@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbac8434cc0fdba45b30cd5dfda9f2bd, type: 3}
+  m_Name: RenderHighlightersData
+  m_EditorClassIdentifier: 
+  _renderingHighlightersList:
+  - layerTexture: {fileID: 2800000, guid: 9c201347c3e7d2b4599dd83dbea9005f, type: 3}
+    _layerName: Default
+    sortingOrderTextColor: {r: .513725519, g: .513725519, b: .552941203, a: 1}
+    customLayerName: 
+  - layerTexture: {fileID: 2800000, guid: 0245555611b43f948a1d24d174cb9323, type: 3}
+    _layerName: Background
+    sortingOrderTextColor: {r: .552941203, g: .784313738, b: .97647059, a: 1}
+    customLayerName: 
+  - layerTexture: {fileID: 2800000, guid: c4ed458305256864cad25d7bcdd3113d, type: 3}
+    _layerName: Character
+    sortingOrderTextColor: {r: .454901963, g: .717647076, b: .874509811, a: 1}
+    customLayerName: 
+  - layerTexture: {fileID: 2800000, guid: 41842a110a41c644a9baa6aa3115004c, type: 3}
+    _layerName: Vfx
+    sortingOrderTextColor: {r: .690196097, g: .164705887, b: .172549024, a: 1}
+    customLayerName: 
+  - layerTexture: {fileID: 2800000, guid: f0a7444339fe4844a9ebee80c1b1cf1b, type: 3}
+    _layerName: Midground
+    sortingOrderTextColor: {r: .517647088, g: .905882359, b: .0666666701, a: 1}
+    customLayerName: 
+  - layerTexture: {fileID: 2800000, guid: a8054a0f3ae0df24baa821a84404a60e, type: 3}
+    _layerName: Middle
+    sortingOrderTextColor: {r: .168627456, g: .823529422, b: .800000012, a: 1}
+    customLayerName: Mid
+  - layerTexture: {fileID: 2800000, guid: ce55ae745178a154ab2a61fff8cc7301, type: 3}
+    _layerName: Foreground
+    sortingOrderTextColor: {r: .850980401, g: .87843138, b: .0823529437, a: 1}
+    customLayerName: 
+  - layerTexture: {fileID: 2800000, guid: 247f95132833f2e4b866a4835d455bbb, type: 3}
+    _layerName: UI
+    sortingOrderTextColor: {r: .886274517, g: .470588237, b: .215686277, a: 1}
+    customLayerName: 
+  - layerTexture: {fileID: 2800000, guid: 4e9fe9cdcefe1554597efd251630144a, type: 3}
+    _layerName: NGUI_Layer
+    sortingOrderTextColor: {r: 1, g: 1, b: 1, a: 1}
+    customLayerName: 
+  - layerTexture: {fileID: 2800000, guid: def59f66b7aab604a9279a170846850c, type: 3}
+    _layerName: NGUIPanel_Layer
+    sortingOrderTextColor: {r: 0, g: 0, b: 0, a: 1}
+    customLayerName: 
