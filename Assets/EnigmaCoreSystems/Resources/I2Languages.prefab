@@ -1,0 +1,1667 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1635998250540344}
+  m_IsPrefabAsset: 1
+--- !u!1 &1635998250540344
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4591963500580686}
+  - component: {fileID: 114620184470772400}
+  m_Layer: 0
+  m_Name: I2Languages
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4591963500580686
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1635998250540344}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114620184470772400
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1635998250540344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 488051eaa73ba421e8fe4868f2e0f364, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NeverDestroy: 0
+  UserAgreesToHaveItOnTheScene: 0
+  UserAgreesToHaveItInsideThePluginsFolder: 1
+  GoogleLiveSyncIsUptoDate: 1
+  Spreadsheet_LocalFileName: 
+  Spreadsheet_LocalCSVSeparator: ','
+  Spreadsheet_LocalCSVEncoding: utf-8
+  Spreadsheet_SpecializationAsRows: 1
+  Assets: []
+  Google_WebServiceURL: https://script.google.com/macros/s/AKfycbwTHyxTlrR2AhvQkULe4VRb-O5yPKD_3swqugSgeg/exec
+  Google_SpreadsheetKey: 13P8l0vsUISVS74f1hgIW5lu2d2LS2Sm0bn9U4YNdmzs
+  Google_SpreadsheetName: I2Loc Greek Quiz Localization
+  Google_LastUpdatedVersion: 1544464683576
+  Google_Password: change_this
+  GoogleUpdateFrequency: 3
+  GoogleInEditorCheckFrequency: 2
+  GoogleUpdateDelay: 5
+  mLanguages:
+  - Name: English
+    Code: en
+    Flags: 0
+  - Name: Spanish
+    Code: es
+    Flags: 0
+  IgnoreDeviceLanguage: 1
+  _AllowUnloadingLanguages: 1
+  mTerms:
+  - Term: Question1
+    TermType: 0
+    Description: 
+    Languages:
+    - 'Goddess of love, lust, and beauty. Wife of Hephaestus but Ares is her lover.
+      Mother of Eros. Known as the most beautiful of the Greek goddesses. '
+    - "Diosa del amor, la lujuria y la belleza.  Esposa de Hephaestus pero Ares es
+      su amante. Madre de Eros. Conocida como la m\xE1s bella de las diosas Griegas."
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer1
+    TermType: 0
+    Description: 
+    Languages:
+    - Aphrodite
+    - Afrodita
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question2
+    TermType: 0
+    Description: 
+    Languages:
+    - 'God of music, prophecies, poetry, light, truth, and archery. He is Artemis''s
+      twin brother, and son of Zeus. '
+    - "Dios de la m\xFAsica, profec\xEDas, luz, verdad y arquer\xEDa.  Es el hermano
+      gemelo de Artemis y el hijo de Zeus."
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer2
+    TermType: 0
+    Description: 
+    Languages:
+    - Apollo
+    - Apolo
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question3
+    TermType: 0
+    Description: 
+    Languages:
+    - God of war, murder and bloodshed. Brother to Athena, and is the son of Zeus.
+    - "Dios de la guerra, el asesinato y la matanza. Tiene un amor\xEDo con Afrodita."
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer3
+    TermType: 0
+    Description: 
+    Languages:
+    - Ares
+    - Ares
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question4
+    TermType: 0
+    Description: 
+    Languages:
+    - Goddess of the hunt and wild things, and the moon. Apollo is her twin brother.
+      She is a virgin goddess.
+    - "Diosa de la cacer\xEDa, y las cosas salvajes, y la luna. Apolo es su hermano
+      gemelo. Ella es una diosa virgen. "
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer4
+    TermType: 0
+    Description: 
+    Languages:
+    - Artemis
+    - Artemisa
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question5
+    TermType: 0
+    Description: 
+    Languages:
+    - 'Goddess of wisdom, warfare, handicrafts and reason. Sister of Ares, and is
+      the daughter of Zeus. Sprung from Zeus''s head in full body armor. She is the
+      wisest of the gods. '
+    - "Diosa de la sabidur\xEDa, la guerra, artesan\xEDas y la raz\xF3n. Hermana de
+      Ares, y es la hija de Zeus. Brot\xF3 de la cabeza de Zeus en armadura de cuerpo
+      completo.  Es la m\xE1s sabia de los dioses."
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer5
+    TermType: 0
+    Description: 
+    Languages:
+    - Athena
+    - Atenea
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question6
+    TermType: 0
+    Description: 
+    Languages:
+    - 'Goddess of fertility, grain and harvest. She is a daughter of Cronus and Rhea
+      and sister of Zeus. '
+    - 'Diosa de la fertilidad, el trigo y la cosecha. Ella es la hija de Cronos y
+      Rea y la hermana de Zeus.  '
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer6
+    TermType: 0
+    Description: 
+    Languages:
+    - Demeter
+    - "Dem\xE9ter"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question7
+    TermType: 0
+    Description: 
+    Languages:
+    - 'God of wine, parties/festivals, madness and merriment. The inspirer of ritual
+      madness and ecstasy. Son of Zeus and Semele. '
+    - Dios del vino, fiestas/festivales, locura y el regocijo.
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer7
+    TermType: 0
+    Description: 
+    Languages:
+    - Dionysus
+    - Dioniso
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question8
+    TermType: 0
+    Description: 
+    Languages:
+    - 'God of the underworld. Brother of Poseidon and Zeus, and consort to Persephone.
+      Son of Cronus and Rhea. Has two brothers, Zeus the youngest of the three and
+      Poseidon his older brother. '
+    - "Dios del inframundo. Hermano de Poseid\xF3n y Zeus, y consorte de Pers\xE9fone.
+      \ Hijo de Cronos y Rea. Tiene dos hermanos, Zeus es el menor de los tres y Poseid\xF3n
+      el hermano mayor. "
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer8
+    TermType: 0
+    Description: 
+    Languages:
+    - Hades
+    - Hades
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question9
+    TermType: 0
+    Description: 
+    Languages:
+    - 'God of fire and the forge. Son of Hera and Zeus. Married to Aphrodite, but
+      she does not love him because he is deformed. He had a daughter named Pandora. '
+    - "Dios del fuego y la herrer\xEDa. Hijo de Hera y Zeus. Casado con Afrodita,
+      pero ella no lo ama por estar deforme. Tiene una hija llamada Pandora. "
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer9
+    TermType: 0
+    Description: 
+    Languages:
+    - Hephaestus
+    - Hefesto
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question10
+    TermType: 0
+    Description: 
+    Languages:
+    - 'Queen of the gods. Goddess of marriage, women, and childbirth. Zeus'' wife
+      and older sister. Daughter of Cronus and Rhea. '
+    - Reina de los dioses. Diosa del matrimonio, las mujeres y el parto.  Es la esposa
+      y hermana mayor de Zeus. Hija de Cronos y Rea.
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer10
+    TermType: 0
+    Description: 
+    Languages:
+    - Hera
+    - 'Hera '
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question11
+    TermType: 0
+    Description: 
+    Languages:
+    - 'God of flight, thieves, commerce, and travelers. Messenger of the gods. He
+      was the son of Zeus and the Pleiade Maia, a daughter of the Titan Atlas. '
+    - "Dios del vuelo, los ladrones, el comercio y los viajeros. Mensajero de los
+      dioses. Era el hijo de Zeus y de la Pl\xE9yades Maya, e hija del Tit\xE1n Atlas. "
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer11
+    TermType: 0
+    Description: 
+    Languages:
+    - Hermes
+    - Hermes
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question12
+    TermType: 0
+    Description: 
+    Languages:
+    - 'Is one of the three Great Goddesses. Goddess of the hearth and home, the focal
+      point of every household. Daughter of Rhea and Cronus. '
+    - Es una de las tres Grandes Diosas. Diosa de la chimenea y el hogar, y el punto
+      focal de cada casa.
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer12
+    TermType: 0
+    Description: 
+    Languages:
+    - Hestia
+    - Hestia
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question13
+    TermType: 0
+    Description: 
+    Languages:
+    - 'God of the sea. He created horses from sea foam. God of earthquakes as well.
+      He was a son of Cronus and Rhea. One of the caretakers of the oracle at Delphi. '
+    - "Dios del mar. Cre\xF3 caballos de la espuma marina.  Era hijo de Cronus y Rea.
+      \ Uno de los cuidadores del or\xE1culo en Delfos."
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer13
+    TermType: 0
+    Description: 
+    Languages:
+    - Poseidon
+    - "Poseid\xF3n"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question14
+    TermType: 0
+    Description: 
+    Languages:
+    - 'The king of the gods, the ruler of Mount Olympus and the god of the sky and
+      thunder. Son of Cronus and Rhea, and the youngest of his siblings. Married to
+      Hera. '
+    - "El rey de los dioses, el gobernante del Monte Olimpo y el dios del cielo y
+      el trueno. Hijo de Cronos y Rea, y el m\xE1s joven de sus hermanos. Casado con
+      Hera. "
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer14
+    TermType: 0
+    Description: 
+    Languages:
+    - Zeus
+    - Zeus
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question15
+    TermType: 0
+    Description: 
+    Languages:
+    - 'God of the upper air, space, and heaven. One of the Protogenoi, the first-born
+      elemental gods. The son of Erebus and Nyx and brother of Hemera. '
+    - "Dios del aire superior, el espacio y el para\xEDso. Uno de los Dioses Primordiales,
+      el primer nacido de los dioses elementales. El hijo de \xC9rebo y Nix y hermano
+      de Hemera."
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer15
+    TermType: 0
+    Description: 
+    Languages:
+    - Aether
+    - "\xC9ter"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question16
+    TermType: 0
+    Description: 
+    Languages:
+    - 'He was the first thing to exist and the womb from which everything emerged.
+      His first children were Gaia, Tartarus, Nyx, Erebus, and Eros. '
+    - "Fue la primera cosa en existir y el \xFAtero de donde todo emergi\xF3. Sus
+      primeros hijos fueron Gaia, T\xE1rtaro, Nix, \xC9rebo y Eros. "
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer16
+    TermType: 0
+    Description: 
+    Languages:
+    - Chaos
+    - Caos
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question17
+    TermType: 0
+    Description: 
+    Languages:
+    - 'Titan of eternal time and father of six of the Olympian gods. Overthrown by
+      his own sons, Zeus, Hades, and Poseidon, and imprisoned in Tartarus. '
+    - "Tit\xE1n del tiempo eterno y padre the seis dioses del Olimpo. Derrocado por
+      sus propios hijos, Zeus, Hades y Poseid\xF3n, y aprisionado en T\xE1rtaro."
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer17
+    TermType: 0
+    Description: 
+    Languages:
+    - Cronus
+    - Crono
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question18
+    TermType: 0
+    Description: 
+    Languages:
+    - 'God of darkness and shadow. Son of a primordial god, Chaos. Nyx''s Lover and
+      father of her children, Aether and Hemera. '
+    - "Dios de la oscuridad y sombra. Hijo de un dios primordial, Caos. Amante de
+      Nix y padre de sus hijos, \xC9ter y Hemera."
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer18
+    TermType: 0
+    Description: 
+    Languages:
+    - Erebus
+    - "\xC9rebo"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question19
+    TermType: 0
+    Description: 
+    Languages:
+    - 'Goddess of the Earth (Mother Earth), mother of Cronus. She brought forth Ouranos
+      , Pontus, and Ourea alone. '
+    - "Madre de la Tierra (Madre Tierra), madre de Cronos. Ella dio a luz a Urano,
+      Ponto, y Ourea por s\xED sola."
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer19
+    TermType: 0
+    Description: 
+    Languages:
+    - Gaia
+    - Gaia
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question20
+    TermType: 0
+    Description: 
+    Languages:
+    - 'Goddess of daylight and the sun. The daughter of Erebos and Nyx. Conceived
+      sea goddess Thalassa with Aether. '
+    - "Diosa de la luz del d\xEDa y el sol. La hija de \xC9rebo y Nix.  Concibi\xF3
+      a la diosa del mar Talasa con \xC9ter."
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer20
+    TermType: 0
+    Description: 
+    Languages:
+    - Hemera
+    - Hemera
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question21
+    TermType: 0
+    Description: 
+    Languages:
+    - 'God of the west wind. Husband of his sister Iris, the goddess of the rainbow.
+      Father of Balius and Xanthus, Achilles'' horses. '
+    - 'Dios del viento del oeste. Esposo de su hermana Iris, la diosa del arco iris.
+      Padre de Balio y Janto, los caballos de Aquiles. '
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer21
+    TermType: 0
+    Description: 
+    Languages:
+    - Zephyrus
+    - "C\xE9firo"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question22
+    TermType: 0
+    Description: 
+    Languages:
+    - 'Goddess of night. A figure of exceptional power and beauty. She rules over
+      an earth-based religion. She is born of Chaos. '
+    - "Diosa de la noche. Una figura de excepcional poder y belleza. Gobierna sobre
+      una tierra basada en religi\xF3n. Es nacida de Caos. "
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer22
+    TermType: 0
+    Description: 
+    Languages:
+    - Nyx
+    - Nix
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question23
+    TermType: 0
+    Description: 
+    Languages:
+    - 'He was the third force to manifest in the yawning void of Chaos. Father of
+      Typhon by Gaia. '
+    - "Fue la tercera fuerza en manifestarse en el vac\xEDo abierto de Caos. Padre
+      de Tif\xF3n por Gaia."
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer23
+    TermType: 0
+    Description: 
+    Languages:
+    - Tartarus
+    - "T\xE1rtaro"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question24
+    TermType: 0
+    Description: 
+    Languages:
+    - 'God of the heavens (Father Sky) and father of the Titans. He came every single
+      night to mate with Gaia, but he hated the children she bore him. '
+    - "Dios de los cielos (Padre Cielo) y padre de los Titanes. \xC9l vino cada noche
+      para aparearse con Gaia, pero \xE9l odio los hijos que ella le dio."
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer24
+    TermType: 0
+    Description: 
+    Languages:
+    - Ouranos
+    - Urano
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question25
+    TermType: 0
+    Description: 
+    Languages:
+    - 'Daughter of Ouranos, the sky, and Gaia, the earth. She was wife to Cronos and
+      mother to Demeter, Hades, Hera, Hestia, Poseidon, and Zeus. '
+    - "Hija de Urano, el cielo, y Gaia, la tierra. Ella fue esposa de Cronos y madre
+      de Dem\xE9ter, Hades, Hera, Hestia, Poseid\xF3n y Zeus."
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer25
+    TermType: 0
+    Description: 
+    Languages:
+    - Rhea
+    - Rea
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question26
+    TermType: 0
+    Description: 
+    Languages:
+    - 'Goddess of gluttony, scatting, bricks, brick layers. Has a temple on the island
+      of Sicily at which she was worshipped alongside of Ceres. '
+    - "Diosa de la gula, la dispersi\xF3n, ladrillos, capas de ladrillo. Tiene un
+      templo en la isla de Sicilia en el que fue adorada junto a Ceres."
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer26
+    TermType: 0
+    Description: 
+    Languages:
+    - Adephagia
+    - Adefagia
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question27
+    TermType: 0
+    Description: 
+    Languages:
+    - 'God of the winds. Born three times, first as the son of Hellen and Orseis,
+      another from Poseidon by Arne, and third from Mimas and Melanippe. '
+    - "\nDios de los vientos. Nacido tres veces, primero como el hijo de Helena y
+      Ors\xE9is, otro de Poseid\xF3n por Arne, y el tercero de Mimas y Melanipe."
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer27
+    TermType: 0
+    Description: 
+    Languages:
+    - Aeolus
+    - Eolo
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question28
+    TermType: 0
+    Description: 
+    Languages:
+    - 'A hermaphroditic demon. Daughter of Zeus and Gaia. The Olympian gods, fearing
+      her, cut off the male organ and cast it away. '
+    - "Un demonio hermafrodita. Hija de Zeus y Gaia. Los dioses del Olimpo, temi\xE9ndole,
+      cortaron su \xF3rgano masculino y lo descartaron."
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer28
+    TermType: 0
+    Description: 
+    Languages:
+    - Agdistis
+    - Agdistis
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question29
+    TermType: 0
+    Description: 
+    Languages:
+    - 'The Greek god of dreams. He has the ability to take any human''s form and appear
+      in dreams. He is the son or brother of Hypnos, the god of sleep. '
+    - "\nEl dios Griego de los sue\xF1os. Tiene la capacidad de tomar cualquier forma
+      humana y aparecer en sue\xF1os. Es el hijo o hermano de Hipnos, el dios del
+      sue\xF1o."
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer29
+    TermType: 0
+    Description: 
+    Languages:
+    - Morpheus
+    - Morfeo
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question30
+    TermType: 0
+    Description: 
+    Languages:
+    - 'Goddess of the morning and man''s waking sense, which causes men to wake up
+      in the morning. Daughter of Helios. '
+    - "Diosa de la ma\xF1ana y el sentido de vigilia del hombre, que hace que los
+      hombres se despierten por la ma\xF1ana. Hija de Helios.\r\n"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer30
+    TermType: 0
+    Description: 
+    Languages:
+    - Alectrona
+    - Alectrona
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question31
+    TermType: 0
+    Description: 
+    Languages:
+    - 'The god of shepherds and flocks, of mountain wilds, hunting and rustic music.
+      He has the hindquarters, legs, and horns of a goat. Son of Hermes. '
+    - "El dios de los pastores y las bandadas, de las monta\xF1as salvajes, la caza
+      y la m\xFAsica r\xFAstica. Tiene el trasero, las patas y los cuernos de una
+      cabra. Hijo de Hermes.\n"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer31
+    TermType: 0
+    Description: 
+    Languages:
+    - Pan
+    - Pan
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question32
+    TermType: 0
+    Description: 
+    Languages:
+    - 'Goddess of the sea, wife of Poseidon. She was a daughter of Nereus and Doris.
+      By her, Poseidon had a son, Triton, and a daughter, Rhode. '
+    - "Diosa del mar, esposa de Poseid\xF3n. Ella era una hija de Nereo y Doris. Por
+      ella, Poseidon tuvo un hijo, Trit\xF3n, y una hija, Rodo.\r\n"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer32
+    TermType: 0
+    Description: 
+    Languages:
+    - Amphitrite
+    - "Anf\xEDtrite "
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question33
+    TermType: 0
+    Description: 
+    Languages:
+    - 'Goddess of violence. Daughter of Pallas and Styx. She was the sister of Nike,
+      Cratos, and Zelus; she and her siblings were constant companions of Zeus. '
+    - "Diosa de la violencia. Hija de Palas y Estigia. Ella era la hermana de Nike,
+      Cratos y Zelus; ella y sus hermanos eran compa\xF1eros constantes de Zeus.\n"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer33
+    TermType: 0
+    Description: 
+    Languages:
+    - Bia
+    - "B\xEDa"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question34
+    TermType: 0
+    Description: 
+    Languages:
+    - 'God of opportunity, luck and favorable moments. He is called the youngest child
+      of Zeus. He brings about what is convenient, fit, and comes in the right moment. '
+    - "\r\nDios de la oportunidad, la suerte y los momentos favorables. Es llamado
+      el hijo m\xE1s joven de Zeus. \xC9l trae lo que es conveniente, apropiado y
+      viene en el momento correcto."
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer34
+    TermType: 0
+    Description: 
+    Languages:
+    - Caerus
+    - Caerus
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question35
+    TermType: 0
+    Description: 
+    Languages:
+    - 'Goddess of the dangers of the ocean and of sea monsters. A daughter of Gaia
+      and Pontus who was a hideous sea monster. With Phorcys, she had many children,
+      known as the Phorcydes. '
+    - "Diosa de los peligros del oc\xE9ano y de los monstruos marinos. Una hija de
+      Gaia y Ponto que era un horrible monstruo marino. Con Forcis, ella tuvo muchos
+      hijos, conocidos como los Forcides."
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer35
+    TermType: 0
+    Description: 
+    Languages:
+    - Ceto
+    - Ceto
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question36
+    TermType: 0
+    Description: 
+    Languages:
+    - 'God of the north wind and of winter. Boreas is very strong, with a violent
+      temper to match. He was frequently shown as a winged old man with shaggy hair
+      and beard. '
+    - "Dios del viento del norte y del invierno. \xC9l es muy fuerte, con un temperamento
+      violento para igualar. Con frecuencia se lo mostraba como un viejo hombre alado
+      con cabello descuidado y barba."
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer36
+    TermType: 0
+    Description: 
+    Languages:
+    - Boreas
+    - "B\xF3reas"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question37
+    TermType: 0
+    Description: 
+    Languages:
+    - 'The goddess of childbirth and midwifery. a daughter of Hera by Zeus. '
+    - "\nLa diosa del parto y la parter\xEDa. Hija de Hera por Zeus."
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer37
+    TermType: 0
+    Description: 
+    Languages:
+    - Eileithyia
+    - "Ilit\xEDa"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question38
+    TermType: 0
+    Description: 
+    Languages:
+    - 'Goddess of Justice. She was born a mortal and Zeus placed her on Earth to keep
+      mankind just. He quickly learned this was impossible and placed her next to
+      him on Mount Olympus. '
+    - "\r\nDiosa de la justicia. Ella naci\xF3 como una mortal y Zeus la coloc\xF3
+      en la Tierra para mantener a la humanidad en paz. R\xE1pidamente supo que esto
+      era imposible y la coloc\xF3 junto a \xE9l en el Monte Olimpo."
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer38
+    TermType: 0
+    Description: 
+    Languages:
+    - Dike
+    - Dicea
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question39
+    TermType: 0
+    Description: 
+    Languages:
+    - "Goddess of the sea\u2019s bounty. She was the daughter of Oceanus and Tethys,
+      and the wife of Nereus. She was mother to Anf\xEDtrite , Poseidon's wife. "
+    - "La diosa de la generosidad del mar. Ella era la hija de Oc\xE9ano y Tetis,
+      y la esposa de Nereo. Ella era madre de Anfitrite, la esposa de Poseid\xF3n."
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer39
+    TermType: 0
+    Description: 
+    Languages:
+    - Doris
+    - Doris
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question40
+    TermType: 0
+    Description: 
+    Languages:
+    - 'The god of sleep. His twin was Thanatos; their mother was the goddess Nyx.
+      His three sons represented things that occur in dreams, Morpheus, Phobetor and
+      Phantasos. '
+    - "El dios del sue\xF1o Su gemelo era T\xE1natos; su madre era la diosa Nix. Sus
+      tres hijos representaron cosas que ocurren en los sue\xF1os, Morfeo, Fob\xE9tor
+      y Fantaso."
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer40
+    TermType: 0
+    Description: 
+    Languages:
+    - Hypnos
+    - Hipnos
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question41
+    TermType: 0
+    Description: 
+    Languages:
+    - 'Goddess of hope or expectation. A child of Nyx and mother of Pheme, the goddess
+      of rumor. Last seen clinging to the inside of PANDORA''s box. '
+    - "Diosa de la esperanza o expectativa. Hija de Nix y madre de Feme, la diosa
+      del rumor. Visto por \xFAltima vez aferr\xE1ndose al interior de la caja de
+      PANDORA."
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer41
+    TermType: 0
+    Description: 
+    Languages:
+    - Elpis
+    - Elpis
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question42
+    TermType: 0
+    Description: 
+    Languages:
+    - 'Minor god of war. The son of Ares by Enyo, a goddess of war. '
+    - Dios menor de la guerra. El hijo de Ares por Enio, una diosa de la guerra.
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer42
+    TermType: 0
+    Description: 
+    Languages:
+    - Enyalius
+    - Enyalius
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question43
+    TermType: 0
+    Description: 
+    Languages:
+    - 'God of satire, mockery, censure, writers, poets, evil-spirited blame and unfair
+      criticism. He was a son of Nyx. Because of his constant criticism, he was exiled
+      from Olympus. '
+    - "Dios de la s\xE1tira, burla, censura, escritores, poetas, culpa malvada y cr\xEDtica
+      injusta. \xC9l era un hijo de Nix. Debido a su constante cr\xEDtica, fue exiliado
+      del Olimpo."
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer43
+    TermType: 0
+    Description: 
+    Languages:
+    - Momus
+    - Momo
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question44
+    TermType: 0
+    Description: 
+    Languages:
+    - 'The god of festivity, revels and nocturnal dalliances. He represents anarchy
+      and chaos. He''s the son of CIRCE and DIONYSUS. '
+    - "El dios de la celebraci\xF3n, fiestas y aventuras nocturnas. \xC9l representa
+      la anarqu\xEDa y el caos. \xC9l es el hijo de CIRCE y DIONISO.\n"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer44
+    TermType: 0
+    Description: 
+    Languages:
+    - Comus
+    - Comus
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question45
+    TermType: 0
+    Description: 
+    Languages:
+    - 'Queen of the Underworld. A daughter of Demeter and Zeus. Hades abducted her
+      and brought her into the underworld where she becomes his consort. '
+    - "Reina del Inframundo. Hija de Dem\xE9ter y Zeus. Hades la secuestr\xF3 y la
+      trajo al inframundo donde se convierte en su consorte.\n"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer45
+    TermType: 0
+    Description: 
+    Languages:
+    - Persephone
+    - "Pers\xE9fone"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question46
+    TermType: 0
+    Description: 
+    Languages:
+    - 'Goddess of victory. The daughter of Pallas and Styx, and the sister of Cratos,
+      Bia, and of Zelus. She was a very close acquaintance with Athena, goddess of
+      wisdom. '
+    - "Diosa de la victoria. La hija de Palas y Estigia, y la hermana de Cratos, B\xEDa
+      y Zelus. Era una conocida muy cercana a la diosa de la sabidur\xEDa de Atenea.\n"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer46
+    TermType: 0
+    Description: 
+    Languages:
+    - Nike
+    - Nike
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question47
+    TermType: 0
+    Description: 
+    Languages:
+    - 'Goddess of retribution and Vengeance. She particularly hates arrogance and
+      offences against the natural order of things. A child of Erebus and Nyx. '
+    - "Diosa de la retribuci\xF3n y la venganza. Odia particularmente la arrogancia
+      y las ofensas contra el orden natural de las cosas. Hija de \xC9rebo y Nix.\n"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer47
+    TermType: 0
+    Description: 
+    Languages:
+    - Nemesis
+    - "N\xE9mesis"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question48
+    TermType: 0
+    Description: 
+    Languages:
+    - 'Goddess of the moon. The daughter of the titans Hyperion and Theia. Her brother
+      is Helios and her sister is Eos. '
+    - "Diosa de la luna La hija de los titanes Hiperi\xF3n y Tea. Su hermano es Helios
+      y su hermana es Eos."
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer48
+    TermType: 0
+    Description: 
+    Languages:
+    - Selene
+    - Selene
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question49
+    TermType: 0
+    Description: 
+    Languages:
+    - '
+
+      God of death and mortality. Twin brother of HYPNOS. A son of Nyx and Erebos.
+      He could occasionally be outwitted by mortals who cheat death. '
+    - "\nDios de la muerte y la mortalidad. Hermano gemelo de HIPNOS. Un hijo de Nix
+      y \xC9rebo. Ocasionalmente pod\xEDa ser burlado por los mortales que enga\xF1an
+      a la muerte."
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer49
+    TermType: 0
+    Description: 
+    Languages:
+    - Thanatos
+    - "T\xE1natos"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question50
+    TermType: 0
+    Description: 
+    Languages:
+    - "Poseidon\u2019s messenger. He is the son of Poseidon, god of the sea, and Amphitrite,
+      goddess of the sea. He was the father of Pallas and foster parent to the goddess
+      Athena. "
+    - "El mensajero de Poseid\xF3n. \xC9l es el hijo de Poseid\xF3n, dios del mar,
+      y Anf\xEDtrite , diosa del mar. \xC9l era el padre de Palas y el padre adoptivo
+      de la diosa Atenea.\n"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answer50
+    TermType: 0
+    Description: 
+    Languages:
+    - Triton
+    - "Trit\xF3n"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: TryAgain
+    TermType: 5
+    Description: 
+    Languages:
+    - Try again today
+    - Trata hoy de nuevo
+    Flags: 0000
+    Languages_Touch: []
+  - Term: WatchVideo
+    TermType: 0
+    Description: 
+    Languages:
+    - Watch video
+    - "Ver v\xEDdeo"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Question
+    TermType: 0
+    Description: 
+    Languages:
+    - Question
+    - Pregunta
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Score
+    TermType: 0
+    Description: 
+    Languages:
+    - Your score is
+    - Tu puntaje es
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Timer
+    TermType: 0
+    Description: 
+    Languages:
+    - Timer
+    - Reloj
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Start
+    TermType: 0
+    Description: 
+    Languages:
+    - Start
+    - Comenzar
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Login
+    TermType: 0
+    Description: 
+    Languages:
+    - Login
+    - "Iniciar Sesi\xF3n"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Logout
+    TermType: 0
+    Description: 
+    Languages:
+    - Logout
+    - "Cerrar Sesi\xF3n"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Register
+    TermType: 0
+    Description: 
+    Languages:
+    - Register
+    - Registrarse
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Guest
+    TermType: 0
+    Description: 
+    Languages:
+    - Guest
+    - "Hu\xE9sped"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: RememberMe
+    TermType: 0
+    Description: 
+    Languages:
+    - Remember Me
+    - Recordarme
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Username
+    TermType: 0
+    Description: 
+    Languages:
+    - Username
+    - Nombre de usuario
+    Flags: 0000
+    Languages_Touch: []
+  - Term: WrongPassword
+    TermType: 0
+    Description: 
+    Languages:
+    - Wrong password
+    - "Contrase\xF1a equivocada"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Banned
+    TermType: 0
+    Description: 
+    Languages:
+    - Banned
+    - Suspendido
+    Flags: 0000
+    Languages_Touch: []
+  - Term: InvalidUsername
+    TermType: 0
+    Description: 
+    Languages:
+    - Invalid username
+    - "Usuario inv\xE1lido"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: InvalidPassword
+    TermType: 0
+    Description: 
+    Languages:
+    - Invalid password
+    - "Contrase\xF1a inv\xE1lida"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Name
+    TermType: 0
+    Description: 
+    Languages:
+    - Name
+    - Nombre de usuario
+    Flags: 0000
+    Languages_Touch: []
+  - Term: CurrentScore
+    TermType: 0
+    Description: 
+    Languages:
+    - Current Score
+    - Puntaje
+    Flags: 0000
+    Languages_Touch: []
+  - Term: HighScore
+    TermType: 0
+    Description: 
+    Languages:
+    - High Score
+    - Mejor Puntaje
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Title
+    TermType: 0
+    Description: 
+    Languages:
+    - Title
+    - "T\xEDtulo"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Password
+    TermType: 0
+    Description: 
+    Languages:
+    - Password
+    - "Contrase\xF1a"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: ConfirmPassword
+    TermType: 0
+    Description: 
+    Languages:
+    - Confirm Password
+    - "Confirmar Contrase\xF1a"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: PasswordConfirmFailed
+    TermType: 0
+    Description: 
+    Languages:
+    - Password confirm failed
+    - "La confirmaci\xF3n de contrase\xF1a fall\xF3"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Submit
+    TermType: 0
+    Description: 
+    Languages:
+    - Submit
+    - Enviar
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Email
+    TermType: 0
+    Description: 
+    Languages:
+    - E-mail
+    - "Correo Electr\xF3nico"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Back
+    TermType: 0
+    Description: 
+    Languages:
+    - Back
+    - "Atr\xE1s"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: RegisterError
+    TermType: 0
+    Description: 
+    Languages:
+    - Register Error
+    - Error de Registro
+    Flags: 0000
+    Languages_Touch: []
+  - Term: ServerError
+    TermType: 0
+    Description: 
+    Languages:
+    - Server Error
+    - Error de Servidor
+    Flags: 0000
+    Languages_Touch: []
+  - Term: ConnectionError
+    TermType: 0
+    Description: 
+    Languages:
+    - Connection Error
+    - "Error de conexi\xF3n"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Loading
+    TermType: 0
+    Description: 
+    Languages:
+    - Loading...
+    - Cargando...
+    Flags: 0000
+    Languages_Touch: []
+  - Term: WeeklyChallenge
+    TermType: 0
+    Description: 
+    Languages:
+    - Weekly Challenge
+    - "Desaf\xEDo Semanal"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Day
+    TermType: 0
+    Description: 
+    Languages:
+    - Day
+    - "D\xEDa"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Of7
+    TermType: 0
+    Description: 
+    Languages:
+    - of 7
+    - de 7
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Beginner
+    TermType: 0
+    Description: 
+    Languages:
+    - Beginner
+    - Aprendiz
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Student
+    TermType: 0
+    Description: 
+    Languages:
+    - Student
+    - Estudiante
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Educated
+    TermType: 0
+    Description: 
+    Languages:
+    - Educated
+    - Educado
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Expert
+    TermType: 0
+    Description: 
+    Languages:
+    - Expert
+    - Experto
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Genius
+    TermType: 0
+    Description: 
+    Languages:
+    - Genius
+    - Genio
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Savant
+    TermType: 0
+    Description: 
+    Languages:
+    - Savant
+    - Sabio
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Shop
+    TermType: 0
+    Description: 
+    Languages:
+    - Shop
+    - Tienda
+    Flags: 0000
+    Languages_Touch: []
+  - Term: ConfirmPurchase
+    TermType: 0
+    Description: 
+    Languages:
+    - Confirm purchase?
+    - "\xBFConfirma compra?"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: NotEnoughCurrency
+    TermType: 0
+    Description: 
+    Languages:
+    - Not enough currency.
+    - No hay suficientes monedas.
+    Flags: 0000
+    Languages_Touch: []
+  - Term: ThanksPurchase
+    TermType: 0
+    Description: 
+    Languages:
+    - Thanks for your purchase.
+    - Gracias por su compra.
+    Flags: 0000
+    Languages_Touch: []
+  - Term: PurchaseFailed
+    TermType: 0
+    Description: 
+    Languages:
+    - Purchase failed.
+    - "La compra fall\xF3."
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Leaderboards
+    TermType: 0
+    Description: 
+    Languages:
+    - Leaderboards
+    - "L\xEDderes"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: BonusQuestion
+    TermType: 0
+    Description: 
+    Languages:
+    - Bonus Question!
+    - Pregunta Bono!
+    Flags: 0000
+    Languages_Touch: []
+  - Term: GotLoginBonus
+    TermType: 0
+    Description: 
+    Languages:
+    - Got Login Bonus!
+    - "\xA1Obtuvo Bono por Sesi\xF3n!"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: AdFailed
+    TermType: 0
+    Description: 
+    Languages:
+    - Ad Failed. Please try again.
+    - "Fall\xF3 el Ad. Favor intente otra vez."
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Currency
+    TermType: 0
+    Description: 
+    Languages:
+    - Currency
+    - Moneda
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Settings
+    TermType: 0
+    Description: 
+    Languages:
+    - Settings
+    - Ajustes
+    Flags: 0000
+    Languages_Touch: []
+  - Term: AudioEffects
+    TermType: 0
+    Description: 
+    Languages:
+    - Audio Effects
+    - Efectos de Sonido
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Questions.
+    TermType: 0
+    Description: 
+    Languages:
+    - Questions.
+    - Preguntas.
+    Flags: 0000
+    Languages_Touch: []
+  - Term: SecondsToAnswer
+    TermType: 0
+    Description: 
+    Languages:
+    - Seconds to answer.
+    - Segundos para contestar.
+    Flags: 0000
+    Languages_Touch: []
+  - Term: PointsTilNextTitle
+    TermType: 0
+    Description: 
+    Languages:
+    - Points til next title.
+    - "Puntos hasta el siguiente t\xEDtulo."
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Continue
+    TermType: 0
+    Description: 
+    Languages:
+    - Continue
+    - Continuar
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Questions
+    TermType: 0
+    Description: 
+    Languages:
+    - Questions
+    - Preguntas
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Results
+    TermType: 0
+    Description: 
+    Languages:
+    - Results
+    - Resultados
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Answers
+    TermType: 0
+    Description: 
+    Languages:
+    - Answers
+    - Respuestas
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Time
+    TermType: 0
+    Description: 
+    Languages:
+    - Time
+    - Tiempo
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Points
+    TermType: 0
+    Description: 
+    Languages:
+    - Points
+    - Puntos
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Totals
+    TermType: 0
+    Description: 
+    Languages:
+    - Totals
+    - Totales
+    Flags: 0000
+    Languages_Touch: []
+  - Term: (Bonus)
+    TermType: 0
+    Description: 
+    Languages:
+    - (Bonus)
+    - (Bono)
+    Flags: 0000
+    Languages_Touch: []
+  - Term: avg
+    TermType: 0
+    Description: 
+    Languages:
+    - avg
+    - prom
+    Flags: 0000
+    Languages_Touch: []
+  - Term: 'Score:'
+    TermType: 0
+    Description: 
+    Languages:
+    - 'Score:'
+    - 'Puntaje:'
+    Flags: 0000
+    Languages_Touch: []
+  - Term: BestOffer
+    TermType: 0
+    Description: 
+    Languages:
+    - Best Offer!
+    - Mejor Oferta!
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Recommended
+    TermType: 0
+    Description: 
+    Languages:
+    - Recommended!
+    - Recomendado!
+    Flags: 0000
+    Languages_Touch: []
+  - Term: BasePriceOffer
+    TermType: 0
+    Description: 
+    Languages:
+    - Base Deal!
+    - Oferta Base!
+    Flags: 0000
+    Languages_Touch: []
+  - Term: SimplePack
+    TermType: 0
+    Description: 
+    Languages:
+    - Simple Pack
+    - Paquete Simple
+    Flags: 0000
+    Languages_Touch: []
+  - Term: AdvancedPack
+    TermType: 0
+    Description: 
+    Languages:
+    - Advanced Pack
+    - Paquete Avanzado
+    Flags: 0000
+    Languages_Touch: []
+  - Term: MasterPack
+    TermType: 0
+    Description: 
+    Languages:
+    - Master Pack
+    - Paquete Maestro
+    Flags: 0000
+    Languages_Touch: []
+  - Term: LegendaryPack
+    TermType: 0
+    Description: 
+    Languages:
+    - Legendary Pack
+    - Paquete Legendario
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Earth
+    TermType: 0
+    Description: 
+    Languages:
+    - Earth
+    - Tierra
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Fire
+    TermType: 0
+    Description: 
+    Languages:
+    - Fire
+    - Fuego
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Wind
+    TermType: 0
+    Description: 
+    Languages:
+    - Wind
+    - Viento
+    Flags: 0000
+    Languages_Touch: []
+  - Term: Water
+    TermType: 0
+    Description: 
+    Languages:
+    - Water
+    - Agua
+    Flags: 0000
+    Languages_Touch: []
+  - Term: EarthPowerDescription
+    TermType: 0
+    Description: 
+    Languages:
+    - 'Earth: Reverts Earth rotation, adding extra time.'
+    - "Tierra: La Tierra rota hacia atr\xE1s, dando tiempo extra."
+    Flags: 0000
+    Languages_Touch: []
+  - Term: FirePowerDescription
+    TermType: 0
+    Description: 
+    Languages:
+    - 'Fire: Burns 2 wrong answers away.'
+    - 'Fuego: Quema 2 respuestas equivocadas.'
+    Flags: 0000
+    Languages_Touch: []
+  - Term: WindPowerDescription
+    TermType: 0
+    Description: 
+    Languages:
+    - 'Wind: Switches question for random one.'
+    - 'Viento: Cambia pregunta por una aleatoria.'
+    Flags: 0000
+    Languages_Touch: []
+  - Term: WaterPowerDescription
+    TermType: 0
+    Description: 
+    Languages:
+    - 'Water: Freezes clock for a time.'
+    - 'Agua: Congela el reloj por un momento.'
+    Flags: 0000
+    Languages_Touch: []
+  - Term: NewQuizAvailable
+    TermType: 0
+    Description: 
+    Languages:
+    - New quiz available!
+    - Nuevo quiz disponible!
+    Flags: 0000
+    Languages_Touch: []
+  - Term: LoginNowForFreeCoins
+    TermType: 0
+    Description: 
+    Languages:
+    - Login now for free coins
+    - Ingresa ahora para monedas gratis
+    Flags: 0000
+    Languages_Touch: []
+  - Term: NewWeek
+    TermType: 0
+    Description: 
+    Languages:
+    - New week!
+    - "\xA1Nueva semana!"
+    Flags: 0000
+    Languages_Touch: []
+  - Term: FreeCoins
+    TermType: 0
+    Description: 
+    Languages:
+    - Get free coins!
+    - "\xA1Obt\xE9n monedas gratis!"
+    Flags: 0000
+    Languages_Touch: []
+  CaseInsensitiveTerms: 0
+  OnMissingTranslation: 1
+  mTerm_AppName: 

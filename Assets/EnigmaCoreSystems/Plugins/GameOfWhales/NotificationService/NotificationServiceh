@@ -1,0 +1,12 @@
+//
+//  NotificationService.h
+//  NotificationService
+//
+//  Created by qVadro on 03/07/2018.
+//
+
+#import <UserNotifications/UserNotifications.h>
+
+@interface NotificationService : UNNotificationServiceExtension
+
+@end

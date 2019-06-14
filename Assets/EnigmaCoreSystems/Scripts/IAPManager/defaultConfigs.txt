@@ -1,0 +1,20 @@
+{
+	"configs" : [
+	{
+		"component": "Enigma.CoreSystems.IAPManager",
+		"version": "0.0.1",
+		"values": {
+			"APPLE_IOS_KEY" : "3d3dc65cde774ad2b97148e941f366fe",
+			"ANDROID_GOOGLE_PLAY_KEY" : "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApCcB4d4vkR32m/miPIzVsEE7kf0meIPjckBGe/8LUcLeMHJgvpClxT4zx4LRP8txeTmIUNu+CAOc/8iAkK0+CoPJXj8cICXkmR76UBNheeulcyfEFIaSPGbz4Z+WXi29KagD5vgx/cWMUzcG4ege7cKo4Qn38olRuCXnyb5nEI2cXRqZ74g+aCDSyVTg0OKOQCBlRl9Jd/Y9EXkYZI0uoVzlYK1ZtgCtehC1QEuTjv8npv9bMM/OsNW3HfI4xjzSmgHUIlOPzvDSUpywAQfdRrDA3dOOP7sCDBfhkrcZesE4cjMeH4DDK4MZ/KhLVgbmT5GFSo3mfUlq+80j3iLVlQIDAQAB",
+			"SAMSUNG_GROUP_ID" : "100000100240",
+			"FORTUMO_SEC" : "8e76df9d87996c87f46b962d75733ebf",
+			"FORTUMO_SERVICE" : "a694e6fd72d787ee9c0e2d6484c9ff35",
+			"IAP_IDS" : [
+				"1",
+                "2",
+                "3",
+                "4",
+			]
+		}
+	}]
+}

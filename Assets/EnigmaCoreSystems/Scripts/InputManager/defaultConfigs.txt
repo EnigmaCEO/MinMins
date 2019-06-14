@@ -1,0 +1,13 @@
+{
+	"configs" : [
+	{
+		"component": "Enigma.CoreSystems.InputManager",
+		"version": "0.0.1",
+		"values": {
+			"mAutoSelect" : true,
+			"mLongTapTime" : 1.0,
+			"mSwipeTolerance" : 0.05,
+			"mStationaryTolerance" : 30
+		}
+	}]
+}

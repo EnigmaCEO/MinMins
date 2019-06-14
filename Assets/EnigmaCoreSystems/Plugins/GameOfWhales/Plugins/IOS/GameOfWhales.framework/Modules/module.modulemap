@@ -1,0 +1,5 @@
+framework module GameOfWhales {
+umbrella header "GameOfWhales.h"
+export *
+module * { export * }
+}
