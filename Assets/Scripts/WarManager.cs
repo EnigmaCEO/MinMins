@@ -24,14 +24,14 @@ public class WarManager : MonoBehaviour {
 		
 		for(int i = 1; i < 6; i++) {
 			slot = (GameObject)Instantiate(Resources.Load <GameObject> ("Prefabs/Units/" + manager.GetComponent<GameManager>().team1[i-1].name));	
-			slot.transform.parent = grid.transform.FindChild("slot" + i);
+			slot.transform.parent = grid.transform.Find("slot" + i);
 			slot.name = manager.GetComponent<GameManager>().team1[i-1].name;
 			slot.transform.localScale = new Vector2(240,240);
 			slot.AddComponent<MinMin>();
 
-			GameObject obj = (GameObject)Instantiate(slot.transform.FindChild("Sprite").gameObject);
+			GameObject obj = (GameObject)Instantiate(slot.transform.Find("Sprite").gameObject);
 			obj.name = manager.GetComponent<GameManager>().team1[i-1].name;
-			obj.transform.parent = field.transform.FindChild("Team1/slot" + i);
+			obj.transform.parent = field.transform.Find("Team1/slot" + i);
 			obj.transform.localPosition = new Vector2(manager.GetComponent<GameManager>().team1[i-1].position.x, manager.GetComponent<GameManager>().team1[i-1].position.y);
 			obj.AddComponent<Unit>();			
 			obj.GetComponent<Unit>().unit = slot;
@@ -44,14 +44,14 @@ public class WarManager : MonoBehaviour {
 
 		for(int i = 1; i < 6; i++) {
 			slot = (GameObject)Instantiate(Resources.Load <GameObject> ("Prefabs/Units/" + manager.GetComponent<GameManager>().team2[i-1].name));	
-			slot.transform.parent = enemies.transform.FindChild("slot" + i);
+			slot.transform.parent = enemies.transform.Find("slot" + i);
 			slot.name = manager.GetComponent<GameManager>().team2[i-1].name;
 			slot.transform.localScale = new Vector2(240,240);
 			slot.transform.localPosition = new Vector2(0,0);
 			
-			GameObject obj = (GameObject)Instantiate(slot.transform.FindChild("Sprite").gameObject);
+			GameObject obj = (GameObject)Instantiate(slot.transform.Find("Sprite").gameObject);
 			obj.name = manager.GetComponent<GameManager>().team2[i-1].name;
-			obj.transform.parent = field.transform.FindChild("Team2/slot" + i);
+			obj.transform.parent = field.transform.Find("Team2/slot" + i);
 			obj.transform.localPosition = new Vector2(manager.GetComponent<GameManager>().team2[i-1].position.x, manager.GetComponent<GameManager>().team1[i-1].position.y);
 			obj.AddComponent<Unit>();
 			obj.transform.localScale = new Vector2(1,1);
@@ -88,13 +88,13 @@ public class WarManager : MonoBehaviour {
 		Transform target = null;
 
 		if(side == 0) {
-			target = grid.transform.FindChild(unit);
+			target = grid.transform.Find(unit);
 		} else {
-			target = enemies.transform.FindChild(unit);
+			target = enemies.transform.Find(unit);
 		}
 
 		if(target == null) return;
-		if(target.FindChild("Effect").transform.childCount == 0) return;
+		if(target.Find("Effect").transform.childCount == 0) return;
 		
 		ready = false;
 		field.GetComponent<TweenPosition>().ResetToBeginning();
@@ -116,11 +116,11 @@ public class WarManager : MonoBehaviour {
 		GameObject attack = GameObject.Find("Waypoint Manager/" + aUnit.Split('/')[1] + "/Attack").transform.GetChild(0).gameObject;
 		
 		if(side == 0) {
-			effect_name = grid.transform.FindChild(aUnit + "/Effect").transform.GetChild(0).name;
+			effect_name = grid.transform.Find(aUnit + "/Effect").transform.GetChild(0).name;
 			
 			attack.transform.localEulerAngles = new Vector3(0,0,0);
 		} else {
-			effect_name = enemies.transform.FindChild(aUnit + "/Effect").transform.GetChild(0).name;
+			effect_name = enemies.transform.Find(aUnit + "/Effect").transform.GetChild(0).name;
 			
 			attack.transform.localEulerAngles = new Vector3(0,180,0);
 		}
@@ -154,7 +154,7 @@ public class WarManager : MonoBehaviour {
 			GameObject temp = val.transform.GetChild(i).gameObject;
 			
 			if(temp.transform.childCount > 0) {
-				Transform attack = temp.transform.GetChild(0).FindChild("Attack");
+				Transform attack = temp.transform.GetChild(0).Find("Attack");
 				if(attack != null) {
 					GameObject item = new GameObject();
 					item.name = temp.transform.GetChild(0).name;

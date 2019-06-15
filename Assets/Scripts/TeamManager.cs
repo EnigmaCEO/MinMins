@@ -36,8 +36,8 @@ public class TeamManager : MonoBehaviour {
 				slot.transform.parent = GameObject.Find("TeamGrid/slot"+ i).transform;
 				slot.transform.localPosition = new Vector2(0,0);
 				slot.transform.localScale = new Vector2(1,1);
-				slot.transform.FindChild("Health").gameObject.SetActive(false);
-				slot.transform.FindChild("Sprite").gameObject.AddComponent<UnitPrep>();
+				slot.transform.Find("Health").gameObject.SetActive(false);
+				slot.transform.Find("Sprite").gameObject.AddComponent<UnitPrep>();
 			}
 		}
 	}
@@ -88,13 +88,13 @@ public class TeamManager : MonoBehaviour {
 		slot.transform.parent = obj;
 		slot.transform.localPosition = new Vector2(0,0);
 		slot.transform.localScale = new Vector2(1,1);
-		slot.transform.FindChild("Health").gameObject.SetActive(false);
+		slot.transform.Find("Health").gameObject.SetActive(false);
 
 		int i = int.Parse(obj.name.Replace("slot","")) - 1;
 		manager.GetComponent<GameManager>().team1[i].name = selection;
 
 		GameObject grid = GameObject.Find("UIWrap Content");
-		GameObject orig = grid.transform.FindChild(selection).gameObject;
+		GameObject orig = grid.transform.Find(selection).gameObject;
 		DestroyImmediate(orig);
 		grid.GetComponent<UIWrapContent>().SortBasedOnScrollMovement();
 		grid.GetComponent<UIWrapContent>().WrapContent();
@@ -123,7 +123,7 @@ public class TeamManager : MonoBehaviour {
 		slot.transform.parent = slotinfo.transform;
 		slot.transform.localPosition = new Vector2(0,0);
 		slot.transform.localScale = new Vector2(1,1);
-		slot.transform.FindChild("Health").gameObject.SetActive(false);
+		slot.transform.Find("Health").gameObject.SetActive(false);
 
 		// Stars
 		GameObject strength = GameObject.Find("Power");
@@ -162,12 +162,12 @@ public class TeamManager : MonoBehaviour {
 			Transform t = null;
 			
 			if(attack.transform.childCount == 2) {
-				t = attack.transform.FindChild("Waypoint "+i);
+				t = attack.transform.Find("Waypoint "+i);
 			} else {
-				if(i == 0) t = attack.transform.FindChild("Waypoint "+i);
-				if(i == 1) t = attack.transform.FindChild("Waypoint "+i+"/Left");
-				if(i == 2) t = attack.transform.FindChild("Waypoint "+(i-1)+"/Right");
-				if(i == 3) t = attack.transform.FindChild("Waypoint "+(i-1));
+				if(i == 0) t = attack.transform.Find("Waypoint "+i);
+				if(i == 1) t = attack.transform.Find("Waypoint "+i+"/Left");
+				if(i == 2) t = attack.transform.Find("Waypoint "+(i-1)+"/Right");
+				if(i == 3) t = attack.transform.Find("Waypoint "+(i-1));
 			}
 
 

@@ -14,30 +14,22 @@ public class TransformFollower : MonoBehaviour {
     private GameObject _go;
     private SphereCollider _collider;
     private string _soundType;
-    private string _variationName;
     private bool _willFollowSource;
     private bool _isInsideTrigger;
     private bool _hasPlayedSound;
     private bool _groupLoadFailed;
     private MasterAudioGroup _groupToPlay;
-    private float _playVolume;
     private bool _positionAtClosestColliderPoint = false;
-    private MasterAudio.AmbientSoundExitMode _exitMode;
-    private float _exitFadeTime;
-    private MasterAudio.AmbientSoundReEnterMode _reEnterMode;
-    private float _reEnterFadeTime;
     private readonly List<Collider> _actorColliders = new List<Collider>();
     private readonly List<Collider2D> _actorColliders2D = new List<Collider2D>();
     private Vector3 _lastListenerPos = new Vector3(float.MinValue, float.MinValue, float.MinValue);
     private readonly Dictionary<Collider, Vector3> _lastPositionByCollider = new Dictionary<Collider, Vector3>();
     private readonly Dictionary<Collider2D, Vector3> _lastPositionByCollider2D = new Dictionary<Collider2D, Vector3>();
-    private PlaySoundResult playingVariation;
-    private PlaySoundResult fadingVariation;
 
     // ReSharper disable once UnusedMember.Local
     void Awake() {
         var trig = Trigger;
-        if (trig == null || _actorColliders.Count == 0 || _actorColliders2D.Count == 0 || _positionAtClosestColliderPoint || _lastListenerPos == Vector3.zero || playingVariation != null) { } // get rid of warning
+        if (trig == null || _actorColliders.Count == 0 || _actorColliders2D.Count == 0 || _positionAtClosestColliderPoint || _lastListenerPos == Vector3.zero) { } // get rid of warning
     }
 
     // ReSharper disable once UnusedMember.Local
@@ -45,28 +37,14 @@ public class TransformFollower : MonoBehaviour {
         _groupToPlay = MasterAudio.GrabGroup(_soundType, false);
     }
 
-    void OnDisable() {
-        AmbientUtil.RemoveTransformFollower(this);
-        PerformTriggerExit(); // trigger exit doesn't seem to fire on same frame for pooling, when just did trigger enter same frame.
-    }
-
-    public void StartFollowing(Transform transToFollow, string soundType, string variationName, float volume, float trigRadius,
-        bool willFollowSource, bool positionAtClosestColliderPoint,
-                               bool useTopCollider, bool useChildColliders,
-                               MasterAudio.AmbientSoundExitMode exitMode, float exitFadeTime,
-                               MasterAudio.AmbientSoundReEnterMode reEnterMode, float reEnterFadeTime) {
+    public void StartFollowing(Transform transToFollow, string soundType, float trigRadius, bool willFollowSource, bool positionAtClosestColliderPoint,
+        bool useTopCollider, bool useChildColliders) {
 
         RuntimeFollowingTransform = transToFollow;
         _goToFollow = transToFollow.gameObject;
         Trigger.radius = trigRadius;
         _soundType = soundType;
-        _variationName = variationName;
-        _playVolume = volume;
         _willFollowSource = willFollowSource;
-        _exitMode = exitMode;
-        _exitFadeTime = exitFadeTime;
-        _reEnterMode = reEnterMode;
-        _reEnterFadeTime = reEnterFadeTime;
         _lastPositionByCollider.Clear();
         _lastPositionByCollider2D.Clear();
 
@@ -84,9 +62,9 @@ public class TransformFollower : MonoBehaviour {
             }
         }
 
-        if (useChildColliders && transToFollow != null) {
-            for (var i = 0; i < transToFollow.childCount; i++) {
-                var child = transToFollow.GetChild(i);
+        if (useChildColliders) {
+            for (var i = 0; i < Trans.childCount; i++) {
+                var child = Trans.GetChild(i);
                 var col3D = child.GetComponent<Collider>();
                 if (col3D != null) {
                     _actorColliders.Add(col3D);
@@ -105,17 +83,14 @@ public class TransformFollower : MonoBehaviour {
         _lastListenerPos = MasterAudio.ListenerTrans.position;
 
 #if UNITY_5_6_OR_NEWER
-
-		if (_actorColliders.Count == 0 && _actorColliders2D.Count == 0 && positionAtClosestColliderPoint) {
-			Debug.Log("Can't follow collider of '" + transToFollow.name + "' because it doesn't have any colliders.");
-		} else {
-			_positionAtClosestColliderPoint = positionAtClosestColliderPoint;
-			if (_positionAtClosestColliderPoint) {
-                RecalcClosestColliderPosition(true);
+        if (_actorColliders.Count == 0 && _actorColliders2D.Count == 0 && positionAtClosestColliderPoint) {
+            Debug.Log("Can't follow collider of '" + transToFollow.name + "' because it doesn't have any colliders.");
+        } else {
+            _positionAtClosestColliderPoint = positionAtClosestColliderPoint;
+            if (_positionAtClosestColliderPoint) {
                 MasterAudio.QueueTransformFollowerForColliderPositionRecalc(this);
-			}
-		}
-		
+            }
+        }
 #endif
     }
 
@@ -123,204 +98,6 @@ public class TransformFollower : MonoBehaviour {
         RuntimeFollowingTransform = null;
         GameObject.Destroy(GameObj);
     }
-
-    private void PlaySound() {
-        var hasSpecificVariation = !string.IsNullOrEmpty(_variationName);
-
-        var needsResult = _positionAtClosestColliderPoint || _exitMode == MasterAudio.AmbientSoundExitMode.FadeSound;
-        if (fadingVariation != null && fadingVariation.ActingVariation != null) {
-            var reEnterModeToUse = _reEnterMode;
-
-            if (!fadingVariation.ActingVariation.IsPlaying) {
-                reEnterModeToUse = MasterAudio.AmbientSoundReEnterMode.StopExistingSound; // it cannot fade it back in if it already stopped.
-            }
-
-            switch (reEnterModeToUse) {
-                case MasterAudio.AmbientSoundReEnterMode.FadeInSameSound:
-                    fadingVariation.ActingVariation.FadeToVolume(_playVolume, _reEnterFadeTime);
-                    playingVariation = fadingVariation;
-
-                    fadingVariation = null;
-                    _hasPlayedSound = true;
-                    return;
-                case MasterAudio.AmbientSoundReEnterMode.StopExistingSound:
-                    fadingVariation.ActingVariation.Stop();
-                    break;
-            }
-        }
-
-        if (_willFollowSource) {
-            if (needsResult) {
-                if (hasSpecificVariation) {
-                    playingVariation = MasterAudio.PlaySound3DFollowTransform(_soundType, RuntimeFollowingTransform, _playVolume, 1f, 0f, _variationName);
-                } else {
-                    playingVariation = MasterAudio.PlaySound3DFollowTransform(_soundType, RuntimeFollowingTransform, _playVolume);
-                }
-            } else {
-                if (hasSpecificVariation) {
-                    MasterAudio.PlaySound3DFollowTransformAndForget(_soundType, RuntimeFollowingTransform, _playVolume, 1f, 0f, _variationName);
-                } else {
-                    MasterAudio.PlaySound3DFollowTransformAndForget(_soundType, RuntimeFollowingTransform, _playVolume);
-                }
-            }
-        } else {
-            if (needsResult) {
-                if (hasSpecificVariation) {
-                    playingVariation = MasterAudio.PlaySound3DAtTransform(_soundType, RuntimeFollowingTransform, _playVolume, 1f, 0f, _variationName);
-                } else {
-                    playingVariation = MasterAudio.PlaySound3DAtTransform(_soundType, RuntimeFollowingTransform, _playVolume);
-                }
-            } else {
-                if (hasSpecificVariation) {
-                    MasterAudio.PlaySound3DAtTransformAndForget(_soundType, RuntimeFollowingTransform, _playVolume, 1f, 0f, _variationName);
-                } else {
-                    MasterAudio.PlaySound3DAtTransformAndForget(_soundType, RuntimeFollowingTransform, _playVolume);
-                }
-            }
-        }
-
-        fadingVariation = null;
-        _hasPlayedSound = true;
-    }
-
-    // ReSharper disable once UnusedMember.Local
-    public void ManualUpdate() {
-        if (RuntimeFollowingTransform == null || !DTMonoHelper.IsActive(_goToFollow)) {
-            StopFollowing();
-            return;
-        }
-
-        if (!_positionAtClosestColliderPoint) {
-            Trans.position = RuntimeFollowingTransform.position;
-        }
-
-        if (!_isInsideTrigger || _hasPlayedSound || _groupLoadFailed) {
-            return;
-        }
-
-        switch (_groupToPlay.GroupLoadStatus) {
-            case MasterAudio.InternetFileLoadStatus.Loaded:
-                PlaySound();
-                break;
-            case MasterAudio.InternetFileLoadStatus.Failed:
-                if (MasterAudio.LogSoundsEnabled) {
-                    MasterAudio.LogWarning("TransformFollower: '" + name + "' not attempting to play Sound Group '" + _soundType + "' because the Sound Group failed to load.");
-                }
-                _groupLoadFailed = true;
-                break;
-            case MasterAudio.InternetFileLoadStatus.Loading:
-                break;
-        }
-    }
-
-#if UNITY_5_6_OR_NEWER
-	/// <summary>
-	/// Called in a queue from MasterAudio to limit the number of times this calculation occurs per frame.
-	/// </summary>
-	/// <returns>true if is calculated "closest position on collider"</returns>
-	public bool RecalcClosestColliderPosition(bool forceRecalc = false) {
-		// follow at closest point
-		var listenerPos = MasterAudio.ListenerTrans.position;
-		var hasListenerMoved = _lastListenerPos != listenerPos;
-		var closestPoint = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
-		var minDist = float.MaxValue;
-		var hasPointMoved = false;
-		
-		if (_actorColliders.Count > 0) {
-			if (_actorColliders.Count == 1) {
-				var colZero = _actorColliders[0];
-                if (colZero == null) {
-                    return false;
-                }
-                
-                var colPos = colZero.transform.position;
-				
-				if (!forceRecalc && _lastPositionByCollider[colZero] == colPos && !hasListenerMoved) {
-                    // same positions, no reason to calculate new position
-                    return false;
-				}
-
-				hasPointMoved = true;
-				closestPoint = colZero.ClosestPoint(listenerPos);
-				
-				_lastPositionByCollider[colZero] = colPos;
-			} else {
-				// ReSharper disable once ForCanBeConvertedToForeach
-				for (var i = 0; i < _actorColliders.Count; i++) {
-					var col = _actorColliders[i];
-					var colPos = col.transform.position;
-					
-					if (!forceRecalc && _lastPositionByCollider[col] == colPos && !hasListenerMoved) {
-						continue; // has not moved, continue loop
-					}
-					
-					hasPointMoved = true;
-					
-					var closestPointOnCollider = col.ClosestPoint(listenerPos);
-					var dist = (listenerPos - closestPointOnCollider).sqrMagnitude;
-					if (dist < minDist) {
-						closestPoint = closestPointOnCollider;
-						minDist = dist;
-					}
-					
-					_lastPositionByCollider[col] = colPos;
-				}
-			}
-		} else if (_actorColliders2D.Count > 0) {
-			if (_actorColliders2D.Count == 1) {
-				var colZero = _actorColliders2D[0];
-				var colPos = colZero.transform.position;
-				
-				if (!forceRecalc && _lastPositionByCollider2D[colZero] == colPos && !hasListenerMoved) {
-					// same positions, no reason to calculate new position
-					return false;
-				}
-				
-				hasPointMoved = true;
-				closestPoint = colZero.bounds.ClosestPoint(listenerPos);
-				
-				_lastPositionByCollider2D[colZero] = colPos;
-			} else {
-				// ReSharper disable once ForCanBeConvertedToForeach
-				for (var i = 0; i < _actorColliders2D.Count; i++) {
-					var col = _actorColliders2D[i];
-					var colPos = col.transform.position;
-					
-					if (!forceRecalc && _lastPositionByCollider2D[col] == colPos && !hasListenerMoved) {
-						continue; // has not moved, continue loop
-					}
-					
-					hasPointMoved = true;
-					
-					var closestPointOn2DCollider = col.bounds.ClosestPoint(listenerPos);
-					var dist = (listenerPos - closestPointOn2DCollider).sqrMagnitude;
-					if (dist < minDist) {
-						closestPoint = closestPointOn2DCollider;
-						minDist = dist;
-					}
-					
-					_lastPositionByCollider2D[col] = colPos;
-				}
-			}
-		} else {
-			return false; // no colliders. Exit
-		}
-		
-		if (!hasPointMoved) {
-			return false; // nothing changed, exit.
-		}
-		
-		Trans.position = closestPoint;
-		Trans.LookAt(MasterAudio.ListenerTrans);
-		if (playingVariation != null && playingVariation.ActingVariation != null) {
-			playingVariation.ActingVariation.transform.position = closestPoint;
-		}
-		
-		_lastListenerPos = listenerPos;
-		
-		return true;
-	}
-#endif
 
     // ReSharper disable once UnusedMember.Local
     private void OnTriggerEnter(Collider other) {
@@ -352,9 +129,150 @@ public class TransformFollower : MonoBehaviour {
         PlaySound();
     }
 
+    private void PlaySound() {
+        if (_willFollowSource) {
+            MasterAudio.PlaySound3DFollowTransformAndForget(_soundType, RuntimeFollowingTransform);
+        } else {
+            MasterAudio.PlaySound3DAtTransformAndForget(_soundType, RuntimeFollowingTransform);
+        }
+
+        _hasPlayedSound = true;
+    }
+
+    // ReSharper disable once UnusedMember.Local
+    void LateUpdate() {
+        if (RuntimeFollowingTransform == null || !DTMonoHelper.IsActive(_goToFollow)) {
+            StopFollowing();
+            return;
+        }
+
+        if (!_positionAtClosestColliderPoint) {
+            Trans.position = RuntimeFollowingTransform.position;
+        }
+
+        if (!_isInsideTrigger || _hasPlayedSound || _groupLoadFailed) {
+            return;
+        }
+
+        switch (_groupToPlay.GroupLoadStatus) {
+            case MasterAudio.InternetFileLoadStatus.Loaded:
+                PlaySound();
+                break;
+            case MasterAudio.InternetFileLoadStatus.Failed:
+                if (MasterAudio.LogSoundsEnabled) {
+                    MasterAudio.LogWarning("TransformFollower: '" + name + "' not attempting to play Sound Group '" + _soundType + "' because the Sound Group failed to load.");
+                }
+                _groupLoadFailed = true;
+                break;
+            case MasterAudio.InternetFileLoadStatus.Loading:
+                break;
+        }
+    }
+
+#if UNITY_5_6_OR_NEWER
+    /// <summary>
+    /// Called in a queue from MasterAudio to limit the number of times this calculation occurs per frame.
+    /// </summary>
+    /// <returns>true if is calculated "closest position on collider"</returns>
+    public bool RecalcClosestColliderPosition() {
+        // follow at closest point
+        var listenerPos = MasterAudio.ListenerTrans.position;
+        var hasListenerMoved = _lastListenerPos != listenerPos;
+        var closestPoint = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+        var minDist = float.MaxValue;
+        var hasPointMoved = false;
+
+        if (_actorColliders.Count > 0) {
+            if (_actorColliders.Count == 1) {
+                var colZero = _actorColliders[0];
+                var colPos = colZero.transform.position;
+
+                if (_lastPositionByCollider[colZero] == colPos && !hasListenerMoved) {
+                    // same positions, no reason to calculate new position
+                    return false;
+                }
+
+                hasPointMoved = true;
+                closestPoint = colZero.ClosestPoint(listenerPos);
+
+                _lastPositionByCollider[colZero] = colPos;
+            } else {
+                // ReSharper disable once ForCanBeConvertedToForeach
+                for (var i = 0; i < _actorColliders.Count; i++) {
+                    var col = _actorColliders[i];
+                    var colPos = col.transform.position;
+
+                    if (_lastPositionByCollider[col] == colPos && !hasListenerMoved) {
+                        continue; // has not moved, continue loop
+                    }
+
+                    hasPointMoved = true;
+
+                    var closestPointOnCollider = col.ClosestPoint(listenerPos);
+                    var dist = (listenerPos - closestPointOnCollider).sqrMagnitude;
+                    if (dist < minDist) {
+                        closestPoint = closestPointOnCollider;
+                        minDist = dist;
+                    }
+
+                    _lastPositionByCollider[col] = colPos;
+                }
+            }
+        } else if (_actorColliders2D.Count > 0) {
+            if (_actorColliders2D.Count == 1) {
+                var colZero = _actorColliders2D[0];
+                var colPos = colZero.transform.position;
+
+                if (_lastPositionByCollider2D[colZero] == colPos && !hasListenerMoved) {
+                    // same positions, no reason to calculate new position
+                    return false;
+                }
+
+                hasPointMoved = true;
+                closestPoint = colZero.bounds.ClosestPoint(listenerPos);
+
+                _lastPositionByCollider2D[colZero] = colPos;
+            } else {
+                // ReSharper disable once ForCanBeConvertedToForeach
+                for (var i = 0; i < _actorColliders2D.Count; i++) {
+                    var col = _actorColliders2D[i];
+                    var colPos = col.transform.position;
+
+                    if (_lastPositionByCollider2D[col] == colPos && !hasListenerMoved) {
+                        continue; // has not moved, continue loop
+                    }
+
+                    hasPointMoved = true;
+
+                    var closestPointOn2DCollider = col.bounds.ClosestPoint(listenerPos);
+                    var dist = (listenerPos - closestPointOn2DCollider).sqrMagnitude;
+                    if (dist < minDist) {
+                        closestPoint = closestPointOn2DCollider;
+                        minDist = dist;
+                    }
+
+                    _lastPositionByCollider2D[col] = colPos;
+                }
+            }
+        } else {
+            return false; // no colliders. Exit
+        }
+
+        if (!hasPointMoved) {
+            return false; // nothing changed, exit.
+        }
+
+        Trans.position = closestPoint;
+        Trans.LookAt(MasterAudio.ListenerTrans);
+
+        _lastListenerPos = listenerPos;
+
+        return true;
+    }
+#endif
+
     // ReSharper disable once UnusedMember.Local
     private void OnTriggerExit(Collider other) {
-
         if (RuntimeFollowingTransform == null) {
             return;
         }
@@ -363,31 +281,9 @@ public class TransformFollower : MonoBehaviour {
             return; // abort if not colliding with Listener.
         }
 
-        PerformTriggerExit();
-    }
-
-    private void PerformTriggerExit() {
         _isInsideTrigger = false;
         _hasPlayedSound = false;
-
-        var grp = MasterAudio.GrabGroup(_soundType, false);
-        if (grp == null) { // might be destroyed! Proceeding will log spam.
-            return;
-        }
-
-        switch (_exitMode) {
-            case MasterAudio.AmbientSoundExitMode.StopSound:
-
-                MasterAudio.StopSoundGroupOfTransform(RuntimeFollowingTransform, _soundType);
-                break;
-            case MasterAudio.AmbientSoundExitMode.FadeSound:
-
-                MasterAudio.FadeOutSoundGroupOfTransform(RuntimeFollowingTransform, _soundType, _exitFadeTime);
-                break;
-        }
-
-        fadingVariation = playingVariation;
-        playingVariation = null;
+        MasterAudio.StopSoundGroupOfTransform(RuntimeFollowingTransform, _soundType);
     }
 
     public SphereCollider Trigger {

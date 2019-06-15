@@ -1,10 +1,11 @@
 ﻿#if !UNITY_4_6
 
-using UnityEditor.iOS.Xcode;
+//using UnityEditor.iOS.Xcode;
 using UnityEditor.Callbacks;
 using UnityEditor;
 using System.IO;
 
+/*
 namespace GameAnalyticsSDK
 {
 	public class GA_PostprocessBuild
@@ -30,5 +31,5 @@ namespace GameAnalyticsSDK
 		}
 	}
 }
-
+*/
 #endif

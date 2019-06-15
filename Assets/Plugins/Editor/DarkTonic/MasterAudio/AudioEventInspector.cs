@@ -3,9 +3,15 @@ using DarkTonic.MasterAudio;
 using UnityEditor;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
+
+#if UNITY_4_6 || UNITY_4_7 || UNITY_5 || UNITY_2017_1_OR_NEWER
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+#endif
+
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
 using UnityEngine.Audio;
+#endif
 
 [CustomEditor(typeof(EventSounds))]
 // ReSharper disable once CheckNamespace
@@ -128,12 +134,20 @@ public class AudioEventInspector : Editor {
 
         _sounds = (EventSounds)target;
 
+#if UNITY_4_6 || UNITY_4_7 || UNITY_5 || UNITY_2017_1_OR_NEWER
         var showNewUIEvents = _sounds.unityUIMode == EventSounds.UnityUIVersion.uGUI;
         var hasSlider = _sounds.GetComponent<Slider>() != null;
         var hasButton = _sounds.GetComponent<Button>() != null;
         var hasToggle = _sounds.GetComponent<Toggle>() != null;
         var hasRect = _sounds.GetComponent<RectTransform>() != null;
         var canClick = hasRect;
+#else
+        const bool showNewUIEvents = false;
+        const bool hasSlider = false;
+        const bool hasButton = false;
+        const bool canClick = false;
+        const bool hasToggle = false;
+#endif
 
         if (_maInScene) {
             // ReSharper disable once PossibleNullReferenceException
@@ -339,6 +353,12 @@ public class AudioEventInspector : Editor {
         }
 
         if (!_sounds.disableSounds) {
+            var newGiz = EditorGUILayout.Toggle("Show 3D Gizmo", _sounds.showGizmo);
+            if (newGiz != _sounds.showGizmo) {
+                AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "toggle Show 3D Gizmo");
+                _sounds.showGizmo = newGiz;
+            }
+
             var newSpawnMode = (MasterAudio.SoundSpawnLocationMode)EditorGUILayout.EnumPopup("Sound Spawn Mode", _sounds.soundSpawnMode);
             if (newSpawnMode != _sounds.soundSpawnMode) {
                 AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "change Sound Spawn Mode");
@@ -371,7 +391,7 @@ public class AudioEventInspector : Editor {
 
             EditorGUILayout.BeginHorizontal();
             var newEventIndex = EditorGUILayout.Popup("Event To Activate", -1, unusedEventTypes.ToArray());
-            DTGUIHelper.AddHelpIconNoStyle("http://www.dtdevtools.com/docs/masteraudio/EventSounds.htm#SupportedEvents");
+            DTGUIHelper.AddHelpIcon("http://www.dtdevtools.com/docs/masteraudio/EventSounds.htm#SupportedEvents");
 
             EditorGUILayout.EndHorizontal();
 
@@ -729,6 +749,7 @@ public class AudioEventInspector : Editor {
             RenderEventWithHeader("Mouse Up (Legacy)" + DisabledText, "toggle Mouse Up (Legacy) Sound", _sounds.mouseUpSound, EventSounds.EventType.OnMouseUp);
         }
 
+#if UNITY_4_6 || UNITY_4_7 || UNITY_5 || UNITY_2017_1_OR_NEWER
         if (showNewUIEvents) {
             if (hasSlider) {
                 if (_sounds.useUnitySliderChangedSound) {
@@ -814,6 +835,7 @@ public class AudioEventInspector : Editor {
                 }
             }
         }
+#endif
 
         if (_sounds.showNGUI) {
             if (_sounds.useNguiOnClickSound) {
@@ -888,6 +910,7 @@ public class AudioEventInspector : Editor {
         //DrawDefaultInspector();
     }
 
+#if UNITY_4_6 || UNITY_4_7 || UNITY_5 || UNITY_2017_1_OR_NEWER
     private bool HasEventTrigger {
         get {
             return _sounds.GetComponent<EventTrigger>() != null;
@@ -903,27 +926,47 @@ public class AudioEventInspector : Editor {
 
             var trig = _sounds.gameObject.AddComponent<EventTrigger>();
 
+#if UNITY_5_1 || UNITY_5_2 || UNITY_5_3 || UNITY_5_4 || UNITY_5_5 || UNITY_5_6 || UNITY_5_7 || UNITY_2017_1_OR_NEWER
             if (trig.triggers == null) {
                 trig.triggers = new List<EventTrigger.Entry>();
             }
+#else 
+                if (trig.delegates == null) {
+                    trig.delegates = new List<EventTrigger.Entry>();
+                }
+#endif
 
             return trig;
         }
     }
+#endif
 
     private void RenderEventWithHeader(string text, string undoText, AudioEventGroup grp, EventSounds.EventType eType, int? itemIndex = null) {
         EditorGUI.indentLevel = 0;
 
         var state = grp.isExpanded;
 
-        DTGUIHelper.ShowCollapsibleSection(ref state, text);
+        // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
+        if (!state) {
+            GUI.backgroundColor = DTGUIHelper.InactiveHeaderColor;
+        } else {
+            GUI.backgroundColor = DTGUIHelper.ActiveHeaderColor;
+        }
 
-        var headerStyle = new GUIStyle();
-        headerStyle.margin = new RectOffset(0, 0, 2, 0);
-        headerStyle.padding = new RectOffset(6, 0, 1, 2);
-        headerStyle.fixedHeight = 18;
+        GUILayout.BeginHorizontal();
 
-        EditorGUILayout.BeginHorizontal(headerStyle, GUILayout.MaxWidth(50));
+        text = "<b><size=11>" + text + "</size></b>";
+
+        if (state) {
+            text = "\u25BC " + text;
+        } else {
+            text = "\u25BA " + text;
+        }
+        if (!GUILayout.Toggle(true, text, "dragtab", GUILayout.MinWidth(20f))) {
+            state = !state;
+        }
+
+        GUILayout.Space(2f);
 
         switch (eType) {
             case EventSounds.EventType.MechanimStateChanged:
@@ -1132,9 +1175,7 @@ public class AudioEventInspector : Editor {
         }
 
         GUILayout.Space(4f);
-        DTGUIHelper.AddHelpIconNoStyle("http://www.dtdevtools.com/docs/masteraudio/EventSounds.htm#EventSettings");
-
-        GUILayout.EndHorizontal();
+        DTGUIHelper.AddHelpIcon("http://www.dtdevtools.com/docs/masteraudio/EventSounds.htm#EventSettings");
 
         GUILayout.EndHorizontal();
         GUI.backgroundColor = Color.white;
@@ -1519,6 +1560,7 @@ public class AudioEventInspector : Editor {
                 EditorGUILayout.EndHorizontal();
             }
             EditorGUILayout.EndToggleGroup();
+            DTGUIHelper.AddSpaceForNonU5(2);
 
             DTGUIHelper.StartGroupHeader();
 
@@ -1666,6 +1708,9 @@ public class AudioEventInspector : Editor {
         }
 
         if (!hideActions) {
+            if (showLayerTagFilter) {
+                DTGUIHelper.AddSpaceForNonU5(2);
+            }
             DTGUIHelper.StartGroupHeader();
             EditorGUILayout.BeginHorizontal();
 
@@ -1675,7 +1720,7 @@ public class AudioEventInspector : Editor {
                 eventGrp.retriggerLimitMode = newRetrigger;
             }
 
-            DTGUIHelper.AddHelpIconNoStyle("http://www.dtdevtools.com/docs/masteraudio/EventSounds.htm#Retrigger");
+            DTGUIHelper.AddHelpIcon("http://www.dtdevtools.com/docs/masteraudio/EventSounds.htm#Retrigger");
 
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.EndVertical();
@@ -1701,6 +1746,7 @@ public class AudioEventInspector : Editor {
             AudioEvent prevEvent = null;
 
             for (var j = 0; j < eventGrp.SoundEvents.Count; j++) {
+                DTGUIHelper.AddSpaceForNonU5(2);
                 var showVolumeSlider = true;
                 var aEvent = eventGrp.SoundEvents[j];
 
@@ -1727,7 +1773,7 @@ public class AudioEventInspector : Editor {
                 var buttonPressed = DTGUIHelper.AddFoldOutListItemButtonItems(j, eventGrp.SoundEvents.Count, "Action", true, false, true);
 
                 GUILayout.Space(4);
-                DTGUIHelper.AddHelpIconNoStyle("http://www.dtdevtools.com/docs/masteraudio/EventSounds.htm#Actions");
+                DTGUIHelper.AddHelpIcon("http://www.dtdevtools.com/docs/masteraudio/EventSounds.htm#Actions");
 
                 EditorGUILayout.EndHorizontal();
                 EditorGUILayout.EndVertical();
@@ -1744,7 +1790,6 @@ public class AudioEventInspector : Editor {
                     if (newSoundType != aEvent.currentSoundFunctionType) {
                         AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "change Action Type");
                         aEvent.currentSoundFunctionType = newSoundType;
-                        CalculateRadiusIfSelected(aEvent);
                     }
 
                     switch (aEvent.currentSoundFunctionType) {
@@ -1800,7 +1845,6 @@ public class AudioEventInspector : Editor {
                                     if (newSound != aEvent.soundType) {
                                         AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "change Sound Group");
                                         aEvent.soundType = newSound;
-                                        CalculateRadiusIfSelected(aEvent);
                                     }
 
                                     var newIndex = EditorGUILayout.Popup("All Sound Groups", -1, _groupNames.ToArray());
@@ -1827,14 +1871,12 @@ public class AudioEventInspector : Editor {
                                             aEvent.soundType = _groupNames[groupIndex.Value];
                                             break;
                                     }
-                                    CalculateRadiusIfSelected(aEvent);
                                 }
                             } else {
                                 var newSType = EditorGUILayout.TextField("Sound Group", aEvent.soundType);
                                 if (newSType != aEvent.soundType) {
                                     AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "change Sound Group");
                                     aEvent.soundType = newSType;
-                                    CalculateRadiusIfSelected(aEvent);
                                 }
                             }
 
@@ -1842,7 +1884,6 @@ public class AudioEventInspector : Editor {
                             if (newVarType != aEvent.variationType) {
                                 AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "change Variation Mode");
                                 aEvent.variationType = newVarType;
-                                CalculateRadiusIfSelected(aEvent);
                             }
 
                             if (aEvent.variationType == EventSounds.VariationType.PlaySpecific) {
@@ -1850,7 +1891,6 @@ public class AudioEventInspector : Editor {
                                 if (newVarName != aEvent.variationName) {
                                     AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "change Variation Name");
                                     aEvent.variationName = newVarName;
-                                    CalculateRadiusIfSelected(aEvent);
                                 }
 
                                 if (string.IsNullOrEmpty(aEvent.variationName)) {
@@ -1896,60 +1936,6 @@ public class AudioEventInspector : Editor {
                                 }
                             }
                             EditorGUI.indentLevel = 1;
-
-                            var newShowgiz = EditorGUILayout.Toggle("Show Range Gizmo", aEvent.showSphereGizmo);
-                            if (newShowgiz != aEvent.showSphereGizmo) {
-                                AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "toggle Show Range Gizmo");
-                                if (newShowgiz == true) {
-                                    // turn rest off
-                                    TurnOffAllOtherShowRangeGizmo();
-
-                                    _sounds.eventToGizmo = aEvent;
-                                }
-
-                                if ((_sounds.eventToGizmo == aEvent) && !newShowgiz) {
-                                    _sounds.eventToGizmo = null;
-                                }
-
-                                aEvent.showSphereGizmo = newShowgiz;
-                            }
-
-                            if (aEvent.showSphereGizmo) {
-                                var aud = _sounds.GetNamedOrFirstAudioSource(aEvent);
-                                if (aud != null) {
-                                    var newMax = EditorGUILayout.Slider("Max Distance", aud.maxDistance, .1f, 1000000f);
-                                    if (newMax != aud.maxDistance) {
-                                        AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, aud, "change Max Distance");
-
-                                        switch (aEvent.variationType) {
-                                            case EventSounds.VariationType.PlayRandom:
-                                                var sources = _sounds.GetAllVariationAudioSources(aEvent);
-                                                if (sources != null) {
-                                                    for (var i = 0; i < sources.Count; i++) {
-                                                        var src = sources[i];
-                                                        src.maxDistance = newMax;
-                                                        EditorUtility.SetDirty(src);
-                                                    }
-                                                }
-                                                break;
-                                            case EventSounds.VariationType.PlaySpecific:
-                                                aud.maxDistance = newMax;
-                                                EditorUtility.SetDirty(aud);
-                                                break;
-                                        }
-                                    }
-                                    switch (aEvent.variationType) {
-                                        case EventSounds.VariationType.PlayRandom:
-                                            DTGUIHelper.ShowLargeBarAlert("Adjusting the Max Distance field will change the Max Distance on the Audio Source of every Variation in the selected Sound Group.");
-                                            break;
-                                        case EventSounds.VariationType.PlaySpecific:
-                                            DTGUIHelper.ShowLargeBarAlert("Adjusting the Max Distance field will change the Max Distance on the Audio Source for the selected Variation in the selected Sound Group.");
-                                            break;
-                                    }
-                                    DTGUIHelper.ShowColorWarning("You can also bulk apply Max Distance and other Audio Source properties with Audio Source Templates using the Master Audio Mixer.");
-                                }
-
-                            }
 
                             var newGlide = (EventSounds.GlidePitchType) EditorGUILayout.EnumPopup("Glide By Pitch Type", aEvent.glidePitchType);
                             if (newGlide != aEvent.glidePitchType) {
@@ -2273,27 +2259,6 @@ public class AudioEventInspector : Editor {
                             switch (aEvent.currentSoundGroupCommand) {
                                 case MasterAudio.SoundGroupCommand.None:
                                     DTGUIHelper.ShowRedError("You have no command selected. Action will do nothing.");
-                                    break;
-                                case MasterAudio.SoundGroupCommand.StopOldSoundGroupVoices:
-                                    var minAge = EditorGUILayout.Slider("Min. Age", aEvent.minAge, 0f, 100f);
-                                    if (minAge != aEvent.minAge) {
-                                        AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "change Min Age");
-                                        aEvent.minAge = minAge;
-                                    }
-                                    break;
-                                case MasterAudio.SoundGroupCommand.FadeOutOldSoundGroupVoices:
-                                    var minAge2 = EditorGUILayout.Slider("Min. Age", aEvent.minAge, 0f, 100f);
-                                    if (minAge2 != aEvent.minAge) {
-                                        AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "change Min Age");
-                                        aEvent.minAge = minAge2;
-                                    }
-
-                                    var newFadeTimeX = EditorGUILayout.Slider("Fade Time", aEvent.fadeTime, 0f, 10f);
-                                    if (newFadeTimeX != aEvent.fadeTime) {
-                                        AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "change Fade Time");
-                                        aEvent.fadeTime = newFadeTimeX;
-                                    }
-
                                     break;
                                 case MasterAudio.SoundGroupCommand.ToggleSoundGroupOfTransform:
                                 case MasterAudio.SoundGroupCommand.ToggleSoundGroup:
@@ -2679,28 +2644,6 @@ public class AudioEventInspector : Editor {
                                     break;
                                 case MasterAudio.BusCommand.Unpause:
                                     break;
-                                case MasterAudio.BusCommand.StopOldBusVoices:
-                                    var minAge = EditorGUILayout.Slider("Min. Age", aEvent.minAge, 0f, 100f);
-                                    if (minAge != aEvent.minAge) {
-                                        AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "change Min Age");
-                                        aEvent.minAge = minAge;
-                                    }
-                                    break;
-                                case MasterAudio.BusCommand.FadeOutOldBusVoices:
-                                    var minAge2 = EditorGUILayout.Slider("Min. Age", aEvent.minAge, 0f, 100f);
-                                    if (minAge2 != aEvent.minAge) {
-                                        AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "change Min Age");
-                                        aEvent.minAge = minAge2;
-                                    }
-
-                                    var newFadeTimeX = EditorGUILayout.Slider("Fade Time", aEvent.fadeTime, 0f, 10f);
-                                    if (newFadeTimeX != aEvent.fadeTime) {
-                                        AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "change Fade Time");
-                                        aEvent.fadeTime = newFadeTimeX;
-                                    }
-
-                                    break;
-
                             }
 
                             break;
@@ -2853,6 +2796,7 @@ public class AudioEventInspector : Editor {
                                     break;
                             }
                             break;
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
                         case MasterAudio.EventSoundFunctionType.UnityMixerControl:
                             var newMix = (MasterAudio.UnityMixerCommand)EditorGUILayout.EnumPopup("Unity Mixer Cmd", aEvent.currentMixerCommand);
                             if (newMix != aEvent.currentMixerCommand) {
@@ -2937,6 +2881,7 @@ public class AudioEventInspector : Editor {
                             }
 
                             break;
+#endif
                         case MasterAudio.EventSoundFunctionType.PersistentSettingsControl:
                             EditorGUI.indentLevel = 1;
 
@@ -3289,90 +3234,11 @@ public class AudioEventInspector : Editor {
         }
     }
 
-    private void CalculateRadiusIfSelected(AudioEvent aEvent) {
-        if (aEvent.showSphereGizmo) {
-            _sounds.CalculateRadius(aEvent);
-        }
-    }
-
     private void SortCustomEventTriggers() {
         AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "Alpha Sort Custom Event Triggers");
 
         _sounds.userDefinedSounds.Sort(delegate (AudioEventGroup x, AudioEventGroup y) {
             return x.customEventName.CompareTo(y.customEventName);
         });
-    }
-
-    private void TurnOfAllShowGizmoInEventGroup(AudioEventGroup grp) {
-        if (grp == null) {
-            return;
-        }
-
-        foreach (var aEvent in grp.SoundEvents) {
-            aEvent.showSphereGizmo = false;
-        }
-    }
-
-    private void TurnOffAllOtherShowRangeGizmo() {
-        TurnOfAllShowGizmoInEventGroup(_sounds.startSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.visibleSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.invisibleSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.collisionSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.collisionExitSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.triggerSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.triggerExitSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.triggerStaySound);
-
-        TurnOfAllShowGizmoInEventGroup(_sounds.mouseEnterSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.mouseExitSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.mouseClickSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.mouseUpSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.mouseDragSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.spawnedSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.despawnedSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.enableSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.disableSound);
-
-        TurnOfAllShowGizmoInEventGroup(_sounds.collision2dSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.collisionExit2dSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.triggerEnter2dSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.triggerStay2dSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.triggerExit2dSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.particleCollisionSound);
-
-        TurnOfAllShowGizmoInEventGroup(_sounds.nguiOnClickSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.nguiMouseDownSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.nguiMouseUpSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.nguiMouseEnterSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.nguiMouseExitSound);
-
-        TurnOfAllShowGizmoInEventGroup(_sounds.unitySliderChangedSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.unityButtonClickedSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.unityPointerDownSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.unityDragSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.unityPointerUpSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.unityPointerEnterSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.unityPointerExitSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.unityDropSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.unityScrollSound);
-
-        TurnOfAllShowGizmoInEventGroup(_sounds.unityUpdateSelectedSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.unitySelectSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.unityDeselectSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.unityMoveSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.unityInitializePotentialDragSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.unityBeginDragSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.unityEndDragSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.unitySubmitSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.unityCancelSound);
-        TurnOfAllShowGizmoInEventGroup(_sounds.unityToggleSound);
-
-        foreach (var grp in _sounds.userDefinedSounds) {
-            TurnOfAllShowGizmoInEventGroup(grp);
-        }
-
-        foreach (var grp in _sounds.mechanimStateChangedSounds) {
-            TurnOfAllShowGizmoInEventGroup(grp);
-        }
     }
 }

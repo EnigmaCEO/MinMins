@@ -34,12 +34,6 @@ public class SoundGroupOrganizerInspector : Editor {
 
         var isInProjectView = DTGUIHelper.IsPrefabInProjectView(_organizer);
 
-        if (isInProjectView) {
-            DTGUIHelper.ShowLargeBarAlert("You are in Project View or have not made your own prefab and cannot use this Game Object.");
-            DTGUIHelper.ShowRedError("Create this prefab from Master Audio Manager window. Do not drag into Scene! Then make your own prefab.");
-            return; 
-        }
-
         if (MasterAudio.Instance == null) {
             var newLang = (SystemLanguage)EditorGUILayout.EnumPopup(new GUIContent("Preview Language", "This setting is only used (and visible) to choose the previewing language when there's no Master Audio prefab in the Scene (language settings are grabbed from there normally). This should only happen when you're using a Master Audio prefab from a previous Scene in persistent mode."), _organizer.previewLanguage);
             if (newLang != _organizer.previewLanguage) {
@@ -466,10 +460,9 @@ public class SoundGroupOrganizerInspector : Editor {
         if (_organizer.itemType == SoundGroupOrganizer.MAItemType.SoundGroups) {
             // ReSharper disable once ConvertToConstant.Local
             var text = "Group Control";
-
-            var collapsed = true;
-
-            DTGUIHelper.ShowCollapsibleSection(ref collapsed, text, false);
+            GUILayout.BeginHorizontal();
+            text = "<b><size=11>" + text + "</size></b>";
+            GUILayout.Toggle(true, text, "dragtab", GUILayout.MinWidth(20f));
             EditorGUILayout.EndHorizontal();
 
             DTGUIHelper.BeginGroupedControls();
@@ -550,6 +543,7 @@ public class SoundGroupOrganizerInspector : Editor {
                             var clips = new List<AudioClip>();
 
                             foreach (var dragged in DragAndDrop.objectReferences) {
+#if UNITY_5_2 || UNITY_5_3 || UNITY_5_4 || UNITY_5_5 || UNITY_5_6 || UNITY_2017_1_OR_NEWER
                                 if (dragged is DefaultAsset) {
                                     var assetPaths = AssetDatabase.FindAssets("t:AudioClip", DragAndDrop.paths);
                                     foreach (var assetPath in assetPaths) {
@@ -563,6 +557,7 @@ public class SoundGroupOrganizerInspector : Editor {
 
                                     continue;
                                 }
+#endif
 
                                 var aClip = dragged as AudioClip;
                                 if (aClip == null) {
@@ -710,10 +705,11 @@ public class SoundGroupOrganizerInspector : Editor {
 
             // ReSharper disable once ConvertToConstant.Local
             var text = "Custom Event Control";
-            var collapsed = true;
-
-            DTGUIHelper.ShowCollapsibleSection(ref collapsed, text, false);
+            GUILayout.BeginHorizontal();
+            text = "<b><size=11>" + text + "</size></b>";
+            GUILayout.Toggle(true, text, "dragtab", GUILayout.MinWidth(20f));
             EditorGUILayout.EndHorizontal();
+
 
             var catNames = new List<string>(_organizer.customEventCategories.Count);
             // ReSharper disable once ForCanBeConvertedToForeach
@@ -754,6 +750,8 @@ public class SoundGroupOrganizerInspector : Editor {
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.EndVertical();
 
+            DTGUIHelper.AddSpaceForNonU5(2);
+
             DTGUIHelper.StartGroupHeader(0, false);
             DTGUIHelper.ResetColors();
             var newCat = EditorGUILayout.TextField("New Category Name", _organizer.newCustomEventCategoryName);
@@ -774,6 +772,7 @@ public class SoundGroupOrganizerInspector : Editor {
             EditorGUILayout.EndVertical();
             DTGUIHelper.ResetColors();
 
+            DTGUIHelper.AddSpaceForNonU5(2);
             GUI.backgroundColor = DTGUIHelper.BrightButtonColor;
 
             var newIndex = EditorGUILayout.Popup("Default Event Category", selCatIndex, catNames.ToArray());
@@ -834,6 +833,8 @@ public class SoundGroupOrganizerInspector : Editor {
 
                 var hasItems = matchingItems.Count > 0;
 
+                EditorGUILayout.BeginHorizontal();
+
                 if (!cat.IsEditing || Application.isPlaying) {
                     var catName = cat.CatName;
 
@@ -842,7 +843,23 @@ public class SoundGroupOrganizerInspector : Editor {
                     var state2 = cat.IsExpanded;
                     var text2 = catName;
 
-                    DTGUIHelper.ShowCollapsibleSection(ref state2, text2);
+                    // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
+                    if (!state2) {
+                        GUI.backgroundColor = DTGUIHelper.InactiveHeaderColor;
+                    } else {
+                        GUI.backgroundColor = DTGUIHelper.BrightButtonColor;
+                    }
+
+                    text2 = "<b><size=11>" + text2 + "</size></b>";
+
+                    if (state2) {
+                        text2 = "\u25BC " + text2;
+                    } else {
+                        text2 = "\u25BA " + text2;
+                    }
+                    if (!GUILayout.Toggle(true, text2, "dragtab", GUILayout.MinWidth(20f))) {
+                        state2 = !state2;
+                    }
 
                     GUILayout.Space(2f);
 
@@ -862,13 +879,6 @@ public class SoundGroupOrganizerInspector : Editor {
                         catItemsCollapsed = false;
                         break;
                     }
-
-                    var headerStyle = new GUIStyle();
-                    headerStyle.margin = new RectOffset(0, 0, 2, 0);
-                    headerStyle.padding = new RectOffset(6, 0, 1, 2);
-                    headerStyle.fixedHeight = 18;
-
-                    EditorGUILayout.BeginHorizontal(headerStyle, GUILayout.MaxWidth(50));
 
                     GUI.backgroundColor = Color.white;
 
@@ -912,20 +922,18 @@ public class SoundGroupOrganizerInspector : Editor {
                                              GUILayout.Height(16))) {
                             catEditing = cat;
                         }
-                        if (GUILayout.Button(new GUIContent(MasterAudioInspectorResources.DeleteTexture, "Click to delete Category"), EditorStyles.toolbarButton, GUILayout.MaxWidth(36)))
-                        {
+                        GUI.backgroundColor = DTGUIHelper.DeleteButtonColor;
+                        if (GUILayout.Button(new GUIContent("Delete", "Click to delete Category"),
+                                             EditorStyles.miniButton, GUILayout.MaxWidth(45))) {
                             catToDelete = cat;
                         }
 
-                        GUILayout.Space(6);
+                        GUILayout.Space(2);
                     } else {
                         GUILayout.Space(4);
                     }
 
-                    EditorGUILayout.EndHorizontal();
                 } else {
-                    EditorGUILayout.BeginHorizontal();
-
                     GUI.backgroundColor = DTGUIHelper.BrightTextColor;
                     var tex = EditorGUILayout.TextField("", cat.ProspectiveName);
                     if (tex != cat.ProspectiveName) {
@@ -979,6 +987,7 @@ public class SoundGroupOrganizerInspector : Editor {
                         EditorGUI.indentLevel = 1;
                         var anEvent = matchingItems[i];
 
+                        DTGUIHelper.AddSpaceForNonU5(2);
                         DTGUIHelper.StartGroupHeader();
 
                         EditorGUILayout.BeginHorizontal();
@@ -1012,8 +1021,9 @@ public class SoundGroupOrganizerInspector : Editor {
                                     eventEditing = anEvent;
                                 }
 
-                                if (GUILayout.Button(new GUIContent(MasterAudioInspectorResources.DeleteTexture, "Click to delete Event"), EditorStyles.toolbarButton, GUILayout.MaxWidth(36)))
-                                {
+                                GUI.backgroundColor = DTGUIHelper.DeleteButtonColor;
+                                if (GUILayout.Button(new GUIContent("Delete", "Click to delete Event"),
+                                                     EditorStyles.miniButton, GUILayout.MaxWidth(45))) {
                                     eventToDelete = anEvent;
                                 }
                             }
@@ -1644,9 +1654,6 @@ public class SoundGroupOrganizerInspector : Editor {
                     break;
             }
 
-            ResonanceAudioHelper.CopyResonanceAudioSource(aVariation, variation);
-            OculusAudioHelper.CopyOculusAudioSource(aVariation, variation);
-
             variation.audLocation = aVariation.audLocation;
             variation.VarAudio.dopplerLevel = aVarAudio.dopplerLevel;
             variation.VarAudio.maxDistance = aVarAudio.maxDistance;
@@ -1655,7 +1662,11 @@ public class SoundGroupOrganizerInspector : Editor {
             variation.VarAudio.ignoreListenerVolume = aVarAudio.ignoreListenerVolume;
             variation.VarAudio.mute = aVarAudio.mute;
 
+#if UNITY_4_5 || UNITY_4_6 || UNITY_4_7
+            variation.VarAudio.pan = aVarAudio.pan;
+#else
             variation.VarAudio.panStereo = aVarAudio.panStereo;
+#endif
 
             variation.VarAudio.rolloffMode = aVarAudio.rolloffMode;
             variation.VarAudio.spread = aVarAudio.spread;
@@ -1743,8 +1754,10 @@ public class SoundGroupOrganizerInspector : Editor {
         groupScript.linkedStartGroupSelectionType = aGroup.linkedStartGroupSelectionType;
         groupScript.linkedStopGroupSelectionType = aGroup.linkedStopGroupSelectionType;
 
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
         groupScript.spatialBlendType = aGroup.spatialBlendType;
         groupScript.spatialBlend = aGroup.spatialBlend;
+#endif
 
         groupScript.targetDespawnedBehavior = aGroup.targetDespawnedBehavior;
         groupScript.despawnFadeTime = aGroup.despawnFadeTime;
@@ -1753,7 +1766,6 @@ public class SoundGroupOrganizerInspector : Editor {
 
         groupScript.resourceClipsAllLoadAsync = aGroup.resourceClipsAllLoadAsync;
         groupScript.logSound = aGroup.logSound;
-        groupScript.comments = aGroup.comments;
         groupScript.alwaysHighestPriority = aGroup.alwaysHighestPriority;
 
         var dyn = aGroup.GetComponentInParent<DynamicSoundGroupCreator>();
@@ -1809,9 +1821,6 @@ public class SoundGroupOrganizerInspector : Editor {
                     break;
             }
 
-            ResonanceAudioHelper.CopyResonanceAudioSource(aVariation, variation);
-            OculusAudioHelper.CopyOculusAudioSource(aVariation, variation);
-
             variation.audLocation = aVariation.audLocation;
             variation.VarAudio.dopplerLevel = aVarAudio.dopplerLevel;
             variation.VarAudio.maxDistance = aVarAudio.maxDistance;
@@ -1820,7 +1829,11 @@ public class SoundGroupOrganizerInspector : Editor {
             variation.VarAudio.ignoreListenerVolume = aVarAudio.ignoreListenerVolume;
             variation.VarAudio.mute = aVarAudio.mute;
 
+#if UNITY_4_5 || UNITY_4_6 || UNITY_4_7
+            variation.VarAudio.pan = aVarAudio.pan;
+#else
             variation.VarAudio.panStereo = aVarAudio.panStereo;
+#endif
 
             variation.VarAudio.rolloffMode = aVarAudio.rolloffMode;
             variation.VarAudio.spread = aVarAudio.spread;
@@ -1902,11 +1915,16 @@ public class SoundGroupOrganizerInspector : Editor {
         groupScript.chainLoopMode = aGroup.chainLoopMode;
         groupScript.chainLoopNumLoops = aGroup.chainLoopNumLoops;
 
+        //groupScript.childGroupMode = aGroup.childGroupMode;
+        //groupScript.childSoundGroups = aGroup.childSoundGroups;
+
         groupScript.soundPlayedEventActive = aGroup.soundPlayedEventActive;
         groupScript.soundPlayedCustomEvent = aGroup.soundPlayedCustomEvent;
 
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
         groupScript.spatialBlendType = aGroup.spatialBlendType;
         groupScript.spatialBlend = aGroup.spatialBlend;
+#endif
 
         groupScript.targetDespawnedBehavior = aGroup.targetDespawnedBehavior;
         groupScript.despawnFadeTime = aGroup.despawnFadeTime;
@@ -1914,7 +1932,6 @@ public class SoundGroupOrganizerInspector : Editor {
         groupScript.isUsingOcclusion = aGroup.isUsingOcclusion;
 
         groupScript.resourceClipsAllLoadAsync = aGroup.resourceClipsAllLoadAsync;
-        groupScript.comments = aGroup.comments;
         groupScript.logSound = aGroup.logSound;
         groupScript.alwaysHighestPriority = aGroup.alwaysHighestPriority;
 
@@ -1971,9 +1988,6 @@ public class SoundGroupOrganizerInspector : Editor {
                     break;
             }
 
-            ResonanceAudioHelper.CopyResonanceAudioSource(aVariation, variation);
-            OculusAudioHelper.CopyOculusAudioSource(aVariation, variation);
-
             variation.audLocation = aVariation.audLocation;
             variation.VarAudio.dopplerLevel = aVarAudio.dopplerLevel;
             variation.VarAudio.maxDistance = aVarAudio.maxDistance;
@@ -1982,7 +1996,11 @@ public class SoundGroupOrganizerInspector : Editor {
             variation.VarAudio.ignoreListenerVolume = aVarAudio.ignoreListenerVolume;
             variation.VarAudio.mute = aVarAudio.mute;
 
+#if UNITY_4_5 || UNITY_4_6 || UNITY_4_7
+            variation.VarAudio.pan = aVarAudio.pan;
+#else
             variation.VarAudio.panStereo = aVarAudio.panStereo;
+#endif
 
             variation.VarAudio.rolloffMode = aVarAudio.rolloffMode;
             variation.VarAudio.spread = aVarAudio.spread;
@@ -2070,8 +2088,10 @@ public class SoundGroupOrganizerInspector : Editor {
         groupScript.linkedStartGroupSelectionType = aGroup.linkedStartGroupSelectionType;
         groupScript.linkedStopGroupSelectionType = aGroup.linkedStopGroupSelectionType;
 
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
         groupScript.spatialBlendType = aGroup.spatialBlendType;
         groupScript.spatialBlend = aGroup.spatialBlend;
+#endif
 
         groupScript.targetDespawnedBehavior = aGroup.targetDespawnedBehavior;
         groupScript.despawnFadeTime = aGroup.despawnFadeTime;
@@ -2079,7 +2099,6 @@ public class SoundGroupOrganizerInspector : Editor {
         groupScript.isUsingOcclusion = aGroup.isUsingOcclusion;
 
         groupScript.resourceClipsAllLoadAsync = aGroup.resourceClipsAllLoadAsync;
-        groupScript.comments = aGroup.comments;
         groupScript.logSound = aGroup.logSound;
         groupScript.alwaysHighestPriority = aGroup.alwaysHighestPriority;
 
@@ -2168,9 +2187,6 @@ public class SoundGroupOrganizerInspector : Editor {
                     break;
             }
 
-            ResonanceAudioHelper.CopyResonanceAudioSource(aVariation, variation);
-            OculusAudioHelper.CopyOculusAudioSource(aVariation, variation);
-
             variation.audLocation = aVariation.audLocation;
             variation.VarAudio.dopplerLevel = aVarAudio.dopplerLevel;
             variation.VarAudio.maxDistance = aVarAudio.maxDistance;
@@ -2179,7 +2195,11 @@ public class SoundGroupOrganizerInspector : Editor {
             variation.VarAudio.ignoreListenerVolume = aVarAudio.ignoreListenerVolume;
             variation.VarAudio.mute = aVarAudio.mute;
 
+#if UNITY_4_5 || UNITY_4_6 || UNITY_4_7
+            variation.VarAudio.pan = aVarAudio.pan;
+#else
             variation.VarAudio.panStereo = aVarAudio.panStereo;
+#endif
 
             variation.VarAudio.rolloffMode = aVarAudio.rolloffMode;
             variation.VarAudio.spread = aVarAudio.spread;
@@ -2270,8 +2290,10 @@ public class SoundGroupOrganizerInspector : Editor {
         groupScript.soundPlayedEventActive = aGroup.soundPlayedEventActive;
         groupScript.soundPlayedCustomEvent = aGroup.soundPlayedCustomEvent;
 
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
         groupScript.spatialBlendType = aGroup.spatialBlendType;
         groupScript.spatialBlend = aGroup.spatialBlend;
+#endif
 
         groupScript.targetDespawnedBehavior = aGroup.targetDespawnedBehavior;
         groupScript.despawnFadeTime = aGroup.despawnFadeTime;
@@ -2279,7 +2301,6 @@ public class SoundGroupOrganizerInspector : Editor {
         groupScript.isUsingOcclusion = aGroup.isUsingOcclusion;
 
         groupScript.resourceClipsAllLoadAsync = aGroup.resourceClipsAllLoadAsync;
-        groupScript.comments = aGroup.comments;
         groupScript.logSound = aGroup.logSound;
         groupScript.alwaysHighestPriority = aGroup.alwaysHighestPriority;
 

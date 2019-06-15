@@ -44,7 +44,7 @@ public class SoundGroupVariationInspector : Editor {
 
                 var label = "Playing ({0}%)";
 
-                if (_variation.IsPaused) {
+                if (AudioUtil.IsAudioPaused(_variation.VarAudio)) {
                     GUI.color = Color.yellow;
                     label = "Paused ({0}%)";
                 }
@@ -59,7 +59,7 @@ public class SoundGroupVariationInspector : Editor {
 
 				GUI.color = DTGUIHelper.BrightButtonColor;
 				if (_variation.ObjectToFollow != null || _variation.ObjectToTriggerFrom != null) {
-					if (GUILayout.Button("Select Caller", EditorStyles.toolbarButton, GUILayout.Width(80))) {
+					if (GUILayout.Button("Select Caller", EditorStyles.miniButton, GUILayout.Width(80))) {
 						if (_variation.ObjectToFollow != null) {
 							Selection.activeGameObject = _variation.ObjectToFollow.gameObject;
 						} else {
@@ -79,8 +79,13 @@ public class SoundGroupVariationInspector : Editor {
         _ma = MasterAudio.Instance;
         var maInScene = _ma != null;
 
+        var canPreview = !DTGUIHelper.IsPrefabInProjectView(_variation);
+
         if (maInScene) {
-            var buttonPressed = DTGUIHelper.AddVariationButtons();
+            var buttonPressed = DTGUIHelper.DTFunctionButtons.None;
+            if (canPreview) {
+                buttonPressed = DTGUIHelper.AddVariationButtons();
+            }
 
             switch (buttonPressed) {
                 case DTGUIHelper.DTFunctionButtons.Play:
@@ -156,7 +161,7 @@ public class SoundGroupVariationInspector : Editor {
         } else {
             EditorGUILayout.LabelField("Audio Origin", _variation.audLocation.ToString());
         }
-        DTGUIHelper.AddHelpIconNoStyle("http://www.dtdevtools.com/docs/masteraudio/SoundGroupVariations.htm#AudioOrigin");
+        DTGUIHelper.AddHelpIcon("http://www.dtdevtools.com/docs/masteraudio/SoundGroupVariations.htm#AudioOrigin");
         EditorGUILayout.EndHorizontal();
 
         switch (_variation.audLocation) {
@@ -301,8 +306,8 @@ public class SoundGroupVariationInspector : Editor {
 
         if (parentGroup.curVariationMode == MasterAudioGroup.VariationMode.LoopedChain) {
             DTGUIHelper.ShowLargeBarAlert(MasterAudio.LoopDisabledLoopedChain);
-        } else if (_variation.useRandomStartTime && _variation.randomEndPercent != 100f) {
-            DTGUIHelper.ShowLargeBarAlert(MasterAudio.LoopDisabledCustomEnd);
+        } else if (_variation.useRandomStartTime) {
+            DTGUIHelper.ShowLargeBarAlert(MasterAudio.LoopDisabledCustomStartEnd);
         } else {
             var newLoop = EditorGUILayout.Toggle("Loop Clip", _variation.VarAudio.loop);
             if (newLoop != _variation.VarAudio.loop) {
@@ -313,7 +318,7 @@ public class SoundGroupVariationInspector : Editor {
 
         EditorGUILayout.BeginHorizontal();
         var newWeight = EditorGUILayout.IntSlider("Voices (Weight)", _variation.weight, 0, 100);
-        DTGUIHelper.AddHelpIconNoStyle("http://www.dtdevtools.com/docs/masteraudio/SoundGroupVariations.htm#Voices");
+        DTGUIHelper.AddHelpIcon("http://www.dtdevtools.com/docs/masteraudio/SoundGroupVariations.htm#Voices");
         EditorGUILayout.EndHorizontal();
         if (newWeight != _variation.weight) {
             AudioUndoHelper.RecordObjectPropertyForUndo(ref isDirty, _variation, "change Voices (Weight)");
@@ -356,6 +361,7 @@ public class SoundGroupVariationInspector : Editor {
         }
 
         EditorGUILayout.EndToggleGroup();
+        DTGUIHelper.AddSpaceForNonU5(2);
 
         DTGUIHelper.StartGroupHeader();
 
@@ -399,6 +405,7 @@ public class SoundGroupVariationInspector : Editor {
         }
 
         EditorGUILayout.EndToggleGroup();
+        DTGUIHelper.AddSpaceForNonU5(2);
 
         DTGUIHelper.StartGroupHeader();
 
@@ -430,6 +437,7 @@ public class SoundGroupVariationInspector : Editor {
         }
 
         EditorGUILayout.EndToggleGroup();
+        DTGUIHelper.AddSpaceForNonU5(2);
 
         DTGUIHelper.StartGroupHeader();
 
@@ -470,6 +478,7 @@ public class SoundGroupVariationInspector : Editor {
         }
 
         EditorGUILayout.EndToggleGroup();
+        DTGUIHelper.AddSpaceForNonU5(2);
 
         if (_variation.VarAudio.loop) {
             DTGUIHelper.StartGroupHeader();
@@ -503,6 +512,7 @@ public class SoundGroupVariationInspector : Editor {
             }
 
             EditorGUILayout.EndToggleGroup();
+            DTGUIHelper.AddSpaceForNonU5(2);
         }
 
         DTGUIHelper.StartGroupHeader();

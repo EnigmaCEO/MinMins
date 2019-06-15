@@ -26,9 +26,6 @@ namespace DarkTonic.MasterAudio {
         public static void RecordObjectsForUndo(Object[] objects, string actionName) {
             // New Undo API
             Undo.RecordObjects(objects, actionName);
-            foreach (var o in objects) {
-                EditorUtility.SetDirty(o);
-            }
         }
 
         public static void DestroyForUndo(GameObject go) {

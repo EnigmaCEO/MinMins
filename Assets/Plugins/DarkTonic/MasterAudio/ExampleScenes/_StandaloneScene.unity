@@ -77,8 +77,8 @@ NavMeshSettings:
 --- !u!1 &93115878
 GameObject:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 100000, guid: 66fc0a8f5f588304ea98c192ec474973, type: 2}
-  m_PrefabInternal: {fileID: 928191504}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 93115879}
@@ -95,8 +95,8 @@ GameObject:
 --- !u!4 &93115879
 Transform:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 400000, guid: 66fc0a8f5f588304ea98c192ec474973, type: 2}
-  m_PrefabInternal: {fileID: 928191504}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 93115878}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -107,9 +107,8 @@ Transform:
 --- !u!82 &93115880
 AudioSource:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 8200000, guid: 66fc0a8f5f588304ea98c192ec474973,
-    type: 2}
-  m_PrefabInternal: {fileID: 928191504}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 93115878}
   m_Enabled: 1
   serializedVersion: 3
@@ -166,9 +165,8 @@ AudioSource:
 --- !u!114 &93115881
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400000, guid: 66fc0a8f5f588304ea98c192ec474973,
-    type: 2}
-  m_PrefabInternal: {fileID: 928191504}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 93115878}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -178,9 +176,8 @@ MonoBehaviour:
 --- !u!114 &93115887
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400002, guid: 66fc0a8f5f588304ea98c192ec474973,
-    type: 2}
-  m_PrefabInternal: {fileID: 928191504}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 93115878}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -202,6 +199,7 @@ MonoBehaviour:
   resourceFileName: 
   internetFileUrl: 
   internetFileLoadStatus: 0
+  fxTailTime: 0
   original_pitch: 0
   original_volume: 0
   isExpanded: 1
@@ -209,70 +207,21 @@ MonoBehaviour:
   useFades: 0
   fadeInTime: 0
   fadeOutTime: 0
-  useCustomLooping: 0
-  minCustomLoops: 1
-  maxCustomLoops: 5
   useRandomStartTime: 0
   randomStartMinPercent: 0
   randomStartMaxPercent: 0
-  randomEndPercent: 100
   useIntroSilence: 0
   introSilenceMin: 0
   introSilenceMax: 0
   fadeMaxVolume: 0
   curFadeMode: 0
-  curPitchMode: 0
   curDetectEndMode: 0
   frames: 0
---- !u!1001 &127216672
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 400002, guid: f96280fe0d290cf4fb61e221878ef2e6, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400002, guid: f96280fe0d290cf4fb61e221878ef2e6, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400002, guid: f96280fe0d290cf4fb61e221878ef2e6, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400002, guid: f96280fe0d290cf4fb61e221878ef2e6, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400002, guid: f96280fe0d290cf4fb61e221878ef2e6, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400002, guid: f96280fe0d290cf4fb61e221878ef2e6, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400002, guid: f96280fe0d290cf4fb61e221878ef2e6, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 400002, guid: f96280fe0d290cf4fb61e221878ef2e6, type: 2}
-      propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: f96280fe0d290cf4fb61e221878ef2e6, type: 2}
-  m_RootGameObject: {fileID: 1098430660}
-  m_IsPrefabParent: 0
-  m_IsExploded: 1
 --- !u!1 &202066586
 GameObject:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 100000, guid: f96280fe0d290cf4fb61e221878ef2e6, type: 2}
-  m_PrefabInternal: {fileID: 127216672}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 202066587}
@@ -287,8 +236,8 @@ GameObject:
 --- !u!4 &202066587
 Transform:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 400000, guid: f96280fe0d290cf4fb61e221878ef2e6, type: 2}
-  m_PrefabInternal: {fileID: 127216672}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 202066586}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -300,9 +249,8 @@ Transform:
 --- !u!114 &202066588
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400000, guid: f96280fe0d290cf4fb61e221878ef2e6,
-    type: 2}
-  m_PrefabInternal: {fileID: 127216672}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 202066586}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -347,6 +295,7 @@ MonoBehaviour:
   occlusionMaxCutoffFreq: 0
   occlusionMinCutoffFreq: 22000
   copySettingsExpanded: 0
+  selectedVariationIndex: 0
   expandLinkedGroups: 0
   childSoundGroups: []
   endLinkedGroups: []
@@ -471,46 +420,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d492d00279c38d04bbbd764b09166bfe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showGizmo: 1
   soundSpawnMode: 1
   disableSounds: 0
   showPoolManager: 0
   showNGUI: 0
-  eventToGizmo:
-    actionName: Your action name
-    isExpanded: 1
-    soundType: '[None]'
-    allPlaylistControllersForGroupCmd: 0
-    allSoundTypesForGroupCmd: 0
-    allSoundTypesForBusCmd: 0
-    volume: 1
-    useFixedPitch: 0
-    pitch: 1
-    glidePitchType: 0
-    targetGlidePitch: 1
-    pitchGlideTime: 1
-    delaySound: 0
-    currentSoundFunctionType: 0
-    currentPlaylistCommand: 0
-    currentSoundGroupCommand: 0
-    currentBusCommand: 0
-    currentCustomEventCommand: 0
-    currentGlobalCommand: 0
-    currentPersistentSettingsCommand: 0
-    busName: 
-    playlistName: 
-    playlistControllerName: 
-    startPlaylist: 1
-    fadeVolume: 0
-    fadeTime: 1
-    stopAfterFade: 0
-    restoreVolumeAfterFade: 0
-    targetVolMode: 0
-    clipName: '[None]'
-    variationType: 1
-    variationName: 
-    colliderMaxDistance: 0
-    showSphereGizmo: 0
-    theCustomEventName: 
   unityUIMode: 0
   logMissingEvents: 1
   startSound:
@@ -538,9 +452,6 @@ MonoBehaviour:
       volume: 1
       useFixedPitch: 0
       pitch: 1
-      glidePitchType: 0
-      targetGlidePitch: 1
-      pitchGlideTime: 1
       delaySound: 0
       currentSoundFunctionType: 0
       currentPlaylistCommand: 11
@@ -561,8 +472,6 @@ MonoBehaviour:
       clipName: lead
       variationType: 1
       variationName: 
-      colliderMaxDistance: 0
-      showSphereGizmo: 0
       theCustomEventName: 
     mouseDragStopMode: 0
     mouseDragFadeOutTime: 1
@@ -571,8 +480,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   visibleSound:
     isExpanded: 1
@@ -599,9 +506,6 @@ MonoBehaviour:
       volume: 1
       useFixedPitch: 0
       pitch: 1
-      glidePitchType: 0
-      targetGlidePitch: 1
-      pitchGlideTime: 1
       delaySound: 0
       currentSoundFunctionType: 0
       currentPlaylistCommand: 0
@@ -622,8 +526,6 @@ MonoBehaviour:
       clipName: '[None]'
       variationType: 1
       variationName: 
-      colliderMaxDistance: 0
-      showSphereGizmo: 0
       theCustomEventName: 
     mouseDragStopMode: 0
     mouseDragFadeOutTime: 1
@@ -632,8 +534,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   invisibleSound:
     isExpanded: 1
@@ -660,9 +560,6 @@ MonoBehaviour:
       volume: 1
       useFixedPitch: 0
       pitch: 1
-      glidePitchType: 0
-      targetGlidePitch: 1
-      pitchGlideTime: 1
       delaySound: 0
       currentSoundFunctionType: 0
       currentPlaylistCommand: 0
@@ -683,8 +580,6 @@ MonoBehaviour:
       clipName: '[None]'
       variationType: 1
       variationName: 
-      colliderMaxDistance: 0
-      showSphereGizmo: 0
       theCustomEventName: 
     mouseDragStopMode: 0
     mouseDragFadeOutTime: 1
@@ -693,8 +588,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   collisionSound:
     isExpanded: 1
@@ -719,8 +612,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   collisionExitSound:
     isExpanded: 1
@@ -745,8 +636,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   triggerSound:
     isExpanded: 1
@@ -771,8 +660,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   triggerExitSound:
     isExpanded: 1
@@ -797,34 +684,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
-    sliderValue: 0
-  triggerStaySound:
-    isExpanded: 1
-    allPlayersShouldHear: 0
-    useLayerFilter: 0
-    useTagFilter: 0
-    matchingLayers: 00000000
-    matchingTags:
-    - Default
-    customSoundActive: 0
-    isCustomEvent: 0
-    customEventName: 
-    mechanimEventActive: 0
-    isMechanimStateCheckEvent: 0
-    mechanimStateName: 
-    mechEventPlayedForState: 0
-    SoundEvents: []
-    mouseDragStopMode: 0
-    mouseDragFadeOutTime: 1
-    retriggerLimitMode: 0
-    limitPerXFrm: 0
-    limitPerXSec: 0
-    triggeredLastFrame: -100
-    triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   mouseEnterSound:
     isExpanded: 1
@@ -851,9 +710,6 @@ MonoBehaviour:
       volume: 1
       useFixedPitch: 0
       pitch: 1
-      glidePitchType: 0
-      targetGlidePitch: 1
-      pitchGlideTime: 1
       delaySound: 0
       currentSoundFunctionType: 0
       currentPlaylistCommand: 0
@@ -874,8 +730,6 @@ MonoBehaviour:
       clipName: '[None]'
       variationType: 1
       variationName: 
-      colliderMaxDistance: 0
-      showSphereGizmo: 0
       theCustomEventName: 
     mouseDragStopMode: 0
     mouseDragFadeOutTime: 1
@@ -884,8 +738,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   mouseExitSound:
     isExpanded: 1
@@ -912,9 +764,6 @@ MonoBehaviour:
       volume: 1
       useFixedPitch: 0
       pitch: 1
-      glidePitchType: 0
-      targetGlidePitch: 1
-      pitchGlideTime: 1
       delaySound: 0
       currentSoundFunctionType: 0
       currentPlaylistCommand: 0
@@ -935,8 +784,6 @@ MonoBehaviour:
       clipName: '[None]'
       variationType: 1
       variationName: 
-      colliderMaxDistance: 0
-      showSphereGizmo: 0
       theCustomEventName: 
     mouseDragStopMode: 0
     mouseDragFadeOutTime: 1
@@ -945,8 +792,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   mouseClickSound:
     isExpanded: 1
@@ -973,9 +818,6 @@ MonoBehaviour:
       volume: 1
       useFixedPitch: 0
       pitch: 1
-      glidePitchType: 0
-      targetGlidePitch: 1
-      pitchGlideTime: 1
       delaySound: 0
       currentSoundFunctionType: 0
       currentPlaylistCommand: 0
@@ -996,8 +838,6 @@ MonoBehaviour:
       clipName: '[None]'
       variationType: 1
       variationName: 
-      colliderMaxDistance: 0
-      showSphereGizmo: 0
       theCustomEventName: 
     mouseDragStopMode: 0
     mouseDragFadeOutTime: 1
@@ -1006,8 +846,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   mouseUpSound:
     isExpanded: 1
@@ -1032,8 +870,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   mouseDragSound:
     isExpanded: 1
@@ -1058,8 +894,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   spawnedSound:
     isExpanded: 1
@@ -1084,8 +918,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   despawnedSound:
     isExpanded: 1
@@ -1110,8 +942,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   enableSound:
     isExpanded: 1
@@ -1138,9 +968,6 @@ MonoBehaviour:
       volume: 1
       useFixedPitch: 0
       pitch: 1
-      glidePitchType: 0
-      targetGlidePitch: 1
-      pitchGlideTime: 1
       delaySound: 0
       currentSoundFunctionType: 3
       currentPlaylistCommand: 2
@@ -1161,8 +988,6 @@ MonoBehaviour:
       clipName: '[None]'
       variationType: 1
       variationName: 
-      colliderMaxDistance: 0
-      showSphereGizmo: 0
       theCustomEventName: 
     mouseDragStopMode: 0
     mouseDragFadeOutTime: 1
@@ -1171,8 +996,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   disableSound:
     isExpanded: 1
@@ -1199,9 +1022,6 @@ MonoBehaviour:
       volume: 1
       useFixedPitch: 0
       pitch: 1
-      glidePitchType: 0
-      targetGlidePitch: 1
-      pitchGlideTime: 1
       delaySound: 0
       currentSoundFunctionType: 0
       currentPlaylistCommand: 0
@@ -1222,8 +1042,6 @@ MonoBehaviour:
       clipName: '[None]'
       variationType: 1
       variationName: 
-      colliderMaxDistance: 0
-      showSphereGizmo: 0
       theCustomEventName: 
     mouseDragStopMode: 0
     mouseDragFadeOutTime: 1
@@ -1232,8 +1050,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   collision2dSound:
     isExpanded: 1
@@ -1258,8 +1074,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   collisionExit2dSound:
     isExpanded: 1
@@ -1284,8 +1098,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   triggerEnter2dSound:
     isExpanded: 1
@@ -1310,34 +1122,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
-    sliderValue: 0
-  triggerStay2dSound:
-    isExpanded: 1
-    allPlayersShouldHear: 0
-    useLayerFilter: 0
-    useTagFilter: 0
-    matchingLayers: 00000000
-    matchingTags:
-    - Default
-    customSoundActive: 0
-    isCustomEvent: 0
-    customEventName: 
-    mechanimEventActive: 0
-    isMechanimStateCheckEvent: 0
-    mechanimStateName: 
-    mechEventPlayedForState: 0
-    SoundEvents: []
-    mouseDragStopMode: 0
-    mouseDragFadeOutTime: 1
-    retriggerLimitMode: 0
-    limitPerXFrm: 0
-    limitPerXSec: 0
-    triggeredLastFrame: -100
-    triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   triggerExit2dSound:
     isExpanded: 1
@@ -1362,8 +1146,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   particleCollisionSound:
     isExpanded: 1
@@ -1388,8 +1170,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   nguiOnClickSound:
     isExpanded: 1
@@ -1414,8 +1194,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   nguiMouseDownSound:
     isExpanded: 1
@@ -1440,8 +1218,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   nguiMouseUpSound:
     isExpanded: 1
@@ -1466,8 +1242,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   nguiMouseEnterSound:
     isExpanded: 1
@@ -1492,8 +1266,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   nguiMouseExitSound:
     isExpanded: 1
@@ -1518,8 +1290,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   unitySliderChangedSound:
     isExpanded: 1
@@ -1544,8 +1314,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   unityButtonClickedSound:
     isExpanded: 1
@@ -1570,8 +1338,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   unityPointerDownSound:
     isExpanded: 1
@@ -1596,8 +1362,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   unityDragSound:
     isExpanded: 1
@@ -1622,8 +1386,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   unityPointerUpSound:
     isExpanded: 1
@@ -1648,8 +1410,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   unityPointerEnterSound:
     isExpanded: 1
@@ -1674,8 +1434,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   unityPointerExitSound:
     isExpanded: 1
@@ -1700,8 +1458,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   unityDropSound:
     isExpanded: 1
@@ -1726,8 +1482,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   unityScrollSound:
     isExpanded: 1
@@ -1752,8 +1506,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   unityUpdateSelectedSound:
     isExpanded: 1
@@ -1778,8 +1530,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   unitySelectSound:
     isExpanded: 1
@@ -1804,8 +1554,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   unityDeselectSound:
     isExpanded: 1
@@ -1830,8 +1578,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   unityMoveSound:
     isExpanded: 1
@@ -1856,8 +1602,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   unityInitializePotentialDragSound:
     isExpanded: 1
@@ -1882,8 +1626,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   unityBeginDragSound:
     isExpanded: 1
@@ -1908,8 +1650,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   unityEndDragSound:
     isExpanded: 1
@@ -1934,8 +1674,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   unitySubmitSound:
     isExpanded: 1
@@ -1960,8 +1698,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   unityCancelSound:
     isExpanded: 1
@@ -1986,8 +1722,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   unityToggleSound:
     isExpanded: 1
@@ -2012,8 +1746,6 @@ MonoBehaviour:
     limitPerXSec: 0
     triggeredLastFrame: -100
     triggeredLastTime: -100
-    triggerStayForTime: 0
-    doesTriggerStayRepeat: 1
     sliderValue: 0
   userDefinedSounds: []
   mechanimStateChangedSounds: []
@@ -2024,7 +1756,6 @@ MonoBehaviour:
   useCollisionExitSound: 0
   useTriggerEnterSound: 0
   useTriggerExitSound: 0
-  useTriggerStaySound: 0
   useMouseEnterSound: 0
   useMouseExitSound: 0
   useMouseClickSound: 0
@@ -2037,7 +1768,6 @@ MonoBehaviour:
   useCollision2dSound: 0
   useCollisionExit2dSound: 0
   useTriggerEnter2dSound: 0
-  useTriggerStay2dSound: 0
   useTriggerExit2dSound: 0
   useParticleCollisionSound: 0
   useNguiOnClickSound: 0
@@ -2067,8 +1797,8 @@ MonoBehaviour:
 --- !u!1 &365914991
 GameObject:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 100002, guid: 66fc0a8f5f588304ea98c192ec474973, type: 2}
-  m_PrefabInternal: {fileID: 928191504}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 365914992}
@@ -2083,8 +1813,8 @@ GameObject:
 --- !u!4 &365914992
 Transform:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 400002, guid: 66fc0a8f5f588304ea98c192ec474973, type: 2}
-  m_PrefabInternal: {fileID: 928191504}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 365914991}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -2096,9 +1826,8 @@ Transform:
 --- !u!114 &365914993
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400004, guid: 66fc0a8f5f588304ea98c192ec474973,
-    type: 2}
-  m_PrefabInternal: {fileID: 928191504}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 365914991}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -2128,6 +1857,7 @@ MonoBehaviour:
   resourceClipsAllLoadAsync: 1
   logSound: 0
   copySettingsExpanded: 0
+  selectedVariationIndex: 0
   expandLinkedGroups: 0
   childSoundGroups: []
   endLinkedGroups: []
@@ -2151,52 +1881,7 @@ MonoBehaviour:
   isMuted: 0
   soundPlayedEventActive: 0
   soundPlayedCustomEvent: 
-  willCleanUpDelegatesAfterStop: 1
   frames: 4
---- !u!1001 &928191504
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 400010, guid: 66fc0a8f5f588304ea98c192ec474973, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400010, guid: 66fc0a8f5f588304ea98c192ec474973, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 400010, guid: 66fc0a8f5f588304ea98c192ec474973, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: -10
-      objectReference: {fileID: 0}
-    - target: {fileID: 400010, guid: 66fc0a8f5f588304ea98c192ec474973, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400010, guid: 66fc0a8f5f588304ea98c192ec474973, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400010, guid: 66fc0a8f5f588304ea98c192ec474973, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400010, guid: 66fc0a8f5f588304ea98c192ec474973, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 400010, guid: 66fc0a8f5f588304ea98c192ec474973, type: 2}
-      propertyPath: m_RootOrder
-      value: 3
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 66fc0a8f5f588304ea98c192ec474973, type: 2}
-  m_RootGameObject: {fileID: 1470547497}
-  m_IsPrefabParent: 0
-  m_IsExploded: 1
 --- !u!1 &1033133989
 GameObject:
   m_ObjectHideFlags: 0
@@ -2380,8 +2065,8 @@ MonoBehaviour:
 --- !u!1 &1072715563
 GameObject:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 100004, guid: 66fc0a8f5f588304ea98c192ec474973, type: 2}
-  m_PrefabInternal: {fileID: 928191504}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1072715564}
@@ -2396,8 +2081,8 @@ GameObject:
 --- !u!4 &1072715564
 Transform:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 400004, guid: 66fc0a8f5f588304ea98c192ec474973, type: 2}
-  m_PrefabInternal: {fileID: 928191504}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1072715563}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -2409,9 +2094,8 @@ Transform:
 --- !u!114 &1072715565
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400006, guid: 66fc0a8f5f588304ea98c192ec474973,
-    type: 2}
-  m_PrefabInternal: {fileID: 928191504}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1072715563}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -2441,6 +2125,7 @@ MonoBehaviour:
   resourceClipsAllLoadAsync: 1
   logSound: 0
   copySettingsExpanded: 0
+  selectedVariationIndex: 0
   expandLinkedGroups: 0
   childSoundGroups: []
   endLinkedGroups: []
@@ -2464,13 +2149,12 @@ MonoBehaviour:
   isMuted: 0
   soundPlayedEventActive: 0
   soundPlayedCustomEvent: 
-  willCleanUpDelegatesAfterStop: 1
   frames: 4
 --- !u!1 &1098430660
 GameObject:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 100002, guid: f96280fe0d290cf4fb61e221878ef2e6, type: 2}
-  m_PrefabInternal: {fileID: 127216672}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1098430661}
@@ -2485,8 +2169,8 @@ GameObject:
 --- !u!4 &1098430661
 Transform:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 400002, guid: f96280fe0d290cf4fb61e221878ef2e6, type: 2}
-  m_PrefabInternal: {fileID: 127216672}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1098430660}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -2498,9 +2182,8 @@ Transform:
 --- !u!114 &1098430662
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400002, guid: f96280fe0d290cf4fb61e221878ef2e6,
-    type: 2}
-  m_PrefabInternal: {fileID: 127216672}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1098430660}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -2543,15 +2226,7 @@ MonoBehaviour:
     crossFadeTime: 1
     fadeInFirstSong: 0
     fadeOutLastSong: 0
-    bulkEditMode: 0
     resourceClipsAllLoadAsync: 1
-    isTemporary: 0
-    showMetadata: 0
-    songMetadataProps: []
-    newMetadataPropName: PropertyName
-    newMetadataPropType: 1
-    newMetadataPropRequired: 1
-    newMetadataPropCanHaveMult: 0
   audioSourceTemplates:
   - {fileID: 100000, guid: b33ba44b9af238a47853694d4346f2d0, type: 2}
   - {fileID: 100000, guid: 0ffecea0fa4184f4a920937c179efeac, type: 2}
@@ -2676,8 +2351,8 @@ MonoBehaviour:
 --- !u!1 &1274804016
 GameObject:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 100006, guid: 66fc0a8f5f588304ea98c192ec474973, type: 2}
-  m_PrefabInternal: {fileID: 928191504}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1274804017}
@@ -2692,8 +2367,8 @@ GameObject:
 --- !u!4 &1274804017
 Transform:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 400006, guid: 66fc0a8f5f588304ea98c192ec474973, type: 2}
-  m_PrefabInternal: {fileID: 928191504}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1274804016}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -2705,9 +2380,8 @@ Transform:
 --- !u!114 &1274804018
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400008, guid: 66fc0a8f5f588304ea98c192ec474973,
-    type: 2}
-  m_PrefabInternal: {fileID: 928191504}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1274804016}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -2737,6 +2411,7 @@ MonoBehaviour:
   resourceClipsAllLoadAsync: 1
   logSound: 0
   copySettingsExpanded: 0
+  selectedVariationIndex: 0
   expandLinkedGroups: 0
   childSoundGroups: []
   endLinkedGroups: []
@@ -2760,13 +2435,12 @@ MonoBehaviour:
   isMuted: 0
   soundPlayedEventActive: 0
   soundPlayedCustomEvent: 
-  willCleanUpDelegatesAfterStop: 1
   frames: 758
 --- !u!1 &1406340885
 GameObject:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 100004, guid: f96280fe0d290cf4fb61e221878ef2e6, type: 2}
-  m_PrefabInternal: {fileID: 127216672}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1406340886}
@@ -2782,8 +2456,8 @@ GameObject:
 --- !u!4 &1406340886
 Transform:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 400004, guid: f96280fe0d290cf4fb61e221878ef2e6, type: 2}
-  m_PrefabInternal: {fileID: 127216672}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1406340885}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -2794,9 +2468,8 @@ Transform:
 --- !u!82 &1406340887
 AudioSource:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 8200000, guid: f96280fe0d290cf4fb61e221878ef2e6,
-    type: 2}
-  m_PrefabInternal: {fileID: 127216672}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1406340885}
   m_Enabled: 1
   serializedVersion: 3
@@ -2853,9 +2526,8 @@ AudioSource:
 --- !u!114 &1406340888
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400004, guid: f96280fe0d290cf4fb61e221878ef2e6,
-    type: 2}
-  m_PrefabInternal: {fileID: 127216672}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1406340885}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -2878,24 +2550,21 @@ MonoBehaviour:
   internetFileUrl: 
   isExpanded: 1
   isChecked: 1
+  fxTailTime: 0
   useFades: 0
   fadeInTime: 0
   fadeOutTime: 0
-  useCustomLooping: 0
-  minCustomLoops: 1
-  maxCustomLoops: 5
   useIntroSilence: 0
   introSilenceMin: 0
   introSilenceMax: 0
   useRandomStartTime: 0
   randomStartMinPercent: 0
   randomStartMaxPercent: 0
-  randomEndPercent: 100
 --- !u!1 &1422463247
 GameObject:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 100008, guid: 66fc0a8f5f588304ea98c192ec474973, type: 2}
-  m_PrefabInternal: {fileID: 928191504}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1422463248}
@@ -2912,8 +2581,8 @@ GameObject:
 --- !u!4 &1422463248
 Transform:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 400008, guid: 66fc0a8f5f588304ea98c192ec474973, type: 2}
-  m_PrefabInternal: {fileID: 928191504}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1422463247}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -2924,9 +2593,8 @@ Transform:
 --- !u!82 &1422463249
 AudioSource:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 8200002, guid: 66fc0a8f5f588304ea98c192ec474973,
-    type: 2}
-  m_PrefabInternal: {fileID: 928191504}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1422463247}
   m_Enabled: 1
   serializedVersion: 3
@@ -2983,9 +2651,8 @@ AudioSource:
 --- !u!114 &1422463250
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400010, guid: 66fc0a8f5f588304ea98c192ec474973,
-    type: 2}
-  m_PrefabInternal: {fileID: 928191504}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1422463247}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -2995,9 +2662,8 @@ MonoBehaviour:
 --- !u!114 &1422463256
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400012, guid: 66fc0a8f5f588304ea98c192ec474973,
-    type: 2}
-  m_PrefabInternal: {fileID: 928191504}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1422463247}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -3019,6 +2685,7 @@ MonoBehaviour:
   resourceFileName: 
   internetFileUrl: 
   internetFileLoadStatus: 0
+  fxTailTime: 0
   original_pitch: 0
   original_volume: 0
   isExpanded: 1
@@ -3026,26 +2693,21 @@ MonoBehaviour:
   useFades: 0
   fadeInTime: 0
   fadeOutTime: 0
-  useCustomLooping: 0
-  minCustomLoops: 1
-  maxCustomLoops: 5
   useRandomStartTime: 0
   randomStartMinPercent: 0
   randomStartMaxPercent: 0
-  randomEndPercent: 100
   useIntroSilence: 0
   introSilenceMin: 0
   introSilenceMax: 0
   fadeMaxVolume: 0
   curFadeMode: 0
-  curPitchMode: 0
   curDetectEndMode: 0
   frames: 0
 --- !u!1 &1470547497
 GameObject:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 100010, guid: 66fc0a8f5f588304ea98c192ec474973, type: 2}
-  m_PrefabInternal: {fileID: 928191504}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1470547498}
@@ -3060,8 +2722,8 @@ GameObject:
 --- !u!4 &1470547498
 Transform:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 400010, guid: 66fc0a8f5f588304ea98c192ec474973, type: 2}
-  m_PrefabInternal: {fileID: 928191504}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1470547497}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: -10}
@@ -3075,9 +2737,8 @@ Transform:
 --- !u!114 &1470547499
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400014, guid: 66fc0a8f5f588304ea98c192ec474973,
-    type: 2}
-  m_PrefabInternal: {fileID: 928191504}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1470547497}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -3132,7 +2793,6 @@ MonoBehaviour:
   playlistControllerPrefab: {fileID: 400000, guid: 8d628ddcfa7a21e49a762de30fc7e9dd,
     type: 2}
   persistBetweenScenes: 0
-  shouldLogDestroys: 0
   areGroupsExpanded: 1
   soundGroupTemplate: {fileID: 400008, guid: 877a3a4bf0a4abf43aba41125e1d3101, type: 2}
   soundGroupVariationTemplate: {fileID: 400000, guid: 08eea2d8c4572c7479da53cfbc14bde6,
@@ -3145,7 +2805,6 @@ MonoBehaviour:
     voiceLimit: -1
     stopOldest: 0
     isExisting: 0
-    isTemporary: 0
     isUsingOcclusion: 0
     forceTo2D: 0
   - busName: Other
@@ -3155,14 +2814,10 @@ MonoBehaviour:
     voiceLimit: -1
     stopOldest: 0
     isExisting: 0
-    isTemporary: 0
     isUsingOcclusion: 0
     forceTo2D: 0
   groupByBus: 1
-  showRangeSoundGizmos: 1
-  showSelectedRangeSoundGizmos: 1
-  rangeGizmoColor: {r: 0, g: 1, b: 0, a: 1}
-  selectedRangeGizmoColor: {r: 0, g: 1, b: 1, a: 1}
+  showGizmos: 1
   showAdvancedSettings: 0
   showLocalization: 0
   playListExpanded: 1
@@ -3181,12 +2836,6 @@ MonoBehaviour:
       pitch: 1
       isExpanded: 1
       isLoop: 0
-      isChecked: 1
-      metadataStringValues: []
-      metadataBoolValues: []
-      metadataIntValues: []
-      metadataFloatValues: []
-      metadataExpanded: 1
       songStartTimeMode: 0
       customStartTime: 0
       customStartTimeMax: 0
@@ -3206,12 +2855,6 @@ MonoBehaviour:
       pitch: 1
       isExpanded: 1
       isLoop: 0
-      isChecked: 1
-      metadataStringValues: []
-      metadataBoolValues: []
-      metadataIntValues: []
-      metadataFloatValues: []
-      metadataExpanded: 1
       songStartTimeMode: 0
       customStartTime: 0
       customStartTimeMax: 0
@@ -3227,19 +2870,9 @@ MonoBehaviour:
     crossFadeTime: 1
     fadeInFirstSong: 0
     fadeOutLastSong: 0
-    bulkEditMode: 0
     resourceClipsAllLoadAsync: 1
-    isTemporary: 0
-    showMetadata: 0
-    songMetadataProps: []
-    newMetadataPropName: PropertyName
-    newMetadataPropType: 1
-    newMetadataPropRequired: 1
-    newMetadataPropCanHaveMult: 0
   _masterAudioVolume: 1
-  vrSettingsExpanded: 0
   useSpatializer: 0
-  useSpatializerPostFX: 0
   ignoreTimeScale: 0
   useGaplessPlaylists: 0
   saveRuntimeChanges: 0
@@ -3261,13 +2894,8 @@ MonoBehaviour:
   occlusionRaycastMode: 0
   occlusionIncludeStartRaycast2DCollider: 1
   occlusionRaycastsHitTriggers: 1
-  ambientAdvancedExpanded: 0
-  ambientMaxRecalcsPerFrame: 4
   visualAdvancedExpanded: 1
   logAdvancedExpanded: 0
-  listenerAdvancedExpanded: 0
-  listenerFollowerHasRigidBody: 1
-  variationFollowerType: 0
   showFadingSettings: 0
   stopZeroVolumeGroups: 0
   stopZeroVolumeBuses: 0
@@ -3286,7 +2914,6 @@ MonoBehaviour:
     riseVolStart: .403846145
     unduckTime: 1
     duckedVolumeCut: -6
-    isTemporary: 0
   defaultRiseVolStart: .5
   defaultUnduckTime: 1
   defaultDuckedVolumeCut: -6
@@ -3307,7 +2934,6 @@ MonoBehaviour:
     distanceThreshold: 0
     eventRcvFilterMode: 0
     filterModeQty: 0
-    isTemporary: 0
     frameLastFired: 0
     categoryName: 
   - EventName: PlayerMoved
@@ -3318,7 +2944,6 @@ MonoBehaviour:
     distanceThreshold: 0
     eventRcvFilterMode: 0
     filterModeQty: 0
-    isTemporary: 0
     frameLastFired: 0
     categoryName: 
   - EventName: PlayerStoppedMoving
@@ -3329,7 +2954,6 @@ MonoBehaviour:
     distanceThreshold: 0
     eventRcvFilterMode: 0
     filterModeQty: 0
-    isTemporary: 0
     frameLastFired: 0
     categoryName: 
   customEventCategories:
@@ -3482,8 +3106,8 @@ MonoBehaviour:
 --- !u!1 &1980743637
 GameObject:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 100012, guid: 66fc0a8f5f588304ea98c192ec474973, type: 2}
-  m_PrefabInternal: {fileID: 928191504}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1980743638}
@@ -3501,8 +3125,8 @@ GameObject:
 --- !u!4 &1980743638
 Transform:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 400012, guid: 66fc0a8f5f588304ea98c192ec474973, type: 2}
-  m_PrefabInternal: {fileID: 928191504}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1980743637}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -3513,9 +3137,8 @@ Transform:
 --- !u!82 &1980743639
 AudioSource:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 8200004, guid: 66fc0a8f5f588304ea98c192ec474973,
-    type: 2}
-  m_PrefabInternal: {fileID: 928191504}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1980743637}
   m_Enabled: 1
   serializedVersion: 3
@@ -3572,9 +3195,8 @@ AudioSource:
 --- !u!164 &1980743640
 AudioReverbFilter:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 16400000, guid: 66fc0a8f5f588304ea98c192ec474973,
-    type: 2}
-  m_PrefabInternal: {fileID: 928191504}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1980743637}
   m_Enabled: 1
   m_DryLevel: 0
@@ -3596,9 +3218,8 @@ AudioReverbFilter:
 --- !u!114 &1980743641
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400016, guid: 66fc0a8f5f588304ea98c192ec474973,
-    type: 2}
-  m_PrefabInternal: {fileID: 928191504}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1980743637}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -3608,9 +3229,8 @@ MonoBehaviour:
 --- !u!114 &1980743646
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400018, guid: 66fc0a8f5f588304ea98c192ec474973,
-    type: 2}
-  m_PrefabInternal: {fileID: 928191504}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1980743637}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -3632,6 +3252,7 @@ MonoBehaviour:
   resourceFileName: King
   internetFileUrl: http://www.dtdevtools.com/downloads/masteraudio/audio/arrow.wav
   internetFileLoadStatus: 0
+  fxTailTime: .920000017
   original_pitch: 0
   original_volume: 0
   isExpanded: 1
@@ -3639,18 +3260,13 @@ MonoBehaviour:
   useFades: 0
   fadeInTime: 0
   fadeOutTime: 0
-  useCustomLooping: 0
-  minCustomLoops: 1
-  maxCustomLoops: 5
   useRandomStartTime: 0
   randomStartMinPercent: 0
   randomStartMaxPercent: 0
-  randomEndPercent: 100
   useIntroSilence: 0
   introSilenceMin: 0
   introSilenceMax: 0
   fadeMaxVolume: 0
   curFadeMode: 0
-  curPitchMode: 0
   curDetectEndMode: 0
   frames: 0

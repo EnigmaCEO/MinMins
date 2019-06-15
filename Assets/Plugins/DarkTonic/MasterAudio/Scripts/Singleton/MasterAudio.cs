@@ -8,7 +8,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
 using UnityEngine.Audio;
+#endif
 
 #if UNITY_XBOXONE
     using PlayerPrefs = DarkTonic.MasterAudio.FilePlayerPrefs;
@@ -23,14 +25,20 @@ namespace DarkTonic.MasterAudio {
     [AudioScriptOrder(-50)]
     public class MasterAudio : MonoBehaviour {
         /*! \cond PRIVATE */
-        #region Constants
+#region Constants
 
 #pragma warning disable 1591
         public const string MasterAudioDefaultFolder = "Assets/Plugins/DarkTonic/MasterAudio";
         public const string PreviewText = "Random delay, custom fading & start/end position settings are ignored by preview in edit mode.";
         public const string LoopDisabledLoopedChain = "Loop Clip is always OFF for Looped Chain Groups";
-        public const string LoopDisabledCustomEnd = "Loop Clip is always OFF when using Custom End Position";
+        public const string LoopDisabledCustomStartEnd = "Loop Clip is always OFF when using Custom Start/End Position";
+
+#if UNITY_5_2 || UNITY_5_3 || UNITY_5_4 || UNITY_5_5 || UNITY_5_6 || UNITY_2017_1_OR_NEWER
         public const string DragAudioTip = "Drag Audio clips or a folder containing some here";
+#else
+			public const string DragAudioTip = "Drag Audio clips here";
+#endif
+
         public const string NoCategory = "[Uncategorized]";
         public const float SemiTonePitchFactor = 1.05946f;
         public const float SpatialBlend_2DValue = 0f;
@@ -38,14 +46,10 @@ namespace DarkTonic.MasterAudio {
         public const float MaxCrossFadeTimeSeconds = 120;
         public const float DefaultDuckVolCut = -6f;
 
-        // error numbers
-        public const int ERROR_MA_LAYER_COLLISIONS_DISABLED = 1;
-
         public const string StoredLanguageNameKey = "~MA_Language_Key~";
 
         public static readonly YieldInstruction EndOfFrameDelay = new WaitForEndOfFrame();
         public static readonly List<string> ExemptChildNames = new List<string> { AmbientUtil.FollowerHolderName };
-        public static readonly HashSet<int> ErrorNumbersLogged = new HashSet<int>();
 
         /// <summary>
         /// Subscribe to this event to be notified when the number of Audio Sources being used by Master Audio changes.
@@ -53,6 +57,7 @@ namespace DarkTonic.MasterAudio {
         // ReSharper disable once RedundantNameQualifier
         public static System.Action NumberOfAudioSourcesChanged;
 
+        public const string GizmoFileName = "MasterAudio/MasterAudio Icon.png";
         public const int HardCodedBusOptions = 2;
         public const string AllBusesName = "[All]";
         public const string NoGroupName = "[None]";
@@ -63,9 +68,9 @@ namespace DarkTonic.MasterAudio {
         public const float InnerLoopCheckInterval = .1f;
 
         private const int MaxComponents = 20;
-        #endregion
+#endregion
 
-        #region Public Variables
+#region Public Variables
 
         // ReSharper disable InconsistentNaming
         public AudioLocation bulkLocationMode = AudioLocation.Clip;
@@ -96,24 +101,19 @@ namespace DarkTonic.MasterAudio {
         public bool resourceClipsAllLoadAsync = true;
         public Transform playlistControllerPrefab;
         public bool persistBetweenScenes = false;
-        public bool shouldLogDestroys = false;
-        public bool showBusColors = false;
         public bool areGroupsExpanded = true;
         public Transform soundGroupTemplate;
         public Transform soundGroupVariationTemplate;
         public List<GroupBus> groupBuses = new List<GroupBus>();
         public bool groupByBus = true;
-        public bool sortAlpha = true;
-        public bool showRangeSoundGizmos = true;
-        public bool showSelectedRangeSoundGizmos = true;
-        public Color rangeGizmoColor = Color.green;
-        public Color selectedRangeGizmoColor = Color.cyan;
+        public bool showGizmos = true;
         public bool showAdvancedSettings = true;
         public bool showLocalization = true;
 
         public bool playListExpanded = true;
         public bool playlistsExpanded = true;
 
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
         public AllMusicSpatialBlendType musicSpatialBlendType = AllMusicSpatialBlendType.ForceAllTo2D;
         public float musicSpatialBlend = 0f;
 
@@ -122,6 +122,7 @@ namespace DarkTonic.MasterAudio {
 
         public ItemSpatialBlendType newGroupSpatialType = ItemSpatialBlendType.ForceTo3D;
         public float newGroupSpatialBlend = 1f;
+#endif
 
         public List<Playlist> musicPlaylists = new List<Playlist>()
         {
@@ -129,11 +130,7 @@ namespace DarkTonic.MasterAudio {
         };
 
         public float _masterAudioVolume = 1.0f;
-        public bool vrSettingsExpanded = false;
         public bool useSpatializer = false;
-        public bool useSpatializerPostFX = false;
-        public bool addOculusAudioSources = false;
-        public bool addResonanceAudioSources = false;
         public bool ignoreTimeScale = false;
         public bool useGaplessPlaylists = false;
         public bool saveRuntimeChanges = false;
@@ -207,10 +204,6 @@ namespace DarkTonic.MasterAudio {
             SoundPlayed = true
         };
 
-        private static readonly PlaySoundResult failedResultDuringInit = new PlaySoundResult {
-            SoundPlayed = false
-        };
-
 #endregion
 
 #region Private Variables
@@ -270,15 +263,6 @@ namespace DarkTonic.MasterAudio {
 #endregion
 
 #region Master Audio enums
-        public enum AmbientSoundExitMode {
-            StopSound,
-            FadeSound
-        }
-
-        public enum AmbientSoundReEnterMode {
-            StopExistingSound,
-            FadeInSameSound
-        }
 
         public enum VariationFollowerType {
             LateUpdate,
@@ -300,6 +284,7 @@ namespace DarkTonic.MasterAudio {
             Physics2D
         }
 
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
         public enum AllMusicSpatialBlendType {
             ForceAllTo2D,
             ForceAllTo3D,
@@ -320,6 +305,7 @@ namespace DarkTonic.MasterAudio {
             ForceToCustom,
             UseCurveFromAudioSource
         }
+#endif
 
         public enum InternetFileLoadStatus {
             Loading,
@@ -378,9 +364,7 @@ namespace DarkTonic.MasterAudio {
             StopBusOfTransform,
             PauseBusOfTransform,
             UnpauseBusOfTransform,
-            GlideByPitch,
-            StopOldBusVoices,
-            FadeOutOldBusVoices
+            GlideByPitch
         }
 
         public enum DragGroupMode {
@@ -395,7 +379,9 @@ namespace DarkTonic.MasterAudio {
             PlaylistControl,
             CustomEventControl,
             GlobalControl,
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
             UnityMixerControl,
+#endif
             PersistentSettingsControl
         }
 
@@ -405,11 +391,13 @@ namespace DarkTonic.MasterAudio {
             DynamicallySet
         }
 
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
         public enum UnityMixerCommand {
             None,
             TransitionToSnapshot,
             TransitionToSnapshotBlend
         }
+#endif
 
         public enum PlaylistCommand {
             None,
@@ -474,8 +462,6 @@ namespace DarkTonic.MasterAudio {
             ToggleSoundGroup,
             ToggleSoundGroupOfTransform,
             FadeOutAllSoundsOfTransform,
-            StopOldSoundGroupVoices,
-            FadeOutOldSoundGroupVoices
         }
 
         public enum PersistentSettingsCommand {
@@ -589,15 +575,8 @@ namespace DarkTonic.MasterAudio {
             public float crossFadeTime = 1f;
             public bool fadeInFirstSong = false;
             public bool fadeOutLastSong = false;
-            public bool bulkEditMode = false;
             public bool resourceClipsAllLoadAsync = true;
             public bool isTemporary = false;
-            public bool showMetadata = false;
-            public List<SongMetadataProperty> songMetadataProps = new List<SongMetadataProperty>();
-            public string newMetadataPropName = "PropertyName";
-            public SongMetadataProperty.MetadataPropertyType newMetadataPropType = SongMetadataProperty.MetadataPropertyType.String;
-            public bool newMetadataPropRequired = true;
-            public bool newMetadataPropCanHaveMult = false;
             // ReSharper restore InconsistentNaming
 
             public enum CrossfadeTimeMode {
@@ -628,27 +607,10 @@ namespace DarkTonic.MasterAudio {
         // ReSharper disable once UnusedMember.Local
         // ReSharper disable once FunctionComplexityOverflow
         private void Awake() {
-            var mas = FindObjectsOfType(typeof(MasterAudio));
-            if (mas.Length > 1) {
+            if (FindObjectsOfType(typeof(MasterAudio)).Length > 1) {
                 Destroy(gameObject);
-
-                bool shouldLog = false;
-                for (var i = 0; i < mas.Length; i++) {
-                    MasterAudio ama = mas[i] as MasterAudio;
-                    if (!ama.persistBetweenScenes) {
-                        continue;
-                    }
-
-                    if (ama.shouldLogDestroys) {
-                        shouldLog = true;
-                        break;
-                    }
-                }
-
-                if (shouldLog) {
-                    Debug.Log("More than one Master Audio prefab exists in this Scene. Destroying the newer one called '" +
-                              name + "'. You may wish to set up a Bootstrapper Scene so this does not occur.");
-                }
+                Debug.Log("More than one Master Audio prefab exists in this Scene. Destroying the newer one called '" +
+                          name + "'. You may wish to set up a Bootstrapper Scene so this does not occur.");
                 return;
             }
 
@@ -671,7 +633,6 @@ namespace DarkTonic.MasterAudio {
             AudioSourcesBySoundType.Clear();
             PlaylistControllersByName.Clear();
             LastTimeSoundGroupPlayed.Clear();
-            ErrorNumbersLogged.Clear();
 
             AllAudioSources.Clear();
             OcclusionSourcesInRange.Clear();
@@ -987,6 +948,10 @@ namespace DarkTonic.MasterAudio {
 
             RefillInactiveGroupPools();
             FireCustomEventsWaiting();
+            
+#if UNITY_5_6_OR_NEWER
+			RecalcClosestColliderPositions();
+#endif
         }
 
         // ReSharper disable once UnusedMember.Local
@@ -995,7 +960,7 @@ namespace DarkTonic.MasterAudio {
                 return;
             }
 
-            ManualUpdate();
+            UpdateActiveVariations();
         }
 
         // ReSharper disable once UnusedMember.Local
@@ -1004,20 +969,9 @@ namespace DarkTonic.MasterAudio {
                 return;
             }
 
-            ManualUpdate();
-        }
-
-        private void ManualUpdate() {
-#if UNITY_5_6_OR_NEWER
-			RecalcClosestColliderPositions();
-#endif
-
-            AmbientUtil.ManualUpdate();
-
             UpdateActiveVariations();
         }
 
-        /*! \cond PRIVATE */
         public static void RegisterUpdaterForUpdates(SoundGroupVariationUpdater updater) {
             if (Instance.ActiveVariationUpdaters.Contains(updater)) {
                 return;
@@ -1029,7 +983,6 @@ namespace DarkTonic.MasterAudio {
         public static void UnregisterUpdaterForUpdates(SoundGroupVariationUpdater updater) {
             Instance.ActiveVariationUpdaters.Remove(updater);
         }
-		/*! \endcond */
 
         private void UpdateActiveVariations() {
             ActiveUpdatersToRemove.Clear();
@@ -1068,8 +1021,7 @@ namespace DarkTonic.MasterAudio {
 
             Instance.ProcessedColliderPositionRecalcs.Clear();
 
-            var itemsToCalc = Instance.TransFollowerColliderPositionRecalcs.Count;
-            for (var i = 0; i < itemsToCalc;) {
+            for (var i = 0; i < Instance.TransFollowerColliderPositionRecalcs.Count;) {
                 if (Instance.TransFollowerColliderPositionRecalcs.Count == 0) {
                     break; // no more waiting there. Abort
                 }
@@ -1416,7 +1368,7 @@ namespace DarkTonic.MasterAudio {
             float delaySoundTime = 0f, string variationName = null,
             double? timeToSchedulePlay = null, bool isChaining = false, bool isSingleSubscribedPlay = false) {
             if (!SceneHasMasterAudio) {
-                return failedResultDuringInit;
+                return null;
             }
 
             if (SoundsReady) {
@@ -1425,7 +1377,7 @@ namespace DarkTonic.MasterAudio {
             }
 
             Debug.LogError("MasterAudio not finished initializing sounds. Cannot play: " + sType);
-            return failedResultDuringInit;
+            return null;
         }
 
         /// <summary>
@@ -1469,7 +1421,7 @@ namespace DarkTonic.MasterAudio {
         public static PlaySoundResult PlaySound3DAtVector3(string sType, Vector3 sourcePosition,
             float volumePercentage = 1f, float? pitch = null, float delaySoundTime = 0f, string variationName = null, double? timeToSchedulePlay = null) {
             if (!SceneHasMasterAudio) {
-                return failedResultDuringInit;
+                return null;
             }
 
             if (SoundsReady) {
@@ -1478,7 +1430,7 @@ namespace DarkTonic.MasterAudio {
             }
 
             Debug.LogError("MasterAudio not finished initializing sounds. Cannot play: " + sType);
-            return failedResultDuringInit;
+            return null;
         }
 
         /// <summary>
@@ -1525,7 +1477,7 @@ namespace DarkTonic.MasterAudio {
             float volumePercentage = 1f, float? pitch = null, float delaySoundTime = 0f, string variationName = null,
             double? timeToSchedulePlay = null, bool isChaining = false, bool isSingleSubscribedPlay = false) {
             if (!SceneHasMasterAudio) {
-                return failedResultDuringInit;
+                return null;
             }
 
             if (SoundsReady) {
@@ -1534,7 +1486,7 @@ namespace DarkTonic.MasterAudio {
             }
 
             Debug.LogError("MasterAudio not finished initializing sounds. Cannot play: " + sType);
-            return failedResultDuringInit;
+            return null;
         }
 
         /// <summary>
@@ -1582,7 +1534,7 @@ namespace DarkTonic.MasterAudio {
             float volumePercentage = 1f, float? pitch = null, float delaySoundTime = 0f, string variationName = null,
             double? timeToSchedulePlay = null, bool isChaining = false, bool isSingleSubscribedPlay = false) {
             if (!SceneHasMasterAudio) {
-                return failedResultDuringInit;
+                return null;
             }
 
             if (SoundsReady) {
@@ -1590,7 +1542,7 @@ namespace DarkTonic.MasterAudio {
                     delaySoundTime, false, true, isChaining, isSingleSubscribedPlay);
             }
             Debug.LogError("MasterAudio not finished initializing sounds. Cannot play: " + sType);
-            return failedResultDuringInit;
+            return null;
         }
 
         /// <summary>
@@ -1898,7 +1850,7 @@ namespace DarkTonic.MasterAudio {
             if (randomSource == null) {
                 // we must get a non-busy random source!
                 if (!Instance._randomizer.ContainsKey(sType)) {
-                    Debug.Log("Sound Group '" + sType + "' has no active Variations.");
+                    Debug.Log("Sound Group {" + sType + "} has no active Variations.");
                     return null;
                 }
 
@@ -2098,7 +2050,7 @@ namespace DarkTonic.MasterAudio {
 
             if (!soundSuccess) {
                 if (loggingEnabledForGrp || LogOutOfVoices) {
-                    LogMessage("All " + sources.Count + " children of " + sType + " were busy. Will not play this sound for this instance. If you need more voices, increase the 'Voices (Weight)' field on the Variation(s) in your Sound Group.");
+                    LogMessage("All children of " + sType + " were busy. Will not play this sound for this instance.");
                 }
             } else {
                 // ReSharper disable once InvertIf
@@ -2372,7 +2324,9 @@ namespace DarkTonic.MasterAudio {
                         variation.Pause();
                         break;
                     case VariationCommand.Unpause:
-                        variation.Unpause();
+                        if (AudioUtil.IsAudioPaused(variation.VarAudio)) {
+                            variation.VarAudio.Play();
+                        }
                         break;
                 }
             }
@@ -3061,34 +3015,7 @@ namespace DarkTonic.MasterAudio {
 
         #endregion
 
-        #region Sound Group methods
-        /// <summary>
-        /// This returns the AudioSource for the next Variation to be played. Only works for top-to-bottom Variation Sequence. 
-        /// </summary>
-        /// <param name="sType"></param>
-        /// <returns>Audio Source</returns>
-        public static AudioSource GetNextVariationForSoundGroup(string sType) {
-            var aGroup = GrabGroup(sType, false);
-            if (aGroup == null || AppIsShuttingDown) {
-                return null;
-            }
-
-            if (aGroup.curVariationSequence == MasterAudioGroup.VariationSequence.Randomized) {
-                Debug.LogWarning("Cannot determine the next Variation of randomly sequenced Sound Group '" + sType + "'.");
-                return null;
-            }
-
-            if (!Instance._randomizer.ContainsKey(sType)) {
-                Debug.Log("Sound Group '" + sType + "' has no active Variations.");
-                return null;
-            }
-
-            var choices = Instance._randomizer[sType];
-            var sources = Instance.AudioSourcesBySoundType[sType];
-
-            var audioInfo = sources.Sources[choices[0]];
-            return audioInfo.Source;
-        }
+#region Sound Group methods
 
         /// <summary>
         /// Returns true or false, telling you true if a Sound Group is playing any voices.
@@ -3184,9 +3111,10 @@ namespace DarkTonic.MasterAudio {
             for (var i = 0; i < sources.Count; i++) {
                 var aVar = sources[i].Variation;
 
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
                 aVar.SetMixerGroup();
                 aVar.SetSpatialBlend(); // set the spatial blend, including any overrides in the bus.
-
+#endif
                 if (!aVar.IsPlaying) {
                     continue;
                 }
@@ -3370,6 +3298,7 @@ namespace DarkTonic.MasterAudio {
             }
         }
 
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
         /*! \cond PRIVATE */
         /// <summary>
         /// This method is used by MasterAudio internally. You should never need to call it.
@@ -3394,6 +3323,7 @@ namespace DarkTonic.MasterAudio {
                 aVar.SetSpatialBlend();
             }
         }
+        /*! \endcond */
 
         public static void RouteGroupToUnityMixerGroup(string sType, AudioMixerGroup mixerGroup) {
             if (!Application.isPlaying) {
@@ -3417,7 +3347,7 @@ namespace DarkTonic.MasterAudio {
                 aVar.VarAudio.outputAudioMixerGroup = mixerGroup;
             }
         }
-        /*! \endcond */
+#endif
 
         /// <summary>
         /// This method allows you to unpause all Audio Sources in a Sound Group.
@@ -3439,7 +3369,17 @@ namespace DarkTonic.MasterAudio {
             for (var i = 0; i < sources.Count; i++) {
                 aVar = sources[i].Variation;
 
-                aVar.Unpause();
+                if (!AudioUtil.IsAudioPaused(aVar.VarAudio)) {
+                    continue;
+                }
+
+                aVar.VarAudio.Play();
+
+                // need to re-enable the Updater so fades and other things will work.
+                if (aVar.VariationUpdater != null) {
+                    aVar.VariationUpdater.enabled = true;
+                    aVar.VariationUpdater.Unpause();
+                }
             }
         }
 
@@ -3511,75 +3451,6 @@ namespace DarkTonic.MasterAudio {
             }
 
             Instance.GroupFades.Add(groupFade);
-        }
-
-        /// <summary>
-        /// This method allows you to fade out voices on a Sound Group that have been playing for at least X seconds.
-        /// </summary>
-        /// <param name="sType">The name of the Sound Group to fade.</param>
-        /// <param name="minimumPlayTime">The minimum time that each Variation must have been playing to be faded.</param>
-        /// <param name="fadeTime">The duration of the fade to perform.</param>
-        public static void FadeOutOldSoundGroupVoices(string sType, float minimumPlayTime, float fadeTime) {
-            if (!SceneHasMasterAudio) {
-                // No MA
-                return;
-            }
-
-            if (!Instance.AudioSourcesBySoundType.ContainsKey(sType)) {
-                return; // Sound Group doesn't exist
-            }
-
-            var sources = Instance.AudioSourcesBySoundType[sType].Sources;
-
-            for (var v = 0; v < sources.Count; v++) {
-                var variation = sources[v].Variation;
-                if (!variation.IsPaused && !variation.IsPlaying) {
-                    continue;
-                }
-
-                var timeElapsed = AudioUtil.Time - variation.LastTimePlayed;
-                if (timeElapsed <= minimumPlayTime) {
-                    continue;
-                }
-
-                if (fadeTime <= 0f) {
-                    variation.Stop();
-                } else {
-                    variation.FadeOutNow(fadeTime);
-                }
-            }
-        }
-
-        /// <summary>
-        /// This method allows you to stop voices on a Sound Group that have been playing for at least X seconds.
-        /// </summary>
-        /// <param name="sType">The name of the Sound Group to stop.</param>
-        /// <param name="minimumPlayTime">The minimum time that each Variation must have been playing to be stopped.</param>
-        public static void StopOldSoundGroupVoices(string sType, float minimumPlayTime) {
-            if (!SceneHasMasterAudio) {
-                // No MA
-                return;
-            }
-
-            if (!Instance.AudioSourcesBySoundType.ContainsKey(sType)) {
-                return; // Sound Group doesn't exist
-            }
-
-            var sources = Instance.AudioSourcesBySoundType[sType].Sources;
-
-            for (var v = 0; v < sources.Count; v++) {
-                var variation = sources[v].Variation;
-                if (!variation.IsPaused && !variation.IsPlaying) {
-                    continue;
-                }
-
-                var timeElapsed = AudioUtil.Time - variation.LastTimePlayed;
-                if (timeElapsed <= minimumPlayTime) {
-                    continue;
-                }
-
-                variation.Stop();
-            }
         }
 
         /// <summary>
@@ -3760,7 +3631,7 @@ namespace DarkTonic.MasterAudio {
 
             var ma = Instance;
 
-			if (Instance.AudioSourcesBySoundType.ContainsKey(groupName)) {
+            if (Instance.Trans.GetChildTransform(groupName) != null) {
                 if (errorOnExisting) {
                     Debug.LogError("Cannot add a new Sound Group named '" + groupName +
                                    "' because there is already a Sound Group of that name.");
@@ -3860,12 +3731,6 @@ namespace DarkTonic.MasterAudio {
                     variation.randomStartMaxPercent = aVariation.randomStartMaxPercent;
                     variation.randomEndPercent = aVariation.randomEndPercent;
 
-                    if (Instance.addResonanceAudioSources && ResonanceAudioHelper.DarkTonicResonanceAudioPackageInstalled()) {
-                        ResonanceAudioHelper.AddResonanceAudioSourceToVariation(variation);
-                    } else if (Instance.addOculusAudioSources && OculusAudioHelper.DarkTonicOculusAudioPackageInstalled()) {
-                        OculusAudioHelper.AddOculusAudioSourceToVariation(variation);
-                    }
-
                     // remove unused filter FX
                     if (variation.LowPassFilter != null && !variation.LowPassFilter.enabled) {
                         // ReSharper disable once ArrangeStaticMemberQualifier
@@ -3950,8 +3815,10 @@ namespace DarkTonic.MasterAudio {
             groupScript.logSound = aGroup.logSound;
             groupScript.alwaysHighestPriority = aGroup.alwaysHighestPriority;
 
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
             groupScript.spatialBlendType = aGroup.spatialBlendType;
             groupScript.spatialBlend = aGroup.spatialBlend;
+#endif
 
             var sources = new List<AudioInfo>();
             // ReSharper disable TooWideLocalVariableScope
@@ -4473,16 +4340,17 @@ namespace DarkTonic.MasterAudio {
             group.Group.UnsubscribeFromLastVariationFinishedPlay();
         }
 
-        #endregion
+#endregion
 
 #region Mixer methods
-        /*! \cond PRIVATE */
+
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
         public void SetSpatialBlendForMixer() {
             foreach (var key in AudioSourcesBySoundType.Keys) {
                 SetGroupSpatialBlend(key);
             }
         }
-        /*! \endcond */
+#endif
 
         /// <summary>
         /// This method allows you to pause all Audio Sources in the mixer (everything but Playlists).
@@ -4879,7 +4747,7 @@ namespace DarkTonic.MasterAudio {
             }
         }
 
-        /*! \cond PRIVATE */
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
         public static void RouteBusToUnityMixerGroup(string busName, AudioMixerGroup mixerGroup) {
             if (!Application.isPlaying) {
                 return;
@@ -4908,7 +4776,7 @@ namespace DarkTonic.MasterAudio {
                 RouteGroupToUnityMixerGroup(aGroup.name, mixerGroup);
             }
         }
-        /*! \endcond */
+#endif
 
         private static void StopOldestSoundOnBus(GroupBus bus) {
             var busIndex = GetBusIndex(bus.busName, true);
@@ -5104,6 +4972,7 @@ namespace DarkTonic.MasterAudio {
                     // this bus was just deleted!
                     aGroup.busIndex = -1;
 
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
                     RouteGroupToUnityMixerGroup(aGroup.name, null);
 
                     // re-init Group for "no bus"
@@ -5113,6 +4982,7 @@ namespace DarkTonic.MasterAudio {
                         aVariation.SetSpatialBlend();
                     }
 
+#endif
                     RecalculateGroupVolumes(aGroupInfo, null);
                 } else if (aGroup.busIndex > busIndex) {
                     aGroup.busIndex--;
@@ -5197,95 +5067,6 @@ namespace DarkTonic.MasterAudio {
             }
 
             Instance.BusFades.Add(busFade);
-        }
-
-        /// <summary>
-        /// This method allows you to fade out voices on a Bus that have been playing for at least X seconds.
-        /// </summary>
-        /// <param name="busName">The name of the bus to fade.</param>
-        /// <param name="minimumPlayTime">The minimum time that each Variation must have been playing to be faded.</param>
-        /// <param name="fadeTime">The duration of the fade to perform.</param>
-        public static void FadeOutOldBusVoices(string busName, float minimumPlayTime, float fadeTime) {
-            if (!SceneHasMasterAudio) {
-                // No MA
-                return;
-            }
-
-            var busIndex = GetBusIndex(busName, true);
-
-            if (busIndex < 0) {
-                return;
-            }
-
-            var sources = Instance.AudioSourcesBySoundType.GetEnumerator();
-
-            while (sources.MoveNext()) {
-                var aInfo = sources.Current.Value;
-                var aGroup = aInfo.Group;
-                if (aGroup.busIndex != busIndex) {
-                    continue; // wrong bus, ignore
-                }
-
-                for (var v = 0; v < aInfo.Sources.Count; v++) {
-                    var variation = aInfo.Sources[v].Variation;
-                    if (!variation.IsPaused && !variation.IsPlaying) {
-                        continue;
-                    }
-
-                    var timeElapsed = AudioUtil.Time - variation.LastTimePlayed;
-                    if (timeElapsed <= minimumPlayTime) {
-                        continue;
-                    }
-
-                    if (fadeTime <= 0f) {
-                        variation.Stop();
-                    } else {
-                        variation.FadeOutNow(fadeTime);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// This method allows you to stop voices on a Bus that have been playing for at least X seconds.
-        /// </summary>
-        /// <param name="busName">The name of the bus to fade.</param>
-        /// <param name="minimumPlayTime">The minimum time that each Variation must have been playing to be stopped.</param>
-        public static void StopOldBusVoices(string busName, float minimumPlayTime) {
-            if (!SceneHasMasterAudio) {
-                // No MA
-                return;
-            }
-
-            var busIndex = GetBusIndex(busName, true);
-
-            if (busIndex < 0) {
-                return;
-            }
-
-            var sources = Instance.AudioSourcesBySoundType.GetEnumerator();
-
-            while (sources.MoveNext()) {
-                var aInfo = sources.Current.Value;
-				var aGroup = aInfo.Group;
-                if (aGroup.busIndex != busIndex) {
-                    continue; // wrong bus, ignore
-                }
-
-				for (var v = 0; v < aInfo.Sources.Count; v++) {
-					var variation = aInfo.Sources[v].Variation;
-					if (!variation.IsPaused && !variation.IsPlaying) {
-						continue;
-					}
-
-					var timeElapsed = AudioUtil.Time - variation.LastTimePlayed;
-					if (timeElapsed <= minimumPlayTime) {
-						continue;
-					}
-
-					variation.Stop(); 
-				}
-            }
         }
 
         /// <summary>
@@ -5649,7 +5430,7 @@ namespace DarkTonic.MasterAudio {
 
         #endregion
 
-#region Playlist methods
+        #region Playlist methods
 
         /// <summary>
         /// This method will find a Playlist by name and return it to you.
@@ -6227,7 +6008,7 @@ namespace DarkTonic.MasterAudio {
             var controllers = new List<PlaylistController>();
 
             if (playlistControllerName == OnlyPlaylistControllerName) {
-				if (!IsOkToCallOnlyPlaylistMethod(pcs, "StartPlaylist")) {
+                if (!IsOkToCallOnlyPlaylistMethod(pcs, "PausePlaylist")) {
                     return;
                 }
 
@@ -6661,20 +6442,6 @@ namespace DarkTonic.MasterAudio {
             }
         }
 
-        #endregion
-
-#region Audio Listener methods
-    /// <summary>
-    /// Call this method if you have disabled the Audio Listener and enabled a different one, so Ambient Sounds will continue to work.
-    /// </summary>
-    /// <param name="listener"></param>
-    public static void AudioListenerChanged(AudioListener listener) {
-        _listenerTrans = listener.GetComponent<Transform>();
-        var follower = AmbientUtil.ListenerFollower;
-        if (follower != null) {
-            follower.StartFollowing(_listenerTrans, AmbientUtil.ListenerFollowerTrigRadius);
-        }
-    }
 #endregion
 
 #region InternetFile methods
@@ -7127,6 +6894,7 @@ namespace DarkTonic.MasterAudio {
 
         /*! \cond PRIVATE */
         private static List<ICustomEventReceiver> GetChildReceivers(Transform origin, string eventName, bool includeSelf) {
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
             var components = origin.GetComponentsInChildren<ICustomEventReceiver>().ToList();
 
             components.RemoveAll(delegate (ICustomEventReceiver rec) {
@@ -7138,9 +6906,16 @@ namespace DarkTonic.MasterAudio {
             }
 
             return FilterOutSelf(components, origin);
+#else
+            var components = origin.GetComponentsInChildren<MonoBehaviour>().ToList();
+            var receivers = GetReceiversFromMonos(components, eventName, includeSelf, origin);
+
+            return receivers;
+#endif
         }
 
         private static List<ICustomEventReceiver> GetParentReceivers(Transform origin, string eventName, bool includeSelf) {
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
             var components = origin.GetComponentsInParent<ICustomEventReceiver>().ToList();
 
             components.RemoveAll(delegate (ICustomEventReceiver rec) {
@@ -7152,7 +6927,40 @@ namespace DarkTonic.MasterAudio {
             }
 
             return FilterOutSelf(components, origin);
+#else
+            var components = origin.GetComponentsInParent<MonoBehaviour>().ToList();
+            var receivers = GetReceiversFromMonos(components, eventName, includeSelf, origin);
+
+            return receivers;
+#endif
         }
+
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
+        // not needed
+#else
+        private static List<ICustomEventReceiver> GetReceiversFromMonos(List<MonoBehaviour> monos, string eventName, bool includeSelf, Transform origin) {
+            var receivers = new List<ICustomEventReceiver>();
+
+            foreach (var component in monos) {
+                var rec = component as ICustomEventReceiver;
+                if (rec == null) {
+                    continue;
+                }
+
+                if (!rec.SubscribesToEvent(eventName)) {
+                    continue;
+                }    
+
+				if (!includeSelf && component.transform == origin) {
+					continue;
+				}
+
+                receivers.Add(rec);
+            }
+
+            return receivers;
+        }
+#endif
 
         private static List<ICustomEventReceiver> FilterOutSelf(List<ICustomEventReceiver> sourceList, Transform origin) {
             var matchOriginComponents = new List<ICustomEventReceiver>();
@@ -7202,7 +7010,7 @@ namespace DarkTonic.MasterAudio {
                 return;
             }
 
-            Debug.Log("T: " + Time.time + " - MasterAudio: " + message);
+            Debug.Log("T: " + Time.time + " - MasterAudio " + message);
         }
 
         /// <summary>
@@ -7228,15 +7036,6 @@ namespace DarkTonic.MasterAudio {
             }
 
             Debug.LogWarning(msg);
-        }
-
-        public static void LogWarningIfNeverLogged(string msg, int errorNumber) {
-            if (ErrorNumbersLogged.Contains(errorNumber)) {
-                return;
-            }
-
-            Debug.LogWarning(msg);
-            ErrorNumbersLogged.Add(errorNumber);
         }
 
         public static void LogError(string msg) {
@@ -7301,6 +7100,7 @@ namespace DarkTonic.MasterAudio {
         /*! \cond PRIVATE */
 
         public static void AddToQueuedOcclusionRays(SoundGroupVariationUpdater updater) {
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
             if (SafeInstance == null) {
                 return;
             }
@@ -7313,9 +7113,11 @@ namespace DarkTonic.MasterAudio {
             }
 
             Instance.QueuedOcclusionRays.Enqueue(updater);
+#endif
         }
 
         public static void AddToOcclusionInRangeSources(GameObject src) {
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
             if (!Application.isEditor || SafeInstance == null || !Instance.occlusionShowCategories) {
                 return;
             }
@@ -7327,9 +7129,11 @@ namespace DarkTonic.MasterAudio {
             if (Instance.OcclusionSourcesOutOfRange.Contains(src)) {
                 Instance.OcclusionSourcesOutOfRange.Remove(src);
             }
+#endif
         }
 
         public static void AddToOcclusionOutOfRangeSources(GameObject src) {
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
             if (!Application.isEditor || SafeInstance == null || !Instance.occlusionShowCategories) {
                 return;
             }
@@ -7344,9 +7148,11 @@ namespace DarkTonic.MasterAudio {
 
             // out of range means no longer blocked
             RemoveFromBlockedOcclusionSources(src);
+#endif
         }
 
         public static void AddToBlockedOcclusionSources(GameObject src) {
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
             if (!Application.isEditor || SafeInstance == null || !Instance.occlusionShowCategories) {
                 return;
             }
@@ -7354,6 +7160,7 @@ namespace DarkTonic.MasterAudio {
             if (!Instance.OcclusionSourcesBlocked.Contains(src)) {
                 Instance.OcclusionSourcesBlocked.Add(src);
             }
+#endif
         }
 
         public static bool HasQueuedOcclusionRays() {
@@ -7361,14 +7168,19 @@ namespace DarkTonic.MasterAudio {
         }
 
         public static SoundGroupVariationUpdater OldestQueuedOcclusionRay() {
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
             if (SafeInstance == null) {
                 return null;
             }
 
             return Instance.QueuedOcclusionRays.Dequeue();
+#else
+            return null;
+#endif
         }
 
         public static bool IsOcclusionFreqencyTransitioning(SoundGroupVariation variation) {
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
             for (var i = 0; i < Instance.VariationOcclusionFreqChanges.Count; i++) {
                 if (Instance.VariationOcclusionFreqChanges[i].ActingVariation == variation) {
                     return true;
@@ -7376,9 +7188,13 @@ namespace DarkTonic.MasterAudio {
             }
 
             return false;
+#else
+                return false;
+#endif
         }
 
         public static void RemoveFromOcclusionFrequencyTransitioning(SoundGroupVariation variation) {
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
             for (var i = 0; i < Instance.VariationOcclusionFreqChanges.Count; i++) {
                 if (Instance.VariationOcclusionFreqChanges[i].ActingVariation != variation) {
                     continue;
@@ -7387,9 +7203,11 @@ namespace DarkTonic.MasterAudio {
                 Instance.VariationOcclusionFreqChanges.RemoveAt(i);
                 break;
             }
+#endif
         }
 
         public static void RemoveFromBlockedOcclusionSources(GameObject src) {
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
             if (!Application.isEditor || SafeInstance == null || !Instance.occlusionShowCategories) {
                 return;
             }
@@ -7397,9 +7215,11 @@ namespace DarkTonic.MasterAudio {
             if (Instance.OcclusionSourcesBlocked.Contains(src)) {
                 Instance.OcclusionSourcesBlocked.Remove(src);
             }
+#endif
         }
 
         public static void StopTrackingOcclusionForSource(GameObject src) {
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
             if (!Application.isEditor || SafeInstance == null || !Instance.occlusionShowCategories) {
                 return;
             }
@@ -7415,6 +7235,7 @@ namespace DarkTonic.MasterAudio {
             if (Instance.OcclusionSourcesBlocked.Contains(src)) {
                 Instance.OcclusionSourcesBlocked.Remove(src);
             }
+#endif
         }
 
         /*! \endcond */
@@ -7785,7 +7606,11 @@ namespace DarkTonic.MasterAudio {
 
         public bool ShouldShowUnityAudioMixerGroupAssignments {
             get {
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
                 return showUnityMixerGroupAssignment;
+#else
+                return false;
+#endif
             }
         }
         /*! \endcond */
@@ -7934,7 +7759,16 @@ namespace DarkTonic.MasterAudio {
         }
 
         public static bool HasAsyncResourceLoaderFeature() {
+#if UNITY_4_5_3 || UNITY_4_5_4 || UNITY_4_5_5 || UNITY_4_6 || UNITY_4_7
+            return Application.HasProLicense();
+#else
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
             return true;
+#else
+            // older versions of Unity
+            return false;
+#endif
+#endif
         }
 
         public static void RescanGroupsNow() {

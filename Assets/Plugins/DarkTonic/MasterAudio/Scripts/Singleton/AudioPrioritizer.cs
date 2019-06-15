@@ -29,11 +29,13 @@ namespace DarkTonic.MasterAudio {
 
             var audio = variation.VarAudio;
 
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
             if (audio.spatialBlend == 0f) {
                 // handle 2D sound if we end here with it.
                 Set2DSoundPriority(variation.VarAudio);
                 return;
             }
+#endif
 
             var distanceToListener = Vector3.Distance(audio.transform.position, MasterAudio.ListenerTrans.position);
             float perceivedVolume;

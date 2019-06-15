@@ -22,7 +22,7 @@ public class AmbientSoundInspector : Editor {
 
         DTGUIHelper.HelpHeader("http://www.dtdevtools.com/docs/masteraudio/AmbientSound.htm");
 
-        var _sounds = (DarkTonic.MasterAudio.AmbientSound)target;
+        var _sounds = (AmbientSound)target;
 
         var _groupNames = new List<string>();
 
@@ -86,7 +86,6 @@ public class AmbientSoundInspector : Editor {
                 if (newSound != _sounds.AmbientSoundGroup) {
                     AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "change Ambient Sound Group");
                     _sounds.AmbientSoundGroup = newSound;
-					_sounds.CalculateRadius();
                 }
 
                 var newIndex = EditorGUILayout.Popup("All Sound Groups", -1, _groupNames.ToArray());
@@ -104,7 +103,7 @@ public class AmbientSoundInspector : Editor {
             if (groupIndex.HasValue) {
                 if (existingIndex != groupIndex.Value) {
                     AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "change Ambient Sound Group");
-				}
+                }
                 switch (groupIndex.Value) {
                     case -1:
                         _sounds.AmbientSoundGroup = MasterAudio.NoGroupName;
@@ -113,107 +112,17 @@ public class AmbientSoundInspector : Editor {
                         _sounds.AmbientSoundGroup = _groupNames[groupIndex.Value];
                         break;
                 }
-				_sounds.CalculateRadius();
-			}
+            }
         } else {
             var newSType = EditorGUILayout.TextField("Ambient Sound Group", _sounds.AmbientSoundGroup);
             if (newSType != _sounds.AmbientSoundGroup) {
                 AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "change Ambient Sound Group");
-				_sounds.CalculateRadius();
-				_sounds.AmbientSoundGroup = newSType;
+                _sounds.AmbientSoundGroup = newSType;
             }
         }
 
-        var newVol = DTGUIHelper.DisplayVolumeField(_sounds.playVolume, DTGUIHelper.VolumeFieldType.None, MasterAudio.MixerWidthMode.Normal, 0f, true);
-        if (newVol != _sounds.playVolume) {
-            AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "change Volume");
-            _sounds.playVolume = newVol;
-        }
-
-        var newVarType = (EventSounds.VariationType)EditorGUILayout.EnumPopup("Variation Mode", _sounds.variationType);
-        if (newVarType != _sounds.variationType) {
-            AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "change Variation Mode");
-			_sounds.CalculateRadius();
-			_sounds.variationType = newVarType;
-        }
-
-        if (_sounds.variationType == EventSounds.VariationType.PlaySpecific) {
-            var newVarName = EditorGUILayout.TextField("Variation Name", _sounds.variationName);
-            if (newVarName != _sounds.variationName) {
-                AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "change Variation Name");
-				_sounds.CalculateRadius();
-				_sounds.variationName = newVarName;
-            }
-
-            if (string.IsNullOrEmpty(_sounds.variationName)) {
-                DTGUIHelper.ShowRedError("Variation Name is empty. No sound will play.");
-            }
-        }
-
-        var newExitMode = (MasterAudio.AmbientSoundExitMode)EditorGUILayout.EnumPopup("Trigger Exit Behavior", _sounds.exitMode);
-        if (newExitMode != _sounds.exitMode) {
-            AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "change Trigger Exit Behavior");
-            _sounds.exitMode = newExitMode;
-        }
-
-        if (_sounds.exitMode == MasterAudio.AmbientSoundExitMode.FadeSound) {
-            var newFadeTime = EditorGUILayout.Slider("Fade Time (sec)", _sounds.exitFadeTime, .2f, 10f);
-            if (newFadeTime != _sounds.exitFadeTime) {
-                AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "change Fade Time (sec)");
-                _sounds.exitFadeTime = newFadeTime;
-            }
-
-            var reEnterMode = (MasterAudio.AmbientSoundReEnterMode)EditorGUILayout.EnumPopup("Trigger Re-Enter Behavior", _sounds.reEnterMode);
-            if (reEnterMode != _sounds.reEnterMode) {
-                AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "change Trigger Re-Enter Behavior");
-                _sounds.reEnterMode = reEnterMode;
-            }
-
-            if (_sounds.reEnterMode == MasterAudio.AmbientSoundReEnterMode.FadeInSameSound) {
-                var newFadeIn = EditorGUILayout.Slider("Fade In Time (sec)", _sounds.reEnterFadeTime, .2f, 10f);
-                if (newFadeIn != _sounds.reEnterFadeTime) {
-                    AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "change Fade In Time (sec)");
-                    _sounds.reEnterFadeTime = newFadeIn;
-                }
-            }
-        }
-
-        var aud = _sounds.GetNamedOrFirstAudioSource();
-        if (aud != null) {
-            var newMax = EditorGUILayout.Slider("Max Distance", aud.maxDistance, .1f, 1000000f);
-            if (newMax != aud.maxDistance) {
-                AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, aud, "change Max Distance");
-
-                switch (_sounds.variationType) {
-                    case EventSounds.VariationType.PlayRandom:
-                        var sources = _sounds.GetAllVariationAudioSources();
-                        if (sources != null) {
-                            for (var i = 0; i < sources.Count; i++) {
-                                var src = sources[i];
-                                src.maxDistance = newMax;
-                                EditorUtility.SetDirty(src);
-                            }
-                        }
-                        break;
-                    case EventSounds.VariationType.PlaySpecific:
-                        aud.maxDistance = newMax;
-                        EditorUtility.SetDirty(aud);
-                        break;
-                }
-            }
-            switch (_sounds.variationType) {
-                case EventSounds.VariationType.PlayRandom:
-                    DTGUIHelper.ShowLargeBarAlert("Adjusting the Max Distance field will change the Max Distance on the Audio Source of every Variation in the selected Sound Group.");
-                    break;
-                case EventSounds.VariationType.PlaySpecific:
-                    DTGUIHelper.ShowLargeBarAlert("Adjusting the Max Distance field will change the Max Distance on the Audio Source for the selected Variation in the selected Sound Group.");
-                    break;
-            }
-            DTGUIHelper.ShowColorWarning("You can also bulk apply Max Distance and other Audio Source properties with Audio Source Templates using the Master Audio Mixer.");
-        }
-
-#if UNITY_5_6_OR_NEWER
-        DTGUIHelper.StartGroupHeader();
+		#if UNITY_5_6_OR_NEWER
+		DTGUIHelper.StartGroupHeader();
         var newClosest = GUILayout.Toggle(_sounds.UseClosestColliderPosition, new GUIContent(" Use Closest Collider Position", "Using this option, the Audio Source will be updated every frame to the closest position on the caller's collider(s)."));
         if (newClosest != _sounds.UseClosestColliderPosition) {
             AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "toggle Follow Caller");
@@ -269,9 +178,9 @@ public class AmbientSoundInspector : Editor {
             }
 
             EditorGUILayout.EndVertical();
+            //DTGUIHelper.ShowColorWarning("Use Closest Collider Position takes precedence over Follow Caller, so that option is hidden.");
         } else {
             EditorGUILayout.EndVertical();
-
             DTGUIHelper.StartGroupHeader();
             var newFollow =
                     GUILayout.Toggle(_sounds.FollowCaller, new GUIContent(" Follow Caller",
@@ -280,26 +189,26 @@ public class AmbientSoundInspector : Editor {
                 AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "toggle Follow Caller");
                 _sounds.FollowCaller = newFollow;
             }
-            EditorGUILayout.EndVertical();
-            if (_sounds.FollowCaller) {
+			EditorGUILayout.EndVertical();
+			if (_sounds.FollowCaller) {
                 DTGUIHelper.ShowColorWarning("Will follow caller at runtime.");
             }
-            EditorGUILayout.EndVertical();
-        }
+			EditorGUILayout.EndVertical();
+		}
 #else
-        DTGUIHelper.StartGroupHeader();
-        var newFollow =
-            GUILayout.Toggle(_sounds.FollowCaller, new GUIContent(" Follow Caller",
-                                                                  "This option is useful if your caller ever moves, as it will make the Audio Source follow to the location of the caller every frame."));
-        if (newFollow != _sounds.FollowCaller) {
-            AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "toggle Follow Caller");
-            _sounds.FollowCaller = newFollow;
-        }
-        EditorGUILayout.EndVertical();
-        if (_sounds.FollowCaller) {
-            DTGUIHelper.ShowColorWarning("Will follow caller at runtime.");
-        }
-        EditorGUILayout.EndVertical();
+		DTGUIHelper.StartGroupHeader();
+		var newFollow =
+			GUILayout.Toggle(_sounds.FollowCaller, new GUIContent(" Follow Caller",
+			                                                      "This option is useful if your caller ever moves, as it will make the Audio Source follow to the location of the caller every frame."));
+		if (newFollow != _sounds.FollowCaller) {
+			AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "toggle Follow Caller");
+			_sounds.FollowCaller = newFollow;
+		}
+		EditorGUILayout.EndVertical();
+		if (_sounds.FollowCaller) {
+			DTGUIHelper.ShowColorWarning("Will follow caller at runtime.");
+		}
+		EditorGUILayout.EndVertical();
 #endif
 
         if (Application.isPlaying) {

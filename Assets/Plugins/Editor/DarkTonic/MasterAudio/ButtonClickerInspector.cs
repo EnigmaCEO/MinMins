@@ -94,6 +94,7 @@ public class ButtonClickerInspector : Editor {
     }
 
     protected void EditSoundGroup(ButtonClicker sounds, ref string soundGroup, string label) {
+        DTGUIHelper.AddSpaceForNonU5(2);
         DTGUIHelper.StartGroupHeader();
         if (_maInScene) {
             var existingIndex = _groupNames.IndexOf(soundGroup);

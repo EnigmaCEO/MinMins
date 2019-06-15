@@ -25,8 +25,7 @@ public class MA_PlayerControl : MonoBehaviour {
         if (collision.gameObject.name.StartsWith("Enemy(")) {
             gameObject.SetActive(false);
         }
-
-   }
+    }
 
     // ReSharper disable UnusedMember.Local
     void OnDisable() {

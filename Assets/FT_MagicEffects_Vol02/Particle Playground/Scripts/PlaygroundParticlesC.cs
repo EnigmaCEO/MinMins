@@ -2796,7 +2796,7 @@ namespace ParticlePlayground {
 						
 						// Source positions and 0 life reset
 						if (setSource || playgroundCache.life[p]==0f && playgroundCache.simulate[p] && !onlyLifetimePositioning) {
-							particleCache[p].lifetime = lifetime;
+							particleCache[p].remainingLifetime = lifetime;
 							playgroundCache.previousTargetPosition[p] = playgroundCache.targetPosition[p];
 							SetSourcePosition(p);
 							playgroundCache.position[p] = playgroundCache.targetPosition[p];
@@ -2809,7 +2809,7 @@ namespace ParticlePlayground {
 						if (playgroundCache.life[p]!=0f) {
 							float evalLife = playgroundCache.death[p]-localTime;
 							if (evalLife<mslt) evalLife = mslt;
-							particleCache[p].lifetime = evalLife;
+							particleCache[p].remainingLifetime = evalLife;
 						}
 						
 						// Size
@@ -4002,7 +4002,7 @@ namespace ParticlePlayground {
 					if (playgroundParticles.playgroundCache.life[p]<playgroundParticles.playgroundCache.death[p]-playgroundParticles.playgroundCache.birth[p]) {
 						playgroundParticles.playgroundCache.life[p] = lifeInSeconds*evaluatedLife;
 						if (!playgroundParticles.syncPositionsOnMainThread)
-							playgroundParticles.particleCache[p].lifetime = Mathf.Clamp (lifeInSeconds*(1f-evaluatedLife), playgroundParticles.minShurikenLifetime, playgroundParticles.playgroundCache.death[p]-playgroundParticles.playgroundCache.birth[p]);
+							playgroundParticles.particleCache[p].remainingLifetime = Mathf.Clamp (lifeInSeconds*(1f-evaluatedLife), playgroundParticles.minShurikenLifetime, playgroundParticles.playgroundCache.death[p]-playgroundParticles.playgroundCache.birth[p]);
 						
 						if (playgroundParticles.lifetimeValueMethod==VALUEMETHOD.RandomBetweenTwoValues && playgroundParticles.playgroundCache.life[p]>lifeInSeconds) {
 							
@@ -5386,13 +5386,13 @@ namespace ParticlePlayground {
 				
 				// Set shuriken particles lifetime
 				if (!playgroundParticles.syncPositionsOnMainThread)
-					playgroundParticles.particleCache[p].lifetime = playgroundParticles.lifetime;
+					playgroundParticles.particleCache[p].remainingLifetime = playgroundParticles.lifetime;
 				playgroundParticles.particleCache[p].startLifetime = playgroundParticles.lifetime-playgroundParticles.playgroundCache.lifetimeSubtraction[p];
 			} else {
 				
 				playgroundParticles.playgroundCache.lifetimeSubtraction[p] = 0;
 				if (!playgroundParticles.syncPositionsOnMainThread)
-					playgroundParticles.particleCache[p].lifetime = playgroundParticles.scriptedLifetime;
+					playgroundParticles.particleCache[p].remainingLifetime = playgroundParticles.scriptedLifetime;
 				playgroundParticles.particleCache[p].startLifetime = playgroundParticles.scriptedLifetime;
 			}
 			

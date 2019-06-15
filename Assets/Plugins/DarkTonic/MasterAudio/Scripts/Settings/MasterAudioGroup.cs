@@ -1,6 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
+
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
+// ReSharper disable once RedundantUsingDirective
 using UnityEngine.Audio;
+#endif
 
 // ReSharper disable once CheckNamespace
 namespace DarkTonic.MasterAudio {
@@ -17,8 +21,10 @@ namespace DarkTonic.MasterAudio {
 
         public int busIndex = -1;
 
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
         public MasterAudio.ItemSpatialBlendType spatialBlendType = MasterAudio.ItemSpatialBlendType.ForceTo3D;
         public float spatialBlend = 1f;
+#endif
 
         public bool isSelected = false;
         public bool isExpanded = true;
@@ -41,10 +47,10 @@ namespace DarkTonic.MasterAudio {
         public List<SoundGroupVariation> groupVariations = new List<SoundGroupVariation>();
         public MasterAudio.AudioLocation bulkVariationMode = MasterAudio.AudioLocation.Clip;
         public bool resourceClipsAllLoadAsync = true;
-        public string comments;
         public bool logSound = false;
 
         public bool copySettingsExpanded = false;
+        public int selectedVariationIndex = 0;
 
         public bool expandLinkedGroups = false;
         public List<string> childSoundGroups = new List<string>();
@@ -154,9 +160,32 @@ namespace DarkTonic.MasterAudio {
             if (childCount > 0) {
             } // to get rid of warning
 
+            var needsUpgrade = false;
+
             if (Trans.parent != null) {
                 gameObject.layer = Trans.parent.gameObject.layer;
             }
+
+            for (var i = 0; i < Trans.childCount; i++) {
+                var variation = Trans.GetChild(i).GetComponent<SoundGroupVariation>();
+                if (variation == null) {
+                    continue;
+                }
+
+                var updater = variation.GetComponent<SoundGroupVariationUpdater>();
+                if (updater != null) {
+                    continue;
+                }
+                needsUpgrade = true;
+                break;
+            }
+
+            if (!needsUpgrade) {
+                return;
+            }
+
+            Debug.LogError("One or more Variations of Sound Group '" + GameObjectName +
+                           "' do not have the SoundGroupVariationUpdater component and will not function properly. Please stop and fix this by opening the Master Audio Manager window and clicking the Upgrade MA Prefab button before continuing.");
         }
 
         // ReSharper disable once UnusedMember.Local
@@ -197,6 +226,7 @@ namespace DarkTonic.MasterAudio {
             }
         }
 
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
         public float SpatialBlendForGroup {
             get {
                 switch (MasterAudio.Instance.mixerSpatialBlendType) {
@@ -224,6 +254,7 @@ namespace DarkTonic.MasterAudio {
                 }
             }
         }
+#endif
         /*! \endcond */
 
         #region public properties

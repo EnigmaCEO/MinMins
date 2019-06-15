@@ -17,14 +17,14 @@ public class ListenerFollower : MonoBehaviour {
         if (trig == null) { } // get rid of warning
     }
 
-    public void StartFollowing(Transform transToFollow, float trigRadius) {
+    public void StartFollowing(Transform transToFollow, string soundType, float trigRadius) {
         _transToFollow = transToFollow;
         _goToFollow = transToFollow.gameObject;
         Trigger.radius = trigRadius;
     }
 
     // ReSharper disable once UnusedMember.Local
-    public void ManualUpdate() {
+    void LateUpdate() {
         BatchOcclusionRaycasts();
 
         if (_transToFollow == null || !DTMonoHelper.IsActive(_goToFollow)) {

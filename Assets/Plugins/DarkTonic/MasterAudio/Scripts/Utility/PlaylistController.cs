@@ -3,7 +3,10 @@ using System;
 // ReSharper disable once RedundantUsingDirective
 using System.Collections;
 using System.Collections.Generic;
+
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
 using UnityEngine.Audio;
+#endif
 
 // ReSharper disable once CheckNamespace
 namespace DarkTonic.MasterAudio {
@@ -34,25 +37,27 @@ namespace DarkTonic.MasterAudio {
         public string startPlaylistName = string.Empty;
         public int syncGroupNum = -1;
 
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
         public AudioMixerGroup mixerChannel;
         public MasterAudio.ItemSpatialBlendType spatialBlendType = MasterAudio.ItemSpatialBlendType.ForceTo2D;
         public float spatialBlend = MasterAudio.SpatialBlend_2DValue;
+#endif
 
         public bool initializedEventExpanded = false;
         public string initializedCustomEvent = string.Empty;
-        public bool crossfadeStartedExpanded = false;
-        public string crossfadeStartedCustomEvent = string.Empty;
-        public bool songChangedEventExpanded = false;
+		public bool crossfadeStartedExpanded = false;
+		public string crossfadeStartedCustomEvent = string.Empty;
+		public bool songChangedEventExpanded = false;
         public string songChangedCustomEvent = string.Empty;
         public bool songEndedEventExpanded = false;
         public string songEndedCustomEvent = string.Empty;
-        public bool songLoopedEventExpanded = false;
-        public string songLoopedCustomEvent = string.Empty;
-        public bool playlistStartedEventExpanded = false;
-        public string playlistStartedCustomEvent = string.Empty;
-        public bool playlistEndedEventExpanded = false;
-        public string playlistEndedCustomEvent = string.Empty;
-        // ReSharper restore InconsistentNaming
+		public bool songLoopedEventExpanded = false;
+		public string songLoopedCustomEvent = string.Empty;
+		public bool playlistStartedEventExpanded = false;
+		public string playlistStartedCustomEvent = string.Empty;
+		public bool playlistEndedEventExpanded = false;
+		public string playlistEndedCustomEvent = string.Empty;
+		// ReSharper restore InconsistentNaming
 
         private AudioSource _activeAudio;
         private AudioSource _transitioningAudio;
@@ -94,7 +99,7 @@ namespace DarkTonic.MasterAudio {
         private int? _lastSongPosition;
         private double? _currentSchedSongDspStartTime;
         private double? _currentSchedSongDspEndTime;
-        private int _lastFrameSongPosition = -1;
+		private int _lastFrameSongPosition = -1;
 
         private readonly Dictionary<AudioSource, double> _scheduledSongOffsetByAudioSource = new Dictionary<AudioSource, double>(2);
 
@@ -109,7 +114,7 @@ namespace DarkTonic.MasterAudio {
         private Transform _trans;
         private bool _willPersist;
         private double? _songPauseTime;
-        private int framesOfSongPlayed = 0;
+		private int framesOfSongPlayed = 0;
 
         public enum AudioPlayType {
             PlayNow,
@@ -137,45 +142,35 @@ namespace DarkTonic.MasterAudio {
         }
         /*! \endcond */
 
-        /// <summary>
-        /// Used for the SongChanged event you can subscribe to
-        /// </summary>
-        public delegate void SongChangedEventHandler(string newSongName, MusicSetting song);
+		/// <summary>
+		/// Used for the SongChanged event you can subscribe to
+		/// </summary>
+		public delegate void SongChangedEventHandler(string newSongName);
+		
+		/// <summary>
+		/// Used for the SongEnded event you can subscribe to
+		/// </summary>
+		public delegate void SongEndedEventHandler(string songName);
+		
+		/// <summary>
+		/// Used for the SongLooped event you can subscribe to
+		/// </summary>
+		public delegate void SongLoopedEventHandler(string songName);
 
-        /// <summary>
-        /// Used for the SongEnded event you can subscribe to
-        /// </summary>
-        public delegate void SongEndedEventHandler(string songName);
-
-        /// <summary>
-        /// Used for the SongLooped event you can subscribe to
-        /// </summary>
-        public delegate void SongLoopedEventHandler(string songName);
-
-        /// <summary>
-        /// Used for the PlaylistEnded event you can subscribe to
-        /// </summary>
-        public delegate void PlaylistEndedEventHandler();
-
-        /// <summary>
-        /// This event will notify you when the Playlist song changes.
-        /// </summary>
-        public event SongChangedEventHandler SongChanged;
-
-        /// <summary>
-        /// This event will notify you when the Playlist song ends.
-        /// </summary>
-        public event SongEndedEventHandler SongEnded;
-
-        /// <summary>
-        /// This event will notify you when a song loops (ends a loop and starts the same clip again via looping).
-        /// </summary>
-        public event SongLoopedEventHandler SongLooped;
-
-        /// <summary>
-        /// This event will notify you when a Playlist stops after the last song plays.
-        /// </summary>
-        public event PlaylistEndedEventHandler PlaylistEnded;
+		/// <summary>
+		/// This event will notify you when the Playlist song changes.
+		/// </summary>
+		public event SongChangedEventHandler SongChanged;
+		
+		/// <summary>
+		/// This event will notify you when the Playlist song ends.
+		/// </summary>
+		public event SongEndedEventHandler SongEnded;
+		
+		/// <summary>
+		/// This event will notify you when a song loops (ends a loop and starts the same clip again via looping).
+		/// </summary>
+		public event SongLoopedEventHandler SongLooped;
 
         #region Monobehavior events
 
@@ -205,25 +200,7 @@ namespace DarkTonic.MasterAudio {
 
             if (sameNameCount > 1) {
                 DestroyImmediate(gameObject);
-
-                var mas = FindObjectsOfType(typeof(MasterAudio));
-                bool shouldLog = false;
-                for (var i = 0; i < mas.Length; i++) {
-                    MasterAudio ama = mas[i] as MasterAudio;
-                    if (!ama.persistBetweenScenes) {
-                        continue;
-                    }
-
-                    if (ama.shouldLogDestroys) {
-                        shouldLog = true;
-                        break;
-                    }
-                }
-
-                if (shouldLog) {
-                    Debug.Log("More than one Playlist Controller prefab exists in this Scene with the same name. Destroying the one called '" + ControllerName + "'. You may wish to set up a Bootstrapper Scene so this does not occur.");
-                }
-
+                Debug.Log("More than one Playlist Controller prefab exists in this Scene with the same name. Destroying the one called '" + ControllerName + "'. You may wish to set up a Bootstrapper Scene so this does not occur.");
                 return;
             }
             // end check
@@ -255,17 +232,20 @@ namespace DarkTonic.MasterAudio {
             _activeAudio = _audio1;
             _transitioningAudio = _audio2;
 
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
             _audio1.outputAudioMixerGroup = mixerChannel;
             _audio2.outputAudioMixerGroup = mixerChannel;
 
             SetSpatialBlend();
+#endif
 
             _curFadeMode = FadeMode.None;
             _fadeCompleteCallback = null;
             _lostFocus = false;
         }
 
-        /*! \cond PRIVATE */
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
+
         public void SetSpatialBlend() {
             if (MasterAudio.SafeInstance == null) {
                 return;
@@ -300,7 +280,6 @@ namespace DarkTonic.MasterAudio {
                     break;
             }
         }
-        /*! \endcond */
 
         private void SetAudiosIfEmpty() {
             var audios = GetComponents<AudioSource>();
@@ -318,6 +297,7 @@ namespace DarkTonic.MasterAudio {
             _audio1.spatialBlend = blend;
             _audio2.spatialBlend = blend;
         }
+#endif
 
         // Use this for initialization 
         // ReSharper disable once UnusedMember.Local
@@ -451,9 +431,9 @@ namespace DarkTonic.MasterAudio {
 
             AutoStartPlaylist(); // in case it didn't happen in Start due to slowness.
 
-            if (_activeAudio.isPlaying) {
-                framesOfSongPlayed++;
-            }
+			if (_activeAudio.isPlaying) {
+				framesOfSongPlayed++;
+			}
 
             if (IsCrossFading) {
                 // cross-fade code
@@ -473,20 +453,20 @@ namespace DarkTonic.MasterAudio {
                 _activeAudio.volume = ratioPassed * _activeAudioEndVolume;
                 _transitioningAudio.volume = _transitioningAudioStartVolume * (1 - ratioPassed);
                 // end cross-fading code
-            }
+            } 
 
             if (!_activeAudio.loop && _activeAudio.clip != null) {
-                if (AudioUtil.IsClipPaused(_activeAudio)) { // 7/12/2017, changed this if before the next one (.isPlaying) because paused tracks were stopping.
-                                                            // do not auto-advance if the audio is paused.
-                    goto AfterAutoAdvance;
-                }
+				if (AudioUtil.IsAudioPaused(_activeAudio)) { // 7/12/2017, changed this if before the next one (.isPlaying) because paused tracks were stopping.
+					// do not auto-advance if the audio is paused.
+					goto AfterAutoAdvance;
+				}
 
-                if (!_activeAudio.isPlaying) {
-                    if (!IsAutoAdvance) {
-                        FirePlaylistEndedEventIfAny();
-                        CeaseAudioSource(_activeAudio); // this will release the resources if not auto-advance
-                        return;
-                    }
+				if (!_activeAudio.isPlaying) {
+				    if (!IsAutoAdvance) {
+						FirePlaylistEndedEventIfAny();
+						CeaseAudioSource(_activeAudio); // this will release the resources if not auto-advance
+				        return;
+				    }
 
                     // is auto-advance. 
                     var hasNoNextSong = false;
@@ -497,8 +477,8 @@ namespace DarkTonic.MasterAudio {
                     }
 
                     if (hasNoNextSong && !_activeAudio.isPlaying) { // 8/21/2017, the last song would not unload because it was never detected.
-                        FirePlaylistEndedEventIfAny();
-                        CeaseAudioSource(_activeAudio); // this will release the resources
+						FirePlaylistEndedEventIfAny();
+						CeaseAudioSource(_activeAudio); // this will release the resources
                         return;
                     }
                 }
@@ -547,24 +527,24 @@ namespace DarkTonic.MasterAudio {
                                 PlayNextOrRandom(AudioPlayType.PlayNow);
                             }
                         }
-                    }
+                    } 
                 }
             }
 
-            if (_activeAudio.loop && _activeAudio.clip != null) {
-                if (_activeAudio.timeSamples < _lastFrameSongPosition) {
-                    var songName = _activeAudio.clip.name;
-                    if (SongLooped != null && !string.IsNullOrEmpty(songName)) {
-                        SongLooped(songName);
-                    }
+			if (_activeAudio.loop && _activeAudio.clip != null) {
+				if (_activeAudio.timeSamples < _lastFrameSongPosition) {
+					var songName = _activeAudio.clip.name;
+					if (SongLooped != null && !string.IsNullOrEmpty(songName)) {
+						SongLooped(songName);
+					}
 
-                    if (songLoopedEventExpanded && songLoopedCustomEvent != string.Empty && songLoopedCustomEvent != MasterAudio.NoGroupName) {
-                        MasterAudio.FireCustomEvent(songLoopedCustomEvent, Trans, false);
-                    }
-                }
+					if (songLoopedEventExpanded && songLoopedCustomEvent != string.Empty && songLoopedCustomEvent != MasterAudio.NoGroupName) {
+						MasterAudio.FireCustomEvent(songLoopedCustomEvent, Trans, false);
+					}
+				}
 
-                _lastFrameSongPosition = _activeAudio.timeSamples;
-            }
+				_lastFrameSongPosition = _activeAudio.timeSamples;
+			}
 
             AfterAutoAdvance:
 
@@ -602,22 +582,22 @@ namespace DarkTonic.MasterAudio {
             return null;
         }
 
-        /// <summary>
-        /// This method will tell you if the song you specify by name is playing or not. If it's the current song and paused, this will still return true.
-        /// </summary>
-        /// <returns><c>true</c> if this instance is song playing the specified songName; otherwise, <c>false</c>.</returns>
-        /// <param name="songName">Song name. Here you pass the name of the clip to check.</param>
-        public bool IsSongPlaying(string songName) {
-            if (!HasPlaylist) {
-                return false;
-            }
-
-            if (ActiveAudioSource == null || ActiveAudioSource.clip == null) {
-                return false;
-            }
-
-            return ActiveAudioSource.clip.name == songName;
-        }
+		/// <summary>
+		/// This method will tell you if the song you specify by name is playing or not. If it's the current song and paused, this will still return true.
+		/// </summary>
+		/// <returns><c>true</c> if this instance is song playing the specified songName; otherwise, <c>false</c>.</returns>
+		/// <param name="songName">Song name. Here you pass the name of the clip to check.</param>
+		public bool IsSongPlaying(string songName) {
+			if (!HasPlaylist) {
+				return false;
+			}
+			
+			if (ActiveAudioSource == null || ActiveAudioSource.clip == null) {
+				return false;
+			}
+			
+			return ActiveAudioSource.clip.name == songName;
+		}
 
         /// <summary>
         /// Call this method to clear all songs out of the queued songs list.
@@ -683,7 +663,7 @@ namespace DarkTonic.MasterAudio {
             }
 
             if (_transitioningAudio.clip != null) {
-                _transitioningAudio.Pause(); // previously scheduled gapless next song should not start during pause.
+                _transitioningAudio.Pause();
             }
         }
 
@@ -718,14 +698,14 @@ namespace DarkTonic.MasterAudio {
             }
 
             if (_activeAudio.clip == null) {
-                _songPauseTime = null;
+                _songPauseTime = null; 
                 return false;
             }
 
             if (!_scheduledSongOffsetByAudioSource.ContainsKey(_activeAudio)) {
                 _activeAudio.Play();
-                framesOfSongPlayed = 0;
-                AudioUtil.ClipPlayed(_activeAudio.clip, GameObj);
+				framesOfSongPlayed = 0;
+				AudioUtil.ClipPlayed(_activeAudio.clip, GameObj);
             } else if (_songPauseTime.HasValue && _currentSchedSongDspStartTime.HasValue) {
                 var unpauseTime = AudioSettings.dspTime;
                 var timePaused = unpauseTime - _songPauseTime.Value;
@@ -742,7 +722,7 @@ namespace DarkTonic.MasterAudio {
 
             if (!_scheduledSongOffsetByAudioSource.ContainsKey(_transitioningAudio)) {
                 _transitioningAudio.Play();
-                AudioUtil.ClipPlayed(_transitioningAudio.clip, GameObj);
+				AudioUtil.ClipPlayed(_transitioningAudio.clip, GameObj);
             } else if (_songPauseTime.HasValue && _currentSchedSongDspStartTime.HasValue) {
                 var unpauseTime = AudioSettings.dspTime;
                 var timePaused = unpauseTime - _songPauseTime.Value;
@@ -777,21 +757,17 @@ namespace DarkTonic.MasterAudio {
             _currentSchedSongDspEndTime = null;
             _currentSong = null;
 
-            switch (PlaylistState) {
-                case PlaylistStates.NotInScene:
-                case PlaylistStates.Stopped:
-                    return; // no need to stop anything.
-            }
+			switch (PlaylistState) {
+				case PlaylistStates.NotInScene:
+				case PlaylistStates.Stopped:
+					return; // no need to stop anything.
+			}
 
             if (!onlyFadingClip) {
                 CeaseAudioSource(_activeAudio);
             }
 
             CeaseAudioSource(_transitioningAudio);
-
-            if (!onlyFadingClip && _clipsRemaining.Count == 0 && PlaylistEnded != null) {
-                PlaylistEnded();
-            }
         }
 
         /// <summary>
@@ -849,7 +825,7 @@ namespace DarkTonic.MasterAudio {
             }
 
             if (_clipsRemaining.Count == 0) {
-                Debug.LogWarning(
+				Debug.LogWarning(
                     "There are no clips left in this Playlist. Turn on Loop Playlist if you want to loop the entire song selection.");
                 return;
             }
@@ -858,7 +834,7 @@ namespace DarkTonic.MasterAudio {
                 return; // this will kill the crossfade, so abort
             }
 
-            var isMidsong = framesOfSongPlayed > 0;
+			var isMidsong = framesOfSongPlayed > 0;
 
             if (isMidsong) {
                 _nextSongScheduled = false;
@@ -934,11 +910,11 @@ namespace DarkTonic.MasterAudio {
             }
 
             if (_currentSequentialClipIndex >= _currentPlaylist.MusicSettings.Count) {
-                Debug.LogWarning("There are no clips left in this Playlist. Turn on Loop Playlist if you want to loop the entire song selection.");
+				Debug.LogWarning("There are no clips left in this Playlist. Turn on Loop Playlist if you want to loop the entire song selection.");
                 return;
             }
 
-            var isMidsong = framesOfSongPlayed > 0;
+			var isMidsong = framesOfSongPlayed > 0;
 
             if (isMidsong) {
                 _nextSongScheduled = false;
@@ -1107,7 +1083,6 @@ namespace DarkTonic.MasterAudio {
                 return false;
             }
 
-            _nextSongScheduled = false; // this should make sure that we don't play the same song twice in a row by failing to increment the song number.
             _currentSequentialClipIndex = setting.songIndex;
 
             // removed AdvanceSongCounter call here as it caused an error.
@@ -1131,7 +1106,7 @@ namespace DarkTonic.MasterAudio {
                 return; // no ducking during cross-fading, it screws up calculations.
             }
 
-            var rangedDuck = AudioUtil.AdjustAudioClipDurationForPitch(duckLength, pitch);
+            var rangedDuck =  AudioUtil.AdjustAudioClipDurationForPitch(duckLength, pitch);
 
             _currentDuckVolCut = duckedVolCut; // store for later usage
 
@@ -1247,7 +1222,7 @@ namespace DarkTonic.MasterAudio {
             _queuedSongs.Clear();
 
             if (playFirstClip) {
-                PlayNextOrRandom(AudioPlayType.PlayNow);
+				PlayNextOrRandom(AudioPlayType.PlayNow);
             }
         }
 
@@ -1267,15 +1242,15 @@ namespace DarkTonic.MasterAudio {
 
         #region Helper methods
 
-        private void CheckIfPlaylistStarted() {
-            if (_songsPlayedFromPlaylist > 0) {
-                return;
-            }
+		private void CheckIfPlaylistStarted() {
+			if (_songsPlayedFromPlaylist > 0) {
+				return;
+			}
 
-            if (playlistStartedEventExpanded && playlistStartedCustomEvent != string.Empty && playlistStartedCustomEvent != MasterAudio.NoGroupName) {
-                MasterAudio.FireCustomEvent(playlistStartedCustomEvent, Trans);
-            }
-        }
+			if (playlistStartedEventExpanded && playlistStartedCustomEvent != string.Empty && playlistStartedCustomEvent != MasterAudio.NoGroupName) {
+				MasterAudio.FireCustomEvent(playlistStartedCustomEvent, Trans);
+			}
+		}
 
         private PlaylistController FindOtherControllerInSameSyncGroup() {
             if (syncGroupNum <= 0 || _currentPlaylist.songTransitionType != MasterAudio.SongFadeInPosition.SynchronizeClips) {
@@ -1325,11 +1300,11 @@ namespace DarkTonic.MasterAudio {
             }
         }
 
-        private void FirePlaylistEndedEventIfAny() {
-            if (playlistEndedEventExpanded && playlistEndedCustomEvent != string.Empty && playlistStartedCustomEvent != MasterAudio.NoGroupName) {
-                MasterAudio.FireCustomEvent(playlistEndedCustomEvent, Trans);
-            }
-        }
+		private void FirePlaylistEndedEventIfAny() {
+			if (playlistEndedEventExpanded && playlistEndedCustomEvent != string.Empty && playlistStartedCustomEvent != MasterAudio.NoGroupName) {
+				MasterAudio.FireCustomEvent(playlistEndedCustomEvent, Trans);
+			}
+		}
 
         private void FillClips() {
             _clipsRemaining.Clear();
@@ -1375,12 +1350,12 @@ namespace DarkTonic.MasterAudio {
             AudioClip clipToPlay = null;
 
             var clipWillBeAudibleNow = playType == AudioPlayType.PlayNow || playType == AudioPlayType.AlreadyScheduled;
+            
+			if (clipWillBeAudibleNow) {
+				_lastFrameSongPosition = -1;
+			}
 
-            if (clipWillBeAudibleNow) {
-                _lastFrameSongPosition = -1;
-            }
-
-            if (clipWillBeAudibleNow && _currentSong != null && !CanSchedule) {
+			if (clipWillBeAudibleNow && _currentSong != null && !CanSchedule) {
                 if (_currentSong.songChangedEventExpanded && _currentSong.songChangedCustomEvent != string.Empty &&
                     _currentSong.songChangedCustomEvent != MasterAudio.NoGroupName) {
                     MasterAudio.FireCustomEvent(_currentSong.songChangedCustomEvent, Trans);
@@ -1470,13 +1445,7 @@ namespace DarkTonic.MasterAudio {
             var shouldPopulateClip = playType == AudioPlayType.PlayNow || isScheduledPlay;
             var clipWillBeAudibleNow = playType == AudioPlayType.PlayNow || playType == AudioPlayType.AlreadyScheduled;
 
-            double? nextClipStartTime = null;
-
             if (shouldPopulateClip) {
-                if (isScheduledPlay && CanSchedule) { // only needed for gapless, looping clip. We can't check if it's looping?
-                    nextClipStartTime = CalculateNextTrackStartTimeOffset();
-                }
-
                 _audioClip.clip = clipToPlay;
                 _audioClip.pitch = _newSongSetting.pitch;
             }
@@ -1484,7 +1453,7 @@ namespace DarkTonic.MasterAudio {
             // set last known time for current song.
             if (_currentSong != null) {
                 _currentSong.lastKnownTimePoint = _activeAudio.timeSamples;
-                _currentSong.wasLastKnownTimePointSet = true;
+				_currentSong.wasLastKnownTimePointSet = true;
             }
 
             if (clipWillBeAudibleNow) {
@@ -1504,8 +1473,6 @@ namespace DarkTonic.MasterAudio {
                 SetDuckProperties();
             }
 
-            var songTimeChanged = false;
-
             switch (playType) {
                 case AudioPlayType.AlreadyScheduled:
                     // start crossfading now	
@@ -1518,46 +1485,45 @@ namespace DarkTonic.MasterAudio {
                     }
 
                     _audioClip.Play(); // need to play before setting time or it sometimes resets back to zero.
-                    framesOfSongPlayed = 0;
-                    AudioUtil.ClipPlayed(_activeAudio.clip, GameObj);
+					framesOfSongPlayed = 0;
+					AudioUtil.ClipPlayed(_activeAudio.clip, GameObj);
 
                     CheckIfPlaylistStarted();
-                    _songsPlayedFromPlaylist++;
-
-                    // this sets the time to match for "synchronized"
-                    var firstMatchingGroupController = FindOtherControllerInSameSyncGroup();
-
-                    if (firstMatchingGroupController != null) {
-                        var matchingTimeSamples = firstMatchingGroupController._activeAudio.timeSamples;
-                        var matchingTime = firstMatchingGroupController._audioClip.time;
-                        var hasEnoughTimeToMatchPosition = Math.Abs(_audioClip.clip.length - matchingTime) >= AudioUtil.FrameTime * FramesEarlyToBeSyncable; // 10 frames time (to catch any weirdness).
-
-                        if (_audioClip.clip != null && matchingTimeSamples < _audioClip.clip.samples && hasEnoughTimeToMatchPosition) {
-                            // align song starting to the same time as other song already playing in the same Sync Group
-                            _audioClip.timeSamples = matchingTimeSamples;
-                            songTimeChanged = true;
-                        }
-                    }
-                    // end set time code
+					_songsPlayedFromPlaylist++;
                     break;
                 case AudioPlayType.Schedule:
-                    // need to calculate for old, previously looping clip
-                    if (!nextClipStartTime.HasValue) {
-                        nextClipStartTime = CalculateNextTrackStartTimeOffset();
-                    }
+                    var scheduledPlayTimeOffset = CalculateNextTrackStartTimeOffset();
 
-                    ScheduleClipPlay(nextClipStartTime.Value, _audioClip, false);
+                    ScheduleClipPlay(scheduledPlayTimeOffset, _audioClip, false);
 
                     _nextSongScheduled = true;
-                    CheckIfPlaylistStarted();
-                    _songsPlayedFromPlaylist++;
+					CheckIfPlaylistStarted();
+					_songsPlayedFromPlaylist++;
 
                     break;
             }
 
+            var songTimeChanged = false;
+
+            if (playType == AudioPlayType.PlayNow) {
+                var firstMatchingGroupController = FindOtherControllerInSameSyncGroup();
+
+                if (firstMatchingGroupController != null) {
+                    var matchingTimeSamples = firstMatchingGroupController._activeAudio.timeSamples;
+                    var matchingTime = firstMatchingGroupController._audioClip.time;
+                    var hasEnoughTimeToMatchPosition = Math.Abs(_audioClip.clip.length - matchingTime) >= AudioUtil.FrameTime * FramesEarlyToBeSyncable; // 10 frames time (to catch any weirdness).
+
+                    if (_audioClip.clip != null && matchingTimeSamples < _audioClip.clip.samples && hasEnoughTimeToMatchPosition) {
+                        // align song starting to the same time as other song already playing in the same Sync Group
+                        _audioClip.timeSamples = matchingTimeSamples;
+                        songTimeChanged = true;
+                    }
+                }
+            }
+
             // this code will adjust the starting position of a song, but shouldn't do so when you first change Playlists.
             if (_currentPlaylist != null) {
-                if (_songsPlayedFromPlaylist <= 1 && !songTimeChanged) {
+				if (_songsPlayedFromPlaylist <= 1 && !songTimeChanged) {
                     _audioClip.timeSamples = 0;
                     // reset pointer so a new Playlist always starts at the beginning, but don't do it for synchronized! We need that first song to use the sync group.
                 } else {
@@ -1608,8 +1574,8 @@ namespace DarkTonic.MasterAudio {
                     }
                 }
 
-                // only use Custom Start Time for "From Last Known Position" if the song hasn't played before and doesn't have a last known position.
-                var isFromLastKnown = _currentPlaylist.songTransitionType == MasterAudio.SongFadeInPosition.NewClipFromLastKnownPosition && !_newSongSetting.wasLastKnownTimePointSet;
+				// only use Custom Start Time for "From Last Known Position" if the song hasn't played before and doesn't have a last known position.
+				var isFromLastKnown = _currentPlaylist.songTransitionType == MasterAudio.SongFadeInPosition.NewClipFromLastKnownPosition && !_newSongSetting.wasLastKnownTimePointSet;
 
                 // account for custom start time.
                 if (_currentPlaylist.songTransitionType == MasterAudio.SongFadeInPosition.NewClipFromBeginning || isFromLastKnown) {
@@ -1639,7 +1605,7 @@ namespace DarkTonic.MasterAudio {
                     if (_audioClip != null) {
                         clipName = _audioClip.clip.name;
                     }
-                    SongChanged(clipName, _newSongSetting);
+                    SongChanged(clipName);
                 }
                 // song changed end
             }
@@ -1701,7 +1667,7 @@ namespace DarkTonic.MasterAudio {
             if (ShouldNotSwitchEarly && _currentSchedSongDspEndTime.HasValue) { // this is being calculated AFTER the scheduled song starts.
                 if (calledAfterPause) {
                     // do not modify
-                } else {
+                } else { 
                     schedTime = _currentSchedSongDspEndTime.Value;
                     scheduledPlayTimeOffset = schedTime - AudioSettings.dspTime;
                 }
@@ -1710,6 +1676,7 @@ namespace DarkTonic.MasterAudio {
             source.PlayScheduled(schedTime);
 
             _currentSchedSongDspStartTime = schedTime;
+            _currentSchedSongDspEndTime = schedTime + GetClipDuration(source);
 
             RemoveScheduledClip();
 
@@ -1722,19 +1689,19 @@ namespace DarkTonic.MasterAudio {
             _duckingMode = AudioDuckingMode.NotDucking;
             _crossFadeStartTime = AudioUtil.Time;
 
-            if (crossfadeStartedExpanded && crossfadeStartedCustomEvent != string.Empty && crossfadeStartedCustomEvent != MasterAudio.NoGroupName) {
-                MasterAudio.FireCustomEvent(crossfadeStartedCustomEvent, Trans, false);
-            }
+			if (crossfadeStartedExpanded && crossfadeStartedCustomEvent != string.Empty && crossfadeStartedCustomEvent != MasterAudio.NoGroupName) {
+				MasterAudio.FireCustomEvent(crossfadeStartedCustomEvent, Trans, false);
+			}
         }
 
         private void CeaseAudioSource(AudioSource source) {
-            if (source == null) {
+			if (source == null) {
                 return;
             }
 
-            if (source == _activeAudio) {
-                framesOfSongPlayed = 0;
-            }
+			if (source == _activeAudio) {
+				framesOfSongPlayed = 0;
+			}
 
             var isValidClip = source.clip != null;
             var songName = source.clip == null ? string.Empty : source.clip.name;
@@ -1773,7 +1740,7 @@ namespace DarkTonic.MasterAudio {
             var origDb = AudioUtil.GetDbFromFloatVolume(_originalMusicVolume);
             var targetVolumeDb = origDb - _currentDuckVolCut;
             var targetVolumeNormal = AudioUtil.GetFloatVolumeFromDb(targetVolumeDb);
-
+    
             _duckRange = _originalMusicVolume - targetVolumeNormal;
             _initialDuckVolume = targetVolumeNormal;
 
@@ -1986,12 +1953,12 @@ namespace DarkTonic.MasterAudio {
             }
         }
 
-        /*! \cond PRIVATE */
+#if UNITY_5 || UNITY_2017_1_OR_NEWER
         public void RouteToMixerChannel(AudioMixerGroup group) {
             _activeAudio.outputAudioMixerGroup = group;
             _transitioningAudio.outputAudioMixerGroup = group;
         }
-        /*! \endcond */
+#endif
 
         /// <summary>
         /// This property returns the current Playlist

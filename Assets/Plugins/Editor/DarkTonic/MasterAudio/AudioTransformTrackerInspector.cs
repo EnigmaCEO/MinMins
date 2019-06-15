@@ -38,7 +38,7 @@ public class AudioTransformTrackerInspector : Editor {
                 MasterAudio.PauseAllSoundsOfTransform(tracker.Trans);
             }
             GUILayout.Space(4);
-            if (GUILayout.Button("Unpause All Sounds", EditorStyles.toolbarButton, GUILayout.Width(115))) {
+            if (GUILayout.Button("Unpause All Sounds", EditorStyles.toolbarButton, GUILayout.Width(110))) {
                 MasterAudio.UnpauseAllSoundsOfTransform(tracker.Trans);
             }
             EditorGUILayout.EndHorizontal();
@@ -95,7 +95,7 @@ public class AudioTransformTrackerInspector : Editor {
 
             var label = "Playing ({0}%)";
 
-            if (variation.IsPaused) {
+            if (AudioUtil.IsAudioPaused(variation.VarAudio)) {
                 GUI.color = Color.yellow;
                 label = "Paused ({0}%)";
             }
@@ -105,7 +105,8 @@ public class AudioTransformTrackerInspector : Editor {
                 percentagePlayed = (int)(variation.VarAudio.time / variation.VarAudio.clip.length * 100);
             }
 
-			EditorGUILayout.LabelField(string.Format(label, percentagePlayed), EditorStyles.miniButtonMid, GUILayout.Height(16));
+			EditorGUILayout.LabelField(string.Format(label, percentagePlayed),
+                EditorStyles.miniButtonMid, GUILayout.Height(16));
 
             GUI.color = Color.white;
 

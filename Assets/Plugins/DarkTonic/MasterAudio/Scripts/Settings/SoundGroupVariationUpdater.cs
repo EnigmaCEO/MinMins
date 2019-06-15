@@ -336,6 +336,10 @@ namespace DarkTonic.MasterAudio {
                 GrpVariation.LowPassFilter = newFilter;
             }
 
+#if UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_5_0 || UNITY_5_1
+            // no option for this
+			if (is2DRaycast) { }
+#else
             var oldQueriesStart = Physics2D.queriesStartInColliders;
             if (is2DRaycast) {
                 Physics2D.queriesStartInColliders = _maThisFrame.occlusionIncludeStartRaycast2DCollider;
@@ -351,6 +355,7 @@ namespace DarkTonic.MasterAudio {
                 oldRaycastsHitTriggers = Physics.queriesHitTriggers;
                 Physics.queriesHitTriggers = _maThisFrame.occlusionRaycastsHitTriggers;
             }
+#endif
 
             var hitPoint = Vector3.zero;
             float? hitDistance = null;
@@ -400,12 +405,15 @@ namespace DarkTonic.MasterAudio {
                 }
             }
 
+#if UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_5_0 || UNITY_5_1
+#else
             if (is2DRaycast) {
                 Physics2D.queriesStartInColliders = oldQueriesStart;
                 Physics2D.queriesHitTriggers = oldRaycastsHitTriggers;
             } else {
                 Physics.queriesHitTriggers = oldRaycastsHitTriggers;
             }
+#endif
 
             if (_maThisFrame.occlusionShowRaycasts) {
                 var endPoint = isHit ? hitPoint : _listenerThisFrame.position;
@@ -467,48 +475,20 @@ namespace DarkTonic.MasterAudio {
 
             if (GrpVariation.useRandomStartTime) {
                 VarAudio.time = ClipStartPosition;
-
-                if (!VarAudio.loop) { // don't stop it if it's going to loop.
-                    var playableLength = AudioUtil.AdjustAudioClipDurationForPitch(ClipEndPosition - ClipStartPosition, VarAudio);
-                    _clipSchedEndTime = startTime + playableLength;
-                    VarAudio.SetScheduledEndTime(_clipSchedEndTime.Value);
-                }
+                var playableLength = AudioUtil.AdjustAudioClipDurationForPitch(ClipEndPosition - ClipStartPosition, VarAudio);
+                _clipSchedEndTime = startTime + playableLength;
+                VarAudio.SetScheduledEndTime(_clipSchedEndTime.Value);
             }
 
             GrpVariation.LastTimePlayed = AudioUtil.Time;
 
-            DuckIfNotSilent();
+            // sound play worked! Duck music if a ducking sound.
+            MasterAudio.DuckSoundGroup(ParentGroup.GameObjectName, VarAudio);
 
             _isPlayingBackward = GrpVariation.OriginalPitch < 0;
             _lastFrameClipTime = _isPlayingBackward ? ClipEndPosition + 1 : -1f;
 
             _waitMode = WaitForSoundFinishMode.WaitForEnd;
-        }
-
-        private void DuckIfNotSilent() {
-            bool isSilent = false;
-
-            if (GrpVariation.PlaySoundParm.VolumePercentage <= 0) {
-                isSilent = true;
-            } else if (GrpVariation.ParentGroup.groupMasterVolume <= 0) {
-                isSilent = true;
-            } else if (GrpVariation.VarAudio.mute) { // other group soloed
-                isSilent = true;
-            } else if (MasterAudio.MixerMuted) { 
-                isSilent = true;
-            } else if (GrpVariation.ParentGroup.isMuted) {
-                isSilent = true;
-            } else {
-                var bus = GrpVariation.ParentGroup.BusForGroup;
-                if (bus != null && bus.isMuted) {
-                    isSilent = true;
-                }
-            }
-
-            // sound play worked! Duck music if a ducking sound and sound is not silent.
-            if (!isSilent) {
-                MasterAudio.DuckSoundGroup(ParentGroup.GameObjectName, VarAudio);
-            }
         }
 
         private void StopOrChain() {

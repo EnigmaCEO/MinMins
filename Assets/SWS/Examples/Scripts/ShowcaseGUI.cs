@@ -24,7 +24,7 @@ public class ShowcaseGUI : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         ActivateSurroundings();
-		SceneManager.sceneLoaded += OnLevelLoaded;
+		UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnLevelLoaded;
     }
 
 
@@ -55,19 +55,19 @@ public class ShowcaseGUI : MonoBehaviour
 
 
 		Rect leftRect = new Rect(width - buttonW * 2 - 70, 10, buttonW, buttonH);
-		if (SceneManager.GetActiveScene().buildIndex > 0 && GUI.Button(leftRect, "<"))
-			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+		if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex > 0 && GUI.Button(leftRect, "<"))
+            UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex - 1);
 		else if (GUI.Button(new Rect(leftRect), "<"))
-			SceneManager.LoadScene(levels - 1);
+            UnityEngine.SceneManagement.SceneManager.LoadScene(levels - 1);
 
 		GUI.Box(new Rect(width - buttonW - 70, 10, 60, buttonH),
-				"Scene:\n" + (SceneManager.GetActiveScene().buildIndex + 1) + " / " + levels);
+				"Scene:\n" + (UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex + 1) + " / " + levels);
 
 		Rect rightRect = new Rect(width - buttonW - 10, 10, buttonW, buttonH);
-        if (SceneManager.GetActiveScene().buildIndex < levels - 1 && GUI.Button(new Rect(rightRect), ">"))
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex < levels - 1 && GUI.Button(new Rect(rightRect), ">"))
+            UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex + 1);
         else if (GUI.Button(new Rect(rightRect), ">"))
-            SceneManager.LoadScene(0);
+            UnityEngine.SceneManagement.SceneManager.LoadScene(0);
 
 		GUI.Box(new Rect(width - 65 * 2, 50, 120, 55), "Example scenes\nmust be added\nto Build Settings.");
     }

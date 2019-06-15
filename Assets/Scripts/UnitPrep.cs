@@ -37,7 +37,7 @@ public class UnitPrep : MonoBehaviour {
 		selected = true;
 		//Debug.Log(name + " selected");
 		if(transform.parent.parent.name.Contains("slot")) {
-			transform.parent = team.transform.FindChild(transform.parent.parent.name);
+			transform.parent = team.transform.Find(transform.parent.parent.name);
 		}
 	}
 	
@@ -54,7 +54,7 @@ public class UnitPrep : MonoBehaviour {
 
 		PosLimit();
 		
-		if(slot.transform.FindChild("confirm_ok(Clone)") == null) {
+		if(slot.transform.Find("confirm_ok(Clone)") == null) {
 			GameObject confirm = (GameObject)Instantiate(Resources.Load <GameObject> ("Prefabs/UI/confirm_ok"));
 			confirm.transform.parent = slot.transform;
 			confirm.transform.localPosition = new Vector2(0,0);

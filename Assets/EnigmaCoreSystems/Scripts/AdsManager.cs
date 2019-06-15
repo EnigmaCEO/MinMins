@@ -109,8 +109,8 @@ public class AdsManager : MonoBehaviour
         AdColony.AppOptions appOptions = new AdColony.AppOptions();
         appOptions.AdOrientation = AdColony.AdOrientationType.AdColonyOrientationAll;
 
-        //AdColony.Ads.Configure(Ads.appId, appOptions, Ads.zoneId);
-        AdColony.Ads.Configure(QuizConfig.Instance.AdColonyAppId, appOptions, QuizConfig.Instance.AdColonyZoneId);
+        AdColony.Ads.Configure(Ads.appId, appOptions, Ads.zoneId);
+        //AdColony.Ads.Configure(QuizConfig.Instance.AdColonyAppId, appOptions, QuizConfig.Instance.AdColonyZoneId);
         print("initialize -> App id: " + Ads.appId);
         print("initialize -> Ads.zoneId[0]" + Ads.zoneId[0]);
     }

@@ -146,17 +146,37 @@ public class FootstepsSoundsInspector : Editor {
             var state = step.isExpanded;
             var text = "Footstep Sound #" + (f + 1);
 
-            DTGUIHelper.ShowCollapsibleSection(ref state, text);
+            // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
+            if (!state) {
+                GUI.backgroundColor = DTGUIHelper.InactiveHeaderColor;
+            } else {
+                GUI.backgroundColor = DTGUIHelper.ActiveHeaderColor;
+            }
+
+            GUILayout.BeginHorizontal();
+
+            text = "<b><size=11>" + text + "</size></b>";
+
+            if (state) {
+                text = "\u25BC " + text;
+            } else {
+                text = "\u25BA " + text;
+            }
+            if (!GUILayout.Toggle(true, text, "dragtab", GUILayout.MinWidth(20f))) {
+                state = !state;
+            }
 
             GUI.backgroundColor = Color.white;
-            GUILayout.Space(3f);
+            if (!state) {
+                GUILayout.Space(3f);
+            }
 
             if (state != step.isExpanded) {
                 AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "toggle Expand Variation");
                 step.isExpanded = state;
             }
 
-            DTGUIHelper.AddHelpIconNoStyle("http://www.dtdevtools.com/docs/masteraudio/FootstepSounds.htm#FootstepSound");
+            DTGUIHelper.AddHelpIcon("http://www.dtdevtools.com/docs/masteraudio/FootstepSounds.htm#FootstepSound");
 
             EditorGUILayout.EndHorizontal();
 
@@ -207,6 +227,7 @@ public class FootstepsSoundsInspector : Editor {
             }
             EditorGUILayout.EndToggleGroup();
 
+            DTGUIHelper.AddSpaceForNonU5(2);
             DTGUIHelper.StartGroupHeader();
             var newTagFilter = EditorGUILayout.BeginToggleGroup("Tag filter", step.useTagFilter);
             if (newTagFilter != step.useTagFilter) {

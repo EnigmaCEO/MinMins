@@ -4,50 +4,12 @@ using UnityEngine;
 // ReSharper disable once CheckNamespace
 namespace DarkTonic.MasterAudio {
     public static class SpatializerHelper {
-        private const string OculusSpatializer = "OculusSpatializer";
-        private const string ResonanceAudioSpatializer = "Resonance Audio";
-
-        public static bool IsSupportedSpatializer {
-            get {
-                switch (SelectedSpatializer) {
-                    case OculusSpatializer:
-                        return true;
-                    case ResonanceAudioSpatializer:
-                        return true;
-                    default:
-                        return false;
-                }
-            }
-        }
-
-        public static bool IsOculusAudioSpatializer {
-            get {
-                return SelectedSpatializer == OculusSpatializer;
-            }
-        }
-
-        public static bool IsResonanceAudioSpatializer {
-            get {
-                return SelectedSpatializer == ResonanceAudioSpatializer;
-            }
-        }
-
-        public static string SelectedSpatializer {
-            get {
-#if UNITY_2017_1_OR_NEWER
-                return AudioSettings.GetSpatializerPluginName();
-#else
-                return string.Empty;
-#endif
-            }
-        }
-
         public static bool SpatializerOptionExists {
             get {
-#if UNITY_2017_1_OR_NEWER
-                return true;
-#else
-				return false;
+#if UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_5_0 || UNITY_5_1 || UNITY_5_2 || UNITY_5_3
+                return false;
+#else 
+				return true;
 #endif
             }
         }
@@ -67,25 +29,11 @@ namespace DarkTonic.MasterAudio {
                 return;
             }
 
-#if UNITY_2017_1_OR_NEWER
-            source.spatialize = true;
-#else
-			// no spatializer!
-#endif
-
-            if (!ResonanceAudioHelper.ResonanceAudioOptionExists) {
-                return;
-            }
-
-            if (!MasterAudio.Instance.useSpatializerPostFX) {
-                return;
-            }
-
-#if UNITY_2018_1_OR_NEWER
-            source.spatializePostEffects = true;
-#else
-			// no spatializer post FX!
-#endif
+			#if UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_5_0 || UNITY_5_1 || UNITY_5_2 || UNITY_5_3 
+				// no spatializer!
+			#else
+				source.spatialize = true;
+			#endif
         }
     }
 }
