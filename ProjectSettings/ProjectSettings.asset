@@ -505,7 +505,16 @@ PlayerSettings:
   webGLLinkerTarget: 1
   webGLThreadsSupport: 0
   scriptingDefineSymbols:
-    7: 
+    1: TextMeshPro
+    4: TextMeshPro
+    7: TextMeshPro
+    13: TextMeshPro
+    19: TextMeshPro
+    21: TextMeshPro
+    25: TextMeshPro
+    26: TextMeshPro
+    27: TextMeshPro
+    28: TextMeshPro
   platformArchitecture:
     iOS: 2
   scriptingBackend:
