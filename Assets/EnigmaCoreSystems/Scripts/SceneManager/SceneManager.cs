@@ -25,11 +25,11 @@ public class SceneManager : Manageable<SceneManager> {
 
 	static public void LoadScene(string name) {
 		targetScene = name;
-        if (Application.CanStreamedLevelBeLoaded("Load") && (name == "Missions" || name == "Level"))
-            UnityEngine.SceneManagement.SceneManager.LoadScene("Load");
-        else if (Application.CanStreamedLevelBeLoaded("Load") && (name == "MissionsNetwork"))
-            UnityEngine.SceneManagement.SceneManager.LoadScene("LoadNetwork");
-		else
+  //      if (Application.CanStreamedLevelBeLoaded("Load") && (name == "Missions" || name == "Level"))
+  //          UnityEngine.SceneManagement.SceneManager.LoadScene("Load");
+  //      else if (Application.CanStreamedLevelBeLoaded("Load") && (name == "MissionsNetwork"))
+  //          UnityEngine.SceneManagement.SceneManager.LoadScene("LoadNetwork");
+		//else
             UnityEngine.SceneManagement.SceneManager.LoadScene(name);
 		
 	}
