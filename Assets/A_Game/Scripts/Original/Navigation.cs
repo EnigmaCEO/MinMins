@@ -18,7 +18,7 @@ public class Navigation : MonoBehaviour {
 	void OnMouseDown() {
 		if(name == "btn_next") {
 			manager.GetComponent<TeamManager>().SetTeam();
-			if(Application.loadedLevelName.Equals("WarPrep")) Application.LoadLevel("War");
+			if(Application.loadedLevelName.Equals("OriginalWarPrep")) Application.LoadLevel("OriginalWar");
 		}
 	}
 
@@ -26,14 +26,14 @@ public class Navigation : MonoBehaviour {
 		if(!isDown) return;
 
 		if(name == "Fight") {
-			Application.LoadLevel("UnitSelect");
+			Application.LoadLevel("OriginalUnitSelect");
 			
 		}
 
 		if(name == "btn_next") {
-			if(Application.loadedLevelName.Equals("UnitSelect")) Application.LoadLevel("WarPrep");
-			
-		}
+			if(Application.loadedLevelName.Equals("OriginalUnitSelect"))
+                Application.LoadLevel("OriginalWarPrep");
+        }
 
 		if(name == "Info") {
 			Debug.Log(transform.parent.name + " Info");

@@ -7,7 +7,7 @@ public class MinMin : MonoBehaviour {
 
 	// Use this for initialization
 	void Awake () {
-		if(Application.loadedLevelName.Equals("UnitSelect")) {
+		if(Application.loadedLevelName.Equals("UnitSelect") || Application.loadedLevelName.Equals("OriginalUnitSelect")) {
 			GameObject button = (GameObject)Instantiate(Resources.Load <GameObject> ("Prefabs/UI/Info"));
 			button.transform.parent = transform;
 			button.transform.localScale = new Vector2(0.01f,0.01f);

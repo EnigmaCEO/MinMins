@@ -21,14 +21,14 @@ public class TeamManager : MonoBehaviour {
 		btn_next = GameObject.Find("btn_next");
 		btn_next.SetActive(false);
 
-		if(Application.loadedLevelName.Equals("UnitSelect")) {
+		if(Application.loadedLevelName.Equals("OriginalUnitSelect") || Application.loadedLevelName.Equals("UnitSelect")) {
 			gTeam = GameObject.Find("TeamGrid").gameObject;
 			gInfo = GameObject.Find("Popup").gameObject;
 		}
 	}
 
 	void Start () {
-		if(Application.loadedLevelName.Equals("WarPrep")) {
+		if(Application.loadedLevelName.Equals("WarPrep") || Application.loadedLevelName.Equals("OriginalWarPrep")) {
 			GameObject slot = null;
 
 			for(int i = 1; i < 6; i++) {
