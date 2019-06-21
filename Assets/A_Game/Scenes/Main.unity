@@ -588,7 +588,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29020a2757dd97b44a618b5f061e7286, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _x: 1
+  _movement: 1
+  _moveType: 0
   _easeType: 14
   _loopType: 2
   _time: 4
@@ -1418,7 +1419,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29020a2757dd97b44a618b5f061e7286, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _x: 0.5
+  _movement: 0.5
+  _moveType: 0
   _easeType: 14
   _loopType: 2
   _time: 4
@@ -7566,7 +7568,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29020a2757dd97b44a618b5f061e7286, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _x: 1.5
+  _movement: 1.5
+  _moveType: 0
   _easeType: 14
   _loopType: 2
   _time: 4.5
