@@ -141,13 +141,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 983541af9fc2ea14d9809b3bf17eb433, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _uiMoveDistance: 5
+  _uiMoveTime: 1
+  _uiOutDelay: 0.1
+  _uiInDelay: 1.5
+  _uiMoveEaseType: 21
   _unitsGridContent: {fileID: 1471649670}
-  _teamGrid: {fileID: 2149739727690083494}
-  _infoPopUp: {fileID: 710730720}
+  _teamGrid: {fileID: 2048502003}
+  _infoPopUp: {fileID: 710730719}
   _powerGridContent: {fileID: 333131172}
   _armorGridContent: {fileID: 1156238418}
   _slotInfoImage: {fileID: 3987988317454387044}
   _waypointManager: {fileID: 232955699}
+  _nextButton: {fileID: 37781455}
+  _backButton: {fileID: 2124526952}
 --- !u!4 &24557417
 Transform:
   m_ObjectHideFlags: 0
@@ -8170,6 +8177,12 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &2048502003 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 367369599006230641, guid: f6f396435d16602419ad607912061bf1,
+    type: 3}
+  m_PrefabInstance: {fileID: 2005296850031016889}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2053731362
 GameObject:
   m_ObjectHideFlags: 0
