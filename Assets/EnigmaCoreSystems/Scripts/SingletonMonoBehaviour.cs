@@ -2,7 +2,7 @@
 
 public abstract class SingletonMonobehaviour<T> : MonoBehaviour where T : SingletonMonobehaviour<T>
 {
-
+    public bool PersistBetweenScenes = false;
     private static T _instance = null;
 
     public static T Instance
@@ -14,27 +14,16 @@ public abstract class SingletonMonobehaviour<T> : MonoBehaviour where T : Single
                 _instance = GameObject.FindObjectOfType(typeof(T)) as T;
                 if (_instance == null)
                 {
-                    GameObject instanceObject = Instantiate(Resources.Load("Prefabs/SingletonMonobehaviours/QuizConfig", typeof(GameObject))) as GameObject;
-                    _instance = instanceObject.GetComponent<T>(); 
-                    _instance.OnAwake();
+                    string instanceName = typeof(T).ToString();
+                    GameObject instanceObject = Instantiate(Resources.Load<GameObject>("Prefabs/SingletonMonobehaviours/" + instanceName));
+                    instanceObject.name = instanceName;
+                    _instance = instanceObject.GetComponent<T>();
+                    if (_instance.PersistBetweenScenes)
+                        DontDestroyOnLoad(instanceObject);
                 }
 
             }
             return _instance;
         }
-    }
-
-    private void Awake()
-    {
-        if (_instance == null)
-            _instance = this as T;
-    }
-
-    public virtual void OnAwake() { }
-
-
-    private void OnApplicationQuit()
-    {
-        _instance = null;
     }
 }

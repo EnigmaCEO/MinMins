@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/A_Game/Scenes/WarPrep.unity
     guid: 4c738e8375b4869498edd1032079fdf9
+  - enabled: 1
+    path: Assets/A_Game/Scenes/Original/OriginalWarPrep.unity
+    guid: ac76e071fd0b69345a898ce2474b2a2c
   m_configObjects: {}

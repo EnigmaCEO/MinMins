@@ -29,7 +29,7 @@ public class UnitSelectManager : MonoBehaviour
     private Transform _teamGridContent;
     private int _selectedUnitIndex;
 
-    private int[] _teamUnitIndexes = new int[6];
+
     private bool _infoEnabled = false;
 
     private Vector2[] _waypoints;
@@ -173,7 +173,7 @@ public class UnitSelectManager : MonoBehaviour
 
     private void onTeamSlotButtonDown(int slotIndex, Image slotImage)
     {
-        _teamUnitIndexes[slotIndex] = _selectedUnitIndex;
+        PlayerStats.Instance.TeamUnitIndexes[slotIndex] = _selectedUnitIndex;
 
         _unitsGridContent.GetChild(_selectedUnitIndex).gameObject.SetActive(false);
 
