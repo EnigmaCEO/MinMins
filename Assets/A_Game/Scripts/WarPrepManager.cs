@@ -20,12 +20,16 @@ public class WarPrepManager : MonoBehaviour
 
         for (int i = 0; i < gridLength; i++)
         {
-            int prepIndex = PlayerStats.Instance.TeamUnitIndexes[i] + 1;
-            if (prepIndex < 1)
+            //int prepIndex = PlayerStats.Instance.TeamUnitIndexes[i] + 1;
+            //if (prepIndex < 1)
+            //    continue;
+
+            string prepName = MatchManager.Instance.Team1[i].name;
+            if (prepName == "-1")
                 continue;
 
-            GameObject minMinObj = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/PrepMinMins/" + prepIndex));
-            minMinObj.name = i.ToString();
+            GameObject minMinObj = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/PrepMinMins/" + prepName));
+            minMinObj.name = prepName;
 
             minMinObj.transform.parent = warPrepGrid.Find("slot" + (i + 1));
             minMinObj.transform.localPosition = new Vector2(0, 0);

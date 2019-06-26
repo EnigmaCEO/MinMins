@@ -173,7 +173,8 @@ public class UnitSelectManager : MonoBehaviour
 
     private void onTeamSlotButtonDown(int slotIndex, Image slotImage)
     {
-        PlayerStats.Instance.TeamUnitIndexes[slotIndex] = _selectedUnitIndex;
+        MatchManager.Instance.Team1[slotIndex].name = (_selectedUnitIndex + 1).ToString();
+        //PlayerStats.Instance.TeamUnitIndexes[slotIndex] = _selectedUnitIndex;
 
         _unitsGridContent.GetChild(_selectedUnitIndex).gameObject.SetActive(false);
 

@@ -20,18 +20,18 @@ public class MatchManager : SingletonMonobehaviour<MatchManager>
         {
             Team1[i] = new UnitData();
             Team2[i] = new UnitData();
+
+            if (i < (TeamSize - 1))
+            {
+                Team1[i].name = (i + 1).ToString();  //default values
+                Team2[i].name = (i + 1).ToString(); // default values
+            }
         }
     }
 
     public class UnitData
     {
-        public string name;
-        public Vector2 position;
-
-        public UnitData()
-        {
-            name = "1";
-            position = new Vector2();
-        }
+        public string name = "-1";
+        public Vector2 position = new Vector2();
     }
 }
