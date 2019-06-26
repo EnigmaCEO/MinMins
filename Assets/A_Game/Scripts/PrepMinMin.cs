@@ -5,6 +5,8 @@ using UnityEngine;
 public class PrepMinMin : MonoBehaviour
 {
     [SerializeField] private bool _selected = false;
+    [SerializeField] private Vector2 _maxPos = new Vector2(6, 4.5f);
+    [SerializeField] private Vector2 _minPos = new Vector2(-6, -1);
 
     private float _x;
     private float _y;
@@ -31,7 +33,7 @@ public class PrepMinMin : MonoBehaviour
             _y = Input.mousePosition.y;
         }
         else
-            PosLimit();
+            limitPosition();
     }
 
     void OnMouseDown()
@@ -57,7 +59,7 @@ public class PrepMinMin : MonoBehaviour
     {
         _selected = false;
 
-        PosLimit();
+        limitPosition();
 
         if (_slot.transform.Find("confirm_ok(Clone)") == null)
         {
@@ -80,17 +82,17 @@ public class PrepMinMin : MonoBehaviour
         _manager = manager;
     }
 
-    void PosLimit()
+    private void limitPosition()
     {
-        if (transform.localPosition.y < -1)
-            transform.localPosition = new Vector2(transform.localPosition.x, -1);
-        else if (transform.localPosition.y > 4.5f)
-            transform.localPosition = new Vector2(transform.localPosition.x, 4.5f);
+        if (transform.localPosition.y < _minPos.y)
+            transform.localPosition = new Vector2(transform.localPosition.x, _minPos.y);
+        else if (transform.localPosition.y > _maxPos.y)
+            transform.localPosition = new Vector2(transform.localPosition.x, _maxPos.y);
 
-        if (transform.localPosition.x > 7.4f)
-            transform.localPosition = new Vector2(7.4f, transform.localPosition.y);
-        else if (transform.localPosition.x < -7.4f)
-            transform.localPosition = new Vector2(-7.4f, transform.localPosition.y);
+        if (transform.localPosition.x > _maxPos.x)
+            transform.localPosition = new Vector2(_maxPos.x, transform.localPosition.y);
+        else if (transform.localPosition.x < _minPos.x)
+            transform.localPosition = new Vector2(_minPos.x, transform.localPosition.y);
     }
 
     void OnCollisionEnter2D(Collision2D coll)
