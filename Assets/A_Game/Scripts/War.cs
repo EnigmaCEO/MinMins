@@ -1,17 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class War : MonoBehaviour
 {
     public bool Ready = true;
 
+    [SerializeField] private Transform _teamGridContent;
+
     private int _side = 0;
 
-    private GameObject _field;
-    private GameObject _grid;
-    private GameObject _enemies;
-    private GameObject _slot;
+    private Transform _battleField;
+    private Transform _teamGrid;
+    private Transform _enemyGrid;
+    //private GameObject _slot;
 
     private string _aUnit = "";
     private float _timer;
@@ -20,9 +23,9 @@ public class War : MonoBehaviour
     // Use this for initialization
     void Awake()
     {
-        _field = GameObject.Find("Battlefield");
-        _grid = GameObject.Find("TeamGrid");
-        _enemies = GameObject.Find("EnemyGrid");
+        _battleField = GameObject.Find("/Battlefield").transform;
+        _teamGrid = _battleField.Find("Team1");
+        _enemyGrid = _battleField.Find("Team2");
 
         MatchManager matchManager = MatchManager.Instance;
         int teamLength = matchManager.Team1.Length;
@@ -30,49 +33,56 @@ public class War : MonoBehaviour
         for (int i = 0; i < teamLength; i++)
         {
             MatchManager.UnitData unitData = matchManager.Team1[i];
-            //if(unitData.)
+            if (unitData.name == "-1")
+                continue;
 
-            _slot = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/Units/" + unitData.name));
+            GameObject unit = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/Units/" + unitData.name));
+            unit.name = unitData.name;
+            Transform unitTransform = unit.transform;
+            unitTransform.parent = _battleField.Find("Team1/slot" + (i + 1));
+            unitTransform.localPosition = Vector2.zero;
 
-            _slot.transform.parent = _grid.transform.Find("slot" + i);
-            _slot.name = matchManager.Team1[i - 1].name;
-            _slot.transform.localScale = new Vector2(240, 240);
-            _slot.AddComponent<MinMin>();
-
-            GameObject obj = (GameObject)Instantiate(_slot.transform.Find("Sprite").gameObject);
-            obj.name = matchManager.Team1[i - 1].name;
-            obj.transform.parent = _field.transform.Find("Team1/slot" + i);
-            obj.transform.localPosition = new Vector2(matchManager.Team1[i - 1].position.x, matchManager.Team1[i - 1].position.y);
-            obj.AddComponent<Unit>();
-            obj.GetComponent<Unit>().unit = _slot;
+            Transform spriteTransform = unitTransform.Find("Sprite");
+            spriteTransform.localPosition = new Vector2(unitData.position.x, unitData.position.y);
+            WarUnit warUnit = spriteTransform.gameObject.AddComponent<WarUnit>();
+            warUnit.Unit = unit; 
+            warUnit.SetWar(this);
 
             GameObject shadow = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/UI/battle_shadow"));
-            shadow.transform.parent = obj.transform;
+            shadow.transform.parent = unit.transform;
+            shadow.transform.localPosition = new Vector2(0, 0);
+            shadow.transform.localScale = new Vector2(-1, 1);
+
+            _teamGridContent.Find("WarTeamGridItem" + (i + 1) + "/Sprite").GetComponent<Image>().sprite = spriteTransform.GetComponent<Image>().sprite;
+        }
+
+        teamLength = matchManager.Team2.Length;
+        for (int i = 0; i < teamLength; i++)
+        {
+            MatchManager.UnitData unitData = matchManager.Team2[i];
+            if (unitData.name == "-1")
+                continue;
+
+            GameObject unit = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/Units/" + unitData.name));
+            unit.name = unitData.name;
+            Transform unitTransform = unit.transform;
+            unitTransform.parent = _battleField.Find("Team2/slot" + (i + 1));
+            unitTransform.localPosition = Vector2.zero;
+
+            Transform spriteTransform = unitTransform.Find("Sprite");
+            spriteTransform.localPosition = new Vector2(unitData.position.x, unitData.position.y);
+            WarUnit warUnit = spriteTransform.gameObject.AddComponent<WarUnit>();
+            warUnit.Unit = unit;
+            warUnit.SetWar(this);
+
+            GameObject shadow = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/UI/battle_shadow"));
+            shadow.transform.parent = unit.transform;
             shadow.transform.localPosition = new Vector2(0, 0);
             shadow.transform.localScale = new Vector2(-1, 1);
         }
 
-        for (int i = 1; i < 6; i++)
-        {
-            _slot = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/Units/" + matchManager.Team2[i - 1].name));
-            _slot.transform.parent = _enemies.transform.Find("slot" + i);
-            _slot.name = matchManager.Team2[i - 1].name;
-            _slot.transform.localScale = new Vector2(240, 240);
-            _slot.transform.localPosition = new Vector2(0, 0);
-
-            GameObject obj = (GameObject)Instantiate(_slot.transform.Find("Sprite").gameObject);
-            obj.name = matchManager.Team2[i - 1].name;
-            obj.transform.parent = _field.transform.Find("Team2/slot" + i);
-            obj.transform.localPosition = new Vector2(matchManager.Team2[i - 1].position.x, matchManager.Team2[i - 1].position.y);
-            obj.AddComponent<Unit>();
-            obj.transform.localScale = new Vector2(1, 1);
-            obj.GetComponent<Unit>().unit = _slot;
-            obj.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1f / 255f);
-
-        }
-
-        SetAttacks(_grid);
-        SetAttacks(_enemies);
+        SetAttacks(_teamGrid);
+        SetAttacks(_enemyGrid);
     }
 
 
@@ -88,8 +98,9 @@ public class War : MonoBehaviour
         {
             for (int i = 0; i < 6; i++)
             {
-                Transform eSlot = _enemies.transform.GetChild(i);
-                if (eSlot.transform.childCount == 0) continue;
+                Transform eSlot = _enemyGrid.transform.GetChild(i);
+                if (eSlot.transform.childCount == 0)
+                    continue;
 
                 Attack(eSlot.name + "/" + eSlot.GetChild(0).name);
                 break;
@@ -104,30 +115,30 @@ public class War : MonoBehaviour
 
         if (_side == 0)
         {
-            target = _grid.transform.Find(unit);
+            target = _teamGrid.transform.Find(unit);
         }
         else
         {
-            target = _enemies.transform.Find(unit);
+            target = _enemyGrid.transform.Find(unit);
         }
 
         if (target == null) return;
         if (target.Find("Effect").transform.childCount == 0) return;
 
         Ready = false;
-        _field.GetComponent<TweenPosition>().ResetToBeginning();
+        _battleField.GetComponent<TweenPosition>().ResetToBeginning();
         if (_side == 0)
         {
-            _field.GetComponent<TweenPosition>().from = new Vector2(0, 0);
-            _field.GetComponent<TweenPosition>().to = new Vector2(-5000, 0);
+            _battleField.GetComponent<TweenPosition>().from = new Vector2(0, 0);
+            _battleField.GetComponent<TweenPosition>().to = new Vector2(-5000, 0);
         }
         else
         {
-            _field.GetComponent<TweenPosition>().to = new Vector2(0, 0);
-            _field.GetComponent<TweenPosition>().from = new Vector2(-5000, 0);
+            _battleField.GetComponent<TweenPosition>().to = new Vector2(0, 0);
+            _battleField.GetComponent<TweenPosition>().from = new Vector2(-5000, 0);
         }
 
-        _field.GetComponent<TweenPosition>().enabled = true;
+        _battleField.GetComponent<TweenPosition>().enabled = true;
         _aUnit = unit;
     }
 
@@ -139,13 +150,13 @@ public class War : MonoBehaviour
 
         if (_side == 0)
         {
-            effect_name = _grid.transform.Find(_aUnit + "/Effect").transform.GetChild(0).name;
+            effect_name = _teamGrid.transform.Find(_aUnit + "/Effect").transform.GetChild(0).name;
 
             attack.transform.localEulerAngles = new Vector3(0, 0, 0);
         }
         else
         {
-            effect_name = _enemies.transform.Find(_aUnit + "/Effect").transform.GetChild(0).name;
+            effect_name = _enemyGrid.transform.Find(_aUnit + "/Effect").transform.GetChild(0).name;
 
             attack.transform.localEulerAngles = new Vector3(0, 180, 0);
         }
@@ -174,12 +185,12 @@ public class War : MonoBehaviour
 
     }
 
-    void SetAttacks(GameObject val)
+    void SetAttacks(Transform val)
     {
-        for (int i = 0; i < val.transform.childCount; i++)
+        for (int i = 0; i < val.childCount; i++)
         {
 
-            GameObject temp = val.transform.GetChild(i).gameObject;
+            GameObject temp = val.GetChild(i).gameObject;
 
             if (temp.transform.childCount > 0)
             {
