@@ -27,7 +27,7 @@ public class WarManager : MonoBehaviour {
 			slot.transform.parent = grid.transform.Find("slot" + i);
 			slot.name = manager.GetComponent<GameManager>().team1[i-1].name;
 			slot.transform.localScale = new Vector2(240,240);
-			//slot.AddComponent<MinMin>();
+			slot.AddComponent<MinMin>();
 
 			GameObject obj = (GameObject)Instantiate(slot.transform.Find("Sprite").gameObject);
 			obj.name = manager.GetComponent<GameManager>().team1[i-1].name;
@@ -97,6 +97,7 @@ public class WarManager : MonoBehaviour {
 		if(target.Find("Effect").transform.childCount == 0) return;
 		
 		ready = false;
+        
 		field.GetComponent<TweenPosition>().ResetToBeginning();
 		if(side == 0) {
 			field.GetComponent<TweenPosition>().from = new Vector2(0,0);
@@ -107,6 +108,7 @@ public class WarManager : MonoBehaviour {
 		}
 
 		field.GetComponent<TweenPosition>().enabled = true;
+        
 		aUnit = unit;
 	}
 

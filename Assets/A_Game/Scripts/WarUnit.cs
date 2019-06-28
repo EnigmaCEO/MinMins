@@ -1,10 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class WarUnit : MonoBehaviour
 {
     [HideInInspector] public GameObject Unit;
+    [HideInInspector] public Image LifeFill;
 
     private War _war;
 
@@ -15,8 +17,7 @@ public class WarUnit : MonoBehaviour
 
     void OnMouseUp()
     {
-        //Debug.Log(name + " selected");
-        //_war.Attack(transform.parent.name + "/" + name);
-        _war.Attack(name);
+        Debug.Log("WarUnit::OnMouseUp -> " + name + " selected");
+        _war.Attack(transform.parent.parent.name + "/" + transform.parent.name);
     }
 }

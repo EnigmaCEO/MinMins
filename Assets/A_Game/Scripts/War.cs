@@ -5,9 +5,15 @@ using UnityEngine.UI;
 
 public class War : MonoBehaviour
 {
-    public bool Ready = true;
+    [HideInInspector] public bool Ready = true;
 
     [SerializeField] private Transform _teamGridContent;
+    [SerializeField] private float _readyCheckDelay = 2;
+
+    [SerializeField] private float _battlefieldMovementAmount = 5000;
+    [SerializeField] private float _battlefieldMovementDelay = 0.1f;
+    [SerializeField] private float _battlefieldMovementTime = 1;
+    [SerializeField] private iTween.EaseType _battlefieldMovementEaseType = iTween.EaseType.easeInOutExpo;
 
     private int _side = 0;
 
@@ -16,7 +22,7 @@ public class War : MonoBehaviour
     private Transform _enemyGrid;
     //private GameObject _slot;
 
-    private string _aUnit = "";
+    private string _attackingUnitName = "";
     private float _timer;
     private float _playTime;
 
@@ -36,10 +42,12 @@ public class War : MonoBehaviour
             if (unitData.name == "-1")
                 continue;
 
-            GameObject unit = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/Units/" + unitData.name));
+            int itemNumber = i + 1;
+
+            GameObject unit = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/MinMins/" + unitData.name));
             unit.name = unitData.name;
             Transform unitTransform = unit.transform;
-            unitTransform.parent = _battleField.Find("Team1/slot" + (i + 1));
+            unitTransform.parent = _teamGrid.Find("slot" + itemNumber);
             unitTransform.localPosition = Vector2.zero;
 
             Transform spriteTransform = unitTransform.Find("Sprite");
@@ -49,11 +57,17 @@ public class War : MonoBehaviour
             warUnit.SetWar(this);
 
             GameObject shadow = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/UI/battle_shadow"));
-            shadow.transform.parent = unit.transform;
+            shadow.transform.parent = spriteTransform;
             shadow.transform.localPosition = new Vector2(0, 0);
             shadow.transform.localScale = new Vector2(-1, 1);
 
-            _teamGridContent.Find("WarTeamGridItem" + (i + 1) + "/Sprite").GetComponent<Image>().sprite = spriteTransform.GetComponent<Image>().sprite;
+            //Set UI
+            Transform warTeamGridItem = _teamGridContent.Find("WarTeamGridItem" + itemNumber);
+            Transform uiSpriteTransform = warTeamGridItem.Find("Sprite");
+            Image uiSpriteImage = uiSpriteTransform.GetComponent<Image>();
+            SpriteRenderer spriteRenderer = spriteTransform.GetComponent<SpriteRenderer>();
+            uiSpriteImage.sprite = spriteRenderer.sprite;
+            warUnit.LifeFill = warTeamGridItem.Find("LifeBar/LifeFill").GetComponent<Image>();
         }
 
         teamLength = matchManager.Team2.Length;
@@ -63,10 +77,12 @@ public class War : MonoBehaviour
             if (unitData.name == "-1")
                 continue;
 
-            GameObject unit = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/Units/" + unitData.name));
+            int itemNumber = i + 1;
+
+            GameObject unit = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/MinMins/" + unitData.name));
             unit.name = unitData.name;
             Transform unitTransform = unit.transform;
-            unitTransform.parent = _battleField.Find("Team2/slot" + (i + 1));
+            unitTransform.parent = _enemyGrid.Find("slot" + itemNumber);
             unitTransform.localPosition = Vector2.zero;
 
             Transform spriteTransform = unitTransform.Find("Sprite");
@@ -76,7 +92,7 @@ public class War : MonoBehaviour
             warUnit.SetWar(this);
 
             GameObject shadow = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/UI/battle_shadow"));
-            shadow.transform.parent = unit.transform;
+            shadow.transform.parent = spriteTransform;
             shadow.transform.localPosition = new Vector2(0, 0);
             shadow.transform.localScale = new Vector2(-1, 1);
         }
@@ -85,86 +101,78 @@ public class War : MonoBehaviour
         SetAttacks(_enemyGrid);
     }
 
-
-
     // Update is called once per frame
     void Update()
     {
         _playTime += Time.deltaTime;
 
-        if (_side == 0) _timer = _playTime;
+        if (_side == 0)
+            _timer = _playTime;
 
-        if (_playTime - _timer >= 2 && Ready)
+        if (((_playTime - _timer) >= _readyCheckDelay) && Ready)
         {
-            for (int i = 0; i < 6; i++)
+            int enemiesGridCount = _enemyGrid.childCount;
+            for (int i = 0; i < enemiesGridCount; i++)
             {
-                Transform eSlot = _enemyGrid.transform.GetChild(i);
-                if (eSlot.transform.childCount == 0)
+                Transform enemySlot = _enemyGrid.GetChild(i);
+                if (enemySlot.childCount == 0)
                     continue;
 
-                Attack(eSlot.name + "/" + eSlot.GetChild(0).name);
+                Attack(enemySlot.name + "/" + enemySlot.GetChild(0).name);
                 break;
             }
         }
     }
 
-    public void Attack(string unit)
+    public void Attack(string attackerUnitName)
     {
-        if (!Ready) return;
-        Transform target = null;
+        if (!Ready)
+            return;
+
+        Transform attackerUnitTransform = null;
 
         if (_side == 0)
-        {
-            target = _teamGrid.transform.Find(unit);
-        }
+            attackerUnitTransform = _teamGrid.Find(attackerUnitName);
         else
-        {
-            target = _enemyGrid.transform.Find(unit);
-        }
+            attackerUnitTransform = _enemyGrid.Find(attackerUnitName);
 
-        if (target == null) return;
-        if (target.Find("Effect").transform.childCount == 0) return;
+        if (attackerUnitTransform == null)
+            return;
+
+        if (attackerUnitTransform.Find("Effect").transform.childCount == 0)
+            return;
 
         Ready = false;
-        _battleField.GetComponent<TweenPosition>().ResetToBeginning();
-        if (_side == 0)
-        {
-            _battleField.GetComponent<TweenPosition>().from = new Vector2(0, 0);
-            _battleField.GetComponent<TweenPosition>().to = new Vector2(-5000, 0);
-        }
-        else
-        {
-            _battleField.GetComponent<TweenPosition>().to = new Vector2(0, 0);
-            _battleField.GetComponent<TweenPosition>().from = new Vector2(-5000, 0);
-        }
+        float movement = (_side == 0) ? -_battlefieldMovementAmount : _battlefieldMovementAmount;
+        iTween.MoveBy(_battleField.gameObject, iTween.Hash("x", movement, "easeType", _battlefieldMovementEaseType,
+                                            "loopType", iTween.LoopType.none, "delay", _battlefieldMovementDelay,
+                                            "time", _battlefieldMovementTime, "oncomplete", "attackReady"));
 
-        _battleField.GetComponent<TweenPosition>().enabled = true;
-        _aUnit = unit;
+        _attackingUnitName = attackerUnitName;
     }
 
-    public void AttackReady(UITweener tween)
+    private void attackReady()
     {
         Debug.Log("Attack ready!");
         string effect_name = "";
-        GameObject attack = GameObject.Find("Waypoint Manager/" + _aUnit.Split('/')[1] + "/Attack").transform.GetChild(0).gameObject;
+        GameObject attack = GameObject.Find("Waypoint Manager/" + _attackingUnitName.Split('/')[1] + "/Attack").transform.GetChild(0).gameObject;
 
         if (_side == 0)
         {
-            effect_name = _teamGrid.transform.Find(_aUnit + "/Effect").transform.GetChild(0).name;
-
+            effect_name = _teamGrid.transform.Find(_attackingUnitName + "/Effect").transform.GetChild(0).name;
             attack.transform.localEulerAngles = new Vector3(0, 0, 0);
         }
         else
         {
-            effect_name = _enemyGrid.transform.Find(_aUnit + "/Effect").transform.GetChild(0).name;
-
+            effect_name = _enemyGrid.transform.Find(_attackingUnitName + "/Effect").transform.GetChild(0).name;
             attack.transform.localEulerAngles = new Vector3(0, 180, 0);
         }
 
         attack.transform.localPosition = new Vector2(0, 0);
         attack.GetComponent<SWS.BezierPathManager>().CalculatePath();
 
-        GameObject effect = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/Attacks/" + effect_name));
+        GameObject effect = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/Effects/" + effect_name));
+        effect.GetComponent<AttackEffect>().SetWar(this);
         effect.GetComponent<SWS.splineMove>().pathContainer = attack.GetComponent<SWS.BezierPathManager>();
         effect.GetComponent<SWS.splineMove>().enabled = true;
         effect.GetComponent<SWS.splineMove>().StartMove();
