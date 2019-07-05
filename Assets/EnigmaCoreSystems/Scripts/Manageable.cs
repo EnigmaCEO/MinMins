@@ -1,14 +1,8 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Reflection;
-using System.IO;
 using System;
 using System.Collections.Generic;
 using SimpleJSON;
-
-#if !UNITY_WP8
-using System.Security.Cryptography;
-#endif
 
 namespace Enigma.CoreSystems
 {
@@ -48,17 +42,17 @@ namespace Enigma.CoreSystems
 
 		}
 
-		protected virtual void Start () 
+		protected virtual void Start ()
 		{
 
 		}
-		
+
 		// Update is called once per frame
-		protected virtual void Update () 
+		protected virtual void Update ()
 		{
-		
+
 		}
-		
+
 		public static void Initialize()
 		{
 			GameObject singleton = new GameObject();
@@ -141,7 +135,7 @@ namespace Enigma.CoreSystems
 							{
 								elements.Add( jsonArray[i] );
 							}
-				
+
 							string[] arrayValue = elements.ToArray();
 							configValue = arrayValue;
 
@@ -164,7 +158,7 @@ namespace Enigma.CoreSystems
 		{
 			System.Text.UTF8Encoding ue = new System.Text.UTF8Encoding();
 			byte[] bytes = ue.GetBytes(strToEncrypt);
-			
+
 			// encrypt bytes
 			#if UNITY_WP8
 			byte[] hashBytes = UnityEngine.Windows.Crypto.ComputeMD5Hash(bytes);
@@ -172,15 +166,15 @@ namespace Enigma.CoreSystems
 			System.Security.Cryptography.MD5CryptoServiceProvider md5 = new System.Security.Cryptography.MD5CryptoServiceProvider();
 			byte[] hashBytes = md5.ComputeHash(bytes);
 			#endif
-			
+
 			// Convert the encrypted bytes back to a string (base 16)
 			string hashString = "";
-			
+
 			for (int i = 0; i < hashBytes.Length; i++)
 			{
 				hashString += System.Convert.ToString(hashBytes[i], 16).PadLeft(2, '0');
 			}
-			
+
 			return hashString.PadLeft(32, '0');
 		}
 	}

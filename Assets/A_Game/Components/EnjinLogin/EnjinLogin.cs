@@ -1,6 +1,8 @@
 ﻿
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
+using Enigma.CoreSystems;
 
 public class EnjinLogin : MonoBehaviour
 {
@@ -76,10 +78,29 @@ public class EnjinLogin : MonoBehaviour
 
     public void registerSubmit() {
         showLoadingScreen();
+
+        Hashtable extras = new Hashtable();
+
+        string ipAddress = NetworkManager.GetUserInfo("ip");
+        string country = NetworkManager.GetUserInfo("country");
+        extras.Add("ip", ipAddress);
+        extras.Add("country", country);
+
+        // NetworkManager.instance.Register(
+        //     registerUsername.text,
+        //     registerPassword.text,
+        //     registerEmail.text,
+        //     ETHField.text,
+        //     Application.productName.ToLower(),
+        //     ShalwendConfigs.TRANSACTION_GAME_NAME,
+        //     onRegistration,
+        //     extras
+        // );
     }
 
     public void loginSubmit() {
         showLoadingScreen();
+
     }
 
     private void showLoadingScreen() {
@@ -87,5 +108,44 @@ public class EnjinLogin : MonoBehaviour
         loginGroup.SetActive(false);
         registerGroup.SetActive(false);
         loadingGroup.SetActive(true);
+    }
+
+    private void onRegistration(SimpleJSON.JSONNode response)
+    {
+        // if (response != null)
+        // {
+        //     print("onRegistration: " + response.ToString());
+
+        //     Enigma.CoreSystems.SimpleJSON.JSONNode response_hash = response[0];
+        //     string status = response_hash["status"].ToString().Trim('"');
+
+        //     if (status == "SUCCESS")
+        //     {
+        //         print("onRegistration SUCCESS");
+        //         completeLogin(response_hash);
+        //     }
+        //     else
+        //     {
+        //         string term = "";
+
+        //         if (status == "ERR_REGISTER")
+        //             term = "Register Error";
+        //         else if (status == "ERR_INVALID_PASSWORD")
+        //             term = "Invalid Password";
+        //         else if (status == "ERR_INVALID_USERNAME")
+        //             term = "Invalid Username";
+        //         else
+        //             term = "Server Error";
+
+        //         //DisableLoginWindow();
+        //         EnableLoginWindow();
+        //         onDisplayErrorText(term);
+        //     }
+        // }
+        // else
+        // {
+        //     EnableLoginWindow();
+        //     onDisplayErrorText("Connection Error");
+        // }
     }
 }

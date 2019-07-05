@@ -1,13 +1,7 @@
 ﻿using UnityEngine;
-using System;
 using System.Collections;
-using Enigma.CoreSystems;
 using SimpleJSON;
-using Tiny;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using UnityEngine.Networking;
-using UnityEditor;
 using UnityEngine.UI;
 
 namespace Enigma.CoreSystems
@@ -23,7 +17,7 @@ namespace Enigma.CoreSystems
         // Video zones
         static public string[] zoneId = { "vze64e837cdaeb448494" }; //{ "vz28f417ceecca4ae4b2", "vzf2257354d2b64e08a8" };
 		//If not android defaults to setting the zone strings for iOS
-		
+
 
 #else
 		// App ID
@@ -62,7 +56,7 @@ namespace Enigma.CoreSystems
 		{
 			base.Start ();
 			data = new Dictionary<string, Hashtable> ();
-			
+
 			//Firebase.Messaging.FirebaseMessaging.TokenReceived += OnTokenReceived;
 			//Firebase.Messaging.FirebaseMessaging.MessageReceived += OnMessageReceived;
 			//GameOfWhales.Instance.OnPushDelivered += OnPushDelivered;
