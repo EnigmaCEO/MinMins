@@ -33,12 +33,13 @@ public class War : MonoBehaviour
         _teamGrid = _battleField.Find("Team1");
         _enemyGrid = _battleField.Find("Team2");
 
-        MatchManager matchManager = MatchManager.Instance;
-        int teamLength = matchManager.Team1.Length;
+        GameMatch matchManager = GameMatch.Instance;
+        //int teamLength = matchManager.Team1.Length;
+        int teamLength = matchManager.GetTeamSize(1);
 
         for (int i = 0; i < teamLength; i++)
         {
-            MatchManager.UnitData unitData = matchManager.Team1[i];
+            GameMatch.UnitData unitData = matchManager.GetUnit(1, i);
             if (unitData.name == "-1")
                 continue;
 
@@ -70,10 +71,10 @@ public class War : MonoBehaviour
             warUnit.LifeFill = warTeamGridItem.Find("LifeBar/LifeFill").GetComponent<Image>();
         }
 
-        teamLength = matchManager.Team2.Length;
+        teamLength = matchManager.GetTeamSize(2);
         for (int i = 0; i < teamLength; i++)
         {
-            MatchManager.UnitData unitData = matchManager.Team2[i];
+            GameMatch.UnitData unitData = matchManager.GetUnit(2, 1);
             if (unitData.name == "-1")
                 continue;
 

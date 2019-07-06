@@ -1,4 +1,5 @@
 ﻿using SWS;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -36,16 +37,23 @@ public class UnitSelectManager : MonoBehaviour
     private GameObject _attack;
 
     void Start()
-    { 
-        int unitsLength = _unitsGridContent.childCount;
+    {
+        List<int> inventoryUnitIndexes = GameInventory.Instance.GetInventoryUnitIndexes();
+        int unitsLength = inventoryUnitIndexes.Count;
+        GameObject unitGridItemTemplate = _unitsGridContent.GetChild(0).gameObject;
 
         for (int i = 0; i < unitsLength; i++)
         {
-            Transform unit =_unitsGridContent.GetChild(i);
+            Transform unit = Instantiate<GameObject>(unitGridItemTemplate, _unitsGridContent).transform;
             int unitIndex = i;
+            int unitNumber = i + 1;
+            unit.name = unitNumber.ToString();
+            unit.Find("Sprite").GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/Units/" + (unitNumber.ToString()));
             unit.Find("FightButton").GetComponent<Button>().onClick.AddListener(() => { onUnitFightButtonDown(unitIndex); });
             unit.Find("InfoButton").GetComponent<Button>().onClick.AddListener(() => { onUnitInfoButtonDown(unitIndex); });
         }
+
+        unitGridItemTemplate.SetActive(false);
 
         _teamGridContent = _teamGrid.transform.Find("Viewport/Content");
         int slotsLength = _teamGridContent.childCount;
@@ -173,8 +181,7 @@ public class UnitSelectManager : MonoBehaviour
 
     private void onTeamSlotButtonDown(int slotIndex, Image slotImage)
     {
-        MatchManager.Instance.Team1[slotIndex].name = (_selectedUnitIndex + 1).ToString();
-        //PlayerStats.Instance.TeamUnitIndexes[slotIndex] = _selectedUnitIndex;
+        GameMatch.Instance.GetUnit(1, slotIndex).name = (_selectedUnitIndex + 1).ToString();
 
         _unitsGridContent.GetChild(_selectedUnitIndex).gameObject.SetActive(false);
 
