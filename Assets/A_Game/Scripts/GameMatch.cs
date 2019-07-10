@@ -20,7 +20,7 @@ public class GameMatch : SingletonMonobehaviour<GameMatch>
                 UnitData unit = new UnitData();
 
                 if (j < (TeamSize - 1)) //Last one is Locked
-                    unit.name = (j + 1).ToString();  //default values
+                    unit.Name = (j + 1).ToString();  //default values
 
                 team.Add(unit);
             }
@@ -46,7 +46,8 @@ public class GameMatch : SingletonMonobehaviour<GameMatch>
 
     public class UnitData
     {
-        public string name = "-1";
-        public Vector2 position = new Vector2();
+        public string Name = "-1";
+        public Vector2 Position = new Vector2();
+        public UnitStats Stats = new UnitStats();
     }
 }

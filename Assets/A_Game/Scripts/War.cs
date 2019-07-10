@@ -40,19 +40,20 @@ public class War : MonoBehaviour
         for (int i = 0; i < teamLength; i++)
         {
             GameMatch.UnitData unitData = matchManager.GetUnit(1, i);
-            if (unitData.name == "-1")
+            if (unitData.Name == "-1")
                 continue;
 
             int itemNumber = i + 1;
 
-            GameObject unit = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/MinMins/" + unitData.name));
-            unit.name = unitData.name;
+            GameObject unit = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/MinMinUnits/" + unitData.Name));
+            unit.name = unitData.Name;
+            unit.GetComponent<MinMinUnit>().Stats.Clone(unitData.Stats);
             Transform unitTransform = unit.transform;
             unitTransform.parent = _teamGrid.Find("slot" + itemNumber);
             unitTransform.localPosition = Vector2.zero;
 
             Transform spriteTransform = unitTransform.Find("Sprite");
-            spriteTransform.localPosition = new Vector2(unitData.position.x, unitData.position.y);
+            spriteTransform.localPosition = new Vector2(unitData.Position.x, unitData.Position.y);
             WarUnit warUnit = spriteTransform.gameObject.AddComponent<WarUnit>();
             warUnit.Unit = unit; 
             warUnit.SetWar(this);
@@ -75,19 +76,19 @@ public class War : MonoBehaviour
         for (int i = 0; i < teamLength; i++)
         {
             GameMatch.UnitData unitData = matchManager.GetUnit(2, 1);
-            if (unitData.name == "-1")
+            if (unitData.Name == "-1")
                 continue;
 
             int itemNumber = i + 1;
 
-            GameObject unit = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/MinMins/" + unitData.name));
-            unit.name = unitData.name;
+            GameObject unit = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/MinMinUnits/" + unitData.Name));
+            unit.name = unitData.Name;
             Transform unitTransform = unit.transform;
             unitTransform.parent = _enemyGrid.Find("slot" + itemNumber);
             unitTransform.localPosition = Vector2.zero;
 
             Transform spriteTransform = unitTransform.Find("Sprite");
-            spriteTransform.localPosition = new Vector2(unitData.position.x, unitData.position.y);
+            spriteTransform.localPosition = new Vector2(unitData.Position.x, unitData.Position.y);
             WarUnit warUnit = spriteTransform.gameObject.AddComponent<WarUnit>();
             warUnit.Unit = unit;
             warUnit.SetWar(this);

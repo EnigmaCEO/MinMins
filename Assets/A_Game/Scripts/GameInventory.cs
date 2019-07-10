@@ -4,7 +4,12 @@ using UnityEngine;
 
 public class GameInventory : SingletonMonobehaviour<GameInventory>
 {
+    [SerializeField] private char _parseSeparator = '|';
+    [SerializeField] private int _expToAddOnDuplicateUnit = 50;
+
     private const string _TEAM_1_GROUP_NAME = "Team1";
+
+    private Hashtable _saveHashTable = new Hashtable();
 
     [SerializeField]
     private List<UnitRarity> _unitSpecialRarities = new List<UnitRarity>()
@@ -18,17 +23,23 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     private void Awake()
     {
         initializeInventory();
-        AddLootBoxToInventory(20); //TODO: Remove test
+        LoadData();
     }
 
-    public List<int> GetInventoryUnitIndexes()
+    public List<string> GetInventoryUnitNames()
     {
-        List<int> inventoryUnitIndexes = new List<int>();
+        List<string> inventoryUnitIndexes = new List<string>();
 
-        foreach (object index in InventoryManager.Instance.GetGroupValues(_TEAM_1_GROUP_NAME))
-            inventoryUnitIndexes.Add((int)index);
+        InventoryManager inventoryManager = InventoryManager.Instance;
+        foreach (string unitName in inventoryManager.GetGroupKeys(_TEAM_1_GROUP_NAME))
+            inventoryUnitIndexes.Add(unitName);
 
         return inventoryUnitIndexes;
+    }
+
+    public UnitStats GetUnitStats(string unitName)
+    {
+        return InventoryManager.Instance.GetItem<UnitStats>(_TEAM_1_GROUP_NAME, unitName);
     }
 
     public void AddLootBoxToInventory(int lootBoxSize)
@@ -44,23 +55,89 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         foreach (int lootBoxIndex in lootBoxIndexes)
         {
             print("LootBoxIndex: " + lootBoxIndex);
-            if (inventoryManager.HasItem(_TEAM_1_GROUP_NAME, lootBoxIndex.ToString()))
+            string unitName = lootBoxIndex.ToString();
+            if (inventoryManager.HasItem(_TEAM_1_GROUP_NAME, unitName, false))
             {
-                //TODO: Add exp to Unit
+                UnitStats stats = inventoryManager.GetItem<UnitStats>(_TEAM_1_GROUP_NAME, unitName);
+                stats.Exp += _expToAddOnDuplicateUnit;
             }
             else
-                inventoryManager.AddItem(_TEAM_1_GROUP_NAME, lootBoxIndex.ToString(), lootBoxIndex);
+            {
+                GameObject minMinPrefab = Resources.Load<GameObject>("Prefabs/MinMinUnits/" + unitName);
+                UnitStats stats = new UnitStats(minMinPrefab.GetComponent<MinMinUnit>().Stats);
+                inventoryManager.AddItem(_TEAM_1_GROUP_NAME, unitName, stats);
+            }
         }
+
+        SaveUnits();
     }
 
     private void initializeInventory()
     {
-        InventoryManager inventoryManager = InventoryManager.Instance;
+        /*
+        addMinMinUnit("2");
+        addMinMinUnit("1");
+        addMinMinUnit("5");
+        addMinMinUnit("8");
+        addMinMinUnit("4");
+        SaveUnits();
+        */
 
-        inventoryManager.AddItem(_TEAM_1_GROUP_NAME, "1", 1);
-        inventoryManager.AddItem(_TEAM_1_GROUP_NAME, "2", 2);
-        inventoryManager.AddItem(_TEAM_1_GROUP_NAME, "3", 3);
-        inventoryManager.AddItem(_TEAM_1_GROUP_NAME, "4", 4);
+        AddLootBoxToInventory(5); //TODO: Remove hack
+    }
+
+    private void addMinMinUnit(string unitName)
+    {
+        GameObject minMinPrefab = Resources.Load<GameObject>("Prefabs/MinMinUnits/" + unitName);
+        UnitStats stats = new UnitStats(minMinPrefab.GetComponent<MinMinUnit>().Stats);
+        InventoryManager.Instance.AddItem(_TEAM_1_GROUP_NAME, unitName, stats);
+    }
+
+    public void LoadData()
+    {
+        _saveHashTable.Clear();
+        _saveHashTable = FileManager.Instance.LoadData();
+
+        InventoryManager inventoryManager = InventoryManager.Instance;
+        inventoryManager.ClearAllGroups();
+        foreach (DictionaryEntry entry in _saveHashTable)
+        {
+            string[] terms = entry.Key.ToString().Split(_parseSeparator);
+            string groupName = terms[0];
+            string unitName = terms[1];
+            UnitStats stats = new UnitStats((string)entry.Value);
+            print("LoadData -> groupName: " + groupName + " -> unitName: " + unitName + " -> stats: " + stats.Serialized());
+            inventoryManager.AddItem(groupName, unitName, stats);
+        }
+    }
+
+    public void SaveUnits()
+    {
+        SaveGroup(_TEAM_1_GROUP_NAME);
+    }
+
+    public void SaveGroup(string groupName)
+    {
+        InventoryManager inventoryManager = InventoryManager.Instance;
+        foreach (string unitName in inventoryManager.GetGroupKeys(groupName))
+            SaveItem(groupName, unitName, false);
+
+        FileManager.Instance.SaveData(_saveHashTable);
+    }
+
+    public void SaveItem(string groupName, string unitName, bool isStandAlone = true)
+    {
+        if (_saveHashTable.ContainsKey(unitName))
+            _saveHashTable.Remove(unitName);
+
+        UnitStats stats = InventoryManager.Instance.GetItem<UnitStats>(groupName, unitName);
+        string hashKey = groupName + _parseSeparator + unitName;
+        string statsSerialized = stats.Serialized();
+        print("SaveItem -> hashKey: " + hashKey + " -> stats: " + statsSerialized);
+        _saveHashTable.Add(hashKey, statsSerialized);
+
+        if (isStandAlone)
+            FileManager.Instance.SaveData(_saveHashTable);
     }
 
     [System.Serializable]

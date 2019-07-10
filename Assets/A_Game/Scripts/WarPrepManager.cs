@@ -24,7 +24,7 @@ public class WarPrepManager : MonoBehaviour
             //if (prepIndex < 1)
             //    continue;
 
-            string prepName = GameMatch.Instance.GetUnit(1, i).name;
+            string prepName = GameMatch.Instance.GetUnit(1, i).Name;
             if (prepName == "-1")
                 continue;
 
@@ -59,7 +59,7 @@ public class WarPrepManager : MonoBehaviour
         for (int i = 0; i < _slotsInPlay; i++)
         {
             Transform unitSpriteTransform = _slotsTeam1.Find("slot" + (i + 1) + "/Sprite");
-            gameMatch.GetUnit(1, i).position = unitSpriteTransform.localPosition;
+            gameMatch.GetUnit(1, i).Position = unitSpriteTransform.localPosition;
         }
 
         SceneManager.LoadScene("War");

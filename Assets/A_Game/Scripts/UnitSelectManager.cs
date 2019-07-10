@@ -28,7 +28,7 @@ public class UnitSelectManager : MonoBehaviour
     //[SerializeField] private Transform _patternBG;
     
     private Transform _teamGridContent;
-    private int _selectedUnitIndex;
+    private string _selectedUnitName;
 
 
     private bool _infoEnabled = false;
@@ -38,19 +38,19 @@ public class UnitSelectManager : MonoBehaviour
 
     void Start()
     {
-        List<int> inventoryUnitIndexes = GameInventory.Instance.GetInventoryUnitIndexes();
-        int unitsLength = inventoryUnitIndexes.Count;
+        List<string> inventoryUnitNames = GameInventory.Instance.GetInventoryUnitNames();  //TODO: Check if this needs to return stats
+        int unitsLength = inventoryUnitNames.Count;
         GameObject unitGridItemTemplate = _unitsGridContent.GetChild(0).gameObject;
 
         for (int i = 0; i < unitsLength; i++)
         {
-            Transform unit = Instantiate<GameObject>(unitGridItemTemplate, _unitsGridContent).transform;
-            int unitIndex = i;
-            int unitNumber = i + 1;
-            unit.name = unitNumber.ToString();
-            unit.Find("Sprite").GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/Units/" + (unitNumber.ToString()));
-            unit.Find("FightButton").GetComponent<Button>().onClick.AddListener(() => { onUnitFightButtonDown(unitIndex); });
-            unit.Find("InfoButton").GetComponent<Button>().onClick.AddListener(() => { onUnitInfoButtonDown(unitIndex); });
+            Transform unitTransform = Instantiate<GameObject>(unitGridItemTemplate, _unitsGridContent).transform;
+            //int unitIndex = i;
+            string unitName = inventoryUnitNames[i];
+            unitTransform.name = unitName;
+            unitTransform.Find("Sprite").GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/Units/" + unitName);
+            unitTransform.Find("FightButton").GetComponent<Button>().onClick.AddListener(() => { onUnitFightButtonDown(unitName); });
+            unitTransform.Find("InfoButton").GetComponent<Button>().onClick.AddListener(() => { onUnitInfoButtonDown(unitName); });
         }
 
         unitGridItemTemplate.SetActive(false);
@@ -148,9 +148,9 @@ public class UnitSelectManager : MonoBehaviour
         enableTeamGrid();
     }
 
-    private void onUnitFightButtonDown(int unitIndex)
+    private void onUnitFightButtonDown(string unitName)
     {
-        _selectedUnitIndex = unitIndex;
+        _selectedUnitName = unitName;
 
         int slotsLength = _teamGridContent.childCount;
         for (int i = 0; i < slotsLength; i++)
@@ -167,9 +167,9 @@ public class UnitSelectManager : MonoBehaviour
         }
     }
 
-    private void onUnitInfoButtonDown(int unitIndex)
+    private void onUnitInfoButtonDown(string unitName)
     {
-        _selectedUnitIndex = unitIndex;
+        _selectedUnitName = unitName;
         loadUnitInfo();
 
         if (_infoEnabled == false)
@@ -181,17 +181,20 @@ public class UnitSelectManager : MonoBehaviour
 
     private void onTeamSlotButtonDown(int slotIndex, Image slotImage)
     {
-        GameMatch.Instance.GetUnit(1, slotIndex).name = (_selectedUnitIndex + 1).ToString();
-
-        _unitsGridContent.GetChild(_selectedUnitIndex).gameObject.SetActive(false);
+        GameObject unitGameObject = _unitsGridContent.Find(_selectedUnitName).gameObject;
+        unitGameObject.SetActive(false);
 
         int slotsLength = _teamGridContent.childCount;
         for (int i = 0; i < slotsLength; i++)
             _teamGridContent.GetChild(i).Find("btn_aid").gameObject.SetActive(false);
 
-        GameObject minMinPrefab = Resources.Load<GameObject>("Prefabs/MinMins/" + (_selectedUnitIndex + 1));
-        slotImage.sprite = minMinPrefab.transform.Find("Sprite").GetComponent<SpriteRenderer>().sprite;
+        string unitName = unitGameObject.name;
+        slotImage.sprite = Resources.Load<Sprite>("Images/Units/" + unitName);
         slotImage.enabled = true;
+
+        GameMatch.UnitData unitData = GameMatch.Instance.GetUnit(1, slotIndex);
+        unitData.Name = unitName;
+        unitData.Stats.Clone(GameInventory.Instance.GetUnitStats(unitName));
 
         checkTeamReady();
     }
@@ -214,18 +217,18 @@ public class UnitSelectManager : MonoBehaviour
 
     private void loadUnitInfo()
     {
-        print("loadUnitInfo -> selectedIndex: " + _selectedUnitIndex);
-        GameObject minMinPrefab = Resources.Load<GameObject>("Prefabs/MinMins/" + (_selectedUnitIndex + 1));
-        MinMin minMin = minMinPrefab.GetComponent<MinMin>();
+        print("loadUnitInfo -> selectedUnitName: " + _selectedUnitName);
+        GameObject minMinPrefab = Resources.Load<GameObject>("Prefabs/MinMinUnits/" + _selectedUnitName);
+        MinMinUnit minMin = minMinPrefab.GetComponent<MinMinUnit>();
         _slotInfoImage.sprite = minMin.transform.Find("Sprite").GetComponent<SpriteRenderer>().sprite;
 
         int powerContentLenght = _powerGridContent.childCount;
         for (int i = 0; i < powerContentLenght; i++)
-            _powerGridContent.GetChild(i).GetComponent<Image>().enabled = (i < minMin.strength);
+            _powerGridContent.GetChild(i).GetComponent<Image>().enabled = (i < minMin.Stats.Strength);
 
         int armorContentLenght = _armorGridContent.childCount;
         for (int i = 0; i < powerContentLenght; i++)
-            _armorGridContent.GetChild(i).GetComponent<Image>().enabled = (i < minMin.defense);
+            _armorGridContent.GetChild(i).GetComponent<Image>().enabled = (i < minMin.Stats.Defense);
 
         // Attack Patterns
         GameObject temp = GameObject.Find("Canvas/PopUp/PatternBG/UnitInfo");
@@ -240,7 +243,7 @@ public class UnitSelectManager : MonoBehaviour
         //container.transform.localPosition = Vector3.zero;
 
         _waypoints = new Vector2[4];
-        int pattern = minMin.attack[0];
+        int pattern = minMin.Attacks[0];
 
         _attack = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/Patterns/Attack" + pattern));
         _attack.transform.parent = container.transform;
