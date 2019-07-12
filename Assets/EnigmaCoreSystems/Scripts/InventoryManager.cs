@@ -13,12 +13,26 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>
         if (shouldCheckGroupExists && !checkGroupExists(groupName, false))
             _items[groupName] = new Dictionary<string, object>();
 
-        _items[groupName].Add(key, value);
+        if (HasItem(groupName, key, true, false))
+            Debug.LogError("Group " + groupName + " already has item: " + key);
+        else 
+            _items[groupName].Add(key, value);
     }
 
-    public bool HasItem(string groupName, string key, bool displayGroupNotFoundError = true)
+    public void UpdateItem(string groupName, string key, object value, bool shouldCheckGroupExists = true)
     {
-        if (!checkGroupExists(groupName, displayGroupNotFoundError))
+        if (shouldCheckGroupExists && !checkGroupExists(groupName, false))
+            _items[groupName] = new Dictionary<string, object>();
+
+        if (!HasItem(groupName, key, true, false))
+            Debug.LogError("Group " + groupName + " does not have item: " + key);
+        else
+            _items[groupName][key] = value;
+    }
+
+    public bool HasItem(string groupName, string key, bool displayGroupNotFoundError = true, bool shouldCheckGroupExists = true)
+    {
+        if (shouldCheckGroupExists && !checkGroupExists(groupName, displayGroupNotFoundError))
             return false;
 
         return _items[groupName].ContainsKey(key);

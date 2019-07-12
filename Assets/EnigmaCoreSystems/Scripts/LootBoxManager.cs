@@ -6,12 +6,12 @@ public class LootBoxManager : SingletonMonobehaviour<LootBoxManager>
 {
     [SerializeField] private int _decimalsForRaritySumChecks = 3;
 
-    public List<int> PickRandomizedIndexes(int amountToPick, bool cannotRepeat, List<int> indexesWithDefaultRarity, Dictionary<int, double> indexesWithSpecialRarity = null, bool forbidDefaultRarityDuplicates = true)
+    public List<int> PickRandomizedNumbers(int amountToPick, bool cannotRepeat, List<int> indexesWithDefaultRarity, Dictionary<int, double> indexesWithSpecialRarity = null, bool forbidDefaultRarityDuplicateOption = true)
     {
         bool defaultListIsValid = (indexesWithDefaultRarity != null) && (indexesWithDefaultRarity.Count > 0);
         bool specialListValid = (indexesWithSpecialRarity != null) && (indexesWithSpecialRarity.Count > 0);
 
-        if(forbidDefaultRarityDuplicates && defaultListIsValid)
+        if(forbidDefaultRarityDuplicateOption && defaultListIsValid)
         {
             List<int> duplicateCheckList = new List<int>();
             foreach (int index in indexesWithDefaultRarity)

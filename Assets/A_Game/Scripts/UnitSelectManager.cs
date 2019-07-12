@@ -45,7 +45,6 @@ public class UnitSelectManager : MonoBehaviour
         for (int i = 0; i < unitsLength; i++)
         {
             Transform unitTransform = Instantiate<GameObject>(unitGridItemTemplate, _unitsGridContent).transform;
-            //int unitIndex = i;
             string unitName = inventoryUnitNames[i];
             unitTransform.name = unitName;
             unitTransform.Find("Sprite").GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/Units/" + unitName);
