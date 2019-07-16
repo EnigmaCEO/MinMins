@@ -70,6 +70,7 @@ public class GameStore : MonoBehaviour
             for (int i = 0; i < tierAmount; i++)
             {
                 Transform unitTransform = Instantiate<GameObject>(boxGridItemTemplate, _lootBoxGridContent).transform;
+                unitTransform.name = "BoxGridItem_Tier " + tier;
                 BoxGridItem box = unitTransform.GetComponent<BoxGridItem>();
                 box.SetTier(tier);
                 int tierCopy = tier;
@@ -94,7 +95,7 @@ public class GameStore : MonoBehaviour
 
     private void onBuySuccessful(int lootBoxTier)
     {
-        GameInventory.Instance.ChangeLootBoxAmount(lootBoxTier, true, true);
+        GameInventory.Instance.ChangeLootBoxAmount(1, lootBoxTier, true, true);
         refreshLootBoxesGrid();
     }
 
@@ -106,6 +107,8 @@ public class GameStore : MonoBehaviour
         List<int> lootBoxUnitNumbers = gameInventory.OpenLootBox(lootBoxTier);
         foreach (int unitNumber in lootBoxUnitNumbers)
             unitsWithTier.Add(unitNumber.ToString(), gameInventory.GetUnitTier(unitNumber));
+
+        refreshLootBoxesGrid();
 
         _openLootBoxPopUp.Feed(unitsWithTier);
         _openLootBoxPopUp.Open();

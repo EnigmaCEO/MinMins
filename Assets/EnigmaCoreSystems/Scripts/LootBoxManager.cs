@@ -134,8 +134,7 @@ public class LootBoxManager : SingletonMonobehaviour<LootBoxManager>
 
             if(defaultListIsValid && !indexWasSelected)
             {
-                int iterations = defaultList.Count;
-                for (int j = 0; j < iterations; j++)
+                for (int j = 0; j < amountToPick; j++)
                 {
                     int indexToAdd = defaultList[Random.Range(0, defaultList.Count)];
 

@@ -48,3 +48,4 @@ MonoBehaviour:
   _fileName: data.txt
   _entrySeparator: 47
   _keyValueSeparator: 61
+  _resetAtStart: 0

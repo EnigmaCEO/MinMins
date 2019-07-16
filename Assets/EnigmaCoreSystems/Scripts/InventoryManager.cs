@@ -10,18 +10,21 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>
 
     public void AddItem(string groupName, string key, object value, bool shouldCheckGroupExists = true)
     {
-        if (shouldCheckGroupExists && !checkGroupExists(groupName, false))
+        if (shouldCheckGroupExists && !CheckGroupExists(groupName, false))
             _items[groupName] = new Dictionary<string, object>();
 
         if (HasItem(groupName, key, true, false))
             Debug.LogError("Group " + groupName + " already has item: " + key);
-        else 
+        else
+        {
+            print("Added item: " + key + " to group: " + groupName);
             _items[groupName].Add(key, value);
+        }
     }
 
     public void UpdateItem(string groupName, string key, object value, bool shouldCheckGroupExists = true)
     {
-        if (shouldCheckGroupExists && !checkGroupExists(groupName, false))
+        if (shouldCheckGroupExists && !CheckGroupExists(groupName, false))
             _items[groupName] = new Dictionary<string, object>();
 
         if (!HasItem(groupName, key, true, false))
@@ -32,7 +35,7 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>
 
     public bool HasItem(string groupName, string key, bool displayGroupNotFoundError = true, bool shouldCheckGroupExists = true)
     {
-        if (shouldCheckGroupExists && !checkGroupExists(groupName, displayGroupNotFoundError))
+        if (shouldCheckGroupExists && !CheckGroupExists(groupName, displayGroupNotFoundError))
             return false;
 
         return _items[groupName].ContainsKey(key);
@@ -45,7 +48,7 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>
 
     public object GetItem(string groupName, string key)
     {
-        if (!checkGroupExists(groupName))
+        if (!CheckGroupExists(groupName))
             return null;
 
         if (!_items[groupName].ContainsKey(key))
@@ -59,7 +62,7 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>
 
     public int GetGroupSize(string groupName)
     {
-        if (!checkGroupExists(groupName))
+        if (!CheckGroupExists(groupName))
             return -1;
 
         return _items[groupName].Count;
@@ -67,7 +70,7 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>
 
     public void ClearGroup(string groupName)
     {
-        if (checkGroupExists(groupName))
+        if (CheckGroupExists(groupName))
             _items[groupName].Clear();
     }
 
@@ -76,7 +79,7 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>
         _items.Clear();
     }
 
-    private bool checkGroupExists(string groupName, bool displayError = true)
+    public bool CheckGroupExists(string groupName, bool displayError = true)
     {
         bool groupExists = true;
 
@@ -93,7 +96,7 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>
 
     public List<string> GetGroupKeys(string groupName)
     {
-        if (!checkGroupExists(groupName))
+        if (!CheckGroupExists(groupName))
             return null;
 
         List<string> keys = new List<string>();
@@ -105,7 +108,7 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>
 
     public List<object> GetGroupValues(string groupName)
     {
-        if (!checkGroupExists(groupName))
+        if (!CheckGroupExists(groupName))
             return null;
 
         List<object> values = new List<object>();
@@ -137,75 +140,4 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>
     {
         _items[groupName] = GetSortedGroup(groupName, isReverse);
     }
-
-    //public void LoadData()
-    //{
-    //    _saveHashTable.Clear();
-    //    _saveHashTable = FileManager.Instance.LoadData();
-
-    //    _items.Clear();
-    //    foreach (DictionaryEntry entry in _saveHashTable)
-    //    {
-    //        string[] terms = entry.Key.ToString().Split(_parseSeparator);
-    //        string groupName = terms[0];
-    //        string itemKey = terms[1];
-    //        object item = Deserialize((string)entry.Value);
-    //        print("LoadData -> groupName: " + groupName + " -> itemKey: " + itemKey + " -> item: " + item.ToString());
-    //        AddItem(groupName, itemKey, item);
-    //    }
-    //}
-
-    //public void SaveGroup(string groupName)
-    //{
-    //    foreach (string key in GetGroupKeys(groupName))
-    //        SaveItem(groupName, key, false);
-
-    //    FileManager.Instance.SaveData(_saveHashTable);
-    //}
-
-    //public void SaveItem(string groupName, string key, bool isStandAlone = true)
-    //{
-    //    if (_saveHashTable.ContainsKey(key))
-    //        _saveHashTable.Remove(key);
-
-    //    object item = GetItem(groupName, key);
-    //    string serializedItem = Serialize(item);
-    //    string hashKey = groupName + _parseSeparator + key;
-    //    print("SaveItem -> hashKey: " + hashKey + " -> serializedItem: " + serializedItem);
-    //    _saveHashTable.Add(hashKey, serializedItem);
-
-    //    if (isStandAlone)
-    //        FileManager.Instance.SaveData(_saveHashTable);
-    //}
-
-    //static public string Serialize(object obj)
-    //{
-    //    print("serialize input: -> obj: " + obj.ToString());
-    //    Newtonsoft.Json.JsonSerializerSettings settings = new Newtonsoft.Json.JsonSerializerSettings();
-    //    settings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-    //    string str = Newtonsoft.Json.JsonConvert.SerializeObject(obj, Newtonsoft.Json.Formatting.Indented, settings);
-    //    print("serialize output: -> str: " + str);
-    //    return str;
-    //}
-
-    //static public object Deserialize(string str)
-    //{
-    //    return Deserialize<object>(str);
-    //}
-
-    //static public T Deserialize<T>(string str)
-    //{
-    //    print("deserialize<T> input: -> str: " + str);
-    //    T result = (T)Newtonsoft.Json.JsonConvert.DeserializeObject(str);
-    //    print("deserialize<T> output: -> T: " + typeof(T).ToString() + " -> result: "  + result.ToString());
-    //    return result;
-    //}
-
-    //static public object Deserialize(string str)
-    //{
-    //    print("deserialize input: -> str: " + str);
-    //    object result = Newtonsoft.Json.JsonConvert.DeserializeObject(str);
-    //    print("deserialize output: " + result);
-    //    return result;
-    //}
 }

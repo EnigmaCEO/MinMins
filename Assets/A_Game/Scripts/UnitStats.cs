@@ -32,7 +32,7 @@ public class UnitStats
         Newtonsoft.Json.JsonSerializerSettings settings = new Newtonsoft.Json.JsonSerializerSettings();
         settings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
         string str = Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.None, settings);
-        Debug.Log("Serialized: " + str);
+        //Debug.Log("Serialized: " + str);
         return str;
     }
 

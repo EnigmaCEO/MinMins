@@ -11,30 +11,40 @@ public class FileManager : MonoBehaviour
     [SerializeField] private char _entrySeparator = '/';
     [SerializeField] private char _keyValueSeparator = '=';
 
+    [SerializeField] private bool _resetAtStart = false; //Hack for testing
+
     private string _filePath = "";
 
     public static FileManager Instance;
+
 
     private void Awake()
     {
         Instance = this;
         _filePath = Application.persistentDataPath + "/" + _fileName;
+
+        if (_resetAtStart)
+            FileManager.Instance.ClearData();
     }
 
     public Hashtable LoadData()
     {
+        Hashtable data = new Hashtable();
+
         if (!System.IO.File.Exists(_filePath))
-            return null;
+            return data;
 
         string dataString = System.IO.File.ReadAllText(_filePath);
+        if (dataString == "")
+            return data; 
+
         string fileSec = Enigma.CoreSystems.NetworkManager.md5(dataString + _egi);
 
         //Set default values to 0 if security code wasn't matched
         if (fileSec != PlayerPrefs.GetString(_secKey, ""))
-            return null;
+            return data;  
         else
         {
-            Hashtable data = new Hashtable();
             string[] entriesString = dataString.Split(_entrySeparator);
             foreach (string entryString in entriesString)
             {
@@ -57,5 +67,10 @@ public class FileManager : MonoBehaviour
 
         PlayerPrefs.SetString(_secKey, Enigma.CoreSystems.NetworkManager.md5(dataToWrite + _egi));
         System.IO.File.WriteAllText(_filePath, dataToWrite);
+    }
+
+    public void ClearData()
+    {
+        System.IO.File.WriteAllText(_filePath, "");
     }
 }

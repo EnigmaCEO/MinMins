@@ -28,19 +28,15 @@ public class WarPrepManager : MonoBehaviour
             if (prepName == "-1")
                 continue;
 
-            GameObject minMinObj = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/PrepMinMins/" + prepName));
+            GameObject minMinObj = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/MinMinUnits/" + prepName));
             minMinObj.name = prepName;
+            Transform minMinTransform = minMinObj.transform;
+            minMinTransform.Find("Sprite").gameObject.AddComponent<PrepMinMin>().SetManager(this);
 
-            minMinObj.transform.parent = warPrepGrid.Find("slot" + (i + 1));
-            minMinObj.transform.localPosition = new Vector2(0, 0);
+            minMinTransform.parent = warPrepGrid.Find("slot" + (i + 1));
+            minMinTransform.localPosition = new Vector2(0, 0);
 
             _slotsInPlay++;
-
-            minMinObj.GetComponentInChildren<PrepMinMin>().SetManager(this);
-          
-            //minMinGameObject.transform.localScale = new Vector2(1, 1);
-           //minMinGameObject.transform.Find("Health").gameObject.SetActive(false);
-            //minMinObj.transform.Find("Sprite").gameObject.AddComponent<UnitPrep>();
         }
     }
 
