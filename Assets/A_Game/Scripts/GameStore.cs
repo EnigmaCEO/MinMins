@@ -7,17 +7,24 @@ public class GameStore : MonoBehaviour
 {
     [SerializeField] private int _maxBoxTierNumber = 3;
 
-    [SerializeField] private List<string> _packNames;
-    [SerializeField] private List<string> _packDescriptions;
+    [SerializeField] private List<string> _packNames = new List<string>() { "Bronze Pack", "Silver Pack", "Gold Pack" };  
+    [SerializeField] private List<string> _packDescriptions = new List<string>() { "No guarantees.", "Guarantees a Silver Unit.", "Guarantees a Gold Unit." };
 
     [SerializeField] private List<Image> _packImages;
+    [SerializeField] private List<string> _packPrices = new List<string>() { "5.00", "10.00", "15.00" };
 
     [SerializeField] private LootBoxBuyConfirmPopUp _lootBoxBuyConfirmPopUp;
     [SerializeField] private OpenLootBoxPopUp _openLootBoxPopUp;
+    [SerializeField] private BuyResultPopUp _buyResultPopUp;
 
     [SerializeField] private Transform _lootBoxGridContent;
 
     private int _selectedPackTier;
+
+    private void Awake()
+    {
+        IAPManager.IAPResult += handleCurrencyBuyResult;
+    }
 
     void Start()
     {
@@ -26,6 +33,7 @@ public class GameStore : MonoBehaviour
         _lootBoxBuyConfirmPopUp.Close();
 
         _openLootBoxPopUp.Close();
+        _buyResultPopUp.Close();
 
         refreshLootBoxesGrid();
     }
@@ -34,6 +42,33 @@ public class GameStore : MonoBehaviour
     {
         _lootBoxBuyConfirmPopUp.ConfirmButton.onClick.RemoveListener(() => onLootBoxBuyConfirmButtonDown());
         _lootBoxBuyConfirmPopUp.CancelButton.onClick.RemoveListener(() => onLootBoxBuyCancelButtonDown());
+
+        IAPManager.IAPResult -= handleCurrencyBuyResult;
+    }
+
+    private void handleCurrencyBuyResult(string id, bool result)
+    {
+        //result = false; //Hack
+        if (result)
+        {
+            IAPManager iapManager = IAPManager.Instance;
+            int idsCount = iapManager.IAP_IDS.Length;
+            int boxTierIndex = -1;
+            for (int i = 0; i < idsCount; i++)
+            {
+                if (iapManager.IAP_IDS[i] == id)
+                {
+                    boxTierIndex = i;
+                    break;
+                }
+            }
+
+            int boxTier = boxTierIndex + 1;
+            grantBuy(boxTier);
+            _buyResultPopUp.Open("Thanks for your Purchase!");
+        }
+        else
+            _buyResultPopUp.Open("Purchase Failed. Please try again later.");
     }
 
     public void OnPackBuyButtonDown(int tier)
@@ -45,12 +80,18 @@ public class GameStore : MonoBehaviour
         _lootBoxBuyConfirmPopUp.SetPackDescription(_packDescriptions[packIndex]);
         _lootBoxBuyConfirmPopUp.SetStars(tier);
         _lootBoxBuyConfirmPopUp.SetPackSprite(_packImages[packIndex].sprite);
+        _lootBoxBuyConfirmPopUp.SetPrice(_packPrices[packIndex]);
         _lootBoxBuyConfirmPopUp.gameObject.SetActive(true);
     }
 
     public void OnLootBoxOpenPopUpDismissButtonDown()
     {
         _openLootBoxPopUp.Close();
+    }
+
+    public void OnBuyResultPopUpDismissButtonDown()
+    {
+        _buyResultPopUp.Close();
     }
 
     private void refreshLootBoxesGrid()
@@ -83,9 +124,10 @@ public class GameStore : MonoBehaviour
 
     private void onLootBoxBuyConfirmButtonDown()
     {
-        //TODO: Complete IAP Code
-        onBuySuccessful(_selectedPackTier); //TODO: Remove hack
+        int packIndex = _selectedPackTier - 1;
+        IAPManager.BuyConsumable(packIndex);
         _lootBoxBuyConfirmPopUp.Close();
+        //grantBuy(_selectedPackTier); //TODO: Remove hack
     }
 
     private void onLootBoxBuyCancelButtonDown()
@@ -93,7 +135,7 @@ public class GameStore : MonoBehaviour
         _lootBoxBuyConfirmPopUp.Close();
     }
 
-    private void onBuySuccessful(int lootBoxTier)
+    private void grantBuy(int lootBoxTier)
     {
         GameInventory.Instance.ChangeLootBoxAmount(1, lootBoxTier, true, true);
         refreshLootBoxesGrid();

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class LootBoxBuyConfirmPopUp : MonoBehaviour
@@ -9,7 +7,8 @@ public class LootBoxBuyConfirmPopUp : MonoBehaviour
     public Button CancelButton;
 
     [SerializeField] private Text _packNameText;
-    [SerializeField] private Text _packNameDescription;
+    [SerializeField] private Text _packNameDescriptionText;
+    [SerializeField] private Text _packPriceText;
 
     [SerializeField] private Transform _tierStarsContent;
 
@@ -29,7 +28,12 @@ public class LootBoxBuyConfirmPopUp : MonoBehaviour
 
     public void SetPackDescription(string description)
     {
-        _packNameDescription.text = description;
+        _packNameDescriptionText.text = description;
+    }
+
+    public void SetPrice(string price)
+    {
+        _packPriceText.text = price + " USD";
     }
 
     public void SetPackSprite(Sprite sprite)

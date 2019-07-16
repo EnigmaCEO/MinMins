@@ -102,28 +102,36 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         foreach (UnitRarity rarity in _unitSpecialRarities)
             specialRarities.Add(rarity.UnitNumber, (double)rarity.Rarity);
 
-        List<int> lootBoxIndexes = null;
+        List<int> unitPicks = null;
         LootBoxManager lootBoxManager = LootBoxManager.Instance;
         if (boxTier == _BRONZE_TIER)
-            lootBoxIndexes = lootBoxManager.PickRandomizedNumbers(_lootBoxSize, true, null, specialRarities);
+            unitPicks = lootBoxManager.PickRandomizedNumbers(_lootBoxSize, true, null, specialRarities);
         else
         {
-            int defaultRandomAmountToPick = _lootBoxSize - _guaranteedUnitTierAmount;
-            lootBoxIndexes = lootBoxManager.PickRandomizedNumbers(defaultRandomAmountToPick, true, null, specialRarities);
+            int specialRarityAmountToPick = _lootBoxSize - _guaranteedUnitTierAmount;
+            unitPicks = lootBoxManager.PickRandomizedNumbers(specialRarityAmountToPick, true, null, specialRarities);
+            List<int> guaranteedTierUnits = null;
+            if (boxTier == _SILVER_TIER)
+                guaranteedTierUnits = _tierSilver_units;
+            else //tier 3 (GOLD)
+                guaranteedTierUnits = _tierGold_units;
+
+            foreach (int pick in unitPicks)
+            {
+                if (guaranteedTierUnits.Contains(pick))
+                    guaranteedTierUnits.Remove(pick);  // Remove so guaranted unit pick cannot be already in the default rarity pick
+            }
 
             List<int> guaranteedPicks = new List<int>();
-            if (boxTier == _SILVER_TIER)
-                guaranteedPicks = lootBoxManager.PickRandomizedNumbers(_guaranteedUnitTierAmount, true, _tierSilver_units, null);
-            else //tier 3 (GOLD)
-                guaranteedPicks = lootBoxManager.PickRandomizedNumbers(_guaranteedUnitTierAmount, true, _tierGold_units, null);
+            guaranteedPicks = lootBoxManager.PickRandomizedNumbers(_guaranteedUnitTierAmount, true, guaranteedTierUnits, null, true);
 
             foreach (int guaranteedUnitNumber in guaranteedPicks)
-                lootBoxIndexes.Add(guaranteedUnitNumber);
+                unitPicks.Add(guaranteedUnitNumber);
         }
         //List<int> lootBoxIndexes = LootBoxManager.Instance.PickRandomizedIndexes(lootBoxSize, false, _defaultRarityIndexes, specialRarities); //test
 
         InventoryManager inventoryManager = InventoryManager.Instance;
-        foreach (int lootBoxIndex in lootBoxIndexes)
+        foreach (int lootBoxIndex in unitPicks)
         {
             print("LootBoxIndex got: " + lootBoxIndex);
             string unitName = lootBoxIndex.ToString();
@@ -144,7 +152,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         saveUnits();
         ChangeLootBoxAmount(1, boxTier, false, true);
 
-        return lootBoxIndexes;
+        return unitPicks;
     }
 
     public int GetUnitTier(int unitNumber)
