@@ -3,75 +3,78 @@ using System.Collections;
 using SimpleJSON;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 
 namespace Enigma.CoreSystems
 {
-	public class Ads
-	{
+  public class Ads
+  {
 
-		public string appVersion = "1.0";
+    public string appVersion = "1.0";
 
 #if UNITY_ANDROID
         // App ID
         static public string appId = "app42a4a7795d6642b4ae";  //"app168a5d9b97bb47739a";
         // Video zones
         static public string[] zoneId = { "vze64e837cdaeb448494" }; //{ "vz28f417ceecca4ae4b2", "vzf2257354d2b64e08a8" };
-		//If not android defaults to setting the zone strings for iOS
+    //If not android defaults to setting the zone strings for iOS
 
 
 #else
-		// App ID
-		static public string appId = "app970a83943f644f9a90";
-		// Video zones
-		static public string[] zoneId = { "vzf8e4e97704c4445c87504e" };
-		#endif
+    // App ID
+    static public string appId = "app970a83943f644f9a90";
+    // Video zones
+    static public string[] zoneId = { "vzf8e4e97704c4445c87504e" };
+    #endif
 
-	}
+  }
 
-	public class NetworkManager : Manageable<NetworkManager>
-	{
+  public class NetworkManager : Manageable<NetworkManager>
+  {
 
-		static private string serverUrl;
-		static private string sessionID;
+    static private string serverUrl;
+    static private string sessionID;
         static private string game;
 
-		static public Dictionary<string, Hashtable> data;
-		static public NetworkManager instance;
+    // static public Dictionary<string, Hashtable> data;
+    static public Dictionary<string, Hashtable> data = new Dictionary<string, Hashtable>();
+    static public NetworkManager instance;
 
-		static public bool connectedToUNet = false;
-		static public bool timeoutDisconnected = false;
-		static public bool serverDisconnected = false;
-		static public bool readySpawn = false;
-		static public bool playerIsServer = false;
-		static public int numberOfPlayers = 0;
-		static public int readyToSpawnElves = 0;
+    static public bool connectedToUNet = false;
+    static public bool timeoutDisconnected = false;
+    static public bool serverDisconnected = false;
+    static public bool readySpawn = false;
+    static public bool playerIsServer = false;
+    static public int numberOfPlayers = 0;
+    static public int readyToSpawnElves = 0;
 
 
-		protected override void Awake ()
-		{
-			instance = this;
-		}
+    protected override void Awake ()
+    {
+        Debug.Log("This should be called");
+        instance = this;
+    }
 
-		protected override void Start ()
-		{
-			base.Start ();
-			data = new Dictionary<string, Hashtable> ();
+    protected override void Start ()
+    {
+      base.Start ();
+      data = new Dictionary<string, Hashtable> ();
 
-			//Firebase.Messaging.FirebaseMessaging.TokenReceived += OnTokenReceived;
-			//Firebase.Messaging.FirebaseMessaging.MessageReceived += OnMessageReceived;
-			//GameOfWhales.Instance.OnPushDelivered += OnPushDelivered;
-		}
+      //Firebase.Messaging.FirebaseMessaging.TokenReceived += OnTokenReceived;
+      //Firebase.Messaging.FirebaseMessaging.MessageReceived += OnMessageReceived;
+      //GameOfWhales.Instance.OnPushDelivered += OnPushDelivered;
+    }
 
         public delegate void Callback (JSONNode data);
 
-		public delegate void TextureCallback (Texture2D data);
+    public delegate void TextureCallback (Texture2D data);
 
-		public delegate void ImageCallback ();
+    public delegate void ImageCallback ();
 
-		static public void SetServer (string url)
-		{
-			serverUrl = url;
-		}
+    static public void SetServer (string url)
+    {
+      serverUrl = url;
+    }
 
         static public string GetServer()
         {
@@ -84,15 +87,15 @@ namespace Enigma.CoreSystems
             instance.StartCoroutine(heartbeat(onHeartBeat));
         }
 
-		static public void SetSessionID (string id)
-		{
-			sessionID = id;
-		}
+    static public void SetSessionID (string id)
+    {
+      sessionID = id;
+    }
 
-		static public string GetSessionID ()
-		{
-			return sessionID;
-		}
+    static public string GetSessionID ()
+    {
+      return sessionID;
+    }
 
         static public void SetGame(string gameName)
         {
@@ -104,253 +107,249 @@ namespace Enigma.CoreSystems
             return game;
         }
 
-		static public void Transaction (int id, Hashtable val, Callback func = null, Callback local = null, TextureCallback texture = null)
-		{
-			instance.StartCoroutine (httpRequest (id, val, func, local, texture));
-		}
+    static public void Transaction (NetworkTransactions id, Hashtable val, Callback func = null, Callback local = null, TextureCallback texture = null)
+    {
+        Debug.Log(instance);
+        instance.StartCoroutine (httpRequest (id, val, func, local, texture));
+    }
 
-		static IEnumerator httpRequest (int id, Hashtable val, Callback func, Callback local, TextureCallback texture)
-		{
-			string url = serverUrl + "/trans/" + id + ".php";
-            string sec = "";
+    static IEnumerator httpRequest (NetworkTransactions id, Hashtable val, Callback func, Callback local, TextureCallback texture)
+    {
+        string url = serverUrl + "/trans/" + id + ".php";
+        string sec = "";
 
-			WWWForm formData = new WWWForm ();
-			formData.AddField ("tid", id);
-			if (sessionID != null)
-				formData.AddField ("ssid", sessionID);
-			foreach (DictionaryEntry pair in val) {
-				Debug.Log (pair.Key + " " + pair.Value);
-                if (pair.Key.ToString() == "image")
-                    formData.AddBinaryData("imageUpload", pair.Value as byte[], "image.png", "image/png");
-                else
-                {
-                    //string value = Md5Sum(Application.identifier + Application.version + (string)pair.Value);
-                    formData.AddField((string)pair.Key, (string)pair.Value);
-                    sec += (string)pair.Value;
-                }
-			}
-
-            formData.AddField("bundle_id", Application.identifier);
-            formData.AddField("game", game);
-
-            sec += Application.identifier + game;
-            sec = md5(sec);
-
-            formData.AddField("sec", sec);
-
-            WWW www = new WWW (url, formData);
-			Debug.Log ("url: " + url);
-			yield return www;
-
-			if (www.error != null) {
-				Debug.Log (www.error + " on transaction: " + id.ToString ());
-
-                JSONNode response = JSON.Parse(www.error);
-
-                if (local != null)
-                    local(null);
-                func(null);
-
-#if UNITY_ANDROID
-                EtceteraAndroid.showAlert ("Network Error", "Error connecting to the server. Restart the app and retry.", "OK");
-
-#endif
-#if UNITY_IPHONE
-				var buttons = new string[] { "OK" };
-				//EtceteraBinding.showAlertWithTitleMessageAndButtons( "Network Error", "Error connecting to the server. Restart the app and retry.", buttons );
-#endif
-			} else {
-				if (func != null) {
-					JSONNode response = JSON.Parse (www.text);
-
-					if (local != null)
-						local (response);
-					func (response);
-				}
-				if (texture != null) {
-
-					if (www.texture != null) {
-						texture (www.texture);
-					}
-				}
-			}
-		}
-
-		static public string url_create_parameters (Hashtable my_hash)
-		{
-			string parameters = "";
-			foreach (DictionaryEntry hash_entry in my_hash) {
-				parameters = parameters + "&" + hash_entry.Key + "=" + hash_entry.Value;
-			}
-
-			return parameters;
-		}
-
-		// from unity wiki
-		static public string Md5Sum (string strToEncrypt)
-		{
-			System.Text.UTF8Encoding ue = new System.Text.UTF8Encoding ();
-			byte[] bytes = ue.GetBytes (strToEncrypt);
-
-			// encrypt bytes
-			System.Security.Cryptography.MD5CryptoServiceProvider md5 = new System.Security.Cryptography.MD5CryptoServiceProvider ();
-			byte[] hashBytes = md5.ComputeHash (bytes);
-
-			// Convert the encrypted bytes back to a string (base 16)
-			string hashString = "";
-
-			for (int i = 0; i < hashBytes.Length; i++) {
-				hashString += System.Convert.ToString (hashBytes [i], 16).PadLeft (2, '0');
-			}
-
-			return hashString.PadLeft (32, '0');
-		}
-
-        static public void Register(int registractionTransactionId, string userName, string password, string email, string game, string bundleId, Callback func = null, Hashtable extras = null)
-        {
-            Hashtable val = new Hashtable();
-
-            val.Add("username", userName);
-            val.Add("password", password);
-            val.Add("email", email);
-            val.Add("game", game);
-            val.Add("bundle_id", bundleId);
-
-            if (extras != null)
-                val.Merge(extras);
-
-            Transaction(registractionTransactionId, val, func, RegistrationResult);
+        WWWForm formData = new WWWForm ();
+        formData.AddField ("tid", (int) id);
+        if (sessionID != null) {
+            formData.AddField ("ssid", sessionID);
+        }
+        foreach (DictionaryEntry pair in val) {
+            Debug.Log (pair.Key + " " + pair.Value);
+            if (pair.Key.ToString() == "image") {
+                formData.AddBinaryData("imageUpload", pair.Value as byte[], "image.png", "image/png");
+            } else {
+                //string value = Md5Sum(Application.identifier + Application.version + (string)pair.Value);
+                formData.AddField((string)pair.Key, (string)pair.Value);
+                sec += (string)pair.Value;
+            }
         }
 
-        static private void RegistrationResult(JSONNode response)
-        {
-            JSONNode response_hash = response[0];
-            string status = response_hash["status"].ToString().Trim('"');
-            string ssid = response_hash["ssid"].ToString().Trim('"');
+        formData.AddField("bundle_id", Application.identifier);
+        formData.AddField("game", game);
 
-            Debug.Log("RegistrationResult: " + response_hash.ToString());
+        sec += Application.identifier + game;
+        sec = md5(sec);
 
-            if (status == "SUCCESS")
-                NetworkManager.SetSessionID(ssid);
+        formData.AddField("sec", sec);
+
+        Debug.Log ("url: " + url);
+        var www = UnityWebRequest.Post(url, formData);
+        yield return www.SendWebRequest();
+
+        if (www.isNetworkError || www.isHttpError) {
+            Debug.Log (www.error + " on transaction: " + id.ToString ());
+
+            JSONNode response = JSON.Parse(www.error);
+
+            if (local != null) {
+                local(null);
+            }
+            func(null);
+
+            #if UNITY_ANDROID
+            EtceteraAndroid.showAlert ("Network Error", "Error connecting to the server. Restart the app and retry.", "OK");
+            #endif
+
+            #if UNITY_IPHONE
+            var buttons = new string[] { "OK" };
+            #endif
+
+        } else {
+            if (func != null) {
+            JSONNode response = JSON.Parse (www.downloadHandler.text);
+
+            if (local != null)
+                local (response);
+            func (response);
+            }
+            if (texture != null) {
+                texture (((DownloadHandlerTexture)www.downloadHandler).texture);
+            }
         }
+    }
 
-        static public void Login (int loginTransactionId, string user, string pw, Callback func = null, Hashtable extras = null)
-		{
-			Hashtable val = new Hashtable ();
-			val.Add ("user", user);
-			val.Add ("pwhash", pw);
+    static public string url_create_parameters (Hashtable my_hash)
+    {
+      string parameters = "";
+      foreach (DictionaryEntry hash_entry in my_hash) {
+        parameters = parameters + "&" + hash_entry.Key + "=" + hash_entry.Value;
+      }
 
-			if (extras != null)
-				val.Merge (extras);
+      return parameters;
+    }
 
-			Transaction (loginTransactionId, val, func, LoginResult);
+    // from unity wiki
+    static public string Md5Sum (string strToEncrypt)
+    {
+      System.Text.UTF8Encoding ue = new System.Text.UTF8Encoding ();
+      byte[] bytes = ue.GetBytes (strToEncrypt);
 
-		}
+      // encrypt bytes
+      System.Security.Cryptography.MD5CryptoServiceProvider md5 = new System.Security.Cryptography.MD5CryptoServiceProvider ();
+      byte[] hashBytes = md5.ComputeHash (bytes);
 
-		static private void LoginResult (JSONNode response)
-		{
+      // Convert the encrypted bytes back to a string (base 16)
+      string hashString = "";
+
+      for (int i = 0; i < hashBytes.Length; i++) {
+        hashString += System.Convert.ToString (hashBytes [i], 16).PadLeft (2, '0');
+      }
+
+      return hashString.PadLeft (32, '0');
+    }
+
+    static public void Register(string userName, string password, string email, string ethAddress, string game, string bundleId, Callback func = null, Hashtable extras = null)
+    {
+        Hashtable val = new Hashtable();
+
+        val.Add("username", userName);
+        val.Add("password", password);
+        val.Add("email", email);
+        val.Add("game", game);
+        val.Add("bundle_id", bundleId);
+
+        if (extras != null)
+            val.Merge(extras);
+
+        Transaction(NetworkTransactions.Registration, val, func, RegistrationResult);
+    }
+
+    static private void RegistrationResult(JSONNode response)
+    {
+        JSONNode response_hash = response[0];
+        string status = response_hash["status"].ToString().Trim('"');
+        string ssid = response_hash["ssid"].ToString().Trim('"');
+
+        Debug.Log("RegistrationResult: " + response_hash.ToString());
+
+        if (status == "SUCCESS")
+            NetworkManager.SetSessionID(ssid);
+    }
+
+    static public void Login (string user, string pw, Callback func = null, Hashtable extras = null)
+    {
+        Hashtable val = new Hashtable ();
+        val.Add ("user", user);
+        val.Add ("pwhash", pw);
+
+        if (extras != null)
+            val.Merge (extras);
+
+        Transaction (NetworkTransactions.Login, val, func, LoginResult);
+    }
+
+    static private void LoginResult (JSONNode response)
+    {
             if (response == null)
                 return;
 
-			JSONNode response_hash = response [0];
-			string status = response_hash ["status"].ToString ().Trim ('"');
-			string ssid = response_hash ["ssid"].ToString ().Trim ('"');
+      JSONNode response_hash = response [0];
+      string status = response_hash ["status"].ToString ().Trim ('"');
+      string ssid = response_hash ["ssid"].ToString ().Trim ('"');
 
-			Debug.Log ("LoginResult: " + response_hash.ToString());
+      Debug.Log ("LoginResult: " + response_hash.ToString());
 
-			if (status == "SUCCESS") {
-				NetworkManager.SetSessionID (ssid);
-			}
-		}
+      if (status == "SUCCESS") {
+        NetworkManager.SetSessionID (ssid);
+      }
+    }
 
-		//static public List<Texture2D> LoadAssetImages (string name, ImageCallback func = null)
-		//{
-		//	List<Texture2D> list = new List<Texture2D> ();
+    //static public List<Texture2D> LoadAssetImages (string name, ImageCallback func = null)
+    //{
+    //	List<Texture2D> list = new List<Texture2D> ();
 
-		//	string url = serverUrl + "/assets/" + name + ".unity3d";
-		//	instance.StartCoroutine (StartAssetLoad (list, url, func));
+    //	string url = serverUrl + "/assets/" + name + ".unity3d";
+    //	instance.StartCoroutine (StartAssetLoad (list, url, func));
 
-		//	return list;
-		//}
+    //	return list;
+    //}
 
-		//static IEnumerator StartAssetLoad (List<Texture2D> list, string url, ImageCallback func)
-		//{
+    //static IEnumerator StartAssetLoad (List<Texture2D> list, string url, ImageCallback func)
+    //{
 
-		//	AssetBundleContainer container = AssetBundleManager.Instance.LoadBundleAsync (url);
-		//	while (!container.IsReady)
-		//		yield return 0;
+    //	AssetBundleContainer container = AssetBundleManager.Instance.LoadBundleAsync (url);
+    //	while (!container.IsReady)
+    //		yield return 0;
 
-		//	if (container.IsError) {
-		//		Debug.LogError (container.ErrorMsg);
-		//		yield break;
-		//	} else {
-		//		foreach (var asset in container.FileList) {
-		//			AssetBundleRequest request = container.AssetBundle.LoadAssetAsync (asset.Name.Replace (".png", ""), typeof(Texture2D));
-		//			Texture2D tex = request.asset as Texture2D;
+    //	if (container.IsError) {
+    //		Debug.LogError (container.ErrorMsg);
+    //		yield break;
+    //	} else {
+    //		foreach (var asset in container.FileList) {
+    //			AssetBundleRequest request = container.AssetBundle.LoadAssetAsync (asset.Name.Replace (".png", ""), typeof(Texture2D));
+    //			Texture2D tex = request.asset as Texture2D;
 
-		//			if (request.asset != null)
-		//				list.Add (tex);
-		//		}
-		//	}
+    //			if (request.asset != null)
+    //				list.Add (tex);
+    //		}
+    //	}
 
-		//	if (list.Count == 0)
-		//		Debug.LogError ("No assets loaded");
-		//	if (func != null && list.Count > 0)
-		//		func ();
-		//	AssetBundleManager.Instance.UnloadBundle (container);
+    //	if (list.Count == 0)
+    //		Debug.LogError ("No assets loaded");
+    //	if (func != null && list.Count > 0)
+    //		func ();
+    //	AssetBundleManager.Instance.UnloadBundle (container);
 
-		//}
-
-
-		static public void SetData (string key, Hashtable val)
-		{
-			if (data.ContainsKey (key))
-				data.Remove (key);
-
-			data.Add (key, val);
-		}
+    //}
 
 
-		static public void GetIAP (JSONNode response)
-		{
-			JSONNode response_hash = response [0];
-			string status = response_hash ["status"].ToString ().Trim ('"');
-			JSONNode data = response_hash ["store"];
+    static public void SetData (string key, Hashtable val)
+    {
+      if (data.ContainsKey (key))
+        data.Remove (key);
 
-			if (status == "SUCCESS") {
+      data.Add (key, val);
+    }
+
+
+    static public void GetIAP (JSONNode response)
+    {
+      JSONNode response_hash = response [0];
+      string status = response_hash ["status"].ToString ().Trim ('"');
+      JSONNode data = response_hash ["store"];
+
+      if (status == "SUCCESS") {
 #if !UNITY_STANDALONE
-				//IAPManager.LoadData(data);
+        //IAPManager.LoadData(data);
 #endif
-			}
-		}
+      }
+    }
 
-		static public string GetUserInfo (string val)
-		{
-            if (!NetworkManager.data.ContainsKey("Info"))
-                return "";
-                //NetworkManager.data.Add ("Info", new Hashtable ());
+    static public string GetUserInfo (string val)
+    {
+        if (!NetworkManager.data.ContainsKey("Info"))
+            return "";
 
-            if (!NetworkManager.data["Info"].ContainsKey("user"))
-                return "";
-				//NetworkManager.data ["Info"].Add ("user", new Hashtable ());
+        if (!NetworkManager.data["Info"].ContainsKey("user"))
+            return "";
 
-			Hashtable userData = NetworkManager.data ["Info"] ["user"] as Hashtable;
-			return userData [val].ToString ().Trim ('"');
-		}
+        Hashtable userData = NetworkManager.data ["Info"] ["user"] as Hashtable;
+        return userData [val].ToString ().Trim ('"');
+    }
 
-		static public void SetUserInfo (string val, string text)
-		{
-			if (!NetworkManager.data.ContainsKey ("Info"))
-				NetworkManager.data.Add ("Info", new Hashtable ());
-			if (!NetworkManager.data ["Info"].ContainsKey ("user"))
-				NetworkManager.data ["Info"].Add ("user", new Hashtable ());
-			Hashtable userData = NetworkManager.data ["Info"] ["user"] as Hashtable;
-			if (!userData.ContainsKey (val))
-				userData.Add (val, text);
-			else
-				userData [val] = text;
+    static public void SetUserInfo (string val, string text)
+    {
+      if (!NetworkManager.data.ContainsKey ("Info"))
+        NetworkManager.data.Add ("Info", new Hashtable ());
+      if (!NetworkManager.data ["Info"].ContainsKey ("user"))
+        NetworkManager.data ["Info"].Add ("user", new Hashtable ());
+      Hashtable userData = NetworkManager.data ["Info"] ["user"] as Hashtable;
+      if (!userData.ContainsKey (val))
+        userData.Add (val, text);
+      else
+        userData [val] = text;
 
-		}
+    }
 
         static public void LoadImageFromUrl(string url, Image image, ImageCallback callback = null)
         {
@@ -380,7 +379,7 @@ namespace Enigma.CoreSystems
                     yield return new WaitForSeconds(5f);
                 else
                 {
-                    NetworkManager.Transaction(GameConstants.HeartBeatTransaction, new Hashtable(), onHeartBeat);
+                    NetworkManager.Transaction(NetworkTransactions.HeartBeat, new Hashtable(), onHeartBeat);
                     yield return new WaitForSeconds(300.0f);
                 }
             }

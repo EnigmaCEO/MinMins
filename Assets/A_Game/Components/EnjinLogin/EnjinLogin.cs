@@ -86,16 +86,16 @@ public class EnjinLogin : MonoBehaviour
         extras.Add("ip", ipAddress);
         extras.Add("country", country);
 
-        // NetworkManager.instance.Register(
-        //     registerUsername.text,
-        //     registerPassword.text,
-        //     registerEmail.text,
-        //     ETHField.text,
-        //     Application.productName.ToLower(),
-        //     ShalwendConfigs.TRANSACTION_GAME_NAME,
-        //     onRegistration,
-        //     extras
-        // );
+        NetworkManager.Register(
+            registerUsername.text,
+            registerPassword.text,
+            registerEmail.text,
+            ETHField.text,
+            ShalwendConfigs.TRANSACTION_GAME_NAME,
+            Application.productName.ToLower(),
+            onRegistration,
+            extras
+        );
     }
 
     public void loginSubmit() {
@@ -110,42 +110,76 @@ public class EnjinLogin : MonoBehaviour
         loadingGroup.SetActive(true);
     }
 
+    private void EnableLoginWindow()
+    {
+        alertText.text = "";
+        loginGroup.SetActive(true);
+        registerGroup.SetActive(false);
+        loadingGroup.SetActive(false);
+    }
+
     private void onRegistration(SimpleJSON.JSONNode response)
     {
-        // if (response != null)
-        // {
+        if (response != null) {
         //     print("onRegistration: " + response.ToString());
 
-        //     Enigma.CoreSystems.SimpleJSON.JSONNode response_hash = response[0];
-        //     string status = response_hash["status"].ToString().Trim('"');
+            SimpleJSON.JSONNode response_hash = response[0];
+            string status = response_hash["status"].ToString().Trim('"');
 
-        //     if (status == "SUCCESS")
-        //     {
-        //         print("onRegistration SUCCESS");
-        //         completeLogin(response_hash);
-        //     }
-        //     else
-        //     {
-        //         string term = "";
+            if (status == "SUCCESS") {
+                // print("onRegistration SUCCESS");
+                // completeLogin(response_hash);
+                closeDialog();
+            }
+            else {
+                EnableLoginWindow();
+                string term = "";
 
-        //         if (status == "ERR_REGISTER")
-        //             term = "Register Error";
-        //         else if (status == "ERR_INVALID_PASSWORD")
-        //             term = "Invalid Password";
-        //         else if (status == "ERR_INVALID_USERNAME")
-        //             term = "Invalid Username";
-        //         else
-        //             term = "Server Error";
+                if (status == "ERR_REGISTER")
+                    term = "Register Error";
+                else if (status == "ERR_INVALID_PASSWORD")
+                    term = "Invalid Password";
+                else if (status == "ERR_INVALID_USERNAME")
+                    term = "Invalid Username";
+                else
+                    term = "Server Error";
 
-        //         //DisableLoginWindow();
-        //         EnableLoginWindow();
-        //         onDisplayErrorText(term);
-        //     }
-        // }
-        // else
-        // {
-        //     EnableLoginWindow();
-        //     onDisplayErrorText("Connection Error");
-        // }
+                alertText.text = term;
+            }
+        } else {
+            EnableLoginWindow();
+            alertText.text = "Connection Error";
+        }
     }
+
+    // private void completeLogin(SimpleJSON.JSONNode response_hash)
+    // {
+    //     print("Complete login:-> enjin hammer: " + response_hash["enjin_hammer"].ToString() + " enjin shield: " + response_hash["enjin_shield"].ToString());
+
+    //     updateEnjinItems(response_hash);
+
+    //     string enjinId = response_hash["user_data"]["enjin_id"].ToString().Trim('"');
+    //     //if(true)  //hack
+    //     if (enjinId != "null")
+    //     {
+    //         string enjinCode = response_hash["user_data"]["enjin_code"].ToString().Trim('"');
+    //         //if(true)  //hack
+    //         if (enjinCode != "null")
+    //         {
+    //             _enjinWindow.SetActive(true);
+    //             _enjinWindow.GetComponent<EnjinQRManager>().ShowImage(enjinCode);
+
+    //             StartCoroutine(handleEnjinLinkingCheck(0));
+    //         }
+    //         else
+    //         {
+    //             print("User has already linked with Enjin");
+    //             PlayerStats.IsEnjinLinked = true;
+    //         }
+    //     }
+    //     else
+    //         print("User is not using Crypto.");
+
+    //     PlayerStats.IsEnjinLinked = true; //hack
+    // }
 }

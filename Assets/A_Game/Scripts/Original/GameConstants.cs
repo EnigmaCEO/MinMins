@@ -1,14 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class GameConstants
+﻿public enum NetworkTransactions
 {
-    public const int IpAndCountryTransaction = 0;
-    public const int LoginTransaction = 3;
-    public const int GetQuestionsTransaction = 2;
-    public const int SendQuizAnswersTransaction = 4;
-    public const int RegistrationTransaction = 5;
-    public const int CoinsEarnedTransaction = 6;
-    public const int HeartBeatTransaction = 14;
+    IpAndCountry = 0,
+    Login = 3,
+    GetQuestions = 2,
+    SendQuizAnswers = 4,
+    Registration = 5,
+    CoinsEarned = 6,
+    HeartBeat = 14
 }

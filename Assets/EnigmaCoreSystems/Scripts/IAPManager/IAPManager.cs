@@ -195,8 +195,8 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
         }
 
         var module = StandardPurchasingModule.Instance();
-        // The FakeStore supports: no-ui (always succeeding), basic ui (purchase pass/fail), and 
-        // developer ui (initialization, purchase, failure code setting). These correspond to 
+        // The FakeStore supports: no-ui (always succeeding), basic ui (purchase pass/fail), and
+        // developer ui (initialization, purchase, failure code setting). These correspond to
         // the FakeStoreUIMode Enum values passed into StandardPurchasingModule.useFakeStoreUIMode.
         //module.useFakeStoreUIMode = FakeStoreUIMode.StandardUser;
 
@@ -280,7 +280,7 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
                 // ... look up the Product reference with the general product identifier and the Purchasing system's products collection.
                 Product product = m_StoreController.products.WithID(productId);
 
-                // If the look up found a product for this device's store and that product is ready to be sold ... 
+                // If the look up found a product for this device's store and that product is ready to be sold ...
                 if (product != null && product.availableToPurchase)
                 {
                     Debug.Log(string.Format("Purchasing product asychronously: '{0}'", product.definition.id));// ... buy the product. Expect a response either through ProcessPurchase or OnPurchaseFailed asynchronously.
@@ -289,7 +289,7 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
                 // Otherwise ...
                 else
                 {
-                    // ... report the product look-up failure situation  
+                    // ... report the product look-up failure situation
                     Debug.Log("BuyProductID: FAIL. Not purchasing product, either is not found or is not available for purchase");
                 }
             }
@@ -322,7 +322,7 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
             return;
         }
 
-        // If we are running on an Apple device ... 
+        // If we are running on an Apple device ...
         if (Application.platform == RuntimePlatform.IPhonePlayer ||
             Application.platform == RuntimePlatform.OSXPlayer)
         {
@@ -347,7 +347,7 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
 #endif
     }
 
-    //  
+    //
     // --- IStoreListener
     //
 
@@ -409,7 +409,7 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
     /// This is called as part of Apple's 'Ask to buy' functionality,
     /// when a purchase is requested by a minor and referred to a parent
     /// for approval.
-    /// 
+    ///
     /// When the purchase is approved or rejected, the normal purchase events
     /// will fire.
     /// </summary>
@@ -612,7 +612,7 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
 
         Hashtable hashtable = new Hashtable();
         hashtable.Add("user", _tapJoyUserId);
-        NetworkManager.Transaction(GameConstants.CoinsEarnedTransaction, hashtable, onCoinsEarned);
+        NetworkManager.Transaction(NetworkTransactions.CoinsEarned, hashtable, onCoinsEarned);
     }
 
     //public void HandleOnRewardRequest(TJPlacement placement, TJActionRequest request, string itemId, int quantity)
