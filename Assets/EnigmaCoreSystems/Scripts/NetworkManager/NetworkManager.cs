@@ -128,7 +128,7 @@ namespace Enigma.CoreSystems
 
         // global active player
         static public JSONNode ActiveCharacter;
-         
+
 
         protected override void Awake ()
         {
@@ -232,9 +232,9 @@ namespace Enigma.CoreSystems
                 JSONNode response = JSON.Parse(www.error);
 
                 if (local != null) {
-                    local(null);
+                    local(response);
                 }
-                func(null);
+                func(response);
 
                 #if UNITY_ANDROID
                 EtceteraAndroid.showAlert ("Network Error", "Error connecting to the server. Restart the app and retry.", "OK");
@@ -711,7 +711,7 @@ namespace Enigma.CoreSystems
 
         //Get variable used to check if user is joining/creating a room
         //(determines whether to disconnect from Photon Network when
-        //leaving lobby)    
+        //leaving lobby)
         static public bool GetCreatingOrJoinRoom()
         {
             return CreatingOrJoinRoom;
@@ -748,7 +748,7 @@ namespace Enigma.CoreSystems
             SetCustomProperties(val);
         }
 
-        //Set player custom properties 
+        //Set player custom properties
         static public void SetCustomProperties(Hashtable systemHTable)
         {
             ExitGames.Client.Photon.Hashtable photonHTable = new ExitGames.Client.Photon.Hashtable();
@@ -850,7 +850,7 @@ namespace Enigma.CoreSystems
             SetLocalPlayerOnlineCustomProperties(systemHTable);
         }
 
-        //Set player custom properties 
+        //Set player custom properties
         static public void SetLocalPlayerOnlineCustomProperties(Hashtable systemHTable)
         {
             ExitGames.Client.Photon.Hashtable photonHTable = new ExitGames.Client.Photon.Hashtable();
@@ -1198,7 +1198,7 @@ namespace Enigma.CoreSystems
                         {
                             if (playerProperties["plGState"].ToString() == "spawn")
                             {
-                                //                            if (SpawnPlayerCharacter != null) 
+                                //                            if (SpawnPlayerCharacter != null)
                                 //								SpawnPlayerCharacter(player);
                             }
                             else if (playerProperties["plGState"].ToString() == "created")
@@ -1238,7 +1238,7 @@ namespace Enigma.CoreSystems
 
         void OnPhotonCustomRoomPropertiesChanged(ExitGames.Client.Photon.Hashtable propertiesThatChanged)
         {
-            //Debug.LogError("Room Properties that changed: " + propertiesThatChanged.ToStringFull());     
+            //Debug.LogError("Room Properties that changed: " + propertiesThatChanged.ToStringFull());
 
             //Room state changes
             if (propertiesThatChanged.ContainsKey("gState"))
@@ -1375,7 +1375,7 @@ namespace Enigma.CoreSystems
                     NetworkManager.SetOtherPlayerOnlineCustomProperties(playerPhotonView.owner, playerSyncProp);
                 }
             }
-            //Id was not successfully retrieved, do something here... 
+            //Id was not successfully retrieved, do something here...
             else
             {
 
@@ -1457,7 +1457,7 @@ namespace Enigma.CoreSystems
         }
 
         //Methods for Chat.cs
-        //Coroutine for joining lobby chat 
+        //Coroutine for joining lobby chat
         static public void InitializeChat()
         {
             Instance.StartCoroutine(AutoJoinChatLobbyCoroutine());
@@ -1495,7 +1495,7 @@ namespace Enigma.CoreSystems
             }
         }
 
-        //Callback for transaction 9 
+        //Callback for transaction 9
         //Cleanup and disconnect from Photon Network if the user
         //did not enter a Photon Room (left to main menu)
         static public void LeaveChatLobby(JSONNode response)
