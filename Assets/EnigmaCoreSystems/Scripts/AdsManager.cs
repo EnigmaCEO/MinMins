@@ -121,4 +121,23 @@ public class AdsManager : MonoBehaviour
             OnAdRewardGranted(zoneId, success, name, amount);
     }
 #endif
+
+    public class Ads
+    {
+        public string appVersion = "1.0";
+
+#if UNITY_ANDROID
+        // App ID
+        static public string appId = "app42a4a7795d6642b4ae";  //"app168a5d9b97bb47739a";
+                                                               // Video zones
+        static public string[] zoneId = { "vze64e837cdaeb448494" }; //{ "vz28f417ceecca4ae4b2", "vzf2257354d2b64e08a8" };
+                                                                    //If not android defaults to setting the zone strings for iOS
+
+#else
+        // App ID
+        static public string appId = "app970a83943f644f9a90";
+        // Video zones
+        static public string[] zoneId = { "vzf8e4e97704c4445c87504e" };
+#endif
+    }
 }

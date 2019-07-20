@@ -8,25 +8,6 @@ using Tiny;
 
 namespace Enigma.CoreSystems
 {
-    public class Ads
-    {
-        public string appVersion = "1.0";
-
-        #if UNITY_ANDROID
-            // App ID
-            static public string appId = "app42a4a7795d6642b4ae";  //"app168a5d9b97bb47739a";
-            // Video zones
-            static public string[] zoneId = { "vze64e837cdaeb448494" }; //{ "vz28f417ceecca4ae4b2", "vzf2257354d2b64e08a8" };
-        //If not android defaults to setting the zone strings for iOS
-
-        #else
-        // App ID
-        static public string appId = "app970a83943f644f9a90";
-        // Video zones
-        static public string[] zoneId = { "vzf8e4e97704c4445c87504e" };
-        #endif
-    }
-
     public class NetworkManager : Manageable<NetworkManager>
     {
         static private string _serverUrl;
@@ -146,9 +127,7 @@ namespace Enigma.CoreSystems
         }
 
         public delegate void Callback (JSONNode data);
-
         public delegate void TextureCallback (Texture2D data);
-
         public delegate void ImageCallback ();
 
         static public void SetServer (string url)
@@ -193,21 +172,23 @@ namespace Enigma.CoreSystems
             Instance.StartCoroutine (httpRequest (id, val, func, local, texture));
         }
 
-        static IEnumerator httpRequest (NetworkTransactions id, Hashtable val, Callback func, Callback local, TextureCallback texture)
+        static private IEnumerator httpRequest (NetworkTransactions id, Hashtable val, Callback func, Callback local, TextureCallback texture)
         {
             string url = _serverUrl + "/trans/" + id + ".php";
             string sec = "";
 
             WWWForm formData = new WWWForm ();
             formData.AddField ("tid", (int) id);
-            if (_sessionID != null) {
+            if (_sessionID != null) 
                 formData.AddField ("ssid", _sessionID);
-            }
-            foreach (DictionaryEntry pair in val) {
+            
+            foreach (DictionaryEntry pair in val)
+            {
                 Debug.Log (pair.Key + " " + pair.Value);
-                if (pair.Key.ToString() == "image") {
+                if (pair.Key.ToString() == "image") 
                     formData.AddBinaryData("imageUpload", pair.Value as byte[], "image.png", "image/png");
-                } else {
+                else
+                {
                     //string value = Md5Sum(Application.identifier + Application.version + (string)pair.Value);
                     formData.AddField((string)pair.Key, (string)pair.Value);
                     sec += (string)pair.Value;
@@ -226,7 +207,8 @@ namespace Enigma.CoreSystems
             var www = UnityWebRequest.Post(url, formData);
             yield return www.SendWebRequest();
 
-            if (www.isNetworkError || www.isHttpError) {
+            if (www.isNetworkError || www.isHttpError)
+            {
                 Debug.Log (www.error + " on transaction: " + id.ToString ());
 
                 JSONNode response = JSON.Parse(www.error);
@@ -244,26 +226,28 @@ namespace Enigma.CoreSystems
                 var buttons = new string[] { "OK" };
                 #endif
 
-            } else {
-                if (func != null) {
-                JSONNode response = JSON.Parse (www.downloadHandler.text);
+            }
+            else
+            {
+                if (func != null)
+                {
+                    JSONNode response = JSON.Parse (www.downloadHandler.text);
 
-                if (local != null)
-                    local (response);
-                func (response);
+                    if (local != null)
+                        local (response);
+
+                    func (response);
                 }
-                if (texture != null) {
+                if (texture != null) 
                     texture (((DownloadHandlerTexture)www.downloadHandler).texture);
-                }
             }
         }
 
-        static public string url_create_parameters (Hashtable my_hash)
+        static public string Url_create_parameters (Hashtable my_hash)
         {
             string parameters = "";
-            foreach (DictionaryEntry hash_entry in my_hash) {
-            parameters = parameters + "&" + hash_entry.Key + "=" + hash_entry.Value;
-            }
+            foreach (DictionaryEntry hash_entry in my_hash) 
+                parameters = parameters + "&" + hash_entry.Key + "=" + hash_entry.Value;
 
             return parameters;
         }
@@ -281,9 +265,9 @@ namespace Enigma.CoreSystems
             // Convert the encrypted bytes back to a string (base 16)
             string hashString = "";
 
-            for (int i = 0; i < hashBytes.Length; i++) {
-            hashString += System.Convert.ToString (hashBytes [i], 16).PadLeft (2, '0');
-            }
+            for (int i = 0; i < hashBytes.Length; i++) 
+                hashString += System.Convert.ToString (hashBytes [i], 16).PadLeft (2, '0');
+            
 
             return hashString.PadLeft (32, '0');
         }
@@ -330,8 +314,8 @@ namespace Enigma.CoreSystems
 
         static private void LoginResult (JSONNode response)
         {
-                if (response == null)
-                    return;
+            if (response == null)
+                return;
 
             JSONNode response_hash = response [0];
             string status = response_hash ["status"].ToString ().Trim ('"');
@@ -339,58 +323,17 @@ namespace Enigma.CoreSystems
 
             Debug.Log ("LoginResult: " + response_hash.ToString());
 
-            if (status == "SUCCESS") {
-            NetworkManager.SetSessionID (ssid);
-            }
+            if (status == "SUCCESS") 
+                NetworkManager.SetSessionID (ssid);
         }
-
-        //static public List<Texture2D> LoadAssetImages (string name, ImageCallback func = null)
-        //{
-        //	List<Texture2D> list = new List<Texture2D> ();
-
-        //	string url = serverUrl + "/assets/" + name + ".unity3d";
-        //	instance.StartCoroutine (StartAssetLoad (list, url, func));
-
-        //	return list;
-        //}
-
-        //static IEnumerator StartAssetLoad (List<Texture2D> list, string url, ImageCallback func)
-        //{
-
-        //	AssetBundleContainer container = AssetBundleManager.Instance.LoadBundleAsync (url);
-        //	while (!container.IsReady)
-        //		yield return 0;
-
-        //	if (container.IsError) {
-        //		Debug.LogError (container.ErrorMsg);
-        //		yield break;
-        //	} else {
-        //		foreach (var asset in container.FileList) {
-        //			AssetBundleRequest request = container.AssetBundle.LoadAssetAsync (asset.Name.Replace (".png", ""), typeof(Texture2D));
-        //			Texture2D tex = request.asset as Texture2D;
-
-        //			if (request.asset != null)
-        //				list.Add (tex);
-        //		}
-        //	}
-
-        //	if (list.Count == 0)
-        //		Debug.LogError ("No assets loaded");
-        //	if (func != null && list.Count > 0)
-        //		func ();
-        //	AssetBundleManager.Instance.UnloadBundle (container);
-
-        //}
-
 
         static public void SetData (string key, Hashtable val)
         {
             if (Data.ContainsKey (key))
-            Data.Remove (key);
+                Data.Remove (key);
 
             Data.Add (key, val);
         }
-
 
         static public void GetIAP (JSONNode response)
         {
@@ -398,7 +341,8 @@ namespace Enigma.CoreSystems
             string status = response_hash ["status"].ToString ().Trim ('"');
             JSONNode data = response_hash ["store"];
 
-            if (status == "SUCCESS") {
+            if (status == "SUCCESS")
+            {
         #if !UNITY_STANDALONE
             //IAPManager.LoadData(data);
         #endif
@@ -432,7 +376,6 @@ namespace Enigma.CoreSystems
             userData.Add (val, text);
             else
             userData [val] = text;
-
         }
 
         static public void LoadImageFromUrl(string url, Image image, ImageCallback callback = null)
@@ -469,24 +412,6 @@ namespace Enigma.CoreSystems
             }
         }
 
-        //public void OnTokenReceived (object sender, Firebase.Messaging.TokenReceivedEventArgs token)
-        //{
-        //	UnityEngine.Debug.Log ("Received Registration Token: " + token.Token);
-        //	//GameOfWhales.Instance.UpdateToken (token.Token, GameOfWhales.PROVIDER_FCM);
-        //}
-
-        //public void OnMessageReceived (object sender, Firebase.Messaging.MessageReceivedEventArgs e)
-        //{
-        //	UnityEngine.Debug.Log ("Received a new message from: " + e.Message.From);
-        //}
-
-        //private void OnPushDelivered (SpecialOffer offer, string campID, string title, string message)
-        //{
-        //	//Show the notification to a player and then call the following method
-        //	GameOfWhales.Instance.PushReacted (campID);
-        //}
-
-
         //Wrappers for Photon calls
         //Connect to Photon Network
         static public void Connect(bool isOffline)
@@ -494,9 +419,8 @@ namespace Enigma.CoreSystems
             if (GetConnected())
             {
                 if (GetInRoom())
-                {
                     LeaveRoom();
-                }
+                
                 return;
             }
 
@@ -511,6 +435,17 @@ namespace Enigma.CoreSystems
         static public void Disconnect()
         {
             PhotonNetwork.Disconnect();
+        }
+
+        static public void SendRPCtoAll(string methodName, params object[] parameters)
+        {
+            SendRPC(methodName, PhotonTargets.All, parameters);
+        }
+
+        static public void SendRPC(string methodName, PhotonTargets target, params object[] parameters)
+        {
+            PhotonView photonView = PhotonView.Get(Instance);
+            photonView.RPC(methodName, target, parameters);
         }
 
         static public bool GetPhotonOfflineMode()
@@ -621,9 +556,7 @@ namespace Enigma.CoreSystems
             RoomInfo[] roomList = GetRoomList();
 
             foreach (RoomInfo r in roomList)
-            {
                 Debug.Log(r);
-            }
         }
 
         //Get number of players in the room

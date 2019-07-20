@@ -14,12 +14,15 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     [SerializeField] private char _parseSeparator = '|';
     [SerializeField] private int _expToAddOnDuplicateUnit = 50;
 
+    public const string RATING_KEY = "Rating";
+
     private const string _TEAM_1_GROUP_NAME = "Team1";
     private const string _LOOT_BOXES = "Lootboxes";
+    private const string _STATS = "Stats";
 
     private const int _BRONZE_TIER = 1;
     private const int _SILVER_TIER = 2;
-    private const int   _GOLD_TIER = 3;
+    private const int _GOLD_TIER = 3;
 
     private Hashtable _saveHashTable = new Hashtable();
 
@@ -59,7 +62,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     public List<string> GetInventoryUnitNames()
     {
         List<string> inventoryUnitIndexes = new List<string>();
-  
+
         InventoryManager inventoryManager = InventoryManager.Instance;
 
         if (inventoryManager.CheckGroupExists(_TEAM_1_GROUP_NAME, false))
@@ -69,6 +72,26 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         }
 
         return inventoryUnitIndexes;
+    }
+
+    public int GetRating()
+    {
+        return InventoryManager.Instance.GetItem<int>(_STATS, RATING_KEY);
+    }
+
+    public void ChangeRatingAmount(int amount, bool isAddition, bool shouldSave)
+    {
+        int newRatingAmount = GetRating();
+
+        if (isAddition)
+            newRatingAmount += amount;
+        else
+            newRatingAmount -= amount;
+
+        InventoryManager.Instance.UpdateItem(_STATS, RATING_KEY, newRatingAmount);
+
+        if (shouldSave)
+            saveRating();
     }
 
     public UnitStats GetUnitStats(string unitName)
@@ -232,6 +255,8 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         InventoryManager inventoryManager = InventoryManager.Instance;
         inventoryManager.ClearAllGroups();
 
+        inventoryManager.AddItem(_STATS, RATING_KEY, 0);
+
         for(int tier = 1; tier <= _lootBoxTiersAmount; tier++)
             inventoryManager.AddItem(_LOOT_BOXES, tier.ToString(), 0);
 
@@ -257,14 +282,31 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
                 int tier = int.Parse(terms[1]);
                 int tierAmount = int.Parse((string)entry.Value);
                 print("LoadData -> box tier: " + tier + " amount: " + tierAmount);
-                ChangeLootBoxAmount(tierAmount, tier, true, false);
+                inventoryManager.UpdateItem(_LOOT_BOXES, tier.ToString(), tierAmount, false);
 
                 isThereAnyLootBox = true;
+            }
+            else if (groupName == _STATS)
+            {
+                int rating = int.Parse(terms[1]);
+                inventoryManager.UpdateItem(_STATS, RATING_KEY, rating);
             }
         }
 
         if (!isThereAnyUnit && !isThereAnyLootBox)
-            ChangeLootBoxAmount(_initialBronzeLootBoxes, _BRONZE_TIER, true, true);
+        {
+            inventoryManager.UpdateItem(_LOOT_BOXES, _BRONZE_TIER.ToString(), _initialBronzeLootBoxes, false);
+            saveLootBoxes();
+        }
+    }
+
+    private void saveRating()
+    {
+        if (_saveHashTable.ContainsKey(RATING_KEY))
+            _saveHashTable.Remove(RATING_KEY);
+
+        _saveHashTable.Add(RATING_KEY, GetRating());
+        saveHashTableToFile();
     }
 
     private void saveLootBoxes()
@@ -283,7 +325,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
             _saveHashTable.Add(hashKey, tierAmount);
         }
 
-        FileManager.Instance.SaveData(_saveHashTable);
+        saveHashTableToFile();
     }
 
     private void saveUnits()
@@ -292,7 +334,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         foreach (string unitName in inventoryManager.GetGroupKeys(_TEAM_1_GROUP_NAME))
             saveUnit(_TEAM_1_GROUP_NAME, unitName, false);
 
-        FileManager.Instance.SaveData(_saveHashTable);
+        saveHashTableToFile();
     }
 
     private void saveUnit(string groupName, string unitName, bool isStandAlone = true)
@@ -308,7 +350,12 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         _saveHashTable.Add(hashKey, statsSerialized);
 
         if (isStandAlone)
-            FileManager.Instance.SaveData(_saveHashTable);
+            saveHashTableToFile();
+    }
+
+    private void saveHashTableToFile()
+    {
+        FileManager.Instance.SaveData(_saveHashTable);
     }
 
     [System.Serializable]
