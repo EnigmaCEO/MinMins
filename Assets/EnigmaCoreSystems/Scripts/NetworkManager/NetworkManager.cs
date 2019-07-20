@@ -8,157 +8,153 @@ using Tiny;
 
 namespace Enigma.CoreSystems
 {
-  public class Ads
-  {
+    public class Ads
+    {
+        public string appVersion = "1.0";
 
-    public string appVersion = "1.0";
+        #if UNITY_ANDROID
+            // App ID
+            static public string appId = "app42a4a7795d6642b4ae";  //"app168a5d9b97bb47739a";
+            // Video zones
+            static public string[] zoneId = { "vze64e837cdaeb448494" }; //{ "vz28f417ceecca4ae4b2", "vzf2257354d2b64e08a8" };
+        //If not android defaults to setting the zone strings for iOS
 
-#if UNITY_ANDROID
+        #else
         // App ID
-        static public string appId = "app42a4a7795d6642b4ae";  //"app168a5d9b97bb47739a";
+        static public string appId = "app970a83943f644f9a90";
         // Video zones
-        static public string[] zoneId = { "vze64e837cdaeb448494" }; //{ "vz28f417ceecca4ae4b2", "vzf2257354d2b64e08a8" };
-    //If not android defaults to setting the zone strings for iOS
+        static public string[] zoneId = { "vzf8e4e97704c4445c87504e" };
+        #endif
+    }
 
+    public class NetworkManager : Manageable<NetworkManager>
+    {
+        static private string _serverUrl;
+        static private string _sessionID;
+        static private string _game;
 
-#else
-    // App ID
-    static public string appId = "app970a83943f644f9a90";
-    // Video zones
-    static public string[] zoneId = { "vzf8e4e97704c4445c87504e" };
-    #endif
+        static public Dictionary<string, Hashtable> Data = new Dictionary<string, Hashtable>();
 
-  }
+        static public bool ConnectedToUNet = false;
+        static public bool TimeoutDisconnected = false;
+        static public bool ServerDisconnected = false;
+        static public bool ReadySpawn = false;
+        static public bool PlayerIsServer = false;
+        static public int NumberOfPlayers = 0;
 
-  public class NetworkManager : Manageable<NetworkManager>
-  {
+        static private bool CreatingOrJoinRoom = false;
 
-    static private string _serverUrl;
-    static private string _sessionID;
-    static private string _game;
+        //static public string ROOM_CLICKED = "1";
+        //static public string ROOM_NAME = "Practice";
+        static public List<string> LobbyUserList = new List<string>();
+        static private List<string> _updatedLobbyUserList = new List<string>();
+        //static public List<string> ROOM_LEVELLIST = new List<string>();
+        //static private List<string> UPDATED_ROOM_LEVELLIST = new List<string>();
 
-    static public Dictionary<string, Hashtable> Data = new Dictionary<string, Hashtable>();
+        static private int _maxPlayersNotSpectating;
 
-    static public bool ConnectedToUNet = false;
-    static public bool TimeoutDisconnected = false;
-    static public bool ServerDisconnected = false;
-    static public bool ReadySpawn = false;
-    static public bool PlayerIsServer = false;
-    static public int NumberOfPlayers = 0;
+        //static private bool LoggedIn = false;
+        static private bool _stopGetRoomData = true;
 
-    static private bool CreatingOrJoinRoom = false;
+        //Make an Enum for room state later
+        static public string ROOM_STATE_STAGING = "Staging";
+        static public string ROOM_STATE_READY = "Ready";
+        static public string ROOM_STATE_SYNC = "Sync";
+        static public string ROOM_STATE_LAUNCH = "Launch";
+        static public string ROOM_STATE_PLAY = "Play";
 
-    //static public string ROOM_CLICKED = "1";
-    //static public string ROOM_NAME = "Practice";
-    static public List<string> LobbyUserList = new List<string>();
-    static private List<string> _updatedLobbyUserList = new List<string>();
-    //static public List<string> ROOM_LEVELLIST = new List<string>();
-    //static private List<string> UPDATED_ROOM_LEVELLIST = new List<string>();
+        static public bool OriginalMaster = false;
 
-    static private int _maxPlayersNotSpectating;
+        static private GameObject _localPlayerCharacter;
 
-    //static private bool LoggedIn = false;
-    static private bool _stopGetRoomData = true;
+        //Delegate for updating the gamerooms grid in the Chat scene
+        public delegate void UpdateGameroomsGridDelegate();
+        static public UpdateGameroomsGridDelegate UpdateGamerooms;
 
-    //Make an Enum for room state later
-    static public string ROOM_STATE_STAGING = "Staging";
-    static public string ROOM_STATE_READY = "Ready";
-    static public string ROOM_STATE_SYNC = "Sync";
-    static public string ROOM_STATE_LAUNCH = "Launch";
-    static public string ROOM_STATE_PLAY = "Play";
+        //Delegate for syncing player info such as player name, etc.
+        public delegate void SyncPlayerInfoDelegate(int playerPhotonViewId, string playerName);
+        static public SyncPlayerInfoDelegate SyncPlayerInfo;
 
-    static public bool OriginalMaster = false;
+        //Delegate for setting the player name as the player object name
+        public delegate void SetPlayerNameAsObjNameDelegate(int playerPhotonViewId, string playerName);
+        static public SetPlayerNameAsObjNameDelegate SetPlayerNameAsObjName;
 
-    static private GameObject _localPlayerCharacter;
+        //Delegate for starting the countdown timer
+        public delegate void StartCountdownTimerDelegate(double startTime);
+        static public StartCountdownTimerDelegate StartCountdownTimer;
 
-    //Delegate for updating the gamerooms grid in the Chat scene
-    public delegate void UpdateGameroomsGridDelegate();
-    static public UpdateGameroomsGridDelegate UpdateGamerooms;
+        //Delegate for setting a player's initial health
+        public delegate void SetHealthDelegate(PhotonPlayer player, int health);
+        static public SetHealthDelegate SetHealth;
 
-    //Delegate for syncing player info such as player name, etc.
-    public delegate void SyncPlayerInfoDelegate(int playerPhotonViewId, string playerName);
-    static public SyncPlayerInfoDelegate SyncPlayerInfo;
+        //Delegate for modifying a player's health
+        public delegate void ModifyHealthDelegate(PhotonPlayer player, int newHealth/*, int userPhotonViewId*/);
+        static public ModifyHealthDelegate ModifyHealth;
 
-    //Delegate for setting the player name as the player object name
-    public delegate void SetPlayerNameAsObjNameDelegate(int playerPhotonViewId, string playerName);
-    static public SetPlayerNameAsObjNameDelegate SetPlayerNameAsObjName;
+        //Delegate for the master to destroy objects of players who left
+        public delegate void DestroyDisconnectedPlayerObjectDelegate(PhotonPlayer player);
+        static public DestroyDisconnectedPlayerObjectDelegate DestroyDisconnectedPlayerObject;
 
-    //Delegate for starting the countdown timer
-    public delegate void StartCountdownTimerDelegate(double startTime);
-    static public StartCountdownTimerDelegate StartCountdownTimer;
+        public delegate void OnPhotonPlayerConnectedDelegate(PhotonPlayer connectedPlayer);
+        static public OnPhotonPlayerConnectedDelegate OnPhotonPlayerConnectedCallback;
 
-    //Delegate for setting a player's initial health
-    public delegate void SetHealthDelegate(PhotonPlayer player, int health);
-    static public SetHealthDelegate SetHealth;
+        public delegate void OnPhotonPlayerDisconnectedDelegate(PhotonPlayer disconnectedPlayer);
+        static public OnPhotonPlayerDisconnectedDelegate OnPhotonPlayerDisconnectedCallback;
 
-    //Delegate for modifying a player's health
-    public delegate void ModifyHealthDelegate(PhotonPlayer player, int newHealth/*, int userPhotonViewId*/);
-    static public ModifyHealthDelegate ModifyHealth;
+        public delegate void OnPhotonPlayerPropertiesChangedDelegate(object[] playerAndUpdatedProps);
+        static public OnPhotonPlayerPropertiesChangedDelegate OnPhotonPlayerPropertiesChangedCallback;
 
-    //Delegate for the master to destroy objects of players who left
-    public delegate void DestroyDisconnectedPlayerObjectDelegate(PhotonPlayer player);
-    static public DestroyDisconnectedPlayerObjectDelegate DestroyDisconnectedPlayerObject;
+        public delegate void OnPhotonCustomRoomPropertiesChangedDelegate(ExitGames.Client.Photon.Hashtable propertiesThatChanged);
+        static public OnPhotonCustomRoomPropertiesChangedDelegate OnPhotonCustomRoomPropertiesChangedCallback;
 
-    public delegate void OnPhotonPlayerConnectedDelegate(PhotonPlayer connectedPlayer);
-    static public OnPhotonPlayerConnectedDelegate OnPhotonPlayerConnectedCallback;
+        public delegate void OnMasterClientSwitchedDelegate(PhotonPlayer newMaster);
+        static public OnMasterClientSwitchedDelegate OnMasterClientSwitchedCallback;
 
-    public delegate void OnPhotonPlayerDisconnectedDelegate(PhotonPlayer disconnectedPlayer);
-    static public OnPhotonPlayerDisconnectedDelegate OnPhotonPlayerDisconnectedCallback;
+        public delegate void SimpleDelegate();
 
-    public delegate void OnPhotonPlayerPropertiesChangedDelegate(object[] playerAndUpdatedProps);
-    static public OnPhotonPlayerPropertiesChangedDelegate OnPhotonPlayerPropertiesChangedCallback;
+        static public SimpleDelegate EnableReadyUI;
+        static public SimpleDelegate DisableReadyUI;
+        static public SimpleDelegate CheckReadyToLaunch;
+        static public SimpleDelegate UpdateGameRooms;
+        static public SimpleDelegate UpdateRoomList;
 
-    public delegate void OnPhotonCustomRoomPropertiesChangedDelegate(ExitGames.Client.Photon.Hashtable propertiesThatChanged);
-    static public OnPhotonCustomRoomPropertiesChangedDelegate OnPhotonCustomRoomPropertiesChangedCallback;
+        static public SimpleDelegate OnJoinedLobbyCallback;
+        static public SimpleDelegate OnLeftLobbyCallback;
+        static public SimpleDelegate OnJoinedRoomCallback;
+        static public SimpleDelegate OnLeftRoomCallback;
 
-    public delegate void OnMasterClientSwitchedDelegate(PhotonPlayer newMaster);
-    static public OnMasterClientSwitchedDelegate OnMasterClientSwitchedCallback;
+        static public SimpleDelegate OnUpdatedFriendListCallback;
+        static public SimpleDelegate OnDisconnectedFromPhotonCallback;
 
-    public delegate void SimpleDelegate();
-
-    static public SimpleDelegate EnableReadyUI;
-    static public SimpleDelegate DisableReadyUI;
-    static public SimpleDelegate CheckReadyToLaunch;
-    static public SimpleDelegate UpdateGameRooms;
-    static public SimpleDelegate UpdateRoomList;
-
-    static public SimpleDelegate OnJoinedLobbyCallback;
-    static public SimpleDelegate OnLeftLobbyCallback;
-    static public SimpleDelegate OnJoinedRoomCallback;
-    static public SimpleDelegate OnLeftRoomCallback;
-
-    static public SimpleDelegate OnUpdatedFriendListCallback;
-    static public SimpleDelegate OnDisconnectedFromPhotonCallback;
-
-    // global active player
-    static public JSONNode ActiveCharacter;
+        // global active player
+        static public JSONNode ActiveCharacter;
          
 
-    protected override void Awake ()
-    {
-        Debug.Log("This should be called");
-    }
+        protected override void Awake ()
+        {
+            Debug.Log("This should be called");
+        }
 
-    protected override void Start ()
-    {
-      base.Start ();
-      Data = new Dictionary<string, Hashtable> ();
+        protected override void Start ()
+        {
+            base.Start ();
+            Data = new Dictionary<string, Hashtable> ();
 
-      //Firebase.Messaging.FirebaseMessaging.TokenReceived += OnTokenReceived;
-      //Firebase.Messaging.FirebaseMessaging.MessageReceived += OnMessageReceived;
-      //GameOfWhales.Instance.OnPushDelivered += OnPushDelivered;
-    }
+            //Firebase.Messaging.FirebaseMessaging.TokenReceived += OnTokenReceived;
+            //Firebase.Messaging.FirebaseMessaging.MessageReceived += OnMessageReceived;
+            //GameOfWhales.Instance.OnPushDelivered += OnPushDelivered;
+        }
 
         public delegate void Callback (JSONNode data);
 
-    public delegate void TextureCallback (Texture2D data);
+        public delegate void TextureCallback (Texture2D data);
 
-    public delegate void ImageCallback ();
+        public delegate void ImageCallback ();
 
-    static public void SetServer (string url)
-    {
-      _serverUrl = url;
-    }
+        static public void SetServer (string url)
+        {
+            _serverUrl = url;
+        }
 
         static public string GetServer()
         {
@@ -171,15 +167,15 @@ namespace Enigma.CoreSystems
             Instance.StartCoroutine(heartbeat(onHeartBeat));
         }
 
-    static public void SetSessionID (string id)
-    {
-      _sessionID = id;
-    }
+        static public void SetSessionID (string id)
+        {
+            _sessionID = id;
+        }
 
-    static public string GetSessionID ()
-    {
-      return _sessionID;
-    }
+        static public string GetSessionID ()
+        {
+            return _sessionID;
+        }
 
         static public void SetGame(string gameName)
         {
@@ -191,253 +187,253 @@ namespace Enigma.CoreSystems
             return _game;
         }
 
-    static public void Transaction (NetworkTransactions id, Hashtable val, Callback func = null, Callback local = null, TextureCallback texture = null)
-    {
-        Debug.Log(Instance);
-        Instance.StartCoroutine (httpRequest (id, val, func, local, texture));
-    }
-
-    static IEnumerator httpRequest (NetworkTransactions id, Hashtable val, Callback func, Callback local, TextureCallback texture)
-    {
-        string url = _serverUrl + "/trans/" + id + ".php";
-        string sec = "";
-
-        WWWForm formData = new WWWForm ();
-        formData.AddField ("tid", (int) id);
-        if (_sessionID != null) {
-            formData.AddField ("ssid", _sessionID);
+        static public void Transaction (NetworkTransactions id, Hashtable val, Callback func = null, Callback local = null, TextureCallback texture = null)
+        {
+            Debug.Log(Instance);
+            Instance.StartCoroutine (httpRequest (id, val, func, local, texture));
         }
-        foreach (DictionaryEntry pair in val) {
-            Debug.Log (pair.Key + " " + pair.Value);
-            if (pair.Key.ToString() == "image") {
-                formData.AddBinaryData("imageUpload", pair.Value as byte[], "image.png", "image/png");
+
+        static IEnumerator httpRequest (NetworkTransactions id, Hashtable val, Callback func, Callback local, TextureCallback texture)
+        {
+            string url = _serverUrl + "/trans/" + id + ".php";
+            string sec = "";
+
+            WWWForm formData = new WWWForm ();
+            formData.AddField ("tid", (int) id);
+            if (_sessionID != null) {
+                formData.AddField ("ssid", _sessionID);
+            }
+            foreach (DictionaryEntry pair in val) {
+                Debug.Log (pair.Key + " " + pair.Value);
+                if (pair.Key.ToString() == "image") {
+                    formData.AddBinaryData("imageUpload", pair.Value as byte[], "image.png", "image/png");
+                } else {
+                    //string value = Md5Sum(Application.identifier + Application.version + (string)pair.Value);
+                    formData.AddField((string)pair.Key, (string)pair.Value);
+                    sec += (string)pair.Value;
+                }
+            }
+
+            formData.AddField("bundle_id", Application.identifier);
+            formData.AddField("game", _game);
+
+            sec += Application.identifier + _game;
+            sec = md5(sec);
+
+            formData.AddField("sec", sec);
+
+            Debug.Log ("url: " + url);
+            var www = UnityWebRequest.Post(url, formData);
+            yield return www.SendWebRequest();
+
+            if (www.isNetworkError || www.isHttpError) {
+                Debug.Log (www.error + " on transaction: " + id.ToString ());
+
+                JSONNode response = JSON.Parse(www.error);
+
+                if (local != null) {
+                    local(null);
+                }
+                func(null);
+
+                #if UNITY_ANDROID
+                EtceteraAndroid.showAlert ("Network Error", "Error connecting to the server. Restart the app and retry.", "OK");
+                #endif
+
+                #if UNITY_IPHONE
+                var buttons = new string[] { "OK" };
+                #endif
+
             } else {
-                //string value = Md5Sum(Application.identifier + Application.version + (string)pair.Value);
-                formData.AddField((string)pair.Key, (string)pair.Value);
-                sec += (string)pair.Value;
+                if (func != null) {
+                JSONNode response = JSON.Parse (www.downloadHandler.text);
+
+                if (local != null)
+                    local (response);
+                func (response);
+                }
+                if (texture != null) {
+                    texture (((DownloadHandlerTexture)www.downloadHandler).texture);
+                }
             }
         }
 
-        formData.AddField("bundle_id", Application.identifier);
-        formData.AddField("game", _game);
-
-        sec += Application.identifier + _game;
-        sec = md5(sec);
-
-        formData.AddField("sec", sec);
-
-        Debug.Log ("url: " + url);
-        var www = UnityWebRequest.Post(url, formData);
-        yield return www.SendWebRequest();
-
-        if (www.isNetworkError || www.isHttpError) {
-            Debug.Log (www.error + " on transaction: " + id.ToString ());
-
-            JSONNode response = JSON.Parse(www.error);
-
-            if (local != null) {
-                local(null);
+        static public string url_create_parameters (Hashtable my_hash)
+        {
+            string parameters = "";
+            foreach (DictionaryEntry hash_entry in my_hash) {
+            parameters = parameters + "&" + hash_entry.Key + "=" + hash_entry.Value;
             }
-            func(null);
 
-            #if UNITY_ANDROID
-            EtceteraAndroid.showAlert ("Network Error", "Error connecting to the server. Restart the app and retry.", "OK");
-            #endif
+            return parameters;
+        }
 
-            #if UNITY_IPHONE
-            var buttons = new string[] { "OK" };
-            #endif
+        // from unity wiki
+        static public string Md5Sum (string strToEncrypt)
+        {
+            System.Text.UTF8Encoding ue = new System.Text.UTF8Encoding ();
+            byte[] bytes = ue.GetBytes (strToEncrypt);
 
-        } else {
-            if (func != null) {
-            JSONNode response = JSON.Parse (www.downloadHandler.text);
+            // encrypt bytes
+            System.Security.Cryptography.MD5CryptoServiceProvider md5 = new System.Security.Cryptography.MD5CryptoServiceProvider ();
+            byte[] hashBytes = md5.ComputeHash (bytes);
 
-            if (local != null)
-                local (response);
-            func (response);
+            // Convert the encrypted bytes back to a string (base 16)
+            string hashString = "";
+
+            for (int i = 0; i < hashBytes.Length; i++) {
+            hashString += System.Convert.ToString (hashBytes [i], 16).PadLeft (2, '0');
             }
-            if (texture != null) {
-                texture (((DownloadHandlerTexture)www.downloadHandler).texture);
+
+            return hashString.PadLeft (32, '0');
+        }
+
+        static public void Register(string userName, string password, string email, string ethAddress, string game, string bundleId, Callback func = null, Hashtable extras = null)
+        {
+            Hashtable val = new Hashtable();
+
+            val.Add("username", userName);
+            val.Add("password", password);
+            val.Add("email", email);
+            val.Add("game", game);
+            val.Add("bundle_id", bundleId);
+
+            if (extras != null)
+                val.Merge(extras);
+
+            Transaction(NetworkTransactions.Registration, val, func, RegistrationResult);
+        }
+
+        static private void RegistrationResult(JSONNode response)
+        {
+            JSONNode response_hash = response[0];
+            string status = response_hash["status"].ToString().Trim('"');
+            string ssid = response_hash["ssid"].ToString().Trim('"');
+
+            Debug.Log("RegistrationResult: " + response_hash.ToString());
+
+            if (status == "SUCCESS")
+                NetworkManager.SetSessionID(ssid);
+        }
+
+        static public void Login (string user, string pw, Callback func = null, Hashtable extras = null)
+        {
+            Hashtable val = new Hashtable ();
+            val.Add ("user", user);
+            val.Add ("pwhash", pw);
+
+            if (extras != null)
+                val.Merge (extras);
+
+            Transaction (NetworkTransactions.Login, val, func, LoginResult);
+        }
+
+        static private void LoginResult (JSONNode response)
+        {
+                if (response == null)
+                    return;
+
+            JSONNode response_hash = response [0];
+            string status = response_hash ["status"].ToString ().Trim ('"');
+            string ssid = response_hash ["ssid"].ToString ().Trim ('"');
+
+            Debug.Log ("LoginResult: " + response_hash.ToString());
+
+            if (status == "SUCCESS") {
+            NetworkManager.SetSessionID (ssid);
             }
         }
-    }
 
-    static public string url_create_parameters (Hashtable my_hash)
-    {
-      string parameters = "";
-      foreach (DictionaryEntry hash_entry in my_hash) {
-        parameters = parameters + "&" + hash_entry.Key + "=" + hash_entry.Value;
-      }
+        //static public List<Texture2D> LoadAssetImages (string name, ImageCallback func = null)
+        //{
+        //	List<Texture2D> list = new List<Texture2D> ();
 
-      return parameters;
-    }
+        //	string url = serverUrl + "/assets/" + name + ".unity3d";
+        //	instance.StartCoroutine (StartAssetLoad (list, url, func));
 
-    // from unity wiki
-    static public string Md5Sum (string strToEncrypt)
-    {
-      System.Text.UTF8Encoding ue = new System.Text.UTF8Encoding ();
-      byte[] bytes = ue.GetBytes (strToEncrypt);
+        //	return list;
+        //}
 
-      // encrypt bytes
-      System.Security.Cryptography.MD5CryptoServiceProvider md5 = new System.Security.Cryptography.MD5CryptoServiceProvider ();
-      byte[] hashBytes = md5.ComputeHash (bytes);
+        //static IEnumerator StartAssetLoad (List<Texture2D> list, string url, ImageCallback func)
+        //{
 
-      // Convert the encrypted bytes back to a string (base 16)
-      string hashString = "";
+        //	AssetBundleContainer container = AssetBundleManager.Instance.LoadBundleAsync (url);
+        //	while (!container.IsReady)
+        //		yield return 0;
 
-      for (int i = 0; i < hashBytes.Length; i++) {
-        hashString += System.Convert.ToString (hashBytes [i], 16).PadLeft (2, '0');
-      }
+        //	if (container.IsError) {
+        //		Debug.LogError (container.ErrorMsg);
+        //		yield break;
+        //	} else {
+        //		foreach (var asset in container.FileList) {
+        //			AssetBundleRequest request = container.AssetBundle.LoadAssetAsync (asset.Name.Replace (".png", ""), typeof(Texture2D));
+        //			Texture2D tex = request.asset as Texture2D;
 
-      return hashString.PadLeft (32, '0');
-    }
+        //			if (request.asset != null)
+        //				list.Add (tex);
+        //		}
+        //	}
 
-    static public void Register(string userName, string password, string email, string ethAddress, string game, string bundleId, Callback func = null, Hashtable extras = null)
-    {
-        Hashtable val = new Hashtable();
+        //	if (list.Count == 0)
+        //		Debug.LogError ("No assets loaded");
+        //	if (func != null && list.Count > 0)
+        //		func ();
+        //	AssetBundleManager.Instance.UnloadBundle (container);
 
-        val.Add("username", userName);
-        val.Add("password", password);
-        val.Add("email", email);
-        val.Add("game", game);
-        val.Add("bundle_id", bundleId);
-
-        if (extras != null)
-            val.Merge(extras);
-
-        Transaction(NetworkTransactions.Registration, val, func, RegistrationResult);
-    }
-
-    static private void RegistrationResult(JSONNode response)
-    {
-        JSONNode response_hash = response[0];
-        string status = response_hash["status"].ToString().Trim('"');
-        string ssid = response_hash["ssid"].ToString().Trim('"');
-
-        Debug.Log("RegistrationResult: " + response_hash.ToString());
-
-        if (status == "SUCCESS")
-            NetworkManager.SetSessionID(ssid);
-    }
-
-    static public void Login (string user, string pw, Callback func = null, Hashtable extras = null)
-    {
-        Hashtable val = new Hashtable ();
-        val.Add ("user", user);
-        val.Add ("pwhash", pw);
-
-        if (extras != null)
-            val.Merge (extras);
-
-        Transaction (NetworkTransactions.Login, val, func, LoginResult);
-    }
-
-    static private void LoginResult (JSONNode response)
-    {
-            if (response == null)
-                return;
-
-      JSONNode response_hash = response [0];
-      string status = response_hash ["status"].ToString ().Trim ('"');
-      string ssid = response_hash ["ssid"].ToString ().Trim ('"');
-
-      Debug.Log ("LoginResult: " + response_hash.ToString());
-
-      if (status == "SUCCESS") {
-        NetworkManager.SetSessionID (ssid);
-      }
-    }
-
-    //static public List<Texture2D> LoadAssetImages (string name, ImageCallback func = null)
-    //{
-    //	List<Texture2D> list = new List<Texture2D> ();
-
-    //	string url = serverUrl + "/assets/" + name + ".unity3d";
-    //	instance.StartCoroutine (StartAssetLoad (list, url, func));
-
-    //	return list;
-    //}
-
-    //static IEnumerator StartAssetLoad (List<Texture2D> list, string url, ImageCallback func)
-    //{
-
-    //	AssetBundleContainer container = AssetBundleManager.Instance.LoadBundleAsync (url);
-    //	while (!container.IsReady)
-    //		yield return 0;
-
-    //	if (container.IsError) {
-    //		Debug.LogError (container.ErrorMsg);
-    //		yield break;
-    //	} else {
-    //		foreach (var asset in container.FileList) {
-    //			AssetBundleRequest request = container.AssetBundle.LoadAssetAsync (asset.Name.Replace (".png", ""), typeof(Texture2D));
-    //			Texture2D tex = request.asset as Texture2D;
-
-    //			if (request.asset != null)
-    //				list.Add (tex);
-    //		}
-    //	}
-
-    //	if (list.Count == 0)
-    //		Debug.LogError ("No assets loaded");
-    //	if (func != null && list.Count > 0)
-    //		func ();
-    //	AssetBundleManager.Instance.UnloadBundle (container);
-
-    //}
+        //}
 
 
-    static public void SetData (string key, Hashtable val)
-    {
-      if (Data.ContainsKey (key))
-        Data.Remove (key);
+        static public void SetData (string key, Hashtable val)
+        {
+            if (Data.ContainsKey (key))
+            Data.Remove (key);
 
-      Data.Add (key, val);
-    }
+            Data.Add (key, val);
+        }
 
 
-    static public void GetIAP (JSONNode response)
-    {
-      JSONNode response_hash = response [0];
-      string status = response_hash ["status"].ToString ().Trim ('"');
-      JSONNode data = response_hash ["store"];
+        static public void GetIAP (JSONNode response)
+        {
+            JSONNode response_hash = response [0];
+            string status = response_hash ["status"].ToString ().Trim ('"');
+            JSONNode data = response_hash ["store"];
 
-      if (status == "SUCCESS") {
-#if !UNITY_STANDALONE
-        //IAPManager.LoadData(data);
-#endif
-      }
-    }
+            if (status == "SUCCESS") {
+        #if !UNITY_STANDALONE
+            //IAPManager.LoadData(data);
+        #endif
+            }
+        }
 
-    static public string GetUserInfo (string val, string defaultValue = "")
-    {
-        if (!NetworkManager.Data.ContainsKey("Info"))
-            return "";
+        static public string GetUserInfo (string val, string defaultValue = "")
+        {
+            if (!NetworkManager.Data.ContainsKey("Info"))
+                return "";
 
-        if (!NetworkManager.Data["Info"].ContainsKey("user"))
-            return "";
+            if (!NetworkManager.Data["Info"].ContainsKey("user"))
+                return "";
 
-        Hashtable userData = NetworkManager.Data ["Info"] ["user"] as Hashtable;
+            Hashtable userData = NetworkManager.Data ["Info"] ["user"] as Hashtable;
 
-            if (userData[val] == null)
-                return defaultValue;
+                if (userData[val] == null)
+                    return defaultValue;
 
-            return userData [val].ToString ().Trim ('"');
-    }
+                return userData [val].ToString ().Trim ('"');
+        }
 
-    static public void SetUserInfo (string val, string text)
-    {
-      if (!NetworkManager.Data.ContainsKey ("Info"))
-        NetworkManager.Data.Add ("Info", new Hashtable ());
-      if (!NetworkManager.Data ["Info"].ContainsKey ("user"))
-        NetworkManager.Data ["Info"].Add ("user", new Hashtable ());
-      Hashtable userData = NetworkManager.Data ["Info"] ["user"] as Hashtable;
-      if (!userData.ContainsKey (val))
-        userData.Add (val, text);
-      else
-        userData [val] = text;
+        static public void SetUserInfo (string val, string text)
+        {
+            if (!NetworkManager.Data.ContainsKey ("Info"))
+            NetworkManager.Data.Add ("Info", new Hashtable ());
+            if (!NetworkManager.Data ["Info"].ContainsKey ("user"))
+            NetworkManager.Data ["Info"].Add ("user", new Hashtable ());
+            Hashtable userData = NetworkManager.Data ["Info"] ["user"] as Hashtable;
+            if (!userData.ContainsKey (val))
+            userData.Add (val, text);
+            else
+            userData [val] = text;
 
-    }
+        }
 
         static public void LoadImageFromUrl(string url, Image image, ImageCallback callback = null)
         {
@@ -566,7 +562,7 @@ namespace Enigma.CoreSystems
 
         //Create a Photon Room using passed in parameters
         static public bool CreateRoom(string roomName, bool isVisible, bool isOpen, int maxPlayers, Hashtable customRoomProperties,
-                                       string[] propsToListInLobby, int maxPlayersNotExpectating)
+                                        string[] propsToListInLobby, int maxPlayersNotExpectating)
         {
             ExitGames.Client.Photon.Hashtable photonHTable = new ExitGames.Client.Photon.Hashtable();
 
