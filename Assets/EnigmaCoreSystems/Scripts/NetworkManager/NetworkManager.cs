@@ -214,9 +214,9 @@ namespace Enigma.CoreSystems
                 JSONNode response = JSON.Parse(www.error);
 
                 if (local != null) {
-                    local(null);
+                    local(response);
                 }
-                func(null);
+                func(response);
 
                 #if UNITY_ANDROID
                 EtceteraAndroid.showAlert ("Network Error", "Error connecting to the server. Restart the app and retry.", "OK");
