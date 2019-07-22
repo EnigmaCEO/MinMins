@@ -113,7 +113,7 @@ namespace Enigma.CoreSystems
 
         protected override void Awake ()
         {
-            Debug.Log("This should be called");
+            Debug.Log("NetworkManager::Awake");
         }
 
         protected override void Start ()
@@ -974,9 +974,19 @@ namespace Enigma.CoreSystems
         }
 
         //PUN event callbacks
+        private void OnConnectedToPhoton()
+        {
+            Debug.Log("NetworkManager::OnConnectedToPhoton");
+        }
+
+        private void OnConnectionFail(DisconnectCause cause)
+        {
+            Debug.Log("NetworkManager::OnConnectionFail -> cause: " + cause.ToString());
+        }
+
         void OnJoinedLobby()
         {
-            Debug.LogError("Joined Lobby");
+            Debug.Log("NetworkManager::Joined Lobby");
 
             //instance.StartCoroutine(LobbyPollCoroutine());
 
@@ -989,6 +999,7 @@ namespace Enigma.CoreSystems
 
         void OnLeftLobby()
         {
+            Debug.Log("NetworkManager::OnLeftLobby");
             //Transaction(WGO2Configs.LeaveChatTransaction, new Hashtable(), LeaveChatLobby);
 
             if (OnLeftLobbyCallback != null)
@@ -997,6 +1008,8 @@ namespace Enigma.CoreSystems
 
         void OnJoinedRoom()
         {
+            Debug.Log("NetworkManager::OnJoinedRoom");
+
             //UNCOMMENT WHEN LINKING GAME TOGETHER WITH STAGING SCENE
             //Debug.Log("Joined Room " + PhotonNetwork.room.name);
             //Debug.Log ("PlayerCount: " + PhotonNetwork.room.playerCount + " MaxPlayers: " + PhotonNetwork.room.maxPlayers);
@@ -1017,6 +1030,8 @@ namespace Enigma.CoreSystems
 
         void OnLeftRoom()
         {
+            Debug.Log("NetworkManager::OnLeftRoom");
+
             string sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
 
             //if (sceneName == "Combat")
@@ -1041,7 +1056,7 @@ namespace Enigma.CoreSystems
 
         void OnPhotonPlayerConnected(PhotonPlayer connectedPlayer)
         {
-            Debug.LogError("Player: " + connectedPlayer.name + " connected");
+            Debug.Log("NetworkManager::Player: " + connectedPlayer.name + " connected");
 
             //if (GetRoom().customProperties["gState"].ToString() == ROOM_STATE_STAGING)
 
@@ -1062,7 +1077,7 @@ namespace Enigma.CoreSystems
 
         void OnPhotonPlayerDisconnected(PhotonPlayer disconnectedPlayer)
         {
-            Debug.LogError("Player: " + disconnectedPlayer.name + " disconnected");
+            Debug.Log("NetworkManager::Player: " + disconnectedPlayer.name + " disconnected");
 
             string sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
 
@@ -1072,7 +1087,7 @@ namespace Enigma.CoreSystems
             {
                 if (GetIsMasterClient())
                 {
-                    Debug.LogError("game state ready recount");
+                    Debug.Log("game state ready recount");
                     CountNumberOfReadyPlayers();
                 }
             }
@@ -1105,7 +1120,7 @@ namespace Enigma.CoreSystems
             //Have the master delete the objects of whoever disconnected
             if (GetIsMasterClient())
             {
-                Debug.LogError("Delete object");
+                Debug.Log("Delete object");
                 if (DestroyDisconnectedPlayerObject != null) DestroyDisconnectedPlayerObject(disconnectedPlayer);
             }
 
@@ -1115,6 +1130,8 @@ namespace Enigma.CoreSystems
 
         void OnPhotonPlayerPropertiesChanged(object[] playerAndUpdatedProps)
         {
+            Debug.Log("NetworkManager::OnPhotonPlayerPropertiesChanged");
+
             PhotonPlayer player = playerAndUpdatedProps[0] as PhotonPlayer;
             ExitGames.Client.Photon.Hashtable playerProperties = playerAndUpdatedProps[1] as ExitGames.Client.Photon.Hashtable;
 
@@ -1171,7 +1188,7 @@ namespace Enigma.CoreSystems
 
         void OnPhotonCustomRoomPropertiesChanged(ExitGames.Client.Photon.Hashtable propertiesThatChanged)
         {
-            //Debug.LogError("Room Properties that changed: " + propertiesThatChanged.ToStringFull());     
+            Debug.Log("NetworkManager::OnPhotonCustomRoomPropertiesChanged-> Room Properties that changed: " + propertiesThatChanged.ToStringFull());     
 
             //Room state changes
             if (propertiesThatChanged.ContainsKey("gState"))
@@ -1208,7 +1225,7 @@ namespace Enigma.CoreSystems
             if (propertiesThatChanged.ContainsKey("st"))
             {
                 //Begin timer here
-                Debug.LogError("Start time: " + (double)propertiesThatChanged["st"]);
+                Debug.Log("Start time: " + (double)propertiesThatChanged["st"]);
                 if (StartCountdownTimer != null) StartCountdownTimer((double)propertiesThatChanged["st"]);
             }
 
@@ -1217,7 +1234,7 @@ namespace Enigma.CoreSystems
                 //if (SpawnPlayerCharacter != null) SpawnPlayerCharacter();
                 Dictionary<int, int> test = (Dictionary<int, int>)propertiesThatChanged["teamTwoIndexes"];
 
-                Debug.LogError("TeamTwoIndex changed: " + test.ToStringFull());
+                Debug.Log("TeamTwoIndex changed: " + test.ToStringFull());
             }
 
             if (OnPhotonCustomRoomPropertiesChangedCallback != null)
@@ -1226,7 +1243,7 @@ namespace Enigma.CoreSystems
 
         void OnMasterClientSwitched(PhotonPlayer newMaster)
         {
-            Debug.LogError("New master name: " + newMaster.NickName);
+            Debug.Log("NetworkManager::OnMasterClientSwitched -> New master name: " + newMaster.NickName);
 
             string sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
 
@@ -1249,9 +1266,11 @@ namespace Enigma.CoreSystems
 
         void OnUpdatedFriendList()
         {
+            Debug.Log("NetworkManager::OnUpdatedFriendList");
+
             if (GetInLobby() == true)
             {
-                Debug.Log("OnUpdatedFriendList");
+                //Debug.Log("NetworkManager::OnUpdatedFriendList");
                 if (PhotonNetwork.Friends != null)
                 {
 
@@ -1268,6 +1287,8 @@ namespace Enigma.CoreSystems
 
         void OnDisconnectedFromPhoton()
         {
+            Debug.Log("NetworkManager::OnDisconnectedFromPhoton");
+
             //FOR TESTING
             Application.Quit();
 
@@ -1559,8 +1580,8 @@ namespace Enigma.CoreSystems
             //A player's health was modified
             if (playerProperties["health"] != null)
             {
-                Debug.LogError(photonPlayer.NickName + ": " + (int)playerProperties["health"]);
-                Debug.LogError("userPhotonViewId: " + (int)playerProperties["userPhotonViewId"]);
+                Debug.Log(photonPlayer.NickName + ": " + (int)playerProperties["health"]);
+                Debug.Log("userPhotonViewId: " + (int)playerProperties["userPhotonViewId"]);
 
                 if (ModifyHealth != null)
                     ModifyHealth(photonPlayer, (int)playerProperties["health"]/*, (int)playerProperties["userPhotonViewId"]*/);
@@ -1569,7 +1590,7 @@ namespace Enigma.CoreSystems
                 {
                     if ((int)playerProperties["health"] <= 0)
                     {
-                        Debug.LogError(photonPlayer.NickName + " is dead...");
+                        Debug.Log(photonPlayer.NickName + " is dead...");
                         //CheckIfTeamLost((WGO2Enums.Faction)photonPlayer.CustomProperties["faction"]);
                     }
                 }

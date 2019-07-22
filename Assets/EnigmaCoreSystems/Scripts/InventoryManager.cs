@@ -17,7 +17,7 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>
             Debug.LogError("Group " + groupName + " already has item: " + key);
         else
         {
-            print("Added item: " + key + " to group: " + groupName);
+            //print("Added item: " + key + " to group: " + groupName);
             _items[groupName].Add(key, value);
         }
     }

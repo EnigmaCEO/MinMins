@@ -272,7 +272,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
             {
                 string unitName = terms[1];
                 UnitStats stats = new UnitStats((string)entry.Value);
-                print("LoadData -> groupName: " + groupName + " -> unitName: " + unitName + " -> stats: " + stats.Serialized());
+                //print("LoadData -> groupName: " + groupName + " -> unitName: " + unitName + " -> stats: " + stats.Serialized());
                 inventoryManager.AddItem(groupName, unitName, stats);
 
                 isThereAnyUnit = true;
@@ -281,7 +281,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
             {
                 int tier = int.Parse(terms[1]);
                 int tierAmount = int.Parse((string)entry.Value);
-                print("LoadData -> box tier: " + tier + " amount: " + tierAmount);
+                //print("LoadData -> box tier: " + tier + " amount: " + tierAmount);
                 inventoryManager.UpdateItem(_LOOT_BOXES, tier.ToString(), tierAmount, false);
 
                 isThereAnyLootBox = true;

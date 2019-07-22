@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class Lobby : MonoBehaviour
 {
-    [SerializeField] private bool _isOnline = false;
+    [SerializeField] private bool _isOffline = false;
     [SerializeField] private int _maxPlayers = 2;
     [SerializeField] private int _maxPlayersNotExpectating = 2;
     [SerializeField] private int _maxRatingDifferenceToFight = 50;
@@ -14,9 +14,8 @@ public class Lobby : MonoBehaviour
 
     void Start()
     {
-        NetworkManager.Connect(_isOnline);
-        NetworkManager.JoinLobby();
-
+        setDelegates();
+        NetworkManager.Connect(_isOffline); //No need to call JoinLobby as Auto-Join Lobby is true in PhotonServerSettings
         NetworkManager.SetCustomProperty(GameInventory.RATING_KEY, GameInventory.Instance.GetRating()); 
     }
 
@@ -35,7 +34,7 @@ public class Lobby : MonoBehaviour
         StopCoroutine(handleWaitForAiRival());
     }
 
-    private void initializeDelegates()
+    private void setDelegates()
     {
         NetworkManager.UpdateGameRooms += UpdateRoomGrid;
         NetworkManager.UpdateRoomList += UpdateRoomPlayers;
@@ -94,6 +93,7 @@ public class Lobby : MonoBehaviour
 
     private void handleRoomCreationAndJoin()
     {
+        print("handleRoomCreationAndJoin");
         RoomInfo[] rooms = NetworkManager.GetRoomList();
         if (rooms.Length == 0)
             createAndJoinRoom();
