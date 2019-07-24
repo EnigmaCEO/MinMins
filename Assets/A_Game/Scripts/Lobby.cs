@@ -11,12 +11,15 @@ public class Lobby : MonoBehaviour
     [SerializeField] private int _maxPlayersNotExpectating = 2;
     [SerializeField] private int _maxRatingDifferenceToFight = 50;
     [SerializeField] private float _timeToWaitBeforeAiRival = 30; // 30 seconds
+    [SerializeField] private GameObject _waitingPopUp;
 
     void Start()
     {
+        _waitingPopUp.SetActive(false);
+
         setDelegates();
         NetworkManager.Connect(_isOffline); //No need to call JoinLobby as Auto-Join Lobby is true in PhotonServerSettings
-        NetworkManager.SetCustomProperty(GameInventory.RATING_KEY, GameInventory.Instance.GetRating()); 
+        //NetworkManager.SetCustomProperty(GameInventory.RATING_KEY, GameInventory.Instance.GetRating()); 
     }
 
     void Update()
@@ -72,7 +75,7 @@ public class Lobby : MonoBehaviour
 
     private void onJoinedRoom()
     {
-
+        _waitingPopUp.SetActive(true);
     }
 
     private void onLeftRoom()
@@ -111,9 +114,9 @@ public class Lobby : MonoBehaviour
                 {
                     PhotonPlayer[] playerList = NetworkManager.GetPlayerList();
                     int playerInRoomRating = (int)playerList[0].CustomProperties[GameInventory.RATING_KEY];
-                    int thisPlayerRating = gameInventory.GetRating();
+                    // int thisPlayerRating = gameInventory.GetRating();
 
-                    if (Mathf.Abs(playerInRoomRating - thisPlayerRating) <= _maxRatingDifferenceToFight)
+                    //if (Mathf.Abs(playerInRoomRating - thisPlayerRating) <= _maxRatingDifferenceToFight)
                     {
                         NetworkManager.JoinRoom(room.Name);
                         NetworkManager.GetRoom().IsOpen = false;

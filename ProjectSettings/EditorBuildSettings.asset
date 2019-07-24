@@ -5,19 +5,19 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
+  - enabled: 1
     path: Assets/A_Game/Scenes/Init.unity
     guid: 3bcfec1e501c9419f952dbb67c7bb751
-  - enabled: 0
+  - enabled: 1
     path: Assets/A_Game/Scenes/Main.unity
     guid: f207d2872789b244aad352e4454c8f7a
-  - enabled: 0
+  - enabled: 1
     path: Assets/A_Game/Scenes/UnitSelect.unity
     guid: 7930e59e5be1c464abf46ed75630b974
-  - enabled: 0
+  - enabled: 1
     path: Assets/A_Game/Scenes/War.unity
     guid: 7e69142547eac3a4fb14d69176f51912
-  - enabled: 0
+  - enabled: 1
     path: Assets/A_Game/Scenes/WarPrep.unity
     guid: 4c738e8375b4869498edd1032079fdf9
   - enabled: 0
@@ -35,4 +35,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/A_Game/Scenes/Lobby.unity
     guid: 19414e202532df14f8e0c5b80c9b0978
+  - enabled: 1
+    path: Assets/A_Game/Scenes/Levels.unity
+    guid: 1507fab4b1a547a4380cc09cfbe3f154
   m_configObjects: {}

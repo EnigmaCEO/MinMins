@@ -20,6 +20,8 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     private const string _LOOT_BOXES = "Lootboxes";
     private const string _STATS = "Stats";
 
+    private const string _SINGLE_PLAYER_LEVEL = "SinglePlayerLevel";
+
     private const int _BRONZE_TIER = 1;
     private const int _SILVER_TIER = 2;
     private const int _GOLD_TIER = 3;
@@ -74,25 +76,35 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         return inventoryUnitIndexes;
     }
 
-    public int GetRating()
+    public void SetSinglePlayerLevel(int level)
     {
-        return InventoryManager.Instance.GetItem<int>(_STATS, RATING_KEY);
+        InventoryManager.Instance.UpdateItem(_STATS, _SINGLE_PLAYER_LEVEL, level, true);
     }
 
-    public void ChangeRatingAmount(int amount, bool isAddition, bool shouldSave)
+    public int GetSinglePlayerLevel()
     {
-        int newRatingAmount = GetRating();
-
-        if (isAddition)
-            newRatingAmount += amount;
-        else
-            newRatingAmount -= amount;
-
-        InventoryManager.Instance.UpdateItem(_STATS, RATING_KEY, newRatingAmount);
-
-        if (shouldSave)
-            saveRating();
+        return InventoryManager.Instance.GetItem<int>(_STATS, _SINGLE_PLAYER_LEVEL);
     }
+
+    //public int GetRating()
+    //{
+    //    return InventoryManager.Instance.GetItem<int>(_STATS, RATING_KEY);
+    //}
+
+    //public void ChangeRatingAmount(int amount, bool isAddition, bool shouldSave)
+    //{
+    //    int newRatingAmount = GetRating();
+
+    //    if (isAddition)
+    //        newRatingAmount += amount;
+    //    else
+    //        newRatingAmount -= amount;
+
+    //    InventoryManager.Instance.UpdateItem(_STATS, RATING_KEY, newRatingAmount);
+
+    //    if (shouldSave)
+    //        saveRating();
+    //}
 
     public UnitStats GetUnitStats(string unitName)
     {
@@ -255,7 +267,8 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         InventoryManager inventoryManager = InventoryManager.Instance;
         inventoryManager.ClearAllGroups();
 
-        inventoryManager.AddItem(_STATS, RATING_KEY, 0);
+        //inventoryManager.AddItem(_STATS, RATING_KEY, 0);
+        inventoryManager.AddItem(_STATS, _SINGLE_PLAYER_LEVEL, 1);
 
         for(int tier = 1; tier <= _lootBoxTiersAmount; tier++)
             inventoryManager.AddItem(_LOOT_BOXES, tier.ToString(), 0);
@@ -288,8 +301,11 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
             }
             else if (groupName == _STATS)
             {
-                int rating = int.Parse(terms[1]);
-                inventoryManager.UpdateItem(_STATS, RATING_KEY, rating);
+                //    int rating = int.Parse(terms[1]);
+                //    inventoryManager.UpdateItem(_STATS, RATING_KEY, rating);
+
+                int singlePlayerLevel = int.Parse(terms[1]);
+                inventoryManager.UpdateItem(_STATS, _SINGLE_PLAYER_LEVEL, singlePlayerLevel);
             }
         }
 
@@ -300,12 +316,21 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         }
     }
 
-    private void saveRating()
-    {
-        if (_saveHashTable.ContainsKey(RATING_KEY))
-            _saveHashTable.Remove(RATING_KEY);
+    //private void saveRating()
+    //{
+    //    if (_saveHashTable.ContainsKey(RATING_KEY))
+    //        _saveHashTable.Remove(RATING_KEY);
 
-        _saveHashTable.Add(RATING_KEY, GetRating());
+    //    _saveHashTable.Add(RATING_KEY, GetRating());
+    //    saveHashTableToFile();
+    //}
+
+    private void saveSinglePlayerLevelNumber()
+    {
+        if (_saveHashTable.ContainsKey(_SINGLE_PLAYER_LEVEL))
+            _saveHashTable.Remove(_SINGLE_PLAYER_LEVEL);
+
+        _saveHashTable.Add(_SINGLE_PLAYER_LEVEL, GetSinglePlayerLevel());
         saveHashTableToFile();
     }
 
