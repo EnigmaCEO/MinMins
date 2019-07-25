@@ -37,17 +37,17 @@ public class Levels : MonoBehaviour
     private int getPvpLevelNumber()
     {
         int levelNumber = 0;
-        int rating = GameStats.Instance.Rating;
+        //int rating = (int)NetworkManager.GetCustomProperty(GameEnums.PlayerCustomProperties.Rating.ToString());
 
-        int arenasLenght = _ratingsForArena.Count;
-        for (int i = (arenasLenght - 1); i == 0; i--)
-        {
-            if (rating >= _ratingsForArena[i])
-            {
-                levelNumber = i + 1;
-                break;
-            }
-        }
+        //int arenasLenght = _ratingsForArena.Count;
+        //for (int i = (arenasLenght - 1); i == 0; i--)
+        //{
+        //    if (rating >= _ratingsForArena[i])
+        //    {
+        //        levelNumber = i + 1;
+        //        break;
+        //    }
+        //}
 
         return levelNumber;
     }

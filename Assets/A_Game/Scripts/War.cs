@@ -5,6 +5,12 @@ using UnityEngine.UI;
 
 public class War : MonoBehaviour
 {
+    public enum MatchResults
+    {
+        Win,
+        Lose
+    }
+
     [HideInInspector] public bool Ready = true;
 
     [SerializeField] private Transform _teamGridContent;
@@ -215,6 +221,5 @@ public class War : MonoBehaviour
                 }
             }
         }
-
     }
 }

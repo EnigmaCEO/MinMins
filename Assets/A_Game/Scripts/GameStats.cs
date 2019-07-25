@@ -11,7 +11,7 @@ public class GameStats : SingletonMonobehaviour<GameStats>
         Pvp
     }
 
-    [HideInInspector] public int Rating = 0;
-    [HideInInspector] public Modes Mode = Modes.None;
-    [HideInInspector] public int SelecteLevelNumber = 0;
+    public Modes Mode = Modes.None;
+    public int SelecteLevelNumber = 0;
+    public bool IsEnjinLinked = false;
 }

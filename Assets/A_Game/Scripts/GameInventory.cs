@@ -14,8 +14,6 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     [SerializeField] private char _parseSeparator = '|';
     [SerializeField] private int _expToAddOnDuplicateUnit = 50;
 
-    public const string RATING_KEY = "Rating";
-
     private const string _TEAM_1_GROUP_NAME = "Team1";
     private const string _LOOT_BOXES = "Lootboxes";
     private const string _STATS = "Stats";

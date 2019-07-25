@@ -81,8 +81,8 @@ public class EnjinLogin : MonoBehaviour
 
         Hashtable extras = new Hashtable();
 
-        string ipAddress = NetworkManager.GetUserInfo("ip");
-        string country = NetworkManager.GetUserInfo("country");
+        string ipAddress = NetworkManager.GetUserInfo(NetworkManager.TransactionKeys.IP);
+        string country = NetworkManager.GetUserInfo(NetworkManager.TransactionKeys.COUNTRY);
         extras.Add("ip", ipAddress);
         extras.Add("country", country);
 
@@ -124,9 +124,9 @@ public class EnjinLogin : MonoBehaviour
         //     print("onRegistration: " + response.ToString());
 
             SimpleJSON.JSONNode response_hash = response[0];
-            string status = response_hash["status"].ToString().Trim('"');
+            string status = response_hash[NetworkManager.TransactionKeys.STATUS].ToString().Trim('"');
 
-            if (status == "SUCCESS") {
+            if (status == NetworkManager.StatusOptions.SUCCESS) {
                 // print("onRegistration SUCCESS");
                 // completeLogin(response_hash);
                 closeDialog();
@@ -135,11 +135,11 @@ public class EnjinLogin : MonoBehaviour
                 EnableLoginWindow();
                 string term = "";
 
-                if (status == "ERR_REGISTER")
+                if (status == NetworkManager.StatusOptions.ERR_REGISTER)
                     term = "Register Error";
-                else if (status == "ERR_INVALID_PASSWORD")
+                else if (status == NetworkManager.StatusOptions.ERR_INVALID_PASSWORD)
                     term = "Invalid Password";
-                else if (status == "ERR_INVALID_USERNAME")
+                else if (status == NetworkManager.StatusOptions.ERR_INVALID_USERNAME)
                     term = "Invalid Username";
                 else
                     term = "Server Error";
@@ -152,34 +152,34 @@ public class EnjinLogin : MonoBehaviour
         }
     }
 
-    // private void completeLogin(SimpleJSON.JSONNode response_hash)
-    // {
-    //     print("Complete login:-> enjin hammer: " + response_hash["enjin_hammer"].ToString() + " enjin shield: " + response_hash["enjin_shield"].ToString());
+    private void completeLogin(SimpleJSON.JSONNode response_hash)
+    {
+        print("Complete login:");
+        int rating = response_hash[NetworkManager.TransactionKeys.USER_DATA][GameNetwork.TransactionKeys.RATING].AsInt;
+        GameNetwork.Instance.SetRating(rating);
 
-    //     updateEnjinItems(response_hash);
+        string enjinId = response_hash[NetworkManager.TransactionKeys.USER_DATA][NetworkManager.EnjinTransKeys.ENJIN_ID].ToString().Trim('"');
+        //if(true)  //hack
+        if (enjinId != "null")
+        {
+            string enjinCode = response_hash[NetworkManager.TransactionKeys.USER_DATA][NetworkManager.EnjinTransKeys.ENJIN_CODE].ToString().Trim('"');
+            //if(true)  //hack
+            if (enjinCode != "null")
+            {
+                //_enjinWindow.SetActive(true);
+                //_enjinWindow.GetComponent<EnjinQRManager>().ShowImage(enjinCode);
 
-    //     string enjinId = response_hash["user_data"]["enjin_id"].ToString().Trim('"');
-    //     //if(true)  //hack
-    //     if (enjinId != "null")
-    //     {
-    //         string enjinCode = response_hash["user_data"]["enjin_code"].ToString().Trim('"');
-    //         //if(true)  //hack
-    //         if (enjinCode != "null")
-    //         {
-    //             _enjinWindow.SetActive(true);
-    //             _enjinWindow.GetComponent<EnjinQRManager>().ShowImage(enjinCode);
+                //StartCoroutine(handleEnjinLinkingCheck(0));
+            }
+            else
+            {
+                print("User has already linked with Enjin");
+                GameStats.Instance.IsEnjinLinked = true;
+            }
+        }
+        else
+            print("User is not using Crypto.");
 
-    //             StartCoroutine(handleEnjinLinkingCheck(0));
-    //         }
-    //         else
-    //         {
-    //             print("User has already linked with Enjin");
-    //             PlayerStats.IsEnjinLinked = true;
-    //         }
-    //     }
-    //     else
-    //         print("User is not using Crypto.");
-
-    //     PlayerStats.IsEnjinLinked = true; //hack
-    // }
+        GameStats.Instance.IsEnjinLinked = true; //hack
+    }
 }

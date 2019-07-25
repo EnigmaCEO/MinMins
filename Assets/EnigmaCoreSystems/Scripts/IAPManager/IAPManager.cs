@@ -612,7 +612,7 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
 
         Hashtable hashtable = new Hashtable();
         hashtable.Add("user", _tapJoyUserId);
-        NetworkManager.Transaction(NetworkTransactions.CoinsEarned, hashtable, onCoinsEarned);
+        NetworkManager.Transaction(NetworkManager.Transactions.COINS_EARNED, hashtable, onCoinsEarned);
     }
 
     //public void HandleOnRewardRequest(TJPlacement placement, TJActionRequest request, string itemId, int quantity)

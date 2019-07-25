@@ -10,6 +10,109 @@ namespace Enigma.CoreSystems
 {
     public class NetworkManager : Manageable<NetworkManager>
     {
+        public class Transactions
+        {
+            public const int IP_AND_COUNTERY = 0;
+            public const int LOGIN = 3;
+            public const int REGISTRATION = 5;
+            public const int COINS_EARNED = 6;
+            public const int HEART_BEAT = 14;
+        }
+
+        public class TransactionKeys
+        {
+            public const string TID = "tid";
+            public const string SSID = "ssid";
+            public const string IMAGE = "image";
+            public const string IMAGE_UPLOAD = "imageUpload";
+            public const string BUNDLE_ID = "bundle_id";
+            public const string GAME = "game";
+            public const string IP = "ip";
+            public const string COUNTRY = "country";
+            public const string USERNAME = "userName";
+            public const string PASSWORD = "password";
+            public const string EMAIL = "email";
+            public const string USER = "user";
+            public const string PW_HASH = "pwhash";
+            public const string STATUS = "status";
+            public const string STORE = "store";
+            public const string ROOM = "room";
+            public const string LIST = "list";
+            public const string CHAT = "chat";
+            public const string USER_LIST = "userList";
+            public const string SEC = "sec";
+            public const string USER_LOGIN = "user_login";
+            public const string USER_DATA = "user_data";
+        }
+
+        public class EnjinTransKeys
+        {
+            public const string ENJIN_ID = "enjin_id";
+            public const string ENJIN_CODE = "enjin_code";
+        }
+
+        public class RoomPropertyOptions
+        {
+            public const string GAME_STATE = "gState";
+            public const string START_COUNT_DOWN_TIMER = "st";
+            public const string TEAM_ONE_INDEXES = "teamOneIndexes";
+            public const string TEAM_TWO_INDEXES = "teamTwoIndexes";
+            public const string PLAYER_LIST = "playerList";
+            public const string HOST = "host";
+            public const string MAX_PLAYERS = "mp";
+        }
+
+        public class PlayerPropertyOptions
+        {
+            public const string PLAYER_STATE = "plState";
+            public const string HEALTH = "health";
+            public const string USER_PHOTON_VIEW_ID = "userPhotonViewId";
+        }
+
+        public class StatusOptions
+        {
+            public const string SUCCESS = "SUCCESS";
+            public const string ERR_REGISTER = "ERR_REGISTER";
+            public const string ERR_INVALID_PASSWORD = "ERR_INVALID_PASSWORD";
+            public const string ERR_INVALID_USERNAME = "ERR_INVALID_PASSWORD";
+        }
+
+        public class DataGroups
+        {
+            public const string INFO = "Info";
+        }
+
+        public class DataKeys
+        {
+            public const string USER = "user";
+        }
+
+        public class RoomStates
+        {
+            public const string STAGING = "Staging";
+            public const string READY = "Ready";
+            public const string SYNC = "Sync";
+            public const string LAUNCH = "Launch";
+            public const string PLAY = "Play";
+        }
+
+        public class PlayerStates
+        {
+            public const string SYNC = "Sync";
+            public const string SPAWN = "Spawn";
+            public const string CREATED = "Created";
+            public const string READY = "Ready";
+        }
+
+        ////Make an Enum for room state later
+        //static public string ROOM_STATE_STAGING = "Staging";
+        //static public string ROOM_STATE_READY = "Ready";
+        //static public string ROOM_STATE_SYNC = "Sync";
+        //static public string ROOM_STATE_LAUNCH = "Launch";
+        //static public string ROOM_STATE_PLAY = "Play";
+
+        public const string _PHOTON_CONNECTION_GAME_VERSION_SETTINGS = "v1.0";
+
         static private string _serverUrl;
         static private string _sessionID;
         static private string _game;
@@ -36,13 +139,6 @@ namespace Enigma.CoreSystems
 
         //static private bool LoggedIn = false;
         static private bool _stopGetRoomData = true;
-
-        //Make an Enum for room state later
-        static public string ROOM_STATE_STAGING = "Staging";
-        static public string ROOM_STATE_READY = "Ready";
-        static public string ROOM_STATE_SYNC = "Sync";
-        static public string ROOM_STATE_LAUNCH = "Launch";
-        static public string ROOM_STATE_PLAY = "Play";
 
         static public bool OriginalMaster = false;
 
@@ -166,27 +262,27 @@ namespace Enigma.CoreSystems
             return _game;
         }
 
-        static public void Transaction (NetworkTransactions id, Hashtable val, Callback func = null, Callback local = null, TextureCallback texture = null)
+        static public void Transaction (int id, Hashtable val, Callback func = null, Callback local = null, TextureCallback texture = null)
         {
             Debug.Log(Instance);
             Instance.StartCoroutine (httpRequest (id, val, func, local, texture));
         }
 
-        static private IEnumerator httpRequest (NetworkTransactions id, Hashtable val, Callback func, Callback local, TextureCallback texture)
+        static private IEnumerator httpRequest (int id, Hashtable val, Callback func, Callback local, TextureCallback texture)
         {
             string url = _serverUrl + "/trans/" + id + ".php";
             string sec = "";
 
             WWWForm formData = new WWWForm ();
-            formData.AddField ("tid", (int) id);
+            formData.AddField (TransactionKeys.TID, id);
             if (_sessionID != null) 
-                formData.AddField ("ssid", _sessionID);
+                formData.AddField (TransactionKeys.SSID, _sessionID);
             
             foreach (DictionaryEntry pair in val)
             {
                 Debug.Log (pair.Key + " " + pair.Value);
-                if (pair.Key.ToString() == "image") 
-                    formData.AddBinaryData("imageUpload", pair.Value as byte[], "image.png", "image/png");
+                if (pair.Key.ToString() == TransactionKeys.IMAGE) 
+                    formData.AddBinaryData(TransactionKeys.IMAGE_UPLOAD, pair.Value as byte[], "image.png", "image/png");
                 else
                 {
                     //string value = Md5Sum(Application.identifier + Application.version + (string)pair.Value);
@@ -195,13 +291,13 @@ namespace Enigma.CoreSystems
                 }
             }
 
-            formData.AddField("bundle_id", Application.identifier);
-            formData.AddField("game", _game);
+            formData.AddField(TransactionKeys.BUNDLE_ID, Application.identifier);
+            formData.AddField(TransactionKeys.GAME, _game);
 
             sec += Application.identifier + _game;
             sec = md5(sec);
 
-            formData.AddField("sec", sec);
+            formData.AddField(TransactionKeys.SEC, sec);
 
             Debug.Log ("url: " + url);
             var www = UnityWebRequest.Post(url, formData);
@@ -276,40 +372,40 @@ namespace Enigma.CoreSystems
         {
             Hashtable val = new Hashtable();
 
-            val.Add("username", userName);
-            val.Add("password", password);
-            val.Add("email", email);
-            val.Add("game", game);
-            val.Add("bundle_id", bundleId);
+            val.Add(TransactionKeys.USERNAME, userName);
+            val.Add(TransactionKeys.PASSWORD, password);
+            val.Add(TransactionKeys.EMAIL, email);
+            val.Add(TransactionKeys.GAME, game);
+            val.Add(TransactionKeys.BUNDLE_ID, bundleId);
 
             if (extras != null)
                 val.Merge(extras);
 
-            Transaction(NetworkTransactions.Registration, val, func, RegistrationResult);
+            Transaction(Transactions.REGISTRATION, val, func, RegistrationResult);
         }
 
         static private void RegistrationResult(JSONNode response)
         {
             JSONNode response_hash = response[0];
-            string status = response_hash["status"].ToString().Trim('"');
-            string ssid = response_hash["ssid"].ToString().Trim('"');
+            string status = response_hash[TransactionKeys.STATUS].ToString().Trim('"');
+            string ssid = response_hash[TransactionKeys.SSID].ToString().Trim('"');
 
             Debug.Log("RegistrationResult: " + response_hash.ToString());
 
-            if (status == "SUCCESS")
+            if (status == StatusOptions.SUCCESS)
                 NetworkManager.SetSessionID(ssid);
         }
 
         static public void Login (string user, string pw, Callback func = null, Hashtable extras = null)
         {
             Hashtable val = new Hashtable ();
-            val.Add ("user", user);
-            val.Add ("pwhash", pw);
+            val.Add (TransactionKeys.USER, user);
+            val.Add (TransactionKeys.PW_HASH, pw);
 
             if (extras != null)
                 val.Merge (extras);
 
-            Transaction (NetworkTransactions.Login, val, func, LoginResult);
+            Transaction (Transactions.LOGIN, val, func, LoginResult);
         }
 
         static private void LoginResult (JSONNode response)
@@ -318,12 +414,12 @@ namespace Enigma.CoreSystems
                 return;
 
             JSONNode response_hash = response [0];
-            string status = response_hash ["status"].ToString ().Trim ('"');
-            string ssid = response_hash ["ssid"].ToString ().Trim ('"');
+            string status = response_hash [TransactionKeys.STATUS].ToString ().Trim ('"');
+            string ssid = response_hash [TransactionKeys.SSID].ToString ().Trim ('"');
 
             Debug.Log ("LoginResult: " + response_hash.ToString());
 
-            if (status == "SUCCESS") 
+            if (status == StatusOptions.SUCCESS) 
                 NetworkManager.SetSessionID (ssid);
         }
 
@@ -338,10 +434,10 @@ namespace Enigma.CoreSystems
         static public void GetIAP (JSONNode response)
         {
             JSONNode response_hash = response [0];
-            string status = response_hash ["status"].ToString ().Trim ('"');
-            JSONNode data = response_hash ["store"];
+            string status = response_hash [TransactionKeys.STATUS].ToString ().Trim ('"');
+            JSONNode data = response_hash [TransactionKeys.STORE];
 
-            if (status == "SUCCESS")
+            if (status == StatusOptions.SUCCESS)
             {
         #if !UNITY_STANDALONE
             //IAPManager.LoadData(data);
@@ -351,13 +447,13 @@ namespace Enigma.CoreSystems
 
         static public string GetUserInfo (string val, string defaultValue = "")
         {
-            if (!NetworkManager.Data.ContainsKey("Info"))
+            if (!NetworkManager.Data.ContainsKey(DataGroups.INFO))
                 return "";
 
-            if (!NetworkManager.Data["Info"].ContainsKey("user"))
+            if (!NetworkManager.Data[DataGroups.INFO].ContainsKey(DataKeys.USER))
                 return "";
 
-            Hashtable userData = NetworkManager.Data ["Info"] ["user"] as Hashtable;
+            Hashtable userData = NetworkManager.Data [DataGroups.INFO][DataKeys.USER] as Hashtable;
 
                 if (userData[val] == null)
                     return defaultValue;
@@ -367,15 +463,17 @@ namespace Enigma.CoreSystems
 
         static public void SetUserInfo (string val, string text)
         {
-            if (!NetworkManager.Data.ContainsKey ("Info"))
-            NetworkManager.Data.Add ("Info", new Hashtable ());
-            if (!NetworkManager.Data ["Info"].ContainsKey ("user"))
-            NetworkManager.Data ["Info"].Add ("user", new Hashtable ());
-            Hashtable userData = NetworkManager.Data ["Info"] ["user"] as Hashtable;
+            if (!NetworkManager.Data.ContainsKey (DataGroups.INFO))
+                NetworkManager.Data.Add (DataGroups.INFO, new Hashtable ());
+
+            if (!NetworkManager.Data [DataGroups.INFO].ContainsKey (DataKeys.USER))
+                NetworkManager.Data [DataGroups.INFO].Add (DataKeys.USER, new Hashtable ());
+
+            Hashtable userData = NetworkManager.Data [DataGroups.INFO] [DataKeys.USER] as Hashtable;
             if (!userData.ContainsKey (val))
-            userData.Add (val, text);
+                userData.Add (val, text);
             else
-            userData [val] = text;
+                userData [val] = text;
         }
 
         static public void LoadImageFromUrl(string url, Image image, ImageCallback callback = null)
@@ -406,7 +504,7 @@ namespace Enigma.CoreSystems
                     yield return new WaitForSeconds(5f);
                 else
                 {
-                    NetworkManager.Transaction(NetworkTransactions.HeartBeat, new Hashtable(), onHeartBeat);
+                    NetworkManager.Transaction(Transactions.HEART_BEAT, new Hashtable(), onHeartBeat);
                     yield return new WaitForSeconds(300.0f);
                 }
             }
@@ -425,7 +523,7 @@ namespace Enigma.CoreSystems
             }
 
             Instance.gameObject.AddComponent<PhotonView>();
-            PhotonNetwork.ConnectUsingSettings("v1.0");
+            PhotonNetwork.ConnectUsingSettings(_PHOTON_CONNECTION_GAME_VERSION_SETTINGS);
             PhotonNetwork.logLevel = PhotonLogLevel.Full;
             PhotonNetwork.offlineMode = isOffline;
             PhotonView photonView = PhotonView.Get(Instance);
@@ -1083,7 +1181,7 @@ namespace Enigma.CoreSystems
 
             //If the room state is currently in ready state
             //If a player disconnects, do a recount of ready players again
-            if (GetRoom().CustomProperties["gState"].ToString() == ROOM_STATE_READY)
+            if (GetRoom().CustomProperties[RoomPropertyOptions.GAME_STATE].ToString() == RoomStates.READY)
             {
                 if (GetIsMasterClient())
                 {
@@ -1092,7 +1190,7 @@ namespace Enigma.CoreSystems
                 }
             }
             //If the room state is currently in sync state
-            else if (GetRoom().CustomProperties["gState"].ToString() == ROOM_STATE_SYNC)
+            else if (GetRoom().CustomProperties[RoomPropertyOptions.GAME_STATE].ToString() == RoomStates.SYNC)
             {
                 if (GetIsMasterClient())
                 {
@@ -1103,7 +1201,7 @@ namespace Enigma.CoreSystems
                 //CountNumberOfSyncPlayers();
             }
             //If the room state is currently in launch state
-            //else if (GetRoom().CustomProperties["gState"].ToString() == ROOM_STATE_LAUNCH)
+            //else if (GetRoom().CustomProperties["gState"].ToString() == RoomStates.LAUNCH)
             //{
             //    if (GetIsMasterClient())
             //    {
@@ -1112,7 +1210,7 @@ namespace Enigma.CoreSystems
             //    }
             //}
             //If the room state is currently in play state
-            else if (GetRoom().CustomProperties["gState"].ToString() == ROOM_STATE_PLAY)
+            else if (GetRoom().CustomProperties[RoomPropertyOptions.GAME_STATE].ToString() == RoomStates.PLAY)
             {
 
             }
@@ -1140,42 +1238,42 @@ namespace Enigma.CoreSystems
             if (GetInRoom())
             {
                 ExitGames.Client.Photon.Hashtable roomProperties = GetRoom().CustomProperties;
-                if (roomProperties["gState"] != null)
+                if (roomProperties[RoomPropertyOptions.GAME_STATE] != null)
                 {
-                    if (roomProperties["gState"].ToString() == ROOM_STATE_READY)
+                    if (roomProperties[RoomPropertyOptions.GAME_STATE].ToString() == RoomStates.READY)
                     {
-                        if (playerProperties["plGState"] != null)
+                        if (playerProperties[PlayerPropertyOptions.PLAYER_STATE] != null)
                         {
-                            if (playerProperties["plGState"].ToString() == "spawn")
+                            if (playerProperties[PlayerPropertyOptions.PLAYER_STATE].ToString() == PlayerStates.SPAWN)
                             {
                                 //                            if (SpawnPlayerCharacter != null) 
                                 //								SpawnPlayerCharacter(player);
                             }
-                            else if (playerProperties["plGState"].ToString() == "created")
+                            else if (playerProperties[PlayerPropertyOptions.PLAYER_STATE].ToString() == PlayerStates.CREATED)
                             {
-                                if (playerProperties["health"] != null)
+                                if (playerProperties[PlayerPropertyOptions.HEALTH] != null)
                                 {
                                     if (SetHealth != null)
-                                        SetHealth(player, (int)playerProperties["health"]);
+                                        SetHealth(player, (int)playerProperties[PlayerPropertyOptions.HEALTH]);
                                 }
 
                                 if (EnableReadyUI != null)
                                     EnableReadyUI();
                             }
-                            else if (playerProperties["plGState"].ToString() == "ready")
+                            else if (playerProperties[PlayerPropertyOptions.PLAYER_STATE].ToString() == PlayerStates.READY)
                             {
                                 if (GetIsMasterClient())
                                     CountNumberOfReadyPlayers();
                             }
                         }
                     }
-                    else if (roomProperties["gState"].ToString() == ROOM_STATE_SYNC)
+                    else if (roomProperties[RoomPropertyOptions.GAME_STATE].ToString() == RoomStates.SYNC)
                     {
                         //A player synced properly in the Combat scene
-                        if ((playerProperties["plGState"] != null) && (playerProperties["plGState"].ToString() == "sync"))
+                        if ((playerProperties[PlayerPropertyOptions.PLAYER_STATE] != null) && (playerProperties[PlayerPropertyOptions.PLAYER_STATE].ToString() == "sync"))
                             CountNumberOfSyncPlayers();
                     }
-                    else if (roomProperties["gState"].ToString() == ROOM_STATE_PLAY)
+                    else if (roomProperties[RoomPropertyOptions.GAME_STATE].ToString() == RoomStates.PLAY)
                     {
                         checkPlayerPropertiesOnPlay(player, playerProperties);
                     }
@@ -1191,42 +1289,41 @@ namespace Enigma.CoreSystems
             Debug.Log("NetworkManager::OnPhotonCustomRoomPropertiesChanged-> Room Properties that changed: " + propertiesThatChanged.ToStringFull());     
 
             //Room state changes
-            if (propertiesThatChanged.ContainsKey("gState"))
+            if (propertiesThatChanged.ContainsKey(RoomPropertyOptions.GAME_STATE))
             {
-                if (propertiesThatChanged["gState"].ToString() == ROOM_STATE_READY)
+                if (propertiesThatChanged[RoomPropertyOptions.GAME_STATE].ToString() == RoomStates.READY)
                 {
                     //Load stuff here...
                     //if (SpawnPlayerCharacterTesting != null) SpawnPlayerCharacterTesting();
                 }
-                else if (propertiesThatChanged["gState"].ToString() == ROOM_STATE_SYNC)
+                else if (propertiesThatChanged[RoomPropertyOptions.GAME_STATE].ToString() == RoomStates.SYNC)
                 {
                     //Master sends sync message here...
                     if (GetIsMasterClient())
-                    {
                         NetworkManager.SendNotifyClientsToSendPlayerInfoMessage();
-                    }
                 }
-                else if (propertiesThatChanged["gState"].ToString() == ROOM_STATE_LAUNCH)
+                else if (propertiesThatChanged[RoomPropertyOptions.GAME_STATE].ToString() == RoomStates.LAUNCH)
                 {
                     //Master sets the start photon timer here...
                     if (GetIsMasterClient())
                     {
                         Hashtable startTimeProp = new Hashtable();
-                        startTimeProp.Add("st", GetPhotonTime());
+                        startTimeProp.Add(RoomPropertyOptions.START_COUNT_DOWN_TIMER, GetPhotonTime());
                         SetRoomCustomProperties(startTimeProp);
                     }
                 }
-                else if (propertiesThatChanged["gState"].ToString() == ROOM_STATE_PLAY)
+                else if (propertiesThatChanged[RoomPropertyOptions.GAME_STATE].ToString() == RoomStates.PLAY)
                 {
 
                 }
             }
 
-            if (propertiesThatChanged.ContainsKey("st"))
+            if (propertiesThatChanged.ContainsKey(RoomPropertyOptions.START_COUNT_DOWN_TIMER))
             {
                 //Begin timer here
-                Debug.Log("Start time: " + (double)propertiesThatChanged["st"]);
-                if (StartCountdownTimer != null) StartCountdownTimer((double)propertiesThatChanged["st"]);
+                Debug.Log("Start time: " + (double)propertiesThatChanged[RoomPropertyOptions.START_COUNT_DOWN_TIMER]);
+                if (StartCountdownTimer != null)
+                    StartCountdownTimer((double)propertiesThatChanged[RoomPropertyOptions.START_COUNT_DOWN_TIMER]);
             }
 
             if (propertiesThatChanged.ContainsKey("teamOneIndexes") || propertiesThatChanged.ContainsKey("teamTwoIndexes"))
@@ -1325,7 +1422,7 @@ namespace Enigma.CoreSystems
                     PhotonView playerPhotonView = PhotonView.Find(playerPhotonViewId);
 
                     Hashtable playerSyncProp = new Hashtable();
-                    playerSyncProp.Add("plGState", "sync");
+                    playerSyncProp.Add(PlayerPropertyOptions.PLAYER_STATE, PlayerStates.SYNC);
                     NetworkManager.SetOtherPlayerOnlineCustomProperties(playerPhotonView.owner, playerSyncProp);
                 }
             }
@@ -1344,13 +1441,13 @@ namespace Enigma.CoreSystems
 
             foreach (PhotonPlayer p in NetworkManager.GetPlayerList())
             {
-                System.Object playerGameStateProp = p.CustomProperties["plGState"];
+                System.Object playerGameStateProp = p.CustomProperties[PlayerPropertyOptions.PLAYER_STATE];
 
                 if (playerGameStateProp != null)
                 {
                     string playerGameState = playerGameStateProp.ToString();
 
-                    if (playerGameState == "ready")
+                    if (playerGameState == PlayerStates.READY)
                         numberOfPlayersReady++;
                 }
             }
@@ -1361,7 +1458,7 @@ namespace Enigma.CoreSystems
                 //if (OriginalMaster) PhotonNetwork.Disconnect();
 
                 Hashtable roomSyncProp = new Hashtable();
-                roomSyncProp.Add("gState", ROOM_STATE_SYNC);
+                roomSyncProp.Add(RoomPropertyOptions.GAME_STATE, RoomStates.SYNC);
                 SetRoomCustomProperties(roomSyncProp);
 
                 //TEST
@@ -1375,14 +1472,14 @@ namespace Enigma.CoreSystems
 
             foreach (PhotonPlayer p in NetworkManager.GetPlayerList())
             {
-                System.Object playerGameStateProp = p.CustomProperties["plGState"];
+                System.Object playerGameStateProp = p.CustomProperties[PlayerPropertyOptions.PLAYER_STATE];
 
                 if (playerGameStateProp != null)
                 {
                     string playerGameState = playerGameStateProp.ToString();
 
                     //if (playerGameState == "sync" || playerGameState == "launch")
-                    if (playerGameState == "sync")
+                    if (playerGameState == PlayerStates.SYNC)
                         numberOfPlayersSynced++;
                 }
             }
@@ -1397,7 +1494,7 @@ namespace Enigma.CoreSystems
                 if (GetIsMasterClient())
                 {
                     Hashtable roomLaunchProp = new Hashtable();
-                    roomLaunchProp.Add("gState", ROOM_STATE_LAUNCH);
+                    roomLaunchProp.Add(RoomPropertyOptions.GAME_STATE, RoomStates.LAUNCH);
                     SetRoomCustomProperties(roomLaunchProp);
                 }
 
@@ -1429,7 +1526,7 @@ namespace Enigma.CoreSystems
             Hashtable val = new Hashtable();
             //val.Add("room", "1");
             //FOR TESTing
-            val.Add("room", "2");
+            val.Add(TransactionKeys.ROOM, "2");
             //Transaction(WGO2Configs.EnterLobbyTransaction, val, EnterLobby);
         }
 
@@ -1438,14 +1535,15 @@ namespace Enigma.CoreSystems
         static public void EnterLobby(JSONNode response)
         {
             JSONNode response_hash = response[0];
-            string status = response_hash["status"].ToString().Trim('"');
+            string status = response_hash[TransactionKeys.STATUS].ToString().Trim('"');
             Debug.Log(response_hash);
 
-            if (status == "SUCCESS")
+            if (status == StatusOptions.SUCCESS)
             {
                 Instance.StartCoroutine(GetRoomDataCoroutine());
 
-                if (UpdateGamerooms != null) UpdateGamerooms();
+                if (UpdateGamerooms != null)
+                    UpdateGamerooms();
             }
         }
 
@@ -1455,10 +1553,10 @@ namespace Enigma.CoreSystems
         static public void LeaveChatLobby(JSONNode response)
         {
             JSONNode response_hash = response[0];
-            string status = response_hash["status"].ToString().Trim('"');
+            string status = response_hash[TransactionKeys.STATUS].ToString().Trim('"');
             Debug.Log(response_hash);
 
-            if (status == "SUCCESS")
+            if (status == StatusOptions.SUCCESS)
             {
                 Instance.StopAllCoroutines();
                 LobbyUserList.Clear();
@@ -1485,9 +1583,7 @@ namespace Enigma.CoreSystems
                     yield return new WaitForSeconds(2f);
                 }
                 else
-                {
                     yield return null;
-                }
             }
         }
 
@@ -1496,13 +1592,13 @@ namespace Enigma.CoreSystems
         static public void GetRoomData(JSONNode response)
         {
             JSONNode response_hash = response[0];
-            string status = response_hash["status"].ToString().Trim('"');
+            string status = response_hash[TransactionKeys.STATUS].ToString().Trim('"');
             Debug.Log(response_hash);
 
-            if (status == "SUCCESS")
+            if (status == StatusOptions.SUCCESS)
             {
-                JSONNode response_userlist = response_hash["list"];
-                JSONNode response_chat = response_hash["chat"];
+                JSONNode response_userlist = response_hash[TransactionKeys.LIST];
+                JSONNode response_chat = response_hash[TransactionKeys.CHAT];
 
                 //List of people in the lobby
                 _updatedLobbyUserList.Clear();
@@ -1511,13 +1607,14 @@ namespace Enigma.CoreSystems
 
                 for (int i = 0; i < response_userlist.Count; i++)
                 {
-                    _updatedLobbyUserList.Add(response_userlist[i]["user_login"].ToString().Trim('"'));
+                    _updatedLobbyUserList.Add(response_userlist[i][TransactionKeys.USER_LOGIN].ToString().Trim('"'));
                     //UPDATED_ROOM_LEVELLIST.Add(response_userlist[i]["level"].ToString().Trim('"'));
                 }
 
                 NetworkManager.CheckOtherPlayersJoinOrLeave();
 
-                if (UpdateGamerooms != null) UpdateGamerooms();
+                if (UpdateGamerooms != null)
+                    UpdateGamerooms();
             }
         }
 
@@ -1559,9 +1656,7 @@ namespace Enigma.CoreSystems
         static public IEnumerator LobbyPollCoroutine()
         {
             while (PhotonNetwork.insideLobby == true)
-            {
                 yield return new WaitForSeconds(5f);
-            }
         }
 
         //Coroutine for polling Lobby info (specifically room info)
@@ -1578,17 +1673,17 @@ namespace Enigma.CoreSystems
         private void checkPlayerPropertiesOnPlay(PhotonPlayer photonPlayer, ExitGames.Client.Photon.Hashtable playerProperties)
         {
             //A player's health was modified
-            if (playerProperties["health"] != null)
+            if (playerProperties[PlayerPropertyOptions.HEALTH] != null)
             {
-                Debug.Log(photonPlayer.NickName + ": " + (int)playerProperties["health"]);
-                Debug.Log("userPhotonViewId: " + (int)playerProperties["userPhotonViewId"]);
+                Debug.Log(photonPlayer.NickName + ": " + (int)playerProperties[PlayerPropertyOptions.HEALTH]);
+                Debug.Log("userPhotonViewId: " + (int)playerProperties[PlayerPropertyOptions.USER_PHOTON_VIEW_ID]);
 
                 if (ModifyHealth != null)
-                    ModifyHealth(photonPlayer, (int)playerProperties["health"]/*, (int)playerProperties["userPhotonViewId"]*/);
+                    ModifyHealth(photonPlayer, (int)playerProperties[PlayerPropertyOptions.HEALTH]/*, (int)playerProperties["userPhotonViewId"]*/);
 
                 if (GetIsMasterClient())
                 {
-                    if ((int)playerProperties["health"] <= 0)
+                    if ((int)playerProperties[PlayerPropertyOptions.HEALTH] <= 0)
                     {
                         Debug.Log(photonPlayer.NickName + " is dead...");
                         //CheckIfTeamLost((WGO2Enums.Faction)photonPlayer.CustomProperties["faction"]);

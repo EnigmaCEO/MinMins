@@ -860,6 +860,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _levelsGridContent: {fileID: 0}
+  _ratingsForArena: f401000058020000bc0200002003000084030000e8030000
 --- !u!4 &1870440657
 Transform:
   m_ObjectHideFlags: 0
@@ -1182,7 +1183,7 @@ PrefabInstance:
     - target: {fileID: 3097089673593597773, guid: d574c84e3c192a84ca40feb1564d5cf5,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.000073194504
+      value: 0.0000121593475
       objectReference: {fileID: 0}
     - target: {fileID: 3096280726558844107, guid: d574c84e3c192a84ca40feb1564d5cf5,
         type: 3}

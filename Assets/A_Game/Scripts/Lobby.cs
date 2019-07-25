@@ -18,8 +18,7 @@ public class Lobby : MonoBehaviour
         _waitingPopUp.SetActive(false);
 
         setDelegates();
-        NetworkManager.Connect(_isOffline); //No need to call JoinLobby as Auto-Join Lobby is true in PhotonServerSettings
-        //NetworkManager.SetCustomProperty(GameInventory.RATING_KEY, GameInventory.Instance.GetRating()); 
+        NetworkManager.Connect(_isOffline); //No need to call JoinLobby as Auto-Join Lobby is true in PhotonServerSettings 
     }
 
     void Update()
@@ -39,26 +38,26 @@ public class Lobby : MonoBehaviour
 
     private void setDelegates()
     {
-        NetworkManager.UpdateGameRooms += UpdateRoomGrid;
-        NetworkManager.UpdateRoomList += UpdateRoomPlayers;
+        //NetworkManager.UpdateGameRooms += UpdateRoomGrid;
+        //NetworkManager.UpdateRoomList += UpdateRoomPlayers;
 
         NetworkManager.OnJoinedLobbyCallback += onJoinedLobby;
-        NetworkManager.OnLeftLobbyCallback += onLeftLobby;
+        //NetworkManager.OnLeftLobbyCallback += onLeftLobby;
         NetworkManager.OnJoinedRoomCallback += onJoinedRoom;
-        NetworkManager.OnLeftRoomCallback += onLeftRoom;
+        //NetworkManager.OnLeftRoomCallback += onLeftRoom;
         NetworkManager.OnPhotonPlayerConnectedCallback += onPlayerConnected;
         NetworkManager.OnPhotonPlayerDisconnectedCallback += onPlayerDisconnected;
     }
 
     private void removeDelegates()
     {
-        NetworkManager.UpdateGameRooms -= UpdateRoomGrid;
-        NetworkManager.UpdateRoomList -= UpdateRoomPlayers;
+        //NetworkManager.UpdateGameRooms -= UpdateRoomGrid;
+        //NetworkManager.UpdateRoomList -= UpdateRoomPlayers;
 
         NetworkManager.OnJoinedLobbyCallback -= onJoinedLobby;
-        NetworkManager.OnLeftLobbyCallback -= onLeftLobby;
+        //NetworkManager.OnLeftLobbyCallback -= onLeftLobby;
         NetworkManager.OnJoinedRoomCallback -= onJoinedRoom;
-        NetworkManager.OnLeftRoomCallback -= onLeftRoom;
+        //NetworkManager.OnLeftRoomCallback -= onLeftRoom;
         NetworkManager.OnPhotonPlayerConnectedCallback -= onPlayerConnected;
         NetworkManager.OnPhotonPlayerDisconnectedCallback -= onPlayerDisconnected;
     }
@@ -68,20 +67,20 @@ public class Lobby : MonoBehaviour
         handleRoomCreationAndJoin();
     }
 
-    private void onLeftLobby()
-    {
+    //private void onLeftLobby()
+    //{
 
-    }
+    //}
 
     private void onJoinedRoom()
     {
         _waitingPopUp.SetActive(true);
     }
 
-    private void onLeftRoom()
-    {
+    //private void onLeftRoom()
+    //{
 
-    }
+    //}
 
     private void onPlayerConnected(PhotonPlayer player)
     {
@@ -103,7 +102,10 @@ public class Lobby : MonoBehaviour
         else
         {
             GameInventory gameInventory = GameInventory.Instance;
+            GameNetwork gameNetwork = GameNetwork.Instance;
             bool foundRoom = false;
+
+            int thisPlayerRating = gameNetwork.GetRating();
 
             int roomsCount = rooms.Length;
             for (int i = 0; i < roomsCount; i++)
@@ -113,10 +115,9 @@ public class Lobby : MonoBehaviour
                 if (room.IsOpen)
                 {
                     PhotonPlayer[] playerList = NetworkManager.GetPlayerList();
-                    int playerInRoomRating = (int)playerList[0].CustomProperties[GameInventory.RATING_KEY];
-                    // int thisPlayerRating = gameInventory.GetRating();
-
-                    //if (Mathf.Abs(playerInRoomRating - thisPlayerRating) <= _maxRatingDifferenceToFight)
+                    int playerInRoomRating = (int)playerList[0].CustomProperties[GameNetwork.PlayerCustomProperties.RATING];
+                    
+                    if (Mathf.Abs(playerInRoomRating - thisPlayerRating) <= _maxRatingDifferenceToFight)
                     {
                         NetworkManager.JoinRoom(room.Name);
                         NetworkManager.GetRoom().IsOpen = false;
@@ -164,12 +165,12 @@ public class Lobby : MonoBehaviour
         playerList.Add(NetworkManager.GetPlayerName());
 
         Hashtable customProps = new Hashtable();
-        customProps.Add("playerList", playerList.ToArray());
-        customProps.Add("host", NetworkManager.GetPlayerName());
+        customProps.Add(NetworkManager.RoomPropertyOptions.PLAYER_LIST, playerList.ToArray());
+        customProps.Add(NetworkManager.RoomPropertyOptions.HOST, NetworkManager.GetPlayerName());
 
-        customProps.Add("mp", _maxPlayers);
+        customProps.Add(NetworkManager.RoomPropertyOptions.MAX_PLAYERS, _maxPlayers);
 
-        string[] customPropsForLobby = new string[] { "playerList", "host" };
+        string[] customPropsForLobby = new string[] { NetworkManager.RoomPropertyOptions.PLAYER_LIST, NetworkManager.RoomPropertyOptions.HOST };
 
         NetworkManager.CreateRoom(roomName, true, true, _maxPlayers, customProps, customPropsForLobby, _maxPlayersNotExpectating);
     }
@@ -187,35 +188,5 @@ public class Lobby : MonoBehaviour
     private void UpdateRoomPlayers()
     {
 
-    }
-
-    // Helper Functions
-    public void SetValue(string key, string val)
-    {
-        NetworkManager.SetUserInfo(key, val);
-    }
-
-    public void SetValue(string key, string[] val)
-    {
-        string value = "";
-        if (val.Length == 0)
-            value = Json.Encode(val);
-
-        NetworkManager.SetUserInfo(key, value);
-    }
-
-    public string GetValue(string key, string defaultValue = "")
-    {
-        return NetworkManager.GetUserInfo(key, defaultValue);
-    }
-
-    public string[] GetValueArray(string key, string[] defaultValue = null)
-    {
-        string value = NetworkManager.GetUserInfo(key);
-
-        if ((value == "") && (defaultValue != null))
-            return defaultValue;
-        else
-            return Json.Decode<string[]>(value);
     }
 }
