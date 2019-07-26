@@ -609,10 +609,7 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
     public void HandlePlacementContentDismiss(TJPlacement placement)
     {
         print("HandlePlacementContentDismiss " + placement.ToString());
-
-        Hashtable hashtable = new Hashtable();
-        hashtable.Add("user", _tapJoyUserId);
-        NetworkManager.Transaction(NetworkManager.Transactions.COINS_EARNED, hashtable, onCoinsEarned);
+        NetworkManager.Transaction(NetworkManager.Transactions.COINS_EARNED, NetworkManager.TransactionKeys.USER, _tapJoyUserId, onCoinsEarned);
     }
 
     //public void HandleOnRewardRequest(TJPlacement placement, TJActionRequest request, string itemId, int quantity)
@@ -658,11 +655,11 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
             Debug.Log("onCoinsEarned: " + response.ToString());
 
             JSONNode response_hash = response[0];
-            string status = response_hash["status"].ToString().Trim('"');
+            string status = response_hash[NetworkManager.TransactionKeys.STATUS].ToString().Trim('"');
 
-            if (status == "SUCCESS")
+            if (status == NetworkManager.StatusOptions.SUCCESS)
             {
-                int coinsEarned = response_hash["coins"].AsInt;
+                int coinsEarned = response_hash[NetworkManager.TransactionKeys.COINS].AsInt;
                 if (OnCoinsEarned != null)
                 {
                     if(coinsEarned > 0)

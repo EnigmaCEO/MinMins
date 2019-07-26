@@ -43,6 +43,7 @@ namespace Enigma.CoreSystems
             public const string SEC = "sec";
             public const string USER_LOGIN = "user_login";
             public const string USER_DATA = "user_data";
+            public const string COINS = "coins";
         }
 
         public class EnjinTransKeys
@@ -262,13 +263,25 @@ namespace Enigma.CoreSystems
             return _game;
         }
 
-        static public void Transaction (int id, Hashtable val, Callback func = null, Callback local = null, TextureCallback texture = null)
+        static public void Transaction(int id, Callback externalCallback = null, Callback localCallback = null, TextureCallback texture = null)
         {
-            Debug.Log(Instance);
-            Instance.StartCoroutine (httpRequest (id, val, func, local, texture));
+            Instance.StartCoroutine(httpRequest(id, new Hashtable(), externalCallback, localCallback, texture));
         }
 
-        static private IEnumerator httpRequest (int id, Hashtable val, Callback func, Callback local, TextureCallback texture)
+        static public void Transaction(int id, string transactionKey, object transactionValue, Callback externalCallback = null, Callback localCallback = null, TextureCallback texture = null)
+        {
+            Hashtable hashtable = new Hashtable();
+            hashtable.Add(transactionKey, transactionValue);
+            Instance.StartCoroutine(httpRequest(id, hashtable, externalCallback, localCallback, texture));
+        }
+
+        static public void Transaction (int id, Hashtable hashtable, Callback externalCallback = null, Callback localCallback = null, TextureCallback texture = null)
+        {
+            Debug.Log(Instance);
+            Instance.StartCoroutine (httpRequest (id, hashtable, externalCallback, localCallback, texture));
+        }
+
+        static private IEnumerator httpRequest (int id, Hashtable hashtable, Callback externalCallback, Callback localCallback, TextureCallback texture)
         {
             string url = _serverUrl + "/trans/" + id + ".php";
             string sec = "";
@@ -278,7 +291,7 @@ namespace Enigma.CoreSystems
             if (_sessionID != null) 
                 formData.AddField (TransactionKeys.SSID, _sessionID);
             
-            foreach (DictionaryEntry pair in val)
+            foreach (DictionaryEntry pair in hashtable)
             {
                 Debug.Log (pair.Key + " " + pair.Value);
                 if (pair.Key.ToString() == TransactionKeys.IMAGE) 
@@ -309,10 +322,10 @@ namespace Enigma.CoreSystems
 
                 JSONNode response = JSON.Parse(www.error);
 
-                if (local != null) {
-                    local(response);
+                if (localCallback != null) {
+                    localCallback(response);
                 }
-                func(response);
+                externalCallback(response);
 
                 #if UNITY_ANDROID
                 EtceteraAndroid.showAlert ("Network Error", "Error connecting to the server. Restart the app and retry.", "OK");
@@ -325,14 +338,14 @@ namespace Enigma.CoreSystems
             }
             else
             {
-                if (func != null)
+                if (externalCallback != null)
                 {
                     JSONNode response = JSON.Parse (www.downloadHandler.text);
 
-                    if (local != null)
-                        local (response);
+                    if (localCallback != null)
+                        localCallback (response);
 
-                    func (response);
+                    externalCallback (response);
                 }
                 if (texture != null) 
                     texture (((DownloadHandlerTexture)www.downloadHandler).texture);
@@ -368,20 +381,20 @@ namespace Enigma.CoreSystems
             return hashString.PadLeft (32, '0');
         }
 
-        static public void Register(string userName, string password, string email, string ethAddress, string game, string bundleId, Callback func = null, Hashtable extras = null)
+        static public void Register(string userName, string password, string email, string ethAddress, string game, string bundleId, Callback callback = null, Hashtable extras = null)
         {
-            Hashtable val = new Hashtable();
+            Hashtable hashtable = new Hashtable();
 
-            val.Add(TransactionKeys.USERNAME, userName);
-            val.Add(TransactionKeys.PASSWORD, password);
-            val.Add(TransactionKeys.EMAIL, email);
-            val.Add(TransactionKeys.GAME, game);
-            val.Add(TransactionKeys.BUNDLE_ID, bundleId);
+            hashtable.Add(TransactionKeys.USERNAME, userName);
+            hashtable.Add(TransactionKeys.PASSWORD, password);
+            hashtable.Add(TransactionKeys.EMAIL, email);
+            hashtable.Add(TransactionKeys.GAME, game);
+            hashtable.Add(TransactionKeys.BUNDLE_ID, bundleId);
 
             if (extras != null)
-                val.Merge(extras);
+                hashtable.Merge(extras);
 
-            Transaction(Transactions.REGISTRATION, val, func, RegistrationResult);
+            Transaction(Transactions.REGISTRATION, hashtable, callback, RegistrationResult);
         }
 
         static private void RegistrationResult(JSONNode response)
@@ -396,16 +409,16 @@ namespace Enigma.CoreSystems
                 NetworkManager.SetSessionID(ssid);
         }
 
-        static public void Login (string user, string pw, Callback func = null, Hashtable extras = null)
+        static public void Login (string user, string pw, Callback callback = null, Hashtable extras = null)
         {
-            Hashtable val = new Hashtable ();
-            val.Add (TransactionKeys.USER, user);
-            val.Add (TransactionKeys.PW_HASH, pw);
+            Hashtable hashtable = new Hashtable ();
+            hashtable.Add (TransactionKeys.USER, user);
+            hashtable.Add (TransactionKeys.PW_HASH, pw);
 
             if (extras != null)
-                val.Merge (extras);
+                hashtable.Merge (extras);
 
-            Transaction (Transactions.LOGIN, val, func, LoginResult);
+            Transaction (Transactions.LOGIN, hashtable, callback, LoginResult);
         }
 
         static private void LoginResult (JSONNode response)
@@ -504,7 +517,7 @@ namespace Enigma.CoreSystems
                     yield return new WaitForSeconds(5f);
                 else
                 {
-                    NetworkManager.Transaction(Transactions.HEART_BEAT, new Hashtable(), onHeartBeat);
+                    NetworkManager.Transaction(Transactions.HEART_BEAT, onHeartBeat);
                     yield return new WaitForSeconds(300.0f);
                 }
             }

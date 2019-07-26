@@ -1,4 +1,5 @@
 ﻿using Enigma.CoreSystems;
+using SimpleJSON;
 using System.Collections;
 using System.Collections.Generic;
 using Tiny;
@@ -9,9 +10,18 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     [SerializeField] private int _ratingIncreaseOnWin = 30;
     [SerializeField] private int _ratingDecreaseOnLose = 15;
 
+    public delegate void OnHandleRatingChangeErrorDelegate(string message);
+    private OnHandleRatingChangeErrorDelegate _onHandleRatingChangeErrorCallback;
+
     public class Transactions
     {
-        public const int CHANGE_RATING = 1;
+        public const int CHANGE_RATING = 15;
+    }
+
+    public class TransactionKeys
+    {
+        public const string RATING_DELTA = "rating_delta";
+        public const string RATING = "rating";
     }
 
     public class PlayerCustomProperties
@@ -19,30 +29,48 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         public const string RATING = "Rating";
     }
 
-    public class TransactionKeys
+    public void HandleMatchResults(War.MatchResults results,  OnHandleRatingChangeErrorDelegate onHandleRatingChangeErrorCallback)
     {
-        public const string RATING = "Rating";
+        _onHandleRatingChangeErrorCallback = onHandleRatingChangeErrorCallback;
+
+        int ratingDelta = 0;
+        if (results == War.MatchResults.Win)
+            ratingDelta += _ratingIncreaseOnWin;
+        else if (results == War.MatchResults.Lose)
+            ratingDelta -= _ratingDecreaseOnLose;
+
+        NetworkManager.Transaction(Transactions.CHANGE_RATING, TransactionKeys.RATING_DELTA, ratingDelta, onChangeRating);
     }
 
-    private void handleMatchResults(War.MatchResults results)
+    private void onChangeRating(JSONNode response)
     {
-        int rating = GameNetwork.Instance.GetRating();
-        if (results == War.MatchResults.Win)
-            rating += _ratingIncreaseOnWin;
-        else if (results == War.MatchResults.Lose)
-            rating -= _ratingDecreaseOnLose;
+        if (response != null)
+        {
+            Debug.Log("onCoinsEarned: " + response.ToString());
 
-        //NetworkManager.Transaction() //TODO: Complete transaction to change rating and handle response
+            JSONNode response_hash = response[0];
+            string status = response_hash[NetworkManager.TransactionKeys.STATUS].ToString().Trim('"');
+
+            if (status == NetworkManager.StatusOptions.SUCCESS)
+            {
+                int updatedRating = response_hash[GameNetwork.TransactionKeys.RATING].AsInt;
+                SetRating(updatedRating);
+            }
+            else 
+                _onHandleRatingChangeErrorCallback("Server Error");
+        }
+        else
+            _onHandleRatingChangeErrorCallback("Connection Error");
     }
 
     public int GetRating()
     {
-        return int.Parse(GetValue(PlayerCustomProperties.RATING, "0"));
+        return (int)NetworkManager.GetCustomProperty(PlayerCustomProperties.RATING);
     }
 
     public void SetRating(int newRating)
     {
-        SetValue(PlayerCustomProperties.RATING, newRating.ToString());
+        NetworkManager.SetCustomProperty(PlayerCustomProperties.RATING, newRating);
     }
 
     public void SetValue(string key, string val)

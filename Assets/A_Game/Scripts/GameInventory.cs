@@ -12,7 +12,9 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     [SerializeField] private int _guaranteedUnitTierAmount = 1;
 
     [SerializeField] private char _parseSeparator = '|';
-    [SerializeField] private int _expToAddOnDuplicateUnit = 50;
+    [SerializeField] private int _expToAddOnDuplicateUnit = 10;
+
+    [SerializeField] private float _statIncrease = 0.1f;
 
     private const string _TEAM_1_GROUP_NAME = "Team1";
     private const string _LOOT_BOXES = "Lootboxes";
@@ -39,15 +41,12 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     [SerializeField] private float _tierSilver_GroupRarity = 0.3f;
     [SerializeField] private float _tierGold_GroupRarity = 0.2f;
 
+    [SerializeField] List<int> _experienceNeededPerUnitLevel = new List<int>() { 10, 20, 40, 80, 160 };
+
     private List<int> _tierSilver_units = new List<int>();
     private List<int> _tierGold_units = new List<int>();
 
     private List<UnitRarity> _unitSpecialRarities = new List<UnitRarity>();
-    //{
-    //    new UnitRarity(1, 0.1f), new UnitRarity(2, 0.1f), new UnitRarity(3, 0.1f), new UnitRarity(4, 0.1f), new UnitRarity(5, 0.1f),
-    //};
-
-    //[SerializeField] private List<int> _defaultRarityIndexes = new List<int>() { 1, 2/*, 3, 4, 5, 6, 7, 8, 9, 10*/ };  //test
 
 
 
@@ -84,25 +83,42 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         return InventoryManager.Instance.GetItem<int>(_STATS, _SINGLE_PLAYER_LEVEL);
     }
 
-    //public int GetRating()
-    //{
-    //    return InventoryManager.Instance.GetItem<int>(_STATS, RATING_KEY);
-    //}
+    public void AddExperienceToUnit(string unitName, int exp)
+    {
+        UnitStats unitStats = InventoryManager.Instance.GetItem<UnitStats>(_TEAM_1_GROUP_NAME, unitName);
+        unitStats.Exp += exp;
 
-    //public void ChangeRatingAmount(int amount, bool isAddition, bool shouldSave)
-    //{
-    //    int newRatingAmount = GetRating();
+        int unitLevel = unitStats.Level;
+        int unitExp = unitStats.Exp;
+        int levelsLenght = _experienceNeededPerUnitLevel.Count;
 
-    //    if (isAddition)
-    //        newRatingAmount += amount;
-    //    else
-    //        newRatingAmount -= amount;
+        for (int level = 1; level <= levelsLenght; level++)
+        {
+            int expNeeded = _experienceNeededPerUnitLevel[level - 1];
 
-    //    InventoryManager.Instance.UpdateItem(_STATS, RATING_KEY, newRatingAmount);
+            if (level == 5)
+            {
+                if (unitExp >= expNeeded)
+                    unitExp = expNeeded;
 
-    //    if (shouldSave)
-    //        saveRating();
-    //}
+                break;
+            }
+            else if (unitExp >= expNeeded)
+            {
+                unitStats.Level += 1;
+                unitStats.Strength = getStatIncrease(unitStats.Strength);
+                unitStats.Health = getStatIncrease(unitStats.Health);
+                unitStats.EffectScale = getStatIncrease(unitStats.EffectScale);
+                unitStats.Exp -= expNeeded;
+                break;
+            }
+        }
+    }
+
+    private int getStatIncrease(int value)
+    {
+        return Mathf.RoundToInt((float)value + (float)value * _statIncrease);
+    }
 
     public UnitStats GetUnitStats(string unitName)
     {
@@ -170,9 +186,8 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
             string unitName = lootBoxIndex.ToString();
             if (inventoryManager.HasItem(_TEAM_1_GROUP_NAME, unitName, false))
             {
-                UnitStats stats = inventoryManager.GetItem<UnitStats>(_TEAM_1_GROUP_NAME, unitName);
-                stats.Exp += _expToAddOnDuplicateUnit;
-                print("Added " + _expToAddOnDuplicateUnit + " exp to unit " + unitName + " for new exp of: " + stats.Exp);
+                AddExperienceToUnit(unitName, _expToAddOnDuplicateUnit);
+                print("Added " + _expToAddOnDuplicateUnit + " exp to unit " + unitName);
             }
             else
             {
