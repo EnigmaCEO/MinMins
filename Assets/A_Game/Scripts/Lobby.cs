@@ -26,7 +26,7 @@ public class Lobby : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             NetworkManager.LeaveLobby();
-            SceneManager.LoadScene("Login");
+            SceneManager.LoadScene(GameConstants.Scenes.MAIN);
         }
     }
 
@@ -136,7 +136,7 @@ public class Lobby : MonoBehaviour
     private void startMatch(PhotonMessageInfo messageInfo)
     {
         Debug.Log("startMatch -> sender nickname: " + messageInfo.sender.NickName);
-        SceneManager.LoadScene("War");
+        SceneManager.LoadScene(GameConstants.Scenes.WAR);
     }
 
     private void createAndJoinRoom()

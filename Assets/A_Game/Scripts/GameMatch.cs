@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class GameMatch : SingletonMonobehaviour<GameMatch>
 {
+    public class TeamNumbers
+    {
+        public const int TEAM_1 = 1;
+        public const int TEAM_2 = 2;
+    }
+
     public int TeamsAmount = 2;
     public int TeamSize = 6;
 
@@ -31,15 +37,15 @@ public class GameMatch : SingletonMonobehaviour<GameMatch>
 
     public int GetTeamSize(int teamNumber)
     {
-        return getTeam(teamNumber).Count;
+        return GetTeam(teamNumber).Count;
     }
 
     public UnitData GetUnit(int teamNumber, int unitIndex)
     {
-        return getTeam(teamNumber)[unitIndex];
+        return GetTeam(teamNumber)[unitIndex];
     }
 
-    private List<UnitData> getTeam(int teamNumber)
+    public List<UnitData> GetTeam(int teamNumber)
     {
         return _teams[teamNumber - 1];
     }

@@ -18,6 +18,6 @@ public class LevelGridItem : MonoBehaviour
     public void OnFightButtonDown()
     {
         if(name == "1")
-            SceneManager.LoadScene("UnitSelect");
+            SceneManager.LoadScene(GameConstants.Scenes.UNIT_SELECT);
     }
 }

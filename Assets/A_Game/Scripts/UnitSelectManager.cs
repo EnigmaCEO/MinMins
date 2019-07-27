@@ -139,7 +139,7 @@ public class UnitSelectManager : MonoBehaviour
 
     private void onNextButtonDown()
     {
-        SceneManager.LoadScene("WarPrep");
+        SceneManager.LoadScene(GameConstants.Scenes.WAR_PREP);
     }
 
     private void onBackButtonDown()

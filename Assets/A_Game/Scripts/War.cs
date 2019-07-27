@@ -1,16 +1,11 @@
-﻿using System.Collections;
+﻿using Enigma.CoreSystems;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class War : MonoBehaviour
 {
-    public enum MatchResults
-    {
-        Win,
-        Lose
-    }
-
     [HideInInspector] public bool Ready = true;
 
     [SerializeField] private Transform _teamGridContent;
@@ -20,6 +15,9 @@ public class War : MonoBehaviour
     [SerializeField] private float _battlefieldMovementDelay = 0.1f;
     [SerializeField] private float _battlefieldMovementTime = 1;
     [SerializeField] private iTween.EaseType _battlefieldMovementEaseType = iTween.EaseType.easeInOutExpo;
+
+    [SerializeField] private Text _errorText;
+    [SerializeField] private MatchResultsPopUp _matchResultsPopUp;
 
     private int _side = 0;
 
@@ -31,6 +29,8 @@ public class War : MonoBehaviour
     private string _attackingUnitName = "";
     private float _timer;
     private float _playTime;
+
+    private MatchData _matchData = new MatchData();
 
     // Use this for initialization
     void Awake()
@@ -61,7 +61,7 @@ public class War : MonoBehaviour
             Transform spriteTransform = unitTransform.Find("Sprite");
             spriteTransform.localPosition = new Vector2(unitData.Position.x, unitData.Position.y);
             WarUnit warUnit = spriteTransform.gameObject.AddComponent<WarUnit>();
-            warUnit.Unit = unit; 
+            warUnit.Unit = unit;
             warUnit.SetWar(this);
 
             GameObject shadow = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/UI/battle_shadow"));
@@ -105,8 +105,15 @@ public class War : MonoBehaviour
             shadow.transform.localScale = new Vector2(-1, 1);
         }
 
-        SetAttacks(_teamGrid);
-        SetAttacks(_enemyGrid);
+        setAttacks(_teamGrid);
+        setAttacks(_enemyGrid);
+    }
+
+    private void Start()
+    {
+        _errorText.gameObject.SetActive(false);
+        _matchResultsPopUp.gameObject.SetActive(false);
+        _matchData.PlayerId = NetworkManager.GetPlayerName();
     }
 
     // Update is called once per frame
@@ -198,10 +205,14 @@ public class War : MonoBehaviour
             _side = 1;
         else
             _side = 0;
-
     }
 
-    void SetAttacks(Transform val)
+    public void OnMatchResultsExitButtonDown()
+    {
+        SceneManager.LoadScene(GameConstants.Scenes.LEVELS);
+    }
+
+    private void setAttacks(Transform val)
     {
         for (int i = 0; i < val.childCount; i++)
         {
@@ -221,5 +232,53 @@ public class War : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void handleMatchResults(bool isVictory)
+    {
+        _matchResultsPopUp.SetValues(_matchData);
+        _matchResultsPopUp.Open();
+
+        GameNetwork.Instance.SendMatchResults(_matchData, onMatchResultsCallback);
+
+        foreach (Transform slot in _teamGridContent)
+        {
+            MinMinUnit minMin = slot.GetChild(0).GetComponent<MinMinUnit>();
+            UnitStats stats = minMin.Stats;
+
+            int expEarned = 0;
+            if (stats.Health > 0)
+            {
+                if (isVictory)
+                    expEarned = 10;
+                else
+                    expEarned = 5;
+            }
+
+            GameInventory.Instance.AddExperienceToUnit(minMin.name, expEarned);
+        }
+    }
+
+    private void onMatchResultsCallback(string message)
+    {
+        if (message == GameNetwork.ServerResponseMessages.SUCCESS)
+        {
+            _errorText.text = "";
+            _errorText.gameObject.SetActive(false);
+        }
+        else
+        {
+            _errorText.text = message;
+            _errorText.gameObject.SetActive(true);
+        }
+    }
+
+    public class MatchData
+    {
+        public string PlayerId = "";
+        public int DamageDealt = 0;
+        public int DamageReceived = 0;
+        public int UnitsKilled = 0;
+        public int MatchDuration = 0;
     }
 }

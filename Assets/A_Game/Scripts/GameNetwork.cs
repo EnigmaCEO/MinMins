@@ -7,11 +7,11 @@ using UnityEngine;
 
 public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 {
-    [SerializeField] private int _ratingIncreaseOnWin = 30;
-    [SerializeField] private int _ratingDecreaseOnLose = 15;
+    public delegate void OnSendResultsDelegate(string message);
+    private OnSendResultsDelegate _onSendResultsCallback;
+    private Hashtable _matchResultshashTable = new Hashtable();
 
-    public delegate void OnHandleRatingChangeErrorDelegate(string message);
-    private OnHandleRatingChangeErrorDelegate _onHandleRatingChangeErrorCallback;
+    [SerializeField] private float _retrySendingResultsDelay = 5;
 
     public class Transactions
     {
@@ -20,8 +20,19 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
     public class TransactionKeys
     {
-        public const string RATING_DELTA = "rating_delta";
         public const string RATING = "rating";
+        public const string PLAYER_ID = "player_id";
+        public const string UNITS_KILLED = "units_killed";
+        public const string DAMAGE_DEALT = "damage_dealt";
+        public const string DAMAGE_RECEIVED = "damage_received";
+        public const string MATCH_DURATION = "match_duration";
+    }
+
+    public class ServerResponseMessages
+    {
+        public const string SUCCESS = "Success";
+        public const string SERVER_ERROR = "Server Error";
+        public const string CONNECTION_ERROR = "Connection Error";
     }
 
     public class PlayerCustomProperties
@@ -29,24 +40,31 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         public const string RATING = "Rating";
     }
 
-    public void HandleMatchResults(War.MatchResults results,  OnHandleRatingChangeErrorDelegate onHandleRatingChangeErrorCallback)
+    public void SendMatchResults(War.MatchData matchData,  OnSendResultsDelegate onSendMatchResultsCallback)
     {
-        _onHandleRatingChangeErrorCallback = onHandleRatingChangeErrorCallback;
+        _onSendResultsCallback = onSendMatchResultsCallback;
 
-        int ratingDelta = 0;
-        if (results == War.MatchResults.Win)
-            ratingDelta += _ratingIncreaseOnWin;
-        else if (results == War.MatchResults.Lose)
-            ratingDelta -= _ratingDecreaseOnLose;
+        _matchResultshashTable.Clear();
+        _matchResultshashTable.Add(TransactionKeys.PLAYER_ID, matchData.PlayerId);
+        _matchResultshashTable.Add(TransactionKeys.MATCH_DURATION, matchData.MatchDuration);
+        _matchResultshashTable.Add(TransactionKeys.DAMAGE_DEALT, matchData.DamageDealt);
+        _matchResultshashTable.Add(TransactionKeys.DAMAGE_RECEIVED, matchData.DamageReceived);
+        _matchResultshashTable.Add(TransactionKeys.MATCH_DURATION, matchData.MatchDuration);
+        _matchResultshashTable.Add(TransactionKeys.UNITS_KILLED, matchData.UnitsKilled);
 
-        NetworkManager.Transaction(Transactions.CHANGE_RATING, TransactionKeys.RATING_DELTA, ratingDelta, onChangeRating);
+        performResultsSendingTransaction();
     }
 
-    private void onChangeRating(JSONNode response)
+    private void performResultsSendingTransaction()
+    {
+        NetworkManager.Transaction(Transactions.CHANGE_RATING, _matchResultshashTable, onSendMatchResults);
+    }
+
+    private void onSendMatchResults(JSONNode response)
     {
         if (response != null)
         {
-            Debug.Log("onCoinsEarned: " + response.ToString());
+            Debug.Log("onSendMatchResults -> response: " + response.ToString());
 
             JSONNode response_hash = response[0];
             string status = response_hash[NetworkManager.TransactionKeys.STATUS].ToString().Trim('"');
@@ -55,12 +73,25 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
             {
                 int updatedRating = response_hash[GameNetwork.TransactionKeys.RATING].AsInt;
                 SetRating(updatedRating);
+                _onSendResultsCallback(ServerResponseMessages.SUCCESS);
             }
-            else 
-                _onHandleRatingChangeErrorCallback("Server Error");
+            else
+            {
+                StartCoroutine(retryResultsSending());
+                _onSendResultsCallback(ServerResponseMessages.SERVER_ERROR);
+            }
         }
         else
-            _onHandleRatingChangeErrorCallback("Connection Error");
+        {
+            StartCoroutine(retryResultsSending());
+            _onSendResultsCallback(ServerResponseMessages.CONNECTION_ERROR);
+        }
+    }
+
+    private IEnumerator retryResultsSending()
+    {
+        yield return new WaitForSeconds(_retrySendingResultsDelay);
+        performResultsSendingTransaction();
     }
 
     public int GetRating()

@@ -59,6 +59,6 @@ public class WarPrepManager : MonoBehaviour
             gameMatch.GetUnit(1, i).Position = unitSpriteTransform.localPosition;
         }
 
-        SceneManager.LoadScene("War");
+        SceneManager.LoadScene(GameConstants.Scenes.WAR);
     }
 }

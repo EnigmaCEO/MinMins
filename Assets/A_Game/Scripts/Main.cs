@@ -23,6 +23,6 @@ public class Main : MonoBehaviour
 
     private void GoToLevels()
     {
-        SceneManager.LoadScene("Levels");
+        SceneManager.LoadScene(GameConstants.Scenes.LEVELS);
     }
 }
