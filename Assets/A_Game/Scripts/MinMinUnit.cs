@@ -17,4 +17,9 @@ public class MinMinUnit : MonoBehaviour
     public int Effect;
     public Types Type;
     public int[] Attacks;
+
+    public bool IsAlive
+    {
+        get { return (Stats.Health > 0); }
+    }
 }

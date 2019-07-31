@@ -27,8 +27,6 @@ namespace Enigma.CoreSystems
             public const string IMAGE_UPLOAD = "imageUpload";
             public const string BUNDLE_ID = "bundle_id";
             public const string GAME = "game";
-            public const string IP = "ip";
-            public const string COUNTRY = "country";
             public const string USERNAME = "userName";
             public const string PASSWORD = "password";
             public const string EMAIL = "email";
@@ -142,6 +140,8 @@ namespace Enigma.CoreSystems
         static private bool _stopGetRoomData = true;
 
         static public bool OriginalMaster = false;
+        static public string Ip;
+        static public string Country;
 
         static private GameObject _localPlayerCharacter;
 
@@ -322,9 +322,9 @@ namespace Enigma.CoreSystems
 
                 JSONNode response = JSON.Parse(www.error);
 
-                if (localCallback != null) {
+                if (localCallback != null) 
                     localCallback(response);
-                }
+                
                 externalCallback(response);
 
                 #if UNITY_ANDROID
@@ -458,37 +458,6 @@ namespace Enigma.CoreSystems
             }
         }
 
-        static public string GetUserInfo (string val, string defaultValue = "")
-        {
-            if (!NetworkManager.Data.ContainsKey(DataGroups.INFO))
-                return "";
-
-            if (!NetworkManager.Data[DataGroups.INFO].ContainsKey(DataKeys.USER))
-                return "";
-
-            Hashtable userData = NetworkManager.Data [DataGroups.INFO][DataKeys.USER] as Hashtable;
-
-                if (userData[val] == null)
-                    return defaultValue;
-
-                return userData [val].ToString ().Trim ('"');
-        }
-
-        static public void SetUserInfo (string val, string text)
-        {
-            if (!NetworkManager.Data.ContainsKey (DataGroups.INFO))
-                NetworkManager.Data.Add (DataGroups.INFO, new Hashtable ());
-
-            if (!NetworkManager.Data [DataGroups.INFO].ContainsKey (DataKeys.USER))
-                NetworkManager.Data [DataGroups.INFO].Add (DataKeys.USER, new Hashtable ());
-
-            Hashtable userData = NetworkManager.Data [DataGroups.INFO] [DataKeys.USER] as Hashtable;
-            if (!userData.ContainsKey (val))
-                userData.Add (val, text);
-            else
-                userData [val] = text;
-        }
-
         static public void LoadImageFromUrl(string url, Image image, ImageCallback callback = null)
         {
             Instance.StartCoroutine(loadImageFromUrlCoroutine(url, image, callback));
@@ -539,8 +508,7 @@ namespace Enigma.CoreSystems
             PhotonNetwork.ConnectUsingSettings(_PHOTON_CONNECTION_GAME_VERSION_SETTINGS);
             PhotonNetwork.logLevel = PhotonLogLevel.Full;
             PhotonNetwork.offlineMode = isOffline;
-            PhotonView photonView = PhotonView.Get(Instance);
-            photonView.viewID = 1;
+            GetLocalPhotonView().viewID = 1;
         }
 
         static public void Disconnect()
@@ -555,11 +523,10 @@ namespace Enigma.CoreSystems
 
         static public void SendRPC(string methodName, PhotonTargets target, params object[] parameters)
         {
-            PhotonView photonView = PhotonView.Get(Instance);
-            photonView.RPC(methodName, target, parameters);
+            GetLocalPhotonView().RPC(methodName, target, parameters);
         }
 
-        static public bool GetPhotonOfflineMode()
+        static public bool IsPhotonOffline()
         {
             return PhotonNetwork.offlineMode;
         }
@@ -613,18 +580,16 @@ namespace Enigma.CoreSystems
             ExitGames.Client.Photon.Hashtable photonHTable = new ExitGames.Client.Photon.Hashtable();
 
             foreach (DictionaryEntry pair in customRoomProperties)
-            {
                 photonHTable.Add(pair.Key, pair.Value);
-            }
 
             _maxPlayersNotSpectating = maxPlayersNotExpectating;
 
             RoomOptions options = new RoomOptions();
-            options.isVisible = isVisible;
-            options.isOpen = isOpen;
-            options.maxPlayers = (byte)maxPlayers;
-            options.customRoomProperties = photonHTable;
-            options.customRoomPropertiesForLobby = propsToListInLobby;
+            options.IsVisible = isVisible;
+            options.IsOpen = isOpen;
+            options.MaxPlayers = (byte)maxPlayers;
+            options.CustomRoomProperties = photonHTable;
+            options.CustomRoomPropertiesForLobby = propsToListInLobby;
 
             SetCreatingOrJoinRoom(true);
 
@@ -673,14 +638,14 @@ namespace Enigma.CoreSystems
         //Get number of players in the room
         static public int GetPlayerCount()
         {
-            return PhotonNetwork.room.playerCount;
+            return PhotonNetwork.room.PlayerCount;
         }
 
         //Get the max number of players that can
         //be in the room
         static public int GetMaxPlayers()
         {
-            return PhotonNetwork.room.maxPlayers;
+            return PhotonNetwork.room.MaxPlayers;
         }
 
         //Set the user's player name in Photon Network
@@ -731,12 +696,21 @@ namespace Enigma.CoreSystems
             return PhotonNetwork.isMasterClient;
         }
 
+        static public bool GetIsMasterClientOrDisconnected()
+        {
+            return (!NetworkManager.GetConnected() || GetIsConnectedAndMasterClient());
+        }
+
+        static public bool GetIsConnectedAndMasterClient()
+        {
+            return (NetworkManager.GetConnected() && NetworkManager.GetIsMasterClient());
+        }
+
         //Get the list of players in the room, including
         //the user
         static public PhotonPlayer[] GetPlayerList()
         {
             return PhotonNetwork.playerList;
-
         }
 
         //Get the list of players in the room, excluding
@@ -769,51 +743,38 @@ namespace Enigma.CoreSystems
             CreatingOrJoinRoom = creatingOrJoinRoom;
         }
 
-        static public void SetPlayerCustomProperty(string key, string value, PhotonView photonView)
+        static public void SetAnyPlayerCustomProperty(string key, string value, PhotonView photonView)
         {
-            if (GetPhotonOfflineMode())
-                SetPlayerOfflineCustomProperty(key, value, photonView);
+            if (IsPhotonOffline())
+                setAnyPlayerOfflineCustomProperty(key, value, photonView);
             else
-                SetPlayerOnlineCustomProperty(key, value, photonView.owner);
+                setAnyPlayerOnlineCustomProperty(key, value, photonView.owner);
         }
 
-        static public string GetPlayerCustomProperty(string key, PhotonView photonView)
+        static public string GetAnyPlayerCustomProperty(string key, PhotonView photonView)
         {
-            if (GetPhotonOfflineMode())
-                return GetPlayerOfflineCustomProperty(key, photonView);
+            if (IsPhotonOffline())
+                return getAnyPlayerOfflineCustomProperty(key, photonView);
             else
-                return GetPlayerOnlineCustomProperty(key, photonView.owner);
+                return getAnyPlayerOnlineCustomProperty(key, photonView.owner);
         }
 
-        static public void SetCustomProperty(object key, object value)
+        static public void SetLocalPlayerCustomProperty(string key, string value)
         {
-            Hashtable val = new Hashtable();
-            val.Add(key, value);
-            SetCustomProperties(val);
+            if (IsPhotonOffline())
+                setLocalPlayerOfflineCustomProperty(key, value);
+            else
+                setLocalPlayerOnlineCustomProperty(key, value);
         }
 
-        //Set player custom properties 
-        static public void SetCustomProperties(Hashtable systemHTable)
+        static public string GetLocalPlayerCustomProperty(string key)
         {
-            ExitGames.Client.Photon.Hashtable photonHTable = new ExitGames.Client.Photon.Hashtable();
+            PhotonView photonView = GetLocalPhotonView();
 
-            foreach (DictionaryEntry pair in systemHTable)
-            {
-                photonHTable.Add(pair.Key, pair.Value);
-            }
-
-            PhotonNetwork.player.SetCustomProperties(photonHTable);
-        }
-
-        static public object GetCustomProperty(string key)
-        {
-            return GetCustomProperties()[key];
-        }
-
-        //Return player custom properties
-        static public ExitGames.Client.Photon.Hashtable GetCustomProperties()
-        {
-            return PhotonNetwork.player.customProperties;
+            if (IsPhotonOffline())
+                return getLocalPlayerOfflineCustomProperty(key);
+            else
+                return getLocalPlayerOnlineCustomProperty(key);
         }
 
         /// <summary>
@@ -822,24 +783,14 @@ namespace Enigma.CoreSystems
         /// <param name="key">Key for the property</param>
         /// <param name="value">Value for the property</param>
         /// <param name="player">Player.</param>
-        static public void SetPlayerOnlineCustomProperty(object key, object value, PhotonPlayer player)
+        static private void setAnyPlayerOnlineCustomProperty(object key, object value, PhotonPlayer player)
         {
             Hashtable properties = new Hashtable();
             properties.Add(key, value);
 
-            SetPlayerOnlineCustomProperties(properties, player);
-        }
-
-        /// <summary>
-        /// Sets a player's custom properties in online mode
-        /// </summary>
-        /// <param name="systemHTable">System H table.</param>
-        /// <param name="player">Player.</param>
-        static public void SetPlayerOnlineCustomProperties(Hashtable systemHTable, PhotonPlayer player)
-        {
             ExitGames.Client.Photon.Hashtable photonHTable = new ExitGames.Client.Photon.Hashtable();
 
-            foreach (DictionaryEntry pair in systemHTable)
+            foreach (DictionaryEntry pair in properties)
                 photonHTable.Add(pair.Key, pair.Value);
 
             if (player != null)
@@ -851,14 +802,26 @@ namespace Enigma.CoreSystems
         /// </summary>
         /// <param name="key">Key.</param>
         /// <param name="value">Value.</param>
-        static public void SetPlayerOfflineCustomProperty(string key, string value)
+        static private void setLocalPlayerOfflineCustomProperty(string key, string value)
         {
-            SetUserInfo(key, value);
+            setAnyPlayerOfflineCustomProperty(key, value, GetLocalPhotonView());
         }
 
-        static public void SetPlayerOfflineCustomProperty(string key, string value, PhotonView photonView)
+        static private void setAnyPlayerOfflineCustomProperty(string key, string value, PhotonView photonView)
         {
-            SetUserInfo(photonView.viewID.ToString() + "_" + key, value);
+            string val = photonView.viewID.ToString() + "_" + key;
+
+            if (!Data.ContainsKey(DataGroups.INFO))
+                Data.Add(DataGroups.INFO, new Hashtable());
+
+            if (!Data[DataGroups.INFO].ContainsKey(DataKeys.USER))
+                Data[DataGroups.INFO].Add(DataKeys.USER, new Hashtable());
+
+            Hashtable userData = Data[DataGroups.INFO][DataKeys.USER] as Hashtable;
+            if (!userData.ContainsKey(val))
+                userData.Add(val, value);
+            else
+                userData[val] = value;
         }
 
         /// <summary>
@@ -867,7 +830,7 @@ namespace Enigma.CoreSystems
         /// <returns>The player custom property.</returns>
         /// <param name="key">Key.</param>
         /// <param name="player">Player.</param>
-        static public string GetPlayerOnlineCustomProperty(string key, PhotonPlayer player)
+        static private string getAnyPlayerOnlineCustomProperty(string key, PhotonPlayer player)
         {
             return player.CustomProperties[key].ToString();
         }
@@ -877,96 +840,55 @@ namespace Enigma.CoreSystems
         /// </summary>
         /// <returns>The player custom property.</returns>
         /// <param name="key">Key.</param>
-        static public string GetPlayerOfflineCustomProperty(string key)
+        static private string getLocalPlayerOfflineCustomProperty(string key)
         {
-            return GetUserInfo(key);
+            return getAnyPlayerOfflineCustomProperty(key, GetLocalPhotonView());
         }
 
-        static public string GetPlayerOfflineCustomProperty(string key, PhotonView photonView)
+        static private string getAnyPlayerOfflineCustomProperty(string key, PhotonView photonView)
         {
-            return GetUserInfo(photonView.viewID.ToString() + "_" + key);
+            //return GetUserInfo(photonView.viewID.ToString() + "_" + key);
+            string val = photonView.viewID.ToString() + "_" + key;
+
+            if (!Data.ContainsKey(DataGroups.INFO))
+                return "";
+
+            if (!Data[DataGroups.INFO].ContainsKey(DataKeys.USER))
+                return "";
+
+            Hashtable userData = Data[DataGroups.INFO][DataKeys.USER] as Hashtable;
+
+            return userData[val].ToString().Trim('"');
         }
 
         //Set player custom property
-        static public void SetLocalPlayerOnlineCustomProperty(object key, object value)
+        static private void setLocalPlayerOnlineCustomProperty(object key, object value)
         {
             Hashtable systemHTable = new Hashtable() { { key, value } };
-            SetLocalPlayerOnlineCustomProperties(systemHTable);
+            setLocalPlayerOnlineCustomProperties(systemHTable);
         }
 
         //Set player custom properties 
-        static public void SetLocalPlayerOnlineCustomProperties(Hashtable systemHTable)
+        static private void setLocalPlayerOnlineCustomProperties(Hashtable systemHTable)
         {
             ExitGames.Client.Photon.Hashtable photonHTable = new ExitGames.Client.Photon.Hashtable();
 
             foreach (DictionaryEntry pair in systemHTable)
-            {
                 photonHTable.Add(pair.Key, pair.Value);
-            }
 
             PhotonNetwork.player.SetCustomProperties(photonHTable);
         }
 
-        //Return player custom properties
-        static public ExitGames.Client.Photon.Hashtable GetPlayerOnlineCustomProperties()
+        static private string getLocalPlayerOnlineCustomProperty(object key)
         {
-            return PhotonNetwork.player.customProperties;
-        }
-
-        ///<summary>
-        /// Set another player's custom property
-        /// </summary>
-        static public void SetOtherPlayerOnlineCustomProperty(PhotonPlayer otherPlayer, object key, object value)
-        {
-            Hashtable systemHTable = new Hashtable() { { key, value } };
-            SetOtherPlayerOnlineCustomProperties(otherPlayer, systemHTable);
-        }
-
-        ///<summary>
-        /// Set another player's custom properties
-        /// </summary>
-        static public void SetOtherPlayerOnlineCustomProperties(PhotonPlayer otherPlayer, Hashtable systemHTable)
-        {
-            ExitGames.Client.Photon.Hashtable photonHTable = new ExitGames.Client.Photon.Hashtable();
-
-            foreach (DictionaryEntry pair in systemHTable)
-            {
-                photonHTable.Add(pair.Key, pair.Value);
-            }
-
-            otherPlayer.SetCustomProperties(photonHTable);
-        }
-
-        ///<summary>
-        /// Set another player's custom properties with expected values
-        /// </summary>
-        static public void SetOtherPlayerOnlineCustomProperties(PhotonPlayer otherPlayer, Hashtable systemHTable, Hashtable expectedHTable)
-        {
-            ExitGames.Client.Photon.Hashtable photonHTable = new ExitGames.Client.Photon.Hashtable();
-
-            foreach (DictionaryEntry pair in systemHTable)
-            {
-                photonHTable.Add(pair.Key, pair.Value);
-            }
-
-            ExitGames.Client.Photon.Hashtable photonExpectedHTable = new ExitGames.Client.Photon.Hashtable();
-
-            foreach (DictionaryEntry pair in expectedHTable)
-            {
-                photonExpectedHTable.Add(pair.Key, pair.Value);
-            }
-
-            otherPlayer.SetCustomProperties(photonHTable, photonExpectedHTable);
+            return PhotonNetwork.player.CustomProperties[key].ToString();
         }
 
         //Helper for testing
         static public void ReadPlayerList(PhotonPlayer[] playerList)
         {
             for (int i = 0; i < PhotonNetwork.playerList.Length; i++)
-            {
-                Debug.Log(string.Format("Player {0}: ", i + 1) + playerList[i].name);
-            }
-
+                Debug.Log(string.Format("Player {0}: ", i + 1) + playerList[i].NickName);
         }
 
         ///<summary>
@@ -986,9 +908,7 @@ namespace Enigma.CoreSystems
             ExitGames.Client.Photon.Hashtable photonHTable = new ExitGames.Client.Photon.Hashtable();
 
             foreach (DictionaryEntry pair in systemHTable)
-            {
                 photonHTable.Add(pair.Key, pair.Value);
-            }
 
             PhotonNetwork.room.SetCustomProperties(photonHTable);
         }
@@ -1001,16 +921,12 @@ namespace Enigma.CoreSystems
             ExitGames.Client.Photon.Hashtable photonHTable = new ExitGames.Client.Photon.Hashtable();
 
             foreach (DictionaryEntry pair in systemHTable)
-            {
                 photonHTable.Add(pair.Key, pair.Value);
-            }
 
             ExitGames.Client.Photon.Hashtable photonExpectedHTable = new ExitGames.Client.Photon.Hashtable();
 
             foreach (DictionaryEntry pair in expectedHTable)
-            {
                 photonExpectedHTable.Add(pair.Key, pair.Value);
-            }
 
             PhotonNetwork.room.SetCustomProperties(photonHTable, photonExpectedHTable);
         }
@@ -1026,10 +942,16 @@ namespace Enigma.CoreSystems
             return PhotonNetwork.InstantiateSceneObject(prefab, vec, quat, group, null);
         }
 
+        static public PhotonView GetLocalPhotonView()
+        {
+            return PhotonView.Get(Instance);
+        }
+
         //Get PhotonView of network object
         static public PhotonView GetPhotonView(GameObject obj)
         {
-            if (obj != null) return PhotonView.Get(obj);
+            if (obj != null)
+                return PhotonView.Get(obj);
 
             return null;
         }
@@ -1056,7 +978,6 @@ namespace Enigma.CoreSystems
         static public IEnumerator PhotonDestroyWithDelayCoroutine(GameObject gameObj, float delay)
         {
             yield return new WaitForSeconds(delay);
-
             PhotonNetwork.Destroy(gameObj);
         }
 
@@ -1145,29 +1066,13 @@ namespace Enigma.CoreSystems
 
             string sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
 
-            //if (sceneName == "Combat")
-            //{
-            //    //Clear player faction info
-            //    Hashtable val = new Hashtable();
-            //    val.Add("faction", null);
-            //    NetworkManager.SetLocalPlayerOnlineCustomProperties(val);
-
-            //    SceneManager.LoadScene("Chat");
-            //}
-            //else if (sceneName == "Quest")
-            //{
-            //    NetworkManager.Disconnect();
-            //    //SceneManager.LoadScene("Login");
-            //    SceneManager.LoadScene("Origin");
-            //}
-
             if (OnLeftRoomCallback != null)
                 OnLeftRoomCallback();
         }
 
         void OnPhotonPlayerConnected(PhotonPlayer connectedPlayer)
         {
-            Debug.Log("NetworkManager::Player: " + connectedPlayer.name + " connected");
+            Debug.Log("NetworkManager::Player: " + connectedPlayer.NickName + " connected");
 
             //if (GetRoom().customProperties["gState"].ToString() == ROOM_STATE_STAGING)
 
@@ -1188,7 +1093,7 @@ namespace Enigma.CoreSystems
 
         void OnPhotonPlayerDisconnected(PhotonPlayer disconnectedPlayer)
         {
-            Debug.Log("NetworkManager::Player: " + disconnectedPlayer.name + " disconnected");
+            Debug.Log("NetworkManager::Player: " + disconnectedPlayer.NickName + " disconnected");
 
             string sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
 
@@ -1206,9 +1111,7 @@ namespace Enigma.CoreSystems
             else if (GetRoom().CustomProperties[RoomPropertyOptions.GAME_STATE].ToString() == RoomStates.SYNC)
             {
                 if (GetIsMasterClient())
-                {
                     SendNotifyClientsToSendPlayerInfoMessage();
-                }
 
                 //Debug.LogError("game state sync recount");
                 //CountNumberOfSyncPlayers();
@@ -1386,9 +1289,7 @@ namespace Enigma.CoreSystems
 
                 }
                 else
-                {
                     Debug.Log("PhotonNetwork.Friends is null");
-                }
             }
 
             if (OnUpdatedFriendListCallback != null)
@@ -1409,17 +1310,14 @@ namespace Enigma.CoreSystems
         //Master sends message to every client when everyone is ready to load
         static public void SendNotifyClientsToSendPlayerInfoMessage()
         {
-            PhotonView photonView = PhotonView.Get(Instance);
-            photonView.RPC("NotifyClientsToSendPlayerInfoMessage", PhotonTargets.All);
+            GetLocalPhotonView().RPC("NotifyClientsToSendPlayerInfoMessage", PhotonTargets.All);
         }
 
         [PunRPC]
         private void NotifyClientsToSendPlayerInfoMessage(PhotonMessageInfo info)
         {
             int playerPhotonViewId = _localPlayerCharacter.GetComponent<PhotonView>().viewID;
-
-            PhotonView photonView = PhotonView.Get(Instance);
-            photonView.RPC("SyncPlayerInfoMessage", PhotonTargets.All, playerPhotonViewId);
+            GetLocalPhotonView().RPC("SyncPlayerInfoMessage", PhotonTargets.All, playerPhotonViewId);
         }
 
         [PunRPC]
@@ -1428,15 +1326,12 @@ namespace Enigma.CoreSystems
             //Id was successfully retrieved
             if (playerPhotonViewId != -1)
             {
-                if (SetPlayerNameAsObjName != null) SetPlayerNameAsObjName(playerPhotonViewId, info.sender.name);
+                if (SetPlayerNameAsObjName != null) SetPlayerNameAsObjName(playerPhotonViewId, info.sender.NickName);
 
                 if (GetIsMasterClient())
                 {
                     PhotonView playerPhotonView = PhotonView.Find(playerPhotonViewId);
-
-                    Hashtable playerSyncProp = new Hashtable();
-                    playerSyncProp.Add(PlayerPropertyOptions.PLAYER_STATE, PlayerStates.SYNC);
-                    NetworkManager.SetOtherPlayerOnlineCustomProperties(playerPhotonView.owner, playerSyncProp);
+                    NetworkManager.SetAnyPlayerCustomProperty(PlayerPropertyOptions.PLAYER_STATE, PlayerStates.SYNC, playerPhotonView);
                 }
             }
             //Id was not successfully retrieved, do something here... 
@@ -1532,9 +1427,7 @@ namespace Enigma.CoreSystems
         static public IEnumerator AutoJoinChatLobbyCoroutine()
         {
             while (PhotonNetwork.insideLobby == false)
-            {
                 yield return null;
-            }
 
             Hashtable val = new Hashtable();
             //val.Add("room", "1");

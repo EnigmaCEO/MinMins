@@ -113,7 +113,7 @@ public class GameStore : MonoBehaviour
                 Transform unitTransform = Instantiate<GameObject>(boxGridItemTemplate, _lootBoxGridContent).transform;
                 unitTransform.name = "BoxGridItem_Tier " + tier;
                 BoxGridItem box = unitTransform.GetComponent<BoxGridItem>();
-                box.SetTier(tier);
+                box.SetUp(tier);
                 int tierCopy = tier;
                 box.OpenButton.onClick.AddListener(() => onLootBoxOpenButtonDown(tierCopy));
             }

@@ -8,6 +8,8 @@ public class War : MonoBehaviour
 {
     [HideInInspector] public bool Ready = true;
 
+    [SerializeField] private int _maxRoundsCount = 3;
+
     [SerializeField] private Transform _teamGridContent;
     [SerializeField] private float _readyCheckDelay = 2;
 
@@ -20,11 +22,15 @@ public class War : MonoBehaviour
     [SerializeField] private MatchResultsPopUp _matchResultsPopUp;
 
     private int _side = 0;
+    private bool _hasMatchEnded = false;
 
     private Transform _battleField;
-    private Transform _teamGrid;
-    private Transform _enemyGrid;
+    private Transform _alliesGrid;
+    private Transform _enemiesGrid;
     //private GameObject _slot;
+
+    private List<MinMinUnit> _allies;
+    private List<MinMinUnit> _enemies;
 
     private string _attackingUnitName = "";
     private float _timer;
@@ -32,12 +38,14 @@ public class War : MonoBehaviour
 
     private MatchData _matchData = new MatchData();
 
+    private int _roundCount = 0;
+
     // Use this for initialization
     void Awake()
     {
         _battleField = GameObject.Find("/Battlefield").transform;
-        _teamGrid = _battleField.Find("Team1");
-        _enemyGrid = _battleField.Find("Team2");
+        _alliesGrid = _battleField.Find("Team1");
+        _enemiesGrid = _battleField.Find("Team2");
 
         GameMatch matchManager = GameMatch.Instance;
         //int teamLength = matchManager.Team1.Length;
@@ -53,9 +61,13 @@ public class War : MonoBehaviour
 
             GameObject unit = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/MinMinUnits/" + unitData.Name));
             unit.name = unitData.Name;
-            unit.GetComponent<MinMinUnit>().Stats.Clone(unitData.Stats);
+
+            MinMinUnit minMinUnit = unit.GetComponent<MinMinUnit>();
+            minMinUnit.Stats.Clone(unitData.Stats);
+            _allies.Add(minMinUnit);
+
             Transform unitTransform = unit.transform;
-            unitTransform.parent = _teamGrid.Find("slot" + itemNumber);
+            unitTransform.parent = _alliesGrid.Find("slot" + itemNumber);
             unitTransform.localPosition = Vector2.zero;
 
             Transform spriteTransform = unitTransform.Find("Sprite");
@@ -89,8 +101,13 @@ public class War : MonoBehaviour
 
             GameObject unit = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/MinMinUnits/" + unitData.Name));
             unit.name = unitData.Name;
+
+            MinMinUnit minMinUnit = unit.GetComponent<MinMinUnit>();
+            minMinUnit.Stats.Clone(unitData.Stats);
+            _enemies.Add(minMinUnit);
+
             Transform unitTransform = unit.transform;
-            unitTransform.parent = _enemyGrid.Find("slot" + itemNumber);
+            unitTransform.parent = _enemiesGrid.Find("slot" + itemNumber);
             unitTransform.localPosition = Vector2.zero;
 
             Transform spriteTransform = unitTransform.Find("Sprite");
@@ -105,8 +122,8 @@ public class War : MonoBehaviour
             shadow.transform.localScale = new Vector2(-1, 1);
         }
 
-        setAttacks(_teamGrid);
-        setAttacks(_enemyGrid);
+        setAttacks(_alliesGrid);
+        setAttacks(_enemiesGrid);
     }
 
     private void Start()
@@ -126,10 +143,10 @@ public class War : MonoBehaviour
 
         if (((_playTime - _timer) >= _readyCheckDelay) && Ready)
         {
-            int enemiesGridCount = _enemyGrid.childCount;
+            int enemiesGridCount = _enemiesGrid.childCount;
             for (int i = 0; i < enemiesGridCount; i++)
             {
-                Transform enemySlot = _enemyGrid.GetChild(i);
+                Transform enemySlot = _enemiesGrid.GetChild(i);
                 if (enemySlot.childCount == 0)
                     continue;
 
@@ -147,9 +164,9 @@ public class War : MonoBehaviour
         Transform attackerUnitTransform = null;
 
         if (_side == 0)
-            attackerUnitTransform = _teamGrid.Find(attackerUnitName);
+            attackerUnitTransform = _alliesGrid.Find(attackerUnitName);
         else
-            attackerUnitTransform = _enemyGrid.Find(attackerUnitName);
+            attackerUnitTransform = _enemiesGrid.Find(attackerUnitName);
 
         if (attackerUnitTransform == null)
             return;
@@ -174,12 +191,12 @@ public class War : MonoBehaviour
 
         if (_side == 0)
         {
-            effect_name = _teamGrid.transform.Find(_attackingUnitName + "/Effect").transform.GetChild(0).name;
+            effect_name = _alliesGrid.transform.Find(_attackingUnitName + "/Effect").transform.GetChild(0).name;
             attack.transform.localEulerAngles = new Vector3(0, 0, 0);
         }
         else
         {
-            effect_name = _enemyGrid.transform.Find(_attackingUnitName + "/Effect").transform.GetChild(0).name;
+            effect_name = _enemiesGrid.transform.Find(_attackingUnitName + "/Effect").transform.GetChild(0).name;
             attack.transform.localEulerAngles = new Vector3(0, 180, 0);
         }
 
@@ -273,6 +290,48 @@ public class War : MonoBehaviour
         }
     }
 
+    //Only master client uses this
+    private void checkWinLoseConditions()
+    {
+        if (_roundCount > _maxRoundsCount)
+            _hasMatchEnded = true;
+        else
+        {
+            if (areAllUnitsDefeated(_allies) || areAllUnitsDefeated(_enemies))
+                _hasMatchEnded = true;
+        }
+
+        if (_hasMatchEnded)
+        {
+
+        }
+    }
+
+    private int getTeamTotalHealth(List<MinMinUnit> units)
+    {
+        int totalHealth = 0;
+        foreach (MinMinUnit unit in units)
+            totalHealth += unit.Stats.Health;
+
+        return totalHealth;
+    }
+
+    private bool areAllUnitsDefeated(List<MinMinUnit> units)
+    {
+        bool areAllUnitsDefeated = true;
+
+        foreach (MinMinUnit unit in units)
+        {
+            if (unit.IsAlive)
+            {
+                areAllUnitsDefeated = false;
+                break;
+            }
+        }
+
+        return areAllUnitsDefeated;
+    }
+
     public class MatchData
     {
         public string PlayerId = "";
@@ -280,5 +339,15 @@ public class War : MonoBehaviour
         public int DamageReceived = 0;
         public int UnitsKilled = 0;
         public int MatchDuration = 0;
+
+        public Dictionary<string, bool> UnitsAlive = new Dictionary<string, bool>();
+        public Dictionary<int, int> BoxTiersWithAmountsRewards = new Dictionary<int, int>();
+
+        public MatchData()
+        {
+            BoxTiersWithAmountsRewards.Add(GameInventory.Tiers.BRONZE, 0);
+            BoxTiersWithAmountsRewards.Add(GameInventory.Tiers.SILVER, 0);
+            BoxTiersWithAmountsRewards.Add(GameInventory.Tiers.GOLD, 0);
+        }
     }
 }

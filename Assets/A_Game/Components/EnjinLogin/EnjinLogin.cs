@@ -81,8 +81,8 @@ public class EnjinLogin : MonoBehaviour
 
         Hashtable extras = new Hashtable();
 
-        string ipAddress = NetworkManager.GetUserInfo(NetworkManager.TransactionKeys.IP);
-        string country = NetworkManager.GetUserInfo(NetworkManager.TransactionKeys.COUNTRY);
+        string ipAddress = NetworkManager.Ip; 
+        string country = NetworkManager.Country;  
         extras.Add("ip", ipAddress);
         extras.Add("country", country);
 

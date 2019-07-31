@@ -96,40 +96,36 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
     public int GetRating()
     {
-        return (int)NetworkManager.GetCustomProperty(PlayerCustomProperties.RATING);
+        return int.Parse(GetLocalPlayerCustomProperty(PlayerCustomProperties.RATING));
     }
 
     public void SetRating(int newRating)
     {
-        NetworkManager.SetCustomProperty(PlayerCustomProperties.RATING, newRating);
+        SetLocalPlayerCustomProperty(PlayerCustomProperties.RATING, newRating.ToString());
     }
 
-    public void SetValue(string key, string val)
+    public void SetLocalPlayerCustomProperty(string key, string val)
     {
-        NetworkManager.SetUserInfo(key, val);
+        NetworkManager.SetLocalPlayerCustomProperty(key, val);
     }
 
-    public void SetValue(string key, string[] val)
+    public void SetLocalPlayerCustomProperty(string key, string[] val)
     {
         string value = "";
         if (val.Length == 0)
             value = Json.Encode(val);
 
-        NetworkManager.SetUserInfo(key, value);
+        SetLocalPlayerCustomProperty(key, value);
     }
 
-    public string GetValue(string key, string defaultValue = "")
+    public string GetLocalPlayerCustomProperty(string key)
     {
-        return NetworkManager.GetUserInfo(key, defaultValue);
+        return NetworkManager.GetLocalPlayerCustomProperty(key);
     }
 
-    public string[] GetValueArray(string key, string[] defaultValue = null)
+    public string[] GetLocalPlayerCustomPropertyArray(string key)
     {
-        string value = NetworkManager.GetUserInfo(key);
-
-        if ((value == "") && (defaultValue != null))
-            return defaultValue;
-        else
-            return Json.Decode<string[]>(value);
+        string value = GetLocalPlayerCustomProperty(key);
+        return Json.Decode<string[]>(value);
     }
 }

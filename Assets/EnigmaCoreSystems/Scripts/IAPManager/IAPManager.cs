@@ -19,6 +19,8 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
     public string FORTUMO_SERVICE = "";
     public string[] IAP_IDS;
 
+    public string Id;
+
     static public string appVersion = "1.0";
     static public string appId = "";
     static public string[] zoneId;
@@ -173,9 +175,10 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
     static public void BuyMobile()
     {
 #if (UNITY_ANDROID || UNITY_IOS)
-        string id = NetworkManager.GetUserInfo("id");
-        string sec = IAPManager.Instance.FORTUMO_SEC;
-        string service = IAPManager.Instance.FORTUMO_SERVICE;
+        IAPManager instance = IAPManager.Instance;
+        string id = instance.Id;
+        string sec = instance.FORTUMO_SEC;
+        string service =  instance.FORTUMO_SERVICE;
 
         string sig = md5("cuid=" + id + sec);
 

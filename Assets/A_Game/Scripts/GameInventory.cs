@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class GameInventory : SingletonMonobehaviour<GameInventory>
 {
+    public class Tiers
+    {
+        public const int BRONZE = 1;
+        public const int SILVER = 2;
+        public const int GOLD = 3;
+    }
+
     [SerializeField] private int _unitsAmount = 80;
     [SerializeField] private int _initialBronzeLootBoxes = 2;
 
@@ -21,10 +28,6 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     private const string _STATS = "Stats";
 
     private const string _SINGLE_PLAYER_LEVEL = "SinglePlayerLevel";
-
-    private const int _BRONZE_TIER = 1;
-    private const int _SILVER_TIER = 2;
-    private const int _GOLD_TIER = 3;
 
     private Hashtable _saveHashTable = new Hashtable();
 
@@ -153,14 +156,14 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
         List<int> unitPicks = null;
         LootBoxManager lootBoxManager = LootBoxManager.Instance;
-        if (boxTier == _BRONZE_TIER)
+        if (boxTier == Tiers.BRONZE)
             unitPicks = lootBoxManager.PickRandomizedNumbers(_lootBoxSize, true, null, specialRarities);
         else
         {
             int specialRarityAmountToPick = _lootBoxSize - _guaranteedUnitTierAmount;
             unitPicks = lootBoxManager.PickRandomizedNumbers(specialRarityAmountToPick, true, null, specialRarities);
             List<int> guaranteedTierUnits = null;
-            if (boxTier == _SILVER_TIER)
+            if (boxTier == Tiers.SILVER)
                 guaranteedTierUnits = _tierSilver_units;
             else //tier 3 (GOLD)
                 guaranteedTierUnits = _tierGold_units;
@@ -205,11 +208,11 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
     public int GetUnitTier(int unitNumber)
     {
-        int unitTier = _BRONZE_TIER;
+        int unitTier = Tiers.BRONZE;
         if (_tierSilver_units.Contains(unitNumber))
-            unitTier = _SILVER_TIER;
+            unitTier = Tiers.SILVER;
         else if (_tierGold_units.Contains(unitNumber))
-            unitTier = _GOLD_TIER;
+            unitTier = Tiers.GOLD;
 
         return unitTier;
     }
@@ -324,7 +327,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
         if (!isThereAnyUnit && !isThereAnyLootBox)
         {
-            inventoryManager.UpdateItem(_LOOT_BOXES, _BRONZE_TIER.ToString(), _initialBronzeLootBoxes, false);
+            inventoryManager.UpdateItem(_LOOT_BOXES, Tiers.BRONZE.ToString(), _initialBronzeLootBoxes, false);
             saveLootBoxes();
         }
     }
