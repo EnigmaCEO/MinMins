@@ -54,6 +54,5 @@ public class GameMatch : SingletonMonobehaviour<GameMatch>
     {
         public string Name = "-1";
         public Vector2 Position = new Vector2();
-        public UnitStats Stats = new UnitStats();
     }
 }

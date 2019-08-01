@@ -40,6 +40,15 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         public const string RATING = "Rating";
     }
 
+    public class Stats
+    {
+        public const string LEVEL = "Level";
+        public const string HEALTH = "Health";
+        public const string STRENGHT = "Strenght";
+        public const string DEFENSE = "Defense";
+        public const string EFFECT_SCALE = "EffectScale";
+    }
+
     public void SendMatchResults(War.MatchData matchData,  OnSendResultsDelegate onSendMatchResultsCallback)
     {
         _onSendResultsCallback = onSendMatchResultsCallback;
@@ -72,7 +81,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
             if (status == NetworkManager.StatusOptions.SUCCESS)
             {
                 int updatedRating = response_hash[GameNetwork.TransactionKeys.RATING].AsInt;
-                SetRating(updatedRating);
+                SetLocalPlayerRating(updatedRating);
                 _onSendResultsCallback(ServerResponseMessages.SUCCESS);
             }
             else
@@ -94,38 +103,53 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         performResultsSendingTransaction();
     }
 
-    public int GetRating()
+    public void SetLocalPlayerUnitStat(string stat, string unitName, int value)
     {
-        return int.Parse(GetLocalPlayerCustomProperty(PlayerCustomProperties.RATING));
+        SetAnyPlayerUnitStat(stat, unitName, value, GetLocalPlayerPhotonView());
     }
 
-    public void SetRating(int newRating)
+    public void SetAnyPlayerUnitStat(string stat, string unitName, int value, PhotonView photonView)
     {
-        SetLocalPlayerCustomProperty(PlayerCustomProperties.RATING, newRating.ToString());
+        NetworkManager.SetAnyPlayerCustomProperty(stat + unitName, value.ToString(), photonView);
     }
 
-    public void SetLocalPlayerCustomProperty(string key, string val)
+    public int GetLocalPlayerUnitStat(string stat, string unitName)
     {
-        NetworkManager.SetLocalPlayerCustomProperty(key, val);
+        return GetAnyPlayerUnitStat(stat, unitName, GetLocalPlayerPhotonView());
     }
 
-    public void SetLocalPlayerCustomProperty(string key, string[] val)
+    public int GetAnyPlayerUnitStat(string stat, string unitName, PhotonView photonView)
+    {
+        return NetworkManager.GetAnyPlayerCustomPropertyAsInt(stat + unitName, photonView);
+    }
+
+    public int GetLocalPlayerRating()
+    {
+        return NetworkManager.GetLocalPlayerCustomPropertyAsInt(PlayerCustomProperties.RATING);
+    }
+
+    public void SetLocalPlayerRating(int newRating)
+    {
+        NetworkManager.SetLocalPlayerCustomProperty(PlayerCustomProperties.RATING, newRating.ToString());
+    }
+
+    public PhotonView GetLocalPlayerPhotonView()
+    {
+        return NetworkManager.GetLocalPlayerPhotonView();
+    }
+
+    public void SetLocalPlayerCustomPropertyArray(string key, string[] val)
     {
         string value = "";
         if (val.Length == 0)
             value = Json.Encode(val);
 
-        SetLocalPlayerCustomProperty(key, value);
-    }
-
-    public string GetLocalPlayerCustomProperty(string key)
-    {
-        return NetworkManager.GetLocalPlayerCustomProperty(key);
+        NetworkManager.SetLocalPlayerCustomProperty(key, value);
     }
 
     public string[] GetLocalPlayerCustomPropertyArray(string key)
     {
-        string value = GetLocalPlayerCustomProperty(key);
+        string value = NetworkManager.GetLocalPlayerCustomProperty(key);
         return Json.Decode<string[]>(value);
     }
 }

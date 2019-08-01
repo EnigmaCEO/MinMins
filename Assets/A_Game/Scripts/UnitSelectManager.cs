@@ -194,7 +194,6 @@ public class UnitSelectManager : MonoBehaviour
 
         GameMatch.UnitData unitData = GameMatch.Instance.GetUnit(1, slotIndex);
         unitData.Name = unitName;
-        unitData.Stats.Clone(GameInventory.Instance.GetUnitStats(unitName));
 
         checkTeamReady();
     }
@@ -218,17 +217,16 @@ public class UnitSelectManager : MonoBehaviour
     private void loadUnitInfo()
     {
         print("loadUnitInfo -> selectedUnitName: " + _selectedUnitName);
-        GameObject minMinPrefab = Resources.Load<GameObject>("Prefabs/MinMinUnits/" + _selectedUnitName);
-        MinMinUnit minMin = minMinPrefab.GetComponent<MinMinUnit>();
+        MinMinUnit minMin = GameInventory.Instance.GetMinMinFromResources(_selectedUnitName);
         _slotInfoImage.sprite = minMin.transform.Find("Sprite").GetComponent<SpriteRenderer>().sprite;
 
         int powerContentLenght = _powerGridContent.childCount;
         for (int i = 0; i < powerContentLenght; i++)
-            _powerGridContent.GetChild(i).GetComponent<Image>().enabled = (i < minMin.Stats.Strength);
+            _powerGridContent.GetChild(i).GetComponent<Image>().enabled = (i < minMin.Strength);
 
         int armorContentLenght = _armorGridContent.childCount;
         for (int i = 0; i < powerContentLenght; i++)
-            _armorGridContent.GetChild(i).GetComponent<Image>().enabled = (i < minMin.Stats.Defense);
+            _armorGridContent.GetChild(i).GetComponent<Image>().enabled = (i < minMin.Defense);
 
         // Attack Patterns
         GameObject temp = GameObject.Find("Canvas/PopUp/PatternBG/UnitInfo");

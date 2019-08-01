@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class JsonSerializationTests : MonoBehaviour
 {
-    public UnitStats Stats;
+    //public UnitBaseStats Stats;
 
     void Start()
     {
-        string statsSerialized = Stats.Serialized();
-        UnitStats newStats = new UnitStats(statsSerialized);
+        //string statsSerialized = Stats.Serialized();
+        //UnitBaseStats newStats = new UnitBaseStats(statsSerialized);
 
         //InventoryManager.Serialize("2");
         //InventoryManager.Serialize(2.0f);

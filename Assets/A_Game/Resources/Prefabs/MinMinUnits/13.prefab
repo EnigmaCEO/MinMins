@@ -378,14 +378,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Stats:
-    Strength: 3
+    Strength: 1
     Defense: 1
     Health: 5
     EffectScale: 1
-    Exp: 0
-    Level: 1
-  Effect: 6
-  Attacks: 0a000000
+  BaseStats:
+    Strength: 1
+    Defense: 1
+    Health: 5
+    EffectScale: 1
+  Effect: 0
+  Type: 0
+  Attacks: 
 --- !u!1 &100024
 GameObject:
   m_ObjectHideFlags: 0

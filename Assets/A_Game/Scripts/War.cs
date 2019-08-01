@@ -63,7 +63,6 @@ public class War : MonoBehaviour
             unit.name = unitData.Name;
 
             MinMinUnit minMinUnit = unit.GetComponent<MinMinUnit>();
-            minMinUnit.Stats.Clone(unitData.Stats);
             _allies.Add(minMinUnit);
 
             Transform unitTransform = unit.transform;
@@ -103,7 +102,6 @@ public class War : MonoBehaviour
             unit.name = unitData.Name;
 
             MinMinUnit minMinUnit = unit.GetComponent<MinMinUnit>();
-            minMinUnit.Stats.Clone(unitData.Stats);
             _enemies.Add(minMinUnit);
 
             Transform unitTransform = unit.transform;
@@ -260,11 +258,11 @@ public class War : MonoBehaviour
 
         foreach (Transform slot in _teamGridContent)
         {
-            MinMinUnit minMin = slot.GetChild(0).GetComponent<MinMinUnit>();
-            UnitStats stats = minMin.Stats;
+            GameObject minMin = slot.GetChild(0).gameObject;
+            //int Health = 
 
             int expEarned = 0;
-            if (stats.Health > 0)
+            //if (stats.Health > 0)
             {
                 if (isVictory)
                     expEarned = 10;
@@ -272,7 +270,7 @@ public class War : MonoBehaviour
                     expEarned = 5;
             }
 
-            GameInventory.Instance.AddExperienceToUnit(minMin.name, expEarned);
+            GameInventory.Instance.LevelUpUnit(minMin.name, expEarned);
         }
     }
 
@@ -310,8 +308,8 @@ public class War : MonoBehaviour
     private int getTeamTotalHealth(List<MinMinUnit> units)
     {
         int totalHealth = 0;
-        foreach (MinMinUnit unit in units)
-            totalHealth += unit.Stats.Health;
+        //foreach (MinMinUnit unit in units)
+        //    totalHealth += unit.BaseStats.Health;
 
         return totalHealth;
     }
@@ -322,7 +320,7 @@ public class War : MonoBehaviour
 
         foreach (MinMinUnit unit in units)
         {
-            if (unit.IsAlive)
+            //if (GameInventory.Instance)
             {
                 areAllUnitsDefeated = false;
                 break;

@@ -508,7 +508,7 @@ namespace Enigma.CoreSystems
             PhotonNetwork.ConnectUsingSettings(_PHOTON_CONNECTION_GAME_VERSION_SETTINGS);
             PhotonNetwork.logLevel = PhotonLogLevel.Full;
             PhotonNetwork.offlineMode = isOffline;
-            GetLocalPhotonView().viewID = 1;
+            GetLocalPlayerPhotonView().viewID = 1;
         }
 
         static public void Disconnect()
@@ -523,7 +523,7 @@ namespace Enigma.CoreSystems
 
         static public void SendRPC(string methodName, PhotonTargets target, params object[] parameters)
         {
-            GetLocalPhotonView().RPC(methodName, target, parameters);
+            GetLocalPlayerPhotonView().RPC(methodName, target, parameters);
         }
 
         static public bool IsPhotonOffline()
@@ -751,6 +751,11 @@ namespace Enigma.CoreSystems
                 setAnyPlayerOnlineCustomProperty(key, value, photonView.owner);
         }
 
+        static public int GetAnyPlayerCustomPropertyAsInt(string key, PhotonView photonView)
+        {
+            return int.Parse(GetAnyPlayerCustomProperty(key, photonView));
+        }
+
         static public string GetAnyPlayerCustomProperty(string key, PhotonView photonView)
         {
             if (IsPhotonOffline())
@@ -769,12 +774,17 @@ namespace Enigma.CoreSystems
 
         static public string GetLocalPlayerCustomProperty(string key)
         {
-            PhotonView photonView = GetLocalPhotonView();
+            PhotonView photonView = GetLocalPlayerPhotonView();
 
             if (IsPhotonOffline())
                 return getLocalPlayerOfflineCustomProperty(key);
             else
                 return getLocalPlayerOnlineCustomProperty(key);
+        }
+
+        static public int GetLocalPlayerCustomPropertyAsInt(string key)
+        {
+            return int.Parse(GetLocalPlayerCustomProperty(key));
         }
 
         /// <summary>
@@ -804,7 +814,7 @@ namespace Enigma.CoreSystems
         /// <param name="value">Value.</param>
         static private void setLocalPlayerOfflineCustomProperty(string key, string value)
         {
-            setAnyPlayerOfflineCustomProperty(key, value, GetLocalPhotonView());
+            setAnyPlayerOfflineCustomProperty(key, value, GetLocalPlayerPhotonView());
         }
 
         static private void setAnyPlayerOfflineCustomProperty(string key, string value, PhotonView photonView)
@@ -842,7 +852,7 @@ namespace Enigma.CoreSystems
         /// <param name="key">Key.</param>
         static private string getLocalPlayerOfflineCustomProperty(string key)
         {
-            return getAnyPlayerOfflineCustomProperty(key, GetLocalPhotonView());
+            return getAnyPlayerOfflineCustomProperty(key, GetLocalPlayerPhotonView());
         }
 
         static private string getAnyPlayerOfflineCustomProperty(string key, PhotonView photonView)
@@ -942,7 +952,7 @@ namespace Enigma.CoreSystems
             return PhotonNetwork.InstantiateSceneObject(prefab, vec, quat, group, null);
         }
 
-        static public PhotonView GetLocalPhotonView()
+        static public PhotonView GetLocalPlayerPhotonView()
         {
             return PhotonView.Get(Instance);
         }
@@ -1310,14 +1320,14 @@ namespace Enigma.CoreSystems
         //Master sends message to every client when everyone is ready to load
         static public void SendNotifyClientsToSendPlayerInfoMessage()
         {
-            GetLocalPhotonView().RPC("NotifyClientsToSendPlayerInfoMessage", PhotonTargets.All);
+            GetLocalPlayerPhotonView().RPC("NotifyClientsToSendPlayerInfoMessage", PhotonTargets.All);
         }
 
         [PunRPC]
         private void NotifyClientsToSendPlayerInfoMessage(PhotonMessageInfo info)
         {
             int playerPhotonViewId = _localPlayerCharacter.GetComponent<PhotonView>().viewID;
-            GetLocalPhotonView().RPC("SyncPlayerInfoMessage", PhotonTargets.All, playerPhotonViewId);
+            GetLocalPlayerPhotonView().RPC("SyncPlayerInfoMessage", PhotonTargets.All, playerPhotonViewId);
         }
 
         [PunRPC]

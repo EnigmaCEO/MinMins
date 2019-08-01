@@ -13,13 +13,13 @@ public class MinMinUnit : MonoBehaviour
         Healers
     }
 
-    public UnitStats Stats;
+    public int Strength = 1;
+    public int Defense = 1;
+    public int Health = 5;
+
+    public int EffectScale = 1;
+
     public int Effect;
     public Types Type;
     public int[] Attacks;
-
-    public bool IsAlive
-    {
-        get { return (Stats.Health > 0); }
-    }
 }

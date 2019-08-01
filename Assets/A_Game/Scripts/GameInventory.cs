@@ -21,13 +21,14 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     [SerializeField] private char _parseSeparator = '|';
     [SerializeField] private int _expToAddOnDuplicateUnit = 10;
 
-    [SerializeField] private float _statIncrease = 0.1f;
+    [SerializeField] private float _statIncreaseByLevel = 1.1f;
 
     private const string _TEAM_1_GROUP_NAME = "Team1";
     private const string _LOOT_BOXES = "Lootboxes";
     private const string _STATS = "Stats";
 
     private const string _SINGLE_PLAYER_LEVEL = "SinglePlayerLevel";
+    //private const string _
 
     private Hashtable _saveHashTable = new Hashtable();
 
@@ -44,7 +45,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     [SerializeField] private float _tierSilver_GroupRarity = 0.3f;
     [SerializeField] private float _tierGold_GroupRarity = 0.2f;
 
-    [SerializeField] List<int> _experienceNeededPerUnitLevel = new List<int>() { 10, 20, 40, 80, 160 };
+    [SerializeField] List<int> _experienceNeededPerUnitLevel = new List<int>() { 10, 30, 70, 150, 310 }; //{ 10, 20, 40, 80, 160 };
 
     private List<int> _tierSilver_units = new List<int>();
     private List<int> _tierGold_units = new List<int>();
@@ -86,46 +87,51 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         return InventoryManager.Instance.GetItem<int>(_STATS, _SINGLE_PLAYER_LEVEL);
     }
 
-    public void AddExperienceToUnit(string unitName, int exp)
+    public void LevelUpUnit(string unitName, int expToAdd)
     {
-        UnitStats unitStats = InventoryManager.Instance.GetItem<UnitStats>(_TEAM_1_GROUP_NAME, unitName);
-        unitStats.Exp += exp;
+        int unitExp = InventoryManager.Instance.GetItem<int>(_TEAM_1_GROUP_NAME, unitName);
+        unitExp += expToAdd;
 
-        int unitLevel = unitStats.Level;
-        int unitExp = unitStats.Exp;
-        int levelsLenght = _experienceNeededPerUnitLevel.Count;
+        int unitLevel = 1;
+        int maxLevelIndexToCheck = _experienceNeededPerUnitLevel.Count - 2;
+        int maxExp = _experienceNeededPerUnitLevel[maxLevelIndexToCheck + 1];
 
-        for (int level = 1; level <= levelsLenght; level++)
+        if (unitExp > maxExp)
+            unitExp = maxExp;
+
+        for (int i = maxLevelIndexToCheck; i >= 0; i++)
         {
-            int expNeeded = _experienceNeededPerUnitLevel[level - 1];
-
-            if (level == 5)
+            if (unitExp >= _experienceNeededPerUnitLevel[i])
             {
-                if (unitExp >= expNeeded)
-                    unitExp = expNeeded;
-
-                break;
-            }
-            else if (unitExp >= expNeeded)
-            {
-                unitStats.Level += 1;
-                unitStats.Strength = getStatIncrease(unitStats.Strength);
-                unitStats.Health = getStatIncrease(unitStats.Health);
-                unitStats.EffectScale = getStatIncrease(unitStats.EffectScale);
-                unitStats.Exp -= expNeeded;
+                unitLevel = i + 1;
                 break;
             }
         }
+
+        MinMinUnit minMin = GetMinMinFromResources(unitName);
+        GameNetwork gameNetwork = GameNetwork.Instance;
+        gameNetwork.SetLocalPlayerUnitStat(GameNetwork.Stats.LEVEL, unitName, unitLevel);
+        gameNetwork.SetLocalPlayerUnitStat(GameNetwork.Stats.HEALTH, unitName, getStatByLevel(minMin.Health, unitLevel));
+        gameNetwork.SetLocalPlayerUnitStat(GameNetwork.Stats.STRENGHT, unitName, getStatByLevel(minMin.Strength, unitLevel));
+        gameNetwork.SetLocalPlayerUnitStat(GameNetwork.Stats.DEFENSE, unitName, getStatByLevel(minMin.Defense, unitLevel));
+        gameNetwork.SetLocalPlayerUnitStat(GameNetwork.Stats.EFFECT_SCALE, unitName, getStatByLevel(minMin.EffectScale, unitLevel));
     }
 
-    private int getStatIncrease(int value)
+    public MinMinUnit GetMinMinFromResources(string unitName)
     {
-        return Mathf.RoundToInt((float)value + (float)value * _statIncrease);
+        GameObject minMinPrefab = Resources.Load<GameObject>("Prefabs/MinMinUnits/" + unitName);
+        MinMinUnit minMin = minMinPrefab.GetComponent<MinMinUnit>();
+        return minMin;
     }
 
-    public UnitStats GetUnitStats(string unitName)
+    private int getStatByLevel(int baseValue, float level)
     {
-        return InventoryManager.Instance.GetItem<UnitStats>(_TEAM_1_GROUP_NAME, unitName);
+        return Mathf.RoundToInt((float)baseValue * _statIncreaseByLevel * level);
+    }
+
+    public int GetUnitExp(string unitName)
+    {
+        return InventoryManager.Instance.GetItem<int>(_TEAM_1_GROUP_NAME, unitName);
     }
 
     public int GetLootBoxTierAmount(int tier)
@@ -189,15 +195,11 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
             string unitName = lootBoxIndex.ToString();
             if (inventoryManager.HasItem(_TEAM_1_GROUP_NAME, unitName, false))
             {
-                AddExperienceToUnit(unitName, _expToAddOnDuplicateUnit);
+                LevelUpUnit(unitName, _expToAddOnDuplicateUnit);
                 print("Added " + _expToAddOnDuplicateUnit + " exp to unit " + unitName);
             }
             else
-            {
-                GameObject minMinPrefab = Resources.Load<GameObject>("Prefabs/MinMinUnits/" + unitName);
-                UnitStats stats = new UnitStats(minMinPrefab.GetComponent<MinMinUnit>().Stats);
-                inventoryManager.AddItem(_TEAM_1_GROUP_NAME, unitName, stats);
-            }
+                inventoryManager.AddItem(_TEAM_1_GROUP_NAME, unitName, 0);
         }
 
         saveUnits();
@@ -270,9 +272,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
     private void addMinMinUnit(string unitName)
     {
-        GameObject minMinPrefab = Resources.Load<GameObject>("Prefabs/MinMinUnits/" + unitName);
-        UnitStats stats = new UnitStats(minMinPrefab.GetComponent<MinMinUnit>().Stats);
-        InventoryManager.Instance.AddItem(_TEAM_1_GROUP_NAME, unitName, stats);
+        InventoryManager.Instance.AddItem(_TEAM_1_GROUP_NAME, unitName, 0);
     }
 
     private void loadData()
@@ -300,9 +300,9 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
             if (groupName == _TEAM_1_GROUP_NAME)
             {
                 string unitName = terms[1];
-                UnitStats stats = new UnitStats((string)entry.Value);
-                //print("LoadData -> groupName: " + groupName + " -> unitName: " + unitName + " -> stats: " + stats.Serialized());
-                inventoryManager.AddItem(groupName, unitName, stats);
+                int unitExp = int.Parse(entry.Value.ToString());
+                print("LoadData -> groupName: " + groupName + " -> unitName: " + unitName + " -> unit exp: " + unitExp.ToString());
+                inventoryManager.AddItem(groupName, unitName, unitExp);
 
                 isThereAnyUnit = true;
             }
@@ -380,15 +380,14 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
     private void saveUnit(string groupName, string unitName, bool isStandAlone = true)
     {
-        UnitStats stats = InventoryManager.Instance.GetItem<UnitStats>(groupName, unitName);
+        int unitExp = InventoryManager.Instance.GetItem<int>(groupName, unitName);
         string hashKey = groupName + _parseSeparator + unitName;
-        string statsSerialized = stats.Serialized();
-        print("SaveUnit -> hashKey: " + hashKey + " -> stats: " + statsSerialized);
+        print("SaveUnit -> hashKey: " + hashKey + " -> unitExp: " + unitExp);
 
         if (_saveHashTable.ContainsKey(hashKey))
             _saveHashTable.Remove(hashKey);
 
-        _saveHashTable.Add(hashKey, statsSerialized);
+        _saveHashTable.Add(hashKey, unitExp);
 
         if (isStandAlone)
             saveHashTableToFile();

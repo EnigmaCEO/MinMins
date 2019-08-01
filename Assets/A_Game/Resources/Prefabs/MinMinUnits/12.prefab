@@ -377,14 +377,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc8395a664cd4044f88156feb10d672d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Stats:
+  BaseStats:
     Strength: 3
     Defense: 1
     Health: 5
     EffectScale: 1
-    Exp: 0
-    Level: 1
+  Strength: 3
+  Defense: 1
+  Health: 5
+  EffectScale: 1
   Effect: 6
+  Type: 0
   Attacks: 0a000000
 --- !u!1 &100024
 GameObject:

@@ -105,7 +105,7 @@ public class Lobby : MonoBehaviour
             GameNetwork gameNetwork = GameNetwork.Instance;
             bool foundRoom = false;
 
-            int thisPlayerRating = gameNetwork.GetRating();
+            int thisPlayerRating = gameNetwork.GetLocalPlayerRating();
 
             int roomsCount = rooms.Length;
             for (int i = 0; i < roomsCount; i++)
