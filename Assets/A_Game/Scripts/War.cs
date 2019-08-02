@@ -291,36 +291,68 @@ public class War : MonoBehaviour
     //Only master client uses this
     private void checkWinLoseConditions()
     {
+        bool enemiesDefeated = false;
+        bool alliesDefeated = false;
+        string winner = "";
+
+        string alliesTeam = GameNetwork.Teams.ALLIES;
+        string enemiesTeam = GameNetwork.Teams.ENEMIES;
+
         if (_roundCount > _maxRoundsCount)
             _hasMatchEnded = true;
         else
-        {
-            if (areAllUnitsDefeated(_allies) || areAllUnitsDefeated(_enemies))
+        { 
+            enemiesDefeated = areAllUnitsDefeated(enemiesTeam);
+            alliesDefeated = areAllUnitsDefeated(alliesTeam);
+            if (enemiesDefeated  || enemiesDefeated)
                 _hasMatchEnded = true;
         }
 
         if (_hasMatchEnded)
         {
+            if (enemiesDefeated)
+                winner = GameNetwork.Teams.ALLIES;
+            else if (alliesDefeated)
+                winner = GameNetwork.Teams.ENEMIES;
 
+            if (winner == "")
+            {
+                int alliesTotalHealth = getTeamTotalHealth(alliesTeam);
+                int enemiesTotalHealth = getTeamTotalHealth(enemiesTeam);
+
+                if (alliesTotalHealth > enemiesTotalHealth)
+                    winner = alliesTeam;
+                else if (enemiesTotalHealth > alliesTotalHealth)
+                    winner = enemiesTeam;
+
+                if (winner == "")
+                {
+
+                }     
+            }
         }
     }
 
-    private int getTeamTotalHealth(List<MinMinUnit> units)
+    //Only master client uses this
+    private int getTeamTotalHealth(string team)
     {
-        int totalHealth = 0;
-        //foreach (MinMinUnit unit in units)
-        //    totalHealth += unit.BaseStats.Health;
-
-        return totalHealth;
+        return GameNetwork.Instance.GetRoomMatchStat(team, GameNetwork.UnitRoomStats.HEALTH);
     }
 
-    private bool areAllUnitsDefeated(List<MinMinUnit> units)
+    //Only master client uses this
+    private bool areAllUnitsDefeated(string team)
     {
         bool areAllUnitsDefeated = true;
+        List<MinMinUnit> units = new List<MinMinUnit>();
+        if (team == GameNetwork.Teams.ALLIES)
+            units = _allies;
+        else if (team == GameNetwork.Teams.ENEMIES)
+            units = _enemies;
 
         foreach (MinMinUnit unit in units)
         {
-            //if (GameInventory.Instance)
+            int unitHealth = getUnitHealth(team, unit.name);
+            if (unitHealth > 0)
             {
                 areAllUnitsDefeated = false;
                 break;
@@ -328,6 +360,11 @@ public class War : MonoBehaviour
         }
 
         return areAllUnitsDefeated;
+    }
+
+    private int getUnitHealth(string team, string unitName)
+    {
+        return GameNetwork.Instance.GetRoomUnitStat(team, GameNetwork.UnitRoomStats.HEALTH, unitName);
     }
 
     public class MatchData

@@ -83,7 +83,8 @@ namespace Enigma.CoreSystems
 
         public class DataKeys
         {
-            public const string USER = "user";
+            public const string PLAYER = "Player";
+            public const string ROOM = "Room";
         }
 
         public class RoomStates
@@ -746,9 +747,38 @@ namespace Enigma.CoreSystems
         static public void SetAnyPlayerCustomProperty(string key, string value, PhotonView photonView)
         {
             if (IsPhotonOffline())
-                setAnyPlayerOfflineCustomProperty(key, value, photonView);
-            else
-                setAnyPlayerOnlineCustomProperty(key, value, photonView.owner);
+            {
+                if (!Data.ContainsKey(DataGroups.INFO))
+                    Data.Add(DataGroups.INFO, new Hashtable());
+
+                if (!Data[DataGroups.INFO].ContainsKey(DataKeys.PLAYER))
+                    Data[DataGroups.INFO].Add(DataKeys.PLAYER, new Hashtable());
+               
+                Hashtable userData = Data[DataGroups.INFO][DataKeys.PLAYER] as Hashtable;
+                string val = photonView.viewID.ToString() + "_" + key;
+
+                if (!userData.ContainsKey(val))
+                    userData.Add(val, value);
+                else
+                    userData[val] = value;
+            }
+            else  //Online
+            {
+                Hashtable properties = new Hashtable();
+                properties.Add(key, value);
+
+                ExitGames.Client.Photon.Hashtable photonHTable = new ExitGames.Client.Photon.Hashtable();
+
+                foreach (DictionaryEntry pair in properties)
+                    photonHTable.Add(pair.Key, pair.Value);
+
+                photonView.owner.SetCustomProperties(photonHTable);
+            }
+        }
+
+        static public void SetLocalPlayerCustomProperty(string key, string value)
+        {
+            SetAnyPlayerCustomProperty(key, value, GetLocalPlayerPhotonView());
         }
 
         static public int GetAnyPlayerCustomPropertyAsInt(string key, PhotonView photonView)
@@ -759,27 +789,19 @@ namespace Enigma.CoreSystems
         static public string GetAnyPlayerCustomProperty(string key, PhotonView photonView)
         {
             if (IsPhotonOffline())
-                return getAnyPlayerOfflineCustomProperty(key, photonView);
-            else
-                return getAnyPlayerOnlineCustomProperty(key, photonView.owner);
-        }
+            {
+                if (!Data.ContainsKey(DataGroups.INFO))
+                    return "";
 
-        static public void SetLocalPlayerCustomProperty(string key, string value)
-        {
-            if (IsPhotonOffline())
-                setLocalPlayerOfflineCustomProperty(key, value);
-            else
-                setLocalPlayerOnlineCustomProperty(key, value);
-        }
+                if (!Data[DataGroups.INFO].ContainsKey(DataKeys.PLAYER))
+                    return "";
 
-        static public string GetLocalPlayerCustomProperty(string key)
-        {
-            PhotonView photonView = GetLocalPlayerPhotonView();
-
-            if (IsPhotonOffline())
-                return getLocalPlayerOfflineCustomProperty(key);
-            else
-                return getLocalPlayerOnlineCustomProperty(key);
+                string val = photonView.viewID.ToString() + "_" + key;
+                Hashtable userData = Data[DataGroups.INFO][DataKeys.PLAYER] as Hashtable;
+                return userData[val].ToString().Trim('"');
+            }
+            else  // Online
+                return photonView.owner.CustomProperties[key].ToString();
         }
 
         static public int GetLocalPlayerCustomPropertyAsInt(string key)
@@ -787,111 +809,9 @@ namespace Enigma.CoreSystems
             return int.Parse(GetLocalPlayerCustomProperty(key));
         }
 
-        /// <summary>
-        /// Sets a player's custom property in online mode
-        /// </summary>
-        /// <param name="key">Key for the property</param>
-        /// <param name="value">Value for the property</param>
-        /// <param name="player">Player.</param>
-        static private void setAnyPlayerOnlineCustomProperty(object key, object value, PhotonPlayer player)
+        static public string GetLocalPlayerCustomProperty(string key)
         {
-            Hashtable properties = new Hashtable();
-            properties.Add(key, value);
-
-            ExitGames.Client.Photon.Hashtable photonHTable = new ExitGames.Client.Photon.Hashtable();
-
-            foreach (DictionaryEntry pair in properties)
-                photonHTable.Add(pair.Key, pair.Value);
-
-            if (player != null)
-                player.SetCustomProperties(photonHTable);
-        }
-
-        /// <summary>
-        /// Sets a player's custom property in offline mode
-        /// </summary>
-        /// <param name="key">Key.</param>
-        /// <param name="value">Value.</param>
-        static private void setLocalPlayerOfflineCustomProperty(string key, string value)
-        {
-            setAnyPlayerOfflineCustomProperty(key, value, GetLocalPlayerPhotonView());
-        }
-
-        static private void setAnyPlayerOfflineCustomProperty(string key, string value, PhotonView photonView)
-        {
-            string val = photonView.viewID.ToString() + "_" + key;
-
-            if (!Data.ContainsKey(DataGroups.INFO))
-                Data.Add(DataGroups.INFO, new Hashtable());
-
-            if (!Data[DataGroups.INFO].ContainsKey(DataKeys.USER))
-                Data[DataGroups.INFO].Add(DataKeys.USER, new Hashtable());
-
-            Hashtable userData = Data[DataGroups.INFO][DataKeys.USER] as Hashtable;
-            if (!userData.ContainsKey(val))
-                userData.Add(val, value);
-            else
-                userData[val] = value;
-        }
-
-        /// <summary>
-        /// Gets the player custom property in online mode
-        /// </summary>
-        /// <returns>The player custom property.</returns>
-        /// <param name="key">Key.</param>
-        /// <param name="player">Player.</param>
-        static private string getAnyPlayerOnlineCustomProperty(string key, PhotonPlayer player)
-        {
-            return player.CustomProperties[key].ToString();
-        }
-
-        /// <summary>
-        /// Gets the player custom property in offline mode
-        /// </summary>
-        /// <returns>The player custom property.</returns>
-        /// <param name="key">Key.</param>
-        static private string getLocalPlayerOfflineCustomProperty(string key)
-        {
-            return getAnyPlayerOfflineCustomProperty(key, GetLocalPlayerPhotonView());
-        }
-
-        static private string getAnyPlayerOfflineCustomProperty(string key, PhotonView photonView)
-        {
-            //return GetUserInfo(photonView.viewID.ToString() + "_" + key);
-            string val = photonView.viewID.ToString() + "_" + key;
-
-            if (!Data.ContainsKey(DataGroups.INFO))
-                return "";
-
-            if (!Data[DataGroups.INFO].ContainsKey(DataKeys.USER))
-                return "";
-
-            Hashtable userData = Data[DataGroups.INFO][DataKeys.USER] as Hashtable;
-
-            return userData[val].ToString().Trim('"');
-        }
-
-        //Set player custom property
-        static private void setLocalPlayerOnlineCustomProperty(object key, object value)
-        {
-            Hashtable systemHTable = new Hashtable() { { key, value } };
-            setLocalPlayerOnlineCustomProperties(systemHTable);
-        }
-
-        //Set player custom properties 
-        static private void setLocalPlayerOnlineCustomProperties(Hashtable systemHTable)
-        {
-            ExitGames.Client.Photon.Hashtable photonHTable = new ExitGames.Client.Photon.Hashtable();
-
-            foreach (DictionaryEntry pair in systemHTable)
-                photonHTable.Add(pair.Key, pair.Value);
-
-            PhotonNetwork.player.SetCustomProperties(photonHTable);
-        }
-
-        static private string getLocalPlayerOnlineCustomProperty(object key)
-        {
-            return PhotonNetwork.player.CustomProperties[key].ToString();
+            return GetAnyPlayerCustomProperty(key, GetLocalPlayerPhotonView());
         }
 
         //Helper for testing
@@ -906,10 +826,59 @@ namespace Enigma.CoreSystems
         /// </summary>
         static public void SetRoomCustomProperty(object key, object value)
         {
-            Hashtable systemHTable = new Hashtable() { { key, value } };
-            SetRoomCustomProperties(systemHTable);
+            if (IsPhotonOffline())
+            {
+                if (!Data.ContainsKey(DataGroups.INFO))
+                    Data.Add(DataGroups.INFO, new Hashtable());
+
+                if (!Data[DataGroups.INFO].ContainsKey(DataKeys.ROOM))
+                    Data[DataGroups.INFO].Add(DataKeys.ROOM, new Hashtable());
+
+                Hashtable roomData = Data[DataGroups.INFO][DataKeys.ROOM] as Hashtable;
+                string val = PhotonNetwork.room.Name + "_" + key;
+
+                if (!roomData.ContainsKey(val)) 
+                    roomData.Add(val, value);
+                else
+                    roomData[val] = value;
+            }
+            else // Online
+            {
+                Hashtable systemHTable = new Hashtable() { { key, value } };
+
+                ExitGames.Client.Photon.Hashtable photonHTable = new ExitGames.Client.Photon.Hashtable();
+
+                foreach (DictionaryEntry pair in systemHTable)
+                    photonHTable.Add(pair.Key, pair.Value);
+
+                PhotonNetwork.room.SetCustomProperties(photonHTable);
+            }
         }
 
+        static public int GetRoomCustomPropertyAsInt(object key)
+        {
+            return int.Parse(GetRoomCustomProperty(key));
+        }
+
+        static public string GetRoomCustomProperty(object key)
+        {
+            if (IsPhotonOffline())
+            {
+                if (!Data.ContainsKey(DataGroups.INFO))
+                    return "";
+
+                if (!Data[DataGroups.INFO].ContainsKey(DataKeys.ROOM))
+                    return "";
+
+                string val = PhotonNetwork.room.Name + "_" + key;
+                Hashtable userData = Data[DataGroups.INFO][DataKeys.ROOM] as Hashtable;
+                return userData[val].ToString().Trim('"');
+            }
+            else  // Online
+                return PhotonNetwork.room.CustomProperties[key].ToString();
+        }
+
+        /*
         ///<summary>
         /// Set room custom properties
         /// </summary>
@@ -922,7 +891,9 @@ namespace Enigma.CoreSystems
 
             PhotonNetwork.room.SetCustomProperties(photonHTable);
         }
+        */
 
+        /*
         ///<summary>
         /// Set room custom properties with expected values
         /// </summary>
@@ -940,6 +911,7 @@ namespace Enigma.CoreSystems
 
             PhotonNetwork.room.SetCustomProperties(photonHTable, photonExpectedHTable);
         }
+        */
 
         //Instantiate network object
         static public GameObject InstantiateObject(string prefab, Vector3 vec, Quaternion quat, byte group)
@@ -1232,11 +1204,7 @@ namespace Enigma.CoreSystems
                 {
                     //Master sets the start photon timer here...
                     if (GetIsMasterClient())
-                    {
-                        Hashtable startTimeProp = new Hashtable();
-                        startTimeProp.Add(RoomPropertyOptions.START_COUNT_DOWN_TIMER, GetPhotonTime());
-                        SetRoomCustomProperties(startTimeProp);
-                    }
+                        SetRoomCustomProperty(RoomPropertyOptions.START_COUNT_DOWN_TIMER, GetPhotonTime());
                 }
                 else if (propertiesThatChanged[RoomPropertyOptions.GAME_STATE].ToString() == RoomStates.PLAY)
                 {
@@ -1375,9 +1343,7 @@ namespace Enigma.CoreSystems
                 //TEST
                 //if (OriginalMaster) PhotonNetwork.Disconnect();
 
-                Hashtable roomSyncProp = new Hashtable();
-                roomSyncProp.Add(RoomPropertyOptions.GAME_STATE, RoomStates.SYNC);
-                SetRoomCustomProperties(roomSyncProp);
+                SetRoomCustomProperty(RoomPropertyOptions.GAME_STATE, RoomStates.SYNC);
 
                 //TEST
                 //if (OriginalMaster) PhotonNetwork.Disconnect();
@@ -1410,15 +1376,7 @@ namespace Enigma.CoreSystems
                 //if (InitializePlayerUI != null) InitializePlayerUI();
 
                 if (GetIsMasterClient())
-                {
-                    Hashtable roomLaunchProp = new Hashtable();
-                    roomLaunchProp.Add(RoomPropertyOptions.GAME_STATE, RoomStates.LAUNCH);
-                    SetRoomCustomProperties(roomLaunchProp);
-                }
-
-                //Hashtable playerLaunchProp = new Hashtable();
-                //playerLaunchProp.Add("plGState", "launch");
-                //SetLocalPlayerCustomProperties(playerLaunchProp);
+                    SetRoomCustomProperty(RoomPropertyOptions.GAME_STATE, RoomStates.LAUNCH);
 
                 //TEST
                 //if (OriginalMaster) PhotonNetwork.Disconnect();

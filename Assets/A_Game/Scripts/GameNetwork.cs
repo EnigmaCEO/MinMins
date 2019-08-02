@@ -40,10 +40,30 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         public const string RATING = "Rating";
     }
 
-    public class Stats
+    public class MatchStats
+    {
+        public const string DAMAGE_DEALT = "DamageDealt";
+        public const string DAMAGE_RECEIVED = "DamageReceived";
+        public const string UNITS_KILLED = "UnitsKilled";
+        public const string MATCH_DURATION = "MatchDuration";
+        public const string ALLIES_TOTAL_HEALTH = "AlliesTotalHealth";
+        public const string ENEMIES_TOTAL_HEALTH = "EnemiesTotalHealth";
+    }
+
+    public class Teams
+    {
+        public const string ALLIES = "Allies";
+        public const string ENEMIES = "Enemies";
+    }
+
+    public class UnitRoomStats
+    {
+        public const string HEALTH = "Health";
+    }
+
+    public class UnitPlayerStats
     {
         public const string LEVEL = "Level";
-        public const string HEALTH = "Health";
         public const string STRENGHT = "Strenght";
         public const string DEFENSE = "Defense";
         public const string EFFECT_SCALE = "EffectScale";
@@ -101,6 +121,40 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     {
         yield return new WaitForSeconds(_retrySendingResultsDelay);
         performResultsSendingTransaction();
+    }
+
+    public void setRoomUnitHealth(string team, string unitName, int value, List<MinMinUnit> teamUnitsForTotalCalculus = null)
+    {
+        SetRoomUnitStat(team, UnitRoomStats.HEALTH, unitName, value);
+
+        if (teamUnitsForTotalCalculus != null)
+        {
+            int healthTotal = 0;
+            foreach (MinMinUnit unit in teamUnitsForTotalCalculus)
+                healthTotal += GetRoomUnitStat(team, UnitRoomStats.HEALTH, unit.name);
+
+            SetRoomMatchStat(team, UnitRoomStats.HEALTH, healthTotal);
+        }
+    }
+
+    public void SetRoomUnitStat(string team, string stat, string unitName, int value)
+    {
+        NetworkManager.SetRoomCustomProperty(team + stat + unitName, value);
+    }
+
+    public int GetRoomUnitStat(string team, string stat, string unitName)
+    {
+        return NetworkManager.GetRoomCustomPropertyAsInt(team + stat + unitName);
+    }
+
+    public void SetRoomMatchStat(string team, string stat, int value)
+    {
+        NetworkManager.SetRoomCustomProperty(team + stat, value);
+    }
+
+    public int GetRoomMatchStat(string team, string stat)
+    {
+        return NetworkManager.GetRoomCustomPropertyAsInt(team + stat);
     }
 
     public void SetLocalPlayerUnitStat(string stat, string unitName, int value)

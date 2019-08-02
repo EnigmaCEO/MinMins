@@ -110,11 +110,11 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
         MinMinUnit minMin = GetMinMinFromResources(unitName);
         GameNetwork gameNetwork = GameNetwork.Instance;
-        gameNetwork.SetLocalPlayerUnitStat(GameNetwork.Stats.LEVEL, unitName, unitLevel);
-        gameNetwork.SetLocalPlayerUnitStat(GameNetwork.Stats.HEALTH, unitName, getStatByLevel(minMin.Health, unitLevel));
-        gameNetwork.SetLocalPlayerUnitStat(GameNetwork.Stats.STRENGHT, unitName, getStatByLevel(minMin.Strength, unitLevel));
-        gameNetwork.SetLocalPlayerUnitStat(GameNetwork.Stats.DEFENSE, unitName, getStatByLevel(minMin.Defense, unitLevel));
-        gameNetwork.SetLocalPlayerUnitStat(GameNetwork.Stats.EFFECT_SCALE, unitName, getStatByLevel(minMin.EffectScale, unitLevel));
+        gameNetwork.SetLocalPlayerUnitStat(GameNetwork.UnitPlayerStats.LEVEL, unitName, unitLevel);
+        //gameNetwork.SetLocalPlayerUnitStat(GameNetwork.UnitPlayerStats.HEALTH, unitName, getStatByLevel(minMin.Health, unitLevel));
+        gameNetwork.SetLocalPlayerUnitStat(GameNetwork.UnitPlayerStats.STRENGHT, unitName, getStatByLevel(minMin.Strength, unitLevel));
+        gameNetwork.SetLocalPlayerUnitStat(GameNetwork.UnitPlayerStats.DEFENSE, unitName, getStatByLevel(minMin.Defense, unitLevel));
+        gameNetwork.SetLocalPlayerUnitStat(GameNetwork.UnitPlayerStats.EFFECT_SCALE, unitName, getStatByLevel(minMin.EffectScale, unitLevel));
     }
 
     public MinMinUnit GetMinMinFromResources(string unitName)
