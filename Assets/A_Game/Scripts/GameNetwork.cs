@@ -187,6 +187,11 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         NetworkManager.SetLocalPlayerCustomProperty(PlayerCustomProperties.RATING, newRating.ToString());
     }
 
+    public int GetAnyPlayerRating(PhotonView photonView)
+    {
+        return NetworkManager.GetAnyPlayerCustomPropertyAsInt(PlayerCustomProperties.RATING, photonView);
+    }
+
     public PhotonView GetLocalPlayerPhotonView()
     {
         return NetworkManager.GetLocalPlayerPhotonView();

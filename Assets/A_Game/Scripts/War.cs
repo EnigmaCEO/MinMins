@@ -320,6 +320,7 @@ public class War : MonoBehaviour
                 int alliesTotalHealth = getTeamTotalHealth(alliesTeam);
                 int enemiesTotalHealth = getTeamTotalHealth(enemiesTeam);
 
+                //Team with higher total health wins
                 if (alliesTotalHealth > enemiesTotalHealth)
                     winner = alliesTeam;
                 else if (enemiesTotalHealth > alliesTotalHealth)
@@ -327,7 +328,17 @@ public class War : MonoBehaviour
 
                 if (winner == "")
                 {
+                    int localPlayerRating = GameNetwork.Instance.GetLocalPlayerRating();
+                    int enemyRating = GameNetwork.Instance.GetAnyPlayerRating(_enemies[0].GetComponent<PhotonView>());
 
+                    //Lowest rated player wins
+                    if (localPlayerRating < enemyRating)
+                        winner = alliesTeam;
+                    else if (enemyRating < localPlayerRating)
+                        winner = enemiesTeam;
+
+                    if (winner == "")
+                        winner = alliesTeam; // Master client wins
                 }     
             }
         }
