@@ -272,6 +272,8 @@ public class War : MonoBehaviour
 
             GameInventory.Instance.LevelUpUnit(minMin.name, expEarned);
         }
+
+        GameInventory.Instance.SaveUnits();
     }
 
     private void onMatchResultsCallback(string message)

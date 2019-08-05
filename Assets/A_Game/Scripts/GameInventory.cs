@@ -202,7 +202,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
                 inventoryManager.AddItem(_TEAM_1_GROUP_NAME, unitName, 0);
         }
 
-        saveUnits();
+        SaveUnits();
         ChangeLootBoxAmount(1, boxTier, false, true);
 
         return unitPicks;
@@ -217,6 +217,15 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
             unitTier = Tiers.GOLD;
 
         return unitTier;
+    }
+
+    public void SaveUnits()
+    {
+        InventoryManager inventoryManager = InventoryManager.Instance;
+        foreach (string unitName in inventoryManager.GetGroupKeys(_TEAM_1_GROUP_NAME))
+            saveUnit(_TEAM_1_GROUP_NAME, unitName, false);
+
+        saveHashTableToFile();
     }
 
     private void createUnitTierLists()
@@ -365,15 +374,6 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
             _saveHashTable.Add(hashKey, tierAmount);
         }
-
-        saveHashTableToFile();
-    }
-
-    private void saveUnits()
-    {
-        InventoryManager inventoryManager = InventoryManager.Instance;
-        foreach (string unitName in inventoryManager.GetGroupKeys(_TEAM_1_GROUP_NAME))
-            saveUnit(_TEAM_1_GROUP_NAME, unitName, false);
 
         saveHashTableToFile();
     }
