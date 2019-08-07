@@ -13,5 +13,6 @@ public class GameStats : SingletonMonobehaviour<GameStats>
 
     public Modes Mode = Modes.None;
     public int SelecteLevelNumber = 0;
+    public bool UsesAiForPvp = false;
     public bool IsEnjinLinked = false;
 }

@@ -31,14 +31,17 @@ public class UnitSelectManager : MonoBehaviour
     private Transform _teamGridContent;
     private string _selectedUnitName;
 
-
     private bool _infoEnabled = false;
 
     private Vector2[] _waypoints;
     private GameObject _attack;
 
+    private List<string> _selectedUnits = new List<string>();
+
     void Start()
     {
+        NetworkManager.Connect(true);
+
         List<string> inventoryUnitNames = GameInventory.Instance.GetInventoryUnitNames();  //TODO: Check if this needs to return stats
         int unitsLength = inventoryUnitNames.Count;
         GameObject unitGridItemTemplate = _unitsGridContent.GetChild(0).gameObject;
@@ -78,6 +81,8 @@ public class UnitSelectManager : MonoBehaviour
         _backButton.onClick.AddListener(() => onBackButtonDown());
 
         disableUnitInfo(true);
+
+        createDefaultSelectedUnits(slotsLength);
     }
 
     void OnGUI()
@@ -104,6 +109,12 @@ public class UnitSelectManager : MonoBehaviour
             }
         }
 
+    }
+
+    private void createDefaultSelectedUnits(int amount)
+    {
+        for (int i = 0; i < amount; i++)
+            _selectedUnits.Add("-1");
     }
 
     private void enableUnitInfo()
@@ -139,6 +150,19 @@ public class UnitSelectManager : MonoBehaviour
 
     private void onNextButtonDown()
     {
+        string teamUnits = "";
+        int selectedUnitLenght = _selectedUnits.Count;
+        for (int i = 0; i < selectedUnitLenght; i++)
+        {
+            if (i != 0)
+                teamUnits += Constants.Separators.First;
+
+            teamUnits += _selectedUnits[i];
+        }
+
+        GameNetwork.Instance.ClearTeamUnits(GameConstants.TeamNames.ALLIES);
+        GameNetwork.Instance.SetLocalPlayerTeamProperty(GameConstants.TeamNames.ALLIES, GameNetwork.TeamPlayerProperties.UNIT_NAMES, teamUnits);
+
         SceneManager.LoadScene(GameConstants.Scenes.WAR_PREP);
     }
 
@@ -192,8 +216,7 @@ public class UnitSelectManager : MonoBehaviour
         slotImage.sprite = Resources.Load<Sprite>("Images/Units/" + unitName);
         slotImage.enabled = true;
 
-        GameMatch.UnitData unitData = GameMatch.Instance.GetUnit(1, slotIndex);
-        unitData.Name = unitName;
+        _selectedUnits[slotIndex] = unitName;
 
         checkTeamReady();
     }

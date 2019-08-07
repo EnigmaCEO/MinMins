@@ -12,4 +12,10 @@ public class GameConstants
         public const string LOBBY = "Lobby";
         public const string UNIT_SELECT = "UnitSelect";
     }
+
+    public class TeamNames
+    {
+        public const string ALLIES = "Allies";
+        public const string ENEMIES = "Enemies";
+    }
 }

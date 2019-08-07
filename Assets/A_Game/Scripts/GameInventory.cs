@@ -21,9 +21,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     [SerializeField] private char _parseSeparator = '|';
     [SerializeField] private int _expToAddOnDuplicateUnit = 10;
 
-    [SerializeField] private float _statIncreaseByLevel = 1.1f;
 
-    private const string _TEAM_1_GROUP_NAME = "Team1";
     private const string _LOOT_BOXES = "Lootboxes";
     private const string _STATS = "Stats";
 
@@ -45,13 +43,10 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     [SerializeField] private float _tierSilver_GroupRarity = 0.3f;
     [SerializeField] private float _tierGold_GroupRarity = 0.2f;
 
-    [SerializeField] List<int> _experienceNeededPerUnitLevel = new List<int>() { 10, 30, 70, 150, 310 }; //{ 10, 20, 40, 80, 160 };
-
     private List<int> _tierSilver_units = new List<int>();
     private List<int> _tierGold_units = new List<int>();
 
     private List<UnitRarity> _unitSpecialRarities = new List<UnitRarity>();
-
 
 
     private void Awake()
@@ -68,9 +63,9 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
         InventoryManager inventoryManager = InventoryManager.Instance;
 
-        if (inventoryManager.CheckGroupExists(_TEAM_1_GROUP_NAME, false))
+        if (inventoryManager.CheckGroupExists(GameConstants.TeamNames.ALLIES, false))
         {
-            foreach (string unitName in inventoryManager.GetGroupKeys(_TEAM_1_GROUP_NAME))
+            foreach (string unitName in inventoryManager.GetGroupKeys(GameConstants.TeamNames.ALLIES))
                 inventoryUnitIndexes.Add(unitName);
         }
 
@@ -87,34 +82,11 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         return InventoryManager.Instance.GetItem<int>(_STATS, _SINGLE_PLAYER_LEVEL);
     }
 
-    public void LevelUpUnit(string unitName, int expToAdd)
+    public void AddExpToUnit(string unitName, int expToAdd)
     {
-        int unitExp = InventoryManager.Instance.GetItem<int>(_TEAM_1_GROUP_NAME, unitName);
+        int unitExp = InventoryManager.Instance.GetItem<int>(GameConstants.TeamNames.ALLIES, unitName);
         unitExp += expToAdd;
-
-        int unitLevel = 1;
-        int maxLevelIndexToCheck = _experienceNeededPerUnitLevel.Count - 2;
-        int maxExp = _experienceNeededPerUnitLevel[maxLevelIndexToCheck + 1];
-
-        if (unitExp > maxExp)
-            unitExp = maxExp;
-
-        for (int i = maxLevelIndexToCheck; i >= 0; i++)
-        {
-            if (unitExp >= _experienceNeededPerUnitLevel[i])
-            {
-                unitLevel = i + 1;
-                break;
-            }
-        }
-
-        MinMinUnit minMin = GetMinMinFromResources(unitName);
-        GameNetwork gameNetwork = GameNetwork.Instance;
-        gameNetwork.SetLocalPlayerUnitStat(GameNetwork.UnitPlayerStats.LEVEL, unitName, unitLevel);
-        //gameNetwork.SetLocalPlayerUnitStat(GameNetwork.UnitPlayerStats.HEALTH, unitName, getStatByLevel(minMin.Health, unitLevel));
-        gameNetwork.SetLocalPlayerUnitStat(GameNetwork.UnitPlayerStats.STRENGHT, unitName, getStatByLevel(minMin.Strength, unitLevel));
-        gameNetwork.SetLocalPlayerUnitStat(GameNetwork.UnitPlayerStats.DEFENSE, unitName, getStatByLevel(minMin.Defense, unitLevel));
-        gameNetwork.SetLocalPlayerUnitStat(GameNetwork.UnitPlayerStats.EFFECT_SCALE, unitName, getStatByLevel(minMin.EffectScale, unitLevel));
+        InventoryManager.Instance.UpdateItem(GameConstants.TeamNames.ALLIES, unitName, unitExp);
     }
 
     public MinMinUnit GetMinMinFromResources(string unitName)
@@ -124,14 +96,9 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         return minMin;
     }
 
-    private int getStatByLevel(int baseValue, float level)
+    public int GetAllyUnitExp(string unitName)
     {
-        return Mathf.RoundToInt((float)baseValue * _statIncreaseByLevel * level);
-    }
-
-    public int GetUnitExp(string unitName)
-    {
-        return InventoryManager.Instance.GetItem<int>(_TEAM_1_GROUP_NAME, unitName);
+        return InventoryManager.Instance.GetItem<int>(GameConstants.TeamNames.ALLIES, unitName);
     }
 
     public int GetLootBoxTierAmount(int tier)
@@ -193,13 +160,13 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         {
             print("LootBoxIndex got: " + lootBoxIndex);
             string unitName = lootBoxIndex.ToString();
-            if (inventoryManager.HasItem(_TEAM_1_GROUP_NAME, unitName, false))
+            if (inventoryManager.HasItem(GameConstants.TeamNames.ALLIES, unitName, false))
             {
-                LevelUpUnit(unitName, _expToAddOnDuplicateUnit);
+                AddExpToUnit(unitName, _expToAddOnDuplicateUnit);
                 print("Added " + _expToAddOnDuplicateUnit + " exp to unit " + unitName);
             }
             else
-                inventoryManager.AddItem(_TEAM_1_GROUP_NAME, unitName, 0);
+                inventoryManager.AddItem(GameConstants.TeamNames.ALLIES, unitName, 0);
         }
 
         SaveUnits();
@@ -222,8 +189,8 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     public void SaveUnits()
     {
         InventoryManager inventoryManager = InventoryManager.Instance;
-        foreach (string unitName in inventoryManager.GetGroupKeys(_TEAM_1_GROUP_NAME))
-            saveUnit(_TEAM_1_GROUP_NAME, unitName, false);
+        foreach (string unitName in inventoryManager.GetGroupKeys(GameConstants.TeamNames.ALLIES))
+            saveUnit(GameConstants.TeamNames.ALLIES, unitName, false);
 
         saveHashTableToFile();
     }
@@ -281,7 +248,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
     private void addMinMinUnit(string unitName)
     {
-        InventoryManager.Instance.AddItem(_TEAM_1_GROUP_NAME, unitName, 0);
+        InventoryManager.Instance.AddItem(GameConstants.TeamNames.ALLIES, unitName, 0);
     }
 
     private void loadData()
@@ -306,7 +273,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
             string[] terms = entry.Key.ToString().Split(_parseSeparator);
             string groupName = terms[0];
 
-            if (groupName == _TEAM_1_GROUP_NAME)
+            if (groupName == GameConstants.TeamNames.ALLIES)
             {
                 string unitName = terms[1];
                 int unitExp = int.Parse(entry.Value.ToString());

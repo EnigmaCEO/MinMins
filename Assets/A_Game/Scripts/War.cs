@@ -6,9 +6,18 @@ using UnityEngine.UI;
 
 public class War : MonoBehaviour
 {
+    public class GridNames
+    {
+        public const string TEAM_1 = "Team1";
+        public const string TEAM_2 = "Team2";
+    }
+
     [HideInInspector] public bool Ready = true;
 
     [SerializeField] private int _maxRoundsCount = 3;
+
+    [SerializeField] private int PvpTeamsToCreate = 2;
+    [SerializeField] private int SinglePlayerOrAiTeamsToCreate = 1;
 
     [SerializeField] private Transform _teamGridContent;
     [SerializeField] private float _readyCheckDelay = 2;
@@ -40,37 +49,79 @@ public class War : MonoBehaviour
 
     private int _roundCount = 0;
 
-    // Use this for initialization
     void Awake()
     {
         _battleField = GameObject.Find("/Battlefield").transform;
-        _alliesGrid = _battleField.Find("Team1");
-        _enemiesGrid = _battleField.Find("Team2");
 
-        GameMatch matchManager = GameMatch.Instance;
-        //int teamLength = matchManager.Team1.Length;
-        int teamLength = matchManager.GetTeamSize(1);
+        if (NetworkManager.IsPhotonOffline())
+        {
+            instantiateAllies();
+            instantiateEnemies(false);
+        }
+        else
+        {
+            if (NetworkManager.GetIsMasterClient())
+            {
+                instantiateAllies();
+
+                if (GameStats.Instance.UsesAiForPvp)
+                    instantiateEnemies(false);
+            }
+            else
+                instantiateEnemies(true);
+        }
+    }
+
+    private void instantiateAllies()
+    {
+        instantiateTeam(GridNames.TEAM_1, GameConstants.TeamNames.ALLIES, true);
+    }
+
+    private void instantiateEnemies(bool localPlayerIsEnemy)
+    {
+        instantiateTeam(GridNames.TEAM_2, GameConstants.TeamNames.ENEMIES, localPlayerIsEnemy);
+    }
+
+    private void instantiateTeam(string gridName, string teamName, bool localPlayerIsTeam)
+    {
+        Transform grid = _battleField.Find(gridName);
+
+        GameNetwork gameNetwork = GameNetwork.Instance;
+        string[] teamUnits = gameNetwork.GetLocalPlayerTeamUnits(teamName);
+        int teamLength = teamUnits.Length;
 
         for (int i = 0; i < teamLength; i++)
         {
-            GameMatch.UnitData unitData = matchManager.GetUnit(1, i);
-            if (unitData.Name == "-1")
+            string unitName = teamUnits[i];
+            if (unitName == "-1")
                 continue;
 
             int itemNumber = i + 1;
 
-            GameObject unit = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/MinMinUnits/" + unitData.Name));
-            unit.name = unitData.Name;
+            GameObject unit = NetworkManager.InstantiateObject("Prefabs/MinMinUnits/" + unitName, Vector3.zero, Quaternion.identity, 0);
+            unit.name = unitName;
 
             MinMinUnit minMinUnit = unit.GetComponent<MinMinUnit>();
             _allies.Add(minMinUnit);
 
+            if (localPlayerIsTeam)
+                gameNetwork.BuildUnitLevels(unitName);
+            else
+            {
+                //TODO: Level up AI unit. 
+            }
+
             Transform unitTransform = unit.transform;
-            unitTransform.parent = _alliesGrid.Find("slot" + itemNumber);
+            unitTransform.parent = grid.Find("slot" + itemNumber);
             unitTransform.localPosition = Vector2.zero;
 
+            string positionString = gameNetwork.GetLocalPlayerUnitProperty(unitName, GameNetwork.UnitPlayerProperties.POSITION);
+            string[] positionCoords = positionString.Split(Constants.Separators.First);
+            float posX = float.Parse(positionCoords[0]);
+            float posY = float.Parse(positionCoords[1]);
+
             Transform spriteTransform = unitTransform.Find("Sprite");
-            spriteTransform.localPosition = new Vector2(unitData.Position.x, unitData.Position.y);
+            spriteTransform.localPosition = new Vector2(posX, posY);
             WarUnit warUnit = spriteTransform.gameObject.AddComponent<WarUnit>();
             warUnit.Unit = unit;
             warUnit.SetWar(this);
@@ -80,48 +131,19 @@ public class War : MonoBehaviour
             shadow.transform.localPosition = new Vector2(0, 0);
             shadow.transform.localScale = new Vector2(-1, 1);
 
-            //Set UI
-            Transform warTeamGridItem = _teamGridContent.Find("WarTeamGridItem" + itemNumber);
-            Transform uiSpriteTransform = warTeamGridItem.Find("Sprite");
-            Image uiSpriteImage = uiSpriteTransform.GetComponent<Image>();
-            SpriteRenderer spriteRenderer = spriteTransform.GetComponent<SpriteRenderer>();
-            uiSpriteImage.sprite = spriteRenderer.sprite;
-            warUnit.LifeFill = warTeamGridItem.Find("LifeBar/LifeFill").GetComponent<Image>();
+            if (localPlayerIsTeam)
+            {
+                //Set UI
+                Transform warTeamGridItem = _teamGridContent.Find("WarTeamGridItem" + itemNumber);
+                Transform uiSpriteTransform = warTeamGridItem.Find("Sprite");
+                Image uiSpriteImage = uiSpriteTransform.GetComponent<Image>();
+                SpriteRenderer spriteRenderer = spriteTransform.GetComponent<SpriteRenderer>();
+                uiSpriteImage.sprite = spriteRenderer.sprite;
+                warUnit.LifeFill = warTeamGridItem.Find("LifeBar/LifeFill").GetComponent<Image>();
+            }
         }
 
-        teamLength = matchManager.GetTeamSize(2);
-        for (int i = 0; i < teamLength; i++)
-        {
-            GameMatch.UnitData unitData = matchManager.GetUnit(2, 1);
-            if (unitData.Name == "-1")
-                continue;
-
-            int itemNumber = i + 1;
-
-            GameObject unit = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/MinMinUnits/" + unitData.Name));
-            unit.name = unitData.Name;
-
-            MinMinUnit minMinUnit = unit.GetComponent<MinMinUnit>();
-            _enemies.Add(minMinUnit);
-
-            Transform unitTransform = unit.transform;
-            unitTransform.parent = _enemiesGrid.Find("slot" + itemNumber);
-            unitTransform.localPosition = Vector2.zero;
-
-            Transform spriteTransform = unitTransform.Find("Sprite");
-            spriteTransform.localPosition = new Vector2(unitData.Position.x, unitData.Position.y);
-            WarUnit warUnit = spriteTransform.gameObject.AddComponent<WarUnit>();
-            warUnit.Unit = unit;
-            warUnit.SetWar(this);
-
-            GameObject shadow = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/UI/battle_shadow"));
-            shadow.transform.parent = spriteTransform;
-            shadow.transform.localPosition = new Vector2(0, 0);
-            shadow.transform.localScale = new Vector2(-1, 1);
-        }
-
-        setAttacks(_alliesGrid);
-        setAttacks(_enemiesGrid);
+        setAttacks(grid);
     }
 
     private void Start()
@@ -262,7 +284,8 @@ public class War : MonoBehaviour
             //int Health = 
 
             int expEarned = 0;
-            //if (stats.Health > 0)
+            int minMinHealth = GameNetwork.Instance.GetRoomUnitStat(GameConstants.TeamNames.ALLIES, minMin.name, GameNetwork.UnitRoomProperties.HEALTH);
+            if (minMinHealth > 0)
             {
                 if (isVictory)
                     expEarned = 10;
@@ -270,7 +293,7 @@ public class War : MonoBehaviour
                     expEarned = 5;
             }
 
-            GameInventory.Instance.LevelUpUnit(minMin.name, expEarned);
+            GameInventory.Instance.AddExpToUnit(minMin.name, expEarned);
         }
 
         GameInventory.Instance.SaveUnits();
@@ -297,8 +320,8 @@ public class War : MonoBehaviour
         bool alliesDefeated = false;
         string winner = "";
 
-        string alliesTeam = GameNetwork.Teams.ALLIES;
-        string enemiesTeam = GameNetwork.Teams.ENEMIES;
+        string alliesTeam = GameConstants.TeamNames.ALLIES;
+        string enemiesTeam = GameConstants.TeamNames.ENEMIES;
 
         if (_roundCount > _maxRoundsCount)
             _hasMatchEnded = true;
@@ -313,9 +336,9 @@ public class War : MonoBehaviour
         if (_hasMatchEnded)
         {
             if (enemiesDefeated)
-                winner = GameNetwork.Teams.ALLIES;
+                winner = GameConstants.TeamNames.ALLIES;
             else if (alliesDefeated)
-                winner = GameNetwork.Teams.ENEMIES;
+                winner = GameConstants.TeamNames.ENEMIES;
 
             if (winner == "")
             {
@@ -349,7 +372,7 @@ public class War : MonoBehaviour
     //Only master client uses this
     private int getTeamTotalHealth(string team)
     {
-        return GameNetwork.Instance.GetRoomMatchStat(team, GameNetwork.UnitRoomStats.HEALTH);
+        return GameNetwork.Instance.GetRoomMatchStat(team, GameNetwork.UnitRoomProperties.HEALTH);
     }
 
     //Only master client uses this
@@ -357,9 +380,9 @@ public class War : MonoBehaviour
     {
         bool areAllUnitsDefeated = true;
         List<MinMinUnit> units = new List<MinMinUnit>();
-        if (team == GameNetwork.Teams.ALLIES)
+        if (team == GameConstants.TeamNames.ALLIES)
             units = _allies;
-        else if (team == GameNetwork.Teams.ENEMIES)
+        else if (team == GameConstants.TeamNames.ENEMIES)
             units = _enemies;
 
         foreach (MinMinUnit unit in units)
@@ -377,7 +400,7 @@ public class War : MonoBehaviour
 
     private int getUnitHealth(string team, string unitName)
     {
-        return GameNetwork.Instance.GetRoomUnitStat(team, GameNetwork.UnitRoomStats.HEALTH, unitName);
+        return GameNetwork.Instance.GetRoomUnitStat(team, unitName, GameNetwork.UnitRoomProperties.HEALTH);
     }
 
     public class MatchData

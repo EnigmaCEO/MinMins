@@ -755,12 +755,20 @@ namespace Enigma.CoreSystems
                     Data[DataGroups.INFO].Add(DataKeys.PLAYER, new Hashtable());
                
                 Hashtable userData = Data[DataGroups.INFO][DataKeys.PLAYER] as Hashtable;
-                string val = photonView.viewID.ToString() + "_" + key;
+                string finalKey = photonView.viewID.ToString() + "_" + key;
 
-                if (!userData.ContainsKey(val))
-                    userData.Add(val, value);
+                if (!userData.ContainsKey(finalKey))
+                {
+                    if (value != null)
+                        userData.Add(finalKey, value);
+                }
                 else
-                    userData[val] = value;
+                {
+                    if (value == null)
+                        userData.Remove(finalKey);
+                    else
+                        userData[finalKey] = value;
+                }
             }
             else  //Online
             {

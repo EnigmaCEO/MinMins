@@ -17,20 +17,17 @@ public class WarPrepManager : MonoBehaviour
         _nextButton.gameObject.SetActive(false);
 
         Transform warPrepGrid = GameObject.Find("/WarPrepGrid").transform;
-        int gridLength = warPrepGrid.childCount;
+        string[] unitNames = GameNetwork.Instance.GetLocalPlayerTeamUnits(GameConstants.TeamNames.ALLIES);
+        int unitsCount = unitNames.Length;
 
-        for (int i = 0; i < gridLength; i++)
+        for (int i = 0; i < unitsCount; i++)
         {
-            //int prepIndex = PlayerStats.Instance.TeamUnitIndexes[i] + 1;
-            //if (prepIndex < 1)
-            //    continue;
-
-            string prepName = GameMatch.Instance.GetUnit(1, i).Name;
-            if (prepName == "-1")
+            string unitName = unitNames[i];
+            if (unitName == "-1")
                 continue;
 
-            GameObject minMinObj = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/MinMinUnits/" + prepName));
-            minMinObj.name = prepName;
+            GameObject minMinObj = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/MinMinUnits/" + unitName));
+            minMinObj.name = unitName;
             Transform minMinTransform = minMinObj.transform;
             minMinTransform.Find("Sprite").gameObject.AddComponent<PrepMinMin>().SetManager(this);
 
@@ -51,12 +48,17 @@ public class WarPrepManager : MonoBehaviour
 
     private void onNextButtonDown()
     {
-        GameMatch gameMatch = GameMatch.Instance;
+        GameNetwork gameNetwork = GameNetwork.Instance;
 
         for (int i = 0; i < _slotsInPlay; i++)
         {
-            Transform unitSpriteTransform = _slotsTeam1.Find("slot" + (i + 1) + "/Sprite");
-            gameMatch.GetUnit(1, i).Position = unitSpriteTransform.localPosition;
+            Transform unitTransform = _slotsTeam1.Find("slot" + (i + 1));
+            Transform unitSpriteTransform = unitTransform.Find("Sprite");
+
+            Vector3 pos = unitSpriteTransform.localPosition;
+            string positionString = pos.x.ToString() + Constants.Separators.First + pos.y.ToString();
+
+            gameNetwork.SetLocalPlayerUnitProperty(unitTransform.name, GameNetwork.UnitPlayerProperties.POSITION, positionString);
         }
 
         SceneManager.LoadScene(GameConstants.Scenes.WAR);

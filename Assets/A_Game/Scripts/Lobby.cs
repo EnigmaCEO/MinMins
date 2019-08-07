@@ -19,6 +19,7 @@ public class Lobby : MonoBehaviour
 
         setDelegates();
         NetworkManager.Connect(_isOffline); //No need to call JoinLobby as Auto-Join Lobby is true in PhotonServerSettings 
+        GameStats.Instance.UsesAiForPvp = false;
     }
 
     void Update()
@@ -155,7 +156,8 @@ public class Lobby : MonoBehaviour
 
     private void assignAiRival()
     {
-
+        //TODO: Assign Ai Rival
+        GameStats.Instance.UsesAiForPvp = true;
     }
 
     private void createRoom(string roomName)
