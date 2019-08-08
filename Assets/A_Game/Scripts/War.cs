@@ -38,8 +38,8 @@ public class War : MonoBehaviour
     private Transform _enemiesGrid;
     //private GameObject _slot;
 
-    private List<MinMinUnit> _allies;
-    private List<MinMinUnit> _enemies;
+    private List<MinMinUnit> _allies = new List<MinMinUnit>();
+    private List<MinMinUnit> _enemies = new List<MinMinUnit>();
 
     private string _attackingUnitName = "";
     private float _timer;
@@ -74,20 +74,20 @@ public class War : MonoBehaviour
 
     private void instantiateAllies()
     {
-        instantiateTeam(GridNames.TEAM_1, GameConstants.TeamNames.ALLIES, true);
+        instantiateTeam(GridNames.TEAM_1, GameConstants.VirtualPlayerIds.ALLIES, true);
     }
 
     private void instantiateEnemies(bool localPlayerIsEnemy)
     {
-        instantiateTeam(GridNames.TEAM_2, GameConstants.TeamNames.ENEMIES, localPlayerIsEnemy);
+        instantiateTeam(GridNames.TEAM_2, GameConstants.VirtualPlayerIds.ENEMIES, localPlayerIsEnemy);
     }
 
-    private void instantiateTeam(string gridName, string teamName, bool localPlayerIsTeam)
+    private void instantiateTeam(string gridName, string virtualPlayerId, bool localPlayerIsTeam)
     {
         Transform grid = _battleField.Find(gridName);
 
         GameNetwork gameNetwork = GameNetwork.Instance;
-        string[] teamUnits = gameNetwork.GetLocalPlayerTeamUnits(teamName);
+        string[] teamUnits = gameNetwork.GetLocalPlayerTeamUnits(virtualPlayerId);
         int teamLength = teamUnits.Length;
 
         for (int i = 0; i < teamLength; i++)
@@ -105,7 +105,7 @@ public class War : MonoBehaviour
             _allies.Add(minMinUnit);
 
             if (localPlayerIsTeam)
-                gameNetwork.BuildUnitLevels(unitName);
+                gameNetwork.BuildUnitLevels(unitName, virtualPlayerId);
             else
             {
                 //TODO: Level up AI unit. 
@@ -115,7 +115,7 @@ public class War : MonoBehaviour
             unitTransform.parent = grid.Find("slot" + itemNumber);
             unitTransform.localPosition = Vector2.zero;
 
-            string positionString = gameNetwork.GetLocalPlayerUnitProperty(unitName, GameNetwork.UnitPlayerProperties.POSITION);
+            string positionString = gameNetwork.GetLocalPlayerUnitProperty(unitName, GameNetwork.UnitPlayerProperties.POSITION, virtualPlayerId);
             string[] positionCoords = positionString.Split(Constants.Separators.First);
             float posX = float.Parse(positionCoords[0]);
             float posY = float.Parse(positionCoords[1]);
@@ -284,7 +284,7 @@ public class War : MonoBehaviour
             //int Health = 
 
             int expEarned = 0;
-            int minMinHealth = GameNetwork.Instance.GetRoomUnitStat(GameConstants.TeamNames.ALLIES, minMin.name, GameNetwork.UnitRoomProperties.HEALTH);
+            int minMinHealth = GameNetwork.Instance.GetRoomUnitStat(GameConstants.VirtualPlayerIds.ALLIES, minMin.name, GameNetwork.UnitRoomProperties.HEALTH);
             if (minMinHealth > 0)
             {
                 if (isVictory)
@@ -320,8 +320,8 @@ public class War : MonoBehaviour
         bool alliesDefeated = false;
         string winner = "";
 
-        string alliesTeam = GameConstants.TeamNames.ALLIES;
-        string enemiesTeam = GameConstants.TeamNames.ENEMIES;
+        string alliesTeam = GameConstants.VirtualPlayerIds.ALLIES;
+        string enemiesTeam = GameConstants.VirtualPlayerIds.ENEMIES;
 
         if (_roundCount > _maxRoundsCount)
             _hasMatchEnded = true;
@@ -336,9 +336,9 @@ public class War : MonoBehaviour
         if (_hasMatchEnded)
         {
             if (enemiesDefeated)
-                winner = GameConstants.TeamNames.ALLIES;
+                winner = GameConstants.VirtualPlayerIds.ALLIES;
             else if (alliesDefeated)
-                winner = GameConstants.TeamNames.ENEMIES;
+                winner = GameConstants.VirtualPlayerIds.ENEMIES;
 
             if (winner == "")
             {
@@ -353,8 +353,8 @@ public class War : MonoBehaviour
 
                 if (winner == "")
                 {
-                    int localPlayerRating = GameNetwork.Instance.GetLocalPlayerRating();
-                    int enemyRating = GameNetwork.Instance.GetAnyPlayerRating(_enemies[0].GetComponent<PhotonView>());
+                    int localPlayerRating = GameNetwork.Instance.GetLocalPlayerRating(GameConstants.VirtualPlayerIds.ALLIES);
+                    int enemyRating = GameNetwork.Instance.GetAnyPlayerRating(_enemies[0].GetComponent<PhotonView>().owner, GameConstants.VirtualPlayerIds.ENEMIES);
 
                     //Lowest rated player wins
                     if (localPlayerRating < enemyRating)
@@ -380,9 +380,9 @@ public class War : MonoBehaviour
     {
         bool areAllUnitsDefeated = true;
         List<MinMinUnit> units = new List<MinMinUnit>();
-        if (team == GameConstants.TeamNames.ALLIES)
+        if (team == GameConstants.VirtualPlayerIds.ALLIES)
             units = _allies;
-        else if (team == GameConstants.TeamNames.ENEMIES)
+        else if (team == GameConstants.VirtualPlayerIds.ENEMIES)
             units = _enemies;
 
         foreach (MinMinUnit unit in units)

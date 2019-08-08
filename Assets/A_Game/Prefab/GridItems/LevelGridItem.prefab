@@ -89,6 +89,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345430bfdd0d5ed48abecbbb9f76f297, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  FightButton: {fileID: 535513337387717043}
+  _label: {fileID: 535513338620661684}
+  _labelShadow: {fileID: 535513338989146328}
 --- !u!1 &535513337387717041
 GameObject:
   m_ObjectHideFlags: 0

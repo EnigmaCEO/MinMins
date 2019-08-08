@@ -11,13 +11,17 @@ public class Main : MonoBehaviour
 
     public void OnSinglePlayerButtonDown()
     {
+        print("OnSinglePlayerButtonDown");
         GameStats.Instance.Mode = GameStats.Modes.SinglePlayer;
+        NetworkManager.Connect(true);
         GoToLevels();
     }
 
     public void OnPvpButtonDown()
     {
+        print("OnPvpButtonDown");
         GameStats.Instance.Mode = GameStats.Modes.Pvp;
+        NetworkManager.Connect(false);
         GoToLevels();
     }
 

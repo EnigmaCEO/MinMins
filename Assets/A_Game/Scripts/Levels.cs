@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class Levels : MonoBehaviour
 {
     [SerializeField] private Transform _levelsGridContent;
-    [SerializeField] List<int> _ratingsForArena = new List<int>() { 500, 600, 700, 800, 900, 1000 };
+    [SerializeField] List<int> _ratingsForArena = new List<int>() { 0, 300, 600, 900, 1200, 1500 };
 
     void Start()
     {
@@ -21,11 +21,16 @@ public class Levels : MonoBehaviour
             
         for (int i = 0; i < levelsLenght; i++)
         {
-            Transform unitTransform = Instantiate<GameObject>(levelGridItemTemplate, _levelsGridContent).transform;
+            GameObject levelGameObject = Instantiate<GameObject>(levelGridItemTemplate, _levelsGridContent);
             int levelNumber = i + 1;
-            unitTransform.name = "Level" + levelNumber;
-            unitTransform.Find("FightButton").GetComponent<Button>().onClick.AddListener(() => { onLevelFightButtonDown(levelNumber); });
+            levelGameObject.name = "Level" + levelNumber;
+
+            LevelGridItem levelGridItem = levelGameObject.GetComponent<LevelGridItem>();
+            levelGridItem.SetLabel(levelNumber.ToString());
+            levelGridItem.FightButton.onClick.AddListener(() => { onLevelFightButtonDown(levelNumber); });
         }
+
+        levelGridItemTemplate.SetActive(false);
     }
 
     private void onLevelFightButtonDown(int levelNumber)
@@ -41,10 +46,10 @@ public class Levels : MonoBehaviour
     private int getPvpLevelNumber()
     {
         int levelNumber = 0;
-        int rating = GameNetwork.Instance.GetLocalPlayerRating();
+        int rating = GameNetwork.Instance.GetLocalPlayerRating(GameConstants.VirtualPlayerIds.ALLIES);
 
         int arenasLenght = _ratingsForArena.Count;
-        for (int i = (arenasLenght - 1); i == 0; i--)
+        for (int i = (arenasLenght - 1); i >= 0; i--)
         {
             if (rating >= _ratingsForArena[i])
             {

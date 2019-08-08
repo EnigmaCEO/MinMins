@@ -17,7 +17,7 @@ public class WarPrepManager : MonoBehaviour
         _nextButton.gameObject.SetActive(false);
 
         Transform warPrepGrid = GameObject.Find("/WarPrepGrid").transform;
-        string[] unitNames = GameNetwork.Instance.GetLocalPlayerTeamUnits(GameConstants.TeamNames.ALLIES);
+        string[] unitNames = GameNetwork.Instance.GetLocalPlayerTeamUnits(GameConstants.VirtualPlayerIds.ALLIES);
         int unitsCount = unitNames.Length;
 
         for (int i = 0; i < unitsCount; i++)
@@ -58,7 +58,7 @@ public class WarPrepManager : MonoBehaviour
             Vector3 pos = unitSpriteTransform.localPosition;
             string positionString = pos.x.ToString() + Constants.Separators.First + pos.y.ToString();
 
-            gameNetwork.SetLocalPlayerUnitProperty(unitTransform.name, GameNetwork.UnitPlayerProperties.POSITION, positionString);
+            gameNetwork.SetLocalPlayerUnitProperty(unitTransform.name, GameNetwork.UnitPlayerProperties.POSITION, positionString, GameConstants.VirtualPlayerIds.ALLIES);
         }
 
         SceneManager.LoadScene(GameConstants.Scenes.WAR);

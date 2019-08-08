@@ -44,10 +44,6 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     public class PlayerCustomProperties
     {
         public const string RATING = "Rating";
-    }
-
-    public class TeamPlayerProperties
-    {
         public const string UNIT_NAMES = "UnitNames";
     }
 
@@ -78,58 +74,10 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
     private void Awake()
     {
-        storeDefaultTeams();
+        StoreDefaultTeams();
     }
 
-    public void SendMatchResults(War.MatchData matchData, OnSendResultsDelegate onSendMatchResultsCallback)
-    {
-        _onSendResultsCallback = onSendMatchResultsCallback;
-
-        _matchResultshashTable.Clear();
-        _matchResultshashTable.Add(TransactionKeys.PLAYER_ID, matchData.PlayerId);
-        _matchResultshashTable.Add(TransactionKeys.MATCH_DURATION, matchData.MatchDuration);
-        _matchResultshashTable.Add(TransactionKeys.DAMAGE_DEALT, matchData.DamageDealt);
-        _matchResultshashTable.Add(TransactionKeys.DAMAGE_RECEIVED, matchData.DamageReceived);
-        _matchResultshashTable.Add(TransactionKeys.MATCH_DURATION, matchData.MatchDuration);
-        _matchResultshashTable.Add(TransactionKeys.UNITS_KILLED, matchData.UnitsKilled);
-
-        performResultsSendingTransaction();
-    }
-
-    public void BuildUnitLevels(string unitName)
-    {
-        GameInventory gameInventory = GameInventory.Instance;
-        int unitExp = gameInventory.GetAllyUnitExp(unitName);
-
-        int unitLevel = 1;
-        int maxLevelIndexToCheck = _experienceNeededPerUnitLevel.Count - 2;
-        int maxExp = _experienceNeededPerUnitLevel[maxLevelIndexToCheck + 1];
-
-        if (unitExp > maxExp)
-            unitExp = maxExp;
-
-        for (int i = maxLevelIndexToCheck; i >= 0; i++)
-        {
-            if (unitExp >= _experienceNeededPerUnitLevel[i])
-            {
-                unitLevel = i + 1;
-                break;
-            }
-        }
-
-        MinMinUnit minMin = gameInventory.GetMinMinFromResources(unitName);
-        SetLocalPlayerUnitProperty(UnitPlayerProperties.LEVEL, unitName, unitLevel.ToString());
-        SetLocalPlayerUnitProperty(UnitPlayerProperties.STRENGHT, unitName, getStatByLevel(minMin.Strength, unitLevel));
-        SetLocalPlayerUnitProperty(UnitPlayerProperties.DEFENSE, unitName, getStatByLevel(minMin.Defense, unitLevel));
-        SetLocalPlayerUnitProperty(UnitPlayerProperties.EFFECT_SCALE, unitName, getStatByLevel(minMin.EffectScale, unitLevel));
-    }
-
-    private string getStatByLevel(int baseValue, float level)
-    {
-        return (Mathf.RoundToInt((float)baseValue * _statIncreaseByLevel * level)).ToString();
-    }
-
-    private void storeDefaultTeams()
+    public void StoreDefaultTeams()
     {
         List<string> teams = new List<string>();
         for (int i = 0; i < TeamsAmount; i++)
@@ -153,8 +101,56 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
             teams.Add(team);
         }
 
-        SetLocalPlayerTeamProperty(GameConstants.TeamNames.ALLIES, TeamPlayerProperties.UNIT_NAMES, teams[0]);
-        SetLocalPlayerTeamProperty(GameConstants.TeamNames.ENEMIES, TeamPlayerProperties.UNIT_NAMES, teams[1]);
+        NetworkManager.SetLocalPlayerCustomProperty(PlayerCustomProperties.UNIT_NAMES, teams[0], GameConstants.VirtualPlayerIds.ALLIES);
+        NetworkManager.SetLocalPlayerCustomProperty(PlayerCustomProperties.UNIT_NAMES, teams[1], GameConstants.VirtualPlayerIds.ENEMIES);
+    }
+
+    public void SendMatchResults(War.MatchData matchData, OnSendResultsDelegate onSendMatchResultsCallback)
+    {
+        _onSendResultsCallback = onSendMatchResultsCallback;
+
+        _matchResultshashTable.Clear();
+        _matchResultshashTable.Add(TransactionKeys.PLAYER_ID, matchData.PlayerId);
+        _matchResultshashTable.Add(TransactionKeys.MATCH_DURATION, matchData.MatchDuration);
+        _matchResultshashTable.Add(TransactionKeys.DAMAGE_DEALT, matchData.DamageDealt);
+        _matchResultshashTable.Add(TransactionKeys.DAMAGE_RECEIVED, matchData.DamageReceived);
+        _matchResultshashTable.Add(TransactionKeys.MATCH_DURATION, matchData.MatchDuration);
+        _matchResultshashTable.Add(TransactionKeys.UNITS_KILLED, matchData.UnitsKilled);
+
+        performResultsSendingTransaction();
+    }
+
+    public void BuildUnitLevels(string unitName, string virtualPlayerId)
+    {
+        GameInventory gameInventory = GameInventory.Instance;
+        int unitExp = gameInventory.GetAllyUnitExp(unitName);
+
+        int unitLevel = 1;
+        int maxLevelIndexToCheck = _experienceNeededPerUnitLevel.Count - 2;
+        int maxExp = _experienceNeededPerUnitLevel[maxLevelIndexToCheck + 1];
+
+        if (unitExp > maxExp)
+            unitExp = maxExp;
+
+        for (int i = maxLevelIndexToCheck; i >= 0; i++)
+        {
+            if (unitExp >= _experienceNeededPerUnitLevel[i])
+            {
+                unitLevel = i + 1;
+                break;
+            }
+        }
+
+        MinMinUnit minMin = gameInventory.GetMinMinFromResources(unitName);
+        SetLocalPlayerUnitProperty(UnitPlayerProperties.LEVEL, unitName, unitLevel.ToString(), virtualPlayerId);
+        SetLocalPlayerUnitProperty(UnitPlayerProperties.STRENGHT, unitName, getStatByLevel(minMin.Strength, unitLevel), virtualPlayerId);
+        SetLocalPlayerUnitProperty(UnitPlayerProperties.DEFENSE, unitName, getStatByLevel(minMin.Defense, unitLevel), virtualPlayerId);
+        SetLocalPlayerUnitProperty(UnitPlayerProperties.EFFECT_SCALE, unitName, getStatByLevel(minMin.EffectScale, unitLevel), virtualPlayerId);
+    }
+
+    private string getStatByLevel(int baseValue, float level)
+    {
+        return (Mathf.RoundToInt((float)baseValue * _statIncreaseByLevel * level)).ToString();
     }
 
     private void performResultsSendingTransaction()
@@ -174,7 +170,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
             if (status == NetworkManager.StatusOptions.SUCCESS)
             {
                 int updatedRating = response_hash[TransactionKeys.RATING].AsInt;
-                SetLocalPlayerRating(updatedRating);
+                SetLocalPlayerRating(updatedRating, GameConstants.VirtualPlayerIds.ALLIES);
                 _onSendResultsCallback(ServerResponseMessages.SUCCESS);
             }
             else
@@ -230,109 +226,90 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         return NetworkManager.GetRoomCustomPropertyAsInt(team + property);
     }
 
-    public void ClearTeamUnits(string teamName)
+    public void ClearTeamUnits(string virtualPlayerId)
     {
-        string[] teamUnits = GetLocalPlayerTeamUnits(teamName);
+        string[] teamUnits = GetLocalPlayerTeamUnits(virtualPlayerId);
         foreach (string unitName in teamUnits)
         {
-            SetLocalPlayerUnitProperty(unitName, UnitPlayerProperties.LEVEL, null);
-            SetLocalPlayerUnitProperty(unitName, UnitPlayerProperties.STRENGHT, null);
-            SetLocalPlayerUnitProperty(unitName, UnitPlayerProperties.DEFENSE, null);
-            SetLocalPlayerUnitProperty(unitName, UnitPlayerProperties.EFFECT_SCALE, null);
-            SetLocalPlayerUnitProperty(unitName, UnitPlayerProperties.POSITION, null);
+            SetLocalPlayerUnitProperty(unitName, UnitPlayerProperties.LEVEL, null, virtualPlayerId);
+            SetLocalPlayerUnitProperty(unitName, UnitPlayerProperties.STRENGHT, null, virtualPlayerId);
+            SetLocalPlayerUnitProperty(unitName, UnitPlayerProperties.DEFENSE, null, virtualPlayerId);
+            SetLocalPlayerUnitProperty(unitName, UnitPlayerProperties.EFFECT_SCALE, null, virtualPlayerId);
+            SetLocalPlayerUnitProperty(unitName, UnitPlayerProperties.POSITION, null, virtualPlayerId);
         }
 
-        SetLocalPlayerTeamProperty(teamName, TeamPlayerProperties.UNIT_NAMES, null);
+        NetworkManager.SetLocalPlayerCustomProperty(PlayerCustomProperties.UNIT_NAMES, null, virtualPlayerId);
     }
 
-    public string[] GetLocalPlayerTeamUnits(string teamName)
+    public string[] GetLocalPlayerTeamUnits(string virtualPlayerId)
     {
-        string teamString = GetLocalPlayerUnitProperty(teamName, TeamPlayerProperties.UNIT_NAMES);
+        string teamString = NetworkManager.GetLocalPlayerCustomProperty(PlayerCustomProperties.UNIT_NAMES, virtualPlayerId);
         return teamString.Split(Constants.Separators.First);
     }
 
-    public void SetLocalPlayerTeamProperty(string teamName, string property, string value)
+    public void SetLocalPlayerUnitProperty(string unitName, string property, string value, string virtualPlayerId)
     {
-        SetAnyPlayerTeamProperty(teamName, property, value, GetLocalPlayerPhotonView());
+        SetAnyPlayerUnitProperty(unitName, property, value, virtualPlayerId, GetLocalPlayer());
     }
 
-    public void SetAnyPlayerTeamProperty(string teamName, string property, string value, PhotonView photonView)
+    public void SetAnyPlayerUnitProperty(string unitName, string property, string value, string virtualPlayerId, PhotonPlayer player)
     {
-        NetworkManager.SetAnyPlayerCustomProperty(teamName + property, value, photonView);
+        NetworkManager.SetAnyPlayerCustomProperty(unitName + property, value, virtualPlayerId, player);
     }
 
-    public string GetLocalPlayerTeamProperty(string teamName, string property)
+    public string GetLocalPlayerUnitProperty(string unitName, string property, string virtualPlayerId)
     {
-        return GetAnyPlayerTeamProperty(teamName, property, GetLocalPlayerPhotonView());
+        return GetAnyPlayerUnitProperty(unitName, property, virtualPlayerId, GetLocalPlayer());
     }
 
-    public string GetAnyPlayerTeamProperty(string teamName, string property, PhotonView photonView)
+    public int GetLocalPlayerUnitPropertyAsInt(string unitName, string property, string virtualPlayerId)
     {
-        return NetworkManager.GetAnyPlayerCustomProperty(teamName + property, photonView);
+        return GetAnyPlayerUnitPropertyAsInt(unitName, property, virtualPlayerId, GetLocalPlayer());
     }
 
-    public void SetLocalPlayerUnitProperty(string unitName, string property, string value)
+    public int GetAnyPlayerUnitPropertyAsInt(string unitName, string property, string virtualPlayerId, PhotonPlayer player)
     {
-        SetAnyPlayerUnitProperty(unitName, property, value, GetLocalPlayerPhotonView());
+        return NetworkManager.GetAnyPlayerCustomPropertyAsInt(unitName + property, virtualPlayerId, player);
     }
 
-    public void SetAnyPlayerUnitProperty(string unitName, string property, string value, PhotonView photonView)
+    public string GetAnyPlayerUnitProperty(string unitName, string property, string virtualPlayerId, PhotonPlayer player)
     {
-        NetworkManager.SetAnyPlayerCustomProperty(unitName + property, value, photonView);
+        return NetworkManager.GetAnyPlayerCustomProperty(unitName + property, virtualPlayerId, player);
     }
 
-    public string GetLocalPlayerUnitProperty(string unitName, string property)
+    public int GetLocalPlayerRating(string virtualPlayerId)
     {
-        return GetAnyPlayerUnitProperty(unitName, property, GetLocalPlayerPhotonView());
+        return 10; //TODO: Remove hack when rating is received from Login response
+        //return NetworkManager.GetLocalPlayerCustomPropertyAsInt(PlayerCustomProperties.RATING, virtualPlayerId);
     }
 
-    public int GetLocalPlayerUnitPropertyAsInt(string unitName, string property)
+    public void SetLocalPlayerRating(int newRating, string virtualPlayerId)
     {
-        return GetAnyPlayerUnitPropertyAsInt(unitName, property, GetLocalPlayerPhotonView());
+        NetworkManager.SetLocalPlayerCustomProperty(PlayerCustomProperties.RATING, newRating.ToString(), virtualPlayerId);
     }
 
-    public int GetAnyPlayerUnitPropertyAsInt(string unitName, string property, PhotonView photonView)
+    public int GetAnyPlayerRating(PhotonPlayer player, string virtualPlayerId)
     {
-        return NetworkManager.GetAnyPlayerCustomPropertyAsInt(unitName + property, photonView);
+        return NetworkManager.GetAnyPlayerCustomPropertyAsInt(PlayerCustomProperties.RATING, virtualPlayerId, player);
     }
 
-    public string GetAnyPlayerUnitProperty(string unitName, string property, PhotonView photonView)
+    public PhotonPlayer GetLocalPlayer()
     {
-        return NetworkManager.GetAnyPlayerCustomProperty(unitName + property, photonView);
+        return NetworkManager.GetLocalPlayer();
     }
 
-    public int GetLocalPlayerRating()
-    {
-        return NetworkManager.GetLocalPlayerCustomPropertyAsInt(PlayerCustomProperties.RATING);
-    }
+    //public void SetLocalPlayerCustomPropertyArray(string key, string[] val)
+    //{
+    //    string value = "";
+    //    if (val.Length == 0)
+    //        value = Json.Encode(val);
 
-    public void SetLocalPlayerRating(int newRating)
-    {
-        NetworkManager.SetLocalPlayerCustomProperty(PlayerCustomProperties.RATING, newRating.ToString());
-    }
+    //    NetworkManager.SetLocalPlayerCustomProperty(key, value);
+    //}
 
-    public int GetAnyPlayerRating(PhotonView photonView)
-    {
-        return NetworkManager.GetAnyPlayerCustomPropertyAsInt(PlayerCustomProperties.RATING, photonView);
-    }
-
-    public PhotonView GetLocalPlayerPhotonView()
-    {
-        return NetworkManager.GetLocalPlayerPhotonView();
-    }
-
-    public void SetLocalPlayerCustomPropertyArray(string key, string[] val)
-    {
-        string value = "";
-        if (val.Length == 0)
-            value = Json.Encode(val);
-
-        NetworkManager.SetLocalPlayerCustomProperty(key, value);
-    }
-
-    public string[] GetLocalPlayerCustomPropertyArray(string key)
-    {
-        string value = NetworkManager.GetLocalPlayerCustomProperty(key);
-        return Json.Decode<string[]>(value);
-    }
+    //public string[] GetLocalPlayerCustomPropertyArray(string key)
+    //{
+    //    string value = NetworkManager.GetLocalPlayerCustomProperty(key);
+    //    return Json.Decode<string[]>(value);
+    //}
 }

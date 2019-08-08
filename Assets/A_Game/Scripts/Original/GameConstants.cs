@@ -13,7 +13,7 @@ public class GameConstants
         public const string UNIT_SELECT = "UnitSelect";
     }
 
-    public class TeamNames
+    public class VirtualPlayerIds
     {
         public const string ALLIES = "Allies";
         public const string ENEMIES = "Enemies";

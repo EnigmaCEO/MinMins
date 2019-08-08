@@ -374,6 +374,12 @@ MonoBehaviour:
   _loopType: 2
   _time: 4
   _delay: 0.2
+--- !u!224 &632697765 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 3097089673593597773, guid: d574c84e3c192a84ca40feb1564d5cf5,
+    type: 3}
+  m_PrefabInstance: {fileID: 3018863116806621798}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1023638250
 GameObject:
   m_ObjectHideFlags: 0
@@ -844,8 +850,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dec979fb6b9713e4a8ac54c6e1315de9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _levelsGridContent: {fileID: 0}
-  _ratingsForArena: f401000058020000bc0200002003000084030000e8030000
+  _levelsGridContent: {fileID: 632697765}
+  _ratingsForArena: 000000002c0100005802000084030000b0040000dc050000
 --- !u!4 &1870440657
 Transform:
   m_ObjectHideFlags: 0

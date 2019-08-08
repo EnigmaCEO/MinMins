@@ -510,6 +510,8 @@ namespace Enigma.CoreSystems
             PhotonNetwork.logLevel = PhotonLogLevel.Full;
             PhotonNetwork.offlineMode = isOffline;
             GetLocalPlayerPhotonView().viewID = 1;
+
+            PhotonNetwork.InstantiateInRoomOnly = !isOffline;
         }
 
         static public void Disconnect()
@@ -662,7 +664,7 @@ namespace Enigma.CoreSystems
         }
 
         //Get the local PhotonPlayer (local user)
-        static public PhotonPlayer GetPlayer()
+        static public PhotonPlayer GetLocalPlayer()
         {
             return PhotonNetwork.player;
         }
@@ -744,8 +746,10 @@ namespace Enigma.CoreSystems
             CreatingOrJoinRoom = creatingOrJoinRoom;
         }
 
-        static public void SetAnyPlayerCustomProperty(string key, string value, PhotonView photonView)
+        static public void SetAnyPlayerCustomProperty(string key, string value, string virtualPlayerId, PhotonPlayer player)
         {
+            string finalKey = virtualPlayerId + "_" + key;
+
             if (IsPhotonOffline())
             {
                 if (!Data.ContainsKey(DataGroups.INFO))
@@ -755,7 +759,7 @@ namespace Enigma.CoreSystems
                     Data[DataGroups.INFO].Add(DataKeys.PLAYER, new Hashtable());
                
                 Hashtable userData = Data[DataGroups.INFO][DataKeys.PLAYER] as Hashtable;
-                string finalKey = photonView.viewID.ToString() + "_" + key;
+                
 
                 if (!userData.ContainsKey(finalKey))
                 {
@@ -772,30 +776,26 @@ namespace Enigma.CoreSystems
             }
             else  //Online
             {
-                Hashtable properties = new Hashtable();
-                properties.Add(key, value);
-
                 ExitGames.Client.Photon.Hashtable photonHTable = new ExitGames.Client.Photon.Hashtable();
-
-                foreach (DictionaryEntry pair in properties)
-                    photonHTable.Add(pair.Key, pair.Value);
-
-                photonView.owner.SetCustomProperties(photonHTable);
+                photonHTable.Add(finalKey, value);
+                player.SetCustomProperties(photonHTable);
             }
         }
 
-        static public void SetLocalPlayerCustomProperty(string key, string value)
+        static public void SetLocalPlayerCustomProperty(string key, string value, string virtualPlayerId)
         {
-            SetAnyPlayerCustomProperty(key, value, GetLocalPlayerPhotonView());
+            SetAnyPlayerCustomProperty(key, value, virtualPlayerId, GetLocalPlayer());
         }
 
-        static public int GetAnyPlayerCustomPropertyAsInt(string key, PhotonView photonView)
+        static public int GetAnyPlayerCustomPropertyAsInt(string key, string virtualPlayerId, PhotonPlayer player)
         {
-            return int.Parse(GetAnyPlayerCustomProperty(key, photonView));
+            return int.Parse(GetAnyPlayerCustomProperty(key, virtualPlayerId, player));
         }
 
-        static public string GetAnyPlayerCustomProperty(string key, PhotonView photonView)
+        static public string GetAnyPlayerCustomProperty(string key, string virtualPlayerId, PhotonPlayer player)
         {
+            string finalKey = virtualPlayerId + "_" + key;
+
             if (IsPhotonOffline())
             {
                 if (!Data.ContainsKey(DataGroups.INFO))
@@ -804,22 +804,22 @@ namespace Enigma.CoreSystems
                 if (!Data[DataGroups.INFO].ContainsKey(DataKeys.PLAYER))
                     return "";
 
-                string val = photonView.viewID.ToString() + "_" + key;
+                
                 Hashtable userData = Data[DataGroups.INFO][DataKeys.PLAYER] as Hashtable;
-                return userData[val].ToString().Trim('"');
+                return userData[finalKey].ToString().Trim('"');
             }
             else  // Online
-                return photonView.owner.CustomProperties[key].ToString();
+                return player.CustomProperties[finalKey].ToString();
         }
 
-        static public int GetLocalPlayerCustomPropertyAsInt(string key)
+        static public int GetLocalPlayerCustomPropertyAsInt(string key, string virtualPlayerId)
         {
-            return int.Parse(GetLocalPlayerCustomProperty(key));
+            return int.Parse(GetLocalPlayerCustomProperty(key, virtualPlayerId));
         }
 
-        static public string GetLocalPlayerCustomProperty(string key)
+        static public string GetLocalPlayerCustomProperty(string key, string virtualPlayerId)
         {
-            return GetAnyPlayerCustomProperty(key, GetLocalPlayerPhotonView());
+            return GetAnyPlayerCustomProperty(key, virtualPlayerId, GetLocalPlayer());
         }
 
         //Helper for testing
@@ -1307,7 +1307,7 @@ namespace Enigma.CoreSystems
         }
 
         [PunRPC]
-        private void SyncPlayerInfoMessage(int playerPhotonViewId, PhotonMessageInfo info)
+        private void SyncPlayerInfoMessage(int playerPhotonViewId, PhotonMessageInfo info, string virtualPlayerId)
         {
             //Id was successfully retrieved
             if (playerPhotonViewId != -1)
@@ -1317,7 +1317,7 @@ namespace Enigma.CoreSystems
                 if (GetIsMasterClient())
                 {
                     PhotonView playerPhotonView = PhotonView.Find(playerPhotonViewId);
-                    NetworkManager.SetAnyPlayerCustomProperty(PlayerPropertyOptions.PLAYER_STATE, PlayerStates.SYNC, playerPhotonView);
+                    NetworkManager.SetAnyPlayerCustomProperty(PlayerPropertyOptions.PLAYER_STATE, PlayerStates.SYNC, virtualPlayerId, playerPhotonView.owner);
                 }
             }
             //Id was not successfully retrieved, do something here... 

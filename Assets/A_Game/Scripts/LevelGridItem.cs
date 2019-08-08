@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class LevelGridItem : MonoBehaviour
 {
+    public Button FightButton;
+
     [SerializeField] private Text _label;
     [SerializeField] private Text _labelShadow;
 

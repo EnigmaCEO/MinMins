@@ -160,8 +160,8 @@ public class UnitSelectManager : MonoBehaviour
             teamUnits += _selectedUnits[i];
         }
 
-        GameNetwork.Instance.ClearTeamUnits(GameConstants.TeamNames.ALLIES);
-        GameNetwork.Instance.SetLocalPlayerTeamProperty(GameConstants.TeamNames.ALLIES, GameNetwork.TeamPlayerProperties.UNIT_NAMES, teamUnits);
+        GameNetwork.Instance.ClearTeamUnits(GameConstants.VirtualPlayerIds.ALLIES);
+        NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.UNIT_NAMES, teamUnits, GameConstants.VirtualPlayerIds.ALLIES);
 
         SceneManager.LoadScene(GameConstants.Scenes.WAR_PREP);
     }

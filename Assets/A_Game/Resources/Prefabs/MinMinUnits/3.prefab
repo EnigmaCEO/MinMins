@@ -490,6 +490,7 @@ GameObject:
   m_Component:
   - component: {fileID: 400018}
   - component: {fileID: 8370392683393848401}
+  - component: {fileID: 8843130009737544662}
   m_Layer: 5
   m_Name: 3
   m_TagString: Untagged
@@ -526,11 +527,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc8395a664cd4044f88156feb10d672d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BaseStats:
-    Strength: 2
-    Defense: 2
-    Health: 5
-    EffectScale: 1
   Strength: 2
   Defense: 2
   Health: 5
@@ -538,6 +534,33 @@ MonoBehaviour:
   Effect: 2
   Type: 0
   Attacks: 03000000
+--- !u!114 &8843130009737544662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ownerId: 0
+  group: 0
+  OwnerShipWasTransfered: 0
+  prefixBackup: -1
+  synchronization: 0
+  onSerializeTransformOption: 3
+  onSerializeRigidBodyOption: 2
+  ownershipTransfer: 0
+  ObservedComponents:
+  - {fileID: 0}
+  ObservedComponentsFoldoutOpen: 1
+  viewIdField: 0
+  instantiationId: -1
+  currentMasterID: -1
+  isRuntimeInstantiated: 0
 --- !u!1 &100022
 GameObject:
   m_ObjectHideFlags: 0

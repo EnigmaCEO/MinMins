@@ -6,7 +6,6 @@ using UnityEngine;
 public class InventoryManager : SingletonMonobehaviour<InventoryManager>
 {
     private Dictionary<string, Dictionary<string, object>> _items = new Dictionary<string, Dictionary<string, object>>();
-    //private Hashtable _saveHashTable = new Hashtable();
 
     public void AddItem(string groupName, string key, object value, bool shouldCheckGroupExists = true)
     {
