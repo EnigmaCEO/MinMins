@@ -103,7 +103,6 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
                     team += unitName;
                 }
             }
-
             teams.Add(team);
         }
 
