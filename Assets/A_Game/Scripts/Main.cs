@@ -3,10 +3,14 @@ using UnityEngine;
 
 public class Main : MonoBehaviour
 {
+    [SerializeField] GameObject _notEnoughUnitsPopUp;
+
     void Start()
     {
         NetworkManager.SetServer("http://www.enigma-games.com/Minmins");
         NetworkManager.SetGame(Application.productName.ToLower());
+
+        _notEnoughUnitsPopUp.SetActive(false);
     }
 
     public void OnSinglePlayerButtonDown()
@@ -21,12 +25,26 @@ public class Main : MonoBehaviour
     {
         print("OnPvpButtonDown");
         GameStats.Instance.Mode = GameStats.Modes.Pvp;
-        NetworkManager.Connect(false);
         GoToLevels();
+    }
+
+    public void OnStoreButtonDown()
+    {
+        print("OnStoreButtonDown");
+        SceneManager.LoadScene(GameConstants.Scenes.STORE);
+    }
+
+    public void OnNotEnoughUnitsPopUpDismissButtonDown()
+    {
+        _notEnoughUnitsPopUp.SetActive(false);
+        SceneManager.LoadScene(GameConstants.Scenes.STORE);
     }
 
     private void GoToLevels()
     {
-        SceneManager.LoadScene(GameConstants.Scenes.LEVELS);
+        if (GameInventory.Instance.HasEnoughUnitsForBattle())
+            SceneManager.LoadScene(GameConstants.Scenes.LEVELS);
+        else
+            _notEnoughUnitsPopUp.SetActive(true);
     }
 }

@@ -6,9 +6,6 @@ namespace Enigma.CoreSystems
 {
     public class Constants
     {
-        public class Separators
-        {
-            public const char First = '|';
-        }
+
     }
 }

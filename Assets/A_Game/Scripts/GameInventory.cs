@@ -23,6 +23,8 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         public const string SINGLE_PLAYER_LEVEL = "SinglePlayerLevel";
     }
 
+    [SerializeField] private int _unitsNecessaryToBattle = 5;
+
     [SerializeField] private int _unitsAmount = 80;
     [SerializeField] private int _initialBronzeLootBoxes = 2;
 
@@ -47,8 +49,9 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
     private Hashtable _saveHashTable = new Hashtable();
 
-    private List<int> _tierSilver_units = new List<int>();
-    private List<int> _tierGold_units = new List<int>();
+    private List<string> _tierBronze_units = new List<string>();
+    private List<string> _tierSilver_units = new List<string>();
+    private List<string> _tierGold_units = new List<string>();
 
     private List<UnitRarity> _unitSpecialRarities = new List<UnitRarity>();
 
@@ -61,15 +64,20 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         initializeInventory();
     }
 
+    public bool HasEnoughUnitsForBattle()
+    {
+        return (GetInventoryUnitNames().Count >= _unitsNecessaryToBattle);
+    }
+
     public List<string> GetInventoryUnitNames()
     {
         List<string> inventoryUnitIndexes = new List<string>();
 
         InventoryManager inventoryManager = InventoryManager.Instance;
 
-        if (inventoryManager.CheckGroupExists(GameConstants.VirtualPlayerIds.ALLIES, false))
+        if (inventoryManager.CheckGroupExists(GroupNames.UNITS, false))
         {
-            foreach (string unitName in inventoryManager.GetGroupKeys(GameConstants.VirtualPlayerIds.ALLIES))
+            foreach (string unitName in inventoryManager.GetGroupKeys(GroupNames.UNITS))
                 inventoryUnitIndexes.Add(unitName);
         }
 
@@ -88,14 +96,19 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
     public void AddExpToUnit(string unitName, int expToAdd)
     {
-        int unitExp = InventoryManager.Instance.GetItem<int>(GameConstants.VirtualPlayerIds.ALLIES, unitName);
+        int unitExp = InventoryManager.Instance.GetItem<int>(GroupNames.UNITS, unitName);
         unitExp += expToAdd;
-        InventoryManager.Instance.UpdateItem(GameConstants.VirtualPlayerIds.ALLIES, unitName, unitExp);
+
+        int maxExp = GameNetwork.Instance.GetMaxUnitExperience();
+        if (unitExp > maxExp)
+            unitExp = maxExp;
+
+        InventoryManager.Instance.UpdateItem(GroupNames.UNITS, unitName, unitExp);
     }
 
     public int GetAllyUnitExp(string unitName)
     {
-        return InventoryManager.Instance.GetItem<int>(GameConstants.VirtualPlayerIds.ALLIES, unitName);
+        return InventoryManager.Instance.GetItem<int>(GroupNames.UNITS, unitName);
     }
 
     public MinMinUnit GetMinMinFromResources(string unitName)
@@ -108,6 +121,16 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     public int GetLootBoxTierAmount(int tier)
     {
         return InventoryManager.Instance.GetItem<int>(GroupNames.LOOT_BOXES, tier.ToString());
+    }
+
+    public bool HasAnyLootBox()
+    {
+        return (GetLootBoxesTotalAmount() > 0);
+    }
+
+    public int GetLootBoxesTotalAmount()
+    {
+        return (GetLootBoxTierAmount(Tiers.BRONZE) + GetLootBoxTierAmount(Tiers.SILVER) + GetLootBoxTierAmount(Tiers.GOLD));
     }
 
     public void ChangeLootBoxAmount(int amount, int tier, bool isAddition, bool shouldSave)
@@ -125,46 +148,46 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
             saveLootBoxes();
     }
     
-    public List<int> OpenLootBox(int boxTier)
+    public List<string> OpenLootBox(int boxTier)
     {
-        Dictionary<int, double> specialRarities = new Dictionary<int, double>();
+        Dictionary<string, double> specialRarities = new Dictionary<string, double>();
         foreach (UnitRarity rarity in _unitSpecialRarities)
-            specialRarities.Add(rarity.UnitNumber, (double)rarity.Rarity);
+            specialRarities.Add(rarity.UnitName, (double)rarity.Rarity);
 
-        List<int> unitPicks = null;
+        List<string> unitPicks = null;
         LootBoxManager lootBoxManager = LootBoxManager.Instance;
         if (boxTier == Tiers.BRONZE)
-            unitPicks = lootBoxManager.PickRandomizedNumbers(_lootBoxSize, true, null, specialRarities);
+            unitPicks = lootBoxManager.PickRandomizedNames(_lootBoxSize, true, null, specialRarities);
         else
         {
             int specialRarityAmountToPick = _lootBoxSize - _guaranteedUnitTierAmount;
-            unitPicks = lootBoxManager.PickRandomizedNumbers(specialRarityAmountToPick, true, null, specialRarities);
-            List<int> guaranteedTierUnits = null;
+            unitPicks = lootBoxManager.PickRandomizedNames(specialRarityAmountToPick, true, null, specialRarities);
+            List<string> guaranteedTierUnits = null;
             if (boxTier == Tiers.SILVER)
                 guaranteedTierUnits = _tierSilver_units;
             else //tier 3 (GOLD)
                 guaranteedTierUnits = _tierGold_units;
 
-            foreach (int pick in unitPicks)
+            foreach (string pick in unitPicks)
             {
                 if (guaranteedTierUnits.Contains(pick))
                     guaranteedTierUnits.Remove(pick);  // Remove so guaranted unit pick cannot be already in the default rarity pick
             }
 
-            List<int> guaranteedPicks = new List<int>();
-            guaranteedPicks = lootBoxManager.PickRandomizedNumbers(_guaranteedUnitTierAmount, true, guaranteedTierUnits, null, true);
+            List<string> guaranteedPicks = new List<string>();
+            guaranteedPicks = lootBoxManager.PickRandomizedNames(_guaranteedUnitTierAmount, true, guaranteedTierUnits, null, true);
 
-            foreach (int guaranteedUnitNumber in guaranteedPicks)
-                unitPicks.Add(guaranteedUnitNumber);
+            foreach (string guaranteedUnitName in guaranteedPicks)
+                unitPicks.Add(guaranteedUnitName);
         }
         //List<int> lootBoxIndexes = LootBoxManager.Instance.PickRandomizedIndexes(lootBoxSize, false, _defaultRarityIndexes, specialRarities); //test
 
         InventoryManager inventoryManager = InventoryManager.Instance;
-        foreach (int lootBoxIndex in unitPicks)
+        foreach (string lootBoxUnitName in unitPicks)
         {
-            print("LootBoxIndex got: " + lootBoxIndex);
-            string unitName = lootBoxIndex.ToString();
-            if (inventoryManager.HasItem(GameConstants.VirtualPlayerIds.ALLIES, unitName, false))
+            print("LootBoxUnitName got: " + lootBoxUnitName);
+            string unitName = lootBoxUnitName.ToString();
+            if (inventoryManager.HasItem(GroupNames.UNITS, unitName, false))
             {
                 AddExpToUnit(unitName, _expToAddOnDuplicateUnit);
                 print("Added " + _expToAddOnDuplicateUnit + " exp to unit " + unitName);
@@ -179,12 +202,12 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         return unitPicks;
     }
 
-    public int GetUnitTier(int unitNumber)
+    public int GetUnitTier(string unitName)
     {
         int unitTier = Tiers.BRONZE;
-        if (_tierSilver_units.Contains(unitNumber))
+        if (_tierSilver_units.Contains(unitName))
             unitTier = Tiers.SILVER;
-        else if (_tierGold_units.Contains(unitNumber))
+        else if (_tierGold_units.Contains(unitName))
             unitTier = Tiers.GOLD;
 
         return unitTier;
@@ -193,21 +216,38 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     public void SaveUnits()
     {
         InventoryManager inventoryManager = InventoryManager.Instance;
-        foreach (string unitName in inventoryManager.GetGroupKeys(GameConstants.VirtualPlayerIds.ALLIES))
-            saveUnit(GameConstants.VirtualPlayerIds.ALLIES, unitName, false);
+        foreach (string unitName in inventoryManager.GetGroupKeys(GroupNames.UNITS))
+            saveUnit(GroupNames.UNITS, unitName, false);
 
         saveHashTableToFile();
     }
 
+    public List<string> GetRandomUnitsFromTier(int amount, int tier)
+    {
+        List<string> tierUnits = _tierBronze_units;
+        if (tier == Tiers.SILVER)
+            tierUnits = _tierSilver_units;
+        else if (tier == Tiers.GOLD)
+            tierUnits = _tierGold_units;
+
+        List<string> unitNames = LootBoxManager.Instance.PickRandomizedNames(amount, true, tierUnits);
+
+        return unitNames;
+    }
+
     private void createUnitTierLists()
     {
+        int firstTierBronze_number = 1;
+        for (int unitNumber = firstTierBronze_number; unitNumber <= _lastTierBronze_unitNumber; unitNumber++)
+            _tierBronze_units.Add(unitNumber.ToString());
+
         int firstTierSilver_number = _lastTierBronze_unitNumber + 1;
         for (int unitNumber = firstTierSilver_number; unitNumber <= _lastTierSilver_unitNumber; unitNumber++)
-            _tierSilver_units.Add(unitNumber);
+            _tierSilver_units.Add(unitNumber.ToString());
 
         int firstTierGold_number = _lastTierSilver_unitNumber + 1;
         for (int unitNumber = firstTierGold_number; unitNumber <= _lastTierGold_unitNumber; unitNumber++)
-            _tierGold_units.Add(unitNumber);
+            _tierGold_units.Add(unitNumber.ToString());
     }
 
     private void createRarity()
@@ -232,7 +272,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
             else if (i > _lastTierBronze_unitNumber)
                 rarity = tierSilver_rarity;
 
-            _unitSpecialRarities.Add(new UnitRarity(i, rarity));
+            _unitSpecialRarities.Add(new UnitRarity(i.ToString(), rarity));
         }
     }
 
@@ -252,7 +292,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
     private void addMinMinUnit(string unitName)
     {
-        InventoryManager.Instance.AddItem(GameConstants.VirtualPlayerIds.ALLIES, unitName, 0);
+        InventoryManager.Instance.AddItem(GroupNames.UNITS, unitName, 0);
     }
 
     private void loadData()
@@ -368,12 +408,12 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     [System.Serializable]
     public class UnitRarity
     {
-        public int UnitNumber;
+        public string UnitName;
         public float Rarity;
 
-        public UnitRarity(int unitNumber, float rarity)
+        public UnitRarity(string unitName, float rarity)
         {
-            UnitNumber = unitNumber;
+            UnitName = unitName;
             Rarity = rarity;
         }
     }

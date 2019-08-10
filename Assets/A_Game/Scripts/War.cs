@@ -14,10 +14,9 @@ public class War : MonoBehaviour
 
     [HideInInspector] public bool Ready = true;
 
-    [SerializeField] private int _maxRoundsCount = 3;
+    [SerializeField] private float _battleFieldRightSideOffset = 10;
 
-    [SerializeField] private int PvpTeamsToCreate = 2;
-    [SerializeField] private int SinglePlayerOrAiTeamsToCreate = 1;
+    [SerializeField] private int _maxRoundsCount = 3;
 
     [SerializeField] private Transform _teamGridContent;
     [SerializeField] private float _readyCheckDelay = 2;
@@ -52,7 +51,42 @@ public class War : MonoBehaviour
     void Awake()
     {
         _battleField = GameObject.Find("/Battlefield").transform;
+    }
 
+    private void Start()
+    {
+        _errorText.gameObject.SetActive(false);
+        _matchResultsPopUp.gameObject.SetActive(false);
+        _matchData.PlayerId = NetworkManager.GetPlayerName();
+
+        createUnits();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        _playTime += Time.deltaTime;
+
+        if (_side == 0)
+            _timer = _playTime;
+
+        if (((_playTime - _timer) >= _readyCheckDelay) && Ready)
+        {
+            int enemiesGridCount = _enemiesGrid.childCount;
+            for (int i = 0; i < enemiesGridCount; i++)
+            {
+                Transform enemySlot = _enemiesGrid.GetChild(i);
+                if (enemySlot.childCount == 0)
+                    continue;
+
+                Attack(enemySlot.name + "/" + enemySlot.GetChild(0).name);
+                break;
+            }
+        }
+    }
+
+    private void createUnits()
+    {
         if (NetworkManager.IsPhotonOffline())
         {
             instantiateAllies();
@@ -79,7 +113,73 @@ public class War : MonoBehaviour
 
     private void instantiateEnemies(bool localPlayerIsEnemy)
     {
+        if (!localPlayerIsEnemy)
+            setUpAiTeam();
+
         instantiateTeam(GridNames.TEAM_2, GameConstants.VirtualPlayerIds.ENEMIES, localPlayerIsEnemy);
+    }
+
+    private void setUpAiTeam()
+    {
+        GameInventory gameInventory = GameInventory.Instance;
+
+        List<string> allyBronzeUnits = new List<string>();
+        List<string> allySilverUnits = new List<string>();
+        List<string> allyGoldUnits = new List<string>();
+
+        foreach (MinMinUnit unit in _allies)
+        {
+            int unitTier = gameInventory.GetUnitTier(unit.name);
+
+            if (unitTier == GameInventory.Tiers.BRONZE)
+                allyBronzeUnits.Add(unit.name);
+            else if (unitTier == GameInventory.Tiers.SILVER)
+                allySilverUnits.Add(unit.name);
+            else if (unitTier == GameInventory.Tiers.GOLD)
+                allyGoldUnits.Add(unit.name);
+        }
+
+        List<string> enemyBronzeUnits = gameInventory.GetRandomUnitsFromTier(allyBronzeUnits.Count, GameInventory.Tiers.BRONZE);
+        List<string> enemySilverUnits = gameInventory.GetRandomUnitsFromTier(allySilverUnits.Count, GameInventory.Tiers.SILVER);
+        List<string> enemyGoldUnits = gameInventory.GetRandomUnitsFromTier(allyGoldUnits.Count, GameInventory.Tiers.GOLD);
+
+        string unitsString = "";
+        unitsString = setEnemyAiUnits(allyBronzeUnits, enemyBronzeUnits, unitsString, false);
+        unitsString = setEnemyAiUnits(allySilverUnits, enemySilverUnits, unitsString, true);
+        unitsString = setEnemyAiUnits(allyGoldUnits, enemyGoldUnits, unitsString, true);
+
+        NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.UNIT_NAMES, unitsString, GameConstants.VirtualPlayerIds.ENEMIES);
+    }
+
+    private string setEnemyAiUnits(List<string> allyUnitNames, List<string> enemyUnitNames, string unitsString, bool addSeparatorBeforeFirstString)
+    {
+        int unitCount = allyUnitNames.Count;
+        if (unitCount > 0)
+        {
+            GameNetwork gameNetwork = GameNetwork.Instance;
+            GameInventory gameInventory = GameInventory.Instance;
+            GameConfig gameConfig = GameConfig.Instance;
+
+            for (int i = 0; i < unitCount; i++)
+            {
+                //Build string
+                if ((i != 0) || addSeparatorBeforeFirstString)
+                    unitsString += GameNetwork.Separators.PARSE;
+
+                unitsString += enemyUnitNames[i];
+
+                //Build unit levels
+                int allyUnitExp = gameInventory.GetAllyUnitExp(allyUnitNames[i]);
+                gameNetwork.BuildUnitLevels(enemyUnitNames[i], allyUnitExp, GameConstants.VirtualPlayerIds.ENEMIES);
+
+                //Set random position
+                Vector2 pos = new Vector2(Random.Range(gameConfig.BattleFieldMinPos.x, gameConfig.BattleFieldMaxPos.x) + _battleFieldRightSideOffset, Random.Range(gameConfig.BattleFieldMinPos.y, gameConfig.BattleFieldMaxPos.y));
+                string posString = pos.x.ToString() + GameNetwork.Separators.PARSE + pos.y.ToString();
+                gameNetwork.SetLocalPlayerUnitProperty(enemyUnitNames[i], GameNetwork.UnitPlayerProperties.POSITION, posString, GameConstants.VirtualPlayerIds.ENEMIES);
+            }
+        }
+
+        return unitsString;
     }
 
     private void instantiateTeam(string gridName, string virtualPlayerId, bool localPlayerIsTeam)
@@ -87,6 +187,8 @@ public class War : MonoBehaviour
         Transform grid = _battleField.Find(gridName);
 
         GameNetwork gameNetwork = GameNetwork.Instance;
+        GameInventory gameInventory = GameInventory.Instance;
+
         string[] teamUnits = gameNetwork.GetLocalPlayerTeamUnits(virtualPlayerId);
         int teamLength = teamUnits.Length;
 
@@ -104,19 +206,12 @@ public class War : MonoBehaviour
             MinMinUnit minMinUnit = unit.GetComponent<MinMinUnit>();
             _allies.Add(minMinUnit);
 
-            if (localPlayerIsTeam)
-                gameNetwork.BuildUnitLevels(unitName, virtualPlayerId);
-            else
-            {
-                //TODO: Level up AI unit. 
-            }
-
             Transform unitTransform = unit.transform;
             unitTransform.parent = grid.Find("slot" + itemNumber);
             unitTransform.localPosition = Vector2.zero;
 
             string positionString = gameNetwork.GetLocalPlayerUnitProperty(unitName, GameNetwork.UnitPlayerProperties.POSITION, virtualPlayerId);
-            string[] positionCoords = positionString.Split(Constants.Separators.First);
+            string[] positionCoords = positionString.Split(GameNetwork.Separators.PARSE);
             float posX = float.Parse(positionCoords[0]);
             float posY = float.Parse(positionCoords[1]);
 
@@ -133,6 +228,9 @@ public class War : MonoBehaviour
 
             if (localPlayerIsTeam)
             {
+                int unitExp = gameInventory.GetAllyUnitExp(unitName);
+                gameNetwork.BuildUnitLevels(unitName, unitExp, virtualPlayerId);
+
                 //Set UI
                 Transform warTeamGridItem = _teamGridContent.Find("WarTeamGridItem" + itemNumber);
                 Transform uiSpriteTransform = warTeamGridItem.Find("Sprite");
@@ -141,39 +239,14 @@ public class War : MonoBehaviour
                 uiSpriteImage.sprite = spriteRenderer.sprite;
                 warUnit.LifeFill = warTeamGridItem.Find("LifeBar/LifeFill").GetComponent<Image>();
             }
+            else
+            {
+                Vector3 localScale = spriteTransform.localScale;
+                spriteTransform.localScale = new Vector3(-localScale.x, localScale.y, localScale.z);
+            }
         }
 
         setAttacks(grid);
-    }
-
-    private void Start()
-    {
-        _errorText.gameObject.SetActive(false);
-        _matchResultsPopUp.gameObject.SetActive(false);
-        _matchData.PlayerId = NetworkManager.GetPlayerName();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        _playTime += Time.deltaTime;
-
-        if (_side == 0)
-            _timer = _playTime;
-
-        if (((_playTime - _timer) >= _readyCheckDelay) && Ready)
-        {
-            int enemiesGridCount = _enemiesGrid.childCount;
-            for (int i = 0; i < enemiesGridCount; i++)
-            {
-                Transform enemySlot = _enemiesGrid.GetChild(i);
-                if (enemySlot.childCount == 0)
-                    continue;
-
-                Attack(enemySlot.name + "/" + enemySlot.GetChild(0).name);
-                break;
-            }
-        }
     }
 
     public void Attack(string attackerUnitName)

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PrepMinMin : MonoBehaviour
+public class PrepMinMinSprite : MonoBehaviour
 {
+    [HideInInspector] public string UnitName = "-1";
+
     [SerializeField] private bool _selected = false;
-    [SerializeField] private Vector2 _maxPos = new Vector2(6, 4.5f);
-    [SerializeField] private Vector2 _minPos = new Vector2(-6, -1);
 
     private float _x;
     private float _y;
@@ -84,15 +84,17 @@ public class PrepMinMin : MonoBehaviour
 
     private void limitPosition()
     {
-        if (transform.localPosition.y < _minPos.y)
-            transform.localPosition = new Vector2(transform.localPosition.x, _minPos.y);
-        else if (transform.localPosition.y > _maxPos.y)
-            transform.localPosition = new Vector2(transform.localPosition.x, _maxPos.y);
+        GameConfig gameConfig = GameConfig.Instance;
 
-        if (transform.localPosition.x > _maxPos.x)
-            transform.localPosition = new Vector2(_maxPos.x, transform.localPosition.y);
-        else if (transform.localPosition.x < _minPos.x)
-            transform.localPosition = new Vector2(_minPos.x, transform.localPosition.y);
+        if (transform.localPosition.y < gameConfig.BattleFieldMinPos.y)
+            transform.localPosition = new Vector2(transform.localPosition.x, gameConfig.BattleFieldMinPos.y);
+        else if (transform.localPosition.y > gameConfig.BattleFieldMaxPos.y)
+            transform.localPosition = new Vector2(transform.localPosition.x, gameConfig.BattleFieldMaxPos.y);
+
+        if (transform.localPosition.x > gameConfig.BattleFieldMaxPos.x)
+            transform.localPosition = new Vector2(gameConfig.BattleFieldMaxPos.x, transform.localPosition.y);
+        else if (transform.localPosition.x < gameConfig.BattleFieldMinPos.x)
+            transform.localPosition = new Vector2(gameConfig.BattleFieldMinPos.x, transform.localPosition.y);
     }
 
     void OnCollisionEnter2D(Collision2D coll)

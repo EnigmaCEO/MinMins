@@ -6,21 +6,25 @@ public class LootBoxManager : SingletonMonobehaviour<LootBoxManager>
 {
     [SerializeField] private int _decimalsForRaritySumChecks = 3;
 
-    public List<int> PickRandomizedNumbers(int amountToPick, bool cannotRepeat, List<int> indexesWithDefaultRarity, Dictionary<int, double> indexesWithSpecialRarity = null, bool forbidDefaultRarityDuplicateOption = true)
+    public List<string> PickRandomizedNames(int amountToPick, bool cannotRepeat, List<string> namesWithDefaultRarity, Dictionary<string, double> namesWithSpecialRarity = null, bool forbidDefaultRarityDuplicateOption = true)
     {
-        bool defaultListIsValid = (indexesWithDefaultRarity != null) && (indexesWithDefaultRarity.Count > 0);
-        bool specialListValid = (indexesWithSpecialRarity != null) && (indexesWithSpecialRarity.Count > 0);
+        List<string> randomizedNames = new List<string>();
+        if (amountToPick <= 0)
+            return randomizedNames;
+
+        bool defaultListIsValid = (namesWithDefaultRarity != null) && (namesWithDefaultRarity.Count > 0);
+        bool specialListValid = (namesWithSpecialRarity != null) && (namesWithSpecialRarity.Count > 0);
 
         if(forbidDefaultRarityDuplicateOption && defaultListIsValid)
         {
-            List<int> duplicateCheckList = new List<int>();
-            foreach (int index in indexesWithDefaultRarity)
+            List<string> duplicateCheckList = new List<string>();
+            foreach (string itemName in namesWithDefaultRarity)
             { 
-                if (!duplicateCheckList.Contains(index))
-                    duplicateCheckList.Add(index);
+                if (!duplicateCheckList.Contains(itemName))
+                    duplicateCheckList.Add(itemName);
                 else
                 {
-                    Debug.LogError("Default rarity list has a duplicate: " + index);
+                    Debug.LogError("Default rarity list has a duplicate: " + itemName);
                     return null;
                 }
             }
@@ -36,11 +40,11 @@ public class LootBoxManager : SingletonMonobehaviour<LootBoxManager>
         //Check if and index is in both lists. 
         if (defaultListIsValid && specialListValid)
         {
-            foreach (int index in indexesWithDefaultRarity)
+            foreach (string itemName in namesWithDefaultRarity)
             {
-                if (indexesWithSpecialRarity.ContainsKey(index))
+                if (namesWithSpecialRarity.ContainsKey(itemName))
                 {
-                    Debug.LogError("Index: " + index + " is both in default and special rarity lists. Please remove it from one of them and try again.");
+                    Debug.LogError("Index: " + itemName + " is both in default and special rarity lists. Please remove it from one of them and try again.");
                     return null;
                 }
             }
@@ -51,16 +55,16 @@ public class LootBoxManager : SingletonMonobehaviour<LootBoxManager>
             if (defaultListIsValid)
             {
                 //Check if amount to pick is greater than default options. This cannot happen because special rarity pick might not happen and there can be no default options left to pick.
-                if (amountToPick > indexesWithDefaultRarity.Count)
+                if (amountToPick > namesWithDefaultRarity.Count)
                 {
-                    Debug.LogError("With valid default rarity list, amount to pick needs to at least be equal to default rarity options amount. Amount to pick: " + amountToPick + " special rarity amount: " + indexesWithDefaultRarity.Count);
+                    Debug.LogError("With valid default rarity list, amount to pick needs to at least be equal to default rarity options amount. Amount to pick: " + amountToPick + " special rarity amount: " + namesWithDefaultRarity.Count);
                     return null;
                 }
             }
             //Check if amount to pick is greater or equal than special options when there are no default options. Equal makes no sense and greater is not possible.
-            else if (amountToPick >= indexesWithSpecialRarity.Count)
+            else if (amountToPick >= namesWithSpecialRarity.Count)
             {
-                Debug.LogError("With not valid default rarity list, amount to pick should be less than the special rarity options amount. Amount to pick: " + amountToPick + " special rarity amount: " + indexesWithSpecialRarity.Count);
+                Debug.LogError("With not valid default rarity list, amount to pick should be less than the special rarity options amount. Amount to pick: " + amountToPick + " special rarity amount: " + namesWithSpecialRarity.Count);
                 return null;
             }
         }
@@ -68,7 +72,7 @@ public class LootBoxManager : SingletonMonobehaviour<LootBoxManager>
         if (specialListValid)
         {
             double specialRarityTotal = 0.000f;
-            foreach (float specialRarity in indexesWithSpecialRarity.Values)
+            foreach (float specialRarity in namesWithSpecialRarity.Values)
                 specialRarityTotal += specialRarity;
 
             specialRarityTotal = System.Math.Round(specialRarityTotal, _decimalsForRaritySumChecks);
@@ -97,56 +101,52 @@ public class LootBoxManager : SingletonMonobehaviour<LootBoxManager>
             }
         }
 
-        List<int> defaultList = null;
-        Dictionary<int, double> specialList = null;
+        List<string> defaultList = null;
+        Dictionary<string, double> specialList = null;
 
         //Create copies so originals are not modified.
         if (defaultListIsValid)
-            defaultList = new List<int>(indexesWithDefaultRarity);
+            defaultList = new List<string>(namesWithDefaultRarity);
 
         if(specialListValid)
-            specialList = new Dictionary<int, double>(indexesWithSpecialRarity);
+            specialList = new Dictionary<string, double>(namesWithSpecialRarity);
 
-        List<int> randomizedIndexes = new List<int>();
         for (int i = 0; i < amountToPick; i++)
         {
-            bool indexWasSelected = false;
+            bool nameWasSelected = false;
 
             if (specialListValid)
             {
                 double specialRarityCheckSum = 0;
                 double randomValue = (double)Random.Range(0.0f, 1.0f);
 
-                foreach (KeyValuePair<int, double> entry in specialList)
+                foreach (KeyValuePair<string, double> entry in specialList)
                 {
                     specialRarityCheckSum += entry.Value;
                     if (randomValue <= specialRarityCheckSum)
                     {
-                        randomizedIndexes.Add(entry.Key);
+                        randomizedNames.Add(entry.Key);
                         if (cannotRepeat)
                             specialList.Remove(entry.Key);
 
-                        indexWasSelected = true;
+                        nameWasSelected = true;
                         break;
                     }
                 }
             }
 
-            if(defaultListIsValid && !indexWasSelected)
+            if(defaultListIsValid && !nameWasSelected)
             {
-                for (int j = 0; j < amountToPick; j++)
-                {
-                    int indexToAdd = defaultList[Random.Range(0, defaultList.Count)];
+                string nameToAdd = defaultList[Random.Range(0, defaultList.Count)];
 
-                    if(cannotRepeat)
-                        defaultList.Remove(indexToAdd);
+                if(cannotRepeat)
+                    defaultList.Remove(nameToAdd);
 
-                    randomizedIndexes.Add(indexToAdd);
-                }
+                randomizedNames.Add(nameToAdd);
             }
         }
 
-        return randomizedIndexes;
+        return randomizedNames;
     }
 
     public Dictionary<string, object> PickRandomObjects(Dictionary<string, object> possibilities)

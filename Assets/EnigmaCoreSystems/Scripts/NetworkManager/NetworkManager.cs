@@ -10,6 +10,11 @@ namespace Enigma.CoreSystems
 {
     public class NetworkManager : Manageable<NetworkManager>
     {
+        public class Separators
+        {
+            public const char FINAL_KEY = '_';
+        }
+
         public class Transactions
         {
             public const int IP_AND_COUNTERY = 0;
@@ -497,6 +502,7 @@ namespace Enigma.CoreSystems
         //Connect to Photon Network
         static public void Connect(bool isOffline)
         {
+            print("NetworkManager::Connect -> isOffline: " + isOffline);
             if (GetConnected())
             {
                 if (GetInRoom())
@@ -748,7 +754,7 @@ namespace Enigma.CoreSystems
 
         static public void SetAnyPlayerCustomProperty(string key, string value, string virtualPlayerId, PhotonPlayer player)
         {
-            string finalKey = virtualPlayerId + "_" + key;
+            string finalKey = virtualPlayerId + Separators.FINAL_KEY + key;
 
             if (IsPhotonOffline())
             {
@@ -760,7 +766,6 @@ namespace Enigma.CoreSystems
                
                 Hashtable userData = Data[DataGroups.INFO][DataKeys.PLAYER] as Hashtable;
                 
-
                 if (!userData.ContainsKey(finalKey))
                 {
                     if (value != null)
@@ -794,7 +799,7 @@ namespace Enigma.CoreSystems
 
         static public string GetAnyPlayerCustomProperty(string key, string virtualPlayerId, PhotonPlayer player)
         {
-            string finalKey = virtualPlayerId + "_" + key;
+            string finalKey = virtualPlayerId + Separators.FINAL_KEY + key;
 
             if (IsPhotonOffline())
             {
@@ -843,22 +848,17 @@ namespace Enigma.CoreSystems
                     Data[DataGroups.INFO].Add(DataKeys.ROOM, new Hashtable());
 
                 Hashtable roomData = Data[DataGroups.INFO][DataKeys.ROOM] as Hashtable;
-                string val = PhotonNetwork.room.Name + "_" + key;
+                string finalKey = PhotonNetwork.room.Name + Separators.FINAL_KEY + key;
 
-                if (!roomData.ContainsKey(val)) 
-                    roomData.Add(val, value);
+                if (!roomData.ContainsKey(finalKey)) 
+                    roomData.Add(finalKey, value);
                 else
-                    roomData[val] = value;
+                    roomData[finalKey] = value;
             }
             else // Online
             {
-                Hashtable systemHTable = new Hashtable() { { key, value } };
-
                 ExitGames.Client.Photon.Hashtable photonHTable = new ExitGames.Client.Photon.Hashtable();
-
-                foreach (DictionaryEntry pair in systemHTable)
-                    photonHTable.Add(pair.Key, pair.Value);
-
+                photonHTable.Add(key, value);
                 PhotonNetwork.room.SetCustomProperties(photonHTable);
             }
         }
@@ -870,6 +870,8 @@ namespace Enigma.CoreSystems
 
         static public string GetRoomCustomProperty(object key)
         {
+            string finalKey = PhotonNetwork.room.Name + Separators.FINAL_KEY + key;
+
             if (IsPhotonOffline())
             {
                 if (!Data.ContainsKey(DataGroups.INFO))
@@ -878,12 +880,11 @@ namespace Enigma.CoreSystems
                 if (!Data[DataGroups.INFO].ContainsKey(DataKeys.ROOM))
                     return "";
 
-                string val = PhotonNetwork.room.Name + "_" + key;
                 Hashtable userData = Data[DataGroups.INFO][DataKeys.ROOM] as Hashtable;
-                return userData[val].ToString().Trim('"');
+                return userData[finalKey].ToString().Trim('"');
             }
             else  // Online
-                return PhotonNetwork.room.CustomProperties[key].ToString();
+                return PhotonNetwork.room.CustomProperties[finalKey].ToString();
         }
 
         /*

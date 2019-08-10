@@ -38,9 +38,14 @@ public class Levels : MonoBehaviour
         GameStats.Instance.SelecteLevelNumber = levelNumber;
 
         if (GameStats.Instance.Mode == GameStats.Modes.SinglePlayer)
-            SceneManager.LoadScene(GameConstants.Scenes.WAR_PREP);
+            SceneManager.LoadScene(GameConstants.Scenes.UNIT_SELECT);
         else if(GameStats.Instance.Mode == GameStats.Modes.Pvp)
             SceneManager.LoadScene(GameConstants.Scenes.LOBBY);
+    }
+
+    public void OnBackButtonDown()
+    {
+        SceneManager.LoadScene(GameConstants.Scenes.MAIN);
     }
 
     private int getPvpLevelNumber()

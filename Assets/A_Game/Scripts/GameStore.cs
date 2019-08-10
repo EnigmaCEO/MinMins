@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Enigma.CoreSystems;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,6 +17,7 @@ public class GameStore : MonoBehaviour
     [SerializeField] private LootBoxBuyConfirmPopUp _lootBoxBuyConfirmPopUp;
     [SerializeField] private OpenLootBoxPopUp _openLootBoxPopUp;
     [SerializeField] private BuyResultPopUp _buyResultPopUp;
+    [SerializeField] private GameObject _extraLootBoxPopUp;
 
     [SerializeField] private Transform _lootBoxGridContent;
 
@@ -34,6 +36,8 @@ public class GameStore : MonoBehaviour
 
         _openLootBoxPopUp.Close();
         _buyResultPopUp.Close();
+
+        _extraLootBoxPopUp.SetActive(false);
 
         refreshLootBoxesGrid();
     }
@@ -64,7 +68,7 @@ public class GameStore : MonoBehaviour
             }
 
             int boxTier = boxTierIndex + 1;
-            grantBuy(boxTier);
+            grantBox(boxTier);
             _buyResultPopUp.Open("Thanks for your Purchase!");
         }
         else
@@ -87,11 +91,28 @@ public class GameStore : MonoBehaviour
     public void OnLootBoxOpenPopUpDismissButtonDown()
     {
         _openLootBoxPopUp.Close();
+        GameInventory gameInventory = GameInventory.Instance;
+
+        if (!gameInventory.HasEnoughUnitsForBattle() && !gameInventory.HasAnyLootBox())
+        {
+            grantBox(GameInventory.Tiers.BRONZE);
+            _extraLootBoxPopUp.SetActive(true);
+        }
     }
 
     public void OnBuyResultPopUpDismissButtonDown()
     {
         _buyResultPopUp.Close();
+    }
+
+    public void onExtraLootBoxPopUpDismissButtonDown()
+    {
+        _extraLootBoxPopUp.SetActive(false);
+    }
+
+    public void OnBackButtonDown()
+    {
+        SceneManager.LoadScene(GameConstants.Scenes.MAIN);
     }
 
     private void refreshLootBoxesGrid()
@@ -135,7 +156,7 @@ public class GameStore : MonoBehaviour
         _lootBoxBuyConfirmPopUp.Close();
     }
 
-    private void grantBuy(int lootBoxTier)
+    private void grantBox(int lootBoxTier)
     {
         GameInventory.Instance.ChangeLootBoxAmount(1, lootBoxTier, true, true);
         refreshLootBoxesGrid();
@@ -146,9 +167,9 @@ public class GameStore : MonoBehaviour
         Dictionary<string, int> unitsWithTier = new Dictionary<string, int>();
         GameInventory gameInventory = GameInventory.Instance;
 
-        List<int> lootBoxUnitNumbers = gameInventory.OpenLootBox(lootBoxTier);
-        foreach (int unitNumber in lootBoxUnitNumbers)
-            unitsWithTier.Add(unitNumber.ToString(), gameInventory.GetUnitTier(unitNumber));
+        List<string> lootBoxUnitNumbers = gameInventory.OpenLootBox(lootBoxTier);
+        foreach (string unitName in lootBoxUnitNumbers)
+            unitsWithTier.Add(unitName.ToString(), gameInventory.GetUnitTier(unitName));
 
         refreshLootBoxesGrid();
 

@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class Lobby : MonoBehaviour
 {
-    [SerializeField] private bool _isOffline = false;
     [SerializeField] private int _maxPlayers = 2;
     [SerializeField] private int _maxPlayersNotExpectating = 2;
     [SerializeField] private int _maxRatingDifferenceToFight = 50;
@@ -18,7 +17,7 @@ public class Lobby : MonoBehaviour
         _waitingPopUp.SetActive(false);
 
         setDelegates();
-        NetworkManager.Connect(_isOffline); //No need to call JoinLobby as Auto-Join Lobby is true in PhotonServerSettings 
+        NetworkManager.Connect(false); //No need to call JoinLobby as Auto-Join Lobby is true in PhotonServerSettings 
         GameStats.Instance.UsesAiForPvp = false;
     }
 
@@ -65,6 +64,7 @@ public class Lobby : MonoBehaviour
 
     private void onJoinedLobby()
     {
+        print("Lobby::OnJoinedLobby");
         handleRoomCreationAndJoin();
     }
 
@@ -75,6 +75,7 @@ public class Lobby : MonoBehaviour
 
     private void onJoinedRoom()
     {
+        print("Lobby::OnJoinedRoom");
         _waitingPopUp.SetActive(true);
     }
 
@@ -85,6 +86,7 @@ public class Lobby : MonoBehaviour
 
     private void onPlayerConnected(PhotonPlayer player)
     {
+        print("Lobby::onPlayerConnected");
         StopCoroutine(handleWaitForAiRival());
         NetworkManager.SendRPCtoAll("startMatch");  //Assuming this is the Master Client of the room
     }
@@ -96,7 +98,7 @@ public class Lobby : MonoBehaviour
 
     private void handleRoomCreationAndJoin()
     {
-        print("handleRoomCreationAndJoin");
+        print("Lobby::handleRoomCreationAndJoin");
         RoomInfo[] rooms = NetworkManager.GetRoomList();
         if (rooms.Length == 0)
             createAndJoinRoom();

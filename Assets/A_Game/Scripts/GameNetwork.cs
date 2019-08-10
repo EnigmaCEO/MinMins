@@ -19,6 +19,12 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     private OnSendResultsDelegate _onSendResultsCallback;
     private Hashtable _matchResultshashTable = new Hashtable();
 
+    public class Separators
+    {
+        public const char PARSE = '|';
+        public const char UNIT_PROPERTY = '-';
+    }
+
     public class Transactions
     {
         public const int CHANGE_RATING = 15;
@@ -92,7 +98,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
                     unitName = (j + 1).ToString();  //default values
 
                     if (j != 0)
-                        team += Constants.Separators.First;
+                        team += Separators.PARSE;
 
                     team += unitName;
                 }
@@ -120,19 +126,19 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         performResultsSendingTransaction();
     }
 
-    public void BuildUnitLevels(string unitName, string virtualPlayerId)
+    public int GetMaxUnitExperience()
     {
-        GameInventory gameInventory = GameInventory.Instance;
-        int unitExp = gameInventory.GetAllyUnitExp(unitName);
-
-        int unitLevel = 1;
         int maxLevelIndexToCheck = _experienceNeededPerUnitLevel.Count - 2;
         int maxExp = _experienceNeededPerUnitLevel[maxLevelIndexToCheck + 1];
+        return maxExp;
+    }
 
-        if (unitExp > maxExp)
-            unitExp = maxExp;
+    public void BuildUnitLevels(string unitName, int unitExp, string virtualPlayerId)
+    {
+        int unitLevel = 1;
+        int maxLevelIndexToCheck = _experienceNeededPerUnitLevel.Count - 2;
 
-        for (int i = maxLevelIndexToCheck; i >= 0; i++)
+        for (int i = maxLevelIndexToCheck; i >= 0; i--)
         {
             if (unitExp >= _experienceNeededPerUnitLevel[i])
             {
@@ -141,7 +147,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
             }
         }
 
-        MinMinUnit minMin = gameInventory.GetMinMinFromResources(unitName);
+        MinMinUnit minMin = GameInventory.Instance.GetMinMinFromResources(unitName);
         SetLocalPlayerUnitProperty(UnitPlayerProperties.LEVEL, unitName, unitLevel.ToString(), virtualPlayerId);
         SetLocalPlayerUnitProperty(UnitPlayerProperties.STRENGHT, unitName, getStatByLevel(minMin.Strength, unitLevel), virtualPlayerId);
         SetLocalPlayerUnitProperty(UnitPlayerProperties.DEFENSE, unitName, getStatByLevel(minMin.Defense, unitLevel), virtualPlayerId);
@@ -244,7 +250,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     public string[] GetLocalPlayerTeamUnits(string virtualPlayerId)
     {
         string teamString = NetworkManager.GetLocalPlayerCustomProperty(PlayerCustomProperties.UNIT_NAMES, virtualPlayerId);
-        return teamString.Split(Constants.Separators.First);
+        return teamString.Split(Separators.PARSE);
     }
 
     public void SetLocalPlayerUnitProperty(string unitName, string property, string value, string virtualPlayerId)
@@ -254,7 +260,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
     public void SetAnyPlayerUnitProperty(string unitName, string property, string value, string virtualPlayerId, PhotonPlayer player)
     {
-        NetworkManager.SetAnyPlayerCustomProperty(unitName + property, value, virtualPlayerId, player);
+        NetworkManager.SetAnyPlayerCustomProperty(unitName + Separators.UNIT_PROPERTY + property, value, virtualPlayerId, player);
     }
 
     public string GetLocalPlayerUnitProperty(string unitName, string property, string virtualPlayerId)
@@ -269,12 +275,12 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
     public int GetAnyPlayerUnitPropertyAsInt(string unitName, string property, string virtualPlayerId, PhotonPlayer player)
     {
-        return NetworkManager.GetAnyPlayerCustomPropertyAsInt(unitName + property, virtualPlayerId, player);
+        return NetworkManager.GetAnyPlayerCustomPropertyAsInt(unitName + Separators.UNIT_PROPERTY + property, virtualPlayerId, player);
     }
 
     public string GetAnyPlayerUnitProperty(string unitName, string property, string virtualPlayerId, PhotonPlayer player)
     {
-        return NetworkManager.GetAnyPlayerCustomProperty(unitName + property, virtualPlayerId, player);
+        return NetworkManager.GetAnyPlayerCustomProperty(unitName + Separators.UNIT_PROPERTY + property, virtualPlayerId, player);
     }
 
     public int GetLocalPlayerRating(string virtualPlayerId)

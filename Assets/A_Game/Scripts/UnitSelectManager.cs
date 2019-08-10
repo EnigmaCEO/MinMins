@@ -24,7 +24,8 @@ public class UnitSelectManager : MonoBehaviour
     [SerializeField] private WaypointManager _waypointManager;
 
     [SerializeField] private Button _nextButton;
-    [SerializeField] private Button _backButton;
+    [SerializeField] private Button _infoBackButton;
+    [SerializeField] private Button _sceneBackButton;
 
     //[SerializeField] private Transform _patternBG;
     
@@ -78,7 +79,8 @@ public class UnitSelectManager : MonoBehaviour
         _nextButton.onClick.AddListener(() => onNextButtonDown());
         _nextButton.gameObject.SetActive(false);
 
-        _backButton.onClick.AddListener(() => onBackButtonDown());
+        _infoBackButton.onClick.AddListener(() => onInfoBackButtonDown());
+        _sceneBackButton.onClick.AddListener(() => onSceneBackButtonDown());
 
         disableUnitInfo(true);
 
@@ -155,7 +157,7 @@ public class UnitSelectManager : MonoBehaviour
         for (int i = 0; i < selectedUnitLenght; i++)
         {
             if (i != 0)
-                teamUnits += Constants.Separators.First;
+                teamUnits += GameNetwork.Separators.PARSE;
 
             teamUnits += _selectedUnits[i];
         }
@@ -166,10 +168,15 @@ public class UnitSelectManager : MonoBehaviour
         SceneManager.LoadScene(GameConstants.Scenes.WAR_PREP);
     }
 
-    private void onBackButtonDown()
+    private void onInfoBackButtonDown()
     {
         disableUnitInfo();
         enableTeamGrid();
+    }
+
+    private void onSceneBackButtonDown()
+    {
+        SceneManager.LoadScene(GameConstants.Scenes.LEVELS);
     }
 
     private void onUnitFightButtonDown(string unitName)
