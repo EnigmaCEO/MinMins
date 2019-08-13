@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 {
-    public delegate void OnSendResultsDelegate(string message);
+    public delegate void OnSendResultsDelegate(string message, int updatedRating);
 
     [SerializeField] private int TeamsAmount = 2;
     [SerializeField] private int TeamSize = 6;
@@ -15,6 +15,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     [SerializeField] private float _statIncreaseByLevel = 1.1f;
     [SerializeField] private float _retrySendingResultsDelay = 5;
     [SerializeField] List<int> _experienceNeededPerUnitLevel = new List<int>() { 10, 30, 70, 150, 310 };  //Rule: Doubles each level
+    [SerializeField] List<int> _ratingsForArena = new List<int>() { 0, 300, 600, 900, 1200, 1500 };
 
     private OnSendResultsDelegate _onSendResultsCallback;
     private Hashtable _matchResultshashTable = new Hashtable();
@@ -153,6 +154,29 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         SetLocalPlayerUnitProperty(UnitPlayerProperties.EFFECT_SCALE, unitName, getStatByLevel(minMin.EffectScale, unitLevel), virtualPlayerId);
     }
 
+    public int GetLocalPlayerPvpLevelNumber()
+    {
+        int rating = GetLocalPlayerRating(GameConstants.VirtualPlayerIds.ALLIES);
+        return GetPvpLevelNumberByRating(rating);
+    }
+
+    public int GetPvpLevelNumberByRating(int rating)
+    {
+        int levelNumber = 0;
+
+        int arenasLenght = _ratingsForArena.Count;
+        for (int i = (arenasLenght - 1); i >= 0; i--)
+        {
+            if (rating >= _ratingsForArena[i])
+            {
+                levelNumber = i + 1;
+                break;
+            }
+        }
+
+        return levelNumber;
+    }
+
     private string getStatByLevel(int baseValue, float level)
     {
         return (Mathf.RoundToInt((float)baseValue * _statIncreaseByLevel * level)).ToString();
@@ -176,18 +200,18 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
             {
                 int updatedRating = response_hash[TransactionKeys.RATING].AsInt;
                 SetLocalPlayerRating(updatedRating, GameConstants.VirtualPlayerIds.ALLIES);
-                _onSendResultsCallback(ServerResponseMessages.SUCCESS);
+                _onSendResultsCallback(ServerResponseMessages.SUCCESS, updatedRating);
             }
             else
             {
                 StartCoroutine(retryResultsSending());
-                _onSendResultsCallback(ServerResponseMessages.SERVER_ERROR);
+                _onSendResultsCallback(ServerResponseMessages.SERVER_ERROR, -1);
             }
         }
         else
         {
             StartCoroutine(retryResultsSending());
-            _onSendResultsCallback(ServerResponseMessages.CONNECTION_ERROR);
+            _onSendResultsCallback(ServerResponseMessages.CONNECTION_ERROR, -1);
         }
     }
 

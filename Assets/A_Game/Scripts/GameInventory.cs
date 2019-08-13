@@ -23,6 +23,8 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         public const string SINGLE_PLAYER_LEVEL = "SinglePlayerLevel";
     }
 
+    [SerializeField] private int _maxArenaLevel = 6;
+
     [SerializeField] private int _unitsNecessaryToBattle = 5;
 
     [SerializeField] private int _unitsAmount = 80;
@@ -64,6 +66,11 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         initializeInventory();
     }
 
+    public int GetRandomTier()
+    {
+        return Random.Range(Tiers.BRONZE, Tiers.GOLD + 1);
+    }
+
     public bool HasEnoughUnitsForBattle()
     {
         return (GetInventoryUnitNames().Count >= _unitsNecessaryToBattle);
@@ -86,6 +93,9 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
     public void SetSinglePlayerLevel(int level)
     {
+        if (level > _maxArenaLevel)
+            level = _maxArenaLevel;
+
         InventoryManager.Instance.UpdateItem(GroupNames.STATS, ItemKeys.SINGLE_PLAYER_LEVEL, level, true);
     }
 

@@ -41,8 +41,6 @@ public class UnitSelectManager : MonoBehaviour
 
     void Start()
     {
-        NetworkManager.Connect(true);
-
         List<string> inventoryUnitNames = GameInventory.Instance.GetInventoryUnitNames();  //TODO: Check if this needs to return stats
         int unitsLength = inventoryUnitNames.Count;
         GameObject unitGridItemTemplate = _unitsGridContent.GetChild(0).gameObject;
@@ -70,6 +68,7 @@ public class UnitSelectManager : MonoBehaviour
             Transform btn_aid = slot.Find("btn_aid");
             int slotIndex = i;
             btn_aid.GetComponent<Button>().onClick.AddListener(() => { onTeamSlotButtonDown(slotIndex, slotImage); });
+            iTween.Pause(btn_aid.gameObject);
             btn_aid.gameObject.SetActive(false);
 
             if(i != 5) //Lock last one
@@ -188,7 +187,11 @@ public class UnitSelectManager : MonoBehaviour
         {
             Transform slot = _teamGridContent.GetChild(i);
             if (!slot.Find("Sprite").GetComponent<Image>().enabled && !slot.Find("obj_item_locked").GetComponent<Image>().enabled)
-                slot.Find("btn_aid").gameObject.SetActive(true);
+            {
+                GameObject btnAidGameObject = slot.Find("btn_aid").gameObject;
+                btnAidGameObject.SetActive(true);
+                iTween.Resume(btnAidGameObject);
+            }
         }
 
         if (_infoEnabled)
@@ -217,7 +220,11 @@ public class UnitSelectManager : MonoBehaviour
 
         int slotsLength = _teamGridContent.childCount;
         for (int i = 0; i < slotsLength; i++)
-            _teamGridContent.GetChild(i).Find("btn_aid").gameObject.SetActive(false);
+        {
+            GameObject btnAidGameObject = _teamGridContent.GetChild(i).Find("btn_aid").gameObject;
+            iTween.Pause(btnAidGameObject);
+            btnAidGameObject.SetActive(false);
+        }
 
         string unitName = unitGameObject.name;
         slotImage.sprite = Resources.Load<Sprite>("Images/Units/" + unitName);

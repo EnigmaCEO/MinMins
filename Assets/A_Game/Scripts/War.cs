@@ -17,9 +17,12 @@ public class War : MonoBehaviour
     [SerializeField] private float _battleFieldRightSideOffset = 10;
 
     [SerializeField] private int _maxRoundsCount = 3;
+    [SerializeField] private int _fieldRewardChestsAmount = 1;
 
     [SerializeField] private Transform _teamGridContent;
     [SerializeField] private float _readyCheckDelay = 2;
+
+    [SerializeField] private float _team1_CloudsLocalPosX = 6.3f;
 
     [SerializeField] private float _battlefieldMovementAmount = 5000;
     [SerializeField] private float _battlefieldMovementDelay = 0.1f;
@@ -59,7 +62,7 @@ public class War : MonoBehaviour
         _matchResultsPopUp.gameObject.SetActive(false);
         _matchData.PlayerId = NetworkManager.GetPlayerName();
 
-        createUnits();
+        setupBattlefieldEntities();
     }
 
     // Update is called once per frame
@@ -85,12 +88,13 @@ public class War : MonoBehaviour
         }
     }
 
-    private void createUnits()
+    private void setupBattlefieldEntities()
     {
         if (NetworkManager.IsPhotonOffline())
         {
             instantiateAllies();
             instantiateEnemies(false);
+            instantiateRewardChests(GridNames.TEAM_2);
         }
         else
         {
@@ -100,10 +104,53 @@ public class War : MonoBehaviour
 
                 if (GameStats.Instance.UsesAiForPvp)
                     instantiateEnemies(false);
+
+                instantiateRewardChests(GridNames.TEAM_2);
+                //moveCloudsToAlliesSide();  //TODO: Remove test hack
             }
             else
+            {
                 instantiateEnemies(true);
+                instantiateRewardChests(GridNames.TEAM_1);
+                moveCloudsToAlliesSide();
+            }
         }
+    }
+
+    private void moveCloudsToAlliesSide()
+    {
+        Transform cloudsContainer = _battleField.Find(GridNames.TEAM_2 + "/CloudsContainer");
+        cloudsContainer.SetParent(_battleField.Find(GridNames.TEAM_1));
+        cloudsContainer.SetAsLastSibling();
+        Vector3 cloudsContainerLocalScale = cloudsContainer.localScale;
+        cloudsContainer.localScale = new Vector3(-cloudsContainerLocalScale.x, cloudsContainerLocalScale.y, cloudsContainerLocalScale.z);
+        cloudsContainer.localPosition = new Vector3(_team1_CloudsLocalPosX, 0, 0);
+    }
+
+    private void instantiateRewardChests(string gridName)
+    {
+        Transform rewardBoxesContainer = _battleField.Find(gridName + "/RewardBoxesContainer");
+
+        for (int i = 0; i < _fieldRewardChestsAmount; i++)
+        {
+            Transform rewardBoxTransform = (Instantiate<GameObject>(Resources.Load<GameObject>("Prefabs/FieldRewardBox"))).transform;
+            rewardBoxTransform.SetParent(rewardBoxesContainer);
+
+            Vector2 randomPos = getRandomBattlefieldPosition();
+            rewardBoxTransform.localPosition = randomPos;
+            rewardBoxTransform.GetComponent<FieldRewardBox>().OnHit = onRewardBoxHit;
+
+            if (gridName == GridNames.TEAM_1)
+            {
+                Vector3 localScale = rewardBoxTransform.localScale;
+                rewardBoxTransform.localScale = new Vector3(-localScale.x, localScale.y, localScale.z);
+            }
+        }
+    }
+
+    private void onRewardBoxHit()
+    {
+        rewardWithRandomBox();
     }
 
     private void instantiateAllies()
@@ -111,12 +158,12 @@ public class War : MonoBehaviour
         instantiateTeam(GridNames.TEAM_1, GameConstants.VirtualPlayerIds.ALLIES, true);
     }
 
-    private void instantiateEnemies(bool localPlayerIsEnemy)
+    private void instantiateEnemies(bool isLocalPlayerEnemy)
     {
-        if (!localPlayerIsEnemy)
+        if (!isLocalPlayerEnemy)
             setUpAiTeam();
 
-        instantiateTeam(GridNames.TEAM_2, GameConstants.VirtualPlayerIds.ENEMIES, localPlayerIsEnemy);
+        instantiateTeam(GridNames.TEAM_2, GameConstants.VirtualPlayerIds.ENEMIES, isLocalPlayerEnemy);
     }
 
     private void setUpAiTeam()
@@ -144,26 +191,25 @@ public class War : MonoBehaviour
         List<string> enemyGoldUnits = gameInventory.GetRandomUnitsFromTier(allyGoldUnits.Count, GameInventory.Tiers.GOLD);
 
         string unitsString = "";
-        unitsString = setEnemyAiUnits(allyBronzeUnits, enemyBronzeUnits, unitsString, false);
-        unitsString = setEnemyAiUnits(allySilverUnits, enemySilverUnits, unitsString, true);
-        unitsString = setEnemyAiUnits(allyGoldUnits, enemyGoldUnits, unitsString, true);
+        unitsString = setEnemyAiUnits(allyBronzeUnits, enemyBronzeUnits, unitsString);
+        unitsString = setEnemyAiUnits(allySilverUnits, enemySilverUnits, unitsString);
+        unitsString = setEnemyAiUnits(allyGoldUnits, enemyGoldUnits, unitsString);
 
         NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.UNIT_NAMES, unitsString, GameConstants.VirtualPlayerIds.ENEMIES);
     }
 
-    private string setEnemyAiUnits(List<string> allyUnitNames, List<string> enemyUnitNames, string unitsString, bool addSeparatorBeforeFirstString)
+    private string setEnemyAiUnits(List<string> allyUnitNames, List<string> enemyUnitNames, string unitsString)
     {
         int unitCount = allyUnitNames.Count;
         if (unitCount > 0)
         {
             GameNetwork gameNetwork = GameNetwork.Instance;
             GameInventory gameInventory = GameInventory.Instance;
-            GameConfig gameConfig = GameConfig.Instance;
 
             for (int i = 0; i < unitCount; i++)
             {
                 //Build string
-                if ((i != 0) || addSeparatorBeforeFirstString)
+                if (unitsString != "")
                     unitsString += GameNetwork.Separators.PARSE;
 
                 unitsString += enemyUnitNames[i];
@@ -173,13 +219,19 @@ public class War : MonoBehaviour
                 gameNetwork.BuildUnitLevels(enemyUnitNames[i], allyUnitExp, GameConstants.VirtualPlayerIds.ENEMIES);
 
                 //Set random position
-                Vector2 pos = new Vector2(Random.Range(gameConfig.BattleFieldMinPos.x, gameConfig.BattleFieldMaxPos.x) + _battleFieldRightSideOffset, Random.Range(gameConfig.BattleFieldMinPos.y, gameConfig.BattleFieldMaxPos.y));
+                Vector2 pos = getRandomBattlefieldPosition();
                 string posString = pos.x.ToString() + GameNetwork.Separators.PARSE + pos.y.ToString();
                 gameNetwork.SetLocalPlayerUnitProperty(enemyUnitNames[i], GameNetwork.UnitPlayerProperties.POSITION, posString, GameConstants.VirtualPlayerIds.ENEMIES);
             }
         }
 
         return unitsString;
+    }
+
+    private Vector2 getRandomBattlefieldPosition()
+    {
+        GameConfig gameConfig = GameConfig.Instance;
+        return new Vector2(Random.Range(gameConfig.BattleFieldMinPos.x, gameConfig.BattleFieldMaxPos.x) + _battleFieldRightSideOffset, Random.Range(gameConfig.BattleFieldMinPos.y, gameConfig.BattleFieldMaxPos.y));
     }
 
     private void instantiateTeam(string gridName, string virtualPlayerId, bool localPlayerIsTeam)
@@ -207,7 +259,7 @@ public class War : MonoBehaviour
             _allies.Add(minMinUnit);
 
             Transform unitTransform = unit.transform;
-            unitTransform.parent = grid.Find("slot" + itemNumber);
+            unitTransform.SetParent(grid.Find("slot" + itemNumber));
             unitTransform.localPosition = Vector2.zero;
 
             string positionString = gameNetwork.GetLocalPlayerUnitProperty(unitName, GameNetwork.UnitPlayerProperties.POSITION, virtualPlayerId);
@@ -346,10 +398,8 @@ public class War : MonoBehaviour
 
     private void handleMatchResults(bool isVictory)
     {
-        _matchResultsPopUp.SetValues(_matchData);
-        _matchResultsPopUp.Open();
-
-        GameNetwork.Instance.SendMatchResults(_matchData, onMatchResultsCallback);
+        GameInventory gameInventory = GameInventory.Instance;
+        GameNetwork gameNetwork = GameNetwork.Instance;
 
         foreach (Transform slot in _teamGridContent)
         {
@@ -357,7 +407,7 @@ public class War : MonoBehaviour
             //int Health = 
 
             int expEarned = 0;
-            int minMinHealth = GameNetwork.Instance.GetRoomUnitStat(GameConstants.VirtualPlayerIds.ALLIES, minMin.name, GameNetwork.UnitRoomProperties.HEALTH);
+            int minMinHealth = gameNetwork.GetRoomUnitStat(GameConstants.VirtualPlayerIds.ALLIES, minMin.name, GameNetwork.UnitRoomProperties.HEALTH);
             if (minMinHealth > 0)
             {
                 if (isVictory)
@@ -366,24 +416,57 @@ public class War : MonoBehaviour
                     expEarned = 5;
             }
 
-            GameInventory.Instance.AddExpToUnit(minMin.name, expEarned);
+            gameInventory.AddExpToUnit(minMin.name, expEarned);
         }
 
-        GameInventory.Instance.SaveUnits();
+        gameInventory.SaveUnits();
+
+        if (isVictory)
+        {
+            rewardWithRandomBox();
+
+            if (GameStats.Instance.Mode == GameStats.Modes.SinglePlayer)
+                gameInventory.SetSinglePlayerLevel(gameInventory.GetSinglePlayerLevel() + 1);
+        }
+
+        if (GameStats.Instance.Mode == GameStats.Modes.Pvp)
+            gameNetwork.SendMatchResults(_matchData, onMatchResultsCallback);
+        else
+            setAndDisplayMathResultsPopUp();
     }
 
-    private void onMatchResultsCallback(string message)
+    private void rewardWithRandomBox()
+    {
+        int rewardBoxTier = GameInventory.Instance.GetRandomTier();
+        _matchData.BoxTiersWithAmountsRewards[rewardBoxTier]++;
+    }
+
+    private void onMatchResultsCallback(string message, int updatedRating)
     {
         if (message == GameNetwork.ServerResponseMessages.SUCCESS)
         {
             _errorText.text = "";
             _errorText.gameObject.SetActive(false);
+
+            int oldArenaLevel = GameNetwork.Instance.GetLocalPlayerPvpLevelNumber();
+            int updatedLevel = GameNetwork.Instance.GetPvpLevelNumberByRating(updatedRating);
+
+            if (updatedLevel > oldArenaLevel)
+                rewardWithRandomBox();
+
+            setAndDisplayMathResultsPopUp();
         }
         else
         {
             _errorText.text = message;
             _errorText.gameObject.SetActive(true);
         }
+    }
+
+    private void setAndDisplayMathResultsPopUp()
+    {
+        _matchResultsPopUp.SetValues(_matchData);
+        _matchResultsPopUp.Open();
     }
 
     //Only master client uses this

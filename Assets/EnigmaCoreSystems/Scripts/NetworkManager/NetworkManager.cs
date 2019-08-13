@@ -522,7 +522,8 @@ namespace Enigma.CoreSystems
 
         static public void Disconnect()
         {
-            PhotonNetwork.Disconnect();
+            if(PhotonNetwork.connected)
+                PhotonNetwork.Disconnect();
         }
 
         static public void SendRPCtoAll(string methodName, params object[] parameters)

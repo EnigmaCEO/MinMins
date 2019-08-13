@@ -15,10 +15,9 @@ public class Lobby : MonoBehaviour
     void Start()
     {
         _waitingPopUp.SetActive(false);
-
-        setDelegates();
-        NetworkManager.Connect(false); //No need to call JoinLobby as Auto-Join Lobby is true in PhotonServerSettings 
+        setDelegates();    
         GameStats.Instance.UsesAiForPvp = false;
+        NetworkManager.JoinLobby();
     }
 
     void Update()
@@ -139,6 +138,11 @@ public class Lobby : MonoBehaviour
     private void startMatch(PhotonMessageInfo messageInfo)
     {
         Debug.Log("startMatch -> sender nickname: " + messageInfo.sender.NickName);
+        goToWar();
+    }
+
+    private void goToWar()
+    {
         SceneManager.LoadScene(GameConstants.Scenes.WAR);
     }
 
@@ -158,8 +162,8 @@ public class Lobby : MonoBehaviour
 
     private void assignAiRival()
     {
-        //TODO: Assign Ai Rival
         GameStats.Instance.UsesAiForPvp = true;
+        goToWar();
     }
 
     private void createRoom(string roomName)

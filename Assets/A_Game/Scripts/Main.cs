@@ -7,9 +7,7 @@ public class Main : MonoBehaviour
 
     void Start()
     {
-        NetworkManager.SetServer("http://www.enigma-games.com/Minmins");
-        NetworkManager.SetGame(Application.productName.ToLower());
-
+        NetworkManager.Disconnect();
         _notEnoughUnitsPopUp.SetActive(false);
     }
 
@@ -25,6 +23,7 @@ public class Main : MonoBehaviour
     {
         print("OnPvpButtonDown");
         GameStats.Instance.Mode = GameStats.Modes.Pvp;
+        NetworkManager.Connect(false);
         GoToLevels();
     }
 

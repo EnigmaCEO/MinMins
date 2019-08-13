@@ -68,7 +68,11 @@ public class WarPrepManager : MonoBehaviour
             gameNetwork.SetLocalPlayerUnitProperty(prepMinMinSprite.UnitName, GameNetwork.UnitPlayerProperties.POSITION, positionString, GameConstants.VirtualPlayerIds.ALLIES);
         }
 
-        SceneManager.LoadScene(GameConstants.Scenes.WAR);
+        GameStats.Modes gameMode = GameStats.Instance.Mode;
+        if (gameMode == GameStats.Modes.SinglePlayer)
+            SceneManager.LoadScene(GameConstants.Scenes.WAR);
+        else if (gameMode == GameStats.Modes.Pvp)
+            SceneManager.LoadScene(GameConstants.Scenes.LOBBY);
     }
 
     private void onBackButtonDown()

@@ -51,6 +51,8 @@ public class Init : MonoBehaviour
     void Start()
 	{
 		_startTime = Time.time;
+        NetworkManager.SetServer("http://www.enigma-games.com/Minmins");
+        NetworkManager.SetGame(Application.productName.ToLower());
 
         //handleNotifications();
         //SoundManager.Play("intro", SoundManager.AudioTypes.Sfx);

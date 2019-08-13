@@ -57,6 +57,16 @@ public class PrepMinMinSprite : MonoBehaviour
 
     void OnMouseUp()
     {
+        dropOnBattlefield();
+    }
+
+    public void SetManager(WarPrepManager manager)
+    {
+        _manager = manager;
+    }
+
+    private void dropOnBattlefield()
+    {
         _selected = false;
 
         limitPosition();
@@ -77,11 +87,6 @@ public class PrepMinMinSprite : MonoBehaviour
         }
     }
 
-    public void SetManager(WarPrepManager manager)
-    {
-        _manager = manager;
-    }
-
     private void limitPosition()
     {
         GameConfig gameConfig = GameConfig.Instance;
@@ -100,11 +105,14 @@ public class PrepMinMinSprite : MonoBehaviour
     void OnCollisionEnter2D(Collision2D coll)
     {
         //Debug.Log(coll.gameObject.transform.parent.name + " collision");
-        OnMouseUp();
+        if (_selected)
+            dropOnBattlefield();
     }
 
     void OnCollisionStay2D(Collision2D coll)
     {
+        //return;
+
         float x1, y1;
 
         if (transform.localPosition.x >= coll.transform.localPosition.x)
