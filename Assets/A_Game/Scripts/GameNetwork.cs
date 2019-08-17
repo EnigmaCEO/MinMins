@@ -8,6 +8,31 @@ using UnityEngine;
 public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 {
     public delegate void OnSendResultsDelegate(string message, int updatedRating);
+    private OnSendResultsDelegate _onSendResultsCallback;
+
+    public delegate void OnTeamTurnStartedDelegate(string turnTeam);
+    public OnTeamTurnStartedDelegate OnTeamTurnStartedCallback;
+
+    public delegate void OnUnitTurnStartedDelegate(string unitName);
+    public OnUnitTurnStartedDelegate OnUnitTurnStartedCallback;
+
+    public delegate void OnUnitHealthSetDelegate(string team, string unitName, int health);
+    public OnUnitHealthSetDelegate OnUnitHealthSetCallback;
+
+    public delegate void OnUnitPropertySetDelegate(string team, string unitName, int value);
+    public OnUnitPropertySetDelegate OnUnitPropertySetCallback;
+
+    public delegate void OnTeamHealthSetDeleate(string team, int health);
+    public OnTeamHealthSetDeleate OnTeamHealthSetCallback;
+
+    public delegate void OnPlayerRatingSetDelegate(int rating);
+    public OnPlayerRatingSetDelegate OnPlayerRatingSetCallback;
+
+    public delegate void OnPlayerTeamUnitsSetDelegate(string teamUnits);
+    public OnPlayerTeamUnitsSetDelegate OnPlayerTeamUnitsSetCallback;
+
+    public delegate void OnUnitPlayerPropertySetDelegate(string property, string value);
+    public OnUnitPlayerPropertySetDelegate OnUnitPlayerPropertySetCallback;
 
     [SerializeField] private int TeamsAmount = 2;
     [SerializeField] private int TeamSize = 6;
@@ -17,14 +42,8 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     [SerializeField] List<int> _experienceNeededPerUnitLevel = new List<int>() { 10, 30, 70, 150, 310 };  //Rule: Doubles each level
     [SerializeField] List<int> _ratingsForArena = new List<int>() { 0, 300, 600, 900, 1200, 1500 };
 
-    private OnSendResultsDelegate _onSendResultsCallback;
-    private Hashtable _matchResultshashTable = new Hashtable();
 
-    public class Separators
-    {
-        public const char PARSE = '|';
-        public const char UNIT_PROPERTY = '-';
-    }
+    private Hashtable _matchResultshashTable = new Hashtable();
 
     public class Transactions
     {
@@ -51,7 +70,14 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     public class PlayerCustomProperties
     {
         public const string RATING = "Rating";
-        public const string UNIT_NAMES = "UnitNames";
+        public const string TEAM_UNITS = "UnitNames";
+    }
+
+    public class RoomCustomProperties
+    {
+        public const string TEAM_IN_TURN = "TeamInTurn";
+        public const string UNIT_IN_TURN = "UnitInTurn";
+        public const string START_COUNT_DOWN_TIMER = "st";
     }
 
     //public class MatchStats
@@ -66,7 +92,12 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
     public class UnitRoomProperties
     {
-        public const string HEALTH = "Health";
+        public const string UNIT_HEALTH = "Unit Health";
+    }
+
+    public class TeamRoomProperties
+    {
+        public const string TEAM_HEALTH = "Team Health";
     }
 
     public class UnitPlayerProperties
@@ -82,6 +113,15 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     private void Awake()
     {
         StoreDefaultTeams();
+
+        NetworkManager.OnPlayerCustomPropertiesChangedCallback += OnPlayerCustomPropertiesChanged;
+        NetworkManager.OnRoomCustomPropertiesChangedCallback += OnRoomCustomPropertiesChanged;
+    }
+
+    private void OnDestroy()
+    {
+        NetworkManager.OnPlayerCustomPropertiesChangedCallback -= OnPlayerCustomPropertiesChanged;
+        NetworkManager.OnRoomCustomPropertiesChangedCallback -= OnRoomCustomPropertiesChanged;
     }
 
     public void StoreDefaultTeams()
@@ -99,7 +139,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
                     unitName = (j + 1).ToString();  //default values
 
                     if (j != 0)
-                        team += Separators.PARSE;
+                        team += NetworkManager.Separators.VALUES;
 
                     team += unitName;
                 }
@@ -107,8 +147,72 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
             teams.Add(team);
         }
 
-        NetworkManager.SetLocalPlayerCustomProperty(PlayerCustomProperties.UNIT_NAMES, teams[0], GameConstants.VirtualPlayerIds.ALLIES);
-        NetworkManager.SetLocalPlayerCustomProperty(PlayerCustomProperties.UNIT_NAMES, teams[1], GameConstants.VirtualPlayerIds.ENEMIES);
+        NetworkManager.SetLocalPlayerCustomProperty(PlayerCustomProperties.TEAM_UNITS, teams[0], GameConstants.VirtualPlayerIds.ALLIES);
+        NetworkManager.SetLocalPlayerCustomProperty(PlayerCustomProperties.TEAM_UNITS, teams[1], GameConstants.VirtualPlayerIds.ENEMIES);
+    }
+
+    public void OnRoomCustomPropertiesChanged(Hashtable updatedProperties)
+    {
+        foreach (string key in updatedProperties.Keys)
+        {
+            string[] keyParts = key.Split(NetworkManager.Separators.KEYS);
+            string idPart = keyParts[0];
+            string value = (string)updatedProperties[key];
+
+            if (idPart == RoomCustomProperties.TEAM_IN_TURN)
+            {
+                if (OnTeamTurnStartedCallback != null)
+                    OnTeamTurnStartedCallback(value);
+            }
+            else if (idPart == RoomCustomProperties.UNIT_IN_TURN)
+            {
+                if (OnUnitTurnStartedCallback != null)
+                    OnUnitTurnStartedCallback(value);
+            }
+            else if (idPart == UnitRoomProperties.UNIT_HEALTH)
+            {
+                string team = keyParts[1];
+                string unitName = keyParts[2];
+
+                if (OnUnitHealthSetCallback != null)
+                    OnUnitHealthSetCallback(team, unitName, int.Parse(value));
+            }
+            else if (idPart == TeamRoomProperties.TEAM_HEALTH)
+            {
+                string team = keyParts[1];
+
+                if(OnTeamHealthSetCallback != null)
+                    OnTeamHealthSetCallback(team, int.Parse(value));
+            }
+        }
+    }
+
+    public void OnPlayerCustomPropertiesChanged(PhotonPlayer player, Hashtable updatedProperties)
+    {
+        foreach (string key in updatedProperties.Keys)
+        {
+            string[] keyParts = key.Split(NetworkManager.Separators.KEYS);
+            string idPart = keyParts[0];
+            string value = (string)updatedProperties[key];
+
+            if (idPart == PlayerCustomProperties.RATING)
+            {
+                if (OnPlayerRatingSetCallback != null)
+                    OnPlayerRatingSetCallback(int.Parse(value));
+            }
+            else if (idPart == PlayerCustomProperties.TEAM_UNITS)
+            {
+                if (OnPlayerTeamUnitsSetCallback != null)
+                    OnPlayerTeamUnitsSetCallback(value);
+            }
+            //else if((idPart == UnitPlayerProperties.LEVEL) || (idPart == UnitPlayerProperties.POSITION) ||
+            //        (idPart == UnitPlayerProperties.STRENGHT) || (idPart == UnitPlayerProperties.DEFENSE) ||
+            //        (idPart == UnitPlayerProperties.EFFECT_SCALE))
+            //{
+            //    if (OnUnitPlayerPropertySetCallback != null)
+            //        OnUnitPlayerPropertySetCallback(idPart, value);
+            //}
+        }
     }
 
     public void SendMatchResults(War.MatchData matchData, OnSendResultsDelegate onSendMatchResultsCallback)
@@ -221,38 +325,38 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         performResultsSendingTransaction();
     }
 
-    public void setRoomUnitHealth(string team, string unitName, int value, List<MinMinUnit> teamUnitsForTotalCalculus = null)
+    public void SetUnitHealth(string team, string unitName, int value, List<MinMinUnit> teamUnitsForTotalCalculus = null)
     {
-        SetRoomUnitStat(team, unitName, UnitRoomProperties.HEALTH, value);
+        SetRoomUnitStat(UnitRoomProperties.UNIT_HEALTH, team, unitName, value);
 
         if (teamUnitsForTotalCalculus != null)
         {
             int healthTotal = 0;
             foreach (MinMinUnit unit in teamUnitsForTotalCalculus)
-                healthTotal += GetRoomUnitStat(team, unit.name, UnitRoomProperties.HEALTH);
+                healthTotal += GetRoomUnitStat(UnitRoomProperties.UNIT_HEALTH, team, unit.name);
 
-            SetRoomMatchStat(team, UnitRoomProperties.HEALTH, healthTotal);
+            SetRoomTeamStat(UnitRoomProperties.UNIT_HEALTH, team, healthTotal);
         }
     }
 
-    public void SetRoomUnitStat(string team, string unitName, string stat, int value)
+    public void SetRoomUnitStat(string stat, string team, string unitName, int value)
     {
-        NetworkManager.SetRoomCustomProperty(team + unitName + stat, value);
+        NetworkManager.SetRoomCustomProperty(stat + NetworkManager.Separators.KEYS + team + NetworkManager.Separators.KEYS + unitName, value);
     }
 
-    public int GetRoomUnitStat(string team, string unitName, string stat)
+    public int GetRoomUnitStat(string stat, string team, string unitName)
     {
-        return NetworkManager.GetRoomCustomPropertyAsInt(team + unitName + stat);
+        return NetworkManager.GetRoomCustomPropertyAsInt(stat + NetworkManager.Separators.KEYS + team + NetworkManager.Separators.KEYS + unitName);
     }
 
-    public void SetRoomMatchStat(string team, string stat, int value)
+    public void SetRoomTeamStat(string stat, string team,  int value)
     {
-        NetworkManager.SetRoomCustomProperty(team + stat, value);
+        NetworkManager.SetRoomCustomProperty(stat + NetworkManager.Separators.KEYS + team, value);
     }
 
-    public int GetRoomMatchStat(string team, string property)
+    public int GetRoomTeamStat(string property, string team)
     {
-        return NetworkManager.GetRoomCustomPropertyAsInt(team + property);
+        return NetworkManager.GetRoomCustomPropertyAsInt(property + NetworkManager.Separators.KEYS + team);
     }
 
     public void ClearTeamUnits(string virtualPlayerId)
@@ -260,50 +364,50 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         string[] teamUnits = GetLocalPlayerTeamUnits(virtualPlayerId);
         foreach (string unitName in teamUnits)
         {
-            SetLocalPlayerUnitProperty(unitName, UnitPlayerProperties.LEVEL, null, virtualPlayerId);
-            SetLocalPlayerUnitProperty(unitName, UnitPlayerProperties.STRENGHT, null, virtualPlayerId);
-            SetLocalPlayerUnitProperty(unitName, UnitPlayerProperties.DEFENSE, null, virtualPlayerId);
-            SetLocalPlayerUnitProperty(unitName, UnitPlayerProperties.EFFECT_SCALE, null, virtualPlayerId);
-            SetLocalPlayerUnitProperty(unitName, UnitPlayerProperties.POSITION, null, virtualPlayerId);
+            SetLocalPlayerUnitProperty(UnitPlayerProperties.LEVEL, unitName, null, virtualPlayerId);
+            SetLocalPlayerUnitProperty(UnitPlayerProperties.STRENGHT, unitName, null, virtualPlayerId);
+            SetLocalPlayerUnitProperty(UnitPlayerProperties.DEFENSE, unitName, null, virtualPlayerId);
+            SetLocalPlayerUnitProperty(UnitPlayerProperties.EFFECT_SCALE, unitName, null, virtualPlayerId);
+            SetLocalPlayerUnitProperty(UnitPlayerProperties.POSITION, unitName, null, virtualPlayerId);
         }
 
-        NetworkManager.SetLocalPlayerCustomProperty(PlayerCustomProperties.UNIT_NAMES, null, virtualPlayerId);
+        NetworkManager.SetLocalPlayerCustomProperty(PlayerCustomProperties.TEAM_UNITS, null, virtualPlayerId);
     }
 
     public string[] GetLocalPlayerTeamUnits(string virtualPlayerId)
     {
-        string teamString = NetworkManager.GetLocalPlayerCustomProperty(PlayerCustomProperties.UNIT_NAMES, virtualPlayerId);
-        return teamString.Split(Separators.PARSE);
+        string teamString = NetworkManager.GetLocalPlayerCustomProperty(PlayerCustomProperties.TEAM_UNITS, virtualPlayerId);
+        return teamString.Split(NetworkManager.Separators.VALUES);
     }
 
-    public void SetLocalPlayerUnitProperty(string unitName, string property, string value, string virtualPlayerId)
+    public void SetLocalPlayerUnitProperty(string property, string unitName, string value, string virtualPlayerId)
     {
-        SetAnyPlayerUnitProperty(unitName, property, value, virtualPlayerId, GetLocalPlayer());
+        SetAnyPlayerUnitProperty(property, unitName, value, virtualPlayerId, GetLocalPlayer());
     }
 
-    public void SetAnyPlayerUnitProperty(string unitName, string property, string value, string virtualPlayerId, PhotonPlayer player)
+    public void SetAnyPlayerUnitProperty(string property, string unitName, string value, string virtualPlayerId, PhotonPlayer player)
     {
-        NetworkManager.SetAnyPlayerCustomProperty(unitName + Separators.UNIT_PROPERTY + property, value, virtualPlayerId, player);
+        NetworkManager.SetAnyPlayerCustomProperty(property + NetworkManager.Separators.KEYS + unitName, value, virtualPlayerId, player);
     }
 
-    public string GetLocalPlayerUnitProperty(string unitName, string property, string virtualPlayerId)
+    public string GetLocalPlayerUnitProperty(string property, string unitName, string virtualPlayerId)
     {
-        return GetAnyPlayerUnitProperty(unitName, property, virtualPlayerId, GetLocalPlayer());
+        return GetAnyPlayerUnitProperty(property, unitName, virtualPlayerId, GetLocalPlayer());
     }
 
-    public int GetLocalPlayerUnitPropertyAsInt(string unitName, string property, string virtualPlayerId)
+    public int GetLocalPlayerUnitPropertyAsInt(string property, string unitName, string virtualPlayerId)
     {
-        return GetAnyPlayerUnitPropertyAsInt(unitName, property, virtualPlayerId, GetLocalPlayer());
+        return GetAnyPlayerUnitPropertyAsInt(property, unitName, virtualPlayerId, GetLocalPlayer());
     }
 
-    public int GetAnyPlayerUnitPropertyAsInt(string unitName, string property, string virtualPlayerId, PhotonPlayer player)
+    public int GetAnyPlayerUnitPropertyAsInt(string property, string unitName, string virtualPlayerId, PhotonPlayer player)
     {
-        return NetworkManager.GetAnyPlayerCustomPropertyAsInt(unitName + Separators.UNIT_PROPERTY + property, virtualPlayerId, player);
+        return NetworkManager.GetAnyPlayerCustomPropertyAsInt(property + NetworkManager.Separators.KEYS + unitName, virtualPlayerId, player);
     }
 
-    public string GetAnyPlayerUnitProperty(string unitName, string property, string virtualPlayerId, PhotonPlayer player)
+    public string GetAnyPlayerUnitProperty(string property, string unitName, string virtualPlayerId, PhotonPlayer player)
     {
-        return NetworkManager.GetAnyPlayerCustomProperty(unitName + Separators.UNIT_PROPERTY + property, virtualPlayerId, player);
+        return NetworkManager.GetAnyPlayerCustomProperty(property + NetworkManager.Separators.KEYS + unitName, virtualPlayerId, player);
     }
 
     public int GetLocalPlayerRating(string virtualPlayerId)
@@ -341,4 +445,24 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     //    string value = NetworkManager.GetLocalPlayerCustomProperty(key);
     //    return Json.Decode<string[]>(value);
     //}
+
+    public void SetTeamInTurn(string team)
+    {
+        NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.TEAM_IN_TURN, team);
+    }
+
+    public string GetTeamInTurn()
+    {
+        return NetworkManager.GetRoomCustomProperty(GameNetwork.RoomCustomProperties.TEAM_IN_TURN);
+    }
+
+    public void SetUnitInTurn(string unitName)
+    {
+        NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.UNIT_IN_TURN, unitName);
+    }
+
+    public string GetUnitInTurn()
+    {
+        return NetworkManager.GetRoomCustomProperty(GameNetwork.RoomCustomProperties.UNIT_IN_TURN);
+    }
 }

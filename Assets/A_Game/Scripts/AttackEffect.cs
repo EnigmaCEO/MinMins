@@ -19,7 +19,7 @@ public class AttackEffect : MonoBehaviour
         Debug.Log(coll.gameObject.name + " hit " + name);
         if (!_war.GetComponent<War>().Ready)
         {
-            WarUnit warUnit = coll.gameObject.GetComponent<WarUnit>();
+            WarUnitSprite warUnit = coll.gameObject.GetComponent<WarUnitSprite>();
             GameObject unit = warUnit.Unit;
             //UIProgressBar val = unit.GetComponentInChildren<UIProgressBar>();
             Image lifeFill = warUnit.LifeFill;

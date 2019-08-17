@@ -44,5 +44,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PersistBetweenScenes: 0
-  BattleFieldMaxPos: {x: 6, y: 4.5}
-  BattleFieldMinPos: {x: -6, y: -1}
+  BattleFieldMaxPos: {x: 6, y: 4.43}
+  BattleFieldMinPos: {x: -6, y: 0.09000001}

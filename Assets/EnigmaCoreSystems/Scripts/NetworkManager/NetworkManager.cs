@@ -12,7 +12,9 @@ namespace Enigma.CoreSystems
     {
         public class Separators
         {
-            public const char FINAL_KEY = '_';
+            public const char VALUES = '|';
+            public const char KEYS = '-';
+            public const char VIRTUAL_PLAYER_KEY = ':';
         }
 
         public class Transactions
@@ -59,8 +61,6 @@ namespace Enigma.CoreSystems
         {
             public const string GAME_STATE = "gState";
             public const string START_COUNT_DOWN_TIMER = "st";
-            public const string TEAM_ONE_INDEXES = "teamOneIndexes";
-            public const string TEAM_TWO_INDEXES = "teamTwoIndexes";
             public const string PLAYER_LIST = "playerList";
             public const string HOST = "host";
             public const string MAX_PLAYERS = "mp";
@@ -69,8 +69,6 @@ namespace Enigma.CoreSystems
         public class PlayerPropertyOptions
         {
             public const string PLAYER_STATE = "plState";
-            public const string HEALTH = "health";
-            public const string USER_PHOTON_VIEW_ID = "userPhotonViewId";
         }
 
         public class StatusOptions
@@ -167,29 +165,21 @@ namespace Enigma.CoreSystems
         public delegate void StartCountdownTimerDelegate(double startTime);
         static public StartCountdownTimerDelegate StartCountdownTimer;
 
-        //Delegate for setting a player's initial health
-        public delegate void SetHealthDelegate(PhotonPlayer player, int health);
-        static public SetHealthDelegate SetHealth;
-
-        //Delegate for modifying a player's health
-        public delegate void ModifyHealthDelegate(PhotonPlayer player, int newHealth/*, int userPhotonViewId*/);
-        static public ModifyHealthDelegate ModifyHealth;
-
         //Delegate for the master to destroy objects of players who left
         public delegate void DestroyDisconnectedPlayerObjectDelegate(PhotonPlayer player);
         static public DestroyDisconnectedPlayerObjectDelegate DestroyDisconnectedPlayerObject;
 
-        public delegate void OnPhotonPlayerConnectedDelegate(PhotonPlayer connectedPlayer);
-        static public OnPhotonPlayerConnectedDelegate OnPhotonPlayerConnectedCallback;
+        public delegate void OnPlayerConnectedDelegate(PhotonPlayer connectedPlayer);
+        static public OnPlayerConnectedDelegate OnPlayerConnectedCallback;
 
-        public delegate void OnPhotonPlayerDisconnectedDelegate(PhotonPlayer disconnectedPlayer);
-        static public OnPhotonPlayerDisconnectedDelegate OnPhotonPlayerDisconnectedCallback;
+        public delegate void OnPlayerDisconnectedDelegate(PhotonPlayer disconnectedPlayer);
+        static public OnPlayerDisconnectedDelegate OnPlayerDisconnectedCallback;
 
-        public delegate void OnPhotonPlayerPropertiesChangedDelegate(object[] playerAndUpdatedProps);
-        static public OnPhotonPlayerPropertiesChangedDelegate OnPhotonPlayerPropertiesChangedCallback;
+        public delegate void OnPlayerCustomPropertiesChangedDelegate(PhotonPlayer player, Hashtable updatedProperties);
+        static public OnPlayerCustomPropertiesChangedDelegate OnPlayerCustomPropertiesChangedCallback;
 
-        public delegate void OnPhotonCustomRoomPropertiesChangedDelegate(ExitGames.Client.Photon.Hashtable propertiesThatChanged);
-        static public OnPhotonCustomRoomPropertiesChangedDelegate OnPhotonCustomRoomPropertiesChangedCallback;
+        public delegate void OnRoomCustomPropertiesChangedDelegate(Hashtable updatedProperties);
+        static public OnRoomCustomPropertiesChangedDelegate OnRoomCustomPropertiesChangedCallback;
 
         public delegate void OnMasterClientSwitchedDelegate(PhotonPlayer newMaster);
         static public OnMasterClientSwitchedDelegate OnMasterClientSwitchedCallback;
@@ -755,7 +745,7 @@ namespace Enigma.CoreSystems
 
         static public void SetAnyPlayerCustomProperty(string key, string value, string virtualPlayerId, PhotonPlayer player)
         {
-            string finalKey = virtualPlayerId + Separators.FINAL_KEY + key;
+            string virtualPlayerKey = virtualPlayerId + Separators.VIRTUAL_PLAYER_KEY + key;
 
             if (IsPhotonOffline())
             {
@@ -767,23 +757,31 @@ namespace Enigma.CoreSystems
                
                 Hashtable userData = Data[DataGroups.INFO][DataKeys.PLAYER] as Hashtable;
                 
-                if (!userData.ContainsKey(finalKey))
+                if (!userData.ContainsKey(virtualPlayerKey))
                 {
                     if (value != null)
-                        userData.Add(finalKey, value);
+                        userData.Add(virtualPlayerKey, value);
                 }
                 else
                 {
                     if (value == null)
-                        userData.Remove(finalKey);
+                        userData.Remove(virtualPlayerKey);
                     else
-                        userData[finalKey] = value;
+                        userData[virtualPlayerKey] = value;
+                }
+
+                if (value != null)
+                {
+                    Hashtable updatedProperties = new Hashtable();
+                    updatedProperties.Add(virtualPlayerKey, value);
+                    if (OnPlayerCustomPropertiesChangedCallback != null)
+                        OnPlayerCustomPropertiesChangedCallback(GetLocalPlayer(), updatedProperties);
                 }
             }
             else  //Online
             {
                 ExitGames.Client.Photon.Hashtable photonHTable = new ExitGames.Client.Photon.Hashtable();
-                photonHTable.Add(finalKey, value);
+                photonHTable.Add(virtualPlayerKey, value);
                 player.SetCustomProperties(photonHTable);
             }
         }
@@ -800,7 +798,7 @@ namespace Enigma.CoreSystems
 
         static public string GetAnyPlayerCustomProperty(string key, string virtualPlayerId, PhotonPlayer player)
         {
-            string finalKey = virtualPlayerId + Separators.FINAL_KEY + key;
+            string virtualPlayerKey = virtualPlayerId + Separators.VIRTUAL_PLAYER_KEY + key;
 
             if (IsPhotonOffline())
             {
@@ -812,10 +810,10 @@ namespace Enigma.CoreSystems
 
                 
                 Hashtable userData = Data[DataGroups.INFO][DataKeys.PLAYER] as Hashtable;
-                return userData[finalKey].ToString().Trim('"');
+                return userData[virtualPlayerKey].ToString().Trim('"');
             }
             else  // Online
-                return player.CustomProperties[finalKey].ToString();
+                return player.CustomProperties[virtualPlayerKey].ToString();
         }
 
         static public int GetLocalPlayerCustomPropertyAsInt(string key, string virtualPlayerId)
@@ -849,12 +847,19 @@ namespace Enigma.CoreSystems
                     Data[DataGroups.INFO].Add(DataKeys.ROOM, new Hashtable());
 
                 Hashtable roomData = Data[DataGroups.INFO][DataKeys.ROOM] as Hashtable;
-                string finalKey = PhotonNetwork.room.Name + Separators.FINAL_KEY + key;
 
-                if (!roomData.ContainsKey(finalKey)) 
-                    roomData.Add(finalKey, value);
+                if (!roomData.ContainsKey(key)) 
+                    roomData.Add(key, value);
                 else
-                    roomData[finalKey] = value;
+                    roomData[key] = value;
+
+                if (value != null)
+                {
+                    Hashtable updatedProperties = new Hashtable();
+                    updatedProperties.Add(key, value);
+                    if (OnRoomCustomPropertiesChangedCallback != null)
+                        OnRoomCustomPropertiesChangedCallback(updatedProperties);
+                }
             }
             else // Online
             {
@@ -871,7 +876,7 @@ namespace Enigma.CoreSystems
 
         static public string GetRoomCustomProperty(object key)
         {
-            string finalKey = PhotonNetwork.room.Name + Separators.FINAL_KEY + key;
+            string virtualPlayerKey = PhotonNetwork.room.Name + Separators.VIRTUAL_PLAYER_KEY + key;
 
             if (IsPhotonOffline())
             {
@@ -882,10 +887,10 @@ namespace Enigma.CoreSystems
                     return "";
 
                 Hashtable userData = Data[DataGroups.INFO][DataKeys.ROOM] as Hashtable;
-                return userData[finalKey].ToString().Trim('"');
+                return userData[virtualPlayerKey].ToString().Trim('"');
             }
             else  // Online
-                return PhotonNetwork.room.CustomProperties[finalKey].ToString();
+                return PhotonNetwork.room.CustomProperties[virtualPlayerKey].ToString();
         }
 
         /*
@@ -1079,8 +1084,8 @@ namespace Enigma.CoreSystems
                 if (CheckReadyToLaunch != null) CheckReadyToLaunch();
             }
 
-            if (OnPhotonPlayerConnectedCallback != null)
-                OnPhotonPlayerConnectedCallback(connectedPlayer);
+            if (OnPlayerConnectedCallback != null)
+                OnPlayerConnectedCallback(connectedPlayer);
         }
 
         void OnPhotonPlayerDisconnected(PhotonPlayer disconnectedPlayer)
@@ -1130,8 +1135,8 @@ namespace Enigma.CoreSystems
                 if (DestroyDisconnectedPlayerObject != null) DestroyDisconnectedPlayerObject(disconnectedPlayer);
             }
 
-            if (OnPhotonPlayerDisconnectedCallback != null)
-                OnPhotonPlayerDisconnectedCallback(disconnectedPlayer);
+            if (OnPlayerDisconnectedCallback != null)
+                OnPlayerDisconnectedCallback(disconnectedPlayer);
         }
 
         void OnPhotonPlayerPropertiesChanged(object[] playerAndUpdatedProps)
@@ -1139,10 +1144,13 @@ namespace Enigma.CoreSystems
             Debug.Log("NetworkManager::OnPhotonPlayerPropertiesChanged");
 
             PhotonPlayer player = playerAndUpdatedProps[0] as PhotonPlayer;
-            ExitGames.Client.Photon.Hashtable playerProperties = playerAndUpdatedProps[1] as ExitGames.Client.Photon.Hashtable;
+            ExitGames.Client.Photon.Hashtable photonUpdatedProps = playerAndUpdatedProps[1] as ExitGames.Client.Photon.Hashtable;
+            Hashtable updatedProperties = new Hashtable();
+            foreach (object key in photonUpdatedProps.Keys)
+                updatedProperties.Add(key, photonUpdatedProps[key]);
 
             //Debug.LogError("Player Properties that changed: " + player.NickName + " " + playerProperties.ToStringFull());
-
+            /*
             if (GetInRoom())
             {
                 ExitGames.Client.Photon.Hashtable roomProperties = GetRoom().CustomProperties;
@@ -1150,25 +1158,21 @@ namespace Enigma.CoreSystems
                 {
                     if (roomProperties[RoomPropertyOptions.GAME_STATE].ToString() == RoomStates.READY)
                     {
-                        if (playerProperties[PlayerPropertyOptions.PLAYER_STATE] != null)
+                        if (photonUpdatedProps[PlayerPropertyOptions.PLAYER_STATE] != null)
                         {
-                            if (playerProperties[PlayerPropertyOptions.PLAYER_STATE].ToString() == PlayerStates.SPAWN)
+                            if (photonUpdatedProps[PlayerPropertyOptions.PLAYER_STATE].ToString() == PlayerStates.SPAWN)
                             {
                                 //                            if (SpawnPlayerCharacter != null) 
                                 //								SpawnPlayerCharacter(player);
                             }
-                            else if (playerProperties[PlayerPropertyOptions.PLAYER_STATE].ToString() == PlayerStates.CREATED)
+                            else if (photonUpdatedProps[PlayerPropertyOptions.PLAYER_STATE].ToString() == PlayerStates.CREATED)
                             {
-                                if (playerProperties[PlayerPropertyOptions.HEALTH] != null)
-                                {
-                                    if (SetHealth != null)
-                                        SetHealth(player, (int)playerProperties[PlayerPropertyOptions.HEALTH]);
-                                }
+
 
                                 if (EnableReadyUI != null)
                                     EnableReadyUI();
                             }
-                            else if (playerProperties[PlayerPropertyOptions.PLAYER_STATE].ToString() == PlayerStates.READY)
+                            else if (photonUpdatedProps[PlayerPropertyOptions.PLAYER_STATE].ToString() == PlayerStates.READY)
                             {
                                 if (GetIsMasterClient())
                                     CountNumberOfReadyPlayers();
@@ -1178,68 +1182,62 @@ namespace Enigma.CoreSystems
                     else if (roomProperties[RoomPropertyOptions.GAME_STATE].ToString() == RoomStates.SYNC)
                     {
                         //A player synced properly in the Combat scene
-                        if ((playerProperties[PlayerPropertyOptions.PLAYER_STATE] != null) && (playerProperties[PlayerPropertyOptions.PLAYER_STATE].ToString() == "sync"))
+                        if ((photonUpdatedProps[PlayerPropertyOptions.PLAYER_STATE] != null) && (photonUpdatedProps[PlayerPropertyOptions.PLAYER_STATE].ToString() == "sync"))
                             CountNumberOfSyncPlayers();
                     }
                     else if (roomProperties[RoomPropertyOptions.GAME_STATE].ToString() == RoomStates.PLAY)
                     {
-                        checkPlayerPropertiesOnPlay(player, playerProperties);
+                        checkPlayerPropertiesOnPlay(player, photonUpdatedProps);
                     }
                 }
             }
-
-            if (OnPhotonPlayerPropertiesChangedCallback != null)
-                OnPhotonPlayerPropertiesChangedCallback(playerAndUpdatedProps);
+            */
+            if (OnPlayerCustomPropertiesChangedCallback != null)
+                OnPlayerCustomPropertiesChangedCallback(player, updatedProperties);
         }
 
-        void OnPhotonCustomRoomPropertiesChanged(ExitGames.Client.Photon.Hashtable propertiesThatChanged)
+        void OnPhotonCustomRoomPropertiesChanged(ExitGames.Client.Photon.Hashtable photonUpdatedProps)
         {
-            Debug.Log("NetworkManager::OnPhotonCustomRoomPropertiesChanged-> Room Properties that changed: " + propertiesThatChanged.ToStringFull());     
-
+            Debug.Log("NetworkManager::OnPhotonCustomRoomPropertiesChanged-> Room Properties that changed: " + photonUpdatedProps.ToStringFull());
+            Hashtable updatedProperties = convertPhotonHashTable(photonUpdatedProps);
+            /*
             //Room state changes
-            if (propertiesThatChanged.ContainsKey(RoomPropertyOptions.GAME_STATE))
+            if (photonUpdatedProps.ContainsKey(RoomPropertyOptions.GAME_STATE))
             {
-                if (propertiesThatChanged[RoomPropertyOptions.GAME_STATE].ToString() == RoomStates.READY)
+                if (photonUpdatedProps[RoomPropertyOptions.GAME_STATE].ToString() == RoomStates.READY)
                 {
                     //Load stuff here...
                     //if (SpawnPlayerCharacterTesting != null) SpawnPlayerCharacterTesting();
                 }
-                else if (propertiesThatChanged[RoomPropertyOptions.GAME_STATE].ToString() == RoomStates.SYNC)
+                else if (photonUpdatedProps[RoomPropertyOptions.GAME_STATE].ToString() == RoomStates.SYNC)
                 {
                     //Master sends sync message here...
                     if (GetIsMasterClient())
                         NetworkManager.SendNotifyClientsToSendPlayerInfoMessage();
                 }
-                else if (propertiesThatChanged[RoomPropertyOptions.GAME_STATE].ToString() == RoomStates.LAUNCH)
+                else if (photonUpdatedProps[RoomPropertyOptions.GAME_STATE].ToString() == RoomStates.LAUNCH)
                 {
                     //Master sets the start photon timer here...
                     if (GetIsMasterClient())
                         SetRoomCustomProperty(RoomPropertyOptions.START_COUNT_DOWN_TIMER, GetPhotonTime());
                 }
-                else if (propertiesThatChanged[RoomPropertyOptions.GAME_STATE].ToString() == RoomStates.PLAY)
+                else if (photonUpdatedProps[RoomPropertyOptions.GAME_STATE].ToString() == RoomStates.PLAY)
                 {
 
                 }
             }
+            */
 
-            if (propertiesThatChanged.ContainsKey(RoomPropertyOptions.START_COUNT_DOWN_TIMER))
+            if (photonUpdatedProps.ContainsKey(RoomPropertyOptions.START_COUNT_DOWN_TIMER))
             {
                 //Begin timer here
-                Debug.Log("Start time: " + (double)propertiesThatChanged[RoomPropertyOptions.START_COUNT_DOWN_TIMER]);
+                Debug.Log("Start time: " + (double)photonUpdatedProps[RoomPropertyOptions.START_COUNT_DOWN_TIMER]);
                 if (StartCountdownTimer != null)
-                    StartCountdownTimer((double)propertiesThatChanged[RoomPropertyOptions.START_COUNT_DOWN_TIMER]);
+                    StartCountdownTimer((double)photonUpdatedProps[RoomPropertyOptions.START_COUNT_DOWN_TIMER]);
             }
 
-            if (propertiesThatChanged.ContainsKey("teamOneIndexes") || propertiesThatChanged.ContainsKey("teamTwoIndexes"))
-            {
-                //if (SpawnPlayerCharacter != null) SpawnPlayerCharacter();
-                Dictionary<int, int> test = (Dictionary<int, int>)propertiesThatChanged["teamTwoIndexes"];
-
-                Debug.Log("TeamTwoIndex changed: " + test.ToStringFull());
-            }
-
-            if (OnPhotonCustomRoomPropertiesChangedCallback != null)
-                OnPhotonCustomRoomPropertiesChanged(propertiesThatChanged);
+            if (OnRoomCustomPropertiesChangedCallback != null)
+                OnRoomCustomPropertiesChangedCallback(updatedProperties);
         }
 
         void OnMasterClientSwitched(PhotonPlayer newMaster)
@@ -1314,7 +1312,8 @@ namespace Enigma.CoreSystems
             //Id was successfully retrieved
             if (playerPhotonViewId != -1)
             {
-                if (SetPlayerNameAsObjName != null) SetPlayerNameAsObjName(playerPhotonViewId, info.sender.NickName);
+                if (SetPlayerNameAsObjName != null)
+                    SetPlayerNameAsObjName(playerPhotonViewId, info.sender.NickName);
 
                 if (GetIsMasterClient())
                 {
@@ -1554,26 +1553,18 @@ namespace Enigma.CoreSystems
             }
         }
 
+        private Hashtable convertPhotonHashTable(ExitGames.Client.Photon.Hashtable photonHashTable)
+        {
+            Hashtable hashTable = new Hashtable();
+            foreach (object key in photonHashTable.Keys)
+                hashTable.Add(key, photonHashTable[key]);
+
+            return hashTable;
+        }
+
         private void checkPlayerPropertiesOnPlay(PhotonPlayer photonPlayer, ExitGames.Client.Photon.Hashtable playerProperties)
         {
-            //A player's health was modified
-            if (playerProperties[PlayerPropertyOptions.HEALTH] != null)
-            {
-                Debug.Log(photonPlayer.NickName + ": " + (int)playerProperties[PlayerPropertyOptions.HEALTH]);
-                Debug.Log("userPhotonViewId: " + (int)playerProperties[PlayerPropertyOptions.USER_PHOTON_VIEW_ID]);
 
-                if (ModifyHealth != null)
-                    ModifyHealth(photonPlayer, (int)playerProperties[PlayerPropertyOptions.HEALTH]/*, (int)playerProperties["userPhotonViewId"]*/);
-
-                if (GetIsMasterClient())
-                {
-                    if ((int)playerProperties[PlayerPropertyOptions.HEALTH] <= 0)
-                    {
-                        Debug.Log(photonPlayer.NickName + " is dead...");
-                        //CheckIfTeamLost((WGO2Enums.Faction)photonPlayer.CustomProperties["faction"]);
-                    }
-                }
-            }
         }
     }
 }

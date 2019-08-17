@@ -29,16 +29,16 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/A_Game/Scenes/Store.unity
     guid: 7c0d49cd26676c2489ca86821607f856
-  - enabled: 0
+  - enabled: 1
     path: Assets/A_Game/Scenes/Original/OriginalWarPrep.unity
     guid: ac76e071fd0b69345a898ce2474b2a2c
-  - enabled: 0
+  - enabled: 1
     path: Assets/A_Game/Scenes/Original/OriginalUnitSelect.unity
     guid: 9ce22464e2b1f9045ac4b826aadf39f7
-  - enabled: 0
+  - enabled: 1
     path: Assets/A_Game/Scenes/Original/OriginalMain.unity
     guid: da49e585e0423144a875beb9b125bcc8
-  - enabled: 0
+  - enabled: 1
     path: Assets/A_Game/Scenes/Original/OriginalWar.unity
     guid: 84e1361f928fcc841b80ebbedd50142e
   m_configObjects: {}

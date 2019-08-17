@@ -31,7 +31,6 @@ RectTransform:
   m_LocalScale: {x: 0.71279, y: 0.71279, z: 0.71279}
   m_Children:
   - {fileID: 651751993502074426}
-  - {fileID: 652654887154638224}
   m_Father: {fileID: 651647372801895008}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -102,12 +101,12 @@ GameObject:
   - component: {fileID: 649492464447567150}
   - component: {fileID: 832431457588007076}
   m_Layer: 5
-  m_Name: LogosSelectionHighlight
+  m_Name: UnitTurnHighlight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &652654887154638224
 RectTransform:
   m_ObjectHideFlags: 0
@@ -117,15 +116,15 @@ RectTransform:
   m_GameObject: {fileID: 725409640907078938}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.71279, y: 0.71279, z: 0.71279}
   m_Children: []
-  m_Father: {fileID: 650784821135108806}
+  m_Father: {fileID: 651647372801895008}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 104, y: -104}
-  m_SizeDelta: {x: 200, y: 200}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -274.42407, y: 95.11124}
+  m_SizeDelta: {x: 144, y: 134.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &649492464447567150
 CanvasRenderer:
@@ -148,7 +147,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.94776875, b: 0.24264705, a: 0.566}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.3372549}
   m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -194,12 +193,17 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 650872059037355452}
+  - {fileID: 8881702672210421049}
+  - {fileID: 8881702672428369409}
+  - {fileID: 8881702672452606204}
+  - {fileID: 8881702670524558855}
+  - {fileID: 8881702671519310806}
   m_Father: {fileID: 650784821135108806}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 41.4}
+  m_AnchoredPosition: {x: 0.000061035156, y: 41.4}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &829449671560615110
@@ -269,6 +273,7 @@ RectTransform:
   m_LocalScale: {x: 1.5805714, y: 1.5805714, z: 1.5805714}
   m_Children:
   - {fileID: 650784821135108806}
+  - {fileID: 652654887154638224}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -309,6 +314,281 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.ScrollRect+ScrollRectEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!1001 &1300747340531288223
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 651751993502074426}
+    m_Modifications:
+    - target: {fileID: 7661992421256126049, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_Name
+      value: WarTeamGridItem6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d4efda6d81588154c9137b779315507b, type: 3}
+--- !u!224 &8881702671519310806 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+    type: 3}
+  m_PrefabInstance: {fileID: 1300747340531288223}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1300747341217681008
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 651751993502074426}
+    m_Modifications:
+    - target: {fileID: 7661992421256126049, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_Name
+      value: WarTeamGridItem2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d4efda6d81588154c9137b779315507b, type: 3}
+--- !u!224 &8881702672210421049 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+    type: 3}
+  m_PrefabInstance: {fileID: 1300747341217681008}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1300747341234842952
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 651751993502074426}
+    m_Modifications:
+    - target: {fileID: 7661992421256126049, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_Name
+      value: WarTeamGridItem3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d4efda6d81588154c9137b779315507b, type: 3}
+--- !u!224 &8881702672428369409 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+    type: 3}
+  m_PrefabInstance: {fileID: 1300747341234842952}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1300747341460009909
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 651751993502074426}
+    m_Modifications:
+    - target: {fileID: 7661992421256126049, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_Name
+      value: WarTeamGridItem4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d4efda6d81588154c9137b779315507b, type: 3}
+--- !u!224 &8881702672452606204 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+    type: 3}
+  m_PrefabInstance: {fileID: 1300747341460009909}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1300747341542458702
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 651751993502074426}
+    m_Modifications:
+    - target: {fileID: 7661992421256126049, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_Name
+      value: WarTeamGridItem5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d4efda6d81588154c9137b779315507b, type: 3}
+--- !u!224 &8881702670524558855 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
+    type: 3}
+  m_PrefabInstance: {fileID: 1300747341542458702}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6937610392974337781
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -319,7 +599,7 @@ PrefabInstance:
     - target: {fileID: 7661992421256126049, guid: d4efda6d81588154c9137b779315507b,
         type: 3}
       propertyPath: m_Name
-      value: WarTeamGridItem
+      value: WarTeamGridItem1
       objectReference: {fileID: 0}
     - target: {fileID: 7588296358024260425, guid: d4efda6d81588154c9137b779315507b,
         type: 3}

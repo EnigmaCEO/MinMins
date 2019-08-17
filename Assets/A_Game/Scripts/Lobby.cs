@@ -44,8 +44,8 @@ public class Lobby : MonoBehaviour
         //NetworkManager.OnLeftLobbyCallback += onLeftLobby;
         NetworkManager.OnJoinedRoomCallback += onJoinedRoom;
         //NetworkManager.OnLeftRoomCallback += onLeftRoom;
-        NetworkManager.OnPhotonPlayerConnectedCallback += onPlayerConnected;
-        NetworkManager.OnPhotonPlayerDisconnectedCallback += onPlayerDisconnected;
+        NetworkManager.OnPlayerConnectedCallback += onPlayerConnected;
+        NetworkManager.OnPlayerDisconnectedCallback += onPlayerDisconnected;
     }
 
     private void removeDelegates()
@@ -57,8 +57,8 @@ public class Lobby : MonoBehaviour
         //NetworkManager.OnLeftLobbyCallback -= onLeftLobby;
         NetworkManager.OnJoinedRoomCallback -= onJoinedRoom;
         //NetworkManager.OnLeftRoomCallback -= onLeftRoom;
-        NetworkManager.OnPhotonPlayerConnectedCallback -= onPlayerConnected;
-        NetworkManager.OnPhotonPlayerDisconnectedCallback -= onPlayerDisconnected;
+        NetworkManager.OnPlayerConnectedCallback -= onPlayerConnected;
+        NetworkManager.OnPlayerDisconnectedCallback -= onPlayerDisconnected;
     }
 
     private void onJoinedLobby()

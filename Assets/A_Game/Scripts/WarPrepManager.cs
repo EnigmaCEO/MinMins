@@ -63,9 +63,9 @@ public class WarPrepManager : MonoBehaviour
             PrepMinMinSprite prepMinMinSprite = unitSpriteTransform.GetComponent<PrepMinMinSprite>();
 
             Vector3 pos = unitSpriteTransform.localPosition;
-            string positionString = pos.x.ToString() + GameNetwork.Separators.PARSE + pos.y.ToString();
+            string positionString = pos.x.ToString() + NetworkManager.Separators.VALUES + pos.y.ToString();
 
-            gameNetwork.SetLocalPlayerUnitProperty(prepMinMinSprite.UnitName, GameNetwork.UnitPlayerProperties.POSITION, positionString, GameConstants.VirtualPlayerIds.ALLIES);
+            gameNetwork.SetLocalPlayerUnitProperty(GameNetwork.UnitPlayerProperties.POSITION, prepMinMinSprite.UnitName, positionString, GameConstants.VirtualPlayerIds.ALLIES);
         }
 
         GameStats.Modes gameMode = GameStats.Instance.Mode;
