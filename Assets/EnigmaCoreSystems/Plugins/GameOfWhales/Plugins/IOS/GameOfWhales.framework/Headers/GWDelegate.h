@@ -34,6 +34,8 @@
  */
 - (void)specialOfferDisappeared:(nonnull GWSpecialOffer *)specialOffer;
 
+- (void)futureSpecialOfferAppeared:(nonnull GWSpecialOffer *)specialOffer;
+
 /*!
  @brief When user get push notification
  @param specialOffer If push campaing has special offer
@@ -53,6 +55,12 @@
  */
 - (void)onPurchaseVerified:(nonnull NSString *)transactionID
                      state:(nonnull NSString *)state;
+
+- (void)onAdLoaded;
+- (void)onAdLoadFailed;
+- (void)onAdClosed;
+
+- (void)onInitialized;
 @end
 
 #endif

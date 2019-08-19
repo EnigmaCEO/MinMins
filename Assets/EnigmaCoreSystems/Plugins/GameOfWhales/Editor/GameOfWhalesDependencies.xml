@@ -1,0 +1,14 @@
+<dependencies>
+    <androidPackages>
+        <androidPackage spec="com.google.android.gms:play-services-identity:11.0.1"></androidPackage>
+        <androidPackage spec="com.google.android.gms:play-services-iid:11.0.1"></androidPackage>
+        
+        <!-- TO GET TOKEN WITHOUT FIREBASE -->
+        <androidPackage spec="com.google.android.gms:play-services-gcm:11.0.1"></androidPackage>
+        
+        <repositories>
+            <repository>Assets/GameOfWhales/m2repository</repository>
+        </repositories>
+        
+    </androidPackages>
+</dependencies>

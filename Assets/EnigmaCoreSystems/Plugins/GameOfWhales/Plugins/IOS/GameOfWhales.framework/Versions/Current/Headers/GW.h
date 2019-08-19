@@ -28,6 +28,10 @@ FOUNDATION_EXPORT NSString *_Nonnull const GW_VERIFY_STATE_UNDEFINED;
 FOUNDATION_EXPORT NSString *_Nonnull GW_PLATFORM;
 FOUNDATION_EXPORT NSString *_Nonnull GW_VERSION;
 
+FOUNDATION_EXPORT NSString *_Nonnull const GW_AD_SHOWED;
+FOUNDATION_EXPORT NSString *_Nonnull const GW_AD_LOADED;
+FOUNDATION_EXPORT NSString *_Nonnull const GW_AD_CLICKED;
+
 @interface GW : NSObject
 /*!
  @brief Is Game of whales SDK initialized
@@ -42,8 +46,13 @@ FOUNDATION_EXPORT NSString *_Nonnull GW_VERSION;
  @param debug BOOL YES - if debug mode
  */
 + (void)InitializeWithGameKey:(nonnull NSString *)gameKey
-        :(nullable NSDictionary *)launchOptions
-        :(BOOL)debug;
+                             :(nullable NSDictionary *)launchOptions
+                             :(BOOL)debug
+                             :(BOOL)nonPersonal;
+
++ (void)InitializeWithGameKey:(nonnull NSString *)gameKey
+                             :(nullable NSDictionary *)launchOptions
+                             :(BOOL)debug;
 
 /*!
  @brief Initialize GameOfWhales SDK method with default game key.
@@ -51,7 +60,22 @@ FOUNDATION_EXPORT NSString *_Nonnull GW_VERSION;
  @param debug BOOL YES - if debug mode
  */
 + (void)Initialize:(nullable NSDictionary *)launchOptions
-        :(BOOL)debug;
+                  :(BOOL)debug
+                  :(BOOL)nonPersonal;
+
++ (void)Initialize:(nullable NSDictionary *)launchOptions
+                  :(BOOL)debug;
+
+/*!
+     Load promo adversting
+ */
++ (void)LoadAd;
+
++ (bool)IsAdLoaded;
+/*!
+     Show promo adversting
+ */
++ (void)ShowAd;
 
 /*!
  @brief Enable/disable debug mode
@@ -78,6 +102,11 @@ FOUNDATION_EXPORT NSString *_Nonnull GW_VERSION;
  @return GWSpecialOffer
  */
 + (nullable GWSpecialOffer *)GetSpecialOffer:(nonnull NSString *)productID;
+
++ (nullable GWSpecialOffer *)GetFutureSpecialOffer:(nonnull NSString *)productID;
+
++ (nullable NSMutableDictionary *)GetProperties;
++ (nullable NSString *)GetUserGroup;
 
 /*!
  @brief Register device token with specified push messages provider
@@ -180,6 +209,14 @@ FOUNDATION_EXPORT NSString *_Nonnull GW_VERSION;
         :(nonnull NSString *)stacktrace;
 
 /*!
+ @param sku NSString product identifier
+ @param currency NSString transaction currency
+ @param price double product price
+ */
++(void)Purchase:(nonnull NSString*)product: (nonnull NSString*)currency: (double)price;
+
+
+/*!
  @brief Register in app purchase
  @param sku NSString product identifier
  @param price double product price
@@ -214,6 +251,12 @@ FOUNDATION_EXPORT NSString *_Nonnull GW_VERSION;
  @param camp NSString Current campaign
  */
 + (void)ReactedRemoteNotificationWithCampaign:(nonnull NSString *)camp;
+
++(void)Internal_onAdClosed;
++(void)AdEvent:(NSString *)camp action:(NSString*)action;
++(void)ExtAdEvent:(NSString *)platform revenue:(NSNumber *)revenue type:(NSString*)type unitType:(NSString*)unitType;
 @end
+
+
 
 #endif

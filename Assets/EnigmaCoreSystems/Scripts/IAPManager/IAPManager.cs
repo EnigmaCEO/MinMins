@@ -101,14 +101,20 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
             // Begin to configure our connection to Purchasing
             InitializePurchasing();
 
-            GameOfWhales.Init(GameOfWhales.GetCurrentStore());
-            GameOfWhales.Instance.SetPushNotificationsEnable(true);
+#if UNITY_IOS
+        string store = GameOfWhales.STORE_APPLEAPPSTORE;
+#else
+            string store = GameOfWhales.STORE_GOOGLEPLAY;
+#endif
+
+            GameOfWhales.Init(store);
+            GameOfWhales.SetPushNotificationsEnable(true);
         }
 
-        GameOfWhales.Instance.OnPurchaseVerified += OnPurchaseVerifiedCallback;
-        GameOfWhales.Instance.OnSpecialOfferAppeared += OnOfferAppearedCallback;
-        GameOfWhales.Instance.OnSpecialOfferedDisappeared += OnOfferDisappearedCallback;
-        GameOfWhales.Instance.OnPushDelivered += OnPushDeliveredCallback;
+        GameOfWhales.OnPurchaseVerified += OnPurchaseVerifiedCallback;
+        GameOfWhales.OnSpecialOfferAppeared += OnOfferAppearedCallback;
+        GameOfWhales.OnSpecialOfferedDisappeared += OnOfferDisappearedCallback;
+        GameOfWhales.OnPushDelivered += OnPushDeliveredCallback;
 #endif
 
 #if Kongregate
@@ -142,10 +148,10 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
 #if (UNITY_ANDROID || UNITY_IOS)
         if (GameOfWhales.Instance != null)
         {
-            GameOfWhales.Instance.OnPurchaseVerified -= OnPurchaseVerifiedCallback;
-            GameOfWhales.Instance.OnSpecialOfferAppeared -= OnOfferAppearedCallback;
-            GameOfWhales.Instance.OnSpecialOfferedDisappeared -= OnOfferDisappearedCallback;
-            GameOfWhales.Instance.OnPushDelivered -= OnPushDeliveredCallback;
+            GameOfWhales.OnPurchaseVerified -= OnPurchaseVerifiedCallback;
+            GameOfWhales.OnSpecialOfferAppeared -= OnOfferAppearedCallback;
+            GameOfWhales.OnSpecialOfferedDisappeared -= OnOfferDisappearedCallback;
+            GameOfWhales.OnPushDelivered -= OnPushDeliveredCallback;
         }
 
         //Tap Joy callbacks and placement responses =========================
@@ -427,14 +433,14 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
     public virtual void RegisterConsume(string currency, long number, string sink, long amount, string place)
     {
 #if (UNITY_ANDROID || UNITY_IOS)
-        GameOfWhales.Instance.Consume(currency, number, sink, amount, place);
+        GameOfWhales.Consume(currency, number, sink, amount, place);
 #endif
     }
 
     public virtual void RegisterAcquire(string currency, long amount, string source, long number, string place)
     {
 #if (UNITY_ANDROID || UNITY_IOS)
-        GameOfWhales.Instance.Consume(currency, amount, source, number, place);
+        GameOfWhales.Consume(currency, amount, source, number, place);
 #endif
     }
 
@@ -443,7 +449,7 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
         float priceFactor = 1;
 
 #if (UNITY_ANDROID || UNITY_IOS)
-        SpecialOffer offer = GameOfWhales.Instance.GetSpecialOffer(product);
+        SpecialOffer offer = GameOfWhales.GetSpecialOffer(product);
 
         if (offer != null)
         {
@@ -460,7 +466,7 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
     PurchaseProcessingResult IStoreListener.ProcessPurchase(PurchaseEventArgs args)
     {
 #if (UNITY_ANDROID || UNITY_IOS)
-        GameOfWhales.Instance.InAppPurchased(
+        GameOfWhales.InAppPurchased(
                                             args.purchasedProduct.definition.id,
                                             (float)args.purchasedProduct.metadata.localizedPrice,
                                             args.purchasedProduct.metadata.isoCurrencyCode,
@@ -503,7 +509,7 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
     private void OnPushDeliveredCallback(SpecialOffer offer, string campID, string title, string message)
     {
         //Show the notification to a player and then call the following method
-        GameOfWhales.Instance.PushReacted(campID);
+        GameOfWhales.PushReacted(campID);
     }
 #endif
     #endregion

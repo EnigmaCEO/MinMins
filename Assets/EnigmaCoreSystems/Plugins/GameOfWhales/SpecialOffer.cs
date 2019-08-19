@@ -11,30 +11,48 @@
 
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
-public class SpecialOffer {
+public class SpecialOffer{
     public string id;
     public string product;
     public float countFactor;
     public float priceFactor;
     public DateTime finishedAt;
+    public DateTime activatedAt;
     public string payload;
-	public bool redeemable;
-	public Dictionary<string,object> customValues = new Dictionary<string,object>();
+    public bool redeemable;
+    public Dictionary<string, object> customValues = new Dictionary<string, object>();
 
-    public bool IsExpired()
-    {
-		return finishedAt.Ticks < GameOfWhales.Instance.GetServerTime().Ticks;
+    public bool IsExpired(){
+        try
+        {
+            return finishedAt.Ticks < GameOfWhales.GetServerTime().Ticks;
+        }
+        catch (Exception e)
+        {
+            Debug.LogError(e.ToString());
+        }
+        return false;
     }
 
-    public bool HasCountFactor()
-    {
+    public bool HasCountFactor(){
         return countFactor > 1.0;
     }
 
-    public bool HasPriceFactor()
-    {
+    public bool HasPriceFactor(){
         return priceFactor < 1.0;
     }
 
+    public bool IsActivated() {
+        try
+        {
+            return activatedAt.Ticks < GameOfWhales.GetServerTime().Ticks;
+        }
+        catch (Exception e)
+        {
+            Debug.LogError(e.ToString());
+        }
+        return false;
+    }
 }

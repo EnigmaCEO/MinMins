@@ -599,7 +599,7 @@ PlayerSettings:
   scriptingDefineSymbols:
     1: TextMeshPro
     4: TextMeshPro
-    7: TextMeshPro
+    7: TextMeshPro;GAME_OF_WHALES
     13: TextMeshPro
     19: TextMeshPro
     21: TextMeshPro

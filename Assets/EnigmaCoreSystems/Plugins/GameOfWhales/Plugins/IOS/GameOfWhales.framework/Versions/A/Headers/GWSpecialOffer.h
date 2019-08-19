@@ -50,6 +50,8 @@
  */
 @property(nonatomic, nonnull) NSDate *finishedAt;
 
+@property(nonatomic, nonnull) NSDate *activatedAt;
+
 /*!
  @brief Special data for developers server. Contains encrypted special offer data.
  */
@@ -60,6 +62,7 @@
  */
 - (BOOL)isExpired;
 
+- (BOOL)isActivated;
 /*!
  @brief Does special offer have discount option
  */
@@ -75,6 +78,7 @@
  */
 - (long)getLeftTime;
 
+- (long)getLeftTimeTillActivated;
 
 @property(nonatomic, nonnull) NSDictionary * customValues;
 @end

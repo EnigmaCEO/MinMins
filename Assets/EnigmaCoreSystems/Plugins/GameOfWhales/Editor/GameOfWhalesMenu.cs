@@ -13,17 +13,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System;
-
 using UnityEngine;
 using UnityEditor;
 
-public class GameOfWhalesMenu {
-
+public class GameOfWhalesMenu{
     [MenuItem("Window/Game Of Whales", false, 0)]
-    private static void OpenSettings()
-    {
-        if (GameOfWhalesSettings.instance == null)
-        {
+    private static void OpenSettings(){
+        if (GameOfWhalesSettings.instance == null){
             CreateSettings();
         }
 
@@ -31,17 +27,14 @@ public class GameOfWhalesMenu {
     }
 
 
-
-    private static void CreateSettings()
-    {
+    private static void CreateSettings(){
         string path = "Assets/Resources/" + "GameOfWhalesSettings" + ".asset";
 
         Directory.CreateDirectory(Application.dataPath + "/Resources");
 
-        if (File.Exists(path))
-        {
-                AssetDatabase.DeleteAsset(path);
-                AssetDatabase.Refresh();
+        if (File.Exists(path)){
+            AssetDatabase.DeleteAsset(path);
+            AssetDatabase.Refresh();
         }
 
         var asset = ScriptableObject.CreateInstance<GameOfWhalesSettings>();
@@ -51,4 +44,3 @@ public class GameOfWhalesMenu {
         AssetDatabase.SaveAssets();
     }
 }
-

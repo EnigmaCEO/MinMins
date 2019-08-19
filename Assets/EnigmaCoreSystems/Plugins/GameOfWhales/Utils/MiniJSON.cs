@@ -73,23 +73,23 @@ using System.Text;
 /// All numbers are parsed to doubles.
 /// </summary>
 
-namespace GameOfWhalesJson {
-    public static class MiniJSON {
+namespace GameOfWhalesJson{
+    public static class MiniJSON{
         /// <summary>
         /// Parses the string json into a value
         /// </summary>
         /// <param name="json">A JSON string.</param>
         /// <returns>An List&lt;object&gt;, a Dictionary&lt;string, object&gt;, a double, an integer,a string, null, true, or false</returns>
-        public static object Deserialize(string json) {
+        public static object Deserialize(string json){
             // save the string for debug information
-            if (json == null) {
+            if (json == null){
                 return null;
             }
 
             return Parser.Parse(json);
         }
 
-        public static object jsonDecode(string json) {
+        public static object jsonDecode(string json){
             var obj = Parser.Parse(json);
             //UnityEngine.Debug.LogWarning(obj);
             //var dict = obj as Dictionary<string, object>;
@@ -99,15 +99,15 @@ namespace GameOfWhalesJson {
             return obj;
         }
 
-        public static string jsonEncode(object obj) {
+        public static string jsonEncode(object obj){
             return Serializer.Serialize(obj);
         }
 
-        sealed class Parser : IDisposable {
+        sealed class Parser : IDisposable{
             const string WHITE_SPACE = " \t\n\r";
             const string WORD_BREAK = " \t\n\r{}[],:\"";
 
-            enum TOKEN {
+            enum TOKEN{
                 NONE,
                 CURLY_OPEN,
                 CURLY_CLOSE,
@@ -124,30 +124,30 @@ namespace GameOfWhalesJson {
 
             StringReader json;
 
-            Parser(string jsonString) {
+            Parser(string jsonString){
                 json = new StringReader(jsonString);
             }
 
-            public static object Parse(string jsonString) {
-                using (var instance = new Parser(jsonString)) {
+            public static object Parse(string jsonString){
+                using (var instance = new Parser(jsonString)){
                     return instance.ParseValue();
                 }
             }
 
-            public void Dispose() {
+            public void Dispose(){
                 json.Dispose();
                 json = null;
             }
 
-            Dictionary<string, object> ParseObject() {
+            Dictionary<string, object> ParseObject(){
                 var table = new Dictionary<string, object>();
 
                 // ditch opening brace
                 json.Read();
 
                 // {
-                while (true) {
-                    switch (NextToken) {
+                while (true){
+                    switch (NextToken){
                         case TOKEN.NONE:
                             return null;
                         case TOKEN.COMMA:
@@ -157,14 +157,15 @@ namespace GameOfWhalesJson {
                         default:
                             // name
                             string name = ParseString();
-                            if (name == null) {
+                            if (name == null){
                                 return null;
                             }
 
                             // :
-                            if (NextToken != TOKEN.COLON) {
+                            if (NextToken != TOKEN.COLON){
                                 return null;
                             }
+
                             // ditch the colon
                             json.Read();
 
@@ -175,7 +176,7 @@ namespace GameOfWhalesJson {
                 }
             }
 
-            List<object> ParseArray() {
+            List<object> ParseArray(){
                 List<object> array = new List<object>();
 
                 // ditch opening bracket
@@ -183,10 +184,10 @@ namespace GameOfWhalesJson {
 
                 // [
                 var parsing = true;
-                while (parsing) {
+                while (parsing){
                     TOKEN nextToken = NextToken;
 
-                    switch (nextToken) {
+                    switch (nextToken){
                         case TOKEN.NONE:
                             return null;
                         case TOKEN.COMMA:
@@ -204,13 +205,13 @@ namespace GameOfWhalesJson {
                 return array;
             }
 
-            object ParseValue() {
+            object ParseValue(){
                 TOKEN nextToken = NextToken;
                 return ParseByToken(nextToken);
             }
 
-            object ParseByToken(TOKEN token) {
-                switch (token) {
+            object ParseByToken(TOKEN token){
+                switch (token){
                     case TOKEN.STRING:
                         return ParseString();
                     case TOKEN.NUMBER:
@@ -230,7 +231,7 @@ namespace GameOfWhalesJson {
                 }
             }
 
-            string ParseString() {
+            string ParseString(){
                 StringBuilder s = new StringBuilder();
                 char c;
 
@@ -238,24 +239,25 @@ namespace GameOfWhalesJson {
                 json.Read();
 
                 bool parsing = true;
-                while (parsing) {
-                    if (json.Peek() == -1) {
+                while (parsing){
+                    if (json.Peek() == -1){
                         parsing = false;
                         break;
                     }
 
                     c = NextChar;
-                    switch (c) {
+                    switch (c){
                         case '"':
                             parsing = false;
                             break;
                         case '\\':
-                            if (json.Peek() == -1) {
+                            if (json.Peek() == -1){
                                 parsing = false;
                                 break;
                             }
+
                             c = NextChar;
-                            switch (c) {
+                            switch (c){
                                 case '"':
                                 case '\\':
                                 case '/':
@@ -278,12 +280,14 @@ namespace GameOfWhalesJson {
                                     break;
                                 case 'u':
                                     var hex = new StringBuilder();
-                                    for (int i = 0; i < 4; i++) {
+                                    for (int i = 0; i < 4; i++){
                                         hex.Append(NextChar);
                                     }
+
                                     s.Append((char) Convert.ToInt32(hex.ToString(), 16));
                                     break;
                             }
+
                             break;
                         default:
                             s.Append(c);
@@ -294,10 +298,10 @@ namespace GameOfWhalesJson {
                 return s.ToString();
             }
 
-            object ParseNumber() {
+            object ParseNumber(){
                 string number = NextWord;
 
-                if (number.IndexOf('.') == -1) {
+                if (number.IndexOf('.') == -1){
                     long parsedInt;
                     Int64.TryParse(number, out parsedInt);
                     return parsedInt;
@@ -308,32 +312,32 @@ namespace GameOfWhalesJson {
                 return parsedDouble;
             }
 
-            void EatWhitespace() {
-                while (WHITE_SPACE.IndexOf(PeekChar) != -1) {
+            void EatWhitespace(){
+                while (WHITE_SPACE.IndexOf(PeekChar) != -1){
                     json.Read();
 
-                    if (json.Peek() == -1) {
+                    if (json.Peek() == -1){
                         break;
                     }
                 }
             }
 
-            char PeekChar {
-                get { return Convert.ToChar(json.Peek()); }
+            char PeekChar{
+                get{ return Convert.ToChar(json.Peek()); }
             }
 
-            char NextChar {
-                get { return Convert.ToChar(json.Read()); }
+            char NextChar{
+                get{ return Convert.ToChar(json.Read()); }
             }
 
-            string NextWord {
-                get {
+            string NextWord{
+                get{
                     StringBuilder word = new StringBuilder();
 
-                    while (WORD_BREAK.IndexOf(PeekChar) == -1) {
+                    while (WORD_BREAK.IndexOf(PeekChar) == -1){
                         word.Append(NextChar);
 
-                        if (json.Peek() == -1) {
+                        if (json.Peek() == -1){
                             break;
                         }
                     }
@@ -342,16 +346,16 @@ namespace GameOfWhalesJson {
                 }
             }
 
-            TOKEN NextToken {
-                get {
+            TOKEN NextToken{
+                get{
                     EatWhitespace();
 
-                    if (json.Peek() == -1) {
+                    if (json.Peek() == -1){
                         return TOKEN.NONE;
                     }
 
                     char c = PeekChar;
-                    switch (c) {
+                    switch (c){
                         case '{':
                             return TOKEN.CURLY_OPEN;
                         case '}':
@@ -385,7 +389,7 @@ namespace GameOfWhalesJson {
 
                     string word = NextWord;
 
-                    switch (word) {
+                    switch (word){
                         case "false":
                             return TOKEN.FALSE;
                         case "true":
@@ -404,18 +408,18 @@ namespace GameOfWhalesJson {
         /// </summary>
         /// <param name="json">A Dictionary&lt;string, object&gt; / List&lt;object&gt;</param>
         /// <returns>A JSON encoded string, or null if object 'json' is not serializable</returns>
-        public static string Serialize(object obj) {
+        public static string Serialize(object obj){
             return Serializer.Serialize(obj);
         }
 
-        sealed class Serializer {
+        sealed class Serializer{
             StringBuilder builder;
 
-            Serializer() {
+            Serializer(){
                 builder = new StringBuilder();
             }
 
-            public static string Serialize(object obj) {
+            public static string Serialize(object obj){
                 var instance = new Serializer();
 
                 instance.SerializeValue(obj);
@@ -423,41 +427,41 @@ namespace GameOfWhalesJson {
                 return instance.builder.ToString();
             }
 
-            void SerializeValue(object value) {
+            void SerializeValue(object value){
                 IList asList;
                 IDictionary asDict;
                 string asStr;
 
-                if (value == null) {
+                if (value == null){
                     builder.Append("null");
                 }
-                else if ((asStr = value as string) != null) {
+                else if ((asStr = value as string) != null){
                     SerializeString(asStr);
                 }
-                else if (value is bool) {
+                else if (value is bool){
                     builder.Append(value.ToString().ToLower());
                 }
-                else if ((asList = value as IList) != null) {
+                else if ((asList = value as IList) != null){
                     SerializeArray(asList);
                 }
-                else if ((asDict = value as IDictionary) != null) {
+                else if ((asDict = value as IDictionary) != null){
                     SerializeObject(asDict);
                 }
-                else if (value is char) {
+                else if (value is char){
                     SerializeString(value.ToString());
                 }
-                else {
+                else{
                     SerializeOther(value);
                 }
             }
 
-            void SerializeObject(IDictionary obj) {
+            void SerializeObject(IDictionary obj){
                 bool first = true;
 
                 builder.Append('{');
 
-                foreach (object e in obj.Keys) {
-                    if (!first) {
+                foreach (object e in obj.Keys){
+                    if (!first){
                         builder.Append(',');
                     }
 
@@ -472,13 +476,13 @@ namespace GameOfWhalesJson {
                 builder.Append('}');
             }
 
-            void SerializeArray(IList anArray) {
+            void SerializeArray(IList anArray){
                 builder.Append('[');
 
                 bool first = true;
 
-                foreach (object obj in anArray) {
-                    if (!first) {
+                foreach (object obj in anArray){
+                    if (!first){
                         builder.Append(',');
                     }
 
@@ -490,12 +494,12 @@ namespace GameOfWhalesJson {
                 builder.Append(']');
             }
 
-            void SerializeString(string str) {
+            void SerializeString(string str){
                 builder.Append('\"');
 
                 char[] charArray = str.ToCharArray();
-                foreach (var c in charArray) {
-                    switch (c) {
+                foreach (var c in charArray){
+                    switch (c){
                         case '"':
                             builder.Append("\\\"");
                             break;
@@ -519,12 +523,13 @@ namespace GameOfWhalesJson {
                             break;
                         default:
                             int codepoint = Convert.ToInt32(c);
-                            if ((codepoint >= 32) && (codepoint <= 126)) {
+                            if ((codepoint >= 32) && (codepoint <= 126)){
                                 builder.Append(c);
                             }
-                            else {
+                            else{
                                 builder.Append("\\u" + Convert.ToString(codepoint, 16).PadLeft(4, '0'));
                             }
+
                             break;
                     }
                 }
@@ -532,7 +537,7 @@ namespace GameOfWhalesJson {
                 builder.Append('\"');
             }
 
-            void SerializeOther(object value) {
+            void SerializeOther(object value){
                 if (value is float
                     || value is int
                     || value is uint
@@ -543,10 +548,10 @@ namespace GameOfWhalesJson {
                     || value is short
                     || value is ushort
                     || value is ulong
-                    || value is decimal) {
+                    || value is decimal){
                     builder.Append(value.ToString());
                 }
-                else {
+                else{
                     SerializeString(value.ToString());
                 }
             }
