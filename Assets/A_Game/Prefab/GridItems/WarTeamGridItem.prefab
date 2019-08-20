@@ -160,6 +160,7 @@ GameObject:
   - component: {fileID: 7588296358024260425}
   - component: {fileID: 7661992421256126051}
   - component: {fileID: 7661992421256126050}
+  - component: {fileID: 6790022586346274154}
   m_Layer: 5
   m_Name: WarTeamGridItem
   m_TagString: Untagged
@@ -225,6 +226,21 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
+--- !u!114 &6790022586346274154
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7661992421256126049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 329aee833932fe0449f34bc5c7f7d70f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  View: {fileID: 8809529105826661479}
+  UnitName: 
+  _lifeFill: {fileID: 7123609384835915650}
 --- !u!1 &8809529105826661477
 GameObject:
   m_ObjectHideFlags: 0

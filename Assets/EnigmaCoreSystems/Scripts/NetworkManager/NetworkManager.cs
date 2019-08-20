@@ -876,8 +876,6 @@ namespace Enigma.CoreSystems
 
         static public string GetRoomCustomProperty(object key)
         {
-            string virtualPlayerKey = PhotonNetwork.room.Name + Separators.VIRTUAL_PLAYER_KEY + key;
-
             if (IsPhotonOffline())
             {
                 if (!Data.ContainsKey(DataGroups.INFO))
@@ -887,10 +885,10 @@ namespace Enigma.CoreSystems
                     return "";
 
                 Hashtable userData = Data[DataGroups.INFO][DataKeys.ROOM] as Hashtable;
-                return userData[virtualPlayerKey].ToString().Trim('"');
+                return userData[key].ToString().Trim('"');
             }
             else  // Online
-                return PhotonNetwork.room.CustomProperties[virtualPlayerKey].ToString();
+                return PhotonNetwork.room.CustomProperties[key].ToString();
         }
 
         /*

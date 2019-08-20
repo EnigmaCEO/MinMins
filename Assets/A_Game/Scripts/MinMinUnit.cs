@@ -15,7 +15,7 @@ public class MinMinUnit : MonoBehaviour
 
     public int Strength = 1;
     public int Defense = 1;
-    public int Health = 5;
+    public int MaxHealth = 5;
 
     public int EffectScale = 1;
 

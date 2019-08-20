@@ -22,22 +22,22 @@ public class AttackEffect : MonoBehaviour
             WarUnitSprite warUnit = coll.gameObject.GetComponent<WarUnitSprite>();
             GameObject unit = warUnit.Unit;
             //UIProgressBar val = unit.GetComponentInChildren<UIProgressBar>();
-            Image lifeFill = warUnit.LifeFill;
+            //Image lifeFill = warUnit.LifeFill;
 
             //if (lifeFill != null)
-                lifeFill.fillAmount -= 0.25f;
+            //    lifeFill.fillAmount -= 0.25f;
 
-            int type = 1;
-            if (lifeFill.fillAmount <= 0)
-            {
-                type = 2;
-                Destroy(coll.transform.parent.gameObject);
-            }
+            //int type = 1;
+            //if (lifeFill.fillAmount <= 0)
+            //{
+            //    type = 2;
+            //    Destroy(coll.transform.parent.gameObject);
+            //}
 
-            GameObject hit = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/Hits/" + type));
-            hit.transform.localPosition = transform.localPosition;
-            hit.AddComponent<VFXSorter>().sortingOrder = 100;
-            Destroy(gameObject);
+            //GameObject hit = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/Hits/" + type));
+            //hit.transform.localPosition = transform.localPosition;
+            //hit.AddComponent<VFXSorter>().sortingOrder = 100;
+            //Destroy(gameObject);
 
             EndAttack();
         }
