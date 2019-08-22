@@ -55,7 +55,9 @@ public class WarPrepManager : MonoBehaviour
     private void onNextButtonDown()
     {
         GameNetwork gameNetwork = GameNetwork.Instance;
+        GameStats gameStats = GameStats.Instance;
 
+        gameStats.PreparationPositions.Clear();
         for (int i = 0; i < _slotsInPlay; i++)
         {
             Transform slotTransform = _slotsTeam1.Find("slot" + (i + 1));
@@ -63,16 +65,20 @@ public class WarPrepManager : MonoBehaviour
             PrepMinMinSprite prepMinMinSprite = unitSpriteTransform.GetComponent<PrepMinMinSprite>();
 
             Vector3 pos = unitSpriteTransform.localPosition;
-            string positionString = pos.x.ToString() + NetworkManager.Separators.VALUES + pos.y.ToString();
-
-            gameNetwork.SetLocalPlayerUnitProperty(GameNetwork.UnitPlayerProperties.POSITION, prepMinMinSprite.UnitName, positionString, GameNetwork.VirtualPlayerIds.ALLIES);
+            gameStats.PreparationPositions.Add(pos);
         }
 
         GameStats.Modes gameMode = GameStats.Instance.Mode;
         if (gameMode == GameStats.Modes.SinglePlayer)
+        {
+            NetworkManager.Connect(true);
             SceneManager.LoadScene(GameConstants.Scenes.WAR);
+        }
         else if (gameMode == GameStats.Modes.Pvp)
+        {
+            NetworkManager.Connect(false);
             SceneManager.LoadScene(GameConstants.Scenes.LOBBY);
+        }
     }
 
     private void onBackButtonDown()

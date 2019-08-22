@@ -19,7 +19,7 @@ namespace Enigma.CoreSystems
 
         public class Transactions
         {
-            public const int IP_AND_COUNTERY = 0;
+            public const int IP_AND_COUNTRY = 0;
             public const int LOGIN = 3;
             public const int REGISTRATION = 5;
             public const int COINS_EARNED = 6;
@@ -200,6 +200,9 @@ namespace Enigma.CoreSystems
         static public SimpleDelegate OnUpdatedFriendListCallback;
         static public SimpleDelegate OnDisconnectedFromPhotonCallback;
 
+        static public SimpleDelegate OnReceivedRoomListUpdateCallback;
+        static public SimpleDelegate OnConnectedToMasterCallback;
+
         // global active player
         static public JSONNode ActiveCharacter;
          
@@ -213,6 +216,8 @@ namespace Enigma.CoreSystems
         {
             base.Start ();
             Data = new Dictionary<string, Hashtable> ();
+
+            //NetworkManager.Transaction(Transactions.IP_AND_COUNTRY, new Hashtable(), GetIpAndCountry);
 
             //Firebase.Messaging.FirebaseMessaging.TokenReceived += OnTokenReceived;
             //Firebase.Messaging.FirebaseMessaging.MessageReceived += OnMessageReceived;
@@ -375,6 +380,20 @@ namespace Enigma.CoreSystems
             
 
             return hashString.PadLeft (32, '0');
+        }
+
+        //Callback for Transaction 0 (getting user IP and country)
+        void GetIpAndCountry(JSONNode response)
+        {
+            JSONNode response_hash = response[0];
+            string status = response_hash["status"].ToString().Trim('"');
+
+            if (status == "SUCCESS")
+            {
+                //Debug.Log(response_hash);
+                Ip = response_hash["ip"].ToString().Trim('"');
+                Country = response_hash["country"].ToString().Trim('"');
+            }
         }
 
         static public void Register(string userName, string password, string email, string ethAddress, string game, string bundleId, Callback callback = null, Hashtable extras = null)
@@ -541,6 +560,7 @@ namespace Enigma.CoreSystems
         //Join Photon lobby
         static public void JoinLobby()
         {
+            print("NetworkManager::JoinLobby");
             PhotonNetwork.JoinLobby();
         }
 
@@ -599,6 +619,7 @@ namespace Enigma.CoreSystems
         //Join a Photon Room
         static public bool JoinRoom(string roomName)
         {
+            print("NetworkManager::JoinRoom");
             return PhotonNetwork.JoinOrCreateRoom(roomName, null, null);
         }
 
@@ -629,6 +650,7 @@ namespace Enigma.CoreSystems
         //Helper for testing
         static public void ReadRoomList()
         {
+            //print("NetworkManager::ReadRoomList");
             RoomInfo[] roomList = GetRoomList();
 
             foreach (RoomInfo r in roomList)
@@ -1011,13 +1033,27 @@ namespace Enigma.CoreSystems
             Debug.Log("NetworkManager::OnConnectionFail -> cause: " + cause.ToString());
         }
 
+        private void OnConnectedToMaster()
+        {
+            Debug.Log("NetworkManager::OnConnectedToMaster");
+            if (OnConnectedToMasterCallback != null)
+                OnConnectedToMasterCallback();
+        }
+
+        private void OnReceivedRoomListUpdate()
+        {
+            Debug.Log("NetworkManager::OnReceivedRoomListUpdate");
+            if (OnReceivedRoomListUpdateCallback != null)
+                OnReceivedRoomListUpdateCallback();
+        }
+
         void OnJoinedLobby()
         {
             Debug.Log("NetworkManager::Joined Lobby");
 
             //instance.StartCoroutine(LobbyPollCoroutine());
 
-            Instance.StartCoroutine(LobbyPollRoomsCoroutine());
+            //Instance.StartCoroutine(LobbyPollRoomsCoroutine());
             //instance.StartCoroutine(GetRoomDataCoroutine());
 
             if (OnJoinedLobbyCallback != null)
@@ -1543,10 +1579,11 @@ namespace Enigma.CoreSystems
         //Coroutine for polling Lobby info (specifically room info)
         static public IEnumerator LobbyPollRoomsCoroutine()
         {
+            print("NetworkManager::LobbyPollRoomsCoroutine -> Inside Lobby: " + PhotonNetwork.insideLobby);
             while (PhotonNetwork.insideLobby == true)
             {
                 PhotonNetwork.GetRoomList();
-                //ReadRoomList();
+                ReadRoomList();
                 yield return null;
             }
         }

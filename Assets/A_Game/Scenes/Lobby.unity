@@ -351,7 +351,7 @@ MonoBehaviour:
   _maxPlayers: 2
   _maxPlayersNotExpectating: 2
   _maxRatingDifferenceToFight: 50
-  _timeToWaitBeforeAiRival: 30
+  _timeToWaitBeforeAiRival: 300000
   _waitingPopUp: {fileID: 39140927}
 --- !u!1001 &1667541217
 PrefabInstance:

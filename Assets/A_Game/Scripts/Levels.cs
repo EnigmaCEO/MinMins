@@ -10,6 +10,7 @@ public class Levels : MonoBehaviour
 
     void Start()
     {
+        GameNetwork.Instance.SetLocalPlayerRating(150, GameNetwork.VirtualPlayerIds.ALLIES); //TODO: Remove hack
         GameObject levelGridItemTemplate = _levelsGridContent.GetChild(0).gameObject;
 
         int levelsLenght = 0;

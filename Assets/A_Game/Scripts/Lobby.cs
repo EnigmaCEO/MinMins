@@ -12,12 +12,15 @@ public class Lobby : MonoBehaviour
     [SerializeField] private float _timeToWaitBeforeAiRival = 30; // 30 seconds
     [SerializeField] private GameObject _waitingPopUp;
 
+    private void Awake()
+    {
+        setDelegates();
+    }
+
     void Start()
     {
-        _waitingPopUp.SetActive(false);
-        setDelegates();    
+        _waitingPopUp.SetActive(false);   
         GameStats.Instance.UsesAiForPvp = false;
-        NetworkManager.JoinLobby();
     }
 
     void Update()
@@ -32,7 +35,7 @@ public class Lobby : MonoBehaviour
     private void OnDestroy()
     {
         removeDelegates();
-        StopCoroutine(handleWaitForAiRival());
+        //StopCoroutine(handleWaitForAiRival());
     }
 
     private void setDelegates()
@@ -46,6 +49,10 @@ public class Lobby : MonoBehaviour
         //NetworkManager.OnLeftRoomCallback += onLeftRoom;
         NetworkManager.OnPlayerConnectedCallback += onPlayerConnected;
         NetworkManager.OnPlayerDisconnectedCallback += onPlayerDisconnected;
+        NetworkManager.OnReceivedRoomListUpdateCallback += OnReceivedRoomListUpdate;
+        NetworkManager.OnConnectedToMasterCallback += OnConnectedToMaster;
+
+        GameNetwork.OnStartMatch += onStartMatch;
     }
 
     private void removeDelegates()
@@ -59,11 +66,27 @@ public class Lobby : MonoBehaviour
         //NetworkManager.OnLeftRoomCallback -= onLeftRoom;
         NetworkManager.OnPlayerConnectedCallback -= onPlayerConnected;
         NetworkManager.OnPlayerDisconnectedCallback -= onPlayerDisconnected;
+        NetworkManager.OnReceivedRoomListUpdateCallback -= OnReceivedRoomListUpdate;
+        NetworkManager.OnConnectedToMasterCallback -= OnConnectedToMaster;
+
+        GameNetwork.OnStartMatch -= onStartMatch;
+    }
+
+    private void OnConnectedToMaster()
+    {
+        print("Lobby::OnConnectedToMaster");
+        NetworkManager.JoinLobby();
     }
 
     private void onJoinedLobby()
     {
         print("Lobby::OnJoinedLobby");
+        NetworkManager.GetRoomList();  //Request room list. Wait for OnReceivedRoomListUpdate
+    }
+
+    private void OnReceivedRoomListUpdate()
+    {
+        print("Lobby::OnReceivedRoomListUpdate");
         handleRoomCreationAndJoin();
     }
 
@@ -74,8 +97,11 @@ public class Lobby : MonoBehaviour
 
     private void onJoinedRoom()
     {
-        print("Lobby::OnJoinedRoom");
-        _waitingPopUp.SetActive(true);
+        print("Lobby::OnJoinedRoom -> Is Master Client: " + NetworkManager.GetIsMasterClient());
+        if(NetworkManager.GetIsMasterClient())
+            _waitingPopUp.SetActive(true);
+        else
+            NetworkManager.GetRoom().IsOpen = false;
     }
 
     //private void onLeftRoom()
@@ -87,7 +113,7 @@ public class Lobby : MonoBehaviour
     {
         print("Lobby::onPlayerConnected");
         StopCoroutine(handleWaitForAiRival());
-        NetworkManager.SendRPCtoAll("startMatch");  //Assuming this is the Master Client of the room
+        sendStartMatch();
     }
 
     private void onPlayerDisconnected(PhotonPlayer player)
@@ -117,12 +143,12 @@ public class Lobby : MonoBehaviour
                 if (room.IsOpen)
                 {
                     PhotonPlayer[] playerList = NetworkManager.GetPlayerList();
-                    int playerInRoomRating = (int)playerList[0].CustomProperties[GameNetwork.PlayerCustomProperties.RATING];
+                    PhotonPlayer player = playerList[0];
+                    int playerInRoomRating = GameNetwork.Instance.GetAnyPlayerRating(player, GameNetwork.VirtualPlayerIds.ALLIES);
                     
                     if (Mathf.Abs(playerInRoomRating - thisPlayerRating) <= _maxRatingDifferenceToFight)
                     {
                         NetworkManager.JoinRoom(room.Name);
-                        NetworkManager.GetRoom().IsOpen = false;
                         foundRoom = true;
                         break;
                     }
@@ -134,20 +160,19 @@ public class Lobby : MonoBehaviour
         }
     }
 
-    [PunRPC]
-    private void startMatch(PhotonMessageInfo messageInfo)
+    private void sendStartMatch()
     {
-        Debug.Log("startMatch -> sender nickname: " + messageInfo.sender.NickName);
-        goToWar();
+        GameNetwork.Instance.SendStartMatch();
     }
 
-    private void goToWar()
+    private void onStartMatch()
     {
         SceneManager.LoadScene(GameConstants.Scenes.WAR);
     }
 
     private void createAndJoinRoom()
     {
+        print("Lobby::createAndJoinRoom");
         string roomName = "1v1 - " + NetworkManager.GetPlayerName();
         createRoom(roomName);
         NetworkManager.JoinRoom(roomName);
@@ -163,7 +188,7 @@ public class Lobby : MonoBehaviour
     private void assignAiRival()
     {
         GameStats.Instance.UsesAiForPvp = true;
-        goToWar();
+        sendStartMatch();
     }
 
     private void createRoom(string roomName)

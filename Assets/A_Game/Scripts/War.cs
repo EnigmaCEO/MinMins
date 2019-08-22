@@ -65,11 +65,10 @@ public class War : MonoBehaviour
 
     void Awake()
     {
-        GameNetwork gameNetwork = GameNetwork.Instance;
-        gameNetwork.OnUnitHealthSetCallback += onUnitHealthSet;
-        gameNetwork.OnTeamHealthSetCallback += onTeamHealthSet;
-        gameNetwork.OnTeamTurnStartedCallback += onTeamTurnStarted;
-        gameNetwork.OnUnitTurnStartedCallback += onUnitTurnStarted;
+        GameNetwork.OnUnitHealthSetCallback += onUnitHealthSet;
+        GameNetwork.OnTeamHealthSetCallback += onTeamHealthSet;
+        GameNetwork.OnTeamTurnStartedCallback += onTeamTurnStarted;
+        GameNetwork.OnUnitTurnStartedCallback += onUnitTurnStarted;
     }
 
     private void Start()
@@ -112,11 +111,10 @@ public class War : MonoBehaviour
 
     private void OnDestroy()
     {
-        GameNetwork gameNetwork = GameNetwork.Instance;
-        gameNetwork.OnUnitHealthSetCallback -= onUnitHealthSet;
-        gameNetwork.OnTeamHealthSetCallback -= onTeamHealthSet;
-        gameNetwork.OnTeamTurnStartedCallback -= onTeamTurnStarted;
-        gameNetwork.OnUnitTurnStartedCallback -= onUnitTurnStarted;
+        GameNetwork.OnUnitHealthSetCallback -= onUnitHealthSet;
+        GameNetwork.OnTeamHealthSetCallback -= onTeamHealthSet;
+        GameNetwork.OnTeamTurnStartedCallback -= onTeamTurnStarted;
+        GameNetwork.OnUnitTurnStartedCallback -= onUnitTurnStarted;
     }
 
     private void onUnitHealthSet(string team, string unitName, int health)
@@ -306,10 +304,10 @@ public class War : MonoBehaviour
                 int allyUnitExp = gameInventory.GetAllyUnitExp(allyUnitNames[i]);
                 gameNetwork.BuildUnitLevels(enemyUnitNames[i], allyUnitExp, GameNetwork.VirtualPlayerIds.ENEMIES);
 
-                //Set random position
-                Vector2 pos = getRandomBattlefieldPosition();
-                string posString = pos.x.ToString() + NetworkManager.Separators.VALUES + pos.y.ToString();
-                gameNetwork.SetLocalPlayerUnitProperty(GameNetwork.UnitPlayerProperties.POSITION, enemyUnitNames[i], posString, GameNetwork.VirtualPlayerIds.ENEMIES);
+                ////Set random position
+                //Vector2 pos = getRandomBattlefieldPosition();
+                //string posString = pos.x.ToString() + NetworkManager.Separators.VALUES + pos.y.ToString();
+                //gameNetwork.SetLocalPlayerUnitProperty(GameNetwork.UnitPlayerProperties.POSITION, enemyUnitNames[i], posString, GameNetwork.VirtualPlayerIds.ENEMIES);
             }
         }
 
@@ -329,6 +327,7 @@ public class War : MonoBehaviour
 
         GameNetwork gameNetwork = GameNetwork.Instance;
         GameInventory gameInventory = GameInventory.Instance;
+        GameStats gameStats = GameStats.Instance;
 
         string[] teamUnits = gameNetwork.GetLocalPlayerTeamUnits(virtualPlayerId);
         int teamLength = teamUnits.Length;
@@ -357,13 +356,12 @@ public class War : MonoBehaviour
 
             unitTransform.localPosition = Vector2.zero;
 
-            string positionString = gameNetwork.GetLocalPlayerUnitProperty(GameNetwork.UnitPlayerProperties.POSITION, unitName, virtualPlayerId);
-            string[] positionCoords = positionString.Split(NetworkManager.Separators.VALUES);
-            float posX = float.Parse(positionCoords[0]);
-            float posY = float.Parse(positionCoords[1]);
+            //string positionString = gameNetwork.GetLocalPlayerUnitProperty(GameNetwork.UnitPlayerProperties.POSITION, unitName, virtualPlayerId);
+            //string[] positionCoords = positionString.Split(NetworkManager.Separators.VALUES);
+            //float posX = float.Parse(positionCoords[0]);
+            //float posY = float.Parse(positionCoords[1]);
 
             Transform spriteTransform = unitTransform.Find("Sprite");
-            spriteTransform.localPosition = new Vector2(posX, posY);
             WarUnitSprite warUnit = spriteTransform.gameObject.AddComponent<WarUnitSprite>();
             warUnit.Unit = unit;
             warUnit.SetWar(this);
@@ -375,6 +373,8 @@ public class War : MonoBehaviour
 
             if (isLocalPlayerTeam)
             {
+                spriteTransform.localPosition = gameStats.PreparationPositions[i];
+
                 //Set and collect UI sprites
                 WarTeamGridItem warTeamGridItem = warGridItemTransform.GetComponent<WarTeamGridItem>();
                 _uiTeamGridItems.Add(warTeamGridItem);
@@ -390,6 +390,8 @@ public class War : MonoBehaviour
             }
             else  //Only Single Player or Master Client will go here to instantiate enemies
             {
+                spriteTransform.localPosition = getRandomBattlefieldPosition();
+
                 Vector3 localScale = spriteTransform.localScale;
                 spriteTransform.localScale = new Vector3(-localScale.x, localScale.y, localScale.z);
             }

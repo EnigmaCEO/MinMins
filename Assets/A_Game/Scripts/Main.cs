@@ -15,16 +15,16 @@ public class Main : MonoBehaviour
     {
         print("OnSinglePlayerButtonDown");
         GameStats.Instance.Mode = GameStats.Modes.SinglePlayer;
-        NetworkManager.Connect(true);
-        GoToLevels();
+        //NetworkManager.Connect(true);
+        TryGoToLevels();
     }
 
     public void OnPvpButtonDown()
     {
         print("OnPvpButtonDown");
         GameStats.Instance.Mode = GameStats.Modes.Pvp;
-        NetworkManager.Connect(false);
-        GoToLevels();
+        //NetworkManager.Connect(false);
+        TryGoToLevels();
     }
 
     public void OnStoreButtonDown()
@@ -39,7 +39,7 @@ public class Main : MonoBehaviour
         SceneManager.LoadScene(GameConstants.Scenes.STORE);
     }
 
-    private void GoToLevels()
+    private void TryGoToLevels()
     {
         if (GameInventory.Instance.HasEnoughUnitsForBattle())
             SceneManager.LoadScene(GameConstants.Scenes.LEVELS);
