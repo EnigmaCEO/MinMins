@@ -4,11 +4,13 @@ using UnityEngine;
 public class Main : MonoBehaviour
 {
     [SerializeField] GameObject _notEnoughUnitsPopUp;
+    [SerializeField] GameObject _loginModal;
 
     void Start()
     {
         NetworkManager.Disconnect();
         _notEnoughUnitsPopUp.SetActive(false);
+        _loginModal.SetActive(false);
     }
 
     public void OnSinglePlayerButtonDown()
@@ -37,6 +39,11 @@ public class Main : MonoBehaviour
     {
         _notEnoughUnitsPopUp.SetActive(false);
         SceneManager.LoadScene(GameConstants.Scenes.STORE);
+    }
+
+    public void ShowLoginForm()
+    {
+        _loginModal.SetActive(true);
     }
 
     private void TryGoToLevels()

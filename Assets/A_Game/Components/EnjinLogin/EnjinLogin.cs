@@ -101,6 +101,19 @@ public class EnjinLogin : MonoBehaviour
     public void loginSubmit() {
         showLoadingScreen();
 
+        Hashtable extras = new Hashtable();
+        string ipAddress = NetworkManager.Ip; 
+        string country = NetworkManager.Country;  
+        extras.Add("ip", ipAddress);
+        extras.Add("country", country);
+
+        NetworkManager.Login(
+            loginUsername.text,
+            loginPassword.text,
+            onLogin,
+            extras
+        );
+
     }
 
     private void showLoadingScreen() {
@@ -181,5 +194,38 @@ public class EnjinLogin : MonoBehaviour
             print("User is not using Crypto.");
 
         GameStats.Instance.IsEnjinLinked = true; //hack
+    }
+
+    private void onLogin(SimpleJSON.JSONNode response)
+    {
+        if (response != null) {
+
+            SimpleJSON.JSONNode response_hash = response[0];
+            string status = response_hash[NetworkManager.TransactionKeys.STATUS].ToString().Trim('"');
+
+            if (status == NetworkManager.StatusOptions.SUCCESS) {
+                // print("onRegistration SUCCESS");
+                // completeLogin(response_hash);
+                closeDialog();
+            }
+            else {
+                EnableLoginWindow();
+                string term = "";
+
+                if (status == NetworkManager.StatusOptions.ERR_REGISTER)
+                    term = "Register Error";
+                else if (status == NetworkManager.StatusOptions.ERR_INVALID_PASSWORD)
+                    term = "Invalid Password";
+                else if (status == NetworkManager.StatusOptions.ERR_INVALID_USERNAME)
+                    term = "Invalid Username";
+                else
+                    term = "Server Error";
+
+                alertText.text = term;
+            }
+        } else {
+            EnableLoginWindow();
+            alertText.text = "Connection Error";
+        }
     }
 }
