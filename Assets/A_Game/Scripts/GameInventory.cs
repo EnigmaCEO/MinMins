@@ -116,7 +116,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         InventoryManager.Instance.UpdateItem(GroupNames.UNITS, unitName, unitExp);
     }
 
-    public int GetAllyUnitExp(string unitName)
+    public int GetLocalUnitExp(string unitName)
     {
         return InventoryManager.Instance.GetItem<int>(GroupNames.UNITS, unitName);
     }

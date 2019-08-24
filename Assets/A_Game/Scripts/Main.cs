@@ -17,7 +17,6 @@ public class Main : MonoBehaviour
     {
         print("OnSinglePlayerButtonDown");
         GameStats.Instance.Mode = GameStats.Modes.SinglePlayer;
-        //NetworkManager.Connect(true);
         TryGoToLevels();
     }
 
@@ -25,7 +24,6 @@ public class Main : MonoBehaviour
     {
         print("OnPvpButtonDown");
         GameStats.Instance.Mode = GameStats.Modes.Pvp;
-        //NetworkManager.Connect(false);
         TryGoToLevels();
     }
 

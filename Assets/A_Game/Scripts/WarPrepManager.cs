@@ -21,8 +21,8 @@ public class WarPrepManager : MonoBehaviour
         _backButton.onClick.AddListener(() => { onBackButtonDown(); });
 
         Transform warPrepGrid = GameObject.Find("/WarPrepGrid").transform;
-        string[] unitNames = GameNetwork.Instance.GetLocalPlayerTeamUnits(GameNetwork.VirtualPlayerIds.ALLIES);
-        int unitsCount = unitNames.Length;
+        List<string> unitNames = GameStats.Instance.TeamUnits;
+        int unitsCount = unitNames.Count;
 
         for (int i = 0; i < unitsCount; i++)
         {
