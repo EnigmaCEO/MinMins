@@ -14,11 +14,7 @@ public class WarUnitSprite : MonoBehaviour
     private void Awake()
     {
         _minMinUnit = transform.parent.GetComponent<MinMinUnit>();
-    }
-
-    public void SetWar(War war)
-    {
-        _war = war;
+        _war = War.GetSceneInstance();
     }
 
     void OnMouseUp()

@@ -37,7 +37,6 @@ public class UnitSelectManager : MonoBehaviour
     private Vector2[] _waypoints;
     private GameObject _attack;
 
-    private List<string> _selectedUnits = new List<string>();
 
     void Start()
     {
@@ -114,8 +113,9 @@ public class UnitSelectManager : MonoBehaviour
 
     private void createDefaultSelectedUnits(int amount)
     {
+        GameStats gameStats = GameStats.Instance;
         for (int i = 0; i < amount; i++)
-            _selectedUnits.Add("-1");
+            gameStats.TeamUnits.Add("-1");
     }
 
     private void enableUnitInfo()
@@ -151,19 +151,6 @@ public class UnitSelectManager : MonoBehaviour
 
     private void onNextButtonDown()
     {
-        string teamUnits = "";
-        int selectedUnitLenght = _selectedUnits.Count;
-        for (int i = 0; i < selectedUnitLenght; i++)
-        {
-            if (i != 0)
-                teamUnits += NetworkManager.Separators.VALUES;
-
-            teamUnits += _selectedUnits[i];
-        }
-
-        GameNetwork.Instance.ClearTeamUnits(GameNetwork.VirtualPlayerIds.ALLIES);
-        NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.TEAM_UNITS, teamUnits, GameNetwork.VirtualPlayerIds.ALLIES);
-
         SceneManager.LoadScene(GameConstants.Scenes.WAR_PREP);
     }
 
@@ -230,7 +217,7 @@ public class UnitSelectManager : MonoBehaviour
         slotImage.sprite = Resources.Load<Sprite>("Images/Units/" + unitName);
         slotImage.enabled = true;
 
-        _selectedUnits[slotIndex] = unitName;
+        GameStats.Instance.TeamUnits[slotIndex] = unitName;
 
         checkTeamReady();
     }

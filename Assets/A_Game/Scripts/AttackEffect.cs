@@ -39,7 +39,7 @@ public class AttackEffect : MonoBehaviour
             //hit.AddComponent<VFXSorter>().sortingOrder = 100;
             //Destroy(gameObject);
 
-            EndAttack();
+            //EndAttack();
         }
     }
 

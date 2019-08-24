@@ -112,6 +112,7 @@ public class Lobby : MonoBehaviour
     private void onPlayerConnected(PhotonPlayer player)
     {
         print("Lobby::onPlayerConnected");
+        GameNetwork.Instance.EnemyPlayer = player;
         StopCoroutine(handleWaitForAiRival());
         sendStartMatch();
     }
