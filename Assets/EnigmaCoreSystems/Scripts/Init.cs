@@ -3,7 +3,7 @@ using System.Collections;
 using Enigma.CoreSystems;
 using System;
 
-public class Init : MonoBehaviour
+public class Init : EnigmaScene
 {
     [SerializeField] private string _nextSceneName = "Main";
 
@@ -53,8 +53,6 @@ public class Init : MonoBehaviour
     void Start()
 	{
 		_startTime = Time.time;
-        NetworkManager.SetServer("http://www.enigma-games.com/Minmins");
-        NetworkManager.SetGame(Application.productName.ToLower());
 
         //handleNotifications();
         //SoundManager.Play("intro", SoundManager.AudioTypes.Sfx);

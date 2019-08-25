@@ -34,7 +34,7 @@ namespace Enigma.CoreSystems
             public const string IMAGE_UPLOAD = "imageUpload";
             public const string BUNDLE_ID = "bundle_id";
             public const string GAME = "game";
-            public const string USERNAME = "userName";
+            public const string USERNAME = "username";
             public const string PASSWORD = "password";
             public const string EMAIL = "email";
             public const string USER = "user";
@@ -75,8 +75,8 @@ namespace Enigma.CoreSystems
         {
             public const string SUCCESS = "SUCCESS";
             public const string ERR_REGISTER = "ERR_REGISTER";
-            public const string ERR_INVALID_PASSWORD = "ERR_INVALID_PASSWORD";
-            public const string ERR_INVALID_USERNAME = "ERR_INVALID_PASSWORD";
+            public const string ERR_INVALID_PASSWORD = "ERR_WRONG_PASSWORD";
+            public const string ERR_INVALID_USERNAME = "ERR_WRONG_USERNAME";
         }
 
         public class DataGroups
@@ -217,7 +217,7 @@ namespace Enigma.CoreSystems
             base.Start ();
             Data = new Dictionary<string, Hashtable> ();
 
-            //NetworkManager.Transaction(Transactions.IP_AND_COUNTRY, new Hashtable(), GetIpAndCountry);
+            NetworkManager.Transaction(Transactions.IP_AND_COUNTRY, new Hashtable(), GetIpAndCountry);
 
             //Firebase.Messaging.FirebaseMessaging.TokenReceived += OnTokenReceived;
             //Firebase.Messaging.FirebaseMessaging.MessageReceived += OnMessageReceived;
@@ -531,7 +531,7 @@ namespace Enigma.CoreSystems
 
         static public void Disconnect()
         {
-            if(PhotonNetwork.connected)
+            if (PhotonNetwork.connected)
                 PhotonNetwork.Disconnect();
         }
 

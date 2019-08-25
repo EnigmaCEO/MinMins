@@ -1,7 +1,7 @@
 ﻿using Enigma.CoreSystems;
 using UnityEngine;
 
-public class Main : MonoBehaviour
+public class Main : EnigmaScene
 {
     [SerializeField] GameObject _notEnoughUnitsPopUp;
     [SerializeField] GameObject _loginModal;

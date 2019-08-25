@@ -157,10 +157,12 @@ public class EnjinLogin : MonoBehaviour
                 else
                     term = "Server Error";
 
+                alertText.color = failColor;
                 alertText.text = term;
             }
         } else {
             EnableLoginWindow();
+            alertText.color = failColor;
             alertText.text = "Connection Error";
         }
     }
@@ -221,10 +223,12 @@ public class EnjinLogin : MonoBehaviour
                 else
                     term = "Server Error";
 
+                alertText.color = failColor;
                 alertText.text = term;
             }
         } else {
             EnableLoginWindow();
+            alertText.color = failColor;
             alertText.text = "Connection Error";
         }
     }
