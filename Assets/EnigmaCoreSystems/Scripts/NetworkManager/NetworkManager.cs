@@ -524,7 +524,7 @@ namespace Enigma.CoreSystems
             PhotonNetwork.ConnectUsingSettings(_PHOTON_CONNECTION_GAME_VERSION_SETTINGS);
             PhotonNetwork.logLevel = PhotonLogLevel.Full;
             PhotonNetwork.offlineMode = isOffline;
-            GetLocalPlayerPhotonView().viewID = 1;
+            GetLocalPlayerPhotonView().viewID = 1000;
 
             PhotonNetwork.InstantiateInRoomOnly = !isOffline;
         }
@@ -768,6 +768,7 @@ namespace Enigma.CoreSystems
         static public void SetAnyPlayerCustomProperty(string key, string value, string virtualPlayerId, PhotonPlayer player)
         {
             string virtualPlayerKey = virtualPlayerId + Separators.VIRTUAL_PLAYER_KEY + key;
+            print("NetworkManager::SetAnyPlayerCustomProperty -> virtualPlayerKey: " + virtualPlayerKey);
 
             if (IsPhotonOffline())
             {
@@ -804,6 +805,7 @@ namespace Enigma.CoreSystems
             {
                 ExitGames.Client.Photon.Hashtable photonHTable = new ExitGames.Client.Photon.Hashtable();
                 photonHTable.Add(virtualPlayerKey, value);
+                print("NetworkManager::SetAnyPlayerCustomProperty -> photonHTable.ToStringFull(): " + photonHTable.ToStringFull());
                 player.SetCustomProperties(photonHTable);
             }
         }
@@ -821,6 +823,7 @@ namespace Enigma.CoreSystems
         static public string GetAnyPlayerCustomProperty(string key, string virtualPlayerId, PhotonPlayer player)
         {
             string virtualPlayerKey = virtualPlayerId + Separators.VIRTUAL_PLAYER_KEY + key;
+            print("NetworkManager::GetAnyPlayerCustomProperty -> virtualPlayerKey: " + virtualPlayerKey);
 
             if (IsPhotonOffline())
             {
@@ -830,12 +833,15 @@ namespace Enigma.CoreSystems
                 if (!Data[DataGroups.INFO].ContainsKey(DataKeys.PLAYER))
                     return "";
 
-                
+
                 Hashtable userData = Data[DataGroups.INFO][DataKeys.PLAYER] as Hashtable;
                 return userData[virtualPlayerKey].ToString().Trim('"');
             }
             else  // Online
+            {
+                print("NetworkManager::GetAnyPlayerCustomProperty -> player.CustomProperties.ToStringFull(): " + player.CustomProperties.ToStringFull());
                 return player.CustomProperties[virtualPlayerKey].ToString();
+            }
         }
 
         static public int GetLocalPlayerCustomPropertyAsInt(string key, string virtualPlayerId)

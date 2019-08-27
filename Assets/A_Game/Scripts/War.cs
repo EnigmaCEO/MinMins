@@ -140,16 +140,39 @@ public class War : MonoBehaviour
 
     private void onPlayerTeamUnitsSet(string teamName, string teamUnits)
     {
+        print("War::onPlayerTeamUnitsSet -> teamName: " + teamName + " teamUnits: " + teamUnits);
         if (teamUnits == null)
             return;
 
-        if(_localPlayerTeam == GameNetwork.VirtualPlayerIds.ALLIES)
+        GameStats gameStats = GameStats.Instance;
+
+        bool localPlayerIsAllies = (_localPlayerTeam == GameNetwork.VirtualPlayerIds.ALLIES);
+        bool isTeamSetAllies = teamName == GameNetwork.VirtualPlayerIds.ALLIES;
+
+        print("War::onPlayerTeamUnitsSet -> localPlayerIsAllies: " + localPlayerIsAllies);
+
+        if (localPlayerIsAllies)
+        {
             instantiateTeam(teamName, teamUnits);
 
-        if (teamName == GameNetwork.VirtualPlayerIds.ALLIES)
-            handleAiEnemiesSetup();
-        else
-            handleRewardChestsAndClouds();            
+            if (isTeamSetAllies)
+            {
+                if (gameStats.Mode == GameStats.Modes.SinglePlayer)
+                    setUpSinglePlayerAiTeamUnits();
+                else //Pvp
+                {
+                    if (gameStats.UsesAiForPvp)
+                        setUpPvpAiTeamUnits();
+                }
+            }
+            else // Team set is enemy
+                instantiateRewardChests(GridNames.TEAM_2);
+        }
+        else // Local player is Enemy
+        {
+            if(isTeamSetAllies)
+                instantiateRewardChests(GridNames.TEAM_1);
+        }
     }
 
     private void onUnitHealthSet(string team, string unitName, int health)
@@ -217,18 +240,8 @@ public class War : MonoBehaviour
             else
                 _localPlayerTeam = GameNetwork.VirtualPlayerIds.ENEMIES;
         }
-    }
 
-    private void handleAiEnemiesSetup()
-    {
-        if (_localPlayerTeam == GameNetwork.VirtualPlayerIds.ALLIES)
-        {
-            GameStats gameStats = GameStats.Instance;
-            if (gameStats.Mode == GameStats.Modes.SinglePlayer)
-                setUpSinglePlayerAiTeamUnits();
-            else if (gameStats.UsesAiForPvp)
-                    setUpPvpAiTeamUnits();
-        }
+        print("War::determinLocalPlayerTeam -> _localPlayerTeam: " + _localPlayerTeam);
     }
 
     private void setLocalTeamUnits()
@@ -271,17 +284,6 @@ public class War : MonoBehaviour
 
         NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.TEAM_UNITS, teamUnitsString, _localPlayerTeam);
     }
-
-    private void handleRewardChestsAndClouds()
-    {
-        if (_localPlayerTeam == GameNetwork.VirtualPlayerIds.ALLIES)
-            instantiateRewardChests(GridNames.TEAM_2);
-        else //local player is enemy
-        {
-            instantiateRewardChests(GridNames.TEAM_1);
-            moveCloudsToAlliesSide();
-        }
-    }
    
     private void moveCloudsToAlliesSide()
     {
@@ -321,11 +323,13 @@ public class War : MonoBehaviour
 
     private void setUpSinglePlayerAiTeamUnits()
     {
+        print("War::setUpSinglePlayerAiTeamUnits");
         setUpPvpAiTeamUnits();
     }
 
     private void setUpPvpAiTeamUnits()
     {
+        print("War::setupPvpAiTeamUnits");
         GameInventory gameInventory = GameInventory.Instance;
 
         List<string> allyBronzeUnits = new List<string>();
@@ -364,6 +368,7 @@ public class War : MonoBehaviour
 
     private string setEnemyAiUnits(List<string> allyUnitNames, List<string> enemyUnitNames, string unitsString)
     {
+        print("War::setEnemyAiUnits");
         int unitCount = allyUnitNames.Count;
         if (unitCount > 0)
         {
@@ -424,7 +429,10 @@ public class War : MonoBehaviour
 
             GameObject unit = NetworkManager.InstantiateObject("Prefabs/MinMinUnits/" + unitName, Vector3.zero, Quaternion.identity, 0);
             unit.name = unitName;
-            unit.AddComponent<WarUnit>().Set(unitName, virtualPlayerId, i);
+            //WarUnit warUnit = unit.AddComponent<WarUnit>(); 
+            //unit.GetComponent<PhotonView>().ObservedComponents.Add(warUnit);
+            //warUnit.Set(unitName, virtualPlayerId, i);
+            unit.GetComponent<MinMinUnit>().SetForWar(unitName, virtualPlayerId, i);
 
             Transform unitTransform = unit.transform;
             Transform spriteTransform = unitTransform.Find("Sprite");
@@ -441,6 +449,12 @@ public class War : MonoBehaviour
 
             int unitExp = gameNetwork.GetAnyPlayerUnitPropertyAsInt(GameNetwork.UnitPlayerProperties.EXPERIENCE, unitName, virtualPlayerId, player);
             gameNetwork.BuildUnitLevels(unitName, unitExp, virtualPlayerId);
+
+            string positionString = gameNetwork.GetAnyPlayerUnitProperty(GameNetwork.UnitPlayerProperties.POSITION, unitName, virtualPlayerId, player);
+            string[] positionCoords = positionString.Split(NetworkManager.Separators.VALUES);
+            float posX = float.Parse(positionCoords[0]);
+            float posY = float.Parse(positionCoords[1]);
+            spriteTransform.localPosition = new Vector3(posX, posY, spriteTransform.localPosition.z);
         }
 
         setTeamMaxHealth(virtualPlayerId);

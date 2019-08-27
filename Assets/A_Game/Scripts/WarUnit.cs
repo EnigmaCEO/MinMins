@@ -14,6 +14,8 @@ public class WarUnit : MonoBehaviour
     private void Awake()
     {
         _minMinUnit = GetComponent<MinMinUnit>();
+        GetComponent<PhotonView>().ObservedComponents.Add(this);
+        print("WarUnit::Awake -> name: " + name);
     }
 
     void Start()
@@ -27,12 +29,6 @@ public class WarUnit : MonoBehaviour
 
         transform.localPosition = Vector2.zero;
         Transform spriteTransform = transform.Find("Sprite");
-        
-        string positionString = GameNetwork.Instance.GetLocalPlayerUnitProperty(GameNetwork.UnitPlayerProperties.POSITION, name, _teamName);
-        string[] positionCoords = positionString.Split(NetworkManager.Separators.VALUES);
-        float posX = float.Parse(positionCoords[0]);
-        float posY = float.Parse(positionCoords[1]);
-        spriteTransform.localPosition = new Vector3(posX, posY, spriteTransform.localPosition.z);
 
         WarUnitSprite warUnitSprite = spriteTransform.gameObject.AddComponent<WarUnitSprite>();
         warUnitSprite.Unit = this.gameObject;
@@ -41,6 +37,8 @@ public class WarUnit : MonoBehaviour
         shadow.transform.parent = spriteTransform;
         shadow.transform.localPosition = new Vector2(0, 0);
         shadow.transform.localScale = new Vector2(-1, 1);
+
+        print("WarUnit::Start -> name: " + name);
     }
 
     public void Set(string unitName, string teamName, int teamIndex)
@@ -48,5 +46,7 @@ public class WarUnit : MonoBehaviour
         _unitName = unitName;
         _teamName = teamName;
         _teamIndex = teamIndex;
+
+        print("WarUnit::Set -> name: " + name);
     }
 }

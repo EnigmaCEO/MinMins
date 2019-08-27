@@ -526,7 +526,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Strength: 2
   Defense: 2
-  Health: 5
+  MaxHealth: 5
   EffectScale: 1
   Effect: 2
   Type: 0
@@ -547,14 +547,15 @@ MonoBehaviour:
   group: 0
   OwnerShipWasTransfered: 0
   prefixBackup: -1
-  synchronization: 0
+  synchronization: 3
   onSerializeTransformOption: 3
   onSerializeRigidBodyOption: 2
   ownershipTransfer: 0
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 1765642563176605684}
   ObservedComponentsFoldoutOpen: 1
-  viewIdField: 0
-  instantiationId: -1
+  viewIdField: 76
+  instantiationId: 76
   currentMasterID: -1
   isRuntimeInstantiated: 0
 --- !u!1 &100022

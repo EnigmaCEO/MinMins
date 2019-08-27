@@ -135,7 +135,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     private void Start()
     {
         _photonView = Instance.gameObject.AddComponent<PhotonView>();
-        _photonView.viewID = 2;
+        _photonView.viewID = 1001;
     }
 
     private void OnDestroy()
