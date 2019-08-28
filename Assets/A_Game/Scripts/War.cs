@@ -21,7 +21,7 @@ public class War : MonoBehaviour
     [SerializeField] private Transform _teamGridContent;
     [SerializeField] private float _readyCheckDelay = 2;
 
-    [SerializeField] private float _team1_CloudsLocalPosX = 6.3f;
+    [SerializeField] private float _team1_CloudsLocalPosX = 0.07f;
 
     [SerializeField] private float _battlefieldMovementAmount = 5000;
     [SerializeField] private float _battlefieldMovementDelay = 0.1f;
@@ -40,6 +40,8 @@ public class War : MonoBehaviour
     [SerializeField] private RectTransform UnitTurnHighlightTransform;
 
     [SerializeField] private Transform _battleField;
+    [SerializeField] private GameCamera _gameCamera;
+
     private Transform _alliesGrid;
     private Transform _enemiesGrid;
 
@@ -242,6 +244,14 @@ public class War : MonoBehaviour
     private void setupWar()
     {
         determineLocalPlayerTeam();
+
+        if (_localPlayerTeam == GameNetwork.VirtualPlayerIds.ENEMIES)
+        {
+            //if(_localPlayerTeam == GameNetwork.VirtualPlayerIds.ALLIES)  //TODO: Remove test hack
+            _gameCamera.SetCameraForEnemies();
+            moveCloudsToOppositeSide();
+        }
+
         setLocalTeamUnits();
 
         _setupWasCalled = true;
@@ -304,7 +314,7 @@ public class War : MonoBehaviour
         NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.TEAM_UNITS, teamUnitsString, _localPlayerTeam);
     }
    
-    private void moveCloudsToAlliesSide()
+    private void moveCloudsToOppositeSide()
     {
         Transform cloudsContainer = _battleField.Find(GridNames.TEAM_2 + "/CloudsContainer");
         cloudsContainer.SetParent(_battleField.Find(GridNames.TEAM_1));
