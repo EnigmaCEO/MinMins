@@ -46,4 +46,5 @@ MonoBehaviour:
   - SyncPlayerInfoMessage
   - TaggedPlayer
   - startMatch
+  - setForWar
   DisableAutoOpenWizard: 1

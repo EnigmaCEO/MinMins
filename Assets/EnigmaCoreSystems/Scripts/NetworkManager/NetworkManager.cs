@@ -107,13 +107,6 @@ namespace Enigma.CoreSystems
             public const string READY = "Ready";
         }
 
-        ////Make an Enum for room state later
-        //static public string ROOM_STATE_STAGING = "Staging";
-        //static public string ROOM_STATE_READY = "Ready";
-        //static public string ROOM_STATE_SYNC = "Sync";
-        //static public string ROOM_STATE_LAUNCH = "Launch";
-        //static public string ROOM_STATE_PLAY = "Play";
-
         public const string _PHOTON_CONNECTION_GAME_VERSION_SETTINGS = "v1.0";
 
         static private string _serverUrl;
@@ -129,7 +122,6 @@ namespace Enigma.CoreSystems
         static public bool PlayerIsServer = false;
         static public int NumberOfPlayers = 0;
 
-        static private bool CreatingOrJoinRoom = false;
 
         //static public string ROOM_CLICKED = "1";
         //static public string ROOM_NAME = "Practice";
@@ -218,10 +210,6 @@ namespace Enigma.CoreSystems
             Data = new Dictionary<string, Hashtable> ();
 
             NetworkManager.Transaction(Transactions.IP_AND_COUNTRY, new Hashtable(), GetIpAndCountry);
-
-            //Firebase.Messaging.FirebaseMessaging.TokenReceived += OnTokenReceived;
-            //Firebase.Messaging.FirebaseMessaging.MessageReceived += OnMessageReceived;
-            //GameOfWhales.Instance.OnPushDelivered += OnPushDelivered;
         }
 
         public delegate void Callback (JSONNode data);
@@ -525,8 +513,6 @@ namespace Enigma.CoreSystems
             PhotonNetwork.logLevel = PhotonLogLevel.Full;
             PhotonNetwork.offlineMode = isOffline;
             GetLocalPlayerPhotonView().viewID = 1000;
-
-            PhotonNetwork.InstantiateInRoomOnly = !isOffline;
         }
 
         static public void Disconnect()
@@ -583,19 +569,23 @@ namespace Enigma.CoreSystems
             return false;
         }
 
-        // Joins a Photon room if it exists, or creates it with the given parameters
-        static public bool JoinOrCreateRoom(string roomName, bool isVisible, bool isOpen, int maxPlayers, Hashtable customRoomProperties,
-                                            string[] propsToListInLobby, int maxPlayersNotExpectating)
-        {
-            if (CheckRoomExists(roomName))
-                return JoinRoom(roomName);
-            else
-                return CreateRoom(roomName, isVisible, isOpen, maxPlayers, customRoomProperties, propsToListInLobby, maxPlayersNotExpectating);
-        }
-
         //Create a Photon Room using passed in parameters
         static public bool CreateRoom(string roomName, bool isVisible, bool isOpen, int maxPlayers, Hashtable customRoomProperties,
                                         string[] propsToListInLobby, int maxPlayersNotExpectating)
+        {
+            RoomOptions options = getRoomOptions(isVisible, isOpen, maxPlayers, customRoomProperties, propsToListInLobby, maxPlayersNotExpectating);   
+            return PhotonNetwork.CreateRoom(roomName, options, null);
+        }
+
+        static public bool JoinOrCreateRoom(string roomName, bool isVisible, bool isOpen, int maxPlayers, Hashtable customRoomProperties,
+                                        string[] propsToListInLobby, int maxPlayersNotExpectating)
+        {
+            RoomOptions options = getRoomOptions(isVisible, isOpen, maxPlayers, customRoomProperties, propsToListInLobby, maxPlayersNotExpectating);
+            return PhotonNetwork.JoinOrCreateRoom(roomName, options, null);
+        }
+
+        static private RoomOptions getRoomOptions(bool isVisible, bool isOpen, int maxPlayers, Hashtable customRoomProperties,
+                                                  string[] propsToListInLobby, int maxPlayersNotExpectating)
         {
             ExitGames.Client.Photon.Hashtable photonHTable = new ExitGames.Client.Photon.Hashtable();
 
@@ -611,9 +601,7 @@ namespace Enigma.CoreSystems
             options.CustomRoomProperties = photonHTable;
             options.CustomRoomPropertiesForLobby = propsToListInLobby;
 
-            SetCreatingOrJoinRoom(true);
-
-            return PhotonNetwork.CreateRoom(roomName, options, null);
+            return options;
         }
 
         //Join a Photon Room
@@ -749,26 +737,10 @@ namespace Enigma.CoreSystems
             return PhotonNetwork.FindFriends(friendsToFind);
         }
 
-        //Get variable used to check if user is joining/creating a room
-        //(determines whether to disconnect from Photon Network when
-        //leaving lobby)    
-        static public bool GetCreatingOrJoinRoom()
-        {
-            return CreatingOrJoinRoom;
-        }
-
-        //Set variable used to check if user is joining/creating a room
-        //(determines whether to disconnect from Photon Network when
-        //leaving lobby)
-        static public void SetCreatingOrJoinRoom(bool creatingOrJoinRoom)
-        {
-            CreatingOrJoinRoom = creatingOrJoinRoom;
-        }
-
         static public void SetAnyPlayerCustomProperty(string key, string value, string virtualPlayerId, PhotonPlayer player)
         {
             string virtualPlayerKey = virtualPlayerId + Separators.VIRTUAL_PLAYER_KEY + key;
-            print("NetworkManager::SetAnyPlayerCustomProperty -> virtualPlayerKey: " + virtualPlayerKey);
+            print("NetworkManager::SetAnyPlayerCustomProperty -> virtualPlayerKey: " + virtualPlayerKey + " photonPlayerId:" + player.ID);
 
             if (IsPhotonOffline())
             {
@@ -823,7 +795,7 @@ namespace Enigma.CoreSystems
         static public string GetAnyPlayerCustomProperty(string key, string virtualPlayerId, PhotonPlayer player)
         {
             string virtualPlayerKey = virtualPlayerId + Separators.VIRTUAL_PLAYER_KEY + key;
-            print("NetworkManager::GetAnyPlayerCustomProperty -> virtualPlayerKey: " + virtualPlayerKey);
+            print("NetworkManager::GetAnyPlayerCustomProperty -> virtualPlayerKey: " + virtualPlayerKey + " playerID: " + player.ID);
 
             if (IsPhotonOffline())
             {
@@ -919,22 +891,6 @@ namespace Enigma.CoreSystems
                 return PhotonNetwork.room.CustomProperties[key].ToString();
         }
 
-        /*
-        ///<summary>
-        /// Set room custom properties
-        /// </summary>
-        static public void SetRoomCustomProperties(Hashtable systemHTable)
-        {
-            ExitGames.Client.Photon.Hashtable photonHTable = new ExitGames.Client.Photon.Hashtable();
-
-            foreach (DictionaryEntry pair in systemHTable)
-                photonHTable.Add(pair.Key, pair.Value);
-
-            PhotonNetwork.room.SetCustomProperties(photonHTable);
-        }
-        */
-
-        /*
         ///<summary>
         /// Set room custom properties with expected values
         /// </summary>
@@ -952,7 +908,6 @@ namespace Enigma.CoreSystems
 
             PhotonNetwork.room.SetCustomProperties(photonHTable, photonExpectedHTable);
         }
-        */
 
         //Instantiate network object
         static public GameObject InstantiateObject(string prefab, Vector3 vec, Quaternion quat, byte group)
@@ -1057,11 +1012,6 @@ namespace Enigma.CoreSystems
         {
             Debug.Log("NetworkManager::Joined Lobby");
 
-            //instance.StartCoroutine(LobbyPollCoroutine());
-
-            //Instance.StartCoroutine(LobbyPollRoomsCoroutine());
-            //instance.StartCoroutine(GetRoomDataCoroutine());
-
             if (OnJoinedLobbyCallback != null)
                 OnJoinedLobbyCallback();
         }
@@ -1069,7 +1019,6 @@ namespace Enigma.CoreSystems
         void OnLeftLobby()
         {
             Debug.Log("NetworkManager::OnLeftLobby");
-            //Transaction(WGO2Configs.LeaveChatTransaction, new Hashtable(), LeaveChatLobby);
 
             if (OnLeftLobbyCallback != null)
                 OnLeftLobbyCallback();
@@ -1083,15 +1032,6 @@ namespace Enigma.CoreSystems
             //Debug.Log("Joined Room " + PhotonNetwork.room.name);
             //Debug.Log ("PlayerCount: " + PhotonNetwork.room.playerCount + " MaxPlayers: " + PhotonNetwork.room.maxPlayers);
 
-            //FOR TESTING
-            /*
-            if (NetworkManager.GetIsMasterClient())
-            {
-                Hashtable roomReadyProp = new Hashtable();
-                roomReadyProp.Add("gState", NetworkManager.ROOM_STATE_READY);
-                NetworkManager.SetRoomCustomProperties(roomReadyProp);
-            }
-            */
 
             if (OnJoinedRoomCallback != null)
                 OnJoinedRoomCallback();
@@ -1111,13 +1051,6 @@ namespace Enigma.CoreSystems
         {
             Debug.Log("NetworkManager::Player: " + connectedPlayer.NickName + " connected");
 
-            //if (GetRoom().customProperties["gState"].ToString() == ROOM_STATE_STAGING)
-
-            //UpdateGameRoomInfo(GetRoom().CustomProperties["gm"].ToString(),
-            //    GetRoom().CustomProperties["sm"].ToString(),
-            //    GetRoom().PlayerCount.ToString(),
-            //    GetRoom().CustomProperties["mp"].ToString());
-
             if (GetIsMasterClient())
             {
                 //UpdateRoomList();
@@ -1131,49 +1064,6 @@ namespace Enigma.CoreSystems
         void OnPhotonPlayerDisconnected(PhotonPlayer disconnectedPlayer)
         {
             Debug.Log("NetworkManager::Player: " + disconnectedPlayer.NickName + " disconnected");
-
-            string sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
-
-            //If the room state is currently in ready state
-            //If a player disconnects, do a recount of ready players again
-            if (GetRoom().CustomProperties[RoomPropertyOptions.GAME_STATE].ToString() == RoomStates.READY)
-            {
-                if (GetIsMasterClient())
-                {
-                    Debug.Log("game state ready recount");
-                    CountNumberOfReadyPlayers();
-                }
-            }
-            //If the room state is currently in sync state
-            else if (GetRoom().CustomProperties[RoomPropertyOptions.GAME_STATE].ToString() == RoomStates.SYNC)
-            {
-                if (GetIsMasterClient())
-                    SendNotifyClientsToSendPlayerInfoMessage();
-
-                //Debug.LogError("game state sync recount");
-                //CountNumberOfSyncPlayers();
-            }
-            //If the room state is currently in launch state
-            //else if (GetRoom().CustomProperties["gState"].ToString() == RoomStates.LAUNCH)
-            //{
-            //    if (GetIsMasterClient())
-            //    {
-            //        Debug.LogError("game state launch recount");
-            //        CountNumberOfLaunchPlayers();
-            //    }
-            //}
-            //If the room state is currently in play state
-            else if (GetRoom().CustomProperties[RoomPropertyOptions.GAME_STATE].ToString() == RoomStates.PLAY)
-            {
-
-            }
-
-            //Have the master delete the objects of whoever disconnected
-            if (GetIsMasterClient())
-            {
-                Debug.Log("Delete object");
-                if (DestroyDisconnectedPlayerObject != null) DestroyDisconnectedPlayerObject(disconnectedPlayer);
-            }
 
             if (OnPlayerDisconnectedCallback != null)
                 OnPlayerDisconnectedCallback(disconnectedPlayer);
@@ -1189,49 +1079,6 @@ namespace Enigma.CoreSystems
             foreach (object key in photonUpdatedProps.Keys)
                 updatedProperties.Add(key, photonUpdatedProps[key]);
 
-            //Debug.LogError("Player Properties that changed: " + player.NickName + " " + playerProperties.ToStringFull());
-            /*
-            if (GetInRoom())
-            {
-                ExitGames.Client.Photon.Hashtable roomProperties = GetRoom().CustomProperties;
-                if (roomProperties[RoomPropertyOptions.GAME_STATE] != null)
-                {
-                    if (roomProperties[RoomPropertyOptions.GAME_STATE].ToString() == RoomStates.READY)
-                    {
-                        if (photonUpdatedProps[PlayerPropertyOptions.PLAYER_STATE] != null)
-                        {
-                            if (photonUpdatedProps[PlayerPropertyOptions.PLAYER_STATE].ToString() == PlayerStates.SPAWN)
-                            {
-                                //                            if (SpawnPlayerCharacter != null) 
-                                //								SpawnPlayerCharacter(player);
-                            }
-                            else if (photonUpdatedProps[PlayerPropertyOptions.PLAYER_STATE].ToString() == PlayerStates.CREATED)
-                            {
-
-
-                                if (EnableReadyUI != null)
-                                    EnableReadyUI();
-                            }
-                            else if (photonUpdatedProps[PlayerPropertyOptions.PLAYER_STATE].ToString() == PlayerStates.READY)
-                            {
-                                if (GetIsMasterClient())
-                                    CountNumberOfReadyPlayers();
-                            }
-                        }
-                    }
-                    else if (roomProperties[RoomPropertyOptions.GAME_STATE].ToString() == RoomStates.SYNC)
-                    {
-                        //A player synced properly in the Combat scene
-                        if ((photonUpdatedProps[PlayerPropertyOptions.PLAYER_STATE] != null) && (photonUpdatedProps[PlayerPropertyOptions.PLAYER_STATE].ToString() == "sync"))
-                            CountNumberOfSyncPlayers();
-                    }
-                    else if (roomProperties[RoomPropertyOptions.GAME_STATE].ToString() == RoomStates.PLAY)
-                    {
-                        checkPlayerPropertiesOnPlay(player, photonUpdatedProps);
-                    }
-                }
-            }
-            */
             if (OnPlayerCustomPropertiesChangedCallback != null)
                 OnPlayerCustomPropertiesChangedCallback(player, updatedProperties);
         }
@@ -1240,41 +1087,6 @@ namespace Enigma.CoreSystems
         {
             Debug.Log("NetworkManager::OnPhotonCustomRoomPropertiesChanged-> Room Properties that changed: " + photonUpdatedProps.ToStringFull());
             Hashtable updatedProperties = convertPhotonHashTable(photonUpdatedProps);
-            /*
-            //Room state changes
-            if (photonUpdatedProps.ContainsKey(RoomPropertyOptions.GAME_STATE))
-            {
-                if (photonUpdatedProps[RoomPropertyOptions.GAME_STATE].ToString() == RoomStates.READY)
-                {
-                    //Load stuff here...
-                    //if (SpawnPlayerCharacterTesting != null) SpawnPlayerCharacterTesting();
-                }
-                else if (photonUpdatedProps[RoomPropertyOptions.GAME_STATE].ToString() == RoomStates.SYNC)
-                {
-                    //Master sends sync message here...
-                    if (GetIsMasterClient())
-                        NetworkManager.SendNotifyClientsToSendPlayerInfoMessage();
-                }
-                else if (photonUpdatedProps[RoomPropertyOptions.GAME_STATE].ToString() == RoomStates.LAUNCH)
-                {
-                    //Master sets the start photon timer here...
-                    if (GetIsMasterClient())
-                        SetRoomCustomProperty(RoomPropertyOptions.START_COUNT_DOWN_TIMER, GetPhotonTime());
-                }
-                else if (photonUpdatedProps[RoomPropertyOptions.GAME_STATE].ToString() == RoomStates.PLAY)
-                {
-
-                }
-            }
-            */
-
-            if (photonUpdatedProps.ContainsKey(RoomPropertyOptions.START_COUNT_DOWN_TIMER))
-            {
-                //Begin timer here
-                Debug.Log("Start time: " + (double)photonUpdatedProps[RoomPropertyOptions.START_COUNT_DOWN_TIMER]);
-                if (StartCountdownTimer != null)
-                    StartCountdownTimer((double)photonUpdatedProps[RoomPropertyOptions.START_COUNT_DOWN_TIMER]);
-            }
 
             if (OnRoomCustomPropertiesChangedCallback != null)
                 OnRoomCustomPropertiesChangedCallback(updatedProperties);
@@ -1283,21 +1095,6 @@ namespace Enigma.CoreSystems
         void OnMasterClientSwitched(PhotonPlayer newMaster)
         {
             Debug.Log("NetworkManager::OnMasterClientSwitched -> New master name: " + newMaster.NickName);
-
-            string sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
-
-            //if (sceneName == "Combat")
-            //{
-            //    if (GetRoom().CustomProperties["gState"].ToString() == ROOM_STATE_STAGING)
-            //    {
-            //        if (GetIsMasterClient())
-            //        {
-            //            Hashtable roomReadyProp = new Hashtable();
-            //            roomReadyProp.Add("gState", NetworkManager.ROOM_STATE_READY);
-            //            NetworkManager.SetRoomCustomProperties(roomReadyProp);
-            //        }
-            //    }
-            //}
 
             if (OnMasterClientSwitchedCallback != null)
                 OnMasterClientSwitchedCallback(newMaster);
@@ -1327,109 +1124,10 @@ namespace Enigma.CoreSystems
             Debug.Log("NetworkManager::OnDisconnectedFromPhoton");
 
             //FOR TESTING
-            Application.Quit();
+            //Application.Quit();
 
             if (OnDisconnectedFromPhotonCallback != null)
                 OnDisconnectedFromPhotonCallback();
-        }
-
-        //Master sends message to every client when everyone is ready to load
-        static public void SendNotifyClientsToSendPlayerInfoMessage()
-        {
-            GetLocalPlayerPhotonView().RPC("NotifyClientsToSendPlayerInfoMessage", PhotonTargets.All);
-        }
-
-        [PunRPC]
-        private void NotifyClientsToSendPlayerInfoMessage(PhotonMessageInfo info)
-        {
-            int playerPhotonViewId = _localPlayerCharacter.GetComponent<PhotonView>().viewID;
-            GetLocalPlayerPhotonView().RPC("SyncPlayerInfoMessage", PhotonTargets.All, playerPhotonViewId);
-        }
-
-        [PunRPC]
-        private void SyncPlayerInfoMessage(int playerPhotonViewId, PhotonMessageInfo info, string virtualPlayerId)
-        {
-            //Id was successfully retrieved
-            if (playerPhotonViewId != -1)
-            {
-                if (SetPlayerNameAsObjName != null)
-                    SetPlayerNameAsObjName(playerPhotonViewId, info.sender.NickName);
-
-                if (GetIsMasterClient())
-                {
-                    PhotonView playerPhotonView = PhotonView.Find(playerPhotonViewId);
-                    NetworkManager.SetAnyPlayerCustomProperty(PlayerPropertyOptions.PLAYER_STATE, PlayerStates.SYNC, virtualPlayerId, playerPhotonView.owner);
-                }
-            }
-            //Id was not successfully retrieved, do something here... 
-            else
-            {
-
-            }
-        }
-
-
-        //Helpers for RPCs
-        private void CountNumberOfReadyPlayers()
-        {
-            int numberOfPlayersReady = 0;
-
-            foreach (PhotonPlayer p in NetworkManager.GetPlayerList())
-            {
-                System.Object playerGameStateProp = p.CustomProperties[PlayerPropertyOptions.PLAYER_STATE];
-
-                if (playerGameStateProp != null)
-                {
-                    string playerGameState = playerGameStateProp.ToString();
-
-                    if (playerGameState == PlayerStates.READY)
-                        numberOfPlayersReady++;
-                }
-            }
-
-            if (numberOfPlayersReady == NetworkManager.GetPlayerCount())
-            {
-                //TEST
-                //if (OriginalMaster) PhotonNetwork.Disconnect();
-
-                SetRoomCustomProperty(RoomPropertyOptions.GAME_STATE, RoomStates.SYNC);
-
-                //TEST
-                //if (OriginalMaster) PhotonNetwork.Disconnect();
-            }
-        }
-
-        private void CountNumberOfSyncPlayers()
-        {
-            int numberOfPlayersSynced = 0;
-
-            foreach (PhotonPlayer p in NetworkManager.GetPlayerList())
-            {
-                System.Object playerGameStateProp = p.CustomProperties[PlayerPropertyOptions.PLAYER_STATE];
-
-                if (playerGameStateProp != null)
-                {
-                    string playerGameState = playerGameStateProp.ToString();
-
-                    //if (playerGameState == "sync" || playerGameState == "launch")
-                    if (playerGameState == PlayerStates.SYNC)
-                        numberOfPlayersSynced++;
-                }
-            }
-
-            if (numberOfPlayersSynced == NetworkManager.GetPlayerCount())
-            {
-                //TEST
-                //if (OriginalMaster) PhotonNetwork.Disconnect();
-
-                //if (InitializePlayerUI != null) InitializePlayerUI();
-
-                if (GetIsMasterClient())
-                    SetRoomCustomProperty(RoomPropertyOptions.GAME_STATE, RoomStates.LAUNCH);
-
-                //TEST
-                //if (OriginalMaster) PhotonNetwork.Disconnect();
-            }
         }
 
         //Methods for Chat.cs
@@ -1484,13 +1182,6 @@ namespace Enigma.CoreSystems
                 Instance.StopAllCoroutines();
                 LobbyUserList.Clear();
                 _updatedLobbyUserList.Clear();
-
-                /*
-                if (!GetCreatingOrJoinRoom())
-                {
-                    PhotonNetwork.Disconnect();
-                }
-                */
             }
         }
 
@@ -1601,11 +1292,6 @@ namespace Enigma.CoreSystems
                 hashTable.Add(key, photonHashTable[key]);
 
             return hashTable;
-        }
-
-        private void checkPlayerPropertiesOnPlay(PhotonPlayer photonPlayer, ExitGames.Client.Photon.Hashtable playerProperties)
-        {
-
         }
     }
 }

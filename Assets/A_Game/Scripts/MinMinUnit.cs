@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using Enigma.CoreSystems;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MinMinUnit : MonoBehaviour
+public class MinMinUnit : NetworkEntity
 {
     public enum Types
     {
@@ -23,7 +24,24 @@ public class MinMinUnit : MonoBehaviour
     public Types Type;
     public int[] Attacks;
 
-    public void SetForWar(string unitName, string teamName, int teamIndex)
+    protected override void Awake()
+    {
+        base.Awake();
+    }
+
+    void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        //Debug.Log("OnPhotonSerializeView()");
+        // ...
+    }
+
+    public void SendSetForWar(string unitName, string teamName, int teamIndex, float posX, float posY)
+    {
+        SendRpcAll("setForWar", unitName, teamName, teamIndex, posX, posY);
+    }
+
+    [PunRPC]
+    private void setForWar(string unitName, string teamName, int teamIndex, float posX, float posY)
     {
         name = unitName;
         string gridName = War.GetTeamGridName(teamName);
@@ -42,5 +60,16 @@ public class MinMinUnit : MonoBehaviour
         shadow.transform.parent = spriteTransform;
         shadow.transform.localPosition = new Vector2(0, 0);
         shadow.transform.localScale = new Vector2(-1, 1);
+
+
+        bool isAllies = (teamName == GameNetwork.VirtualPlayerIds.ALLIES);
+
+        if (!isAllies)
+        {
+            Vector3 localScale = spriteTransform.localScale;
+            spriteTransform.localScale = new Vector3(-localScale.x, localScale.y, localScale.z);
+        }
+
+        spriteTransform.localPosition = new Vector3(posX, posY, spriteTransform.localPosition.z);
     }
 }

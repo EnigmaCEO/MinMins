@@ -43,8 +43,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42b5de34e7eb1454490edfffee5224ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxPlayers: 2
-  _maxPlayersNotExpectating: 2
   _maxRatingDifferenceToFight: 50
   _timeToWaitBeforeAiRival: 3000
   _waitingPopUp: {fileID: 0}

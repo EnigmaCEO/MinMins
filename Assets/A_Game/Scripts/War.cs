@@ -61,9 +61,12 @@ public class War : MonoBehaviour
     private int _roundCount = 0;
     private string _localPlayerTeam = "";
     private bool _isLocalPlayerTurn = false;
+    private bool _setupWasCalled = false;
 
     void Awake()
     {
+        NetworkManager.OnJoinedRoomCallback += onJoinedRoom;
+
         GameNetwork.OnPlayerTeamUnitsSetCallback += onPlayerTeamUnitsSet;
         GameNetwork.OnUnitHealthSetCallback += onUnitHealthSet;
         GameNetwork.OnTeamHealthSetCallback += onTeamHealthSet;
@@ -80,8 +83,10 @@ public class War : MonoBehaviour
         _alliesGrid = _battleField.Find(GridNames.TEAM_1);
         _enemiesGrid = _battleField.Find(GridNames.TEAM_2);
 
-        determineLocalPlayerTeam();
-        setLocalTeamUnits();
+        if (GameStats.Instance.Mode == GameStats.Modes.SinglePlayer)
+            GameNetwork.Instance.JoinOrCreateRoom();
+        else
+            setupWar();
 
         /*
         if (_localPlayerTeam == GameNetwork.VirtualPlayerIds.ALLIES)
@@ -117,6 +122,8 @@ public class War : MonoBehaviour
 
     private void OnDestroy()
     {
+        NetworkManager.OnJoinedRoomCallback -= onJoinedRoom;
+
         GameNetwork.OnPlayerTeamUnitsSetCallback -= onPlayerTeamUnitsSet;
         GameNetwork.OnUnitHealthSetCallback -= onUnitHealthSet;
         GameNetwork.OnTeamHealthSetCallback -= onTeamHealthSet;
@@ -136,6 +143,13 @@ public class War : MonoBehaviour
     static public War GetSceneInstance()
     {
         return GameObject.Find("War").GetComponent<War>();
+    }
+
+    private void onJoinedRoom()
+    {
+        print("War::OnJoinedRoom -> Is Master Client: " + NetworkManager.GetIsMasterClient());
+        if(!_setupWasCalled)
+            setupWar();
     }
 
     private void onPlayerTeamUnitsSet(string teamName, string teamUnits)
@@ -227,6 +241,14 @@ public class War : MonoBehaviour
         }
         else
             UnitTurnHighlightTransform.gameObject.SetActive(false);
+    }
+
+    private void setupWar()
+    {
+        determineLocalPlayerTeam();
+        setLocalTeamUnits();
+
+        _setupWasCalled = true;
     }
 
     private void determineLocalPlayerTeam()
@@ -429,19 +451,6 @@ public class War : MonoBehaviour
 
             GameObject unit = NetworkManager.InstantiateObject("Prefabs/MinMinUnits/" + unitName, Vector3.zero, Quaternion.identity, 0);
             unit.name = unitName;
-            //WarUnit warUnit = unit.AddComponent<WarUnit>(); 
-            //unit.GetComponent<PhotonView>().ObservedComponents.Add(warUnit);
-            //warUnit.Set(unitName, virtualPlayerId, i);
-            unit.GetComponent<MinMinUnit>().SetForWar(unitName, virtualPlayerId, i);
-
-            Transform unitTransform = unit.transform;
-            Transform spriteTransform = unitTransform.Find("Sprite");
-
-            if (!isAllies) 
-            {
-                Vector3 localScale = spriteTransform.localScale;
-                spriteTransform.localScale = new Vector3(-localScale.x, localScale.y, localScale.z);
-            }
 
             PhotonPlayer player = NetworkManager.GetLocalPlayer();
             if (!isAllies && (gameStats.Mode == GameStats.Modes.Pvp) && !gameStats.UsesAiForPvp)
@@ -454,7 +463,8 @@ public class War : MonoBehaviour
             string[] positionCoords = positionString.Split(NetworkManager.Separators.VALUES);
             float posX = float.Parse(positionCoords[0]);
             float posY = float.Parse(positionCoords[1]);
-            spriteTransform.localPosition = new Vector3(posX, posY, spriteTransform.localPosition.z);
+
+            unit.GetComponent<MinMinUnit>().SendSetForWar(unitName, virtualPlayerId, i, posX, posY);
         }
 
         setTeamMaxHealth(virtualPlayerId);

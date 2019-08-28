@@ -6,11 +6,11 @@ using UnityEngine;
 
 public class Lobby : MonoBehaviour
 {
-    [SerializeField] private int _maxPlayers = 2;
-    [SerializeField] private int _maxPlayersNotExpectating = 2;
     [SerializeField] private int _maxRatingDifferenceToFight = 50;
     [SerializeField] private float _timeToWaitBeforeAiRival = 30; // 30 seconds
     [SerializeField] private GameObject _waitingPopUp;
+
+    private bool _isJoiningRoom = false;
 
     private void Awake()
     {
@@ -35,20 +35,13 @@ public class Lobby : MonoBehaviour
     private void OnDestroy()
     {
         removeDelegates();
-        //StopCoroutine(handleWaitForAiRival());
     }
 
     private void setDelegates()
     {
-        //NetworkManager.UpdateGameRooms += UpdateRoomGrid;
-        //NetworkManager.UpdateRoomList += UpdateRoomPlayers;
-
         NetworkManager.OnJoinedLobbyCallback += onJoinedLobby;
-        //NetworkManager.OnLeftLobbyCallback += onLeftLobby;
         NetworkManager.OnJoinedRoomCallback += onJoinedRoom;
-        //NetworkManager.OnLeftRoomCallback += onLeftRoom;
         NetworkManager.OnPlayerConnectedCallback += onPlayerConnected;
-        NetworkManager.OnPlayerDisconnectedCallback += onPlayerDisconnected;
         NetworkManager.OnReceivedRoomListUpdateCallback += OnReceivedRoomListUpdate;
         NetworkManager.OnConnectedToMasterCallback += OnConnectedToMaster;
 
@@ -57,15 +50,9 @@ public class Lobby : MonoBehaviour
 
     private void removeDelegates()
     {
-        //NetworkManager.UpdateGameRooms -= UpdateRoomGrid;
-        //NetworkManager.UpdateRoomList -= UpdateRoomPlayers;
-
         NetworkManager.OnJoinedLobbyCallback -= onJoinedLobby;
-        //NetworkManager.OnLeftLobbyCallback -= onLeftLobby;
         NetworkManager.OnJoinedRoomCallback -= onJoinedRoom;
-        //NetworkManager.OnLeftRoomCallback -= onLeftRoom;
         NetworkManager.OnPlayerConnectedCallback -= onPlayerConnected;
-        NetworkManager.OnPlayerDisconnectedCallback -= onPlayerDisconnected;
         NetworkManager.OnReceivedRoomListUpdateCallback -= OnReceivedRoomListUpdate;
         NetworkManager.OnConnectedToMasterCallback -= OnConnectedToMaster;
 
@@ -87,27 +74,21 @@ public class Lobby : MonoBehaviour
     private void OnReceivedRoomListUpdate()
     {
         print("Lobby::OnReceivedRoomListUpdate");
-        handleRoomCreationAndJoin();
+        if(!_isJoiningRoom)
+            handleRoomCreationAndJoin();
     }
-
-    //private void onLeftLobby()
-    //{
-
-    //}
 
     private void onJoinedRoom()
     {
         print("Lobby::OnJoinedRoom -> Is Master Client: " + NetworkManager.GetIsMasterClient());
-        if(NetworkManager.GetIsMasterClient())
+        if (NetworkManager.GetIsMasterClient())
+        {
             _waitingPopUp.SetActive(true);
+            StartCoroutine(handleWaitForAiRival());
+        }
         else
             NetworkManager.GetRoom().IsOpen = false;
     }
-
-    //private void onLeftRoom()
-    //{
-
-    //}
 
     private void onPlayerConnected(PhotonPlayer player)
     {
@@ -117,17 +98,12 @@ public class Lobby : MonoBehaviour
         sendStartMatch();
     }
 
-    private void onPlayerDisconnected(PhotonPlayer player)
-    {
-        
-    }
-
     private void handleRoomCreationAndJoin()
     {
         print("Lobby::handleRoomCreationAndJoin");
         RoomInfo[] rooms = NetworkManager.GetRoomList();
         if (rooms.Length == 0)
-            createAndJoinRoom();
+            joinOrCreateRoom();
         else
         {
             GameInventory gameInventory = GameInventory.Instance;
@@ -157,7 +133,7 @@ public class Lobby : MonoBehaviour
             }
 
             if (!foundRoom)
-                createAndJoinRoom();
+                joinOrCreateRoom();
         }
     }
 
@@ -171,13 +147,10 @@ public class Lobby : MonoBehaviour
         SceneManager.LoadScene(GameConstants.Scenes.WAR);
     }
 
-    private void createAndJoinRoom()
+    private void joinOrCreateRoom()
     {
-        print("Lobby::createAndJoinRoom");
-        string roomName = "1v1 - " + NetworkManager.GetPlayerName();
-        createRoom(roomName);
-        NetworkManager.JoinRoom(roomName);
-        StartCoroutine(handleWaitForAiRival());
+        GameNetwork.Instance.JoinOrCreateRoom();
+        _isJoiningRoom = true;
     }
 
     private IEnumerator handleWaitForAiRival()
@@ -190,37 +163,5 @@ public class Lobby : MonoBehaviour
     {
         GameStats.Instance.UsesAiForPvp = true;
         sendStartMatch();
-    }
-
-    private void createRoom(string roomName)
-    {
-        List<string> playerList = new List<string>();
-
-        playerList.Add(NetworkManager.GetPlayerName());
-
-        Hashtable customProps = new Hashtable();
-        customProps.Add(NetworkManager.RoomPropertyOptions.PLAYER_LIST, playerList.ToArray());
-        customProps.Add(NetworkManager.RoomPropertyOptions.HOST, NetworkManager.GetPlayerName());
-
-        customProps.Add(NetworkManager.RoomPropertyOptions.MAX_PLAYERS, _maxPlayers);
-
-        string[] customPropsForLobby = new string[] { NetworkManager.RoomPropertyOptions.PLAYER_LIST, NetworkManager.RoomPropertyOptions.HOST };
-
-        NetworkManager.CreateRoom(roomName, true, true, _maxPlayers, customProps, customPropsForLobby, _maxPlayersNotExpectating);
-    }
-
-    private void UpdateRoomGrid()
-    {
-        //if (NetworkManager > 0)
-        //{
-        //    if (LAST_ROOM_SELECTED == NetworkManager.GetRoomList()[i].customProperties["gt"].ToString())
-        //    {
-        //    }
-        //}
-    }
-
-    private void UpdateRoomPlayers()
-    {
-
     }
 }
