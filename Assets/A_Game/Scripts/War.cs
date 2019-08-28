@@ -47,8 +47,6 @@ public class War : MonoBehaviour
     private bool _hasMatchEnded = false;
     private List<WarTeamGridItem> _uiTeamGridItems = new List<WarTeamGridItem>();
 
-    //private GameObject _slot;
-
     private List<MinMinUnit> _allies = new List<MinMinUnit>();
     private List<MinMinUnit> _enemies = new List<MinMinUnit>();
 
@@ -88,13 +86,11 @@ public class War : MonoBehaviour
         else
             setupWar();
 
-        /*
         if (_localPlayerTeam == GameNetwork.VirtualPlayerIds.ALLIES)
         {
             GameNetwork.Instance.SetTeamInTurn(GameNetwork.VirtualPlayerIds.ALLIES);
             GameNetwork.Instance.SetUnitInTurn(_allies[0].name);
         }
-        */
     }
 
     // Update is called once per frame
@@ -297,6 +293,7 @@ public class War : MonoBehaviour
  
                 WarTeamGridItem warTeamGridItem = warGridItemTransform.GetComponent<WarTeamGridItem>();
                 _uiTeamGridItems.Add(warTeamGridItem);
+                warTeamGridItem.UnitName = unitName;
 
                 warTeamGridItem.View.sprite = Resources.Load<Sprite>("Images/Units/" + unitName);
             }
@@ -405,15 +402,10 @@ public class War : MonoBehaviour
 
                 unitsString += enemyUnitNames[i];
 
-                ////Build unit levels
-                //int allyUnitExp = gameInventory.GetLocalUnitExp(allyUnitNames[i]);
-
                 //Give enemy AI same exp as allies of the same tier. When team is created the levels will be built.  
                 int allyUnitExp = gameNetwork.GetLocalPlayerUnitPropertyAsInt(GameNetwork.UnitPlayerProperties.EXPERIENCE, allyUnitNames[i], GameNetwork.VirtualPlayerIds.ALLIES);
                 gameNetwork.SetLocalPlayerUnitProperty(GameNetwork.UnitPlayerProperties.EXPERIENCE, enemyUnitNames[i], allyUnitExp.ToString(), GameNetwork.VirtualPlayerIds.ENEMIES);
                 
-                //gameNetwork.BuildUnitLevels(enemyUnitNames[i], allyUnitExp, GameNetwork.VirtualPlayerIds.ENEMIES);
-
                 ////Set random position
                 Vector2 pos = getRandomBattlefieldPosition();
                 string posString = pos.x.ToString() + NetworkManager.Separators.VALUES + pos.y.ToString();
