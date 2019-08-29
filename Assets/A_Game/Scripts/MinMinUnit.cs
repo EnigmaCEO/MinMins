@@ -41,7 +41,7 @@ public class MinMinUnit : NetworkEntity
     }
 
     [PunRPC]
-    private void setForWar(string unitName, string teamName, int teamIndex, float posX, float posY)
+    private void setForWar(PhotonMessageInfo photonMessageInfo, string unitName, string teamName, int teamIndex, float posX, float posY)
     {
         name = unitName;
         string gridName = War.GetTeamGridName(teamName);

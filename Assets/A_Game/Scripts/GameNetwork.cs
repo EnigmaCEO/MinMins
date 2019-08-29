@@ -2,7 +2,6 @@
 using SimpleJSON;
 using System.Collections;
 using System.Collections.Generic;
-using Tiny;
 using UnityEngine;
 
 public class GameNetwork : SingletonMonobehaviour<GameNetwork>
@@ -37,7 +36,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
     public class RoomCustomProperties
     {
-        public const string TEAM_IN_TURN = "Team_In_Turn";
+        public const string ROUND_NUMBER = "Team_In_Turn";
         public const string UNIT_IN_TURN = "Unit_In_Turn";
         public const string START_COUNT_DOWN_TIMER = "st";
     }
@@ -73,7 +72,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     }
 
     public delegate void OnTeamTurnStartedDelegate(string turnTeam);
-    static public OnTeamTurnStartedDelegate OnTeamTurnStartedCallback;
+    static public OnTeamTurnStartedDelegate OnRoundStartedCallback;
 
     public delegate void OnUnitTurnStartedDelegate(string unitName);
     static public OnUnitTurnStartedDelegate OnUnitTurnStartedCallback;
@@ -84,13 +83,16 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     //public delegate void OnUnitPropertySetDelegate(string team, string unitName, int value);
     //public OnUnitPropertySetDelegate OnUnitPropertySetCallback;
 
-    public delegate void OnTeamHealthSetDeleate(string team, int health);
-    static public OnTeamHealthSetDeleate OnTeamHealthSetCallback;
+    public delegate void OnTeamHealthSetDelegate(string team, int health);
+    static public OnTeamHealthSetDelegate OnTeamHealthSetCallback;
 
     public delegate void OnPlayerRatingSetDelegate(int rating);
     static public OnPlayerRatingSetDelegate OnPlayerRatingSetCallback;
 
     static public NetworkManager.SimpleDelegate OnStartMatch;
+
+    //public delegate void OnCameraMoveDelegate(Vector3 position);
+    //static public OnCameraMoveDelegate OnCameraMoveCallback;
 
     public delegate void OnPlayerTeamUnitsSetDelegate(string team, string teamUnits);
     static public OnPlayerTeamUnitsSetDelegate OnPlayerTeamUnitsSetCallback;
@@ -146,10 +148,10 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
             string value = updatedProperties[keyObject].ToString();
 
-            if (idPart == RoomCustomProperties.TEAM_IN_TURN)
+            if (idPart == RoomCustomProperties.ROUND_NUMBER)
             {
-                if (OnTeamTurnStartedCallback != null)
-                    OnTeamTurnStartedCallback(value);
+                if (OnRoundStartedCallback != null)
+                    OnRoundStartedCallback(value);
             }
             else if (idPart == RoomCustomProperties.UNIT_IN_TURN)
             {
@@ -420,14 +422,14 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         return NetworkManager.GetLocalPlayer();
     }
 
-    public void SetTeamInTurn(string team)
+    public void SetRoundNumber(int roundNumber)
     {
-        NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.TEAM_IN_TURN, team);
+        NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.ROUND_NUMBER, roundNumber.ToString());
     }
 
-    public string GetTeamInTurn()
+    public int GetRoundNumber()
     {
-        return NetworkManager.GetRoomCustomProperty(GameNetwork.RoomCustomProperties.TEAM_IN_TURN);
+        return int.Parse(NetworkManager.GetRoomCustomProperty(GameNetwork.RoomCustomProperties.ROUND_NUMBER));
     }
 
     public void SetUnitInTurn(string unitName)
@@ -453,6 +455,18 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         if (OnStartMatch != null)
             OnStartMatch();
     }
+
+    //public void SendCameraMove(Vector3 position)
+    //{
+    //    _photonView.RPC("CameraMove", PhotonTargets.All, position);
+    //}
+
+    //[PunRPC]
+    //private void cameraMove(PhotonMessageInfo messageInfo, Vector3 position)
+    //{
+    //    if (OnCameraMoveCallback != null)
+    //        OnCameraMoveCallback(position);
+    //}
 
     public void JoinOrCreateRoom()
     {

@@ -70,7 +70,7 @@ public class War : MonoBehaviour
         GameNetwork.OnPlayerTeamUnitsSetCallback += onPlayerTeamUnitsSet;
         GameNetwork.OnUnitHealthSetCallback += onUnitHealthSet;
         GameNetwork.OnTeamHealthSetCallback += onTeamHealthSet;
-        GameNetwork.OnTeamTurnStartedCallback += onTeamTurnStarted;
+        GameNetwork.OnRoundStartedCallback += onRoundStarted;
         GameNetwork.OnUnitTurnStartedCallback += onUnitTurnStarted;
     }
 
@@ -90,7 +90,7 @@ public class War : MonoBehaviour
 
         if (_localPlayerTeam == GameNetwork.VirtualPlayerIds.ALLIES)
         {
-            GameNetwork.Instance.SetTeamInTurn(GameNetwork.VirtualPlayerIds.ALLIES);
+            GameNetwork.Instance.SetRoundNumber(1);
             GameNetwork.Instance.SetUnitInTurn(_allies[0].name);
         }
     }
@@ -125,7 +125,7 @@ public class War : MonoBehaviour
         GameNetwork.OnPlayerTeamUnitsSetCallback -= onPlayerTeamUnitsSet;
         GameNetwork.OnUnitHealthSetCallback -= onUnitHealthSet;
         GameNetwork.OnTeamHealthSetCallback -= onTeamHealthSet;
-        GameNetwork.OnTeamTurnStartedCallback -= onTeamTurnStarted;
+        GameNetwork.OnRoundStartedCallback -= onRoundStarted;
         GameNetwork.OnUnitTurnStartedCallback -= onUnitTurnStarted;
     }
 
@@ -213,7 +213,7 @@ public class War : MonoBehaviour
         fillToUpdate.fillAmount = (float)health / (float)teamMaxHealth;
     }
 
-    private void onTeamTurnStarted(string team)
+    private void onRoundStarted(string team)
     {
         _isLocalPlayerTurn = (team == _localPlayerTeam);
         _teamTurnText.text = "Team turn: " + (_isLocalPlayerTurn ? "Mine" : "Other");
