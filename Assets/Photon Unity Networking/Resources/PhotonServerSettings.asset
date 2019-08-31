@@ -47,4 +47,9 @@ MonoBehaviour:
   - TaggedPlayer
   - startMatch
   - setForWar
+  - sendPlayerTargetInput
+  - handlePlayerTargetInput
+  - receivePlayerTargetInput
+  - receiveSettingsForWar
+  - receiveStartMatch
   DisableAutoOpenWizard: 1

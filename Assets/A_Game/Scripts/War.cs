@@ -1,9 +1,11 @@
 ﻿using Enigma.CoreSystems;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class War : MonoBehaviour
+public class War : NetworkEntity
 {
     public class GridNames
     {
@@ -23,34 +25,32 @@ public class War : MonoBehaviour
 
     [SerializeField] private float _team1_CloudsLocalPosX = 0.07f;
 
-    [SerializeField] private float _battlefieldMovementAmount = 5000;
-    [SerializeField] private float _battlefieldMovementDelay = 0.1f;
-    [SerializeField] private float _battlefieldMovementTime = 1;
-    [SerializeField] private iTween.EaseType _battlefieldMovementEaseType = iTween.EaseType.easeInOutExpo;
-
     [SerializeField] private Text _errorText;
     [SerializeField] private MatchResultsPopUp _matchResultsPopUp;
 
     [SerializeField] private Text _teamTurnText;
     [SerializeField] private Text _unitTurnText;
+    [SerializeField] private Text _roundNumberText;
 
-    [SerializeField] private Image _alliesHealthFill;
-    [SerializeField] private Image _enemiesHealthFill;
+    [SerializeField] private Image _hostTeamHealthFill;
+    [SerializeField] private Image _guestTeamHealthFill;
 
     [SerializeField] private RectTransform UnitTurnHighlightTransform;
 
     [SerializeField] private Transform _battleField;
     [SerializeField] private GameCamera _gameCamera;
 
-    private Transform _alliesGrid;
-    private Transform _enemiesGrid;
+    [SerializeField] private GameObject _targetCirclePrefab;
+
+    private Transform _hostGrid;
+    private Transform _guestGrid;
 
     private int _side = 0;
     private bool _hasMatchEnded = false;
     private List<WarTeamGridItem> _uiTeamGridItems = new List<WarTeamGridItem>();
 
-    private List<MinMinUnit> _allies = new List<MinMinUnit>();
-    private List<MinMinUnit> _enemies = new List<MinMinUnit>();
+    private Dictionary<string, MinMinUnit> _hostUnits = new Dictionary<string, MinMinUnit>();
+    private Dictionary<string, MinMinUnit> _guestUnits = new Dictionary<string, MinMinUnit>();
 
     private string _attackingUnitName = "";
     private float _timer;
@@ -60,8 +60,8 @@ public class War : MonoBehaviour
 
     private int _roundCount = 0;
     private string _localPlayerTeam = "";
-    private bool _isLocalPlayerTurn = false;
     private bool _setupWasCalled = false;
+
 
     void Awake()
     {
@@ -71,7 +71,12 @@ public class War : MonoBehaviour
         GameNetwork.OnUnitHealthSetCallback += onUnitHealthSet;
         GameNetwork.OnTeamHealthSetCallback += onTeamHealthSet;
         GameNetwork.OnRoundStartedCallback += onRoundStarted;
-        GameNetwork.OnUnitTurnStartedCallback += onUnitTurnStarted;
+        GameNetwork.OnTeamTurnChangedCallback += onTeamTurnChanged;
+        GameNetwork.OnHostUnitIndexChangedCallback += onHostUnitIndexChanged;
+        GameNetwork.OnGuestUnitIndexChangedCallback += onGuestUnitIndexChanged;
+        GameNetwork.OnActionStartedCallback += onActionStarted;
+
+        GameCamera.OnMovementCompletedCallback += onCameraMovementCompleted;
     }
 
     private void Start()
@@ -80,20 +85,17 @@ public class War : MonoBehaviour
         _matchResultsPopUp.gameObject.SetActive(false);
         _matchData.PlayerId = NetworkManager.GetPlayerName();
 
-        _alliesGrid = _battleField.Find(GridNames.TEAM_1);
-        _enemiesGrid = _battleField.Find(GridNames.TEAM_2);
+        _hostGrid = _battleField.Find(GridNames.TEAM_1);
+        _guestGrid = _battleField.Find(GridNames.TEAM_2);
 
         if (GameStats.Instance.Mode == GameStats.Modes.SinglePlayer)
             GameNetwork.Instance.JoinOrCreateRoom();
         else
             setupWar();
 
-        if (_localPlayerTeam == GameNetwork.VirtualPlayerIds.ALLIES)
-        {
-            GameNetwork.Instance.SetRoundNumber(1);
-            GameNetwork.Instance.SetUnitInTurn(_allies[0].name);
-        }
-    }
+        if (getIsHost())
+            NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.ROUND_NUMBER, 1);
+    } 
 
     // Update is called once per frame
     void Update()
@@ -105,14 +107,14 @@ public class War : MonoBehaviour
 
         if (((_playTime - _timer) >= _readyCheckDelay) && Ready)
         {
-            int enemiesGridCount = _enemiesGrid.childCount;
-            for (int i = 0; i < enemiesGridCount; i++)
+            int guestGridCount = _guestGrid.childCount;
+            for (int i = 0; i < guestGridCount; i++)
             {
-                Transform enemySlot = _enemiesGrid.GetChild(i);
-                if (enemySlot.childCount == 0)
+                Transform guestUnitSlot = _guestGrid.GetChild(i);
+                if (guestUnitSlot.childCount == 0)
                     continue;
 
-                //Attack(enemySlot.name + "/" + enemySlot.GetChild(0).name);
+                //Attack(guestUnitSlot.name + "/" + guestUnitSlot.GetChild(0).name);
                 break;
             }
         }
@@ -126,13 +128,18 @@ public class War : MonoBehaviour
         GameNetwork.OnUnitHealthSetCallback -= onUnitHealthSet;
         GameNetwork.OnTeamHealthSetCallback -= onTeamHealthSet;
         GameNetwork.OnRoundStartedCallback -= onRoundStarted;
-        GameNetwork.OnUnitTurnStartedCallback -= onUnitTurnStarted;
+        GameNetwork.OnTeamTurnChangedCallback -= onTeamTurnChanged;
+        GameNetwork.OnHostUnitIndexChangedCallback -= onHostUnitIndexChanged;
+        GameNetwork.OnGuestUnitIndexChangedCallback -= onGuestUnitIndexChanged;
+        GameNetwork.OnActionStartedCallback -= onActionStarted;
+
+        GameCamera.OnMovementCompletedCallback -= onCameraMovementCompleted;
     }
 
     static public string GetTeamGridName(string teamName)
     {
         string gridName = GridNames.TEAM_1;
-        if (teamName == GameNetwork.VirtualPlayerIds.ENEMIES)
+        if (teamName == GameNetwork.VirtualPlayerIds.GUEST)
             gridName = GridNames.TEAM_2;
 
         return gridName;
@@ -140,7 +147,25 @@ public class War : MonoBehaviour
 
     static public War GetSceneInstance()
     {
-        return GameObject.Find("War").GetComponent<War>();
+        return GameObject.FindObjectOfType<War>();
+    }
+
+    private bool getIsHost()
+    {
+        return (_localPlayerTeam == GameNetwork.VirtualPlayerIds.HOST);
+    }
+
+    private int getPlayerInTurnId()
+    {
+        string teamInTurn = NetworkManager.GetRoomCustomProperty(GameNetwork.RoomCustomProperties.TEAM_IN_TURN);
+        int playerId = -1;
+
+        if (!getIsHost())
+            playerId = NetworkManager.GetLocalPlayerId();
+        else
+            playerId = GameNetwork.Instance.GuestPlayerId;
+
+        return playerId;
     }
 
     private void onJoinedRoom()
@@ -158,16 +183,16 @@ public class War : MonoBehaviour
 
         GameStats gameStats = GameStats.Instance;
 
-        bool localPlayerIsAllies = (_localPlayerTeam == GameNetwork.VirtualPlayerIds.ALLIES);
-        bool isTeamSetAllies = teamName == GameNetwork.VirtualPlayerIds.ALLIES;
+        bool localPlayerIsHost = getIsHost();
+        bool isTeamSetHost = teamName == GameNetwork.VirtualPlayerIds.HOST;
 
-        print("War::onPlayerTeamUnitsSet -> localPlayerIsAllies: " + localPlayerIsAllies);
+        print("War::onPlayerTeamUnitsSet -> localPlayerIsHost: " + localPlayerIsHost);
 
-        if (localPlayerIsAllies)
+        if (localPlayerIsHost)
         {
             instantiateTeam(teamName, teamUnits);
 
-            if (isTeamSetAllies)
+            if (isTeamSetHost)
             {
                 if (gameStats.Mode == GameStats.Modes.SinglePlayer)
                     setUpSinglePlayerAiTeamUnits();
@@ -177,12 +202,12 @@ public class War : MonoBehaviour
                         setUpPvpAiTeamUnits();
                 }
             }
-            else // Team set is enemy
+            else // Team set is Host
                 instantiateRewardChests(GridNames.TEAM_2);
         }
-        else // Local player is Enemy
+        else // Local player is Guest
         {
-            if(isTeamSetAllies)
+            if(isTeamSetHost)
                 instantiateRewardChests(GridNames.TEAM_1);
         }
     }
@@ -209,33 +234,123 @@ public class War : MonoBehaviour
         GameNetwork gameNetwork = GameNetwork.Instance;
         int teamMaxHealth = gameNetwork.GetRoomTeamProperty(GameNetwork.TeamRoomProperties.MAX_HEALTH, team);
 
-        Image fillToUpdate = (team == _localPlayerTeam) ? _alliesHealthFill : _enemiesHealthFill;
+        Image fillToUpdate = (team == _localPlayerTeam) ? _hostTeamHealthFill : _guestTeamHealthFill;
         fillToUpdate.fillAmount = (float)health / (float)teamMaxHealth;
     }
 
-    private void onRoundStarted(string team)
+    private void onRoundStarted(int roundNumber)
     {
-        _isLocalPlayerTurn = (team == _localPlayerTeam);
-        _teamTurnText.text = "Team turn: " + (_isLocalPlayerTurn ? "Mine" : "Other");
+        _roundNumberText.text = roundNumber.ToString();
+
+        NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.TEAM_IN_TURN, GameNetwork.VirtualPlayerIds.HOST);
     }
 
-    private void onUnitTurnStarted(string unitName)
+    private void onTeamTurnChanged(string teamName)
+    {
+        _teamTurnText.text = "Team turn: " + ((teamName == _localPlayerTeam) ? "Mine" : "Other");
+
+        string roomProperty = GameNetwork.RoomCustomProperties.HOST_UNIT_INDEX;
+        if (teamName == GameNetwork.VirtualPlayerIds.GUEST)
+            roomProperty = GameNetwork.RoomCustomProperties.GUEST_UNIT_INDEX;
+
+        int unitIndex = NetworkManager.GetRoomCustomPropertyAsInt(roomProperty) + 1;
+        NetworkManager.SetRoomCustomProperty(roomProperty, unitIndex);
+    }
+
+    private void onHostUnitIndexChanged(int hostUnitIndex)
+    {
+        MinMinUnit unit = _hostUnits.Values.ElementAt(hostUnitIndex);
+        handleUnitIndexChanged(hostUnitIndex, unit.name, GameNetwork.VirtualPlayerIds.HOST);
+    }
+
+    private void onGuestUnitIndexChanged(int guestUnitIndex)
+    {
+        MinMinUnit unit = _guestUnits.Values.ElementAt(guestUnitIndex);
+        handleUnitIndexChanged(guestUnitIndex, unit.name, GameNetwork.VirtualPlayerIds.GUEST);
+    }
+
+    private void handleUnitIndexChanged(int unitIndex, string unitName, string teamName)
     {
         _unitTurnText.text = "Unit turn: " + unitName;
+        handleHighlight(unitIndex, teamName);
+        Dictionary<string, MinMinUnit> teamUnits = GetTeamUnitsDictionary(teamName);
+        _gameCamera.HandleMovement(teamName, teamUnits[unitName].Type);
+    }
 
-        if (_isLocalPlayerTurn)
+    private void onCameraMovementCompleted(string sideTeam)
+    {
+        if (getIsHost())
         {
-            foreach (WarTeamGridItem teamGridItem in _uiTeamGridItems)
+            string teamInTurn = NetworkManager.GetRoomCustomProperty(GameNetwork.RoomCustomProperties.TEAM_IN_TURN);
+            int unitIndex = -1;
+            
+            if (teamInTurn == GameNetwork.VirtualPlayerIds.HOST)
+                unitIndex = NetworkManager.GetRoomCustomPropertyAsInt(GameNetwork.RoomCustomProperties.HOST_UNIT_INDEX);
+            else
+                unitIndex = NetworkManager.GetRoomCustomPropertyAsInt(GameNetwork.RoomCustomProperties.GUEST_UNIT_INDEX);
+
+            Dictionary<string, MinMinUnit> teamUnits = GetTeamUnitsDictionary(teamInTurn);
+            MinMinUnit unit = teamUnits.Values.ElementAt(unitIndex);
+            int unitTier = GameInventory.Instance.GetUnitTier(unit.name);
+
+            NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.ACTIONS_LEFT, unitTier.ToString());
+        }
+    }
+
+    private void onActionStarted(int actionsLeft)
+    {
+        string teamInTurn = NetworkManager.GetRoomCustomProperty(GameNetwork.RoomCustomProperties.TEAM_IN_TURN);
+        if (teamInTurn == _localPlayerTeam)
+        {
+            if (actionsLeft > 0)
+                StartCoroutine(handlePlayerInput());
+            else
             {
-                if (teamGridItem.UnitName == unitName)
-                {
-                    UnitTurnHighlightTransform.SetParent(teamGridItem.transform);
-                    UnitTurnHighlightTransform.SetAsFirstSibling();
-                    UnitTurnHighlightTransform.localPosition = Vector3.zero;
-                    UnitTurnHighlightTransform.gameObject.SetActive(true);
-                    break;
-                }
+                //TODO: Increase round and check if match is over
             }
+        }
+    }
+
+    private IEnumerator handlePlayerInput()
+    {
+        while (true)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                Vector3 tapWorldPosition = _gameCamera.MyCamera.ScreenToWorldPoint(Input.mousePosition);
+                sendPlayerTargetInput(tapWorldPosition);
+                //TODO: Check click boundaries
+                //TODO: Set actions left
+                yield break;
+            }
+
+            yield return null;
+        }
+    }
+
+    private void sendPlayerTargetInput(Vector3 playerInputWorldPosition)
+    {
+        base.SendRpcToMasterClient("receivePlayerTargetInput", playerInputWorldPosition, NetworkManager.GetLocalPlayerId(), _localPlayerTeam);
+    }
+
+    [PunRPC]
+    private void receivePlayerTargetInput(Vector3 playerInputWorldPosition, int networkPlayerId, string virtualPlayerId)
+    {     
+        GameObject targetCircle = NetworkManager.Instantiate<GameObject>(_targetCirclePrefab);
+        int playerInTurnActionsLeft = NetworkManager.GetRoomCustomPropertyAsInt(GameNetwork.RoomCustomProperties.ACTIONS_LEFT) - 1;
+        NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.ACTIONS_LEFT, playerInTurnActionsLeft.ToString());
+    }
+
+    private void handleHighlight(int unitIndex, string teamName)
+    {
+        if (teamName == _localPlayerTeam)
+        {
+            WarTeamGridItem warTeamGridItem = _uiTeamGridItems[unitIndex];
+
+            UnitTurnHighlightTransform.SetParent(warTeamGridItem.transform);
+            UnitTurnHighlightTransform.SetAsFirstSibling();
+            UnitTurnHighlightTransform.localPosition = Vector3.zero;
+            UnitTurnHighlightTransform.gameObject.SetActive(true);
         }
         else
             UnitTurnHighlightTransform.gameObject.SetActive(false);
@@ -245,10 +360,10 @@ public class War : MonoBehaviour
     {
         determineLocalPlayerTeam();
 
-        if (_localPlayerTeam == GameNetwork.VirtualPlayerIds.ENEMIES)
+        if (_localPlayerTeam == GameNetwork.VirtualPlayerIds.GUEST)
         {
-            //if(_localPlayerTeam == GameNetwork.VirtualPlayerIds.ALLIES)  //TODO: Remove test hack
-            _gameCamera.SetCameraForEnemies();
+            //if(_localPlayerTeam == GameNetwork.VirtualPlayerIds.HOST)  //TODO: Remove test hack
+            _gameCamera.SetCameraForGuest();
             moveCloudsToOppositeSide();
         }
 
@@ -260,13 +375,13 @@ public class War : MonoBehaviour
     private void determineLocalPlayerTeam()
     {
         if (NetworkManager.IsPhotonOffline()) //Single player
-            _localPlayerTeam = GameNetwork.VirtualPlayerIds.ALLIES;
+            _localPlayerTeam = GameNetwork.VirtualPlayerIds.HOST;
         else // Pvp
         {
             if (NetworkManager.GetIsMasterClient())
-                _localPlayerTeam = GameNetwork.VirtualPlayerIds.ALLIES;
+                _localPlayerTeam = GameNetwork.VirtualPlayerIds.HOST;
             else
-                _localPlayerTeam = GameNetwork.VirtualPlayerIds.ENEMIES;
+                _localPlayerTeam = GameNetwork.VirtualPlayerIds.GUEST;
         }
 
         print("War::determinLocalPlayerTeam -> _localPlayerTeam: " + _localPlayerTeam);
@@ -361,14 +476,14 @@ public class War : MonoBehaviour
         print("War::setupPvpAiTeamUnits");
         GameInventory gameInventory = GameInventory.Instance;
 
-        List<string> allyBronzeUnits = new List<string>();
-        List<string> allySilverUnits = new List<string>();
-        List<string> allyGoldUnits = new List<string>();
+        List<string> hostBronzeUnits = new List<string>();
+        List<string> hostSilverUnits = new List<string>();
+        List<string> hostGoldUnits = new List<string>();
 
-        string alliesUnitsString = NetworkManager.GetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.TEAM_UNITS, GameNetwork.VirtualPlayerIds.ALLIES);
-        string[] alliesUnits = alliesUnitsString.Split(NetworkManager.Separators.VALUES);
+        string hostUnitsString = NetworkManager.GetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.TEAM_UNITS, GameNetwork.VirtualPlayerIds.HOST);
+        string[] hostUnits = hostUnitsString.Split(NetworkManager.Separators.VALUES);
 
-        foreach (string unitName in alliesUnits)
+        foreach (string unitName in hostUnits)
         {
             if (unitName == "-1")
                 continue;
@@ -376,29 +491,29 @@ public class War : MonoBehaviour
             int unitTier = gameInventory.GetUnitTier(unitName);
 
             if (unitTier == GameInventory.Tiers.BRONZE)
-                allyBronzeUnits.Add(unitName);
+                hostBronzeUnits.Add(unitName);
             else if (unitTier == GameInventory.Tiers.SILVER)
-                allySilverUnits.Add(unitName);
+                hostSilverUnits.Add(unitName);
             else if (unitTier == GameInventory.Tiers.GOLD)
-                allyGoldUnits.Add(unitName);
+                hostGoldUnits.Add(unitName);
         }
 
-        List<string> enemyBronzeUnits = gameInventory.GetRandomUnitsFromTier(allyBronzeUnits.Count, GameInventory.Tiers.BRONZE);
-        List<string> enemySilverUnits = gameInventory.GetRandomUnitsFromTier(allySilverUnits.Count, GameInventory.Tiers.SILVER);
-        List<string> enemyGoldUnits = gameInventory.GetRandomUnitsFromTier(allyGoldUnits.Count, GameInventory.Tiers.GOLD);
+        List<string> guestBronzeUnits = gameInventory.GetRandomUnitsFromTier(hostBronzeUnits.Count, GameInventory.Tiers.BRONZE);
+        List<string> guestSilverUnits = gameInventory.GetRandomUnitsFromTier(hostSilverUnits.Count, GameInventory.Tiers.SILVER);
+        List<string> guestGoldUnits = gameInventory.GetRandomUnitsFromTier(hostGoldUnits.Count, GameInventory.Tiers.GOLD);
 
         string unitsString = "";
-        unitsString = setEnemyAiUnits(allyBronzeUnits, enemyBronzeUnits, unitsString);
-        unitsString = setEnemyAiUnits(allySilverUnits, enemySilverUnits, unitsString);
-        unitsString = setEnemyAiUnits(allyGoldUnits, enemyGoldUnits, unitsString);
+        unitsString = setGuestAiUnits(hostBronzeUnits, guestBronzeUnits, unitsString);
+        unitsString = setGuestAiUnits(hostSilverUnits, guestSilverUnits, unitsString);
+        unitsString = setGuestAiUnits(hostGoldUnits, guestGoldUnits, unitsString);
 
-        NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.TEAM_UNITS, unitsString, GameNetwork.VirtualPlayerIds.ENEMIES);
+        NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.TEAM_UNITS, unitsString, GameNetwork.VirtualPlayerIds.GUEST);
     }
 
-    private string setEnemyAiUnits(List<string> allyUnitNames, List<string> enemyUnitNames, string unitsString)
+    private string setGuestAiUnits(List<string> hostUnitNames, List<string> guestUnitNames, string unitsString)
     {
-        print("War::setEnemyAiUnits");
-        int unitCount = allyUnitNames.Count;
+        print("War::setGuestAiUnits");
+        int unitCount = hostUnitNames.Count;
         if (unitCount > 0)
         {
             GameNetwork gameNetwork = GameNetwork.Instance;
@@ -410,16 +525,16 @@ public class War : MonoBehaviour
                 if (unitsString != "")
                     unitsString += NetworkManager.Separators.VALUES;
 
-                unitsString += enemyUnitNames[i];
+                unitsString += guestUnitNames[i];
 
-                //Give enemy AI same exp as allies of the same tier. When team is created the levels will be built.  
-                int allyUnitExp = gameNetwork.GetLocalPlayerUnitPropertyAsInt(GameNetwork.UnitPlayerProperties.EXPERIENCE, allyUnitNames[i], GameNetwork.VirtualPlayerIds.ALLIES);
-                gameNetwork.SetLocalPlayerUnitProperty(GameNetwork.UnitPlayerProperties.EXPERIENCE, enemyUnitNames[i], allyUnitExp.ToString(), GameNetwork.VirtualPlayerIds.ENEMIES);
+                //Give guest AI same exp as host units of the same tier. When team is created the levels will be built.  
+                int hostUnitExp = gameNetwork.GetLocalPlayerUnitPropertyAsInt(GameNetwork.UnitPlayerProperties.EXPERIENCE, hostUnitNames[i], GameNetwork.VirtualPlayerIds.HOST);
+                gameNetwork.SetLocalPlayerUnitProperty(GameNetwork.UnitPlayerProperties.EXPERIENCE, guestUnitNames[i], hostUnitExp.ToString(), GameNetwork.VirtualPlayerIds.GUEST);
                 
                 ////Set random position
                 Vector2 pos = getRandomBattlefieldPosition();
                 string posString = pos.x.ToString() + NetworkManager.Separators.VALUES + pos.y.ToString();
-                gameNetwork.SetLocalPlayerUnitProperty(GameNetwork.UnitPlayerProperties.POSITION, enemyUnitNames[i], posString, GameNetwork.VirtualPlayerIds.ENEMIES);
+                gameNetwork.SetLocalPlayerUnitProperty(GameNetwork.UnitPlayerProperties.POSITION, guestUnitNames[i], posString, GameNetwork.VirtualPlayerIds.GUEST);
             }
         }
 
@@ -434,7 +549,7 @@ public class War : MonoBehaviour
 
     private void instantiateTeam(string virtualPlayerId, string teamUnitsString)
     {
-        bool isAllies = (virtualPlayerId == GameNetwork.VirtualPlayerIds.ALLIES);
+        bool isHost = getIsHost();
         string gridName = GetTeamGridName(virtualPlayerId);
         Transform grid = _battleField.Find(gridName);
 
@@ -454,19 +569,19 @@ public class War : MonoBehaviour
             GameObject unit = NetworkManager.InstantiateObject("Prefabs/MinMinUnits/" + unitName, Vector3.zero, Quaternion.identity, 0);
             unit.name = unitName;
 
-            PhotonPlayer player = NetworkManager.GetLocalPlayer();
-            if (!isAllies && (gameStats.Mode == GameStats.Modes.Pvp) && !gameStats.UsesAiForPvp)
-                player = gameNetwork.EnemyPlayer;
+            int playerId = NetworkManager.GetLocalPlayerId();
+            if (!isHost)
+                playerId = gameNetwork.GuestPlayerId;
 
-            int unitExp = gameNetwork.GetAnyPlayerUnitPropertyAsInt(GameNetwork.UnitPlayerProperties.EXPERIENCE, unitName, virtualPlayerId, player);
+            int unitExp = gameNetwork.GetAnyPlayerUnitPropertyAsInt(GameNetwork.UnitPlayerProperties.EXPERIENCE, unitName, virtualPlayerId, playerId);
             gameNetwork.BuildUnitLevels(unitName, unitExp, virtualPlayerId);
 
-            string positionString = gameNetwork.GetAnyPlayerUnitProperty(GameNetwork.UnitPlayerProperties.POSITION, unitName, virtualPlayerId, player);
+            string positionString = gameNetwork.GetAnyPlayerUnitProperty(GameNetwork.UnitPlayerProperties.POSITION, unitName, virtualPlayerId, playerId);
             string[] positionCoords = positionString.Split(NetworkManager.Separators.VALUES);
             float posX = float.Parse(positionCoords[0]);
             float posY = float.Parse(positionCoords[1]);
 
-            unit.GetComponent<MinMinUnit>().SendSetForWar(unitName, virtualPlayerId, i, posX, posY);
+            unit.GetComponent<MinMinUnit>().SendSettingsForWar(unitName, virtualPlayerId, i, posX, posY);
         }
 
         setTeamMaxHealth(virtualPlayerId);
@@ -517,12 +632,12 @@ public class War : MonoBehaviour
 
         if (_side == 0)
         {
-            effect_name = _alliesGrid.transform.Find(_attackingUnitName + "/Effect").transform.GetChild(0).name;
+            effect_name = _hostGrid.transform.Find(_attackingUnitName + "/Effect").transform.GetChild(0).name;
             attack.transform.localEulerAngles = new Vector3(0, 0, 0);
         }
         else
         {
-            effect_name = _enemiesGrid.transform.Find(_attackingUnitName + "/Effect").transform.GetChild(0).name;
+            effect_name = _guestGrid.transform.Find(_attackingUnitName + "/Effect").transform.GetChild(0).name;
             attack.transform.localEulerAngles = new Vector3(0, 180, 0);
         }
 
@@ -552,11 +667,11 @@ public class War : MonoBehaviour
 
     public void OnMatchResultsExitButtonDown()
     {
-        if (_localPlayerTeam == GameNetwork.VirtualPlayerIds.ALLIES)
+        if(getIsHost())
         {
             GameNetwork gameNetwork = GameNetwork.Instance;
-            gameNetwork.ClearTeamUnits(GameNetwork.VirtualPlayerIds.ALLIES);
-            gameNetwork.ClearTeamUnits(GameNetwork.VirtualPlayerIds.ENEMIES);
+            gameNetwork.ClearTeamUnits(GameNetwork.VirtualPlayerIds.HOST);
+            gameNetwork.ClearTeamUnits(GameNetwork.VirtualPlayerIds.GUEST);
         }
 
         SceneManager.LoadScene(GameConstants.Scenes.LEVELS);
@@ -570,13 +685,13 @@ public class War : MonoBehaviour
             setTeamHealth(team);
     }
 
-    public List<MinMinUnit> GetTeamUnitsList(string teamName)
+    public Dictionary<string, MinMinUnit> GetTeamUnitsDictionary(string teamName)
     {
-        List<MinMinUnit> teamUnits = null;
-        if (teamName == GameNetwork.VirtualPlayerIds.ALLIES)
-            teamUnits = _allies;
-        else //Enemies
-            teamUnits = _enemies;
+        Dictionary<string, MinMinUnit> teamUnits = null;
+        if (teamName == GameNetwork.VirtualPlayerIds.HOST)
+            teamUnits = _hostUnits;
+        else //guest
+            teamUnits = _guestUnits;
 
         return teamUnits;
     }
@@ -611,10 +726,9 @@ public class War : MonoBehaviour
         foreach (Transform slot in _teamGridContent)
         {
             GameObject minMin = slot.GetChild(0).gameObject;
-            //int Health = 
 
             int expEarned = 0;
-            int minMinHealth = gameNetwork.GetRoomUnitProperty(GameNetwork.UnitRoomProperties.HEALTH, GameNetwork.VirtualPlayerIds.ALLIES, minMin.name);
+            int minMinHealth = gameNetwork.GetRoomUnitProperty(GameNetwork.UnitRoomProperties.HEALTH, GameNetwork.VirtualPlayerIds.HOST, minMin.name);
             if (minMinHealth > 0)
             {
                 if (isVictory)
@@ -679,54 +793,54 @@ public class War : MonoBehaviour
     //Only master client uses this
     private void checkWinLoseConditions()
     {
-        bool enemiesDefeated = false;
-        bool alliesDefeated = false;
+        bool guestTeamDefeated = false;
+        bool hostTeamDefeated = false;
         string winner = "";
 
-        string alliesTeam = GameNetwork.VirtualPlayerIds.ALLIES;
-        string enemiesTeam = GameNetwork.VirtualPlayerIds.ENEMIES;
+        string hostTeam = GameNetwork.VirtualPlayerIds.HOST;
+        string guestTeam = GameNetwork.VirtualPlayerIds.GUEST;
 
         if (_roundCount > _maxRoundsCount)
             _hasMatchEnded = true;
         else
         { 
-            enemiesDefeated = areAllUnitsDefeated(enemiesTeam);
-            alliesDefeated = areAllUnitsDefeated(alliesTeam);
-            if (enemiesDefeated  || enemiesDefeated)
+            guestTeamDefeated = areAllUnitsDefeated(guestTeam);
+            hostTeamDefeated = areAllUnitsDefeated(hostTeam);
+            if (guestTeamDefeated  || guestTeamDefeated)
                 _hasMatchEnded = true;
         }
 
         if (_hasMatchEnded)
         {
-            if (enemiesDefeated)
-                winner = GameNetwork.VirtualPlayerIds.ALLIES;
-            else if (alliesDefeated)
-                winner = GameNetwork.VirtualPlayerIds.ENEMIES;
+            if (guestTeamDefeated)
+                winner = GameNetwork.VirtualPlayerIds.HOST;
+            else if (hostTeamDefeated)
+                winner = GameNetwork.VirtualPlayerIds.GUEST;
 
             if (winner == "")
             {
-                int alliesTotalHealth = getTeamTotalHealth(alliesTeam);
-                int enemiesTotalHealth = getTeamTotalHealth(enemiesTeam);
+                int hostUnitsTotalHealth = getTeamTotalHealth(hostTeam);
+                int guestUnitsTotalHealth = getTeamTotalHealth(guestTeam);
 
                 //Team with higher total health wins
-                if (alliesTotalHealth > enemiesTotalHealth)
-                    winner = alliesTeam;
-                else if (enemiesTotalHealth > alliesTotalHealth)
-                    winner = enemiesTeam;
+                if (hostUnitsTotalHealth > guestUnitsTotalHealth)
+                    winner = hostTeam;
+                else if (guestUnitsTotalHealth > hostUnitsTotalHealth)
+                    winner = guestTeam;
 
                 if (winner == "")
                 {
-                    int localPlayerRating = GameNetwork.Instance.GetLocalPlayerRating(GameNetwork.VirtualPlayerIds.ALLIES);
-                    int enemyRating = GameNetwork.Instance.GetAnyPlayerRating(_enemies[0].GetComponent<PhotonView>().owner, GameNetwork.VirtualPlayerIds.ENEMIES);
+                    int hostPlayerRating = GameNetwork.Instance.GetLocalPlayerRating(GameNetwork.VirtualPlayerIds.HOST);
+                    int guestPlayerRating = GameNetwork.Instance.GetAnyPlayerRating(GameNetwork.Instance.GuestPlayerId, GameNetwork.VirtualPlayerIds.GUEST);
 
                     //Lowest rated player wins
-                    if (localPlayerRating < enemyRating)
-                        winner = alliesTeam;
-                    else if (enemyRating < localPlayerRating)
-                        winner = enemiesTeam;
+                    if (hostPlayerRating < guestPlayerRating)
+                        winner = hostTeam;
+                    else if (guestPlayerRating < hostPlayerRating)
+                        winner = guestTeam;
 
                     if (winner == "")
-                        winner = alliesTeam; // Master client wins
+                        winner = hostTeam; // Master client wins
                 }     
             }
         }
@@ -741,10 +855,10 @@ public class War : MonoBehaviour
     private void setTeamHealth(string teamName)
     {
         GameNetwork gameNetwork = GameNetwork.Instance;
-        List<MinMinUnit> teamUnitsForTotalCalculus = GetTeamUnitsList(teamName);
+        Dictionary<string, MinMinUnit> teamUnitsForTotalCalculus = GetTeamUnitsDictionary(teamName);
 
         int healthTotal = 0;
-        foreach (MinMinUnit unit in teamUnitsForTotalCalculus)
+        foreach (MinMinUnit unit in teamUnitsForTotalCalculus.Values)
             healthTotal += gameNetwork.GetRoomUnitProperty(GameNetwork.UnitRoomProperties.HEALTH, teamName, unit.name);
 
         gameNetwork.SetRoomTeamProperty(GameNetwork.TeamRoomProperties.HEALTH, teamName, healthTotal.ToString());
@@ -752,11 +866,11 @@ public class War : MonoBehaviour
 
     private void setTeamMaxHealth(string teamName)
     {
-        List<MinMinUnit> teamUnitsForTotalCalculus = GetTeamUnitsList(teamName);
+        Dictionary<string, MinMinUnit> teamUnitsForTotalCalculus = GetTeamUnitsDictionary(teamName);
 
         GameNetwork gameNetwork = GameNetwork.Instance;
         int maxHealthTotal = 0;
-        foreach (MinMinUnit unit in teamUnitsForTotalCalculus)
+        foreach (MinMinUnit unit in teamUnitsForTotalCalculus.Values)
             maxHealthTotal += gameNetwork.GetRoomUnitProperty(GameNetwork.UnitRoomProperties.MAX_HEALTH, teamName, unit.name);
 
         gameNetwork.SetRoomTeamProperty(GameNetwork.TeamRoomProperties.MAX_HEALTH, teamName, maxHealthTotal.ToString());
@@ -766,13 +880,13 @@ public class War : MonoBehaviour
     private bool areAllUnitsDefeated(string team)
     {
         bool areAllUnitsDefeated = true;
-        List<MinMinUnit> units = new List<MinMinUnit>();
-        if (team == GameNetwork.VirtualPlayerIds.ALLIES)
-            units = _allies;
-        else if (team == GameNetwork.VirtualPlayerIds.ENEMIES)
-            units = _enemies;
+        Dictionary<string, MinMinUnit> units = new Dictionary<string, MinMinUnit>();
+        if (team == GameNetwork.VirtualPlayerIds.HOST)
+            units = _hostUnits;
+        else if (team == GameNetwork.VirtualPlayerIds.GUEST)
+            units = _guestUnits;
 
-        foreach (MinMinUnit unit in units)
+        foreach (MinMinUnit unit in units.Values)
         {
             int unitHealth = getUnitHealth(team, unit.name);
             if (unitHealth > 0)

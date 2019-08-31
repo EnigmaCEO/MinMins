@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameNetwork : SingletonMonobehaviour<GameNetwork>
+public class GameNetwork : SingletonNetworkEntity<GameNetwork>
 {
     public class Transactions
     {
@@ -36,8 +36,11 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
     public class RoomCustomProperties
     {
-        public const string ROUND_NUMBER = "Team_In_Turn";
-        public const string UNIT_IN_TURN = "Unit_In_Turn";
+        public const string ROUND_NUMBER = "Round_Number";
+        public const string TEAM_IN_TURN = "Team_In_Turn";
+        public const string HOST_UNIT_INDEX = "Host_Unit_Index";
+        public const string GUEST_UNIT_INDEX = "Guest_Unit_Index";
+        public const string ACTIONS_LEFT = "Actions_Left";
         public const string START_COUNT_DOWN_TIMER = "st";
     }
 
@@ -67,21 +70,27 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
     public class VirtualPlayerIds
     {
-        public const string ALLIES = "Allies";
-        public const string ENEMIES = "Enemies";
+        public const string HOST = "Host";
+        public const string GUEST = "Guest";
     }
 
-    public delegate void OnTeamTurnStartedDelegate(string turnTeam);
-    static public OnTeamTurnStartedDelegate OnRoundStartedCallback;
+    public delegate void OnRoundStartedDelegate(int roundNumber);
+    static public OnRoundStartedDelegate OnRoundStartedCallback;
 
-    public delegate void OnUnitTurnStartedDelegate(string unitName);
-    static public OnUnitTurnStartedDelegate OnUnitTurnStartedCallback;
+    public delegate void OnTeamTurnChangedDelegate(string teamName);
+    static public OnTeamTurnChangedDelegate OnTeamTurnChangedCallback;
+
+    public delegate void OnHostUnitIndexChangedDelegate(int hostUnitIndex);
+    static public OnHostUnitIndexChangedDelegate OnHostUnitIndexChangedCallback;
+
+    public delegate void OnGuestUnitIndexChangedDelegate(int guestUnitIndex);
+    static public OnGuestUnitIndexChangedDelegate OnGuestUnitIndexChangedCallback;
+
+    public delegate void OnActionStartedDelegate(int actionsLeft);
+    static public OnActionStartedDelegate OnActionStartedCallback; 
 
     public delegate void OnUnitHealthSetDelegate(string team, string unitName, int health);
     static public OnUnitHealthSetDelegate OnUnitHealthSetCallback;
-
-    //public delegate void OnUnitPropertySetDelegate(string team, string unitName, int value);
-    //public OnUnitPropertySetDelegate OnUnitPropertySetCallback;
 
     public delegate void OnTeamHealthSetDelegate(string team, int health);
     static public OnTeamHealthSetDelegate OnTeamHealthSetCallback;
@@ -89,19 +98,13 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     public delegate void OnPlayerRatingSetDelegate(int rating);
     static public OnPlayerRatingSetDelegate OnPlayerRatingSetCallback;
 
-    static public NetworkManager.SimpleDelegate OnStartMatch;
-
-    //public delegate void OnCameraMoveDelegate(Vector3 position);
-    //static public OnCameraMoveDelegate OnCameraMoveCallback;
-
     public delegate void OnPlayerTeamUnitsSetDelegate(string team, string teamUnits);
     static public OnPlayerTeamUnitsSetDelegate OnPlayerTeamUnitsSetCallback;
-
 
     public delegate void OnSendResultsDelegate(string message, int updatedRating);
     private OnSendResultsDelegate _onSendResultsCallback;
 
-    [HideInInspector] public PhotonPlayer EnemyPlayer;
+    [HideInInspector] public int GuestPlayerId;
 
     [SerializeField] private int TeamsAmount = 2;
     [SerializeField] private int TeamSize = 6;
@@ -115,24 +118,36 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     [SerializeField] private int _roomMaxPlayersNotExpectating = 2;
 
     private Hashtable _matchResultshashTable = new Hashtable();
-    private PhotonView _photonView;
 
-    private void Awake()
+    override protected void Awake()
     {
+        base.Awake();
+
         NetworkManager.OnPlayerCustomPropertiesChangedCallback += OnPlayerCustomPropertiesChanged;
         NetworkManager.OnRoomCustomPropertiesChangedCallback += OnRoomCustomPropertiesChanged;
     }
 
     private void Start()
     {
-        _photonView = Instance.gameObject.AddComponent<PhotonView>();
-        _photonView.viewID = 1001;
+        base.setNetworkViewId(1001);
     }
 
     private void OnDestroy()
     {
         NetworkManager.OnPlayerCustomPropertiesChangedCallback -= OnPlayerCustomPropertiesChanged;
         NetworkManager.OnRoomCustomPropertiesChangedCallback -= OnRoomCustomPropertiesChanged;
+    }
+
+    static public string GetOppositeTeamName(string teamName)
+    {
+        string oppositeTeam = "";
+
+        if (teamName == GameNetwork.VirtualPlayerIds.HOST)
+            oppositeTeam = GameNetwork.VirtualPlayerIds.GUEST;
+        else if (teamName == GameNetwork.VirtualPlayerIds.GUEST)
+            oppositeTeam = GameNetwork.VirtualPlayerIds.HOST;
+
+        return oppositeTeam;
     }
 
     public void OnRoomCustomPropertiesChanged(Hashtable updatedProperties)
@@ -151,12 +166,27 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
             if (idPart == RoomCustomProperties.ROUND_NUMBER)
             {
                 if (OnRoundStartedCallback != null)
-                    OnRoundStartedCallback(value);
+                    OnRoundStartedCallback(int.Parse(value));
             }
-            else if (idPart == RoomCustomProperties.UNIT_IN_TURN)
+            else if (idPart == RoomCustomProperties.TEAM_IN_TURN)
             {
-                if (OnUnitTurnStartedCallback != null)
-                    OnUnitTurnStartedCallback(value);
+                if (OnTeamTurnChangedCallback != null)
+                    OnTeamTurnChangedCallback(value);
+            }
+            else if (idPart == RoomCustomProperties.HOST_UNIT_INDEX)
+            {
+                if (OnHostUnitIndexChangedCallback != null)
+                    OnHostUnitIndexChangedCallback(int.Parse(value));
+            }
+            else if (idPart == RoomCustomProperties.GUEST_UNIT_INDEX)
+            {
+                if (OnGuestUnitIndexChangedCallback != null)
+                    OnGuestUnitIndexChangedCallback(int.Parse(value));
+            }
+            else if (idPart == RoomCustomProperties.ACTIONS_LEFT)
+            {
+                if (OnActionStartedCallback != null)
+                    OnActionStartedCallback(int.Parse(value));
             }
             else if (idPart == UnitRoomProperties.HEALTH)
             {
@@ -170,7 +200,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
             {
                 string team = keyParts[1];
 
-                if(OnTeamHealthSetCallback != null)
+                if (OnTeamHealthSetCallback != null)
                     OnTeamHealthSetCallback(team, int.Parse(value));
             }
         }
@@ -260,7 +290,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
     public int GetLocalPlayerPvpLevelNumber()
     {
-        int rating = GetLocalPlayerRating(VirtualPlayerIds.ALLIES);
+        int rating = GetLocalPlayerRating(VirtualPlayerIds.HOST);
         return GetPvpLevelNumberByRating(rating);
     }
 
@@ -303,7 +333,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
             if (status == NetworkManager.StatusOptions.SUCCESS)
             {
                 int updatedRating = response_hash[TransactionKeys.RATING].AsInt;
-                SetLocalPlayerRating(updatedRating, VirtualPlayerIds.ALLIES);
+                SetLocalPlayerRating(updatedRating, VirtualPlayerIds.HOST);
                 _onSendResultsCallback(ServerResponseMessages.SUCCESS, updatedRating);
             }
             else
@@ -374,32 +404,32 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
     public void SetLocalPlayerUnitProperty(string property, string unitName, string value, string virtualPlayerId)
     {
-        SetAnyPlayerUnitProperty(property, unitName, value, virtualPlayerId, GetLocalPlayer());
+        SetAnyPlayerUnitProperty(property, unitName, value, virtualPlayerId, NetworkManager.GetLocalPlayerId());
     }
 
-    public void SetAnyPlayerUnitProperty(string property, string unitName, string value, string virtualPlayerId, PhotonPlayer player)
+    public void SetAnyPlayerUnitProperty(string property, string unitName, string value, string virtualPlayerId, int networkPlayerId)
     {
-        NetworkManager.SetAnyPlayerCustomProperty(property + NetworkManager.Separators.KEYS + unitName, value, virtualPlayerId, player);
+        NetworkManager.SetAnyPlayerCustomProperty(property + NetworkManager.Separators.KEYS + unitName, value, virtualPlayerId, networkPlayerId);
     }
 
     public string GetLocalPlayerUnitProperty(string property, string unitName, string virtualPlayerId)
     {
-        return GetAnyPlayerUnitProperty(property, unitName, virtualPlayerId, GetLocalPlayer());
+        return GetAnyPlayerUnitProperty(property, unitName, virtualPlayerId, NetworkManager.GetLocalPlayerId());
     }
 
     public int GetLocalPlayerUnitPropertyAsInt(string property, string unitName, string virtualPlayerId)
     {
-        return GetAnyPlayerUnitPropertyAsInt(property, unitName, virtualPlayerId, GetLocalPlayer());
+        return GetAnyPlayerUnitPropertyAsInt(property, unitName, virtualPlayerId, NetworkManager.GetLocalPlayerId());
     }
 
-    public int GetAnyPlayerUnitPropertyAsInt(string property, string unitName, string virtualPlayerId, PhotonPlayer player)
+    public int GetAnyPlayerUnitPropertyAsInt(string property, string unitName, string virtualPlayerId, int networkPlayerId)
     {
-        return NetworkManager.GetAnyPlayerCustomPropertyAsInt(property + NetworkManager.Separators.KEYS + unitName, virtualPlayerId, player);
+        return NetworkManager.GetAnyPlayerCustomPropertyAsInt(property + NetworkManager.Separators.KEYS + unitName, virtualPlayerId, networkPlayerId);
     }
 
-    public string GetAnyPlayerUnitProperty(string property, string unitName, string virtualPlayerId, PhotonPlayer player)
+    public string GetAnyPlayerUnitProperty(string property, string unitName, string virtualPlayerId, int networkPlayerId)
     {
-        return NetworkManager.GetAnyPlayerCustomProperty(property + NetworkManager.Separators.KEYS + unitName, virtualPlayerId, player);
+        return NetworkManager.GetAnyPlayerCustomProperty(property + NetworkManager.Separators.KEYS + unitName, virtualPlayerId, networkPlayerId);
     }
 
     public int GetLocalPlayerRating(string virtualPlayerId)
@@ -412,61 +442,10 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         NetworkManager.SetLocalPlayerCustomProperty(PlayerCustomProperties.RATING, newRating.ToString(), virtualPlayerId);
     }
 
-    public int GetAnyPlayerRating(PhotonPlayer player, string virtualPlayerId)
+    public int GetAnyPlayerRating(int networkPlayerId, string virtualPlayerId)
     {
-        return NetworkManager.GetAnyPlayerCustomPropertyAsInt(PlayerCustomProperties.RATING, virtualPlayerId, player);
+        return NetworkManager.GetAnyPlayerCustomPropertyAsInt(PlayerCustomProperties.RATING, virtualPlayerId, networkPlayerId);
     }
-
-    public PhotonPlayer GetLocalPlayer()
-    {
-        return NetworkManager.GetLocalPlayer();
-    }
-
-    public void SetRoundNumber(int roundNumber)
-    {
-        NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.ROUND_NUMBER, roundNumber.ToString());
-    }
-
-    public int GetRoundNumber()
-    {
-        return int.Parse(NetworkManager.GetRoomCustomProperty(GameNetwork.RoomCustomProperties.ROUND_NUMBER));
-    }
-
-    public void SetUnitInTurn(string unitName)
-    {
-        NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.UNIT_IN_TURN, unitName);
-    }
-
-    public string GetUnitInTurn()
-    {
-        return NetworkManager.GetRoomCustomProperty(GameNetwork.RoomCustomProperties.UNIT_IN_TURN);
-    }
-
-    public void SendStartMatch()
-    {
-        _photonView.RPC("startMatch", PhotonTargets.All);   
-    }
-
-    [PunRPC]
-    private void startMatch(PhotonMessageInfo messageInfo)
-    {
-        Debug.Log("startMatch -> sender nickname: " + messageInfo.sender.NickName);
-
-        if (OnStartMatch != null)
-            OnStartMatch();
-    }
-
-    //public void SendCameraMove(Vector3 position)
-    //{
-    //    _photonView.RPC("CameraMove", PhotonTargets.All, position);
-    //}
-
-    //[PunRPC]
-    //private void cameraMove(PhotonMessageInfo messageInfo, Vector3 position)
-    //{
-    //    if (OnCameraMoveCallback != null)
-    //        OnCameraMoveCallback(position);
-    //}
 
     public void JoinOrCreateRoom()
     {

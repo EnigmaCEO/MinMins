@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4362592052017487263}
   - component: {fileID: 2883818665234711840}
+  - component: {fileID: 9114933846075954132}
   m_Layer: 0
   m_Name: GameNetwork
   m_TagString: Untagged
@@ -44,3 +45,38 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PersistBetweenScenes: 1
+  TeamsAmount: 2
+  TeamSize: 6
+  _statIncreaseByLevel: 1.1
+  _retrySendingResultsDelay: 5
+  _experienceNeededPerUnitLevel: 0a0000001e000000460000009600000036010000
+  _ratingsForArena: 000000002c0100005802000084030000b0040000dc050000
+  _roomMaxPlayers: 2
+  _roomMaxPlayersNotExpectating: 2
+--- !u!114 &9114933846075954132
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2494509627556806917}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ownerId: 0
+  group: 0
+  OwnerShipWasTransfered: 0
+  prefixBackup: -1
+  synchronization: 0
+  onSerializeTransformOption: 3
+  onSerializeRigidBodyOption: 2
+  ownershipTransfer: 0
+  ObservedComponents:
+  - {fileID: 0}
+  ObservedComponentsFoldoutOpen: 1
+  viewIdField: 0
+  instantiationId: -1
+  currentMasterID: -1
+  isRuntimeInstantiated: 0

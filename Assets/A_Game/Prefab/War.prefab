@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2185244040754804244}
   - component: {fileID: 2185244040754804245}
+  - component: {fileID: 3122206619754247083}
   m_Layer: 0
   m_Name: War
   m_TagString: Untagged
@@ -50,16 +51,42 @@ MonoBehaviour:
   _teamGridContent: {fileID: 0}
   _readyCheckDelay: 2
   _team1_CloudsLocalPosX: 0.07
-  _battlefieldMovementAmount: 22.94
-  _battlefieldMovementDelay: 0.1
-  _battlefieldMovementTime: 1.5
-  _battlefieldMovementEaseType: 2
   _errorText: {fileID: 0}
   _matchResultsPopUp: {fileID: 0}
   _teamTurnText: {fileID: 0}
   _unitTurnText: {fileID: 0}
-  _alliesHealthFill: {fileID: 0}
-  _enemiesHealthFill: {fileID: 0}
+  _roundNumberText: {fileID: 0}
+  _hostTeamHealthFill: {fileID: 0}
+  _guestTeamHealthFill: {fileID: 0}
   UnitTurnHighlightTransform: {fileID: 0}
   _battleField: {fileID: 0}
   _gameCamera: {fileID: 0}
+  _targetCirclePrefab: {fileID: 8652984424792842986, guid: b74e0e8e2fc47b34bb97a94a6748f9f1,
+    type: 3}
+--- !u!114 &3122206619754247083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2185244040754804246}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ownerId: 0
+  group: 0
+  OwnerShipWasTransfered: 0
+  prefixBackup: -1
+  synchronization: 0
+  onSerializeTransformOption: 3
+  onSerializeRigidBodyOption: 2
+  ownershipTransfer: 0
+  ObservedComponents:
+  - {fileID: 0}
+  ObservedComponentsFoldoutOpen: 1
+  viewIdField: 0
+  instantiationId: -1
+  currentMasterID: -1
+  isRuntimeInstantiated: 0

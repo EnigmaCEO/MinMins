@@ -4,18 +4,29 @@ using UnityEngine;
 
 namespace Enigma.CoreSystems
 {
+    [RequireComponent(typeof(PhotonView))]
     public class NetworkEntity : MonoBehaviour
     {
         private PhotonView _photonView;
 
         protected virtual void Awake()
         {
-            _photonView = GetComponent<PhotonView>();
+            _photonView = GetComponent<PhotonView>();         
         }
 
-        public void SendRpcAll(string methodName, params object[] parameters)
+        protected void setNetworkViewId(int id)
+        {
+            _photonView.viewID = id;
+        }
+
+        public void SendRpcToAll(string methodName, params object[] parameters)
         {
             _photonView.RPC(methodName, PhotonTargets.All, parameters);
+        }
+
+        public void SendRpcToMasterClient(string methodName, params object[] parameters)
+        {
+            _photonView.RPC(methodName, PhotonTargets.MasterClient, parameters);
         }
     }
 }

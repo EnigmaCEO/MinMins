@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Tiny;
 using UnityEngine;
 
-public class Lobby : MonoBehaviour
+public class Lobby : NetworkEntity
 {
     [SerializeField] private int _maxRatingDifferenceToFight = 50;
     [SerializeField] private float _timeToWaitBeforeAiRival = 30; // 30 seconds
@@ -12,8 +12,9 @@ public class Lobby : MonoBehaviour
 
     private bool _isJoiningRoom = false;
 
-    private void Awake()
+    override protected void Awake()
     {
+        base.Awake();
         setDelegates();
     }
 
@@ -44,8 +45,6 @@ public class Lobby : MonoBehaviour
         NetworkManager.OnPlayerConnectedCallback += onPlayerConnected;
         NetworkManager.OnReceivedRoomListUpdateCallback += OnReceivedRoomListUpdate;
         NetworkManager.OnConnectedToMasterCallback += OnConnectedToMaster;
-
-        GameNetwork.OnStartMatch += onStartMatch;
     }
 
     private void removeDelegates()
@@ -55,8 +54,6 @@ public class Lobby : MonoBehaviour
         NetworkManager.OnPlayerConnectedCallback -= onPlayerConnected;
         NetworkManager.OnReceivedRoomListUpdateCallback -= OnReceivedRoomListUpdate;
         NetworkManager.OnConnectedToMasterCallback -= OnConnectedToMaster;
-
-        GameNetwork.OnStartMatch -= onStartMatch;
     }
 
     private void OnConnectedToMaster()
@@ -90,10 +87,10 @@ public class Lobby : MonoBehaviour
             NetworkManager.GetRoom().IsOpen = false;
     }
 
-    private void onPlayerConnected(PhotonPlayer player)
+    private void onPlayerConnected(int networkPlayerId)
     {
         print("Lobby::onPlayerConnected");
-        GameNetwork.Instance.EnemyPlayer = player;
+        GameNetwork.Instance.GuestPlayerId = networkPlayerId;
         StopCoroutine(handleWaitForAiRival());
         sendStartMatch();
     }
@@ -110,7 +107,7 @@ public class Lobby : MonoBehaviour
             GameNetwork gameNetwork = GameNetwork.Instance;
             bool foundRoom = false;
 
-            int thisPlayerRating = gameNetwork.GetLocalPlayerRating(GameNetwork.VirtualPlayerIds.ALLIES);
+            int thisPlayerRating = gameNetwork.GetLocalPlayerRating(GameNetwork.VirtualPlayerIds.HOST);
 
             int roomsCount = rooms.Length;
             for (int i = 0; i < roomsCount; i++)
@@ -119,9 +116,9 @@ public class Lobby : MonoBehaviour
 
                 if (room.IsOpen)
                 {
-                    PhotonPlayer[] playerList = NetworkManager.GetPlayerList();
-                    PhotonPlayer player = playerList[0];
-                    int playerInRoomRating = GameNetwork.Instance.GetAnyPlayerRating(player, GameNetwork.VirtualPlayerIds.ALLIES);
+                    int[] playerIdList = NetworkManager.GetPlayerIdList();
+                    int playerId = playerIdList[0];
+                    int playerInRoomRating = GameNetwork.Instance.GetAnyPlayerRating(playerId, GameNetwork.VirtualPlayerIds.HOST);
                     
                     if (Mathf.Abs(playerInRoomRating - thisPlayerRating) <= _maxRatingDifferenceToFight)
                     {
@@ -137,13 +134,15 @@ public class Lobby : MonoBehaviour
         }
     }
 
-    private void sendStartMatch()
+    public void sendStartMatch()
     {
-        GameNetwork.Instance.SendStartMatch();
+        base.SendRpcToAll("receiveStartMatch");
     }
 
-    private void onStartMatch()
+    [PunRPC]
+    private void receiveStartMatch()
     {
+        Debug.Log("Lobby::receiveStartMatch");
         SceneManager.LoadScene(GameConstants.Scenes.WAR);
     }
 
@@ -162,6 +161,7 @@ public class Lobby : MonoBehaviour
     private void assignAiRival()
     {
         GameStats.Instance.UsesAiForPvp = true;
+        GameNetwork.Instance.GuestPlayerId = NetworkManager.GetLocalPlayerId();
         sendStartMatch();
     }
 }

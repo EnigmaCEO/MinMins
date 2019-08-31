@@ -161,7 +161,7 @@ namespace Enigma.CoreSystems
         public delegate void DestroyDisconnectedPlayerObjectDelegate(PhotonPlayer player);
         static public DestroyDisconnectedPlayerObjectDelegate DestroyDisconnectedPlayerObject;
 
-        public delegate void OnPlayerConnectedDelegate(PhotonPlayer connectedPlayer);
+        public delegate void OnPlayerConnectedDelegate(int connectedPlayerId);
         static public OnPlayerConnectedDelegate OnPlayerConnectedCallback;
 
         public delegate void OnPlayerDisconnectedDelegate(PhotonPlayer disconnectedPlayer);
@@ -197,26 +197,26 @@ namespace Enigma.CoreSystems
 
         // global active player
         static public JSONNode ActiveCharacter;
-         
 
-        protected override void Awake ()
+
+        protected override void Awake()
         {
             Debug.Log("NetworkManager::Awake");
         }
 
-        protected override void Start ()
+        protected override void Start()
         {
-            base.Start ();
-            Data = new Dictionary<string, Hashtable> ();
+            base.Start();
+            Data = new Dictionary<string, Hashtable>();
 
             NetworkManager.Transaction(Transactions.IP_AND_COUNTRY, new Hashtable(), GetIpAndCountry);
         }
 
-        public delegate void Callback (JSONNode data);
-        public delegate void TextureCallback (Texture2D data);
-        public delegate void ImageCallback ();
+        public delegate void Callback(JSONNode data);
+        public delegate void TextureCallback(Texture2D data);
+        public delegate void ImageCallback();
 
-        static public void SetServer (string url)
+        static public void SetServer(string url)
         {
             _serverUrl = url;
         }
@@ -232,12 +232,12 @@ namespace Enigma.CoreSystems
             Instance.StartCoroutine(heartbeat(onHeartBeat));
         }
 
-        static public void SetSessionID (string id)
+        static public void SetSessionID(string id)
         {
             _sessionID = id;
         }
 
-        static public string GetSessionID ()
+        static public string GetSessionID()
         {
             return _sessionID;
         }
@@ -264,26 +264,26 @@ namespace Enigma.CoreSystems
             Instance.StartCoroutine(httpRequest(id, hashtable, externalCallback, localCallback, texture));
         }
 
-        static public void Transaction (int id, Hashtable hashtable, Callback externalCallback = null, Callback localCallback = null, TextureCallback texture = null)
+        static public void Transaction(int id, Hashtable hashtable, Callback externalCallback = null, Callback localCallback = null, TextureCallback texture = null)
         {
             Debug.Log(Instance);
-            Instance.StartCoroutine (httpRequest (id, hashtable, externalCallback, localCallback, texture));
+            Instance.StartCoroutine(httpRequest(id, hashtable, externalCallback, localCallback, texture));
         }
 
-        static private IEnumerator httpRequest (int id, Hashtable hashtable, Callback externalCallback, Callback localCallback, TextureCallback texture)
+        static private IEnumerator httpRequest(int id, Hashtable hashtable, Callback externalCallback, Callback localCallback, TextureCallback texture)
         {
             string url = _serverUrl + "/trans/" + id + ".php";
             string sec = "";
 
-            WWWForm formData = new WWWForm ();
-            formData.AddField (TransactionKeys.TID, id);
-            if (_sessionID != null) 
-                formData.AddField (TransactionKeys.SSID, _sessionID);
-            
+            WWWForm formData = new WWWForm();
+            formData.AddField(TransactionKeys.TID, id);
+            if (_sessionID != null)
+                formData.AddField(TransactionKeys.SSID, _sessionID);
+
             foreach (DictionaryEntry pair in hashtable)
             {
-                Debug.Log (pair.Key + " " + pair.Value);
-                if (pair.Key.ToString() == TransactionKeys.IMAGE) 
+                Debug.Log(pair.Key + " " + pair.Value);
+                if (pair.Key.ToString() == TransactionKeys.IMAGE)
                     formData.AddBinaryData(TransactionKeys.IMAGE_UPLOAD, pair.Value as byte[], "image.png", "image/png");
                 else
                 {
@@ -301,73 +301,73 @@ namespace Enigma.CoreSystems
 
             formData.AddField(TransactionKeys.SEC, sec);
 
-            Debug.Log ("url: " + url);
+            Debug.Log("url: " + url);
             var www = UnityWebRequest.Post(url, formData);
             yield return www.SendWebRequest();
 
             if (www.isNetworkError || www.isHttpError)
             {
-                Debug.Log (www.error + " on transaction: " + id.ToString ());
+                Debug.Log(www.error + " on transaction: " + id.ToString());
 
                 JSONNode response = JSON.Parse(www.error);
 
-                if (localCallback != null) 
+                if (localCallback != null)
                     localCallback(response);
-                
+
                 externalCallback(response);
 
-                #if UNITY_ANDROID
-                EtceteraAndroid.showAlert ("Network Error", "Error connecting to the server. Restart the app and retry.", "OK");
-                #endif
+#if UNITY_ANDROID
+                EtceteraAndroid.showAlert("Network Error", "Error connecting to the server. Restart the app and retry.", "OK");
+#endif
 
-                #if UNITY_IPHONE
+#if UNITY_IPHONE
                 var buttons = new string[] { "OK" };
-                #endif
+#endif
 
             }
             else
             {
                 if (externalCallback != null)
                 {
-                    JSONNode response = JSON.Parse (www.downloadHandler.text);
+                    JSONNode response = JSON.Parse(www.downloadHandler.text);
 
                     if (localCallback != null)
-                        localCallback (response);
+                        localCallback(response);
 
-                    externalCallback (response);
+                    externalCallback(response);
                 }
-                if (texture != null) 
-                    texture (((DownloadHandlerTexture)www.downloadHandler).texture);
+                if (texture != null)
+                    texture(((DownloadHandlerTexture)www.downloadHandler).texture);
             }
         }
 
-        static public string Url_create_parameters (Hashtable my_hash)
+        static public string Url_create_parameters(Hashtable my_hash)
         {
             string parameters = "";
-            foreach (DictionaryEntry hash_entry in my_hash) 
+            foreach (DictionaryEntry hash_entry in my_hash)
                 parameters = parameters + "&" + hash_entry.Key + "=" + hash_entry.Value;
 
             return parameters;
         }
 
         // from unity wiki
-        static public string Md5Sum (string strToEncrypt)
+        static public string Md5Sum(string strToEncrypt)
         {
-            System.Text.UTF8Encoding ue = new System.Text.UTF8Encoding ();
-            byte[] bytes = ue.GetBytes (strToEncrypt);
+            System.Text.UTF8Encoding ue = new System.Text.UTF8Encoding();
+            byte[] bytes = ue.GetBytes(strToEncrypt);
 
             // encrypt bytes
-            System.Security.Cryptography.MD5CryptoServiceProvider md5 = new System.Security.Cryptography.MD5CryptoServiceProvider ();
-            byte[] hashBytes = md5.ComputeHash (bytes);
+            System.Security.Cryptography.MD5CryptoServiceProvider md5 = new System.Security.Cryptography.MD5CryptoServiceProvider();
+            byte[] hashBytes = md5.ComputeHash(bytes);
 
             // Convert the encrypted bytes back to a string (base 16)
             string hashString = "";
 
-            for (int i = 0; i < hashBytes.Length; i++) 
-                hashString += System.Convert.ToString (hashBytes [i], 16).PadLeft (2, '0');
-            
+            for (int i = 0; i < hashBytes.Length; i++)
+                hashString += System.Convert.ToString(hashBytes[i], 16).PadLeft(2, '0');
 
-            return hashString.PadLeft (32, '0');
+
+            return hashString.PadLeft(32, '0');
         }
 
         //Callback for Transaction 0 (getting user IP and country)
@@ -412,52 +412,52 @@ namespace Enigma.CoreSystems
                 NetworkManager.SetSessionID(ssid);
         }
 
-        static public void Login (string user, string pw, Callback callback = null, Hashtable extras = null)
+        static public void Login(string user, string pw, Callback callback = null, Hashtable extras = null)
         {
-            Hashtable hashtable = new Hashtable ();
-            hashtable.Add (TransactionKeys.USER, user);
-            hashtable.Add (TransactionKeys.PW_HASH, pw);
+            Hashtable hashtable = new Hashtable();
+            hashtable.Add(TransactionKeys.USER, user);
+            hashtable.Add(TransactionKeys.PW_HASH, pw);
 
             if (extras != null)
-                hashtable.Merge (extras);
+                hashtable.Merge(extras);
 
-            Transaction (Transactions.LOGIN, hashtable, callback, LoginResult);
+            Transaction(Transactions.LOGIN, hashtable, callback, LoginResult);
         }
 
-        static private void LoginResult (JSONNode response)
+        static private void LoginResult(JSONNode response)
         {
             if (response == null)
                 return;
 
-            JSONNode response_hash = response [0];
-            string status = response_hash [TransactionKeys.STATUS].ToString ().Trim ('"');
-            string ssid = response_hash [TransactionKeys.SSID].ToString ().Trim ('"');
+            JSONNode response_hash = response[0];
+            string status = response_hash[TransactionKeys.STATUS].ToString().Trim('"');
+            string ssid = response_hash[TransactionKeys.SSID].ToString().Trim('"');
 
-            Debug.Log ("LoginResult: " + response_hash.ToString());
+            Debug.Log("LoginResult: " + response_hash.ToString());
 
-            if (status == StatusOptions.SUCCESS) 
-                NetworkManager.SetSessionID (ssid);
+            if (status == StatusOptions.SUCCESS)
+                NetworkManager.SetSessionID(ssid);
         }
 
-        static public void SetData (string key, Hashtable val)
+        static public void SetData(string key, Hashtable val)
         {
-            if (Data.ContainsKey (key))
-                Data.Remove (key);
+            if (Data.ContainsKey(key))
+                Data.Remove(key);
 
-            Data.Add (key, val);
+            Data.Add(key, val);
         }
 
-        static public void GetIAP (JSONNode response)
+        static public void GetIAP(JSONNode response)
         {
-            JSONNode response_hash = response [0];
-            string status = response_hash [TransactionKeys.STATUS].ToString ().Trim ('"');
-            JSONNode data = response_hash [TransactionKeys.STORE];
+            JSONNode response_hash = response[0];
+            string status = response_hash[TransactionKeys.STATUS].ToString().Trim('"');
+            JSONNode data = response_hash[TransactionKeys.STORE];
 
             if (status == StatusOptions.SUCCESS)
             {
-        #if !UNITY_STANDALONE
-            //IAPManager.LoadData(data);
-        #endif
+#if !UNITY_STANDALONE
+                //IAPManager.LoadData(data);
+#endif
             }
         }
 
@@ -504,7 +504,7 @@ namespace Enigma.CoreSystems
             {
                 if (GetInRoom())
                     LeaveRoom();
-                
+
                 return;
             }
 
@@ -573,7 +573,7 @@ namespace Enigma.CoreSystems
         static public bool CreateRoom(string roomName, bool isVisible, bool isOpen, int maxPlayers, Hashtable customRoomProperties,
                                         string[] propsToListInLobby, int maxPlayersNotExpectating)
         {
-            RoomOptions options = getRoomOptions(isVisible, isOpen, maxPlayers, customRoomProperties, propsToListInLobby, maxPlayersNotExpectating);   
+            RoomOptions options = getRoomOptions(isVisible, isOpen, maxPlayers, customRoomProperties, propsToListInLobby, maxPlayersNotExpectating);
             return PhotonNetwork.CreateRoom(roomName, options, null);
         }
 
@@ -670,10 +670,20 @@ namespace Enigma.CoreSystems
             return PhotonNetwork.playerName;
         }
 
+        static public int GetLocalPlayerId()
+        {
+            return GetLocalPlayer().ID;
+        }
+
         //Get the local PhotonPlayer (local user)
         static public PhotonPlayer GetLocalPlayer()
         {
             return PhotonNetwork.player;
+        }
+
+        static PhotonPlayer GetNetworkPlayerById(int id)
+        {
+            return PhotonPlayer.Find(id);
         }
 
         //Set a PhotonPlayer's tag object
@@ -723,6 +733,18 @@ namespace Enigma.CoreSystems
             return PhotonNetwork.playerList;
         }
 
+        static public int[] GetPlayerIdList()
+        {
+            PhotonPlayer[] photonPlayerList = GetPlayerList();
+
+            int length = photonPlayerList.Length;
+            int[] idList = new int[length];
+            for (int i = 0; i < length; i++)
+                idList[i] = photonPlayerList[i].ID;
+
+            return idList;
+        }
+
         //Get the list of players in the room, excluding
         //the user
         static public PhotonPlayer[] GetOtherPlayerList()
@@ -737,10 +759,10 @@ namespace Enigma.CoreSystems
             return PhotonNetwork.FindFriends(friendsToFind);
         }
 
-        static public void SetAnyPlayerCustomProperty(string key, string value, string virtualPlayerId, PhotonPlayer player)
+        static public void SetAnyPlayerCustomProperty(string key, string value, string virtualPlayerId, int networkPlayerId)
         {
             string virtualPlayerKey = virtualPlayerId + Separators.VIRTUAL_PLAYER_KEY + key;
-            print("NetworkManager::SetAnyPlayerCustomProperty -> virtualPlayerKey: " + virtualPlayerKey + " photonPlayerId:" + player.ID);
+            print("NetworkManager::SetAnyPlayerCustomProperty -> virtualPlayerKey: " + virtualPlayerKey + " photonPlayerId:" + networkPlayerId);
 
             if (IsPhotonOffline())
             {
@@ -749,9 +771,9 @@ namespace Enigma.CoreSystems
 
                 if (!Data[DataGroups.INFO].ContainsKey(DataKeys.PLAYER))
                     Data[DataGroups.INFO].Add(DataKeys.PLAYER, new Hashtable());
-               
+
                 Hashtable userData = Data[DataGroups.INFO][DataKeys.PLAYER] as Hashtable;
-                
+
                 if (!userData.ContainsKey(virtualPlayerKey))
                 {
                     if (value != null)
@@ -778,24 +800,24 @@ namespace Enigma.CoreSystems
                 ExitGames.Client.Photon.Hashtable photonHTable = new ExitGames.Client.Photon.Hashtable();
                 photonHTable.Add(virtualPlayerKey, value);
                 print("NetworkManager::SetAnyPlayerCustomProperty -> photonHTable.ToStringFull(): " + photonHTable.ToStringFull());
-                player.SetCustomProperties(photonHTable);
+                PhotonPlayer.Find(networkPlayerId).SetCustomProperties(photonHTable);
             }
         }
 
         static public void SetLocalPlayerCustomProperty(string key, string value, string virtualPlayerId)
         {
-            SetAnyPlayerCustomProperty(key, value, virtualPlayerId, GetLocalPlayer());
+            SetAnyPlayerCustomProperty(key, value, virtualPlayerId, GetLocalPlayerId());
         }
 
-        static public int GetAnyPlayerCustomPropertyAsInt(string key, string virtualPlayerId, PhotonPlayer player)
+        static public int GetAnyPlayerCustomPropertyAsInt(string key, string virtualPlayerId, int networkPlayerId)
         {
-            return int.Parse(GetAnyPlayerCustomProperty(key, virtualPlayerId, player));
+            return int.Parse(GetAnyPlayerCustomProperty(key, virtualPlayerId, networkPlayerId));
         }
 
-        static public string GetAnyPlayerCustomProperty(string key, string virtualPlayerId, PhotonPlayer player)
+        static public string GetAnyPlayerCustomProperty(string key, string virtualPlayerId, int networkPlayerId)
         {
             string virtualPlayerKey = virtualPlayerId + Separators.VIRTUAL_PLAYER_KEY + key;
-            print("NetworkManager::GetAnyPlayerCustomProperty -> virtualPlayerKey: " + virtualPlayerKey + " playerID: " + player.ID);
+            print("NetworkManager::GetAnyPlayerCustomProperty -> virtualPlayerKey: " + virtualPlayerKey + " playerID: " + networkPlayerId);
 
             if (IsPhotonOffline())
             {
@@ -811,8 +833,8 @@ namespace Enigma.CoreSystems
             }
             else  // Online
             {
-                print("NetworkManager::GetAnyPlayerCustomProperty -> player.CustomProperties.ToStringFull(): " + player.CustomProperties.ToStringFull());
-                return player.CustomProperties[virtualPlayerKey].ToString();
+                print("NetworkManager::GetAnyPlayerCustomProperty -> player.CustomProperties.ToStringFull(): " + PhotonPlayer.Find(networkPlayerId).CustomProperties.ToStringFull());
+                return PhotonPlayer.Find(networkPlayerId).CustomProperties[virtualPlayerKey].ToString();
             }
         }
 
@@ -823,7 +845,7 @@ namespace Enigma.CoreSystems
 
         static public string GetLocalPlayerCustomProperty(string key, string virtualPlayerId)
         {
-            return GetAnyPlayerCustomProperty(key, virtualPlayerId, GetLocalPlayer());
+            return GetAnyPlayerCustomProperty(key, virtualPlayerId, GetLocalPlayerId());
         }
 
         //Helper for testing
@@ -1058,7 +1080,7 @@ namespace Enigma.CoreSystems
             }
 
             if (OnPlayerConnectedCallback != null)
-                OnPlayerConnectedCallback(connectedPlayer);
+                OnPlayerConnectedCallback(connectedPlayer.ID);
         }
 
         void OnPhotonPlayerDisconnected(PhotonPlayer disconnectedPlayer)

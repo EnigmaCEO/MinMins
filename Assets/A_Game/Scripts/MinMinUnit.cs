@@ -35,20 +35,20 @@ public class MinMinUnit : NetworkEntity
         // ...
     }
 
-    public void SendSetForWar(string unitName, string teamName, int teamIndex, float posX, float posY)
+    public void SendSettingsForWar(string unitName, string teamName, int teamIndex, float posX, float posY)
     {
-        SendRpcAll("setForWar", unitName, teamName, teamIndex, posX, posY);
+        SendRpcToAll("receiveSettingsForWar", unitName, teamName, teamIndex, posX, posY);
     }
 
     [PunRPC]
-    private void setForWar(PhotonMessageInfo photonMessageInfo, string unitName, string teamName, int teamIndex, float posX, float posY)
+    private void receiveSettingsForWar(PhotonMessageInfo photonMessageInfo, string unitName, string teamName, int teamIndex, float posX, float posY)
     {
         name = unitName;
         string gridName = War.GetTeamGridName(teamName);
         int slotNumber = teamIndex + 1;
         transform.SetParent(GameObject.Find("Battlefield/" + gridName + "/slot" + slotNumber).transform);
 
-        War.GetSceneInstance().GetTeamUnitsList(teamName).Add(this);
+        War.GetSceneInstance().GetTeamUnitsDictionary(teamName).Add(unitName, this);
 
         transform.localPosition = Vector2.zero;
         Transform spriteTransform = transform.Find("Sprite");
@@ -62,7 +62,7 @@ public class MinMinUnit : NetworkEntity
         shadow.transform.localScale = new Vector2(-1, 1);
 
 
-        bool isAllies = (teamName == GameNetwork.VirtualPlayerIds.ALLIES);
+        bool isAllies = (teamName == GameNetwork.VirtualPlayerIds.HOST);
 
         if (!isAllies)
         {
