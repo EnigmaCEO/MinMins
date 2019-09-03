@@ -104,10 +104,9 @@ public class Lobby : NetworkEntity
         else
         {
             GameInventory gameInventory = GameInventory.Instance;
-            GameNetwork gameNetwork = GameNetwork.Instance;
             bool foundRoom = false;
 
-            int thisPlayerRating = gameNetwork.GetLocalPlayerRating(GameNetwork.VirtualPlayerIds.HOST);
+            int thisPlayerRating = GameNetwork.GetLocalPlayerRating(GameNetwork.VirtualPlayerIds.HOST);
 
             int roomsCount = rooms.Length;
             for (int i = 0; i < roomsCount; i++)
@@ -118,7 +117,7 @@ public class Lobby : NetworkEntity
                 {
                     int[] playerIdList = NetworkManager.GetPlayerIdList();
                     int playerId = playerIdList[0];
-                    int playerInRoomRating = GameNetwork.Instance.GetAnyPlayerRating(playerId, GameNetwork.VirtualPlayerIds.HOST);
+                    int playerInRoomRating = GameNetwork.GetAnyPlayerRating(playerId, GameNetwork.VirtualPlayerIds.HOST);
                     
                     if (Mathf.Abs(playerInRoomRating - thisPlayerRating) <= _maxRatingDifferenceToFight)
                     {

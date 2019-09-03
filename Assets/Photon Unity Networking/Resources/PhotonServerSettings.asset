@@ -52,4 +52,5 @@ MonoBehaviour:
   - receivePlayerTargetInput
   - receiveSettingsForWar
   - receiveStartMatch
+  - receiveSetupData
   DisableAutoOpenWizard: 1

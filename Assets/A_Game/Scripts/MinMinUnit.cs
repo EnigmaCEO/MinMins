@@ -18,7 +18,7 @@ public class MinMinUnit : NetworkEntity
     public int Defense = 1;
     public int MaxHealth = 5;
 
-    public int EffectScale = 1;
+    public float EffectScale = 1;
 
     public int Effect;
     public Types Type;
