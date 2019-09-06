@@ -18,4 +18,5 @@ public class GameStats : SingletonMonobehaviour<GameStats>
     public bool IsEnjinLinked = false;
     public List<Vector3> PreparationPositions = new List<Vector3>();
     public List<string> TeamUnits = new List<string>();
+    public int Rating = 0;
 }

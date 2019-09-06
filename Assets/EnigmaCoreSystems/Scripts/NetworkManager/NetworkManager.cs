@@ -57,15 +57,6 @@ namespace Enigma.CoreSystems
             public const string ENJIN_CODE = "enjin_code";
         }
 
-        public class RoomPropertyOptions
-        {
-            public const string GAME_STATE = "gState";
-            public const string START_COUNT_DOWN_TIMER = "st";
-            public const string PLAYER_LIST = "playerList";
-            public const string HOST = "host";
-            public const string MAX_PLAYERS = "mp";
-        }
-
         public class PlayerPropertyOptions
         {
             public const string PLAYER_STATE = "plState";
@@ -800,7 +791,7 @@ namespace Enigma.CoreSystems
                 ExitGames.Client.Photon.Hashtable photonHTable = new ExitGames.Client.Photon.Hashtable();
                 photonHTable.Add(virtualPlayerKey, value);
                 print("NetworkManager::SetAnyPlayerCustomProperty -> photonHTable.ToStringFull(): " + photonHTable.ToStringFull());
-                PhotonPlayer.Find(networkPlayerId).SetCustomProperties(photonHTable);
+                GetNetworkPlayerById(networkPlayerId).SetCustomProperties(photonHTable);
             }
         }
 
@@ -834,7 +825,7 @@ namespace Enigma.CoreSystems
             else  // Online
             {
                 print("NetworkManager::GetAnyPlayerCustomProperty -> player.CustomProperties.ToStringFull(): " + PhotonPlayer.Find(networkPlayerId).CustomProperties.ToStringFull());
-                return PhotonPlayer.Find(networkPlayerId).CustomProperties[virtualPlayerKey].ToString();
+                return GetNetworkPlayerById(networkPlayerId).CustomProperties[virtualPlayerKey].ToString();
             }
         }
 
@@ -860,6 +851,7 @@ namespace Enigma.CoreSystems
         /// </summary>
         static public void SetRoomCustomProperty(object key, object value)
         {
+            Debug.Log("NetworkManager::SetRoomCustomProperty -> key: " + key.ToString() + " value: " + value.ToString());
             if (IsPhotonOffline())
             {
                 if (!Data.ContainsKey(DataGroups.INFO))
@@ -898,6 +890,7 @@ namespace Enigma.CoreSystems
 
         static public string GetRoomCustomProperty(object key)
         {
+            Debug.Log("GetRoomCustomProperty -> key: " + key);
             if (IsPhotonOffline())
             {
                 if (!Data.ContainsKey(DataGroups.INFO))
@@ -910,7 +903,10 @@ namespace Enigma.CoreSystems
                 return userData[key].ToString().Trim('"');
             }
             else  // Online
+            {
+                Debug.Log("GetRoomCustomProperty -> PhotonNetwork.room.CustomProperties.ToStringFull(): " + PhotonNetwork.room.CustomProperties.ToStringFull());
                 return PhotonNetwork.room.CustomProperties[key].ToString();
+            }
         }
 
         ///<summary>
@@ -957,25 +953,25 @@ namespace Enigma.CoreSystems
         }
 
         //Get Photon Network time
-        static public double GetPhotonTime()
+        static public double GetNetworkTime()
         {
             return PhotonNetwork.time;
         }
 
         //Load another scene with every player in the room
-        static public void PhotonLoadLevel(string sceneName)
+        static public void NetworkLoadLevel(string sceneName)
         {
             PhotonNetwork.LoadLevel(sceneName);
         }
 
         //Destroy a Photon Instantiated GameObject
-        static public void PhotonDestroy(GameObject gameObj)
+        static public void NetworkDestroy(GameObject gameObj)
         {
             PhotonNetwork.Destroy(gameObj);
         }
 
         //Destroy a Photon Instantiated GameObject with delay
-        static public IEnumerator PhotonDestroyWithDelayCoroutine(GameObject gameObj, float delay)
+        static public IEnumerator NetworkDestroyWithDelayCoroutine(GameObject gameObj, float delay)
         {
             yield return new WaitForSeconds(delay);
             PhotonNetwork.Destroy(gameObj);

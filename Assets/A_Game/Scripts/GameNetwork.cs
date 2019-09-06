@@ -42,6 +42,12 @@ public class GameNetwork : SingletonNetworkEntity<GameNetwork>
         public const string GUEST_UNIT_INDEX = "Guest_Unit_Index";
         public const string ACTIONS_LEFT = "Actions_Left";
         public const string START_COUNT_DOWN_TIMER = "st";
+
+        //public const string GAME_STATE = "gState";
+        //public const string PLAYER_LIST = "playerList";
+        //public const string HOST = "host";
+        public const string HOST_RATING = "Host_Rating";
+        //public const string MAX_PLAYERS = "mp";
     }
 
     public class UnitRoomProperties
@@ -104,7 +110,7 @@ public class GameNetwork : SingletonNetworkEntity<GameNetwork>
     public delegate void OnSendResultsDelegate(string message, int updatedRating);
     private OnSendResultsDelegate _onSendResultsCallback;
 
-    [HideInInspector] public int GuestPlayerId;
+    [HideInInspector] public int GuestPlayerId = -1;
 
     [SerializeField] private int TeamsAmount = 2;
     [SerializeField] private int TeamSize = 6;
@@ -240,7 +246,7 @@ public class GameNetwork : SingletonNetworkEntity<GameNetwork>
         }
     }
 
-    public void SendMatchResults(War.MatchData matchData, OnSendResultsDelegate onSendMatchResultsCallback)
+    public void SendMatchResultsToServer(War.MatchData matchData, OnSendResultsDelegate onSendMatchResultsCallback)
     {
         _onSendResultsCallback = onSendMatchResultsCallback;
 
@@ -262,7 +268,7 @@ public class GameNetwork : SingletonNetworkEntity<GameNetwork>
         return maxExp;
     }
 
-    public void BuildUnitLevels(string unitName, int unitExp, string virtualPlayerId)
+    public void BuildUnitLevels(string unitName, int unitExp, int networkPlayerId, string virtualPlayerId)
     {
         int unitLevel = 1;
         int maxLevelIndexToCheck = _experienceNeededPerUnitLevel.Count - 2;
@@ -277,20 +283,20 @@ public class GameNetwork : SingletonNetworkEntity<GameNetwork>
         }
 
         MinMinUnit minMin = GameInventory.Instance.GetMinMinFromResources(unitName);
-        SetLocalPlayerUnitProperty(UnitPlayerProperties.LEVEL, unitName, unitLevel.ToString(), virtualPlayerId);
-        SetLocalPlayerUnitProperty(UnitPlayerProperties.STRENGHT, unitName, getStatByLevel(minMin.Strength, unitLevel), virtualPlayerId);
-        SetLocalPlayerUnitProperty(UnitPlayerProperties.DEFENSE, unitName, getStatByLevel(minMin.Defense, unitLevel), virtualPlayerId);
-        SetLocalPlayerUnitProperty(UnitPlayerProperties.EFFECT_SCALE, unitName, getStatByLevel(minMin.EffectScale, unitLevel), virtualPlayerId);
+        SetAnyPlayerUnitProperty(UnitPlayerProperties.LEVEL, unitName, unitLevel.ToString(), virtualPlayerId, networkPlayerId);
+        SetAnyPlayerUnitProperty(UnitPlayerProperties.STRENGHT, unitName, getStatByLevel(minMin.Strength, unitLevel), virtualPlayerId, networkPlayerId);
+        SetAnyPlayerUnitProperty(UnitPlayerProperties.DEFENSE, unitName, getStatByLevel(minMin.Defense, unitLevel), virtualPlayerId, networkPlayerId);
+        SetAnyPlayerUnitProperty(UnitPlayerProperties.EFFECT_SCALE, unitName, getStatByLevel(minMin.EffectScale, unitLevel), virtualPlayerId, networkPlayerId);
 
         string maxHealth = getStatByLevel(minMin.MaxHealth, unitLevel);
         SetRoomUnitProperty(UnitRoomProperties.MAX_HEALTH, virtualPlayerId, unitName, maxHealth);
-        //SetUnitHealth(virtualPlayerId, unitName, int.Parse(maxHealth));
-        SetUnitHealth(virtualPlayerId, unitName, (int.Parse(maxHealth))/2); //TODO: Remove text hack
+        SetUnitHealth(virtualPlayerId, unitName, int.Parse(maxHealth));
+        //SetUnitHealth(virtualPlayerId, unitName, (int.Parse(maxHealth))/2); //TODO: Remove text hack
     }
 
     public int GetLocalPlayerPvpLevelNumber()
     {
-        int rating = GetLocalPlayerRating(VirtualPlayerIds.HOST);
+        int rating = GameStats.Instance.Rating;
         return GetPvpLevelNumberByRating(rating);
     }
 
@@ -465,14 +471,17 @@ public class GameNetwork : SingletonNetworkEntity<GameNetwork>
     public void JoinOrCreateRoom()
     {
         string roomName = "1v1 - " + NetworkManager.GetPlayerName();
-        string[] customPropsForLobby = new string[] { NetworkManager.RoomPropertyOptions.PLAYER_LIST, NetworkManager.RoomPropertyOptions.HOST };
-        NetworkManager.JoinOrCreateRoom(roomName, true, true, _roomMaxPlayers, getCustomProps(), customPropsForLobby, _roomMaxPlayersNotExpectating);
+        NetworkManager.JoinOrCreateRoom(roomName, true, true, _roomMaxPlayers, getCustomProps(), getCustomPropsForLobby(), _roomMaxPlayersNotExpectating);
     }
 
     public void CreateRoom(string roomName)
     {
-        string[] customPropsForLobby = new string[] { NetworkManager.RoomPropertyOptions.PLAYER_LIST, NetworkManager.RoomPropertyOptions.HOST };
-        NetworkManager.CreateRoom(roomName, true, true, _roomMaxPlayers, getCustomProps(), customPropsForLobby, _roomMaxPlayersNotExpectating);
+        NetworkManager.CreateRoom(roomName, true, true, _roomMaxPlayers, getCustomProps(), getCustomPropsForLobby(), _roomMaxPlayersNotExpectating);
+    }
+
+    private string[] getCustomPropsForLobby()
+    {
+        return new string[] { RoomCustomProperties.HOST_RATING };
     }
 
     private Hashtable getCustomProps()
@@ -482,10 +491,12 @@ public class GameNetwork : SingletonNetworkEntity<GameNetwork>
         playerList.Add(NetworkManager.GetPlayerName());
 
         Hashtable customProps = new Hashtable();
-        customProps.Add(NetworkManager.RoomPropertyOptions.PLAYER_LIST, playerList.ToArray());
-        customProps.Add(NetworkManager.RoomPropertyOptions.HOST, NetworkManager.GetPlayerName());
+        customProps.Add(RoomCustomProperties.HOST_RATING, GameStats.Instance.Rating);
+        //customProps.Add(RoomCustomProperties.PLAYER_LIST, playerList.ToArray());
+        //customProps.Add(RoomCustomProperties.HOST, NetworkManager.GetPlayerName());
+        //customProps.Add(RoomCustomProperties.HOST_ID, NetworkManager.GetLocalPlayerId());
 
-        customProps.Add(NetworkManager.RoomPropertyOptions.MAX_PLAYERS, _roomMaxPlayers);
+        //customProps.Add(RoomCustomProperties.MAX_PLAYERS, _roomMaxPlayers);
 
         return customProps;
     }

@@ -53,4 +53,5 @@ MonoBehaviour:
   - receiveSettingsForWar
   - receiveStartMatch
   - receiveSetupData
+  - receiveMatchResults
   DisableAutoOpenWizard: 1

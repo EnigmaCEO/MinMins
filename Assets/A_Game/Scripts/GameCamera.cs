@@ -27,7 +27,7 @@ public class GameCamera : MonoBehaviour
     public void HandleMovement(string teamInTurn, MinMinUnit.Types unitType)
     {
         string oppositeTeam = GameNetwork.GetOppositeTeamName(teamInTurn);
-
+        
         if ((unitType == MinMinUnit.Types.Bombers) || (unitType == MinMinUnit.Types.Destroyers) || (unitType == MinMinUnit.Types.Scouts))
             moveToSide(oppositeTeam);
         else
@@ -36,6 +36,8 @@ public class GameCamera : MonoBehaviour
 
     private void moveToSide(string sideToMoveTeam)
     {
+        print("moveToSide: " + sideToMoveTeam +  " _positionSideTeam: " + _positionSideTeam);
+
         if (sideToMoveTeam == _positionSideTeam)
         {
             if (OnMovementCompletedCallback != null)
@@ -50,10 +52,16 @@ public class GameCamera : MonoBehaviour
             else if (sideToMoveTeam == GameNetwork.VirtualPlayerIds.GUEST)
                 sideTransform = _team2_transform;
 
-            iTween.MoveTo(gameObject, iTween.Hash("position", sideTransform.position, "easeType", iTween.EaseType.easeInOutExpo,
+            Vector3 currentPos = transform.position;
+            Vector3 sideTransformPos = sideTransform.position;
+            Vector3 targetPos = new Vector3(sideTransformPos.x, currentPos.y, currentPos.z);
+
+            iTween.MoveTo(gameObject, iTween.Hash("position", targetPos, "easeType", iTween.EaseType.easeInOutExpo,
                                                 "loopType", iTween.LoopType.none, "delay", _movementDelay,
                                                 "time", _movementTime, "oncomplete", "movementReady",
                                                 "oncompleteparams", iTween.Hash("teamName", sideToMoveTeam)));
+
+            _positionSideTeam = sideToMoveTeam;
         }
     }
 

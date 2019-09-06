@@ -7,11 +7,11 @@ public class MinMinUnit : NetworkEntity
 {
     public enum Types
     {
-        Scouts,
         Bombers,
+        Healers,
         Tanks,
         Destroyers,
-        Healers
+        Scouts,
     }
 
     public int Strength = 1;
@@ -29,19 +29,13 @@ public class MinMinUnit : NetworkEntity
         base.Awake();
     }
 
-    void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    {
-        //Debug.Log("OnPhotonSerializeView()");
-        // ...
-    }
-
     public void SendSettingsForWar(string unitName, string teamName, int teamIndex, float posX, float posY)
     {
         SendRpcToAll("receiveSettingsForWar", unitName, teamName, teamIndex, posX, posY);
     }
 
     [PunRPC]
-    private void receiveSettingsForWar(PhotonMessageInfo photonMessageInfo, string unitName, string teamName, int teamIndex, float posX, float posY)
+    private void receiveSettingsForWar(string unitName, string teamName, int teamIndex, float posX, float posY)
     {
         name = unitName;
         string gridName = War.GetTeamGridName(teamName);

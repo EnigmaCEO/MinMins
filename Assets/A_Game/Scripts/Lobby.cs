@@ -80,11 +80,15 @@ public class Lobby : NetworkEntity
         print("Lobby::OnJoinedRoom -> Is Master Client: " + NetworkManager.GetIsMasterClient());
         if (NetworkManager.GetIsMasterClient())
         {
+            print("Lobby::OnJoinedRoom -> room.CustomProperties: " + NetworkManager.GetRoom().CustomProperties.ToStringFull());
             _waitingPopUp.SetActive(true);
             StartCoroutine(handleWaitForAiRival());
         }
         else
+        {
+            GameNetwork.SetLocalPlayerRating(GameStats.Instance.Rating, GameNetwork.VirtualPlayerIds.GUEST);
             NetworkManager.GetRoom().IsOpen = false;
+        }
     }
 
     private void onPlayerConnected(int networkPlayerId)
@@ -99,6 +103,7 @@ public class Lobby : NetworkEntity
     {
         print("Lobby::handleRoomCreationAndJoin");
         RoomInfo[] rooms = NetworkManager.GetRoomList();
+
         if (rooms.Length == 0)
             joinOrCreateRoom();
         else
@@ -106,7 +111,7 @@ public class Lobby : NetworkEntity
             GameInventory gameInventory = GameInventory.Instance;
             bool foundRoom = false;
 
-            int thisPlayerRating = GameNetwork.GetLocalPlayerRating(GameNetwork.VirtualPlayerIds.HOST);
+            int thisPlayerRating = GameStats.Instance.Rating;
 
             int roomsCount = rooms.Length;
             for (int i = 0; i < roomsCount; i++)
@@ -115,12 +120,12 @@ public class Lobby : NetworkEntity
 
                 if (room.IsOpen)
                 {
-                    int[] playerIdList = NetworkManager.GetPlayerIdList();
-                    int playerId = playerIdList[0];
-                    int playerInRoomRating = GameNetwork.GetAnyPlayerRating(playerId, GameNetwork.VirtualPlayerIds.HOST);
+                    print("Lobby::handleRoomCreationAndJoin -> room.CustomProperties: " + room.CustomProperties.ToStringFull());
+                    int playerInRoomRating = (int)room.CustomProperties[GameNetwork.RoomCustomProperties.HOST_RATING];
                     
                     if (Mathf.Abs(playerInRoomRating - thisPlayerRating) <= _maxRatingDifferenceToFight)
                     {
+                        GameNetwork.SetLocalPlayerRating(GameStats.Instance.Rating, GameNetwork.VirtualPlayerIds.GUEST);
                         NetworkManager.JoinRoom(room.Name);
                         foundRoom = true;
                         break;
@@ -147,6 +152,7 @@ public class Lobby : NetworkEntity
 
     private void joinOrCreateRoom()
     {
+        GameNetwork.SetLocalPlayerRating(GameStats.Instance.Rating, GameNetwork.VirtualPlayerIds.HOST);
         GameNetwork.Instance.JoinOrCreateRoom();
         _isJoiningRoom = true;
     }

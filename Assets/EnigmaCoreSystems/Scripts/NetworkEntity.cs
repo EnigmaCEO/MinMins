@@ -11,7 +11,14 @@ namespace Enigma.CoreSystems
 
         protected virtual void Awake()
         {
-            _photonView = GetComponent<PhotonView>();         
+            _photonView = GetComponent<PhotonView>();
+            if(!_photonView.ObservedComponents.Contains(this))
+                _photonView.ObservedComponents.Add(this);
+        }
+
+        protected virtual void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+        {
+            //For now to prevent photon error when observing component
         }
 
         protected void setNetworkViewId(int id)

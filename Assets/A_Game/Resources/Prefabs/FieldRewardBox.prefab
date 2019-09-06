@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2826343889934492443}
   - component: {fileID: 2826343889935525339}
   - component: {fileID: 8268897696599959589}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: FieldRewardBox
   m_TagString: Player
   m_Icon: {fileID: 0}

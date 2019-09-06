@@ -170,8 +170,8 @@ public class EnjinLogin : MonoBehaviour
     private void completeLogin(SimpleJSON.JSONNode response_hash)
     {
         print("Complete login:");
-        int rating = response_hash[NetworkManager.TransactionKeys.USER_DATA][GameNetwork.TransactionKeys.RATING].AsInt;
-        GameNetwork.SetLocalPlayerRating(rating, GameNetwork.VirtualPlayerIds.HOST);
+        GameStats.Instance.Rating = response_hash[NetworkManager.TransactionKeys.USER_DATA][GameNetwork.TransactionKeys.RATING].AsInt;
+        //GameNetwork.SetLocalPlayerRating(rating, GameNetwork.VirtualPlayerIds.HOST);
 
         string enjinId = response_hash[NetworkManager.TransactionKeys.USER_DATA][NetworkManager.EnjinTransKeys.ENJIN_ID].ToString().Trim('"');
         //if(true)  //hack
