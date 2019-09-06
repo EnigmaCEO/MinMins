@@ -7,7 +7,7 @@ public class WarTeamGridItem : MonoBehaviour
 {
     public Image View;
 
-    [HideInInspector] public string UnitName = "";
+    public string UnitName = "";
 
     [SerializeField] private Image _lifeFill;
 

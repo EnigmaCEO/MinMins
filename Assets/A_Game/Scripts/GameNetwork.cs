@@ -406,7 +406,7 @@ public class GameNetwork : SingletonNetworkEntity<GameNetwork>
         return NetworkManager.GetRoomCustomPropertyAsInt(property + NetworkManager.Separators.KEYS + team);
     }
 
-    static public void ClearTeamUnits(string virtualPlayerId)
+    static public void ClearLocalTeamUnits(string virtualPlayerId)
     {
         string teamString = NetworkManager.GetLocalPlayerCustomProperty(PlayerCustomProperties.TEAM_UNITS, virtualPlayerId);
         string[] teamUnits = teamString.Split(NetworkManager.Separators.VALUES);

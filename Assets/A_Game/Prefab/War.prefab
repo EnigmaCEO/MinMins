@@ -46,8 +46,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Ready: 1
   _battleFieldRightSideOffset: 0
-  _maxRoundsCount: 3
+  _targetCirclePosZ: -0.1
+  _maxRoundsCount: 2
   _fieldRewardChestsAmount: 1
+  _normalActionDuration: 1
+  _quickActionDuration: 0.5
   _teamGridContent: {fileID: 0}
   _readyCheckDelay: 2
   _team1_CloudsLocalPosX: 0.07
@@ -56,13 +59,12 @@ MonoBehaviour:
   _teamTurnText: {fileID: 0}
   _unitTurnText: {fileID: 0}
   _roundNumberText: {fileID: 0}
+  _actionsLeftText: {fileID: 0}
   _hostTeamHealthFill: {fileID: 0}
   _guestTeamHealthFill: {fileID: 0}
   UnitTurnHighlightTransform: {fileID: 0}
   _battleField: {fileID: 0}
   _gameCamera: {fileID: 0}
-  _targetCirclePrefab: {fileID: 8652984424792842986, guid: b74e0e8e2fc47b34bb97a94a6748f9f1,
-    type: 3}
 --- !u!114 &3122206619754247083
 MonoBehaviour:
   m_ObjectHideFlags: 0

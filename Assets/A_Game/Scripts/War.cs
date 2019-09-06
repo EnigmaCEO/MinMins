@@ -85,7 +85,10 @@ public class War : NetworkEntity
     private void Start()
     {
         _errorText.gameObject.SetActive(false);
+
+        _matchResultsPopUp.DismissButton.onClick.AddListener(() => onMatchResultsDismissButtonDown() );
         _matchResultsPopUp.gameObject.SetActive(false);
+
         _matchData.PlayerId = NetworkManager.GetPlayerName();
 
         _hostGrid = _battleField.Find(GridNames.TEAM_1);
@@ -298,10 +301,11 @@ public class War : NetworkEntity
 
     private void handleUnitIndexChanged(Dictionary<string, MinMinUnit> units, int unitIndex, string teamName)
     {
+        print("handleUnitIndexChanged:-> units.Count: " + units.Count + " unitIndex: " + unitIndex + " teamName: " + teamName);
         if (unitIndex == -1)
             return;
 
-        if ((teamName == GameNetwork.VirtualPlayerIds.GUEST) && (unitIndex >= units.Count))
+        if ((teamName == GameNetwork.VirtualPlayerIds.HOST) && (unitIndex >= units.Count))
         {
             if (getIsHost())
             {
@@ -330,6 +334,7 @@ public class War : NetworkEntity
         {
             MinMinUnit unit = getUnitInTurn();
             int unitTier = GameInventory.Instance.GetUnitTier(unit.name);
+            //unitTier = 1; //TODO: Remove actions hack
 
             NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.ACTIONS_LEFT, unitTier.ToString());
         }
@@ -756,14 +761,9 @@ public class War : NetworkEntity
             _side = 0;
     }
 
-    public void OnMatchResultsExitButtonDown()
+    public void onMatchResultsDismissButtonDown()
     {
-        if(getIsHost())
-        {
-            GameNetwork.ClearTeamUnits(GameNetwork.VirtualPlayerIds.HOST);
-            GameNetwork.ClearTeamUnits(GameNetwork.VirtualPlayerIds.GUEST);
-        }
-
+        GameNetwork.ClearLocalTeamUnits(_localPlayerTeam);
         SceneManager.LoadScene(GameConstants.Scenes.LEVELS);
     }
 
@@ -823,10 +823,13 @@ public class War : NetworkEntity
 
         foreach (Transform slot in _teamGridContent)
         {
-            GameObject minMin = slot.GetChild(0).gameObject;
+            WarTeamGridItem teamGridItem = slot.GetComponent<WarTeamGridItem>();
+            string unitName = teamGridItem.UnitName;
+            if (unitName == "")
+                continue;
 
             int expEarned = 0;
-            int minMinHealth = GameNetwork.GetRoomUnitProperty(GameNetwork.UnitRoomProperties.HEALTH, _localPlayerTeam, minMin.name);
+            int minMinHealth = GameNetwork.GetRoomUnitProperty(GameNetwork.UnitRoomProperties.HEALTH, _localPlayerTeam, unitName);
             if (minMinHealth > 0)
             {
                 if (isVictory)
@@ -835,7 +838,7 @@ public class War : NetworkEntity
                     expEarned = 5;
             }
 
-            gameInventory.AddExpToUnit(minMin.name, expEarned);
+            gameInventory.AddExpToUnit(unitName, expEarned);
         }
 
         gameInventory.SaveUnits();
@@ -912,7 +915,7 @@ public class War : NetworkEntity
     {
         string winner = "";
 
-        if (roundCount > _maxRoundsCount)
+        if (roundCount >= _maxRoundsCount)
         {
             string hostTeam = GameNetwork.VirtualPlayerIds.HOST;
             string guestTeam = GameNetwork.VirtualPlayerIds.GUEST;
@@ -948,7 +951,7 @@ public class War : NetworkEntity
     //Only master client uses this
     private int getTeamTotalHealth(string team)
     {
-        return GameNetwork.GetRoomTeamProperty(GameNetwork.UnitRoomProperties.HEALTH, team);
+        return GameNetwork.GetRoomTeamProperty(GameNetwork.TeamRoomProperties.HEALTH, team);
     }
 
     private void setTeamHealth(string teamName)

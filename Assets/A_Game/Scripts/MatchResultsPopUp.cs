@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class MatchResultsPopUp : MonoBehaviour
 {
+    public Button DismissButton;
+
     [SerializeField] private Text _damageDealtValue;
     [SerializeField] private Text _damageReceivedValue;
     [SerializeField] private Text _unitsKilledValue;
@@ -12,6 +14,7 @@ public class MatchResultsPopUp : MonoBehaviour
 
     [SerializeField] private Transform _unitsAliveGridContent;
     [SerializeField] private Transform _rewardsGridContent;
+
 
     public void Open()
     {
