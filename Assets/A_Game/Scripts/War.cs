@@ -266,6 +266,13 @@ public class War : NetworkEntity
 
         if (getIsHost())
         {
+            //string parentPath = "/TargetCircleContainers/" + MinMinUnit.Types.Healers.ToString();
+            //TargetCircle[] healingTargetCircles = GameObject.Find(parentPath).GetComponentsInChildren<TargetCircle>();
+            //foreach (TargetCircle targetCircle in healingTargetCircles)
+            //    targetCircle.EnableCollider();
+
+            //StartCoroutine(handleLaterTargetCircleDestruction());
+
             //Initial values
             NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.HOST_UNIT_INDEX, -1);
             NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.GUEST_UNIT_INDEX, -1);
@@ -413,10 +420,18 @@ public class War : NetworkEntity
         int targetCirclesAmount = targetCircles.Length;
 
         for (int i = 0; i < targetCirclesAmount; i++)
-            NetworkManager.NetworkDestroy(targetCircles[i].gameObject);
+        {
+            if(unitType == MinMinUnit.Types.Bombers)
+                NetworkManager.NetworkDestroy(targetCircles[i].gameObject);
+        }
 
         int playerInTurnActionsLeft = NetworkManager.GetRoomCustomPropertyAsInt(GameNetwork.RoomCustomProperties.ACTIONS_LEFT) - 1;
         NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.ACTIONS_LEFT, playerInTurnActionsLeft.ToString());
+    }
+
+    private void handleLaterCircleDestruction()
+    {
+
     }
 
     private MinMinUnit getUnitInTurn()

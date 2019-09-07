@@ -24,6 +24,11 @@ public class TargetCircle : NetworkEntity
         _collider.enabled = false;
     }
 
+    public void EnableCollider()
+    {
+        _collider.enabled = true;
+    }
+
     public void SendSetupData(Vector3 position, MinMinUnit.Types unitType, string unitName, string virtualPlayerId, int networkPlayerId)
     {
         base.SendRpcToAll("receiveSetupData", position, unitType, unitName, virtualPlayerId, networkPlayerId);
@@ -52,6 +57,7 @@ public class TargetCircle : NetworkEntity
         }
         else if (UnitType == MinMinUnit.Types.Healers)
         {
+            //_collider.enabled = true;
         }
         else if (UnitType == MinMinUnit.Types.Tanks)
         {
@@ -71,24 +77,41 @@ public class TargetCircle : NetworkEntity
         Debug.Log("TargetCircle::OnTriggerEnter2D: " + coll.gameObject.name + " hit " + name);
         string targetUnitName = coll.transform.parent.name;
         GameNetwork gameNetwork = GameNetwork.Instance;
+        bool isHost = NetworkManager.GetIsMasterClient();
 
         if (UnitType == MinMinUnit.Types.Bombers)
         {
-            int damage = int.Parse(getUnitProperty(GameNetwork.UnitPlayerProperties.STRENGHT));
-            string oppositeTeam = GameNetwork.GetOppositeTeamName(VirtualPlayerId);
+            if (isHost)
+            {
+                int damage = int.Parse(getUnitProperty(GameNetwork.UnitPlayerProperties.STRENGHT));
+                string oppositeTeam = GameNetwork.GetOppositeTeamName(VirtualPlayerId);
 
-            print("TargetCircle virtual player Id: " + VirtualPlayerId);
-            print("Target Unit virtual player Id: " + oppositeTeam);
+                //print("TargetCircle virtual player Id: " + VirtualPlayerId);
+                //print("Target Unit virtual player Id: " + oppositeTeam);
 
-            int targetUnitHealth = GameNetwork.GetRoomUnitProperty(GameNetwork.UnitRoomProperties.HEALTH, oppositeTeam, targetUnitName);
-            targetUnitHealth -= damage;  //TODO: Check if damage formula is needed;
-            if (targetUnitHealth < 0)
-                targetUnitHealth = 0;
-            _warRef.SetUnitHealth(oppositeTeam, targetUnitName, targetUnitHealth, true);
+                int targetUnitHealth = GameNetwork.GetRoomUnitProperty(GameNetwork.UnitRoomProperties.HEALTH, oppositeTeam, targetUnitName);
+                targetUnitHealth -= damage;  //TODO: Check if damage formula is needed;
+                if (targetUnitHealth < 0)
+                    targetUnitHealth = 0;
+                _warRef.SetUnitHealth(oppositeTeam, targetUnitName, targetUnitHealth, true);
+            }
         }
         else if (UnitType == MinMinUnit.Types.Healers)
         {
+            if (isHost)
+            {
+                int healing = int.Parse(getUnitProperty(GameNetwork.UnitPlayerProperties.STRENGHT));
 
+                //print("TargetCircle virtual player Id: " + VirtualPlayerId);
+
+                int targetUnitHealth = GameNetwork.GetRoomUnitProperty(GameNetwork.UnitRoomProperties.HEALTH, VirtualPlayerId, targetUnitName);
+                int targetUnitMaxHealth = GameNetwork.GetRoomUnitProperty(GameNetwork.UnitRoomProperties.MAX_HEALTH, VirtualPlayerId, targetUnitName);
+
+                targetUnitHealth += healing;  //TODO: Check if healing formula is needed;
+                if (targetUnitHealth > targetUnitMaxHealth)
+                    targetUnitHealth = targetUnitMaxHealth;
+                _warRef.SetUnitHealth(VirtualPlayerId, targetUnitName, targetUnitHealth, true);
+            }
         }
         else if (UnitType == MinMinUnit.Types.Tanks)
         {

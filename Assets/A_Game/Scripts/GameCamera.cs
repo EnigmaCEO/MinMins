@@ -19,6 +19,8 @@ public class GameCamera : MonoBehaviour
 
     public void SetCameraForGuest()
     {
+        _positionSideTeam = GameNetwork.VirtualPlayerIds.GUEST;
+
         MyCamera.projectionMatrix = MyCamera .projectionMatrix * Matrix4x4.Scale(new Vector3(-1, 1, 1));
         Vector3 team2_pos = _team2_transform.position;
         transform.position = new Vector3(team2_pos.x, team2_pos.y, transform.position.z);
