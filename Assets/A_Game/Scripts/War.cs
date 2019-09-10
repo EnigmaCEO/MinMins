@@ -20,8 +20,8 @@ public class War : NetworkEntity
 
     [SerializeField] private int _maxRoundsCount = 3;
     [SerializeField] private int _fieldRewardChestsAmount = 1;
-    [SerializeField] private float _normalActionDuration = 2;
-    [SerializeField] private float _quickActionDuration = 1;
+    [SerializeField] private float _immediateActionDuration = 2;
+    [SerializeField] private float _delayedActionDuration = 1;
 
     [SerializeField] private Transform _teamGridContent;
     [SerializeField] private float _readyCheckDelay = 2;
@@ -52,6 +52,8 @@ public class War : NetworkEntity
 
     private Dictionary<string, MinMinUnit> _hostUnits = new Dictionary<string, MinMinUnit>();
     private Dictionary<string, MinMinUnit> _guestUnits = new Dictionary<string, MinMinUnit>();
+
+    private Dictionary<string, Dictionary<string,int>> _healingByUnitByTeam;
 
     private string _attackingUnitName = "";
     private float _timer;
@@ -104,6 +106,10 @@ public class War : NetworkEntity
 
         if (getIsHost())
         {
+            _healingByUnitByTeam = new Dictionary<string, Dictionary<string, int>>();
+            _healingByUnitByTeam.Add(GameNetwork.VirtualPlayerIds.HOST, new Dictionary<string, int>());
+            _healingByUnitByTeam.Add(GameNetwork.VirtualPlayerIds.GUEST, new Dictionary<string, int>());
+
             ////Starts combat cycle
             NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.ROUND_COUNT, 1);
         }
@@ -169,7 +175,7 @@ public class War : NetworkEntity
 
     private int getPlayerInTurnId()
     {
-        string teamInTurn = GameNetwork.Instance.GetTeamInTurn();
+        string teamInTurn = GameNetwork.GetTeamInTurn();
         int playerId = -1;
 
         if (!getIsHost())
@@ -266,18 +272,11 @@ public class War : NetworkEntity
 
         if (getIsHost())
         {
-            //string parentPath = "/TargetCircleContainers/" + MinMinUnit.Types.Healers.ToString();
-            //TargetCircle[] healingTargetCircles = GameObject.Find(parentPath).GetComponentsInChildren<TargetCircle>();
-            //foreach (TargetCircle targetCircle in healingTargetCircles)
-            //    targetCircle.EnableCollider();
-
-            //StartCoroutine(handleLaterTargetCircleDestruction());
-
             //Initial values
             NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.HOST_UNIT_INDEX, -1);
             NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.GUEST_UNIT_INDEX, -1);
 
-            GameNetwork.Instance.SetTeamInTurn(GameNetwork.VirtualPlayerIds.HOST);
+            GameNetwork.SetTeamInTurn(GameNetwork.VirtualPlayerIds.HOST);
         }
     }
 
@@ -316,6 +315,8 @@ public class War : NetworkEntity
         {
             if (getIsHost())
             {
+                processUnitsHealing();
+
                 int roundCount = NetworkManager.GetRoomCustomPropertyAsInt(GameNetwork.RoomCustomProperties.ROUND_COUNT);
                 string winner = checkTimeWinner(roundCount);
                 if (winner == "")
@@ -350,7 +351,7 @@ public class War : NetworkEntity
     private void onActionStarted(int actionsLeft)
     {
         _actionsLeftText.text = "Actions Left: " + actionsLeft;
-        string teamInTurn = GameNetwork.Instance.GetTeamInTurn();
+        string teamInTurn = GameNetwork.GetTeamInTurn();
 
         if (actionsLeft > 0)
         {
@@ -358,7 +359,7 @@ public class War : NetworkEntity
                 StartCoroutine(handlePlayerInput());
         }
         else if(getIsHost())
-            GameNetwork.Instance.SetTeamInTurn(GameNetwork.GetOppositeTeamName(teamInTurn));
+            GameNetwork.SetTeamInTurn(GameNetwork.GetOppositeTeamName(teamInTurn));
     }
 
     private IEnumerator handlePlayerInput()
@@ -409,34 +410,25 @@ public class War : NetworkEntity
     //Only Master Client uses this
     private IEnumerator HandleTargetCircleTime(MinMinUnit.Types unitType)
     {
-        float time = _normalActionDuration;
+        float time = _immediateActionDuration;
         if (unitType == MinMinUnit.Types.Healers)
-            time = _quickActionDuration;
+            time = _delayedActionDuration;
 
         yield return new WaitForSeconds(time);
 
-        string parentPath = "/TargetCircleContainers/" + unitType.ToString();
-        TargetCircle[] targetCircles = GameObject.Find(parentPath).GetComponentsInChildren<TargetCircle>();
+        TargetCircle[] targetCircles = GameObject.Find(TargetCircle.PARENT_PATH).GetComponentsInChildren<TargetCircle>();
         int targetCirclesAmount = targetCircles.Length;
 
         for (int i = 0; i < targetCirclesAmount; i++)
-        {
-            if(unitType == MinMinUnit.Types.Bombers)
-                NetworkManager.NetworkDestroy(targetCircles[i].gameObject);
-        }
+            NetworkManager.NetworkDestroy(targetCircles[i].gameObject);
 
         int playerInTurnActionsLeft = NetworkManager.GetRoomCustomPropertyAsInt(GameNetwork.RoomCustomProperties.ACTIONS_LEFT) - 1;
         NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.ACTIONS_LEFT, playerInTurnActionsLeft.ToString());
     }
 
-    private void handleLaterCircleDestruction()
-    {
-
-    }
-
     private MinMinUnit getUnitInTurn()
     {
-        string teamInTurn = GameNetwork.Instance.GetTeamInTurn();
+        string teamInTurn = GameNetwork.GetTeamInTurn();
         int unitIndex = -1;
 
         if (teamInTurn == GameNetwork.VirtualPlayerIds.HOST)
@@ -697,7 +689,7 @@ public class War : NetworkEntity
 
         setTeamMaxHealth(virtualPlayerId);
         setTeamHealth(virtualPlayerId);
-        setAttacks(grid);
+        //setAttacks(grid);
     }
 
     public void Attack(MinMinUnit minMinUnit)
@@ -735,37 +727,37 @@ public class War : NetworkEntity
     }
     */
 
-    private void attackReady()
-    {
-        Debug.Log("Attack ready!");
-        string effect_name = "";
-        GameObject attack = GameObject.Find("Waypoint Manager/" + _attackingUnitName.Split('/')[1] + "/Attack").transform.GetChild(0).gameObject;
+  //  private void attackReady()
+  //  {
+  //      Debug.Log("Attack ready!");
+  //      string effect_name = "";
+  //      GameObject attack = GameObject.Find("Waypoint Manager/" + _attackingUnitName.Split('/')[1] + "/Attack").transform.GetChild(0).gameObject;
 
-        if (_side == 0)
-        {
-            effect_name = _hostGrid.transform.Find(_attackingUnitName + "/Effect").transform.GetChild(0).name;
-            attack.transform.localEulerAngles = new Vector3(0, 0, 0);
-        }
-        else
-        {
-            effect_name = _guestGrid.transform.Find(_attackingUnitName + "/Effect").transform.GetChild(0).name;
-            attack.transform.localEulerAngles = new Vector3(0, 180, 0);
-        }
+  //      if (_side == 0)
+  //      {
+  //          effect_name = _hostGrid.transform.Find(_attackingUnitName + "/Effect").transform.GetChild(0).name;
+  //          attack.transform.localEulerAngles = new Vector3(0, 0, 0);
+  //      }
+  //      else
+  //      {
+  //          effect_name = _guestGrid.transform.Find(_attackingUnitName + "/Effect").transform.GetChild(0).name;
+  //          attack.transform.localEulerAngles = new Vector3(0, 180, 0);
+  //      }
 
-        attack.transform.localPosition = new Vector2(0, 0);
-        attack.GetComponent<SWS.BezierPathManager>().CalculatePath();
+  //      attack.transform.localPosition = new Vector2(0, 0);
+  //      attack.GetComponent<SWS.BezierPathManager>().CalculatePath();
 
-        GameObject effect = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/Effects/" + effect_name));
-        effect.GetComponent<AttackEffect>().SetWar(this);
-        effect.GetComponent<SWS.splineMove>().pathContainer = attack.GetComponent<SWS.BezierPathManager>();
-        effect.GetComponent<SWS.splineMove>().enabled = true;
-        effect.GetComponent<SWS.splineMove>().StartMove();
-        effect.AddComponent<VFXSorter>().sortingOrder = 100;
+  //      GameObject effect = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/Effects/" + effect_name));
+  //      effect.GetComponent<AttackEffect>().SetWar(this);
+  //      effect.GetComponent<SWS.splineMove>().pathContainer = attack.GetComponent<SWS.BezierPathManager>();
+  //      effect.GetComponent<SWS.splineMove>().enabled = true;
+  //      effect.GetComponent<SWS.splineMove>().StartMove();
+  //      effect.AddComponent<VFXSorter>().sortingOrder = 100;
 
-        /* SWS.MessageOptions opt = effect.GetComponent<SWS.splineMove>().messages.GetMessageOption(2); - needs to be replaced
-		opt.message [0] = "EndAttack";
-		opt.pos = 1;*/
-    }
+  //      /* SWS.MessageOptions opt = effect.GetComponent<SWS.splineMove>().messages.GetMessageOption(2); - needs to be replaced
+		//opt.message [0] = "EndAttack";
+		//opt.pos = 1;*/
+  //  }
 
     public void Switch()
     {
@@ -782,9 +774,20 @@ public class War : NetworkEntity
         SceneManager.LoadScene(GameConstants.Scenes.LEVELS);
     }
 
+    public void SetUnitForHealing(string team, string unitName, int value)
+    {
+        if (_healingByUnitByTeam[team].ContainsKey(unitName))
+        {
+            if(value > _healingByUnitByTeam[team][unitName])
+                _healingByUnitByTeam[team][unitName] = value;  //Update value if greater than previous
+        }
+        else
+            _healingByUnitByTeam[team].Add(unitName, value);
+    }
+
     public void SetUnitHealth(string team, string unitName, int value, bool shouldUpdateTeamHealth)
     {
-        GameNetwork.Instance.SetUnitHealth(team, unitName, value);
+        GameNetwork.SetUnitHealth(team, unitName, value);
 
         if (shouldUpdateTeamHealth)
             setTeamHealth(team);
@@ -801,27 +804,47 @@ public class War : NetworkEntity
         return teamUnits;
     }
 
-    private void setAttacks(Transform val)
+    private void processUnitsHealing()
     {
-        for (int i = 0; i < val.childCount; i++)
+        foreach (string team in _healingByUnitByTeam.Keys)
         {
-
-            GameObject temp = val.GetChild(i).gameObject;
-
-            if (temp.transform.childCount > 0)
+            foreach (string unitName in _healingByUnitByTeam[team].Keys)
             {
-                Transform attack = temp.transform.GetChild(0).Find("Attack");
-                if (attack != null)
-                {
-                    GameObject item = new GameObject();
-                    item.name = temp.transform.GetChild(0).name;
-                    item.transform.parent = GameObject.Find("Waypoint Manager").transform;
-                    attack.parent = item.transform;
-                    attack.transform.localPosition = new Vector2(0, 0);
-                }
+                int unitHealth = GameNetwork.GetRoomUnitProperty(GameNetwork.UnitRoomProperties.HEALTH, team, unitName);
+                int unitMaxHealth = GameNetwork.GetRoomUnitProperty(GameNetwork.UnitRoomProperties.MAX_HEALTH, team, unitName);
+
+                unitHealth += _healingByUnitByTeam[team][unitName];  //TODO: Check if healing formula is needed;
+                if (unitHealth > unitMaxHealth)
+                    unitHealth = unitMaxHealth;
+
+                //TODO: Add healing SFX
+
+                SetUnitHealth(team, unitName, unitHealth, true);
             }
         }
     }
+
+    //private void setAttacks(Transform val)
+    //{
+    //    for (int i = 0; i < val.childCount; i++)
+    //    {
+
+    //        GameObject temp = val.GetChild(i).gameObject;
+
+    //        if (temp.transform.childCount > 0)
+    //        {
+    //            Transform attack = temp.transform.GetChild(0).Find("Attack");
+    //            if (attack != null)
+    //            {
+    //                GameObject item = new GameObject();
+    //                item.name = temp.transform.GetChild(0).name;
+    //                item.transform.parent = GameObject.Find("Waypoint Manager").transform;
+    //                attack.parent = item.transform;
+    //                attack.transform.localPosition = new Vector2(0, 0);
+    //            }
+    //        }
+    //    }
+    //}
 
     private void sendMatchResults(string winner)
     {

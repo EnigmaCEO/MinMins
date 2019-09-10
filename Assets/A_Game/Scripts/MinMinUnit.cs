@@ -7,8 +7,8 @@ public class MinMinUnit : NetworkEntity
 {
     public enum Types
     {
-        Bombers,
         Healers,
+        Bombers,
         Tanks,
         Destroyers,
         Scouts,

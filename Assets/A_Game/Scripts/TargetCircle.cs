@@ -5,14 +5,16 @@ using UnityEngine;
 
 public class TargetCircle : NetworkEntity
 {
-    public MinMinUnit.Types UnitType;
-    public string UnitName;
-    public string VirtualPlayerId;
-    public int NetworkPlayerId;
+    public const string PARENT_PATH = "/TargetCircleContainer";
+
+    public MinMinUnit.Types OwnerUnitType;
+    public string OwnerUnitName;
+    public string OwnerTeamName;
+    public int OwnerNetworkPlayerId;
 
     private War _warRef;
 
-    private Collider2D _collider;
+    //private Collider2D _collider;
 
     override protected void Awake()
     {
@@ -20,14 +22,13 @@ public class TargetCircle : NetworkEntity
 
         _warRef = War.GetSceneInstance();
 
-        _collider = GetComponent<Collider2D>();
-        _collider.enabled = false;
+        //_collider = GetComponent<Collider2D>();
     }
 
-    public void EnableCollider()
-    {
-        _collider.enabled = true;
-    }
+    //public void EnableCollider()
+    //{
+    //    _collider.enabled = true;
+    //}
 
     public void SendSetupData(Vector3 position, MinMinUnit.Types unitType, string unitName, string virtualPlayerId, int networkPlayerId)
     {
@@ -35,40 +36,39 @@ public class TargetCircle : NetworkEntity
     }
 
     [PunRPC]
-    private void receiveSetupData(Vector3 position, MinMinUnit.Types unitType, string unitName, string virtualPlayerId, int networkPlayerId)
+    private void receiveSetupData(Vector3 position, MinMinUnit.Types unitType, string unitName, string teamName, int networkPlayerId)
     {
-        UnitType = unitType;
-        UnitName = unitName;
-        VirtualPlayerId = virtualPlayerId;
-        NetworkPlayerId = networkPlayerId;
+        OwnerUnitType = unitType;
+        OwnerUnitName = unitName;
+        OwnerTeamName = teamName;
+        OwnerNetworkPlayerId = networkPlayerId;
 
         transform.position = position;
 
         float scaleFactor = float.Parse(getUnitProperty(GameNetwork.UnitPlayerProperties.EFFECT_SCALE));
         Vector3 scale = transform.localScale;
         transform.localScale = new Vector3(scaleFactor * scale.x, scaleFactor * scale.y, scaleFactor * scale.z);
+        transform.SetParent(GameObject.Find(PARENT_PATH).transform);
 
-        string parentPath = "/TargetCircleContainers/" + UnitType.ToString();
-        transform.SetParent(GameObject.Find(parentPath).transform);
+        if (OwnerUnitType == MinMinUnit.Types.Bombers)
+        {
 
-        if (UnitType == MinMinUnit.Types.Bombers)
-        {
-            _collider.enabled = true;
         }
-        else if (UnitType == MinMinUnit.Types.Healers)
+        else if (OwnerUnitType == MinMinUnit.Types.Healers)
         {
-            //_collider.enabled = true;
+
         }
-        else if (UnitType == MinMinUnit.Types.Tanks)
+        else if (OwnerUnitType == MinMinUnit.Types.Tanks)
         {
-            _collider.enabled = true;
+
         }
-        else if (UnitType == MinMinUnit.Types.Destroyers)
+        else if (OwnerUnitType == MinMinUnit.Types.Destroyers)
         {
+
         }
-        else if (UnitType == MinMinUnit.Types.Scouts)
+        else if (OwnerUnitType == MinMinUnit.Types.Scouts)
         {
-            _collider.enabled = true;
+
         }
     }
 
@@ -79,12 +79,12 @@ public class TargetCircle : NetworkEntity
         GameNetwork gameNetwork = GameNetwork.Instance;
         bool isHost = NetworkManager.GetIsMasterClient();
 
-        if (UnitType == MinMinUnit.Types.Bombers)
+        if (OwnerUnitType == MinMinUnit.Types.Bombers)
         {
             if (isHost)
             {
                 int damage = int.Parse(getUnitProperty(GameNetwork.UnitPlayerProperties.STRENGHT));
-                string oppositeTeam = GameNetwork.GetOppositeTeamName(VirtualPlayerId);
+                string oppositeTeam = GameNetwork.GetOppositeTeamName(OwnerTeamName);
 
                 //print("TargetCircle virtual player Id: " + VirtualPlayerId);
                 //print("Target Unit virtual player Id: " + oppositeTeam);
@@ -96,32 +96,24 @@ public class TargetCircle : NetworkEntity
                 _warRef.SetUnitHealth(oppositeTeam, targetUnitName, targetUnitHealth, true);
             }
         }
-        else if (UnitType == MinMinUnit.Types.Healers)
+        else if (OwnerUnitType == MinMinUnit.Types.Healers)
         {
             if (isHost)
             {
                 int healing = int.Parse(getUnitProperty(GameNetwork.UnitPlayerProperties.STRENGHT));
-
+                _warRef.SetUnitForHealing(OwnerTeamName, targetUnitName, healing);
                 //print("TargetCircle virtual player Id: " + VirtualPlayerId);
-
-                int targetUnitHealth = GameNetwork.GetRoomUnitProperty(GameNetwork.UnitRoomProperties.HEALTH, VirtualPlayerId, targetUnitName);
-                int targetUnitMaxHealth = GameNetwork.GetRoomUnitProperty(GameNetwork.UnitRoomProperties.MAX_HEALTH, VirtualPlayerId, targetUnitName);
-
-                targetUnitHealth += healing;  //TODO: Check if healing formula is needed;
-                if (targetUnitHealth > targetUnitMaxHealth)
-                    targetUnitHealth = targetUnitMaxHealth;
-                _warRef.SetUnitHealth(VirtualPlayerId, targetUnitName, targetUnitHealth, true);
             }
         }
-        else if (UnitType == MinMinUnit.Types.Tanks)
+        else if (OwnerUnitType == MinMinUnit.Types.Tanks)
         {
 
         }
-        else if (UnitType == MinMinUnit.Types.Destroyers)
+        else if (OwnerUnitType == MinMinUnit.Types.Destroyers)
         {
 
         }
-        else if (UnitType == MinMinUnit.Types.Scouts)
+        else if (OwnerUnitType == MinMinUnit.Types.Scouts)
         {
 
         }
@@ -129,6 +121,6 @@ public class TargetCircle : NetworkEntity
 
     private string getUnitProperty(string property)
     {
-        return GameNetwork.GetAnyPlayerUnitProperty(property, UnitName, VirtualPlayerId, NetworkPlayerId);
+        return GameNetwork.GetAnyPlayerUnitProperty(property, OwnerUnitName, OwnerTeamName, OwnerNetworkPlayerId);
     }
 }

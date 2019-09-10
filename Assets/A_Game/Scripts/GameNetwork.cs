@@ -290,8 +290,8 @@ public class GameNetwork : SingletonNetworkEntity<GameNetwork>
 
         string maxHealth = getStatByLevel(minMin.MaxHealth, unitLevel);
         SetRoomUnitProperty(UnitRoomProperties.MAX_HEALTH, virtualPlayerId, unitName, maxHealth);
-        SetUnitHealth(virtualPlayerId, unitName, int.Parse(maxHealth));
-        //SetUnitHealth(virtualPlayerId, unitName, (int.Parse(maxHealth))/4); //TODO: Remove text hack
+        //SetUnitHealth(virtualPlayerId, unitName, int.Parse(maxHealth));
+        SetUnitHealth(virtualPlayerId, unitName, (int.Parse(maxHealth))/4); //TODO: Remove text hack
     }
 
     public int GetLocalPlayerPvpLevelNumber()
@@ -366,22 +366,22 @@ public class GameNetwork : SingletonNetworkEntity<GameNetwork>
         performResultsSendingTransaction();
     }
 
-    public void SetUnitHealth(string team, string unitName, int value)
+    static public void SetUnitHealth(string team, string unitName, int value)
     {
         SetRoomUnitProperty(UnitRoomProperties.HEALTH, team, unitName, value.ToString());
     }
 
-    public int GetUnitHealth(string team, string unitName)
+    static public int GetUnitHealth(string team, string unitName)
     {
         return GetRoomUnitProperty(UnitRoomProperties.HEALTH, team, unitName);
     }
 
-    public string GetTeamInTurn()
+    static public string GetTeamInTurn()
     {
         return NetworkManager.GetRoomCustomProperty(GameNetwork.RoomCustomProperties.TEAM_IN_TURN);
     }
 
-    public void SetTeamInTurn(string teamInTurn)
+    static public void SetTeamInTurn(string teamInTurn)
     {
         NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.TEAM_IN_TURN, teamInTurn);
     }
