@@ -290,8 +290,8 @@ public class GameNetwork : SingletonNetworkEntity<GameNetwork>
 
         string maxHealth = getStatByLevel(minMin.MaxHealth, unitLevel);
         SetRoomUnitProperty(UnitRoomProperties.MAX_HEALTH, virtualPlayerId, unitName, maxHealth);
-        //SetUnitHealth(virtualPlayerId, unitName, int.Parse(maxHealth));
-        SetUnitHealth(virtualPlayerId, unitName, (int.Parse(maxHealth))/4); //TODO: Remove text hack
+        SetUnitHealth(virtualPlayerId, unitName, int.Parse(maxHealth));
+        //SetUnitHealth(virtualPlayerId, unitName, (int.Parse(maxHealth))/4); //TODO: Remove text hack
     }
 
     public int GetLocalPlayerPvpLevelNumber()

@@ -56,14 +56,22 @@ public class MinMinUnit : NetworkEntity
         shadow.transform.localScale = new Vector2(-1, 1);
 
 
-        bool isAllies = (teamName == GameNetwork.VirtualPlayerIds.HOST);
+        bool isHost = (teamName == GameNetwork.VirtualPlayerIds.HOST);
 
-        if (!isAllies)
+        if (!isHost)
         {
             Vector3 localScale = spriteTransform.localScale;
             spriteTransform.localScale = new Vector3(-localScale.x, localScale.y, localScale.z);
         }
 
         spriteTransform.localPosition = new Vector3(posX, posY, spriteTransform.localPosition.z);
+
+
+        //Test hack =======================================
+        //if (teamName == GameNetwork.VirtualPlayerIds.HOST)
+        //    Type = MinMinUnit.Types.Tanks;
+        //else
+        //    Type = MinMinUnit.Types.Bombers;
+        //==============================================================
     }
 }

@@ -54,6 +54,7 @@ public class War : NetworkEntity
     private Dictionary<string, MinMinUnit> _guestUnits = new Dictionary<string, MinMinUnit>();
 
     private Dictionary<string, Dictionary<string,int>> _healingByUnitByTeam;
+    private Dictionary<string, Dictionary<string, Dictionary<string, int>>> _defenseByOwnerByUnitByTeam;
 
     private string _attackingUnitName = "";
     private float _timer;
@@ -109,6 +110,10 @@ public class War : NetworkEntity
             _healingByUnitByTeam = new Dictionary<string, Dictionary<string, int>>();
             _healingByUnitByTeam.Add(GameNetwork.VirtualPlayerIds.HOST, new Dictionary<string, int>());
             _healingByUnitByTeam.Add(GameNetwork.VirtualPlayerIds.GUEST, new Dictionary<string, int>());
+
+            _defenseByOwnerByUnitByTeam = new Dictionary<string, Dictionary<string, Dictionary<string, int>>>();
+            _defenseByOwnerByUnitByTeam.Add(GameNetwork.VirtualPlayerIds.HOST, new Dictionary<string, Dictionary<string, int>>());
+            _defenseByOwnerByUnitByTeam.Add(GameNetwork.VirtualPlayerIds.GUEST, new Dictionary<string, Dictionary<string,int>>());
 
             ////Starts combat cycle
             NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.ROUND_COUNT, 1);
@@ -330,6 +335,9 @@ public class War : NetworkEntity
             MinMinUnit unit = units.Values.ElementAt(unitIndex);
             string unitName = unit.name;
 
+            if(getIsHost() && (unit.Type == MinMinUnit.Types.Tanks))
+                checkSpecialDefenseEnded(teamName, unitName);
+
             _unitTurnText.text = "Unit turn: " + unitName + " index: " + unitIndex;
             handleHighlight(unitIndex, teamName);
             _gameCamera.HandleMovement(teamName, units[unitName].Type);
@@ -463,7 +471,7 @@ public class War : NetworkEntity
 
         if (_localPlayerTeam == GameNetwork.VirtualPlayerIds.GUEST)
         {
-            //if(_localPlayerTeam == GameNetwork.VirtualPlayerIds.HOST)  //TODO: Remove test hack
+            //if(_localPlayerTeam == GameNetwork.VirtualPlayerIds.HOST)  //Test hack
             _gameCamera.SetCameraForGuest();
             moveCloudsToOppositeSide();
         }
@@ -774,15 +782,61 @@ public class War : NetworkEntity
         SceneManager.LoadScene(GameConstants.Scenes.LEVELS);
     }
 
-    public void SetUnitForHealing(string team, string unitName, int value)
+    public void SetUnitForHealing(string team, string unitName, int healing)
     {
         if (_healingByUnitByTeam[team].ContainsKey(unitName))
         {
-            if(value > _healingByUnitByTeam[team][unitName])
-                _healingByUnitByTeam[team][unitName] = value;  //Update value if greater than previous
+            if(healing > _healingByUnitByTeam[team][unitName])
+                _healingByUnitByTeam[team][unitName] = healing;  //Update value if greater than previous
         }
         else
-            _healingByUnitByTeam[team].Add(unitName, value);
+            _healingByUnitByTeam[team].Add(unitName, healing);
+    }
+
+    public void SetUnitSpecialDefense(string team, string targetUnitName, string ownerUnitName, int defense)
+    {
+        if (!_defenseByOwnerByUnitByTeam[team].ContainsKey(targetUnitName))
+            _defenseByOwnerByUnitByTeam[team].Add(targetUnitName, new Dictionary<string, int>());
+        
+        if(!_defenseByOwnerByUnitByTeam[team][targetUnitName].ContainsKey(ownerUnitName))
+            _defenseByOwnerByUnitByTeam[team][targetUnitName].Add(ownerUnitName, 0);
+         
+        _defenseByOwnerByUnitByTeam[team][targetUnitName][ownerUnitName] += defense;
+
+        //Debug.LogWarning("War::SetUnitSpecialDefense -> team: " + team + " targetUnitName: " + targetUnitName + " defense added: " + defense + " defense total: " + _defenseByOwnerByUnitByTeam[team][targetUnitName][ownerUnitName] + " ownerUnitName: " + ownerUnitName );
+    }
+
+    public int GetUnitSpecialDefense(string team, string unitName)
+    {
+        //Debug.LogWarning("War::GetUnitSpecialDefense -> team: " + team + " unitName: " + unitName);
+        int unitSpecialDefense = 0;
+
+        if (_defenseByOwnerByUnitByTeam[team].ContainsKey(unitName))
+        {
+            foreach (string ownerUnitName in _defenseByOwnerByUnitByTeam[team][unitName].Keys)
+            {
+                int defenseInput = _defenseByOwnerByUnitByTeam[team][unitName][ownerUnitName];
+                //Debug.LogWarning("War::GetUnitSpecialDefense -> ownerUnitName: " + ownerUnitName + " defenseInput: " + defenseInput);
+                unitSpecialDefense += defenseInput;
+            }
+        }
+
+        //Debug.LogWarning("War::GetUnitSpecialDefense -> unitSpecialDefense: " + unitSpecialDefense);
+
+        return unitSpecialDefense;
+    }
+
+    private void checkSpecialDefenseEnded(string teamName, string ownerUnitName)
+    {
+        //Debug.LogWarning("War::checkSpecialDefenseEnded -> teamName: " + teamName + " ownerUnitName: " + ownerUnitName);
+        foreach (string unitName in _defenseByOwnerByUnitByTeam[teamName].Keys)
+        {
+            if (_defenseByOwnerByUnitByTeam[teamName][unitName].ContainsKey(ownerUnitName))
+            {
+                //Debug.LogWarning("War::checkSpecialDefenseEnded -> Removed unitName: " + unitName);
+                _defenseByOwnerByUnitByTeam[teamName][unitName].Remove(ownerUnitName);
+            }
+        }
     }
 
     public void SetUnitHealth(string team, string unitName, int value, bool shouldUpdateTeamHealth)
