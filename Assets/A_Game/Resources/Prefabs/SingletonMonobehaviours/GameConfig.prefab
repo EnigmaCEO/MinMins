@@ -46,3 +46,9 @@ MonoBehaviour:
   PersistBetweenScenes: 0
   BattleFieldMaxPos: {x: 6, y: 4.43}
   BattleFieldMinPos: {x: -6, y: 0.09000001}
+  MaxUnitDefense: 50
+  ProjectilesSpeed: 8
+  BronzeProjectileBaseDirection: {x: 1, y: 0, z: 0}
+  SilverProjectileBaseDirection: {x: 0.5, y: 0.5, z: 0}
+  GoldProjectileBaseDirection: {x: 0, y: 1, z: 0}
+  DestroyerActionAreaScaleModifier: 0.33

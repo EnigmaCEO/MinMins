@@ -16,7 +16,7 @@ public class War : NetworkEntity
     [HideInInspector] public bool Ready = true;
 
     [SerializeField] private float _battleFieldRightSideOffset = 0;
-    [SerializeField] private float _targetCirclePosZ = -0.1f;
+    [SerializeField] private float _actionAreaPosZ = -0.1f;
 
     [SerializeField] private int _maxRoundsCount = 3;
     [SerializeField] private int _fieldRewardChestsAmount = 1;
@@ -33,6 +33,8 @@ public class War : NetworkEntity
 
     [SerializeField] private Text _teamTurnText;
     [SerializeField] private Text _unitTurnText;
+    [SerializeField] private Text _unitTypeTurnText;
+    [SerializeField] private Text _unitTierTurnText;
     [SerializeField] private Text _roundNumberText;
     [SerializeField] private Text _actionsLeftText;
 
@@ -287,7 +289,7 @@ public class War : NetworkEntity
 
     private void onTeamTurnChanged(string teamName)
     {
-        _teamTurnText.text = "Turn: " + teamName + " Mine: " + _localPlayerTeam;
+        _teamTurnText.text = "Turn: " + teamName + " | Mine: " + _localPlayerTeam;
 
         if (getIsHost())
         {
@@ -338,7 +340,7 @@ public class War : NetworkEntity
             if(getIsHost() && (unit.Type == MinMinUnit.Types.Tanks))
                 checkSpecialDefenseEnded(teamName, unitName);
 
-            _unitTurnText.text = "Unit turn: " + unitName + " index: " + unitIndex;
+            _unitTurnText.text = "Unit turn: " + unitName + " | Index: " + unitIndex;
             handleHighlight(unitIndex, teamName);
             _gameCamera.HandleMovement(teamName, units[unitName].Type);
         }
@@ -350,7 +352,10 @@ public class War : NetworkEntity
         {
             MinMinUnit unit = getUnitInTurn();
             int unitTier = GameInventory.Instance.GetUnitTier(unit.name);
-            //unitTier = 1; //TODO: Remove actions hack
+            //unitTier = 100; //Unit tier hack
+
+            _unitTierTurnText.text = "Unit tier: " + unitTier.ToString();
+            _unitTypeTurnText.text = "Unit type: " + unit.Type.ToString();
 
             NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.ACTIONS_LEFT, unitTier.ToString());
         }
@@ -401,34 +406,72 @@ public class War : NetworkEntity
     private void receivePlayerTargetInput(Vector3 inputWorldPosition, string virtualPlayerId, int networkPlayerId)
     {
         MinMinUnit unitInTurn = getUnitInTurn();
-        Vector3 targetCirclePos = inputWorldPosition;
-        targetCirclePos.z = _targetCirclePosZ;
-        handleTargetCircleCreation(targetCirclePos, unitInTurn, virtualPlayerId, networkPlayerId);
-        StartCoroutine(HandleTargetCircleTime(unitInTurn.Type));
+        Vector3 actionAreaPos = inputWorldPosition;
+        actionAreaPos.z = _actionAreaPosZ;
+
+        List<Vector3> directions = new List<Vector3>();
+
+        if (unitInTurn.Type == MinMinUnit.Types.Destroyers)
+        {
+            int unitTier = GameInventory.Instance.GetUnitTier(unitInTurn.name);
+            GameConfig gameConfig = GameConfig.Instance;
+
+            if (unitTier >= GameInventory.Tiers.GOLD)
+            {
+                directions.Add(gameConfig.GoldProjectileBaseDirection);
+                directions.Add(-gameConfig.GoldProjectileBaseDirection);
+            }
+
+            if (unitTier >= GameInventory.Tiers.SILVER)
+            {
+                directions.Add(gameConfig.SilverProjectileBaseDirection);
+                directions.Add(-gameConfig.SilverProjectileBaseDirection);
+            }
+
+            if (unitTier >= GameInventory.Tiers.BRONZE)
+            {
+                directions.Add(gameConfig.BronzeProjectileBaseDirection);
+                directions.Add(-gameConfig.BronzeProjectileBaseDirection);
+            }
+        }
+        else
+            directions.Add(Vector3.zero);
+
+        GameStats.Instance.UnitsDamagedInSingleAction.Clear();
+        handleActionAreaCreation(actionAreaPos, directions, unitInTurn, virtualPlayerId, networkPlayerId);
+
+        StartCoroutine(HandleActionAreaTime(unitInTurn.Type));
     }
 
     //Only Master Client uses this
-    private void handleTargetCircleCreation(Vector3 inputWorldPosition, MinMinUnit unit, string virtualPlayerId, int networkPlayerId)
+    private void handleActionAreaCreation(Vector3 inputWorldPosition, List<Vector3> directions, MinMinUnit unit, string virtualPlayerId, int networkPlayerId)
     {
-        GameObject targetCircleObject = NetworkManager.InstantiateObject("Prefabs/TargetCircle", Vector3.zero, Quaternion.identity, 0);
-        TargetCircle targetCircle  = targetCircleObject.GetComponent<TargetCircle>();
-        targetCircle.SendSetupData(inputWorldPosition, unit.Type, unit.name, virtualPlayerId, networkPlayerId);
+        foreach (Vector3 direction in directions)
+        {
+            GameObject actionAreaObject = NetworkManager.InstantiateObject("Prefabs/ActionArea", Vector3.zero, Quaternion.identity, 0);
+
+            ActionArea actionArea = actionAreaObject.GetComponent<ActionArea>();
+            actionArea.SetWarReference(this);
+            actionArea.SendSetupData(inputWorldPosition, direction, unit.Type, unit.name, unit.EffectName, virtualPlayerId, networkPlayerId);
+        }
     }
 
     //Only Master Client uses this
-    private IEnumerator HandleTargetCircleTime(MinMinUnit.Types unitType)
+    private IEnumerator HandleActionAreaTime(MinMinUnit.Types unitType)
     {
         float time = _immediateActionDuration;
         if (unitType == MinMinUnit.Types.Healers)
             time = _delayedActionDuration;
 
+        //time = 60; // Actions time hack
+
         yield return new WaitForSeconds(time);
 
-        TargetCircle[] targetCircles = GameObject.Find(TargetCircle.PARENT_PATH).GetComponentsInChildren<TargetCircle>();
-        int targetCirclesAmount = targetCircles.Length;
+        ActionArea[] actionAreas = GameObject.Find(ActionArea.PARENT_FIND_PATH).GetComponentsInChildren<ActionArea>();
+        int actionAreasAmount = actionAreas.Length;
 
-        for (int i = 0; i < targetCirclesAmount; i++)
-            NetworkManager.NetworkDestroy(targetCircles[i].gameObject);
+        for (int i = 0; i < actionAreasAmount; i++)
+            NetworkManager.NetworkDestroy(actionAreas[i].gameObject);
 
         int playerInTurnActionsLeft = NetworkManager.GetRoomCustomPropertyAsInt(GameNetwork.RoomCustomProperties.ACTIONS_LEFT) - 1;
         NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.ACTIONS_LEFT, playerInTurnActionsLeft.ToString());
@@ -700,11 +743,11 @@ public class War : NetworkEntity
         //setAttacks(grid);
     }
 
-    public void Attack(MinMinUnit minMinUnit)
-    {
-        if (!Ready)
-            return;
-    }
+    //public void Attack(MinMinUnit minMinUnit)
+    //{
+    //    if (!Ready)
+    //        return;
+    //}
 
     /*
     public void Attack(string attackerUnitName)
@@ -767,14 +810,14 @@ public class War : NetworkEntity
 		//opt.pos = 1;*/
   //  }
 
-    public void Switch()
-    {
-        Ready = true;
-        if (_side == 0)
-            _side = 1;
-        else
-            _side = 0;
-    }
+    //public void Switch()
+    //{
+    //    Ready = true;
+    //    if (_side == 0)
+    //        _side = 1;
+    //    else
+    //        _side = 0;
+    //}
 
     public void onMatchResultsDismissButtonDown()
     {

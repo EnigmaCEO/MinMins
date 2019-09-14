@@ -13,10 +13,15 @@ public class GameStats : SingletonMonobehaviour<GameStats>
 
     [Header("Only for display. Set at runtime:")]
     public Modes Mode = Modes.None;
-    public int SelecteLevelNumber = 0;
+    public int SelectedLevelNumber = 0;
+
     public bool UsesAiForPvp = false;
     public bool IsEnjinLinked = false;
+
     public List<Vector3> PreparationPositions = new List<Vector3>();
     public List<string> TeamUnits = new List<string>();
+
     public int Rating = 0;
+
+    public List<string> UnitsDamagedInSingleAction = new List<string>();
 }

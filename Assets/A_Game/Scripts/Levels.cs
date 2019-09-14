@@ -36,7 +36,7 @@ public class Levels : MonoBehaviour
 
     private void onLevelFightButtonDown(int levelNumber)
     {
-        GameStats.Instance.SelecteLevelNumber = levelNumber;
+        GameStats.Instance.SelectedLevelNumber = levelNumber;
         SceneManager.LoadScene(GameConstants.Scenes.UNIT_SELECT);
     }
 

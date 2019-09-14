@@ -536,6 +536,7 @@ MonoBehaviour:
   Effect: 1
   Type: 0
   Attacks: 07000000
+  EffectName: 1
 --- !u!114 &8387392013339228796
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -559,8 +560,8 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 2383135031580524435}
   ObservedComponentsFoldoutOpen: 1
-  viewIdField: 0
-  instantiationId: -1
+  viewIdField: 74
+  instantiationId: 74
   currentMasterID: -1
   isRuntimeInstantiated: 0
 --- !u!1 &100022

@@ -46,7 +46,7 @@ public class AttackEffect : MonoBehaviour
     void EndAttack()
     {
         Debug.Log("Attack done");
-        _war.Switch();
+        //_war.Switch();
         Destroy(transform.gameObject);
     }
 }

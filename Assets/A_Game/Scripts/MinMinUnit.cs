@@ -14,6 +14,16 @@ public class MinMinUnit : NetworkEntity
         Scouts,
     }
 
+    public enum EffectNames
+    {
+        One = 1,
+        Two,
+        Three,
+        Four,
+        Five,
+        Six
+    }
+
     public int Strength = 1;
     public int Defense = 1;
     public int MaxHealth = 5;
@@ -23,6 +33,12 @@ public class MinMinUnit : NetworkEntity
     public int Effect;
     public Types Type;
     public int[] Attacks;
+
+    public EffectNames EffectName;
+
+    private string _teamName;
+
+    public string TeamName { get { return _teamName; } }
 
     protected override void Awake()
     {
@@ -38,7 +54,8 @@ public class MinMinUnit : NetworkEntity
     private void receiveSettingsForWar(string unitName, string teamName, int teamIndex, float posX, float posY)
     {
         name = unitName;
-        string gridName = War.GetTeamGridName(teamName);
+        _teamName = teamName;
+        string gridName = War.GetTeamGridName(_teamName);
         int slotNumber = teamIndex + 1;
         transform.SetParent(GameObject.Find("Battlefield/" + gridName + "/slot" + slotNumber).transform);
 
@@ -66,12 +83,15 @@ public class MinMinUnit : NetworkEntity
 
         spriteTransform.localPosition = new Vector3(posX, posY, spriteTransform.localPosition.z);
 
-
         //Test hack =======================================
         //if (teamName == GameNetwork.VirtualPlayerIds.HOST)
         //    Type = MinMinUnit.Types.Tanks;
         //else
         //    Type = MinMinUnit.Types.Bombers;
+        //==============================================================
+
+        //Test hack =======================================
+        Type = Types.Destroyers;
         //==============================================================
     }
 }
