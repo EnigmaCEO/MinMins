@@ -123,11 +123,13 @@ public class ActionArea : NetworkEntity
                 string targetUnitTeam = GameNetwork.GetOppositeTeamName(OwnerTeamName);
                 if (targetUnit.TeamName == targetUnitTeam)  //Just in case moving action circle collides with the wrong team
                 {
-                    if (!GameStats.Instance.UnitsDamagedInSingleAction.Contains(targetUnitName))
+                    if (!GameStats.Instance.UnitsDamagedInSingleDestroyerAction.Contains(targetUnitName))
                     {
                         dealDamage(targetUnitName);
-                        GameStats.Instance.UnitsDamagedInSingleAction.Add(targetUnitName);
+                        GameStats.Instance.UnitsDamagedInSingleDestroyerAction.Add(targetUnitName);
                     }
+                    //else
+                    //    Debug.LogWarning("Unit " + targetUnitName + " at team: " + targetUnitTeam + " already took damage this action.");
                 }
             }
         }
@@ -177,8 +179,6 @@ public class ActionArea : NetworkEntity
         if (targetUnitHealth < 0)
             targetUnitHealth = 0;
         _warRef.SetUnitHealth(targetUnitTeam, targetUnitName, targetUnitHealth, true);
-
-        GameStats.Instance.UnitsDamagedInSingleAction.Add(targetUnitName);
     }
 
     private void enableCollider()

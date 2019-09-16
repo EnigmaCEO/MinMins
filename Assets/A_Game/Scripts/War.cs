@@ -433,13 +433,14 @@ public class War : NetworkEntity
                 directions.Add(gameConfig.BronzeProjectileBaseDirection);
                 directions.Add(-gameConfig.BronzeProjectileBaseDirection);
             }
+
+            GameStats.Instance.UnitsDamagedInSingleDestroyerAction.Clear();
         }
         else
             directions.Add(Vector3.zero);
 
-        GameStats.Instance.UnitsDamagedInSingleAction.Clear();
-        handleActionAreaCreation(actionAreaPos, directions, unitInTurn, virtualPlayerId, networkPlayerId);
 
+        handleActionAreaCreation(actionAreaPos, directions, unitInTurn, virtualPlayerId, networkPlayerId);
         StartCoroutine(HandleActionAreaTime(unitInTurn.Type));
     }
 

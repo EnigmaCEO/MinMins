@@ -23,5 +23,5 @@ public class GameStats : SingletonMonobehaviour<GameStats>
 
     public int Rating = 0;
 
-    public List<string> UnitsDamagedInSingleAction = new List<string>();
+    public List<string> UnitsDamagedInSingleDestroyerAction = new List<string>();
 }
