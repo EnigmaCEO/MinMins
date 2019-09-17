@@ -69,6 +69,8 @@ public class War : NetworkEntity
 
     private bool _canCheckWinner = false;
 
+    public string LocalPlayerTeam { get { return _localPlayerTeam; } }
+
     override protected void Awake()
     {
         base.Awake();
@@ -337,7 +339,7 @@ public class War : NetworkEntity
             MinMinUnit unit = units.Values.ElementAt(unitIndex);
             string unitName = unit.name;
 
-            if(getIsHost() && (unit.Type == MinMinUnit.Types.Tanks))
+            if(getIsHost() && (unit.Type == MinMinUnit.Types.Tank))
                 checkSpecialDefenseEnded(teamName, unitName);
 
             _unitTurnText.text = "Unit turn: " + unitName + " | Index: " + unitIndex;
@@ -348,17 +350,16 @@ public class War : NetworkEntity
 
     private void onCameraMovementCompleted(string sideTeam)
     {
+        MinMinUnit unit = getUnitInTurn();
+        int unitTier = GameInventory.Instance.GetUnitTier(unit.name);
+
+        //unitTier = 100; //Unit tier hack
+
+        _unitTierTurnText.text = "Unit tier: " + unitTier.ToString();
+        _unitTypeTurnText.text = "Unit type: " + unit.Type.ToString();
+
         if (getIsHost())
-        {
-            MinMinUnit unit = getUnitInTurn();
-            int unitTier = GameInventory.Instance.GetUnitTier(unit.name);
-            //unitTier = 100; //Unit tier hack
-
-            _unitTierTurnText.text = "Unit tier: " + unitTier.ToString();
-            _unitTypeTurnText.text = "Unit type: " + unit.Type.ToString();
-
             NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.ACTIONS_LEFT, unitTier.ToString());
-        }
     }
 
     private void onActionStarted(int actionsLeft)
@@ -411,7 +412,7 @@ public class War : NetworkEntity
 
         List<Vector3> directions = new List<Vector3>();
 
-        if (unitInTurn.Type == MinMinUnit.Types.Destroyers)
+        if (unitInTurn.Type == MinMinUnit.Types.Destroyer)
         {
             int unitTier = GameInventory.Instance.GetUnitTier(unitInTurn.name);
             GameConfig gameConfig = GameConfig.Instance;
@@ -452,7 +453,6 @@ public class War : NetworkEntity
             GameObject actionAreaObject = NetworkManager.InstantiateObject("Prefabs/ActionArea", Vector3.zero, Quaternion.identity, 0);
 
             ActionArea actionArea = actionAreaObject.GetComponent<ActionArea>();
-            actionArea.SetWarReference(this);
             actionArea.SendSetupData(inputWorldPosition, direction, unit.Type, unit.name, unit.EffectName, virtualPlayerId, networkPlayerId);
         }
     }
@@ -461,14 +461,14 @@ public class War : NetworkEntity
     private IEnumerator HandleActionAreaTime(MinMinUnit.Types unitType)
     {
         float time = _immediateActionDuration;
-        if (unitType == MinMinUnit.Types.Healers)
+        if (unitType == MinMinUnit.Types.Healer)
             time = _delayedActionDuration;
 
         //time = 60; // Actions time hack
 
         yield return new WaitForSeconds(time);
 
-        ActionArea[] actionAreas = GameObject.Find(ActionArea.PARENT_FIND_PATH).GetComponentsInChildren<ActionArea>();
+        ActionArea[] actionAreas = GameObject.Find(ActionArea.ACTION_AREAS_PARENT_FIND_PATH).GetComponentsInChildren<ActionArea>();
         int actionAreasAmount = actionAreas.Length;
 
         for (int i = 0; i < actionAreasAmount; i++)
@@ -721,8 +721,8 @@ public class War : NetworkEntity
             if (unitName == "-1")
                 continue;
 
-            GameObject unit = NetworkManager.InstantiateObject("Prefabs/MinMinUnits/" + unitName, Vector3.zero, Quaternion.identity, 0);
-            unit.name = unitName;
+            GameObject unitGameObject = NetworkManager.InstantiateObject("Prefabs/MinMinUnits/" + unitName, Vector3.zero, Quaternion.identity, 0);
+            unitGameObject.name = unitName;
 
             int networkPlayerId = NetworkManager.GetLocalPlayerId();
             if (virtualPlayerId == GameNetwork.VirtualPlayerIds.GUEST)
@@ -736,7 +736,26 @@ public class War : NetworkEntity
             float posX = float.Parse(positionCoords[0]);
             float posY = float.Parse(positionCoords[1]);
 
-            unit.GetComponent<MinMinUnit>().SendSettingsForWar(unitName, virtualPlayerId, i, posX, posY);
+            MinMinUnit unit = unitGameObject.GetComponent<MinMinUnit>();
+            unit.SendSettingsForWar(unitName, virtualPlayerId, i, posX, posY);
+
+            MinMinUnit.Types unitDebugType = MinMinUnit.Types.Bomber;
+            //Tanks against Bombers Test hack =======================================
+            //if (teamName == GameNetwork.VirtualPlayerIds.HOST)
+            //    unitDebugType = MinMinUnit.Types.Tank;
+            //else
+            //    unitDebugType = MinMinUnit.Types.Bomber;
+            //==============================================================
+
+            //Specific Type Test hack =======================================
+            //unitDebugType = MinMinUnit.Types.Scout;
+            //==============================================================
+
+            //Random type Test hack =======================================
+            unitDebugType = (MinMinUnit.Types)Random.Range(0, 5);
+            //==============================================================
+
+            unit.SendDebugSettingsForWar(unitDebugType);
         }
 
         setTeamMaxHealth(virtualPlayerId);
@@ -879,6 +898,36 @@ public class War : NetworkEntity
             {
                 //Debug.LogWarning("War::checkSpecialDefenseEnded -> Removed unitName: " + unitName);
                 _defenseByOwnerByUnitByTeam[teamName][unitName].Remove(ownerUnitName);
+            }
+        }
+    }
+
+    public void HandleUnitScouted(string team, string unitName, int strenght)
+    {
+        if (_healingByUnitByTeam[team].ContainsKey(unitName))
+        {
+            int healing = _healingByUnitByTeam[team][unitName];
+            if (strenght > healing)
+            {
+                _healingByUnitByTeam[team].Remove(unitName);  //Remove healing if scouting is stronger
+                Debug.LogWarning("War::HandleUnitScouted -> unitName: " + unitName + " at team: " + team + " with healing " + healing + " was removed by scouting with strenght " + strenght);
+            }
+            else
+                Debug.LogWarning("War::HandleUnitScouted -> unitName: " + unitName + " at team: " + team + " with healing " + healing + " endured scouting with strenght " + strenght);
+        }
+
+        if (_defenseByOwnerByUnitByTeam[team].ContainsKey(unitName))
+        {
+            foreach (string ownerUnitName in _defenseByOwnerByUnitByTeam[team][unitName].Keys)
+            {
+                int defense = _defenseByOwnerByUnitByTeam[team][unitName][ownerUnitName];
+                if (strenght > defense)
+                {
+                    _defenseByOwnerByUnitByTeam[team][unitName].Remove(ownerUnitName);
+                    Debug.LogWarning("War::HandleUnitScouted -> unitName: " + unitName + " at team: " + team + " with defense " + defense + " by owner: " + ownerUnitName + " was removed by scouting with strenght " + strenght);
+                }
+                else
+                    Debug.LogWarning("War::HandleUnitScouted -> unitName: " + unitName + " at team: " + team + " with defense " + defense + " by owner: " + ownerUnitName + " endured scouting with strenght " + strenght);
             }
         }
     }

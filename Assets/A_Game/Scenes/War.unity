@@ -246,7 +246,7 @@ GameObject:
   m_Component:
   - component: {fileID: 60384331}
   - component: {fileID: 60384330}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: clouds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -299,7 +299,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
+  m_MaskInteraction: 2
   m_SpriteSortPoint: 0
 --- !u!4 &60384331
 Transform:
@@ -325,7 +325,7 @@ GameObject:
   m_Component:
   - component: {fileID: 70326386}
   - component: {fileID: 70326387}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: clouds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -392,7 +392,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
+  m_MaskInteraction: 2
   m_SpriteSortPoint: 0
 --- !u!1 &79340053
 GameObject:
@@ -433,7 +433,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 162152719}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: slot5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -542,7 +542,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 272274285}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: slot4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -608,7 +608,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 312937817}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: slot1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -869,7 +869,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 447504676}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Team2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1125,7 +1125,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 610611885}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Battlefield
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1159,7 +1159,7 @@ GameObject:
   m_Component:
   - component: {fileID: 612856824}
   - component: {fileID: 612856825}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: clouds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1226,7 +1226,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
+  m_MaskInteraction: 2
   m_SpriteSortPoint: 0
 --- !u!1 &662998816
 GameObject:
@@ -1273,7 +1273,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 664022961}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: slot1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1303,7 +1303,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 665945782}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: slot6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1324,6 +1324,36 @@ Transform:
   m_Father: {fileID: 447504676}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &702369623
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 702369624}
+  m_Layer: 0
+  m_Name: ScoutSpriteMasksContainer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &702369624
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 702369623}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &744787653
 GameObject:
   m_ObjectHideFlags: 0
@@ -1334,7 +1364,7 @@ GameObject:
   m_Component:
   - component: {fileID: 744787654}
   - component: {fileID: 744787655}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: clouds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1401,7 +1431,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
+  m_MaskInteraction: 2
   m_SpriteSortPoint: 0
 --- !u!1 &878497339
 GameObject:
@@ -1442,7 +1472,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 888335280}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: slot3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1473,7 +1503,7 @@ GameObject:
   m_Component:
   - component: {fileID: 945239750}
   - component: {fileID: 945239751}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: clouds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1540,7 +1570,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
+  m_MaskInteraction: 2
   m_SpriteSortPoint: 0
 --- !u!1 &1002682284
 GameObject:
@@ -1581,7 +1611,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1016286609}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: RewardBoxesContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1611,7 +1641,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1034741255}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: slot6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1672,7 +1702,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1087705950}
   - component: {fileID: 1087705951}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: clouds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1739,7 +1769,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
+  m_MaskInteraction: 2
   m_SpriteSortPoint: 0
 --- !u!1 &1133722166
 GameObject:
@@ -1751,7 +1781,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1133722167}
   - component: {fileID: 1133722168}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: clouds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1818,7 +1848,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
+  m_MaskInteraction: 2
   m_SpriteSortPoint: 0
 --- !u!1 &1185835905
 GameObject:
@@ -1829,7 +1859,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1185835906}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: slot5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1890,7 +1920,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1260997993}
   - component: {fileID: 1260997994}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: clouds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1957,7 +1987,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
+  m_MaskInteraction: 2
   m_SpriteSortPoint: 0
 --- !u!1 &1295999059
 GameObject:
@@ -2158,7 +2188,7 @@ PrefabInstance:
     - target: {fileID: 6429970597806121283, guid: 75fa70199ff524d4cb00288cf90d7a53,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.000012397766
+      value: -0.00002002716
       objectReference: {fileID: 0}
     - target: {fileID: 6429970597806121283, guid: 75fa70199ff524d4cb00288cf90d7a53,
         type: 3}
@@ -2442,7 +2472,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1447766331}
   - component: {fileID: 1447766332}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: clouds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2509,7 +2539,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
+  m_MaskInteraction: 2
   m_SpriteSortPoint: 0
 --- !u!1 &1494818316
 GameObject:
@@ -2520,7 +2550,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1494818317}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: slot4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2550,7 +2580,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1495735422}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: RewardBoxesContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2586,7 +2616,7 @@ PrefabInstance:
     - target: {fileID: 1031012573810610783, guid: 4adb97f4c8d765f428eb4862ef02cb3f,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.000042915344
+      value: -0.00003528595
       objectReference: {fileID: 0}
     - target: {fileID: 1031012573810610783, guid: 4adb97f4c8d765f428eb4862ef02cb3f,
         type: 3}
@@ -2886,7 +2916,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1541429957}
   - component: {fileID: 1541429958}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: clouds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2953,7 +2983,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
+  m_MaskInteraction: 2
   m_SpriteSortPoint: 0
 --- !u!1 &1598046204
 GameObject:
@@ -2964,7 +2994,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1598046205}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: CloudsContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3009,7 +3039,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1622077151}
   - component: {fileID: 1622077152}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: clouds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3076,7 +3106,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
+  m_MaskInteraction: 2
   m_SpriteSortPoint: 0
 --- !u!1 &1626790447
 GameObject:
@@ -3117,7 +3147,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1656317379}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: slot2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3148,7 +3178,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1704921694}
   - component: {fileID: 1704921695}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: clouds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3215,7 +3245,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
+  m_MaskInteraction: 2
   m_SpriteSortPoint: 0
 --- !u!1 &1717247811
 GameObject:
@@ -3226,7 +3256,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1717247812}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Team1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3409,7 +3439,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1821815110}
   - component: {fileID: 1821815111}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: clouds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3476,7 +3506,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
+  m_MaskInteraction: 2
   m_SpriteSortPoint: 0
 --- !u!1 &1848025852
 GameObject:
@@ -3626,7 +3656,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1976476450}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: slot3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3798,7 +3828,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1989806305}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: slot2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3934,7 +3964,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Unit Type: Bombers'
+  m_Text: 'Unit Type: Bomber'
 --- !u!222 &2018381165
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3953,7 +3983,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2122672166}
   - component: {fileID: 2122672167}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: clouds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4020,7 +4050,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
+  m_MaskInteraction: 2
   m_SpriteSortPoint: 0
 --- !u!224 &577138593788727875 stripped
 RectTransform:
@@ -4984,7 +5014,7 @@ PrefabInstance:
     - target: {fileID: 757844435481458886, guid: 22ed8609c460bcf4a9b339891b39f4a9,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.000096321106
+      value: -0.00014209747
       objectReference: {fileID: 0}
     - target: {fileID: 757844435481458886, guid: 22ed8609c460bcf4a9b339891b39f4a9,
         type: 3}
@@ -5089,7 +5119,7 @@ PrefabInstance:
     - target: {fileID: 562898128920184180, guid: 22ed8609c460bcf4a9b339891b39f4a9,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.000111579895
+      value: -0.00014972687
       objectReference: {fileID: 0}
     - target: {fileID: 562898128920184180, guid: 22ed8609c460bcf4a9b339891b39f4a9,
         type: 3}

@@ -30,7 +30,7 @@ public class GameCamera : MonoBehaviour
     {
         string oppositeTeam = GameNetwork.GetOppositeTeamName(teamInTurn);
         
-        if ((unitType == MinMinUnit.Types.Bombers) || (unitType == MinMinUnit.Types.Destroyers) || (unitType == MinMinUnit.Types.Scouts))
+        if ((unitType == MinMinUnit.Types.Bomber) || (unitType == MinMinUnit.Types.Destroyer) || (unitType == MinMinUnit.Types.Scout))
             moveToSide(oppositeTeam);
         else
             moveToSide(teamInTurn);

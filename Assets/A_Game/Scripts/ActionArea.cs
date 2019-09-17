@@ -5,8 +5,11 @@ using UnityEngine;
 
 public class ActionArea : NetworkEntity
 {
-    public const string PARENT_FIND_PATH = "/ActionAreasContainer";
-    public const string EFFECTS_RESOURCES_PATH = "Prefabs/EffectsNew/";
+    public const string ACTION_AREAS_PARENT_FIND_PATH = "/ActionAreasContainer";
+    public const string SCOUT_SPRITE_MASKS_PARENT_FIND_PATH = "/ScoutSpriteMasksContainer";
+
+    public const string EFFECTS_RESOURCES_FOLDER_PATH = "Prefabs/EffectsNew/";
+    public const string SCOUTS_SPRITE_MASK_RESOURCE_PATH = "Prefabs/ScoutSpriteMask";
 
     public MinMinUnit.Types OwnerUnitType;
     public string OwnerUnitName;
@@ -16,7 +19,7 @@ public class ActionArea : NetworkEntity
     private Vector3 _velocity;
 
     private War _warRef;
-    private Collider2D _collider;
+    //private Collider2D _collider;
     private Transform _transform;
 
 
@@ -24,19 +27,14 @@ public class ActionArea : NetworkEntity
     {
         base.Awake();
 
-        _collider = GetComponent<Collider2D>();
+        _warRef = War.GetSceneInstance();
+        //_collider = GetComponent<Collider2D>();
     }
 
     private void Update()
     {
-        if(OwnerUnitType == MinMinUnit.Types.Destroyers)
+        if(OwnerUnitType == MinMinUnit.Types.Destroyer)
             transform.position += _velocity * Time.deltaTime;
-    }
-
-    //Only master client uses this
-    public void SetWarReference(War war)
-    {
-        _warRef = war;
     }
 
     public void SendSetupData(Vector3 position, Vector3 velocity, MinMinUnit.Types unitType, string unitName, MinMinUnit.EffectNames effectName, string virtualPlayerId, int networkPlayerId)
@@ -58,31 +56,38 @@ public class ActionArea : NetworkEntity
         float scaleFactor = float.Parse(getOwnerUnitProperty(GameNetwork.UnitPlayerProperties.EFFECT_SCALE));
         Vector3 scale = transform.localScale;
         transform.localScale = new Vector3(scaleFactor * scale.x, scaleFactor * scale.y, scaleFactor * scale.z);
-        transform.SetParent(GameObject.Find(PARENT_FIND_PATH).transform);
+        transform.SetParent(GameObject.Find(ACTION_AREAS_PARENT_FIND_PATH).transform);
 
         setEffect(effectName);
 
-        if (OwnerUnitType == MinMinUnit.Types.Bombers)
+        if (OwnerUnitType == MinMinUnit.Types.Bomber)
         {
 
         }
-        else if (OwnerUnitType == MinMinUnit.Types.Healers)
+        else if (OwnerUnitType == MinMinUnit.Types.Healer)
         {
 
         }
-        else if (OwnerUnitType == MinMinUnit.Types.Tanks)
+        else if (OwnerUnitType == MinMinUnit.Types.Tank)
         {
 
         }
-        else if (OwnerUnitType == MinMinUnit.Types.Destroyers)
+        else if (OwnerUnitType == MinMinUnit.Types.Destroyer)
         {
             scale = transform.localScale;
             float scaleModifier = GameConfig.Instance.DestroyerActionAreaScaleModifier;
             transform.localScale = new Vector3(scaleModifier * scale.x, scaleModifier * scale.y, scaleModifier * scale.z);
         }
-        else if (OwnerUnitType == MinMinUnit.Types.Scouts)
+        else if (OwnerUnitType == MinMinUnit.Types.Scout)
         {
-
+            if (OwnerTeamName == _warRef.LocalPlayerTeam)
+            {
+                GameObject spriteMask = Instantiate<GameObject>(Resources.Load<GameObject>(SCOUTS_SPRITE_MASK_RESOURCE_PATH));
+                Transform spriteMaskTransform = spriteMask.transform;
+                spriteMaskTransform.SetParent(GameObject.Find(SCOUT_SPRITE_MASKS_PARENT_FIND_PATH).transform);
+                spriteMaskTransform.position = this.transform.position;
+                spriteMaskTransform.localScale = this.transform.localScale;
+            }
         }
     }
 
@@ -93,12 +98,12 @@ public class ActionArea : NetworkEntity
         string targetUnitName = targetUnit.name;
         bool isHost = NetworkManager.GetIsMasterClient();
 
-        if (OwnerUnitType == MinMinUnit.Types.Bombers)
+        if (OwnerUnitType == MinMinUnit.Types.Bomber)
         {
             if (isHost)
                 dealDamage(targetUnitName);
         }
-        else if (OwnerUnitType == MinMinUnit.Types.Healers)
+        else if (OwnerUnitType == MinMinUnit.Types.Healer)
         {
             if (isHost)
             {
@@ -107,7 +112,7 @@ public class ActionArea : NetworkEntity
                 //print("ActionArea virtual player Id: " + VirtualPlayerId);
             }
         }
-        else if (OwnerUnitType == MinMinUnit.Types.Tanks)
+        else if (OwnerUnitType == MinMinUnit.Types.Tank)
         {
             if (isHost)
             {
@@ -116,7 +121,7 @@ public class ActionArea : NetworkEntity
                 //print("ActionArea virtual player Id: " + VirtualPlayerId);
             }
         }
-        else if (OwnerUnitType == MinMinUnit.Types.Destroyers)
+        else if (OwnerUnitType == MinMinUnit.Types.Destroyer)
         {
             if (isHost)
             {
@@ -129,21 +134,26 @@ public class ActionArea : NetworkEntity
                         GameStats.Instance.UnitsDamagedInSingleDestroyerAction.Add(targetUnitName);
                     }
                     //else
-                    //    Debug.LogWarning("Unit " + targetUnitName + " at team: " + targetUnitTeam + " already took damage this action.");
+                    //    Debug.LogWarning("ActionAre::OnTriggerEnter2D -> Unit " + targetUnitName + " at team: " + targetUnitTeam + " already took damage this action.");
                 }
             }
         }
-        else if (OwnerUnitType == MinMinUnit.Types.Scouts)
+        else if (OwnerUnitType == MinMinUnit.Types.Scout)
         {
-
+            if (isHost)
+            {
+                string targetUnitTeam = GameNetwork.GetOppositeTeamName(OwnerTeamName);
+                int strenght = int.Parse(getOwnerUnitProperty(GameNetwork.UnitPlayerProperties.STRENGHT));
+                _warRef.HandleUnitScouted(targetUnitTeam, targetUnitName, strenght);
+            }
         }
     }
 
     private void setEffect(MinMinUnit.EffectNames effectName)
     {
-        string effectFullPath = EFFECTS_RESOURCES_PATH + ((int)effectName).ToString();
+        string effectFullPath = EFFECTS_RESOURCES_FOLDER_PATH + ((int)effectName).ToString();
 
-        Debug.LogWarning("ActionArea::receiveSetupData -> effectFullPath: " + effectFullPath);
+        //Debug.LogWarning("ActionArea::setEffect -> effectFullPath: " + effectFullPath);
 
         GameObject effectObject = Instantiate<GameObject>(Resources.Load<GameObject>(effectFullPath));
         effectObject.transform.parent = this.transform;
@@ -152,7 +162,7 @@ public class ActionArea : NetworkEntity
 
     private void dealDamage(string targetUnitName)
     {
-        int damage = int.Parse(getOwnerUnitProperty(GameNetwork.UnitPlayerProperties.STRENGHT));
+        int damage = int.Parse(getOwnerUnitProperty(GameNetwork.UnitPlayerProperties.STRENGHT)); //TODO: Use damage formula if needed.
         string targetUnitTeam = GameNetwork.GetOppositeTeamName(OwnerTeamName);
 
         //print("ActionArea virtual player Id: " + VirtualPlayerId);
@@ -171,20 +181,20 @@ public class ActionArea : NetworkEntity
         if (finalDefense > maxDefense)
             finalDefense = maxDefense;
 
-        int finalDamage = Mathf.FloorToInt((float)damage * (float)(1 - (finalDefense / 100.0f)));
+        int finalDamage = Mathf.FloorToInt((float)damage * (float)(1 - (finalDefense / 100.0f)));  //Defense is translated into damage reduction
 
         //Debug.LogWarning("ActionArea::OnTriggerEnter2D -> finalDefense: " + finalDefense + " damage: " + damage + " finalDamage: " + finalDamage);
 
-        targetUnitHealth -= finalDamage;  //TODO: Add final damage formula;
+        targetUnitHealth -= finalDamage;  
         if (targetUnitHealth < 0)
             targetUnitHealth = 0;
         _warRef.SetUnitHealth(targetUnitTeam, targetUnitName, targetUnitHealth, true);
     }
 
-    private void enableCollider()
-    {
-        _collider.enabled = true;
-    }
+    //private void enableCollider()
+    //{
+    //    _collider.enabled = true;
+    //}
 
     private string getOwnerUnitProperty(string property)
     {

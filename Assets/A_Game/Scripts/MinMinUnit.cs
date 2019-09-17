@@ -7,11 +7,11 @@ public class MinMinUnit : NetworkEntity
 {
     public enum Types
     {
-        Healers,
-        Bombers,
-        Tanks,
-        Destroyers,
-        Scouts,
+        Healer,
+        Bomber,
+        Tank,
+        Destroyer,
+        Scout,
     }
 
     public enum EffectNames
@@ -82,16 +82,16 @@ public class MinMinUnit : NetworkEntity
         }
 
         spriteTransform.localPosition = new Vector3(posX, posY, spriteTransform.localPosition.z);
+    }
 
-        //Test hack =======================================
-        //if (teamName == GameNetwork.VirtualPlayerIds.HOST)
-        //    Type = MinMinUnit.Types.Tanks;
-        //else
-        //    Type = MinMinUnit.Types.Bombers;
-        //==============================================================
+    public void SendDebugSettingsForWar(Types unitType)
+    {
+        SendRpcToAll("receiveDebugSettingsForWar", (int)unitType);
+    }
 
-        //Test hack =======================================
-        Type = Types.Destroyers;
-        //==============================================================
+    [PunRPC]
+    private void receiveDebugSettingsForWar(int unitType)
+    {
+        Type = (Types)unitType;
     }
 }
