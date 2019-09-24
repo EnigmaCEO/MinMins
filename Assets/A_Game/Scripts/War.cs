@@ -53,8 +53,8 @@ public class War : NetworkEntity
     private Dictionary<string, MinMinUnit> _hostUnits = new Dictionary<string, MinMinUnit>();
     private Dictionary<string, MinMinUnit> _guestUnits = new Dictionary<string, MinMinUnit>();
 
-    private Dictionary<string, Dictionary<string, List<HealerArea>>> _healerAreasByUnitByTeam;
-    private Dictionary<string, Dictionary<string, Dictionary<string, List<TankArea>>>> _tanksAreasByOwnerByUnitByTeam;
+    private Dictionary<string, Dictionary<string, Dictionary<string, List<HealerArea>>>> _healerAreasByOwnerByTargetByTeam;
+    private Dictionary<string, Dictionary<string, Dictionary<string, List<TankArea>>>> _tanksAreasByOwnerByTargetByTeam;
 
     private string _attackingUnitName = "";
     private float _timer;
@@ -78,6 +78,7 @@ public class War : NetworkEntity
         NetworkManager.OnJoinedRoomCallback += onJoinedRoom;
 
         GameNetwork.OnPlayerTeamUnitsSetCallback += onPlayerTeamUnitsSet;
+        GameNetwork.OnReadyToFightCallback += onReadyToFight;
         GameNetwork.OnUnitHealthSetCallback += onUnitHealthSet;
         GameNetwork.OnTeamHealthSetCallback += onTeamHealthSet;
         GameNetwork.OnRoundStartedCallback += onRoundStarted;
@@ -108,15 +109,17 @@ public class War : NetworkEntity
 
         determineLocalPlayerTeam();
 
+        NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.READY_TO_FIGHT, false.ToString(), _localPlayerTeam);
+
         if (getIsHost())
         {
-            _healerAreasByUnitByTeam = new Dictionary<string, Dictionary<string, List<HealerArea>>>();
-            _healerAreasByUnitByTeam.Add(GameNetwork.TeamNames.HOST, new Dictionary<string, List<HealerArea>>());
-            _healerAreasByUnitByTeam.Add(GameNetwork.TeamNames.GUEST, new Dictionary<string, List<HealerArea>>());
+            _healerAreasByOwnerByTargetByTeam = new Dictionary<string, Dictionary<string, Dictionary<string, List<HealerArea>>>>();
+            _healerAreasByOwnerByTargetByTeam.Add(GameNetwork.TeamNames.HOST, new Dictionary<string, Dictionary<string, List<HealerArea>>>());
+            _healerAreasByOwnerByTargetByTeam.Add(GameNetwork.TeamNames.GUEST, new Dictionary<string, Dictionary<string, List<HealerArea>>>());
 
-            _tanksAreasByOwnerByUnitByTeam = new Dictionary<string, Dictionary<string, Dictionary<string, List<TankArea>>>>();
-            _tanksAreasByOwnerByUnitByTeam.Add(GameNetwork.TeamNames.HOST, new Dictionary<string, Dictionary<string, List<TankArea>>>());
-            _tanksAreasByOwnerByUnitByTeam.Add(GameNetwork.TeamNames.GUEST, new Dictionary<string, Dictionary<string, List<TankArea>>>());
+            _tanksAreasByOwnerByTargetByTeam = new Dictionary<string, Dictionary<string, Dictionary<string, List<TankArea>>>>();
+            _tanksAreasByOwnerByTargetByTeam.Add(GameNetwork.TeamNames.HOST, new Dictionary<string, Dictionary<string, List<TankArea>>>());
+            _tanksAreasByOwnerByTargetByTeam.Add(GameNetwork.TeamNames.GUEST, new Dictionary<string, Dictionary<string, List<TankArea>>>());
         }
 
         if (GameStats.Instance.Mode == GameStats.Modes.SinglePlayer)
@@ -157,6 +160,7 @@ public class War : NetworkEntity
         NetworkManager.OnJoinedRoomCallback -= onJoinedRoom;
 
         GameNetwork.OnPlayerTeamUnitsSetCallback -= onPlayerTeamUnitsSet;
+        GameNetwork.OnReadyToFightCallback -= onReadyToFight;
         GameNetwork.OnUnitHealthSetCallback -= onUnitHealthSet;
         GameNetwork.OnTeamHealthSetCallback -= onTeamHealthSet;
         GameNetwork.OnRoundStartedCallback -= onRoundStarted;
@@ -245,15 +249,49 @@ public class War : NetworkEntity
         }
     }
 
-    private void onUnitHealthSet(string team, string unitName, int health)
+    private void onReadyToFight(string teamName, bool ready)
     {
-        if (team == _localPlayerTeam)
+        if (getIsHost())
+        {
+            if (ready)
+            {
+                bool hostReady = false;
+                bool guestReady = false;
+
+                if (teamName == GameNetwork.TeamNames.HOST)
+                {
+                    hostReady = true;
+
+                    GameStats gameStats = GameStats.Instance;
+                    if (gameStats.Mode == GameStats.Modes.SinglePlayer || gameStats.UsesAiForPvp)
+                        guestReady = true;
+                    else
+                        guestReady = bool.Parse(NetworkManager.GetAnyPlayerCustomProperty(GameNetwork.PlayerCustomProperties.READY_TO_FIGHT, GameNetwork.TeamNames.GUEST, GameNetwork.GetTeamNetworkPlayerId(GameNetwork.TeamNames.GUEST)));
+                }
+                else if (teamName == GameNetwork.TeamNames.GUEST)
+                {
+                    guestReady = true;
+                    hostReady = bool.Parse(NetworkManager.GetAnyPlayerCustomProperty(GameNetwork.PlayerCustomProperties.READY_TO_FIGHT, GameNetwork.TeamNames.HOST, GameNetwork.GetTeamNetworkPlayerId(GameNetwork.TeamNames.HOST)));
+                }
+
+                if (hostReady && guestReady)
+                    NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.ROUND_COUNT, 1); //Starts combat cycle
+            }
+        }
+    }
+
+    private void onUnitHealthSet(string teamName, string unitName, int health)
+    {
+        if (health <= 0)
+            handleUnitDeath(teamName, unitName);
+
+        if (teamName == _localPlayerTeam)
         {
             foreach (WarTeamGridItem teamGridItem in _uiTeamGridItems)
             {
                 if (teamGridItem.UnitName == unitName)
                 {
-                    int unitMaxHealth = GameNetwork.GetRoomUnitProperty(GameNetwork.UnitRoomProperties.MAX_HEALTH, team, unitName);
+                    int unitMaxHealth = GameNetwork.GetRoomUnitProperty(GameNetwork.UnitRoomProperties.MAX_HEALTH, teamName, unitName);
                     teamGridItem.SetLifeFill((float)health / (float)unitMaxHealth);
                     break;
                 }
@@ -281,6 +319,22 @@ public class War : NetworkEntity
         }
     }
 
+    private void handleUnitDeath(string teamName, string unitName)
+    {
+        Dictionary<string, MinMinUnit> teamUnits = GetTeamUnitsDictionary(teamName);
+        MinMinUnit unit = teamUnits[unitName];
+        unit.gameObject.SetActive(false);
+
+        if (getIsHost())
+        {
+            removeAreaForOwner<HealerArea>(teamName, unitName, _healerAreasByOwnerByTargetByTeam);
+            removeAreaForOwner<TankArea>(teamName, unitName, _tanksAreasByOwnerByTargetByTeam);
+
+            removeTargetFromAreas<HealerArea>(teamName, unitName, _healerAreasByOwnerByTargetByTeam);
+            removeTargetFromAreas<TankArea>(teamName, unitName, _tanksAreasByOwnerByTargetByTeam);
+        }
+    }
+
     private void onRoundStarted(int roundNumber)
     {
         _roundNumberText.text = "Round: " + roundNumber.ToString();
@@ -300,14 +354,17 @@ public class War : NetworkEntity
         _teamTurnText.text = "Turn: " + teamName + " | Mine: " + _localPlayerTeam;
 
         if (getIsHost())
-        {
-            string roomProperty = GameNetwork.RoomCustomProperties.HOST_UNIT_INDEX;
-            if (teamName == GameNetwork.TeamNames.GUEST)
-                roomProperty = GameNetwork.RoomCustomProperties.GUEST_UNIT_INDEX;
+            advanceUnitIndex(teamName);
+    }
 
-            int unitIndex = NetworkManager.GetRoomCustomPropertyAsInt(roomProperty) + 1;
-            NetworkManager.SetRoomCustomProperty(roomProperty, unitIndex);
-        }
+    private void advanceUnitIndex(string teamName)
+    {
+        string roomProperty = GameNetwork.RoomCustomProperties.HOST_UNIT_INDEX;
+        if (teamName == GameNetwork.TeamNames.GUEST)
+            roomProperty = GameNetwork.RoomCustomProperties.GUEST_UNIT_INDEX;
+
+        int unitIndex = NetworkManager.GetRoomCustomPropertyAsInt(roomProperty) + 1;
+        NetworkManager.SetRoomCustomProperty(roomProperty, unitIndex);
     }
 
     private void onHostUnitIndexChanged(int hostUnitIndex)
@@ -346,11 +403,18 @@ public class War : NetworkEntity
             string unitName = unit.name;
 
             if (getIsHost() && (unit.Type == MinMinUnit.Types.Tank))
-                checkSpecialDefenseEnded(teamName, unitName);
+                removeAreaForOwner<TankArea>(teamName, unitName, _tanksAreasByOwnerByTargetByTeam);
 
-            _unitTurnText.text = "Unit turn: " + unitName + " | Index: " + unitIndex;
-            handleHighlight(unitIndex, teamName);
-            _gameCamera.HandleMovement(teamName, units[unitName].Type);
+            int unitHealth = GameNetwork.GetRoomUnitProperty(GameNetwork.UnitRoomProperties.HEALTH, teamName, unitName);
+
+            if (unitHealth > 0)
+            {
+                _unitTurnText.text = "Unit turn: " + unitName + " | Index: " + unitIndex;
+                handleHighlight(unitIndex, teamName);
+                _gameCamera.HandleMovement(teamName, units[unitName].Type);
+            }
+            else if(getIsHost())
+                advanceUnitIndex(teamName);
         }
     }
 
@@ -765,28 +829,28 @@ public class War : NetworkEntity
         SceneManager.LoadScene(GameConstants.Scenes.LEVELS);
     }
 
-    public void SetUnitForHealing(string team, string unitName, HealerArea healerArea)
+    public void SetUnitForHealing(string targetName, HealerArea healerArea)
     {
-        if (!_healerAreasByUnitByTeam[team].ContainsKey(unitName))
-            _healerAreasByUnitByTeam[team].Add(unitName, new List<HealerArea>());
-
-        _healerAreasByUnitByTeam[team][unitName].Add(healerArea);
+        setUnitForActionArea<HealerArea>(targetName, healerArea, _healerAreasByOwnerByTargetByTeam);
     }
 
-    public void SetUnitSpecialDefense(string targetUnitName, TankArea tankArea)
+    public void SetUnitSpecialDefense(string targetName, TankArea tankArea)
     {
-        string targetTeamName = tankArea.OwnerTeamName;
-        string ownerUnitName = tankArea.OwnerUnitName;
+        setUnitForActionArea<TankArea>(targetName, tankArea, _tanksAreasByOwnerByTargetByTeam);
+    }
 
-        if (!_tanksAreasByOwnerByUnitByTeam[targetTeamName].ContainsKey(targetUnitName))
-            _tanksAreasByOwnerByUnitByTeam[targetTeamName].Add(targetUnitName, new Dictionary<string, List<TankArea>>());
+    private void setUnitForActionArea<T>(string targetName, T area, Dictionary<string, Dictionary<string, Dictionary<string, List<T>>>> areasByOwnerByTargetByTeam) where T : ActionArea
+    {
+        string team = area.OwnerTeamName;
+        string owner = area.OwnerUnitName;
 
-        if (!_tanksAreasByOwnerByUnitByTeam[targetTeamName][targetUnitName].ContainsKey(ownerUnitName))
-            _tanksAreasByOwnerByUnitByTeam[targetTeamName][targetUnitName].Add(ownerUnitName, new List<TankArea>());
+        if (!areasByOwnerByTargetByTeam[team].ContainsKey(targetName))
+            areasByOwnerByTargetByTeam[team].Add(targetName, new Dictionary<string, List<T>>());
 
-        _tanksAreasByOwnerByUnitByTeam[targetTeamName][targetUnitName][ownerUnitName].Add(tankArea);
+        if (!areasByOwnerByTargetByTeam[team][targetName].ContainsKey(owner))
+            areasByOwnerByTargetByTeam[team][targetName].Add(owner, new List<T>());
 
-        Debug.LogWarning("War::SetUnitSpecialDefense -> team: " + targetTeamName + " targetUnitName: " + targetUnitName + " defense: " + tankArea.Defense + " ownerUnitName: " + ownerUnitName);
+        areasByOwnerByTargetByTeam[team][targetName][owner].Add(area);
     }
 
     public int GetUnitSpecialDefense(string team, string unitName)
@@ -794,11 +858,11 @@ public class War : NetworkEntity
         //Debug.LogWarning("War::GetUnitSpecialDefense -> team: " + team + " unitName: " + unitName);
         int unitSpecialDefense = 0;
 
-        if (_tanksAreasByOwnerByUnitByTeam[team].ContainsKey(unitName))
+        if (_tanksAreasByOwnerByTargetByTeam[team].ContainsKey(unitName))
         {
-            foreach (string ownerUnitName in _tanksAreasByOwnerByUnitByTeam[team][unitName].Keys)
+            foreach (string ownerUnitName in _tanksAreasByOwnerByTargetByTeam[team][unitName].Keys)
             {
-                foreach (TankArea tankArea in _tanksAreasByOwnerByUnitByTeam[team][unitName][ownerUnitName])
+                foreach (TankArea tankArea in _tanksAreasByOwnerByTargetByTeam[team][unitName][ownerUnitName])
                 {
                     int defenseInput = tankArea.Defense;
                     Debug.LogWarning("War::GetUnitSpecialDefense -> ownerUnitName: " + ownerUnitName + " tankArea: " + tankArea + " defenseInput: " + defenseInput);
@@ -812,103 +876,77 @@ public class War : NetworkEntity
         return unitSpecialDefense;
     }
 
-    private void checkSpecialDefenseEnded(string teamName, string ownerUnitName)
+    private void removeTargetFromAreas<T>(string teamName, string targetName, Dictionary<string, Dictionary<string, Dictionary<string, List<T>>>> areasByOwnerByTargetByTeam) where T : ActionArea
     {
-        List<ActionArea> tankAreasToDestroy = new List<ActionArea>();
+        if (areasByOwnerByTargetByTeam[teamName].ContainsKey(targetName))
+            areasByOwnerByTargetByTeam[teamName].Remove(targetName);
+    }
 
-        Debug.LogWarning("War::checkSpecialDefenseEnded -> teamName: " + teamName + " ownerUnitName: " + ownerUnitName);
-        foreach (string unitName in _tanksAreasByOwnerByUnitByTeam[teamName].Keys)
+    //private void removeTankAreaForOwner(string teamName, string ownerUnitName)
+    //{
+    //    removeAreaForOwner<TankArea>(teamName, ownerUnitName, _tanksAreasByOwnerByTargetByTeam);
+    //}
+
+    //private void removeHealingAreaForOwner(string teamName, string ownerUnitName)
+    //{
+    //    removeAreaForOwner<HealerArea>(teamName, ownerUnitName, _healerAreasByOwnerByTargetByTeam);
+    //}
+
+    private void removeAreaForOwner<T>(string teamName, string ownerUnitName, Dictionary<string, Dictionary<string, Dictionary<string, List<T>>>> areasByOwnerByTargetByTeam) where T: ActionArea
+    {
+        List<ActionArea> areasToDestroy = new List<ActionArea>();
+
+        //Debug.LogWarning("War::removeAreaForOwner -> teamName: " + teamName + " ownerUnitName: " + ownerUnitName);
+        foreach (string unitName in areasByOwnerByTargetByTeam[teamName].Keys)
         {
-            Debug.LogWarning("War::checkSpecialDefenseEnded -> unitName: " + unitName);
-            if (_tanksAreasByOwnerByUnitByTeam[teamName][unitName].ContainsKey(ownerUnitName))
+            //Debug.LogWarning("War::removeAreaForOwner -> unitName: " + unitName);
+            if (areasByOwnerByTargetByTeam[teamName][unitName].ContainsKey(ownerUnitName))
             {
-                Debug.LogWarning("War::checkSpecialDefenseEnded -> ownerUnitName: " + ownerUnitName);
-                foreach (TankArea tankArea in _tanksAreasByOwnerByUnitByTeam[teamName][unitName][ownerUnitName])
+                //Debug.LogWarning("War::removeAreaForOwner -> ownerUnitName: " + ownerUnitName);
+                foreach (T area in areasByOwnerByTargetByTeam[teamName][unitName][ownerUnitName])
                 {
-                    Debug.LogWarning("War::checkSpecialDefenseEnded -> Tank Area to destroy: " + tankArea);
+                    //Debug.LogWarning("War::removeAreaForOwner -> Area to destroy: " + area);
 
-                    if (!tankAreasToDestroy.Contains(tankArea))
+                    if (!areasToDestroy.Contains(area))
                     {
-                        Debug.LogWarning("War::checkSpecialDefenseEnded -> Tank Area to list: " + tankArea);
-                        tankAreasToDestroy.Add(tankArea);
+                        //Debug.LogWarning("War::removeAreaForOwner -> Area to list: " + area);
+                        areasToDestroy.Add(area);
                     }
                 }
 
-                _tanksAreasByOwnerByUnitByTeam[teamName][unitName].Remove(ownerUnitName);
+                areasByOwnerByTargetByTeam[teamName][unitName].Remove(ownerUnitName);
             }
         }
 
-        ActionArea.DestroyActionAreaList(tankAreasToDestroy);
+        ActionArea.DestroyActionAreaList(areasToDestroy);
     }
 
-    public void RemoveHealerArea(string team, HealerArea healingArea)
+    public void RemoveHealerArea(HealerArea healerArea)
     {
-        foreach (string unitName in _healerAreasByUnitByTeam[team].Keys)
-        {
-            if (_healerAreasByUnitByTeam[team][unitName].Contains(healingArea))
-                _healerAreasByUnitByTeam[team][unitName].Remove(healingArea);
-        }
-
-        NetworkManager.NetworkDestroy(healingArea.gameObject);
+        removeArea<HealerArea>(healerArea, _healerAreasByOwnerByTargetByTeam);
     }
 
-    public void RemoveTankArea(string team, TankArea tankArea)
+    public void RemoveTankArea(TankArea tankArea)
     {
-        string tankAreaOwner = tankArea.OwnerUnitName;
-
-        foreach (string unitName in _tanksAreasByOwnerByUnitByTeam[team].Keys)
-        {
-            if (_tanksAreasByOwnerByUnitByTeam[team][unitName].ContainsKey(tankAreaOwner))
-            {
-                if (_tanksAreasByOwnerByUnitByTeam[team][unitName][tankAreaOwner].Contains(tankArea))
-                    _tanksAreasByOwnerByUnitByTeam[team][unitName][tankAreaOwner].Remove(tankArea);
-            }
-        }
-
-        NetworkManager.NetworkDestroy(tankArea.gameObject);
+        removeArea<TankArea>(tankArea, _tanksAreasByOwnerByTargetByTeam);
     }
 
-    /*
-    public void HandleUnitScouted(string team, string unitName, int strenght)
+    private void removeArea<T>(T area, Dictionary<string, Dictionary<string, Dictionary<string, List<T>>>> areasByOwnerByTargetByTeam) where T : ActionArea
     {
-        if (_healingByUnitByTeam[team].ContainsKey(unitName))
+        string team = area.OwnerTeamName;
+        string owner = area.OwnerUnitName;
+
+        foreach (string unitName in areasByOwnerByTargetByTeam[team].Keys)
         {
-            int healing = _healingByUnitByTeam[team][unitName];
-            if (strenght > healing)
+            if (areasByOwnerByTargetByTeam[team][unitName].ContainsKey(owner))
             {
-                _healingByUnitByTeam[team].Remove(unitName);  //Remove healing if scouting is stronger
-                Debug.LogWarning("War::HandleUnitScouted -> unitName: " + unitName + " at team: " + team + " with healing " + healing + " was removed by scouting with strenght " + strenght);
+                if (areasByOwnerByTargetByTeam[team][unitName][owner].Contains(area))
+                    areasByOwnerByTargetByTeam[team][unitName][owner].Remove(area);
             }
-            else
-                Debug.LogWarning("War::HandleUnitScouted -> unitName: " + unitName + " at team: " + team + " with healing " + healing + " endured scouting with strenght " + strenght);
         }
 
-        if (_defenseByAreaByOwnerByUnitByTeam[team].ContainsKey(unitName))
-        {
-            Dictionary<string, int> defenseOwnerToRemove = new Dictionary<string, int>();
-            foreach (string ownerUnitName in _defenseByAreaByOwnerByUnitByTeam[team][unitName].Keys)
-            {
-                defenseOwnerToRemove.Clear();
-                int defense = _defenseByAreaByOwnerByUnitByTeam[team][unitName][ownerUnitName];
-                if (strenght > defense)
-                {
-                    _defenseByAreaByOwnerByUnitByTeam[team][unitName].Remove(ownerUnitName);
-                    defenseOwnerToRemove.Add(ownerUnitName, defense);                  
-                }
-                else
-                    Debug.LogWarning("War::HandleUnitScouted -> unitName: " + unitName + " at team: " + team + " with defense " + defense + " by owner: " + ownerUnitName + " endured scouting with strenght " + strenght);
-            }
-
-            foreach (KeyValuePair<string, int> defenseByOwner in defenseOwnerToRemove)
-            {
-                string ownerUnitName = defenseByOwner.Key;
-                int defense = defenseByOwner.Value;
-                _defenseByAreaByOwnerByUnitByTeam[team][unitName].Remove(defenseByOwner.Key);
-                Debug.LogWarning("War::HandleUnitScouted -> unitName: " + unitName + " at team: " + team + " with defense " + defense + " by owner: " + ownerUnitName + " was removed by scouting with strenght " + strenght);
-            }
-        }
+        NetworkManager.NetworkDestroy(area.gameObject);
     }
-    */
 
     public void SetUnitHealth(string team, string unitName, int value, bool shouldUpdateTeamHealth)
     {
@@ -920,23 +958,19 @@ public class War : NetworkEntity
 
     public void RegisterUnit(string teamName, MinMinUnit unit)
     {
+        Debug.LogWarning("War::RegisterUnit -> teamName: " + teamName + " unit: " + unit.name);
         Dictionary<string, MinMinUnit> teamUnits = GetTeamUnitsDictionary(teamName);
         teamUnits.Add(unit.name, unit);
 
-        if (getIsHost())
+        int teamPlayersAmount = GameNetwork.GetTeamUnitNames(teamName).Length;
+        Debug.LogWarning("War::RegisterUnit -> teamName: " + teamName + " unit: " + unit.name + " units on list: " + teamPlayersAmount + " units registered: " + teamUnits.Count);
+        if (teamUnits.Count == teamPlayersAmount)
         {
-            int teamPlayersAmount = GameNetwork.GetTeamUnitNames(teamName).Length;
-            Debug.LogWarning("War::RegisterUnit -> teamName: " + teamName + " unit: " + unit.name + " units on list: " + teamPlayersAmount + " units registered: " + teamUnits.Count);
-            if (teamUnits.Count == teamPlayersAmount)
-            {
-                _readyByTeam[teamName] = true;
+            _readyByTeam[teamName] = true;
 
-                if (_readyByTeam[GameNetwork.TeamNames.HOST] && _readyByTeam[GameNetwork.TeamNames.GUEST])
-                {
-                    ////Starts combat cycle
-                    NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.ROUND_COUNT, 1);
-                }
-            }
+            if (_readyByTeam[GameNetwork.TeamNames.HOST] && _readyByTeam[GameNetwork.TeamNames.GUEST])
+                NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.READY_TO_FIGHT, true.ToString(), _localPlayerTeam);
+
         }
     }
 
@@ -955,19 +989,22 @@ public class War : NetworkEntity
     {
         List<ActionArea> healerAreasToDestroy = new List<ActionArea>();
 
-        foreach (string team in _healerAreasByUnitByTeam.Keys)
+        foreach (string team in _healerAreasByOwnerByTargetByTeam.Keys)
         {
-            foreach (string unitName in _healerAreasByUnitByTeam[team].Keys)
+            foreach (string unitName in _healerAreasByOwnerByTargetByTeam[team].Keys)
             {
                 int strongerHealing = 0;
-                foreach (HealerArea healerArea in _healerAreasByUnitByTeam[team][unitName])
-                {
-                    int healing = healerArea.Healing;
-                    if (healing > strongerHealing)
-                        strongerHealing = healing;
+                foreach (string owner in _healerAreasByOwnerByTargetByTeam[team][unitName].Keys)
+                {              
+                    foreach (HealerArea healerArea in _healerAreasByOwnerByTargetByTeam[team][unitName][owner])
+                    {
+                        int healing = healerArea.Healing;
+                        if (healing > strongerHealing)
+                            strongerHealing = healing;
 
-                    if (!healerAreasToDestroy.Contains(healerArea))
-                        healerAreasToDestroy.Add(healerArea);
+                        if (!healerAreasToDestroy.Contains(healerArea))
+                            healerAreasToDestroy.Add(healerArea);
+                    }
                 }
 
                 int unitHealth = GameNetwork.GetRoomUnitProperty(GameNetwork.UnitRoomProperties.HEALTH, team, unitName);
@@ -982,7 +1019,7 @@ public class War : NetworkEntity
                 SetUnitHealth(team, unitName, unitHealth, true);
             }
 
-            _healerAreasByUnitByTeam[team].Clear();
+            _healerAreasByOwnerByTargetByTeam[team].Clear();
         }
 
         ActionArea.DestroyActionAreaList(healerAreasToDestroy);

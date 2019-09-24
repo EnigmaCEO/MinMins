@@ -14,7 +14,7 @@ public class ScoutArea : ActionArea
         base.Awake();
 
         Power = int.Parse(getOwnerUnitProperty(GameNetwork.UnitPlayerProperties.STRENGHT));
-        Power = Random.Range(1, 6); // Power hack.
+        //Power = Random.Range(1, 6); // Power hack.
 
         if (OwnerTeamName != _warRef.LocalPlayerTeam)
             GetComponent<SpriteMask>().enabled = false;  //Not needed.
@@ -43,14 +43,12 @@ public class ScoutArea : ActionArea
 
         if (NetworkManager.GetIsMasterClient())
         {
-            string targetAreaTeam = GameNetwork.GetOppositeTeamName(OwnerTeamName);
-
             HealerArea healerArea = coll.GetComponent<HealerArea>();
             if (healerArea != null)
             {
                 if (Power > healerArea.Healing)
                 {
-                    _warRef.RemoveHealerArea(targetAreaTeam, healerArea);
+                    _warRef.RemoveHealerArea(healerArea);
                     Debug.LogWarning("HealerArea of owner: " + healerArea.OwnerUnitName + " and team: " + healerArea.OwnerTeamName + " and Healing: " + healerArea.Healing + " was removed by scoutArea of owner " + OwnerUnitName + " and team: " + OwnerTeamName + " and Power: " + Power);
                 }
                 else
@@ -63,7 +61,7 @@ public class ScoutArea : ActionArea
                 {
                     if (Power > tankArea.Defense)
                     {
-                        _warRef.RemoveTankArea(targetAreaTeam, tankArea);
+                        _warRef.RemoveTankArea(tankArea);
                         Debug.LogWarning("TankArea of owner: " + tankArea.OwnerUnitName + " and team: " + tankArea.OwnerTeamName + " and Defense: " + tankArea.Defense + " was removed by scoutArea of owner " + OwnerUnitName + " and team: " + OwnerTeamName + " and Power: " + Power);
                     }
                     else

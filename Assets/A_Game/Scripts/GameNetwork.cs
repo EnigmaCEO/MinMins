@@ -32,6 +32,7 @@ public class GameNetwork : SingletonNetworkEntity<GameNetwork>
     {
         public const string RATING = "Rating";
         public const string TEAM_UNITS = "Unit_Names";
+        public const string READY_TO_FIGHT = "Ready_To_Fight";
     }
 
     public class RoomCustomProperties
@@ -80,6 +81,9 @@ public class GameNetwork : SingletonNetworkEntity<GameNetwork>
         public const string HOST = "Host";
         public const string GUEST = "Guest";
     }
+
+    public delegate void OnReadyToFightDelegate(string teamName, bool ready);
+    static public OnReadyToFightDelegate OnReadyToFightCallback;
 
     public delegate void OnRoundStartedDelegate(int roundNumber);
     static public OnRoundStartedDelegate OnRoundStartedCallback;
@@ -266,6 +270,11 @@ public class GameNetwork : SingletonNetworkEntity<GameNetwork>
             {
                 if (OnPlayerTeamUnitsSetCallback != null)
                     OnPlayerTeamUnitsSetCallback(teamName, value);
+            }
+            else if (idPart == PlayerCustomProperties.READY_TO_FIGHT)
+            {
+                if (OnReadyToFightCallback != null)
+                    OnReadyToFightCallback(teamName, bool.Parse(value));
             }
         }
     }

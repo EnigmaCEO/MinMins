@@ -852,7 +852,7 @@ namespace Enigma.CoreSystems
         /// </summary>
         static public void SetRoomCustomProperty(object key, object value)
         {
-            Debug.Log("NetworkManager::SetRoomCustomProperty -> key: " + key.ToString() + " value: " + value.ToString());
+            //Debug.Log("NetworkManager::SetRoomCustomProperty -> key: " + key.ToString() + " value: " + value.ToString());
             if (IsPhotonOffline())
             {
                 if (!Data.ContainsKey(DataGroups.INFO))
@@ -891,7 +891,7 @@ namespace Enigma.CoreSystems
 
         static public string GetRoomCustomProperty(object key)
         {
-            Debug.Log("GetRoomCustomProperty -> key: " + key);
+            //Debug.Log("GetRoomCustomProperty -> key: " + key);
             if (IsPhotonOffline())
             {
                 if (!Data.ContainsKey(DataGroups.INFO))

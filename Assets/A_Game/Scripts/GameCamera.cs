@@ -62,8 +62,6 @@ public class GameCamera : MonoBehaviour
                                                 "loopType", iTween.LoopType.none, "delay", _movementDelay,
                                                 "time", _movementTime, "oncomplete", "movementReady",
                                                 "oncompleteparams", iTween.Hash("teamName", sideToMoveTeam)));
-
-            _positionSideTeam = sideToMoveTeam;
         }
     }
 
@@ -71,7 +69,10 @@ public class GameCamera : MonoBehaviour
     {
         Hashtable hashTable = (Hashtable)onCompleteParams;
 
+        string sideToMoveTeam = (string)hashTable["teamName"];
+        _positionSideTeam = sideToMoveTeam;
+
         if (OnMovementCompletedCallback != null)
-            OnMovementCompletedCallback((string)hashTable["teamName"]);
+            OnMovementCompletedCallback(sideToMoveTeam);
     }
 }
