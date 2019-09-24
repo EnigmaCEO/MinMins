@@ -37,31 +37,27 @@ public class MinMinUnit : NetworkEntity
     public EffectNames EffectName;
 
     private string _teamName;
+    private int _teamIndex;
 
     public string TeamName { get { return _teamName; } }
 
     protected override void Awake()
     {
         base.Awake();
+
+        object[] data = base.GetInstantiationData();
+        if (data != null)
+            setUpUnitForWar((string)data[0], (string)data[1], (int)data[2], (float)data[3], (float)data[4]);
     }
 
-    public void SendSettingsForWar(string unitName, string teamName, int teamIndex, float posX, float posY)
+    private void setUpUnitForWar(string unitName, string teamName, int teamIndex, float posX, float posY)
     {
-        SendRpcToAll("receiveSettingsForWar", unitName, teamName, teamIndex, posX, posY);
-    }
+        Debug.LogWarning("MinMinUnit::setUpUnitForWar -> unitName: " + unitName + " teamName: " + teamName + " teamIndex: " + teamIndex);
 
-    [PunRPC]
-    private void receiveSettingsForWar(string unitName, string teamName, int teamIndex, float posX, float posY)
-    {
-        name = unitName;
+        this.name = unitName;
         _teamName = teamName;
-        string gridName = War.GetTeamGridName(_teamName);
-        int slotNumber = teamIndex + 1;
-        transform.SetParent(GameObject.Find("Battlefield/" + gridName + "/slot" + slotNumber).transform);
+        _teamIndex = teamIndex;
 
-        War.GetSceneInstance().GetTeamUnitsDictionary(teamName).Add(unitName, this);
-
-        transform.localPosition = Vector2.zero;
         Transform spriteTransform = transform.Find("Sprite");
 
         WarUnitSprite warUnitSprite = spriteTransform.gameObject.AddComponent<WarUnitSprite>();
@@ -72,8 +68,7 @@ public class MinMinUnit : NetworkEntity
         shadow.transform.localPosition = new Vector2(0, 0);
         shadow.transform.localScale = new Vector2(-1, 1);
 
-
-        bool isHost = (teamName == GameNetwork.VirtualPlayerIds.HOST);
+        bool isHost = (teamName == GameNetwork.TeamNames.HOST);
 
         if (!isHost)
         {
@@ -82,6 +77,24 @@ public class MinMinUnit : NetworkEntity
         }
 
         spriteTransform.localPosition = new Vector3(posX, posY, spriteTransform.localPosition.z);
+
+        string gridName = War.GetTeamGridName(_teamName);
+        int slotNumber = _teamIndex + 1;
+        string slotFindPath = "Battlefield/" + gridName + "/slot" + slotNumber;
+
+        base.StartReadyOnSceneCheck(slotFindPath);
+    }
+
+    protected override void onReadyInScene(GameObject sceneObjectFound)
+    {
+        base.onReadyInScene(sceneObjectFound);
+
+        Transform parent = sceneObjectFound.transform;
+        transform.SetParent(parent);
+        transform.localPosition = Vector2.zero;
+
+        War.GetSceneInstance().RegisterUnit(_teamName, this);
+        ReadyInScene = true;
     }
 
     public void SendDebugSettingsForWar(Types unitType)

@@ -55,4 +55,7 @@ MonoBehaviour:
   - receiveSetupData
   - receiveMatchResults
   - receiveDebugSettingsForWar
+  - disableCollider
+  - receiveDisableCollider
+  - setUpActionArea
   DisableAutoOpenWizard: 1

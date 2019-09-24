@@ -5,10 +5,19 @@ using UnityEngine;
 public class FieldRewardBox : MonoBehaviour
 {
     public delegate void SimpleDelegate();
-    public SimpleDelegate OnHit;
+    public SimpleDelegate OnHitCallback;
 
-    private void onHit()  //Called by attack collision
+    public void Hit()  //Called by attack collision
     {
-        OnHit();
+        OnHitCallback();
+        GetComponent<PolygonCollider2D>().enabled = false;
+
+        StartCoroutine(handleDelayedDestroy());
+    }
+
+    private IEnumerator handleDelayedDestroy()
+    {
+        yield return new WaitForSeconds(GameConfig.Instance.RewardChestDestructionDelay);
+        Destroy(this.gameObject);
     }
 }

@@ -81,12 +81,17 @@ public class Lobby : NetworkEntity
         if (NetworkManager.GetIsMasterClient())
         {
             print("Lobby::OnJoinedRoom -> room.CustomProperties: " + NetworkManager.GetRoom().CustomProperties.ToStringFull());
+            GameNetwork.Instance.HostPlayerId = NetworkManager.GetLocalPlayerId();
+            NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.HOST_ID, GameNetwork.Instance.HostPlayerId);
+
             _waitingPopUp.SetActive(true);
             StartCoroutine(handleWaitForAiRival());
         }
         else
         {
-            GameNetwork.SetLocalPlayerRating(GameStats.Instance.Rating, GameNetwork.VirtualPlayerIds.GUEST);
+            GameNetwork.Instance.GuestPlayerId = NetworkManager.GetLocalPlayerId();
+            GameNetwork.Instance.HostPlayerId = NetworkManager.GetRoomCustomPropertyAsInt(GameNetwork.RoomCustomProperties.HOST_ID);
+            GameNetwork.SetLocalPlayerRating(GameStats.Instance.Rating, GameNetwork.TeamNames.GUEST);
             NetworkManager.GetRoom().IsOpen = false;
         }
     }
@@ -122,10 +127,10 @@ public class Lobby : NetworkEntity
                 {
                     print("Lobby::handleRoomCreationAndJoin -> room.CustomProperties: " + room.CustomProperties.ToStringFull());
                     int playerInRoomRating = (int)room.CustomProperties[GameNetwork.RoomCustomProperties.HOST_RATING];
-                    
+
                     if (Mathf.Abs(playerInRoomRating - thisPlayerRating) <= _maxRatingDifferenceToFight)
                     {
-                        GameNetwork.SetLocalPlayerRating(GameStats.Instance.Rating, GameNetwork.VirtualPlayerIds.GUEST);
+                        GameNetwork.SetLocalPlayerRating(GameStats.Instance.Rating, GameNetwork.TeamNames.GUEST);
                         NetworkManager.JoinRoom(room.Name);
                         foundRoom = true;
                         break;
@@ -152,7 +157,7 @@ public class Lobby : NetworkEntity
 
     private void joinOrCreateRoom()
     {
-        GameNetwork.SetLocalPlayerRating(GameStats.Instance.Rating, GameNetwork.VirtualPlayerIds.HOST);
+        GameNetwork.SetLocalPlayerRating(GameStats.Instance.Rating, GameNetwork.TeamNames.HOST);
         GameNetwork.Instance.JoinOrCreateRoom();
         _isJoiningRoom = true;
     }

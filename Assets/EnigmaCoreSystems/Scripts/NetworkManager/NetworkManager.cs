@@ -824,7 +824,8 @@ namespace Enigma.CoreSystems
             }
             else  // Online
             {
-                print("NetworkManager::GetAnyPlayerCustomProperty -> player.CustomProperties.ToStringFull(): " + PhotonPlayer.Find(networkPlayerId).CustomProperties.ToStringFull());
+                print("NetworkManager::GetAnyPlayerCustomProperty -> networkPlayerId: " + networkPlayerId + " player.CustomProperties.ToStringFull(): " + PhotonPlayer.Find(networkPlayerId).CustomProperties.ToStringFull());
+                    
                 return GetNetworkPlayerById(networkPlayerId).CustomProperties[virtualPlayerKey].ToString();
             }
         }
@@ -928,14 +929,14 @@ namespace Enigma.CoreSystems
         }
 
         //Instantiate network object
-        static public GameObject InstantiateObject(string prefab, Vector3 vec, Quaternion quat, byte group)
+        static public GameObject InstantiateObject(string prefab, Vector3 vec, Quaternion quat, byte group = 0, object[] data = null)
         {
-            return PhotonNetwork.Instantiate(prefab, vec, quat, group, null);
+            return PhotonNetwork.Instantiate(prefab, vec, quat, group, data);
         }
 
-        static public GameObject InstantiateSceneObject(string prefab, Vector3 vec, Quaternion quat, byte group)
+        static public GameObject InstantiateSceneObject(string prefab, Vector3 vec, Quaternion quat, byte group = 0, object[] data = null)
         {
-            return PhotonNetwork.InstantiateSceneObject(prefab, vec, quat, group, null);
+            return PhotonNetwork.InstantiateSceneObject(prefab, vec, quat, group, data);
         }
 
         static public PhotonView GetLocalPlayerPhotonView()

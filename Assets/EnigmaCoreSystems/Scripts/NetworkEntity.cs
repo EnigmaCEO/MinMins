@@ -7,7 +7,14 @@ namespace Enigma.CoreSystems
     [RequireComponent(typeof(PhotonView))]
     public class NetworkEntity : MonoBehaviour
     {
+        [SerializeField] private float _readyOnSceneCheckDelay = 1;
         private PhotonView _photonView;
+
+        public delegate void CheckReadyOnSceneDelegate(GameObject objectToFind);
+        static public CheckReadyOnSceneDelegate OnReadyInSceneCallback;
+
+        public bool ReadyInScene { get; protected set; }
+
 
         protected virtual void Awake()
         {
@@ -21,9 +28,37 @@ namespace Enigma.CoreSystems
             //For now to prevent photon error when observing component
         }
 
+        protected void StartReadyOnSceneCheck(string sceneObjectToFind)
+        {
+            StartCoroutine(checkReadyOnSceneCheck(sceneObjectToFind));
+        }
+
+        private IEnumerator checkReadyOnSceneCheck(string sceneObjectToFind)
+        {
+            while (!ReadyInScene)
+            {
+                GameObject sceneObject = GameObject.Find(sceneObjectToFind);
+                if (sceneObject != null)
+                    onReadyInScene(sceneObject);
+
+                yield return new WaitForSeconds(_readyOnSceneCheckDelay);
+            }
+        }
+
+        protected virtual void onReadyInScene(GameObject sceneObjectFound)
+        {
+            Debug.LogWarning("NewtorkEntity::onReadyInScene -> name: " + this.name);
+            ReadyInScene = true;
+        }
+
         protected void setNetworkViewId(int id)
         {
             _photonView.viewID = id;
+        }
+
+        protected object[] GetInstantiationData()
+        {
+            return _photonView.instantiationData;
         }
 
         public void SendRpcToAll(string methodName, params object[] parameters)

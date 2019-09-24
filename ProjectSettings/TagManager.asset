@@ -14,13 +14,13 @@ TagManager:
   - 
   - 
   - Units
-  - TargetCircles
+  - ActionAreas
   - Chests
-  - 
-  - 
-  - 
-  - 
-  - 
+  - BomberAreas
+  - DestroyerAreas
+  - HealerAreas
+  - ScoutAreas
+  - TankAreas
   - 
   - 
   - 

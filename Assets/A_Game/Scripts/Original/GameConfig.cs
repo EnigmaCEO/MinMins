@@ -14,5 +14,5 @@ public class GameConfig : SingletonMonobehaviour<GameConfig>
     [SerializeField] public Vector3 SilverProjectileBaseDirection = new Vector3(0.5f, 0.5f, 0);
     [SerializeField] public Vector3 GoldProjectileBaseDirection = new Vector3(0, 1, 0);
 
-    [SerializeField] public float DestroyerActionAreaScaleModifier = 0.33f;
+    [SerializeField] public float RewardChestDestructionDelay = 1;
 }

@@ -524,7 +524,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Team Turn: Mine'
+  m_Text: 'Team Turn: -'
 --- !u!222 &229168789
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -998,7 +998,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Actions Left: 2'
+  m_Text: 'Actions Left: -'
 --- !u!222 &510433359
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1107,7 +1107,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Unit Turn: 12'
+  m_Text: 'Unit Turn: -'
 --- !u!222 &587655291
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1493,6 +1493,36 @@ Transform:
   m_Father: {fileID: 1717247812}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &923600416
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 923600417}
+  m_Layer: 0
+  m_Name: HealerAreasContainer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &923600417
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 923600416}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1848025853}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &945239749
 GameObject:
   m_ObjectHideFlags: 0
@@ -1572,6 +1602,36 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 2
   m_SpriteSortPoint: 0
+--- !u!1 &945431275
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 945431276}
+  m_Layer: 0
+  m_Name: TankAreasContainer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &945431276
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 945431275}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1848025853}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1002682284
 GameObject:
   m_ObjectHideFlags: 0
@@ -2059,7 +2119,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Unit Tier: 1'
+  m_Text: 'Unit Tier: -'
 --- !u!222 &1295999062
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2188,7 +2248,7 @@ PrefabInstance:
     - target: {fileID: 6429970597806121283, guid: 75fa70199ff524d4cb00288cf90d7a53,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.00002002716
+      value: 0.000041007996
       objectReference: {fileID: 0}
     - target: {fileID: 6429970597806121283, guid: 75fa70199ff524d4cb00288cf90d7a53,
         type: 3}
@@ -2387,6 +2447,36 @@ Transform:
   m_Children: []
   m_Father: {fileID: 299231531}
   m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1423529765
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1423529766}
+  m_Layer: 0
+  m_Name: BomberAreasContainer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1423529766
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1423529765}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1848025853}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1431896398
 GameObject:
@@ -2616,7 +2706,7 @@ PrefabInstance:
     - target: {fileID: 1031012573810610783, guid: 4adb97f4c8d765f428eb4862ef02cb3f,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.00003528595
+      value: 0.00004863739
       objectReference: {fileID: 0}
     - target: {fileID: 1031012573810610783, guid: 4adb97f4c8d765f428eb4862ef02cb3f,
         type: 3}
@@ -3168,6 +3258,36 @@ Transform:
   m_Father: {fileID: 1717247812}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1668237606
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1668237607}
+  m_Layer: 0
+  m_Name: ScoutAreasContainer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1668237607
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668237606}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1848025853}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1704921693
 GameObject:
   m_ObjectHideFlags: 0
@@ -3420,7 +3540,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Round: 1'
+  m_Text: 'Round: -'
 --- !u!222 &1775991604
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3429,6 +3549,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1775991601}
   m_CullTransparentMesh: 0
+--- !u!1 &1811840443
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1811840444}
+  m_Layer: 0
+  m_Name: DestroyerAreasContainer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1811840444
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1811840443}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1848025853}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1821815109
 GameObject:
   m_ObjectHideFlags: 0
@@ -3518,7 +3668,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1848025853}
   m_Layer: 0
-  m_Name: ActionAreasContainer
+  m_Name: ActionAreaContainers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3534,7 +3684,12 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1423529766}
+  - {fileID: 923600417}
+  - {fileID: 1811840444}
+  - {fileID: 945431276}
+  - {fileID: 1668237607}
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3964,7 +4119,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Unit Type: Bomber'
+  m_Text: 'Unit Type: -'
 --- !u!222 &2018381165
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4267,7 +4422,7 @@ PrefabInstance:
     - target: {fileID: 651751993502074426, guid: c015a82bdc950724292288c09c1c5337,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.000061035156
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 650872059037355452, guid: c015a82bdc950724292288c09c1c5337,
         type: 3}
@@ -4809,7 +4964,7 @@ PrefabInstance:
     - target: {fileID: 577138593788727875, guid: 22ed8609c460bcf4a9b339891b39f4a9,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.00011062622
+      value: -0.000019073486
       objectReference: {fileID: 0}
     - target: {fileID: 577138593788727875, guid: 22ed8609c460bcf4a9b339891b39f4a9,
         type: 3}
@@ -5014,7 +5169,7 @@ PrefabInstance:
     - target: {fileID: 757844435481458886, guid: 22ed8609c460bcf4a9b339891b39f4a9,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.00014209747
+      value: 0.0000333786
       objectReference: {fileID: 0}
     - target: {fileID: 757844435481458886, guid: 22ed8609c460bcf4a9b339891b39f4a9,
         type: 3}
@@ -5119,7 +5274,7 @@ PrefabInstance:
     - target: {fileID: 562898128920184180, guid: 22ed8609c460bcf4a9b339891b39f4a9,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.00014972687
+      value: -0.00003528595
       objectReference: {fileID: 0}
     - target: {fileID: 562898128920184180, guid: 22ed8609c460bcf4a9b339891b39f4a9,
         type: 3}

@@ -376,6 +376,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc8395a664cd4044f88156feb10d672d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _readyOnSceneCheckDelay: 1
   Strength: 3
   Defense: 1
   MaxHealth: 5
@@ -407,8 +408,8 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 2093155095511855604}
   ObservedComponentsFoldoutOpen: 1
-  viewIdField: 73
-  instantiationId: 73
+  viewIdField: 0
+  instantiationId: -1
   currentMasterID: -1
   isRuntimeInstantiated: 0
 --- !u!1 &100024

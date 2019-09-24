@@ -5,22 +5,25 @@ using UnityEngine;
 
 public class ActionArea : NetworkEntity
 {
-    public const string ACTION_AREAS_PARENT_FIND_PATH = "/ActionAreasContainer";
-    public const string SCOUT_SPRITE_MASKS_PARENT_FIND_PATH = "/ScoutSpriteMasksContainer";
+    public const string ACTION_AREAS_RESOURCES_FOLDER_PATH = "Prefabs/ActionAreas/";
 
+    public const string ACTION_AREAS_PARENT_FIND_PATH = "/ActionAreaContainers/";
     public const string EFFECTS_RESOURCES_FOLDER_PATH = "Prefabs/EffectsNew/";
-    public const string SCOUTS_SPRITE_MASK_RESOURCE_PATH = "Prefabs/ScoutSpriteMask";
 
-    public MinMinUnit.Types OwnerUnitType;
+    public float LifeTime = -1; //Unlimited
+    public float CollisionTime = -1;  //Unlimited
+
+    public float ActionTime = 2; //Used by War script
+
+
+    [Header("Only for display. Set at runtime:")]
     public string OwnerUnitName;
     public string OwnerTeamName;
     public int OwnerNetworkPlayerId;
 
-    private Vector3 _velocity;
-
-    private War _warRef;
-    //private Collider2D _collider;
-    private Transform _transform;
+    protected War _warRef;
+    protected Collider2D _collider;
+    protected GameObject _effect;
 
 
     override protected void Awake()
@@ -28,125 +31,105 @@ public class ActionArea : NetworkEntity
         base.Awake();
 
         _warRef = War.GetSceneInstance();
-        //_collider = GetComponent<Collider2D>();
+        _collider = GetComponent<Collider2D>();
+
+        object[] data = base.GetInstantiationData();
+        setUpActionArea((string)data[0], (Vector3)data[1], (Vector3)data[2], (string)data[3], (MinMinUnit.EffectNames)data[4], (string)data[5], (int)data[6]);
     }
 
-    private void Update()
+    virtual protected void Update()
     {
-        if(OwnerUnitType == MinMinUnit.Types.Destroyer)
-            transform.position += _velocity * Time.deltaTime;
+        if (NetworkManager.GetIsMasterClient())
+        {
+            if (LifeTime > 0)
+            {
+                LifeTime -= Time.deltaTime;
+                if (LifeTime < 0)
+                {
+                    LifeTime = 0;
+                    NetworkManager.NetworkDestroy(this.gameObject);
+                }
+            }
+
+            if (CollisionTime > 0)
+            {
+                CollisionTime -= Time.deltaTime;
+                if (CollisionTime < 0)
+                {
+                    CollisionTime = 0;
+                    sendDisableCollider();
+                }
+            }
+        }
     }
 
-    public void SendSetupData(Vector3 position, Vector3 velocity, MinMinUnit.Types unitType, string unitName, MinMinUnit.EffectNames effectName, string virtualPlayerId, int networkPlayerId)
+    virtual protected void setUpActionArea(string areaName, Vector3 position, Vector3 direction, string unitName, MinMinUnit.EffectNames effectName, string teamName, int networkPlayerId)
     {
-        base.SendRpcToAll("receiveSetupData", position, velocity, unitType, unitName, effectName, virtualPlayerId, networkPlayerId);
-    }
+        this.name = areaName;
 
-    [PunRPC]
-    private void receiveSetupData(Vector3 position, Vector3 direction, MinMinUnit.Types unitType, string unitName, MinMinUnit.EffectNames effectName, string teamName, int networkPlayerId)
-    {
-        OwnerUnitType = unitType;
         OwnerUnitName = unitName;
         OwnerTeamName = teamName;
         OwnerNetworkPlayerId = networkPlayerId;
 
         transform.position = position;
-        _velocity = direction * GameConfig.Instance.ProjectilesSpeed;
 
         float scaleFactor = float.Parse(getOwnerUnitProperty(GameNetwork.UnitPlayerProperties.EFFECT_SCALE));
         Vector3 scale = transform.localScale;
         transform.localScale = new Vector3(scaleFactor * scale.x, scaleFactor * scale.y, scaleFactor * scale.z);
-        transform.SetParent(GameObject.Find(ACTION_AREAS_PARENT_FIND_PATH).transform);
 
         setEffect(effectName);
 
-        if (OwnerUnitType == MinMinUnit.Types.Bomber)
-        {
+        StartReadyOnSceneCheck(ACTION_AREAS_PARENT_FIND_PATH + this.name + "sContainer");
+    }
 
-        }
-        else if (OwnerUnitType == MinMinUnit.Types.Healer)
-        {
+    protected override void onReadyInScene(GameObject sceneObjectFound)
+    {
+        base.onReadyInScene(sceneObjectFound);
 
-        }
-        else if (OwnerUnitType == MinMinUnit.Types.Tank)
-        {
+        Transform parent = sceneObjectFound.transform;
+        this.transform.SetParent(parent);
+    }
 
-        }
-        else if (OwnerUnitType == MinMinUnit.Types.Destroyer)
+    public static void DestroyActionAreaList(List<ActionArea> actionAreas)
+    {
+        while (actionAreas.Count > 0)
         {
-            scale = transform.localScale;
-            float scaleModifier = GameConfig.Instance.DestroyerActionAreaScaleModifier;
-            transform.localScale = new Vector3(scaleModifier * scale.x, scaleModifier * scale.y, scaleModifier * scale.z);
-        }
-        else if (OwnerUnitType == MinMinUnit.Types.Scout)
-        {
-            if (OwnerTeamName == _warRef.LocalPlayerTeam)
-            {
-                GameObject spriteMask = Instantiate<GameObject>(Resources.Load<GameObject>(SCOUTS_SPRITE_MASK_RESOURCE_PATH));
-                Transform spriteMaskTransform = spriteMask.transform;
-                spriteMaskTransform.SetParent(GameObject.Find(SCOUT_SPRITE_MASKS_PARENT_FIND_PATH).transform);
-                spriteMaskTransform.position = this.transform.position;
-                spriteMaskTransform.localScale = this.transform.localScale;
-            }
+            ActionArea area = actionAreas[0];
+            Debug.LogWarning("ActionArea::DestroyActionAreaList -> actionAreaToDestroy: " + area.name + " ownerTeamName: " + area.OwnerTeamName + " owerName: " + area.OwnerUnitName);
+            actionAreas.RemoveAt(0);
+            NetworkManager.NetworkDestroy(area.gameObject);
         }
     }
 
-    void OnTriggerEnter2D(Collider2D coll)
+    private void sendDisableCollider()
     {
-        //Debug.LogWarning("ActionArea::OnTriggerEnter2D: " + coll.gameObject.name + " hit " + name);
-        MinMinUnit targetUnit = coll.transform.parent.GetComponent<MinMinUnit>();
-        string targetUnitName = targetUnit.name;
-        bool isHost = NetworkManager.GetIsMasterClient();
+        base.SendRpcToAll("receiveDisableCollider");
+    }
 
-        if (OwnerUnitType == MinMinUnit.Types.Bomber)
-        {
-            if (isHost)
-                dealDamage(targetUnitName);
-        }
-        else if (OwnerUnitType == MinMinUnit.Types.Healer)
-        {
-            if (isHost)
-            {
-                int healing = int.Parse(getOwnerUnitProperty(GameNetwork.UnitPlayerProperties.STRENGHT));
-                _warRef.SetUnitForHealing(OwnerTeamName, targetUnitName, healing);
-                //print("ActionArea virtual player Id: " + VirtualPlayerId);
-            }
-        }
-        else if (OwnerUnitType == MinMinUnit.Types.Tank)
-        {
-            if (isHost)
-            {
-                int defense = int.Parse(getOwnerUnitProperty(GameNetwork.UnitPlayerProperties.STRENGHT));
-                _warRef.SetUnitSpecialDefense(OwnerTeamName, targetUnitName, OwnerUnitName, defense);
-                //print("ActionArea virtual player Id: " + VirtualPlayerId);
-            }
-        }
-        else if (OwnerUnitType == MinMinUnit.Types.Destroyer)
-        {
-            if (isHost)
-            {
-                string targetUnitTeam = GameNetwork.GetOppositeTeamName(OwnerTeamName);
-                if (targetUnit.TeamName == targetUnitTeam)  //Just in case moving action circle collides with the wrong team
-                {
-                    if (!GameStats.Instance.UnitsDamagedInSingleDestroyerAction.Contains(targetUnitName))
-                    {
-                        dealDamage(targetUnitName);
-                        GameStats.Instance.UnitsDamagedInSingleDestroyerAction.Add(targetUnitName);
-                    }
-                    //else
-                    //    Debug.LogWarning("ActionAre::OnTriggerEnter2D -> Unit " + targetUnitName + " at team: " + targetUnitTeam + " already took damage this action.");
-                }
-            }
-        }
-        else if (OwnerUnitType == MinMinUnit.Types.Scout)
-        {
-            if (isHost)
-            {
-                string targetUnitTeam = GameNetwork.GetOppositeTeamName(OwnerTeamName);
-                int strenght = int.Parse(getOwnerUnitProperty(GameNetwork.UnitPlayerProperties.STRENGHT));
-                _warRef.HandleUnitScouted(targetUnitTeam, targetUnitName, strenght);
-            }
-        }
+    [PunRPC]
+    protected void receiveDisableCollider()
+    {
+        _collider.enabled = false;
+    }
+
+    virtual protected void OnTriggerEnter2D(Collider2D coll)
+    {
+        //Debug.LogWarning("ActionArea::OnTriggerEnter2D: " + coll.name + " collided with " + this.name);
+    }
+
+    protected void checkFieldRewardBoxHit(Collider2D coll)
+    {
+        FieldRewardBox fieldRewardBox = coll.GetComponent<FieldRewardBox>();
+        if (fieldRewardBox != null)
+            fieldRewardBox.Hit();
+    }
+
+    protected MinMinUnit getUnitFromCollider(Collider2D coll)
+    {
+        if (coll.transform.parent == null)
+            return null;
+
+        return coll.transform.parent.GetComponent<MinMinUnit>();
     }
 
     private void setEffect(MinMinUnit.EffectNames effectName)
@@ -155,12 +138,12 @@ public class ActionArea : NetworkEntity
 
         //Debug.LogWarning("ActionArea::setEffect -> effectFullPath: " + effectFullPath);
 
-        GameObject effectObject = Instantiate<GameObject>(Resources.Load<GameObject>(effectFullPath));
-        effectObject.transform.parent = this.transform;
-        effectObject.transform.localPosition = Vector3.zero;
+        _effect = Instantiate<GameObject>(Resources.Load<GameObject>(effectFullPath));
+        _effect.transform.parent = this.transform;
+        _effect.transform.localPosition = Vector3.zero;
     }
 
-    private void dealDamage(string targetUnitName)
+    protected void dealDamage(string targetUnitName)
     {
         int damage = int.Parse(getOwnerUnitProperty(GameNetwork.UnitPlayerProperties.STRENGHT)); //TODO: Use damage formula if needed.
         string targetUnitTeam = GameNetwork.GetOppositeTeamName(OwnerTeamName);
@@ -168,7 +151,7 @@ public class ActionArea : NetworkEntity
         //print("ActionArea virtual player Id: " + VirtualPlayerId);
         //print("Target Unit virtual player Id: " + oppositeTeam);
 
-        int targetUnitPlayerId = (targetUnitTeam == GameNetwork.VirtualPlayerIds.HOST) ? NetworkManager.GetLocalPlayerId() : GameNetwork.Instance.GuestPlayerId;
+        int targetUnitPlayerId = (targetUnitTeam == GameNetwork.TeamNames.HOST) ? NetworkManager.GetLocalPlayerId() : GameNetwork.Instance.GuestPlayerId;
 
         int targetUnitHealth = GameNetwork.GetRoomUnitProperty(GameNetwork.UnitRoomProperties.HEALTH, targetUnitTeam, targetUnitName);
         int targetUnitDefense = GameNetwork.GetAnyPlayerUnitPropertyAsInt(GameNetwork.UnitPlayerProperties.DEFENSE, targetUnitName, targetUnitTeam, targetUnitPlayerId);
@@ -191,12 +174,7 @@ public class ActionArea : NetworkEntity
         _warRef.SetUnitHealth(targetUnitTeam, targetUnitName, targetUnitHealth, true);
     }
 
-    //private void enableCollider()
-    //{
-    //    _collider.enabled = true;
-    //}
-
-    private string getOwnerUnitProperty(string property)
+    protected string getOwnerUnitProperty(string property)
     {
         return GameNetwork.GetAnyPlayerUnitProperty(property, OwnerUnitName, OwnerTeamName, OwnerNetworkPlayerId);
     }
