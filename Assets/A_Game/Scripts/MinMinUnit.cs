@@ -94,7 +94,6 @@ public class MinMinUnit : NetworkEntity
         transform.localPosition = Vector2.zero;
 
         War.GetSceneInstance().RegisterUnit(_teamName, this);
-        ReadyInScene = true;
     }
 
     public void SendDebugSettingsForWar(Types unitType)

@@ -17,7 +17,7 @@ public class TankArea : ActionArea
     {
         base.OnTriggerEnter2D(coll);
 
-        if (NetworkManager.GetIsMasterClient())
+        if (base._warRef.GetIsHost())
         {
             MinMinUnit targetUnit = getUnitFromCollider(coll);
             if (targetUnit != null)

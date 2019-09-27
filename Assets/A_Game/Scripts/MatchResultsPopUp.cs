@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Enigma.CoreSystems;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,6 +7,8 @@ using UnityEngine.UI;
 public class MatchResultsPopUp : MonoBehaviour
 {
     public Button DismissButton;
+
+    [SerializeField] private Text _winnerText;
 
     [SerializeField] private Text _damageDealtValue;
     [SerializeField] private Text _damageReceivedValue;
@@ -15,6 +18,12 @@ public class MatchResultsPopUp : MonoBehaviour
     [SerializeField] private Transform _unitsAliveGridContent;
     [SerializeField] private Transform _rewardsGridContent;
 
+    private War _warRef;
+
+    private void Awake()
+    {
+        _warRef = War.GetSceneInstance();
+    }
 
     public void Open()
     {
@@ -26,25 +35,44 @@ public class MatchResultsPopUp : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public void SetValues(War.MatchData matchData)
+    public void SetValues(War.MatchLocalData matchLocalData)
     {
-        _damageDealtValue.text = matchData.DamageDealt.ToString();
-        _damageReceivedValue.text = matchData.DamageReceived.ToString();
-        _unitsKilledValue.text = matchData.UnitsKilled.ToString();
-        _matchDurationValue.text = matchData.MatchDuration.ToString();
+        string winnerNickname = NetworkManager.GetRoomCustomProperty(GameNetwork.RoomCustomProperties.WINNER_NICKNAME);
+        string localPlayerNickname = NetworkManager.GetLocalPlayerNickname();
 
-        Dictionary<string, bool> unitsAlive = matchData.UnitsAlive;
+        if (localPlayerNickname == winnerNickname)
+            _winnerText.text = "You win!";
+        else
+            _winnerText.text = "You lose!";
+
+        string localTeamName = _warRef.LocalPlayerTeam;
+
+        _damageDealtValue.text = GameNetwork.GetTeamRoomProperty(GameNetwork.TeamRoomProperties.DAMAGE_DEALT, localTeamName);
+        _damageReceivedValue.text = GameNetwork.GetTeamRoomProperty(GameNetwork.TeamRoomProperties.DAMAGE_RECEIVED, localTeamName);
+        _unitsKilledValue.text = GameNetwork.GetTeamRoomProperty(GameNetwork.TeamRoomProperties.UNITS_KILLED, localTeamName);
+
+        double matchDuration = double.Parse(NetworkManager.GetRoomCustomProperty(GameNetwork.RoomCustomProperties.MATCH_DURATION));
+        System.TimeSpan timeSpan = System.TimeSpan.FromSeconds(matchDuration);
+        string matchDurationString = string.Format("{0:D2}:{1:D2}:{2:D2}", timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds);
+        _matchDurationValue.text = matchDurationString;
+
         GameObject unitGridItemTemplate = _unitsAliveGridContent.GetChild(0).gameObject;
 
-        foreach(KeyValuePair<string, bool> unitAlive in unitsAlive)
+        string localTeam = _warRef.LocalPlayerTeam;
+        string[] localTeamUnitNames = GameNetwork.GetTeamUnitNames(_warRef.LocalPlayerTeam);
+
+        foreach(string unitName in localTeamUnitNames)
         {
+            int unitHealth = GameNetwork.GetUnitRoomPropertyAsInt(GameNetwork.UnitRoomProperties.HEALTH, localTeam, unitName);
+            bool unitIsAlive = (unitHealth > 0);
+
             GameObject unit = Instantiate<GameObject>(unitGridItemTemplate, _unitsAliveGridContent);
-            unit.GetComponent<UnitAliveGridItem>().SetUp(unitAlive.Key, unitAlive.Value);
+            unit.GetComponent<UnitAliveGridItem>().SetUp(unitName, unitIsAlive);
         }
 
         unitGridItemTemplate.SetActive(false);
 
-        Dictionary<int, int> boxTiersWithAmountRewards = matchData.BoxTiersWithAmountsRewards;
+        Dictionary<int, int> boxTiersWithAmountRewards = matchLocalData.BoxTiersWithAmountsRewards;
         GameObject rewardGridItemTemplate = _rewardsGridContent.GetChild(0).gameObject;
 
         foreach (KeyValuePair<int, int> tiersWithAmount in boxTiersWithAmountRewards)

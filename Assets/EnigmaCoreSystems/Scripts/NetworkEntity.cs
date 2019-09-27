@@ -13,7 +13,9 @@ namespace Enigma.CoreSystems
         public delegate void CheckReadyOnSceneDelegate(GameObject objectToFind);
         static public CheckReadyOnSceneDelegate OnReadyInSceneCallback;
 
-        public bool ReadyInScene { get; protected set; }
+        private string _sceneObjectToFind = "";
+
+        public bool RequiresSceneReady { get; protected set; }
 
 
         protected virtual void Awake()
@@ -21,6 +23,23 @@ namespace Enigma.CoreSystems
             _photonView = GetComponent<PhotonView>();
             if(!_photonView.ObservedComponents.Contains(this))
                 _photonView.ObservedComponents.Add(this);
+
+            RequiresSceneReady = false;
+        }
+
+        protected virtual void Update()
+        {
+            if (RequiresSceneReady) 
+            {
+                if (_sceneObjectToFind != "")
+                {
+                    GameObject sceneObject = GameObject.Find(_sceneObjectToFind);
+                    if (sceneObject != null)
+                        onReadyInScene(sceneObject);
+                    else
+                        Debug.LogWarning("NetworkEntity::LateUpdate -> sceneObjectToFind: " + _sceneObjectToFind + " not yet found by: " + this.name);
+                }
+            }
         }
 
         protected virtual void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -30,25 +49,15 @@ namespace Enigma.CoreSystems
 
         protected void StartReadyOnSceneCheck(string sceneObjectToFind)
         {
-            StartCoroutine(checkReadyOnSceneCheck(sceneObjectToFind));
-        }
-
-        private IEnumerator checkReadyOnSceneCheck(string sceneObjectToFind)
-        {
-            while (!ReadyInScene)
-            {
-                GameObject sceneObject = GameObject.Find(sceneObjectToFind);
-                if (sceneObject != null)
-                    onReadyInScene(sceneObject);
-
-                yield return new WaitForSeconds(_readyOnSceneCheckDelay);
-            }
+            Debug.LogWarning("NetworkEntity::StartReadyOnSceneCheck -> name: " + this.name + " sceneObjectToFind: " + sceneObjectToFind);
+            _sceneObjectToFind = sceneObjectToFind;
+            RequiresSceneReady = true;
         }
 
         protected virtual void onReadyInScene(GameObject sceneObjectFound)
         {
             Debug.LogWarning("NewtorkEntity::onReadyInScene -> name: " + this.name);
-            ReadyInScene = true;
+            RequiresSceneReady = false;
         }
 
         protected void setNetworkViewId(int id)

@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _readyOnSceneCheckDelay: 1
   _maxRatingDifferenceToFight: 50
-  _timeToWaitBeforeAiRival: 30
+  _timeToWaitBeforeAiRival: 3000
   _waitingPopUp: {fileID: 0}
 --- !u!114 &9133879716181396368
 MonoBehaviour:

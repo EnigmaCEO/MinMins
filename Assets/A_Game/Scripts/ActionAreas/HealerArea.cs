@@ -17,7 +17,7 @@ public class HealerArea : ActionArea
     {
         base.OnTriggerEnter2D(coll);
 
-        if (NetworkManager.GetIsMasterClient())
+        if (base._warRef.GetIsHost())
         {
             MinMinUnit unit = getUnitFromCollider(coll);
 

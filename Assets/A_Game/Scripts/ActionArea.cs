@@ -37,9 +37,10 @@ public class ActionArea : NetworkEntity
         setUpActionArea((string)data[0], (Vector3)data[1], (Vector3)data[2], (string)data[3], (MinMinUnit.EffectNames)data[4], (string)data[5], (int)data[6]);
     }
 
-    virtual protected void Update()
+    override protected void Update()
     {
-        if (NetworkManager.GetIsMasterClient())
+        base.Update();
+        if (_warRef.GetIsHost())
         {
             if (LifeTime > 0)
             {
@@ -95,7 +96,7 @@ public class ActionArea : NetworkEntity
         while (actionAreas.Count > 0)
         {
             ActionArea area = actionAreas[0];
-            Debug.LogWarning("ActionArea::DestroyActionAreaList -> actionAreaToDestroy: " + area.name + " ownerTeamName: " + area.OwnerTeamName + " owerName: " + area.OwnerUnitName);
+            //Debug.LogWarning("ActionArea::DestroyActionAreaList -> actionAreaToDestroy: " + area.name + " ownerTeamName: " + area.OwnerTeamName + " owerName: " + area.OwnerUnitName);
             actionAreas.RemoveAt(0);
             NetworkManager.NetworkDestroy(area.gameObject);
         }
@@ -153,7 +154,7 @@ public class ActionArea : NetworkEntity
 
         int targetUnitPlayerId = (targetUnitTeam == GameNetwork.TeamNames.HOST) ? NetworkManager.GetLocalPlayerId() : GameNetwork.Instance.GuestPlayerId;
 
-        int targetUnitHealth = GameNetwork.GetRoomUnitProperty(GameNetwork.UnitRoomProperties.HEALTH, targetUnitTeam, targetUnitName);
+        int targetUnitHealth = GameNetwork.GetUnitRoomPropertyAsInt(GameNetwork.UnitRoomProperties.HEALTH, targetUnitTeam, targetUnitName);
         int targetUnitDefense = GameNetwork.GetAnyPlayerUnitPropertyAsInt(GameNetwork.UnitPlayerProperties.DEFENSE, targetUnitName, targetUnitTeam, targetUnitPlayerId);
         int targetUnitSpecialDefense = _warRef.GetUnitSpecialDefense(targetUnitTeam, targetUnitName);
         int finalDefense = targetUnitDefense + targetUnitSpecialDefense;
@@ -166,11 +167,18 @@ public class ActionArea : NetworkEntity
 
         int finalDamage = Mathf.FloorToInt((float)damage * (float)(1 - (finalDefense / 100.0f)));  //Defense is translated into damage reduction
 
-        //Debug.LogWarning("ActionArea::OnTriggerEnter2D -> finalDefense: " + finalDefense + " damage: " + damage + " finalDamage: " + finalDamage);
+        int damageDealt = GameNetwork.GetTeamRoomPropertyAsInt(GameNetwork.TeamRoomProperties.DAMAGE_DEALT, OwnerTeamName);
+        GameNetwork.SetTeamRoomProperty(GameNetwork.TeamRoomProperties.DAMAGE_DEALT, OwnerTeamName, (damageDealt + finalDamage).ToString());
+
+        int damageReceived = GameNetwork.GetTeamRoomPropertyAsInt(GameNetwork.TeamRoomProperties.DAMAGE_RECEIVED, targetUnitTeam);
+        GameNetwork.SetTeamRoomProperty(GameNetwork.TeamRoomProperties.DAMAGE_RECEIVED, targetUnitTeam, (damageReceived + finalDamage).ToString());
+        
+        //Debug.LogWarning("ActionArea::OnTriggerEnter2D -> finalDefense: " + finalDefense + " damage: " + damage + " finalDamage: " + finalDamageString);
 
         targetUnitHealth -= finalDamage;  
         if (targetUnitHealth < 0)
             targetUnitHealth = 0;
+
         _warRef.SetUnitHealth(targetUnitTeam, targetUnitName, targetUnitHealth, true);
     }
 

@@ -672,9 +672,24 @@ namespace Enigma.CoreSystems
             return PhotonNetwork.player;
         }
 
-        static PhotonPlayer GetNetworkPlayerById(int id)
+        static public PhotonPlayer GetNetworkPlayerById(int id)
         {
             return PhotonPlayer.Find(id);
+        }
+
+        static public string GetLocalPlayerNickname()
+        {
+            return GetLocalPlayer().NickName;
+        }
+
+        static public string GetNetworkPlayerNicknameById(int id)
+        {
+            return GetNetworkPlayerById(id).NickName;
+        }
+
+        static public void SetLocalPlayerNickName(string nickname)
+        {
+            GetLocalPlayer().NickName = nickname;
         }
 
         //Set a PhotonPlayer's tag object
@@ -891,7 +906,7 @@ namespace Enigma.CoreSystems
 
         static public string GetRoomCustomProperty(object key)
         {
-            //Debug.Log("GetRoomCustomProperty -> key: " + key);
+            Debug.Log("GetRoomCustomProperty -> key: " + key);
             if (IsPhotonOffline())
             {
                 if (!Data.ContainsKey(DataGroups.INFO))
@@ -913,20 +928,20 @@ namespace Enigma.CoreSystems
         ///<summary>
         /// Set room custom properties with expected values
         /// </summary>
-        static public void SetRoomCustomProperties(Hashtable systemHTable, Hashtable expectedHTable)
-        {
-            ExitGames.Client.Photon.Hashtable photonHTable = new ExitGames.Client.Photon.Hashtable();
+        //static public void SetRoomCustomProperties(Hashtable systemHTable, Hashtable expectedHTable)
+        //{
+        //    ExitGames.Client.Photon.Hashtable photonHTable = new ExitGames.Client.Photon.Hashtable();
 
-            foreach (DictionaryEntry pair in systemHTable)
-                photonHTable.Add(pair.Key, pair.Value);
+        //    foreach (DictionaryEntry pair in systemHTable)
+        //        photonHTable.Add(pair.Key, pair.Value);
 
-            ExitGames.Client.Photon.Hashtable photonExpectedHTable = new ExitGames.Client.Photon.Hashtable();
+        //    ExitGames.Client.Photon.Hashtable photonExpectedHTable = new ExitGames.Client.Photon.Hashtable();
 
-            foreach (DictionaryEntry pair in expectedHTable)
-                photonExpectedHTable.Add(pair.Key, pair.Value);
+        //    foreach (DictionaryEntry pair in expectedHTable)
+        //        photonExpectedHTable.Add(pair.Key, pair.Value);
 
-            PhotonNetwork.room.SetCustomProperties(photonHTable, photonExpectedHTable);
-        }
+        //    PhotonNetwork.room.SetCustomProperties(photonHTable, photonExpectedHTable);
+        //}
 
         //Instantiate network object
         static public GameObject InstantiateObject(string prefab, Vector3 vec, Quaternion quat, byte group = 0, object[] data = null)

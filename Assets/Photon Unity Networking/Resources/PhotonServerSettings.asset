@@ -58,4 +58,5 @@ MonoBehaviour:
   - disableCollider
   - receiveDisableCollider
   - setUpActionArea
+  - receiveMatchResultsServerResponse
   DisableAutoOpenWizard: 1

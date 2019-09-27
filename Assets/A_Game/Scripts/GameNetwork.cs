@@ -14,10 +14,16 @@ public class GameNetwork : SingletonNetworkEntity<GameNetwork>
     public class TransactionKeys
     {
         public const string RATING = "rating";
-        public const string PLAYER_ID = "player_id";
-        public const string UNITS_KILLED = "units_killed";
-        public const string DAMAGE_DEALT = "damage_dealt";
-        public const string DAMAGE_RECEIVED = "damage_received";
+
+        public const string WINNER_NICKNAME = "winner_nickname";
+        public const string LOSER_NICKNAME = "loser_nickname";
+
+        public const string WINNER_DAMAGE_DEALT = "winner_damage_dealt";
+        public const string LOSER_DAMAGE_DEALT = "loser_damage_dealt";
+
+        public const string WINNER_UNITS_KILLED = "winner_units_killed";
+        public const string LOSER_UNITS_KILLED = "loser_units_killed";
+
         public const string MATCH_DURATION = "match_duration";
     }
 
@@ -42,7 +48,14 @@ public class GameNetwork : SingletonNetworkEntity<GameNetwork>
         public const string HOST_UNIT_INDEX = "Host_Unit_Index";
         public const string GUEST_UNIT_INDEX = "Guest_Unit_Index";
         public const string ACTIONS_LEFT = "Actions_Left";
+
         public const string START_COUNT_DOWN_TIMER = "st";
+
+        public const string MATCH_START_TIME = "Match_Start_Time";
+        public const string MATCH_END_TIME = "Match_End_Time";
+        public const string MATCH_DURATION = "Match_Duration";
+        public const string WINNER_NICKNAME = "Winner_Nickname";
+        public const string LOSER_NICKNAME = "Loser_Nickname";
 
         //public const string GAME_STATE = "gState";
         //public const string PLAYER_LIST = "playerList";
@@ -62,6 +75,11 @@ public class GameNetwork : SingletonNetworkEntity<GameNetwork>
     {
         public const string HEALTH = "Team_Health";
         public const string MAX_HEALTH = "Team_Max_Health";
+
+        public const string PLAYER_NICKNAME = "Player_Nickname";
+        public const string DAMAGE_DEALT = "Damage_Dealt";
+        public const string DAMAGE_RECEIVED = "Damage_Received";
+        public const string UNITS_KILLED = "Units_Killed";
     }
 
     public class UnitPlayerProperties
@@ -148,6 +166,14 @@ public class GameNetwork : SingletonNetworkEntity<GameNetwork>
     {
         NetworkManager.OnPlayerCustomPropertiesChangedCallback -= OnPlayerCustomPropertiesChanged;
         NetworkManager.OnRoomCustomPropertiesChangedCallback -= OnRoomCustomPropertiesChanged;
+    }
+
+    static public string GetNicknameFromPlayerTeam(string teamName)
+    {
+        int playerId = GetTeamNetworkPlayerId(teamName);
+        string nickName = NetworkManager.GetNetworkPlayerNicknameById(playerId);
+
+        return nickName;
     }
 
     static public string GetOppositeTeamName(string teamName)
@@ -279,17 +305,22 @@ public class GameNetwork : SingletonNetworkEntity<GameNetwork>
         }
     }
 
-    public void SendMatchResultsToServer(War.MatchData matchData, OnSendResultsDelegate onSendMatchResultsCallback)
+    public void SendMatchResultsToServer(string winner, OnSendResultsDelegate onSendMatchResultsCallback)
     {
         _onSendResultsCallback = onSendMatchResultsCallback;
 
+        string loser = GameNetwork.GetOppositeTeamName(winner);
+
         _matchResultshashTable.Clear();
-        _matchResultshashTable.Add(TransactionKeys.PLAYER_ID, matchData.PlayerId);
-        _matchResultshashTable.Add(TransactionKeys.MATCH_DURATION, matchData.MatchDuration);
-        _matchResultshashTable.Add(TransactionKeys.DAMAGE_DEALT, matchData.DamageDealt);
-        _matchResultshashTable.Add(TransactionKeys.DAMAGE_RECEIVED, matchData.DamageReceived);
-        _matchResultshashTable.Add(TransactionKeys.MATCH_DURATION, matchData.MatchDuration);
-        _matchResultshashTable.Add(TransactionKeys.UNITS_KILLED, matchData.UnitsKilled);
+
+        _matchResultshashTable.Add(TransactionKeys.WINNER_NICKNAME, NetworkManager.GetRoomCustomProperty(GameNetwork.RoomCustomProperties.WINNER_NICKNAME));
+        _matchResultshashTable.Add(TransactionKeys.LOSER_NICKNAME, NetworkManager.GetRoomCustomProperty(GameNetwork.RoomCustomProperties.LOSER_NICKNAME));
+
+        _matchResultshashTable.Add(TransactionKeys.WINNER_DAMAGE_DEALT, GameNetwork.GetTeamRoomProperty(GameNetwork.TeamRoomProperties.DAMAGE_DEALT, winner));
+        _matchResultshashTable.Add(TransactionKeys.LOSER_DAMAGE_DEALT, GameNetwork.GetTeamRoomProperty(GameNetwork.TeamRoomProperties.DAMAGE_DEALT, loser));
+
+        _matchResultshashTable.Add(TransactionKeys.WINNER_UNITS_KILLED, GameNetwork.GetTeamRoomProperty(GameNetwork.TeamRoomProperties.UNITS_KILLED, winner));
+        _matchResultshashTable.Add(TransactionKeys.LOSER_UNITS_KILLED, GameNetwork.GetTeamRoomProperty(GameNetwork.TeamRoomProperties.UNITS_KILLED, loser));
 
         performResultsSendingTransaction();
     }
@@ -322,7 +353,7 @@ public class GameNetwork : SingletonNetworkEntity<GameNetwork>
         SetAnyPlayerUnitProperty(UnitPlayerProperties.EFFECT_SCALE, unitName, getStatByLevel(minMin.EffectScale, unitLevel), teamName, networkPlayerId);
 
         string maxHealth = getStatByLevel(minMin.MaxHealth, unitLevel);
-        SetRoomUnitProperty(UnitRoomProperties.MAX_HEALTH, teamName, unitName, maxHealth);
+        SetUnitRoomProperty(UnitRoomProperties.MAX_HEALTH, teamName, unitName, maxHealth);
         SetUnitHealth(teamName, unitName, int.Parse(maxHealth));
         //SetUnitHealth(teamName, unitName, (int.Parse(maxHealth))/4); //TODO: Remove text hack
     }
@@ -401,12 +432,12 @@ public class GameNetwork : SingletonNetworkEntity<GameNetwork>
 
     static public void SetUnitHealth(string team, string unitName, int value)
     {
-        SetRoomUnitProperty(UnitRoomProperties.HEALTH, team, unitName, value.ToString());
+        SetUnitRoomProperty(UnitRoomProperties.HEALTH, team, unitName, value.ToString());
     }
 
     static public int GetUnitHealth(string team, string unitName)
     {
-        return GetRoomUnitProperty(UnitRoomProperties.HEALTH, team, unitName);
+        return GetUnitRoomPropertyAsInt(UnitRoomProperties.HEALTH, team, unitName);
     }
 
     static public string GetTeamInTurn()
@@ -419,24 +450,34 @@ public class GameNetwork : SingletonNetworkEntity<GameNetwork>
         NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.TEAM_IN_TURN, teamInTurn);
     }
 
-    static public void SetRoomUnitProperty(string property, string team, string unitName, string value)
+    static public void SetUnitRoomProperty(string property, string team, string unitName, string value)
     {
         NetworkManager.SetRoomCustomProperty(property + NetworkManager.Separators.KEYS + team + NetworkManager.Separators.KEYS + unitName, value);
     }
 
-    static public int GetRoomUnitProperty(string property, string team, string unitName)
+    static public int GetUnitRoomPropertyAsInt(string property, string team, string unitName)
     {
-        return NetworkManager.GetRoomCustomPropertyAsInt(property + NetworkManager.Separators.KEYS + team + NetworkManager.Separators.KEYS + unitName);
+        return int.Parse(GetUnitRoomProperty(property, team, unitName));
     }
 
-    static public void SetRoomTeamProperty(string property, string team,  string value)
+    static public string GetUnitRoomProperty(string property, string team, string unitName)
+    {
+        return NetworkManager.GetRoomCustomProperty(property + NetworkManager.Separators.KEYS + team + NetworkManager.Separators.KEYS + unitName);
+    }
+
+    static public void SetTeamRoomProperty(string property, string team,  string value)
     {
         NetworkManager.SetRoomCustomProperty(property + NetworkManager.Separators.KEYS + team, value);
     }
 
-    static public int GetRoomTeamProperty(string property, string team)
+    static public int GetTeamRoomPropertyAsInt(string property, string team)
     {
-        return NetworkManager.GetRoomCustomPropertyAsInt(property + NetworkManager.Separators.KEYS + team);
+        return int.Parse(GetTeamRoomProperty(property, team));
+    }
+
+    static public string GetTeamRoomProperty(string property, string team)
+    {
+        return NetworkManager.GetRoomCustomProperty(property + NetworkManager.Separators.KEYS + team);
     }
 
     static public void ClearLocalTeamUnits(string teamName)

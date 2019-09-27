@@ -11,7 +11,7 @@ public class BomberArea : ActionArea
 
         checkFieldRewardBoxHit(coll);
 
-        if (NetworkManager.GetIsMasterClient())
+        if (_warRef.GetIsHost())
         {
             MinMinUnit unit = getUnitFromCollider(coll);
             if(unit != null)

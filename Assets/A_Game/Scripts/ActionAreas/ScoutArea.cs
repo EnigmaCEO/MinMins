@@ -41,7 +41,7 @@ public class ScoutArea : ActionArea
     {
         base.OnTriggerEnter2D(coll);
 
-        if (NetworkManager.GetIsMasterClient())
+        if (base._warRef.GetIsHost())
         {
             HealerArea healerArea = coll.GetComponent<HealerArea>();
             if (healerArea != null)
