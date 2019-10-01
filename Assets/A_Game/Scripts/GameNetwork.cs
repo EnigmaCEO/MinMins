@@ -6,9 +6,13 @@ using UnityEngine;
 
 public class GameNetwork : SingletonNetworkEntity<GameNetwork>
 {
+    public const string TRANSACTION_GAME_NAME = "MinMins";
+
     public class Transactions
     {
         public const int CHANGE_RATING = 15;
+        public const int RANK_CHANGED_TRANSACTION_ID = 16;
+        public const int ENJIN_ITEM_COLLECTED_TRANSACTION = 17;
     }
 
     public class TransactionKeys

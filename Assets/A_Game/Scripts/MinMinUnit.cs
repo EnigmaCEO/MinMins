@@ -39,15 +39,24 @@ public class MinMinUnit : NetworkEntity
     private string _teamName;
     private int _teamIndex;
 
+    private Transform _spriteTransform;
+
     public string TeamName { get { return _teamName; } }
 
     protected override void Awake()
     {
         base.Awake();
 
+        _spriteTransform = transform.Find("Sprite");
+
         object[] data = base.GetInstantiationData();
         if (data != null)
             setUpUnitForWar((string)data[0], (string)data[1], (int)data[2], (float)data[3], (float)data[4]);
+    }
+
+    public Vector3 GetBattlefieldPosition()
+    {
+        return _spriteTransform.position;
     }
 
     private void setUpUnitForWar(string unitName, string teamName, int teamIndex, float posX, float posY)
@@ -58,13 +67,11 @@ public class MinMinUnit : NetworkEntity
         _teamName = teamName;
         _teamIndex = teamIndex;
 
-        Transform spriteTransform = transform.Find("Sprite");
-
-        WarUnitSprite warUnitSprite = spriteTransform.gameObject.AddComponent<WarUnitSprite>();
+        WarUnitSprite warUnitSprite = _spriteTransform.gameObject.AddComponent<WarUnitSprite>();
         warUnitSprite.Unit = this.gameObject;
 
         GameObject shadow = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/UI/battle_shadow"));
-        shadow.transform.parent = spriteTransform;
+        shadow.transform.parent = _spriteTransform;
         shadow.transform.localPosition = new Vector2(0, 0);
         shadow.transform.localScale = new Vector2(-1, 1);
 
@@ -72,11 +79,11 @@ public class MinMinUnit : NetworkEntity
 
         if (!isHost)
         {
-            Vector3 localScale = spriteTransform.localScale;
-            spriteTransform.localScale = new Vector3(-localScale.x, localScale.y, localScale.z);
+            Vector3 localScale = _spriteTransform.localScale;
+            _spriteTransform.localScale = new Vector3(-localScale.x, localScale.y, localScale.z);
         }
 
-        spriteTransform.localPosition = new Vector3(posX, posY, spriteTransform.localPosition.z);
+        _spriteTransform.localPosition = new Vector3(posX, posY, _spriteTransform.localPosition.z);
 
         string gridName = War.GetTeamGridName(_teamName);
         int slotNumber = _teamIndex + 1;

@@ -91,7 +91,7 @@ public class EnjinLogin : MonoBehaviour
             registerPassword.text,
             registerEmail.text,
             ETHField.text,
-            ShalwendConfigs.TRANSACTION_GAME_NAME,
+            GameNetwork.TRANSACTION_GAME_NAME,
             Application.productName.ToLower(),
             onRegistration,
             extras

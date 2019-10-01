@@ -67,6 +67,15 @@ public class ScoutArea : ActionArea
                     else
                         Debug.LogWarning("TankArea of owner: " + tankArea.OwnerUnitName + " and team: " + tankArea.OwnerTeamName + " and Defense: " + tankArea.Defense + " endured scoutArea of owner " + OwnerUnitName + " and team: " + OwnerTeamName + " and Power: " + Power);
                 }
+                else
+                {
+                    MinMinUnit minMinUnit = coll.GetComponent<MinMinUnit>();
+                    if (minMinUnit != null)
+                    {
+                        string targetTeam = GameNetwork.GetOppositeTeamName(OwnerTeamName);
+                        _warRef.HandleExposedUnit(targetTeam, minMinUnit);
+                    }
+                }
             }
         }
     }

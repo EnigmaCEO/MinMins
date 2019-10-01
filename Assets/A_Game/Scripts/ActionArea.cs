@@ -144,7 +144,7 @@ public class ActionArea : NetworkEntity
         _effect.transform.localPosition = Vector3.zero;
     }
 
-    protected void dealDamage(string targetUnitName)
+    protected void dealDamage (string targetUnitName)
     {
         int damage = int.Parse(getOwnerUnitProperty(GameNetwork.UnitPlayerProperties.STRENGHT)); //TODO: Use damage formula if needed.
         string targetUnitTeam = GameNetwork.GetOppositeTeamName(OwnerTeamName);
@@ -178,6 +178,9 @@ public class ActionArea : NetworkEntity
         targetUnitHealth -= finalDamage;  
         if (targetUnitHealth < 0)
             targetUnitHealth = 0;
+
+        if(_warRef.GetIsAiTurn())
+            _warRef.HandleAiSuccessfulAttack(this);
 
         _warRef.SetUnitHealth(targetUnitTeam, targetUnitName, targetUnitHealth, true);
     }

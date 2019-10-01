@@ -835,6 +835,7 @@ namespace Enigma.CoreSystems
 
 
                 Hashtable userData = Data[DataGroups.INFO][DataKeys.PLAYER] as Hashtable;
+                print("NetworkManager::GetAnyPlayerCustomProperty -> networkPlayerId: " + networkPlayerId + " userData.ToStringFull(): " + userData.ToStringFull());
                 return userData[virtualPlayerKey].ToString().Trim('"');
             }
             else  // Online
@@ -916,6 +917,7 @@ namespace Enigma.CoreSystems
                     return "";
 
                 Hashtable userData = Data[DataGroups.INFO][DataKeys.ROOM] as Hashtable;
+                Debug.Log("GetRoomCustomProperty -> userData.ToStringFull(): " + userData.ToStringFull());
                 return userData[key].ToString().Trim('"');
             }
             else  // Online
