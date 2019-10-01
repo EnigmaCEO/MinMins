@@ -49,12 +49,14 @@ MonoBehaviour:
   _battleFieldRightSideOffset: 0
   _actionAreaPosZ: -0.1
   _maxRoundsCount: 3
+  _maxDecisionTime: 10
   _fieldRewardChestsAmount: 1
   _teamGridContent: {fileID: 0}
   _readyCheckDelay: 2
   _team1_CloudsLocalPosX: 0.07
   _errorText: {fileID: 0}
   _matchResultsPopUp: {fileID: 0}
+  _timeLeftText: {fileID: 0}
   _teamTurnText: {fileID: 0}
   _unitTurnText: {fileID: 0}
   _unitTypeTurnText: {fileID: 0}

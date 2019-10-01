@@ -21,7 +21,7 @@ public class HealerArea : ActionArea
         {
             MinMinUnit unit = getUnitFromCollider(coll);
 
-            if(unit != null)
+            if((unit != null) && (unit.TeamName == OwnerTeamName))
                 _warRef.SetUnitForHealing(unit.name, this);
         }
     }

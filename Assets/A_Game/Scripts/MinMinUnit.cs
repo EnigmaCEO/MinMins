@@ -61,7 +61,7 @@ public class MinMinUnit : NetworkEntity
 
     private void setUpUnitForWar(string unitName, string teamName, int teamIndex, float posX, float posY)
     {
-        Debug.LogWarning("MinMinUnit::setUpUnitForWar -> unitName: " + unitName + " teamName: " + teamName + " teamIndex: " + teamIndex);
+        //Debug.LogWarning("MinMinUnit::setUpUnitForWar -> unitName: " + unitName + " teamName: " + teamName + " teamIndex: " + teamIndex);
 
         this.name = unitName;
         _teamName = teamName;

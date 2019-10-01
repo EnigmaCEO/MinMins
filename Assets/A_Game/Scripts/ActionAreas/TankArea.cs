@@ -19,10 +19,10 @@ public class TankArea : ActionArea
 
         if (base._warRef.GetIsHost())
         {
-            MinMinUnit targetUnit = getUnitFromCollider(coll);
-            if (targetUnit != null)
+            MinMinUnit unit = getUnitFromCollider(coll);
+            if ((unit != null) && (unit.TeamName == OwnerTeamName))
             {
-                string targetUnitName = targetUnit.name;
+                string targetUnitName = unit.name;
                 _warRef.SetUnitSpecialDefense(targetUnitName, this);
             }
         }

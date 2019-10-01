@@ -49,14 +49,14 @@ namespace Enigma.CoreSystems
 
         protected void StartReadyOnSceneCheck(string sceneObjectToFind)
         {
-            Debug.LogWarning("NetworkEntity::StartReadyOnSceneCheck -> name: " + this.name + " sceneObjectToFind: " + sceneObjectToFind);
+            //Debug.LogWarning("NetworkEntity::StartReadyOnSceneCheck -> name: " + this.name + " sceneObjectToFind: " + sceneObjectToFind);
             _sceneObjectToFind = sceneObjectToFind;
             RequiresSceneReady = true;
         }
 
         protected virtual void onReadyInScene(GameObject sceneObjectFound)
         {
-            Debug.LogWarning("NewtorkEntity::onReadyInScene -> name: " + this.name);
+            //Debug.LogWarning("NewtorkEntity::onReadyInScene -> name: " + this.name);
             RequiresSceneReady = false;
         }
 

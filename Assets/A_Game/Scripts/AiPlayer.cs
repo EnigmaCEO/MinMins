@@ -35,12 +35,14 @@ public class AiPlayer
         {
             targetIndex = getTargetIndexForAttackers(LastBomberAttackWasSuccessful, _lastBomberTargetGridIndex, _bomberGridTargetIndexesTried);
             _lastBomberTargetGridIndex = targetIndex;
+            Debug.LogWarning("AiPlayer::GetWorldInput2D -> LastBomberAttackWasSuccessful: " + LastBomberAttackWasSuccessful + " _lastBomberTargetGridIndex: " + _lastBomberTargetGridIndex);
             LastBomberAttackWasSuccessful = false;
         }
         else if (unitType == MinMinUnit.Types.Destroyer)
         {
             targetIndex = getTargetIndexForAttackers(LastDestroyerAttackWasSuccessful, _lastDestroyerTargetGridIndex, _destroyerGridTargetIndexesTried);
             _lastDestroyerTargetGridIndex = targetIndex;
+            Debug.LogWarning("AiPlayer::GetWorldInput2D -> LastDestroyerAttackWasSuccessful: " + LastDestroyerAttackWasSuccessful + " _lastDestroyerTargetGridIndex: " + _lastDestroyerTargetGridIndex);
             LastDestroyerAttackWasSuccessful = false;
         }
         else if (unitType == MinMinUnit.Types.Scout)
@@ -103,6 +105,10 @@ public class AiPlayer
         }
 
         int selectedIndex = Random.Range(0, candidateIndexes.Count);
+        foreach(int index in targetIndexesTried)
+            Debug.LogWarning("AiPlayer::getRandomTargetIndexNotTried -> targetIndexesTried index: " + index.ToString() + " target: " + _gridTargets[index].ToString());
+
+        Debug.LogWarning("AiPlayer::getRandomTargetIndexNotTried -> selectedIndex: " + selectedIndex);
         targetIndexesTried.Add(selectedIndex);
 
         return selectedIndex;
@@ -129,6 +135,8 @@ public class AiPlayer
                 int injury = GetUnitInjury(unit.name);
                 if (injury > 0)
                 {
+                    Debug.LogWarning("AiPlayer::getTankTargetPosition -> injured unit: " + unit.name + " unit.Type: " + unit.Type + " injury: " + injury);
+
                     if (injury > maxInjury)
                     {
                         maxInjury = injury;
@@ -144,13 +152,30 @@ public class AiPlayer
         }
 
         if (maxInjuryUnit != null)
+        {
             input = maxInjuryUnit.GetBattlefieldPosition();
+            Debug.LogWarning("AiPlayer::getTankTargetPosition -> maxInjuryUnit: " + maxInjuryUnit.name + " maxInjury: " + maxInjury + " input: " + input);
+        }
         else
         {
             if (attackerUnits.Count > 0)
-                input = getRandomUnitFromList(attackerUnits).GetBattlefieldPosition();
+            {
+                foreach (MinMinUnit unit in attackerUnits)
+                    Debug.LogWarning("AiPlayer::getTankTargetPosition -> attacker unit: " + unit.name + " unit.Type: " + unit.Type);
+
+                MinMinUnit randomAttacker = getRandomUnitFromList(attackerUnits);
+                input = randomAttacker.GetBattlefieldPosition();
+                Debug.LogWarning("AiPlayer::getTankTargetPosition -> random attacker: " + randomAttacker.name + " input: " + input.ToString());
+            }
             else
-                input = getRandomUnitFromList(aliveUnits).GetBattlefieldPosition();
+            {
+                foreach (MinMinUnit unit in aliveUnits)
+                    Debug.LogWarning("AiPlayer::getTankTargetPosition -> alive unit: " + unit.name + " unit.Type: " + unit.Type);
+
+                MinMinUnit randomAlive = getRandomUnitFromList(aliveUnits);
+                input = randomAlive.GetBattlefieldPosition();
+                Debug.LogWarning("AiPlayer::getTankTargetPosition -> random alive: " + randomAlive.name + " input: " + input.ToString());
+            }
         }
 
         return input;
@@ -177,6 +202,8 @@ public class AiPlayer
                 {
                     if (!healerAreasByOwnerByTargetByTeam[GameNetwork.TeamNames.GUEST].ContainsKey(unit.name))
                     {
+                        Debug.LogWarning("AiPlayer::getHealerTargetPosition -> injured unit with no healing: " + unit.name + " unit.Type: " + unit.Type + " injury: " + injury);
+
                         if (injury > maxInjury)
                         {
                             maxInjury = injury;
@@ -193,14 +220,32 @@ public class AiPlayer
         }
 
         if (maxInjuryUnit != null)
+        {
             input = maxInjuryUnit.GetBattlefieldPosition();
+            Debug.LogWarning("AiPlayer::getHealerTargetPosition -> maxInjuryUnit: " + maxInjuryUnit.name + " with maxInjury: " + maxInjury + " input: " + input.ToString());
+        }
         else
         {
             List<MinMinUnit> exposedUnits = exposedUnitsByTeam[GameNetwork.TeamNames.GUEST];
+
             if (exposedUnits.Count > 0)
-                input = getRandomUnitFromList(exposedUnits).GetBattlefieldPosition();
+            {
+                foreach (MinMinUnit unit in exposedUnits)
+                    Debug.LogWarning("AiPlayer::getHealerTargetPosition -> exposed unit: " + unit.name + " unit.Type: " + unit.Type);
+
+                MinMinUnit randomExposed = getRandomUnitFromList(exposedUnits);
+                input = randomExposed.GetBattlefieldPosition();
+                Debug.LogWarning("AiPlayer::getHealerTargetPosition -> randomExposed: " + randomExposed.name);
+            }
             else
-                input = getRandomUnitFromList(aliveUnits).GetBattlefieldPosition();
+            {
+                foreach (MinMinUnit unit in aliveUnits)
+                    Debug.LogWarning("AiPlayer::getHealerTargetPosition -> alive unit: " + unit.name + " unit.Type: " + unit.Type);
+
+                MinMinUnit randomAlive = getRandomUnitFromList(aliveUnits);
+                input = randomAlive.GetBattlefieldPosition();
+                Debug.LogWarning("AiPlayer::getHealerTargetPosition -> randomAlive: " + randomAlive.name);
+            }
         }
 
         return input;

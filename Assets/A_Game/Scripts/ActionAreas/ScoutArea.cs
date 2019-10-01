@@ -49,10 +49,10 @@ public class ScoutArea : ActionArea
                 if (Power > healerArea.Healing)
                 {
                     _warRef.RemoveHealerArea(healerArea);
-                    Debug.LogWarning("HealerArea of owner: " + healerArea.OwnerUnitName + " and team: " + healerArea.OwnerTeamName + " and Healing: " + healerArea.Healing + " was removed by scoutArea of owner " + OwnerUnitName + " and team: " + OwnerTeamName + " and Power: " + Power);
+                    //Debug.LogWarning("HealerArea of owner: " + healerArea.OwnerUnitName + " and team: " + healerArea.OwnerTeamName + " and Healing: " + healerArea.Healing + " was removed by scoutArea of owner " + OwnerUnitName + " and team: " + OwnerTeamName + " and Power: " + Power);
                 }
-                else
-                    Debug.LogWarning("HealerArea of owner: " + healerArea.OwnerUnitName + " and team: " + healerArea.OwnerTeamName + " and Healing: " + healerArea.Healing + " endured scoutArea of owner " + OwnerUnitName + " and team: " + OwnerTeamName + " and Power: " + Power);
+                //else
+                //    Debug.LogWarning("HealerArea of owner: " + healerArea.OwnerUnitName + " and team: " + healerArea.OwnerTeamName + " and Healing: " + healerArea.Healing + " endured scoutArea of owner " + OwnerUnitName + " and team: " + OwnerTeamName + " and Power: " + Power);
             }
             else
             {
@@ -62,18 +62,19 @@ public class ScoutArea : ActionArea
                     if (Power > tankArea.Defense)
                     {
                         _warRef.RemoveTankArea(tankArea);
-                        Debug.LogWarning("TankArea of owner: " + tankArea.OwnerUnitName + " and team: " + tankArea.OwnerTeamName + " and Defense: " + tankArea.Defense + " was removed by scoutArea of owner " + OwnerUnitName + " and team: " + OwnerTeamName + " and Power: " + Power);
+                        //Debug.LogWarning("TankArea of owner: " + tankArea.OwnerUnitName + " and team: " + tankArea.OwnerTeamName + " and Defense: " + tankArea.Defense + " was removed by scoutArea of owner " + OwnerUnitName + " and team: " + OwnerTeamName + " and Power: " + Power);
                     }
-                    else
-                        Debug.LogWarning("TankArea of owner: " + tankArea.OwnerUnitName + " and team: " + tankArea.OwnerTeamName + " and Defense: " + tankArea.Defense + " endured scoutArea of owner " + OwnerUnitName + " and team: " + OwnerTeamName + " and Power: " + Power);
+                    //else
+                    //    Debug.LogWarning("TankArea of owner: " + tankArea.OwnerUnitName + " and team: " + tankArea.OwnerTeamName + " and Defense: " + tankArea.Defense + " endured scoutArea of owner " + OwnerUnitName + " and team: " + OwnerTeamName + " and Power: " + Power);
                 }
                 else
                 {
-                    MinMinUnit minMinUnit = coll.GetComponent<MinMinUnit>();
+                    MinMinUnit minMinUnit = getUnitFromCollider(coll);
                     if (minMinUnit != null)
                     {
                         string targetTeam = GameNetwork.GetOppositeTeamName(OwnerTeamName);
-                        _warRef.HandleExposedUnit(targetTeam, minMinUnit);
+                        if(targetTeam == minMinUnit.TeamName)  //To filter this area colliding against owner team
+                            _warRef.HandleExposedUnit(targetTeam, minMinUnit);
                     }
                 }
             }

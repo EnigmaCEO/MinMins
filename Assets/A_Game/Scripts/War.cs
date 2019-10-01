@@ -19,6 +19,7 @@ public class War : NetworkEntity
     [SerializeField] private float _actionAreaPosZ = -0.1f;
 
     [SerializeField] private int _maxRoundsCount = 3;
+    [SerializeField] private float _maxDecisionTime = 10;
     [SerializeField] private int _fieldRewardChestsAmount = 1;
 
     [SerializeField] private Transform _teamGridContent;
@@ -60,9 +61,8 @@ public class War : NetworkEntity
 
     private Dictionary<string, List<MinMinUnit>> _exposedUnitsByTeam = new Dictionary<string, List<MinMinUnit>>();
 
-    private string _attackingUnitName = "";
-    private float _timer;
-    private float _playTime;
+
+    private float _timeLeftCount = 0;
 
     private MatchLocalData _matchLocalData = new MatchLocalData();
 
@@ -105,6 +105,7 @@ public class War : NetworkEntity
         {
             _aiPlayer = new AiPlayer();
 
+            _exposedUnitsByTeam.Add(GameNetwork.TeamNames.HOST, new List<MinMinUnit>());
             _exposedUnitsByTeam.Add(GameNetwork.TeamNames.GUEST, new List<MinMinUnit>());
         }
 
@@ -142,29 +143,6 @@ public class War : NetworkEntity
         else
             setupWar();
     }
-
-    //// Update is called once per frame
-    //void Update()
-    //{
-    //    _playTime += Time.deltaTime;
-
-    //    if (_side == 0)
-    //        _timer = _playTime;
-
-    //    if (((_playTime - _timer) >= _readyCheckDelay) && Ready)
-    //    {
-    //        int guestGridCount = _guestGrid.childCount;
-    //        for (int i = 0; i < guestGridCount; i++)
-    //        {
-    //            Transform guestUnitSlot = _guestGrid.GetChild(i);
-    //            if (guestUnitSlot.childCount == 0)
-    //                continue;
-
-    //            //Attack(guestUnitSlot.name + "/" + guestUnitSlot.GetChild(0).name);
-    //            break;
-    //        }
-    //    }
-    //}
 
     private void OnDestroy()
     {
@@ -223,8 +201,11 @@ public class War : NetworkEntity
 
     public void HandleExposedUnit(string teamName, MinMinUnit unit)
     {
-        if(!_exposedUnitsByTeam[teamName].Contains(unit))
+        if (!_exposedUnitsByTeam[teamName].Contains(unit))
+        {
+            Debug.LogWarning("War::HandleExposedUnit Added to exposed units: -> teamName: " + teamName + " unit name: " + unit.name + " unit type: " + unit.Type);
             _exposedUnitsByTeam[teamName].Add(unit);
+        }
     }
 
     private int getPlayerInTurnId()
@@ -294,7 +275,7 @@ public class War : NetworkEntity
 
     private void onReadyToFight(string teamName, bool ready)
     {
-        Debug.LogWarning("War::onReadyToFight -> teamName: " + teamName + " ready: " + ready);
+        //Debug.LogWarning("War::onReadyToFight -> teamName: " + teamName + " ready: " + ready);
         if (GetIsHost())
         {
             if (ready)
@@ -318,7 +299,7 @@ public class War : NetworkEntity
                     hostReady = bool.Parse(NetworkManager.GetAnyPlayerCustomProperty(GameNetwork.PlayerCustomProperties.READY_TO_FIGHT, GameNetwork.TeamNames.HOST, GameNetwork.GetTeamNetworkPlayerId(GameNetwork.TeamNames.HOST)));
                 }
 
-                Debug.LogWarning("War::onReadyToFight -> hostReady: " + hostReady + " guestReady: " + guestReady);
+                //Debug.LogWarning("War::onReadyToFight -> hostReady: " + hostReady + " guestReady: " + guestReady);
 
                 if (hostReady && guestReady)
                 {
@@ -407,10 +388,20 @@ public class War : NetworkEntity
         _teamTurnText.text = "Turn: " + teamName + " | Mine: " + _localPlayerTeam;
 
         if (GetIsHost())
-            advanceUnitIndex(teamName);
+            skipUnitIndex(teamName);
     }
 
-    private void advanceUnitIndex(string teamName)
+    private int getTeamUnitIndex(string teamName)
+    {
+        string roomProperty = GameNetwork.RoomCustomProperties.HOST_UNIT_INDEX;
+        if (teamName == GameNetwork.TeamNames.GUEST)
+            roomProperty = GameNetwork.RoomCustomProperties.GUEST_UNIT_INDEX;
+
+        int unitIndex = NetworkManager.GetRoomCustomPropertyAsInt(roomProperty);
+        return unitIndex;
+    }
+
+    private void skipUnitIndex(string teamName)
     {
         string roomProperty = GameNetwork.RoomCustomProperties.HOST_UNIT_INDEX;
         if (teamName == GameNetwork.TeamNames.GUEST)
@@ -418,6 +409,16 @@ public class War : NetworkEntity
 
         int unitIndex = NetworkManager.GetRoomCustomPropertyAsInt(roomProperty) + 1;
         NetworkManager.SetRoomCustomProperty(roomProperty, unitIndex);
+    }
+
+    private void changeTurn()
+    {
+        changeTurn(GameNetwork.GetTeamInTurn());
+    }
+
+    private void changeTurn(string teamName)
+    {
+        GameNetwork.SetTeamInTurn(GameNetwork.GetOppositeTeamName(teamName));
     }
 
     private void onHostUnitIndexChanged(int hostUnitIndex)
@@ -436,8 +437,8 @@ public class War : NetworkEntity
         if (unitIndex == -1)
             return;
 
-        int unitsCount = units.Count;
-        if (unitIndex >= unitsCount)
+        int teamUnitsCount = units.Count;
+        if (unitIndex >= teamUnitsCount)
         {
             if (GetIsHost())
             {
@@ -453,7 +454,7 @@ public class War : NetworkEntity
                         handlMatchEnd(winner);
                 }
                 else // Is GUEST
-                    GameNetwork.SetTeamInTurn(GameNetwork.GetOppositeTeamName(teamName));
+                    changeTurn(teamName);
             }
         }
         else
@@ -474,10 +475,10 @@ public class War : NetworkEntity
             }
             else if (GetIsHost())
             {
-                if ((unitIndex + 1) >= unitsCount)
-                    GameNetwork.SetTeamInTurn(GameNetwork.GetOppositeTeamName(teamName));
+                if ((unitIndex + 1) >= teamUnitsCount)
+                    changeTurn(teamName);
                 else
-                    advanceUnitIndex(teamName);
+                    skipUnitIndex(teamName);
             }
         }
     }
@@ -511,23 +512,37 @@ public class War : NetworkEntity
                 StartCoroutine(handleHumanPlayerInput());
         }
         else if (GetIsHost())
-            GameNetwork.SetTeamInTurn(GameNetwork.GetOppositeTeamName(teamInTurn));
+            changeTurn(teamInTurn);
     }
 
     private IEnumerator handleAiPlayerInput(string teamInTurn)
     {
+        resetDecisionTimeCount();
         float delay = Random.Range(AiPlayer._MIN_DECISION_DELAY, AiPlayer._MAX_DECISION_DELAY);
-        yield return new WaitForSeconds(delay);
 
-        MinMinUnit unit = getUnitInTurn();
-        Dictionary<string, MinMinUnit> teamInTurnUnits = GetTeamUnitsDictionary(teamInTurn);
-        Vector2 aiWorldInput2D = _aiPlayer.GetWorldInput2D(unit.Type, teamInTurnUnits, _exposedUnitsByTeam, _healerAreasByOwnerByTargetByTeam);
-        Vector3 aiWorldInput3D = new Vector3(aiWorldInput2D.x, aiWorldInput2D.y, _actionAreaPosZ);
-        sendPlayerTargetInput(aiWorldInput3D, GameNetwork.TeamNames.GUEST);
+        while (true)
+        {
+            reduceDecisionTimeCount();
+
+            delay -= Time.deltaTime;
+            if (delay <= 0)
+            {
+                MinMinUnit unit = getUnitInTurn();
+                Dictionary<string, MinMinUnit> teamInTurnUnits = GetTeamUnitsDictionary(teamInTurn);
+                Vector2 aiWorldInput2D = _aiPlayer.GetWorldInput2D(unit.Type, teamInTurnUnits, _exposedUnitsByTeam, _healerAreasByOwnerByTargetByTeam);
+                Vector3 aiWorldInput3D = new Vector3(aiWorldInput2D.x, aiWorldInput2D.y, _actionAreaPosZ);
+                sendPlayerTargetInput(aiWorldInput3D, GameNetwork.TeamNames.GUEST);
+                yield break;
+            }
+
+            yield return null;
+        }
     }
 
     private IEnumerator handleHumanPlayerInput()
     {
+        resetDecisionTimeCount();
+
         //Debug.LogWarning("handlePlayerInput");
         while (true)
         {
@@ -543,9 +558,51 @@ public class War : NetworkEntity
                     yield break;
                 }
             }
-            
+            else if (checkDecisionTimeOut())
+                yield break;
+           
             yield return null;
         }
+    }
+
+    private bool checkDecisionTimeOut()
+    {
+        bool timeIsOver = reduceDecisionTimeCount();
+
+        if (timeIsOver)
+            changeTurn();
+
+        return timeIsOver;
+    }
+
+    private void resetDecisionTimeCount()
+    {
+        _timeLeftCount = _maxDecisionTime;
+        updateTimeLeftDisplay();
+    }
+
+    private bool reduceDecisionTimeCount()
+    {
+        //return false; // decisition time hack
+        
+        bool isOver = false;
+
+        _timeLeftCount -= Time.deltaTime;
+
+        if (_timeLeftCount <= 0)
+        {
+            _timeLeftCount = 0;
+            isOver = true;
+        }
+
+        updateTimeLeftDisplay();
+
+        return isOver;
+    }
+
+    private void updateTimeLeftDisplay()
+    {
+        _timeLeftText.text = "Time Left: " + (Mathf.CeilToInt(_timeLeftCount)).ToString();
     }
 
     private void sendPlayerTargetInput(Vector3 playerInputWorldPosition, string teamName)
@@ -771,7 +828,7 @@ public class War : NetworkEntity
 
     private void onRewardBoxHit()
     {
-        Debug.LogWarning("onRewardBoxHit");
+        //Debug.LogWarning("onRewardBoxHit");
         rewardWithRandomBox();
     }
 
@@ -891,15 +948,22 @@ public class War : NetworkEntity
             MinMinUnit unit = unitGameObject.GetComponent<MinMinUnit>();
 
             MinMinUnit.Types unitDebugType = MinMinUnit.Types.Bomber;
-            //Tanks against Bombers Test hack =======================================
+            //Type vs Type Test hack =======================================
             //if (teamName == GameNetwork.TeamNames.HOST)
-            //    unitDebugType = MinMinUnit.Types.Bomber;
+            //    unitDebugType = MinMinUnit.Types.Scout;
             //else
             //    unitDebugType = MinMinUnit.Types.Healer;
             //==============================================================
 
             //Specific Type Test hack =======================================
             //unitDebugType = MinMinUnit.Types.Scout;
+            //==============================================================
+
+            //Tanks against Bombers Test hack =======================================
+            //if (teamName == GameNetwork.TeamNames.HOST)
+            //    unitDebugType = (MinMinUnit.Types)Random.Range(0, 5);
+            //else
+            //    unitDebugType = MinMinUnit.Types.Tank;
             //==============================================================
 
             //Random type Test hack =======================================
@@ -921,16 +985,19 @@ public class War : NetworkEntity
 
     public void SetUnitForHealing(string targetName, HealerArea healerArea)
     {
+        Debug.LogWarning("War::SetUnitForHealing -> healing: " + healerArea.Healing);
         setUnitForActionArea<HealerArea>(targetName, healerArea, _healerAreasByOwnerByTargetByTeam);
     }
 
     public void SetUnitSpecialDefense(string targetName, TankArea tankArea)
     {
+        Debug.LogWarning("War::SetUnitSpecialDefense -> defense: " + tankArea.Defense);
         setUnitForActionArea<TankArea>(targetName, tankArea, _tanksAreasByOwnerByTargetByTeam);
     }
 
     private void setUnitForActionArea<T>(string targetName, T area, Dictionary<string, Dictionary<string, Dictionary<string, List<T>>>> areasByOwnerByTargetByTeam) where T : ActionArea
     {
+        Debug.LogWarning("War::setUnitForActionArea -> targetName: " + targetName + " owner: " + area.OwnerUnitName + " team " + area.OwnerTeamName);
         string team = area.OwnerTeamName;
         string owner = area.OwnerUnitName;
 
@@ -1064,7 +1131,7 @@ public class War : NetworkEntity
         teamUnits.Add(unit.name, unit);
 
         int teamPlayersAmount = GameNetwork.GetTeamUnitNames(teamName).Length;
-        Debug.LogWarning("War::RegisterUnit -> teamName: " + teamName + " unit: " + unit.name + " units on list: " + teamPlayersAmount + " units registered: " + teamUnits.Count);
+        //Debug.LogWarning("War::RegisterUnit -> teamName: " + teamName + " unit: " + unit.name + " units on list: " + teamPlayersAmount + " units registered: " + teamUnits.Count);
         if (teamUnits.Count == teamPlayersAmount)
         {
             _readyByTeam[teamName] = true;

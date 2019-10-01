@@ -14,7 +14,7 @@ public class BomberArea : ActionArea
         if (_warRef.GetIsHost())
         {
             MinMinUnit unit = getUnitFromCollider(coll);
-            if(unit != null)
+            if((unit != null) && (unit.TeamName != OwnerTeamName))
                 dealDamage(unit.name);
         }
     }
