@@ -19,7 +19,7 @@ public class War : NetworkEntity
     [SerializeField] private float _actionAreaPosZ = -0.1f;
 
     [SerializeField] private int _maxRoundsCount = 3;
-    [SerializeField] private float _maxDecisionTime = 10;
+    [SerializeField] private double _maxDecisionTime = 10;
     [SerializeField] private int _fieldRewardChestsAmount = 1;
 
     [SerializeField] private Transform _teamGridContent;
@@ -62,7 +62,7 @@ public class War : NetworkEntity
     private Dictionary<string, List<MinMinUnit>> _exposedUnitsByTeam = new Dictionary<string, List<MinMinUnit>>();
 
 
-    private float _timeLeftCount = 0;
+    private double _timeLeftCount = 0;
 
     private MatchLocalData _matchLocalData = new MatchLocalData();
 
@@ -76,6 +76,7 @@ public class War : NetworkEntity
     public string LocalPlayerTeam { get { return _localPlayerTeam; } }
 
     private AiPlayer _aiPlayer;
+    private double _lastNetworkTime;
 
     override protected void Awake()
     {
@@ -110,6 +111,7 @@ public class War : NetworkEntity
         }
 
         _errorText.gameObject.SetActive(false);
+        enableTimeLeftDisplay(false);
 
         _matchResultsPopUp.DismissButton.onClick.AddListener(() => onMatchResultsDismissButtonDown());
         _matchResultsPopUp.gameObject.SetActive(false);
@@ -517,12 +519,12 @@ public class War : NetworkEntity
 
     private IEnumerator handleAiPlayerInput(string teamInTurn)
     {
-        resetDecisionTimeCount();
+        //resetDecisionTimeCount();
         float delay = Random.Range(AiPlayer._MIN_DECISION_DELAY, AiPlayer._MAX_DECISION_DELAY);
 
         while (true)
         {
-            reduceDecisionTimeCount();
+            //reduceDecisionTimeCount();
 
             delay -= Time.deltaTime;
             if (delay <= 0)
@@ -555,6 +557,7 @@ public class War : NetworkEntity
                 || (tapWorldPosition.x < gameConfig.BattleFieldMaxPos.x) || (tapWorldPosition.x > gameConfig.BattleFieldMinPos.x))
                 {
                     sendPlayerTargetInput(tapWorldPosition, _localPlayerTeam);
+                    enableTimeLeftDisplay(false);
                     yield break;
                 }
             }
@@ -570,7 +573,10 @@ public class War : NetworkEntity
         bool timeIsOver = reduceDecisionTimeCount();
 
         if (timeIsOver)
+        {
+            enableTimeLeftDisplay(false);
             changeTurn();
+        }
 
         return timeIsOver;
     }
@@ -578,7 +584,14 @@ public class War : NetworkEntity
     private void resetDecisionTimeCount()
     {
         _timeLeftCount = _maxDecisionTime;
+        enableTimeLeftDisplay(true);
         updateTimeLeftDisplay();
+        _lastNetworkTime = NetworkManager.GetNetworkTime();
+    }
+
+    private void enableTimeLeftDisplay(bool enabled)
+    {
+        _timeLeftText.enabled = enabled;
     }
 
     private bool reduceDecisionTimeCount()
@@ -587,7 +600,11 @@ public class War : NetworkEntity
         
         bool isOver = false;
 
-        _timeLeftCount -= Time.deltaTime;
+        double networkTime = NetworkManager.GetNetworkTime();
+        double deltaTime = networkTime - _lastNetworkTime;
+        _lastNetworkTime = networkTime;
+
+        _timeLeftCount -= deltaTime;
 
         if (_timeLeftCount <= 0)
         {
@@ -602,7 +619,7 @@ public class War : NetworkEntity
 
     private void updateTimeLeftDisplay()
     {
-        _timeLeftText.text = "Time Left: " + (Mathf.CeilToInt(_timeLeftCount)).ToString();
+        _timeLeftText.text = "Time Left: " + (Mathf.CeilToInt(((float)_timeLeftCount))).ToString();
     }
 
     private void sendPlayerTargetInput(Vector3 playerInputWorldPosition, string teamName)
