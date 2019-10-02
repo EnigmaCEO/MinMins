@@ -941,9 +941,15 @@ public class War : NetworkEntity
         GameNetwork gameNetwork = GameNetwork.Instance;
         GameInventory gameInventory = GameInventory.Instance;
         GameStats gameStats = GameStats.Instance;
+        GameConfig gameConfig = GameConfig.Instance;
+
+        bool requiresHorizontalInversion = (!GetUsesAi() && (teamName == GameNetwork.TeamNames.GUEST));
+        //requiresHorizontalInversion = true;  // test hack
+        float battlefieldCenterX = 0;
+        if(requiresHorizontalInversion)
+            battlefieldCenterX = (gameConfig.BattleFieldMaxPos.x + gameConfig.BattleFieldMinPos.x) * 0.5f;
 
         int teamLength = teamUnits.Length;
-
         int networkPlayerId = GameNetwork.GetTeamNetworkPlayerId(teamName);
 
         for (int i = 0; i < teamLength; i++)
@@ -957,6 +963,9 @@ public class War : NetworkEntity
             string[] positionCoords = positionString.Split(NetworkManager.Separators.VALUES);
             float posX = float.Parse(positionCoords[0]);
             float posY = float.Parse(positionCoords[1]);
+
+            if (requiresHorizontalInversion)
+                posX = battlefieldCenterX - (posX - battlefieldCenterX); 
 
             object[] instantiationData = { unitName, teamName, i, posX, posY };
 
