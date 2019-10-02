@@ -69,12 +69,15 @@ public class ScoutArea : ActionArea
                 }
                 else
                 {
-                    MinMinUnit minMinUnit = getUnitFromCollider(coll);
-                    if (minMinUnit != null)
+                    if (_warRef.GetUsesAi())
                     {
-                        string targetTeam = GameNetwork.GetOppositeTeamName(OwnerTeamName);
-                        if(targetTeam == minMinUnit.TeamName)  //To filter this area colliding against owner team
-                            _warRef.HandleExposedUnit(targetTeam, minMinUnit);
+                        MinMinUnit minMinUnit = getUnitFromCollider(coll);
+                        if (minMinUnit != null)
+                        {
+                            string targetTeam = GameNetwork.GetOppositeTeamName(OwnerTeamName);
+                            if (targetTeam == minMinUnit.TeamName)  //To filter this area colliding against owner team
+                                _warRef.HandleAddExposedUnit(targetTeam, minMinUnit);
+                        }
                     }
                 }
             }

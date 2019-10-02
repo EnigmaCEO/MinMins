@@ -114,6 +114,7 @@ public class UnitSelectManager : MonoBehaviour
     private void createDefaultSelectedUnits(int amount)
     {
         GameStats gameStats = GameStats.Instance;
+        gameStats.TeamUnits.Clear();
         for (int i = 0; i < amount; i++)
             gameStats.TeamUnits.Add("-1");
     }

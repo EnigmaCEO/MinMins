@@ -417,13 +417,13 @@ public class GameNetwork : SingletonNetworkEntity<GameNetwork>
             }
             else
             {
-                StartCoroutine(retryResultsSending());
+                //StartCoroutine(retryResultsSending());
                 _onSendResultsCallback(ServerResponseMessages.SERVER_ERROR, -1);
             }
         }
         else
         {
-            StartCoroutine(retryResultsSending());
+            //StartCoroutine(retryResultsSending());
             _onSendResultsCallback(ServerResponseMessages.CONNECTION_ERROR, -1);
         }
     }

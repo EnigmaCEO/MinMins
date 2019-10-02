@@ -201,12 +201,21 @@ public class War : NetworkEntity
             _aiPlayer.LastDestroyerAttackWasSuccessful = true;
     }
 
-    public void HandleExposedUnit(string teamName, MinMinUnit unit)
-    {
+    public void HandleAddExposedUnit(string teamName, MinMinUnit unit)
+    {         
         if (!_exposedUnitsByTeam[teamName].Contains(unit))
         {
             Debug.LogWarning("War::HandleExposedUnit Added to exposed units: -> teamName: " + teamName + " unit name: " + unit.name + " unit type: " + unit.Type);
             _exposedUnitsByTeam[teamName].Add(unit);
+        }
+    }
+
+    public void HandleRemoveExposedUnit(string teamName, MinMinUnit unit)
+    {
+        if (_exposedUnitsByTeam[teamName].Contains(unit))
+        {
+            Debug.LogWarning("War::HandleExposedUnit Removed from exposed units: -> teamName: " + teamName + " unit name: " + unit.name + " unit type: " + unit.Type);
+            _exposedUnitsByTeam[teamName].Remove(unit);
         }
     }
 
@@ -368,6 +377,9 @@ public class War : NetworkEntity
             string killerTeam = GameNetwork.GetOppositeTeamName(teamName);
             int unitsKilled = GameNetwork.GetTeamRoomPropertyAsInt(GameNetwork.TeamRoomProperties.UNITS_KILLED, killerTeam);
             GameNetwork.SetTeamRoomProperty(GameNetwork.TeamRoomProperties.UNITS_KILLED, killerTeam, (unitsKilled + 1).ToString());
+
+            if(GetUsesAi())
+                HandleRemoveExposedUnit(teamName, unit);
         }
     }
 
@@ -1006,6 +1018,7 @@ public class War : NetworkEntity
     public void onMatchResultsDismissButtonDown()
     {
         GameNetwork.ClearLocalTeamUnits(_localPlayerTeam);
+        NetworkManager.LeaveRoom();
         SceneManager.LoadScene(GameConstants.Scenes.LEVELS);
     }
 
