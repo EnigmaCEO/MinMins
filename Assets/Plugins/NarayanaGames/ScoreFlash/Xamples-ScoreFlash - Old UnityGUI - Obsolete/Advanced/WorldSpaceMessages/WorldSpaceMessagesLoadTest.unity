@@ -1,0 +1,3891 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!29 &1
+SceneSettings:
+  m_ObjectHideFlags: 0
+  m_PVSData: 
+  m_PVSObjectsArray: []
+  m_PVSPortalsArray: []
+  m_OcclusionBakeSettings:
+    smallestOccluder: 5
+    smallestHole: 0.25
+    backfaceThreshold: 100
+--- !u!104 &2
+RenderSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 7
+  m_Fog: 0
+  m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  m_FogMode: 3
+  m_FogDensity: 0.01
+  m_LinearFogStart: 0
+  m_LinearFogEnd: 300
+  m_AmbientSkyColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
+  m_AmbientEquatorColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
+  m_AmbientGroundColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
+  m_AmbientIntensity: 1
+  m_AmbientMode: 3
+  m_SkyboxMaterial: {fileID: 0}
+  m_HaloStrength: 0.5
+  m_FlareStrength: 1
+  m_FlareFadeSpeed: 3
+  m_HaloTexture: {fileID: 0}
+  m_SpotCookie: {fileID: 10001, guid: 0000000000000000e000000000000000, type: 0}
+  m_DefaultReflectionMode: 0
+  m_DefaultReflectionResolution: 128
+  m_ReflectionBounces: 1
+  m_ReflectionIntensity: 1
+  m_CustomReflection: {fileID: 0}
+  m_Sun: {fileID: 0}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+--- !u!157 &4
+LightmapSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 7
+  m_GIWorkflowMode: 1
+  m_GISettings:
+    serializedVersion: 2
+    m_BounceScale: 1
+    m_IndirectOutputScale: 1
+    m_AlbedoBoost: 1
+    m_TemporalCoherenceThreshold: 1
+    m_EnvironmentLightingMode: 0
+    m_EnableBakedLightmaps: 1
+    m_EnableRealtimeLightmaps: 0
+  m_LightmapEditorSettings:
+    serializedVersion: 4
+    m_Resolution: 1
+    m_BakeResolution: 50
+    m_TextureWidth: 1024
+    m_TextureHeight: 1024
+    m_AO: 1
+    m_AOMaxDistance: 1
+    m_CompAOExponent: 1
+    m_CompAOExponentDirect: 0
+    m_Padding: 2
+    m_LightmapParameters: {fileID: 0}
+    m_LightmapsBakeMode: 1
+    m_TextureCompression: 0
+    m_DirectLightInLightProbes: 1
+    m_FinalGather: 0
+    m_FinalGatherFiltering: 1
+    m_FinalGatherRayCount: 256
+    m_ReflectionCompression: 2
+  m_LightingDataAsset: {fileID: 0}
+  m_RuntimeCPUUsage: 25
+--- !u!1 &5
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 19}
+  - 114: {fileID: 61}
+  m_Layer: 0
+  m_Name: GenericGUI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &18
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 32}
+  - 20: {fileID: 33}
+  - 92: {fileID: 53}
+  - 124: {fileID: 55}
+  - 81: {fileID: 52}
+  m_Layer: 0
+  m_Name: Main Camera
+  m_TagString: MainCamera
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &19
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 5}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+--- !u!4 &32
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 18}
+  m_LocalRotation: {x: 0.09443026, y: 0, z: 0, w: 0.9955315}
+  m_LocalPosition: {x: 0, y: 3.805807, z: -9.801569}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+--- !u!20 &33
+Camera:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 18}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 1
+  m_BackGroundColor: {r: 0, g: 0.029104434, b: 0.13958472, a: 0.02}
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.3
+  far clip plane: 1000
+  field of view: 60
+  orthographic: 0
+  orthographic size: 100
+  m_Depth: -1
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
+  m_HDR: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
+  m_StereoMirrorMode: 0
+--- !u!81 &52
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 18}
+  m_Enabled: 1
+--- !u!92 &53
+Behaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 18}
+  m_Enabled: 1
+--- !u!124 &55
+Behaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 18}
+  m_Enabled: 1
+--- !u!114 &61
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 5}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 483b72acc35bf4ef0974b82a51caf16e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  labelLocation:
+    serializedVersion: 2
+    x: 30
+    y: 30
+    width: 600
+    height: 80
+  labelText: 'Load Test for ScoreFlashFollow3D - you should never push this many message
+    ... but if you do, ScoreFlash will still be with you, at: {0}'
+  buttonLocation:
+    serializedVersion: 2
+    x: 730
+    y: 400
+    width: 150
+    height: 30
+  buttonText: Next Scene
+  updateInterval: 1
+  performanceTextFormat: '{1:000} FPS{5} (Avg: {2:000}, Min: {3:000}, Max: {4:000})'
+--- !u!114 &73 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c,
+    type: 2}
+  m_PrefabInternal: {fileID: 74}
+  m_Script: {fileID: 11500000, guid: 5d404ebb642ce4a329ccd7ce3dbe2d41, type: 3}
+--- !u!1001 &74
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: isTestAutogenerateMessages
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: skin
+      value: 
+      objectReference: {fileID: 11400000, guid: 0bd2508b81c334bfbb1a0c77d7d69eb6,
+        type: 2}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: skinHighDensity
+      value: 
+      objectReference: {fileID: 11400000, guid: 60e4c996b1d1c44e981ea2df9b020d34,
+        type: 2}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: screenAlign
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: minDistanceBetweenMessages
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: spreadSpeed
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: colorSelectionMode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: colors.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: colors.Array.data[0].r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: colors.Array.data[0].g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: colors.Array.data[0].b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: colors.Array.data[0].a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: colors.Array.data[1].r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: colors.Array.data[1].g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: colors.Array.data[1].b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: colors.Array.data[1].a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: colors.Array.data[2].r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: colors.Array.data[2].g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: colors.Array.data[2].b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: colors.Array.data[2].a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: colors.Array.data[3].r
+      value: 0.73134327
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: colors.Array.data[3].g
+      value: 0.31655157
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: colors.Array.data[3].b
+      value: 0.6458648
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: colors.Array.data[3].a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: colors.Array.data[4].r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: colors.Array.data[4].g
+      value: 0.7342657
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: colors.Array.data[4].b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: colors.Array.data[4].a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: colors.Array.data[5].r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: colors.Array.data[5].g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: colors.Array.data[5].b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: colors.Array.data[5].a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: fadeInTimeSeconds
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: fadeInOffsetY
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: fadeInScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: readTimeSeconds
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: readFloatUpVelocity
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: readScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: fadeOutTimeSeconds
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: fadeOutFloatUpVelocity
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: ensureSingleton
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: version
+      value: 5.0.0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: isDebugMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+      propertyPath: innerAnchor
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 0feea4d8a765e470fb27d0b937caba6c, type: 2}
+  m_IsPrefabParent: 0
+--- !u!196 &75
+NavMeshSettings:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_BuildSettings:
+    serializedVersion: 2
+    agentRadius: 0.5
+    agentHeight: 2
+    agentSlope: 45
+    agentClimb: 0.4
+    ledgeDropHeight: 0
+    maxJumpAcrossDistance: 0
+    accuratePlacement: 0
+    minRegionArea: 2
+    cellSize: 0.16666666
+    manualCellSize: 0
+  m_NavMeshData: {fileID: 0}
+--- !u!1 &14343145
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 14343146}
+  - 114: {fileID: 14343147}
+  m_Layer: 0
+  m_Name: ScoreFlashLayout-BL
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &14343146
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 14343145}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1399363178}
+  m_RootOrder: 6
+--- !u!114 &14343147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 14343145}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f55138f36c629488497b4bd79835a07e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  testMessageDelaySeconds: 0.6
+  isDesignMode: 1
+  enableDeselectHack: 0
+  designText: +1024
+  lockScreenAlign: 0
+  screenAlign: -1
+  position: {x: 0, y: 0}
+  lockInnerAnchor: 1
+  innerAnchor: -1
+  minPaddingX: 20
+  maxWidth: 600
+  freezeOnRead: 0
+  defaultScoreFlash: {fileID: 0}
+--- !u!1 &129502867
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 129502868}
+  - 33: {fileID: 129502870}
+  - 23: {fileID: 129502869}
+  - 114: {fileID: 129502871}
+  m_Layer: 0
+  m_Name: ScoreFlashFollow3D
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &129502868
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 129502867}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1171939206}
+  m_RootOrder: 11
+--- !u!23 &129502869
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 129502867}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 59e67fa6309b14259a2f8245eccf260f, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_SelectedWireframeHidden: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!33 &129502870
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 129502867}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &129502871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 129502867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be6fac2be9cf848dbb3d24bed79e8852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  pushLocally: 1
+  testMessageDelaySeconds: 0.5
+  scoreFlashTestInstances: []
+  targetRenderer: {fileID: 129502869}
+  hasSentTargetRendererError: 0
+  isDesignMode: 0
+  enableDeselectHack: 0
+  designText: +1024
+  keepStatic: 0
+  leaveBehind: 0
+  loseMomentum: 1
+  screenPositionOffset: {x: 0, y: 0}
+  worldPositionOffset: {x: 0, y: 1, z: 0}
+  innerAnchor: 1
+  freezeOnRead: 0
+  referenceCamera: {fileID: 33}
+  defaultScoreFlash: {fileID: 73}
+--- !u!1 &212590044
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 212590045}
+  - 114: {fileID: 212590046}
+  m_Layer: 0
+  m_Name: ScoreFlashLayout-BL
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &212590045
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 212590044}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1399363178}
+  m_RootOrder: 8
+--- !u!114 &212590046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 212590044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f55138f36c629488497b4bd79835a07e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  testMessageDelaySeconds: 0.6
+  isDesignMode: 1
+  enableDeselectHack: 0
+  designText: +1024
+  lockScreenAlign: 0
+  screenAlign: -1
+  position: {x: 0, y: 0}
+  lockInnerAnchor: 1
+  innerAnchor: -1
+  minPaddingX: 20
+  maxWidth: 600
+  freezeOnRead: 0
+  defaultScoreFlash: {fileID: 0}
+--- !u!1 &233087638
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 233087639}
+  - 33: {fileID: 233087641}
+  - 23: {fileID: 233087640}
+  - 114: {fileID: 233087642}
+  m_Layer: 0
+  m_Name: ScoreFlashFollow3D
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &233087639
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 233087638}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1171939206}
+  m_RootOrder: 3
+--- !u!23 &233087640
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 233087638}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 59e67fa6309b14259a2f8245eccf260f, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_SelectedWireframeHidden: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!33 &233087641
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 233087638}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &233087642
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 233087638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be6fac2be9cf848dbb3d24bed79e8852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  pushLocally: 1
+  testMessageDelaySeconds: 0.5
+  scoreFlashTestInstances: []
+  targetRenderer: {fileID: 233087640}
+  hasSentTargetRendererError: 0
+  isDesignMode: 0
+  enableDeselectHack: 0
+  designText: +1024
+  keepStatic: 0
+  leaveBehind: 0
+  loseMomentum: 1
+  screenPositionOffset: {x: 0, y: 0}
+  worldPositionOffset: {x: 0, y: 1, z: 0}
+  innerAnchor: 1
+  freezeOnRead: 0
+  referenceCamera: {fileID: 33}
+  defaultScoreFlash: {fileID: 73}
+--- !u!1 &256498360
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 256498361}
+  - 114: {fileID: 256498362}
+  m_Layer: 0
+  m_Name: ScoreFlashLayout-BL
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &256498361
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 256498360}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1399363178}
+  m_RootOrder: 7
+--- !u!114 &256498362
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 256498360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f55138f36c629488497b4bd79835a07e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  testMessageDelaySeconds: 0.6
+  isDesignMode: 1
+  enableDeselectHack: 0
+  designText: +1024
+  lockScreenAlign: 0
+  screenAlign: -1
+  position: {x: 0, y: 0}
+  lockInnerAnchor: 1
+  innerAnchor: -1
+  minPaddingX: 20
+  maxWidth: 600
+  freezeOnRead: 0
+  defaultScoreFlash: {fileID: 0}
+--- !u!1 &352639173
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 352639174}
+  - 114: {fileID: 352639175}
+  m_Layer: 0
+  m_Name: ScoreFlashLayout-BC
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &352639174
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 352639173}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1399363178}
+  m_RootOrder: 4
+--- !u!114 &352639175
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 352639173}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f55138f36c629488497b4bd79835a07e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  testMessageDelaySeconds: 0.6
+  isDesignMode: 1
+  enableDeselectHack: 0
+  designText: +1024
+  lockScreenAlign: 0
+  screenAlign: 2
+  position: {x: 0, y: 0}
+  lockInnerAnchor: 1
+  innerAnchor: 2
+  minPaddingX: 20
+  maxWidth: 600
+  freezeOnRead: 0
+  defaultScoreFlash: {fileID: 0}
+--- !u!1 &361521778
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 361521779}
+  - 33: {fileID: 361521781}
+  - 23: {fileID: 361521780}
+  - 114: {fileID: 361521782}
+  m_Layer: 0
+  m_Name: ScoreFlashFollow3D
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &361521779
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 361521778}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1171939206}
+  m_RootOrder: 18
+--- !u!23 &361521780
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 361521778}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 59e67fa6309b14259a2f8245eccf260f, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_SelectedWireframeHidden: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!33 &361521781
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 361521778}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &361521782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 361521778}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be6fac2be9cf848dbb3d24bed79e8852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  pushLocally: 1
+  testMessageDelaySeconds: 0.5
+  scoreFlashTestInstances: []
+  targetRenderer: {fileID: 361521780}
+  hasSentTargetRendererError: 0
+  isDesignMode: 0
+  enableDeselectHack: 0
+  designText: +1024
+  keepStatic: 0
+  leaveBehind: 0
+  loseMomentum: 1
+  screenPositionOffset: {x: 0, y: 0}
+  worldPositionOffset: {x: 0, y: 1, z: 0}
+  innerAnchor: 1
+  freezeOnRead: 0
+  referenceCamera: {fileID: 33}
+  defaultScoreFlash: {fileID: 73}
+--- !u!1 &434386357
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 434386358}
+  - 114: {fileID: 434386359}
+  m_Layer: 0
+  m_Name: ScoreFlashLayout-ML
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &434386358
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 434386357}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1399363178}
+  m_RootOrder: 15
+--- !u!114 &434386359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 434386357}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f55138f36c629488497b4bd79835a07e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  testMessageDelaySeconds: 0.6
+  isDesignMode: 1
+  enableDeselectHack: 0
+  designText: +1024
+  lockScreenAlign: 0
+  screenAlign: -2
+  position: {x: 0, y: 0}
+  lockInnerAnchor: 1
+  innerAnchor: -2
+  minPaddingX: 20
+  maxWidth: 600
+  freezeOnRead: 0
+  defaultScoreFlash: {fileID: 0}
+--- !u!1 &484802927
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 484802928}
+  - 33: {fileID: 484802930}
+  - 23: {fileID: 484802929}
+  - 114: {fileID: 484802931}
+  m_Layer: 0
+  m_Name: ScoreFlashFollow3D
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &484802928
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 484802927}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1171939206}
+  m_RootOrder: 4
+--- !u!23 &484802929
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 484802927}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 59e67fa6309b14259a2f8245eccf260f, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_SelectedWireframeHidden: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!33 &484802930
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 484802927}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &484802931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 484802927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be6fac2be9cf848dbb3d24bed79e8852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  pushLocally: 1
+  testMessageDelaySeconds: 0.5
+  scoreFlashTestInstances: []
+  targetRenderer: {fileID: 484802929}
+  hasSentTargetRendererError: 0
+  isDesignMode: 0
+  enableDeselectHack: 0
+  designText: +1024
+  keepStatic: 0
+  leaveBehind: 0
+  loseMomentum: 1
+  screenPositionOffset: {x: 0, y: 0}
+  worldPositionOffset: {x: 0, y: 1, z: 0}
+  innerAnchor: 1
+  freezeOnRead: 0
+  referenceCamera: {fileID: 33}
+  defaultScoreFlash: {fileID: 73}
+--- !u!1 &601376820
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 601376821}
+  - 33: {fileID: 601376823}
+  - 23: {fileID: 601376822}
+  - 114: {fileID: 601376824}
+  m_Layer: 0
+  m_Name: ScoreFlashFollow3D
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &601376821
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 601376820}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1171939206}
+  m_RootOrder: 8
+--- !u!23 &601376822
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 601376820}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 59e67fa6309b14259a2f8245eccf260f, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_SelectedWireframeHidden: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!33 &601376823
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 601376820}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &601376824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 601376820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be6fac2be9cf848dbb3d24bed79e8852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  pushLocally: 1
+  testMessageDelaySeconds: 0.5
+  scoreFlashTestInstances: []
+  targetRenderer: {fileID: 601376822}
+  hasSentTargetRendererError: 0
+  isDesignMode: 0
+  enableDeselectHack: 0
+  designText: +1024
+  keepStatic: 0
+  leaveBehind: 0
+  loseMomentum: 1
+  screenPositionOffset: {x: 0, y: 0}
+  worldPositionOffset: {x: 0, y: 1, z: 0}
+  innerAnchor: 1
+  freezeOnRead: 0
+  referenceCamera: {fileID: 33}
+  defaultScoreFlash: {fileID: 73}
+--- !u!1 &608566740
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 608566741}
+  - 114: {fileID: 608566742}
+  m_Layer: 0
+  m_Name: ScoreFlashLayout-BR
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &608566741
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 608566740}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1399363178}
+  m_RootOrder: 5
+--- !u!114 &608566742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 608566740}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f55138f36c629488497b4bd79835a07e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  testMessageDelaySeconds: 0.6
+  isDesignMode: 1
+  enableDeselectHack: 0
+  designText: +1024
+  lockScreenAlign: 0
+  screenAlign: 8
+  position: {x: 0, y: 0}
+  lockInnerAnchor: 1
+  innerAnchor: 8
+  minPaddingX: 20
+  maxWidth: 600
+  freezeOnRead: 0
+  defaultScoreFlash: {fileID: 0}
+--- !u!1 &641450975
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 641450976}
+  - 114: {fileID: 641450977}
+  m_Layer: 0
+  m_Name: ScoreFlashLayout-BL
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &641450976
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 641450975}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1399363178}
+  m_RootOrder: 18
+--- !u!114 &641450977
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 641450975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f55138f36c629488497b4bd79835a07e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  testMessageDelaySeconds: 0.6
+  isDesignMode: 1
+  enableDeselectHack: 0
+  designText: +1024
+  lockScreenAlign: 0
+  screenAlign: -1
+  position: {x: 0, y: 0}
+  lockInnerAnchor: 1
+  innerAnchor: -1
+  minPaddingX: 20
+  maxWidth: 600
+  freezeOnRead: 0
+  defaultScoreFlash: {fileID: 0}
+--- !u!1 &696841030
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 696841031}
+  - 33: {fileID: 696841033}
+  - 23: {fileID: 696841032}
+  - 114: {fileID: 696841034}
+  m_Layer: 0
+  m_Name: ScoreFlashFollow3D
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &696841031
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 696841030}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1171939206}
+  m_RootOrder: 19
+--- !u!23 &696841032
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 696841030}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 59e67fa6309b14259a2f8245eccf260f, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_SelectedWireframeHidden: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!33 &696841033
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 696841030}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &696841034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 696841030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be6fac2be9cf848dbb3d24bed79e8852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  pushLocally: 1
+  testMessageDelaySeconds: 0.5
+  scoreFlashTestInstances: []
+  targetRenderer: {fileID: 696841032}
+  hasSentTargetRendererError: 0
+  isDesignMode: 0
+  enableDeselectHack: 0
+  designText: +1024
+  keepStatic: 0
+  leaveBehind: 0
+  loseMomentum: 1
+  screenPositionOffset: {x: 0, y: 0}
+  worldPositionOffset: {x: 0, y: 1, z: 0}
+  innerAnchor: 1
+  freezeOnRead: 0
+  referenceCamera: {fileID: 33}
+  defaultScoreFlash: {fileID: 73}
+--- !u!1 &896608206
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 896608207}
+  - 114: {fileID: 896608208}
+  m_Layer: 0
+  m_Name: ScoreFlashLayout-BC
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &896608207
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 896608206}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1399363178}
+  m_RootOrder: 0
+--- !u!114 &896608208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 896608206}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f55138f36c629488497b4bd79835a07e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  testMessageDelaySeconds: 0.6
+  isDesignMode: 1
+  enableDeselectHack: 0
+  designText: +1024
+  lockScreenAlign: 0
+  screenAlign: 2
+  position: {x: 0, y: 0}
+  lockInnerAnchor: 1
+  innerAnchor: 2
+  minPaddingX: 20
+  maxWidth: 600
+  freezeOnRead: 0
+  defaultScoreFlash: {fileID: 0}
+--- !u!1 &937826802
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 937826803}
+  - 33: {fileID: 937826805}
+  - 23: {fileID: 937826804}
+  - 114: {fileID: 937826806}
+  m_Layer: 0
+  m_Name: ScoreFlashFollow3D
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &937826803
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 937826802}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1171939206}
+  m_RootOrder: 2
+--- !u!23 &937826804
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 937826802}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 59e67fa6309b14259a2f8245eccf260f, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_SelectedWireframeHidden: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!33 &937826805
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 937826802}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &937826806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 937826802}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be6fac2be9cf848dbb3d24bed79e8852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  pushLocally: 1
+  testMessageDelaySeconds: 0.5
+  scoreFlashTestInstances: []
+  targetRenderer: {fileID: 937826804}
+  hasSentTargetRendererError: 0
+  isDesignMode: 0
+  enableDeselectHack: 0
+  designText: +1024
+  keepStatic: 0
+  leaveBehind: 0
+  loseMomentum: 1
+  screenPositionOffset: {x: 0, y: 0}
+  worldPositionOffset: {x: 0, y: 1, z: 0}
+  innerAnchor: 1
+  freezeOnRead: 0
+  referenceCamera: {fileID: 33}
+  defaultScoreFlash: {fileID: 73}
+--- !u!1 &1110780294
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1110780295}
+  - 114: {fileID: 1110780296}
+  m_Layer: 0
+  m_Name: ScoreFlashLayout-MR
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1110780295
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1110780294}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1399363178}
+  m_RootOrder: 22
+--- !u!114 &1110780296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1110780294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f55138f36c629488497b4bd79835a07e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  testMessageDelaySeconds: 0.6
+  isDesignMode: 1
+  enableDeselectHack: 0
+  designText: +1024
+  lockScreenAlign: 0
+  screenAlign: 7
+  position: {x: 0, y: 0}
+  lockInnerAnchor: 1
+  innerAnchor: 7
+  minPaddingX: 20
+  maxWidth: 600
+  freezeOnRead: 0
+  defaultScoreFlash: {fileID: 0}
+--- !u!1 &1165918680
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1165918681}
+  - 114: {fileID: 1165918682}
+  m_Layer: 0
+  m_Name: ScoreFlashLayout-BR
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1165918681
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1165918680}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1399363178}
+  m_RootOrder: 12
+--- !u!114 &1165918682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1165918680}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f55138f36c629488497b4bd79835a07e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  testMessageDelaySeconds: 0.6
+  isDesignMode: 1
+  enableDeselectHack: 0
+  designText: +1024
+  lockScreenAlign: 0
+  screenAlign: 8
+  position: {x: 0, y: 0}
+  lockInnerAnchor: 1
+  innerAnchor: 8
+  minPaddingX: 20
+  maxWidth: 600
+  freezeOnRead: 0
+  defaultScoreFlash: {fileID: 0}
+--- !u!1 &1171939205
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1171939206}
+  m_Layer: 0
+  m_Name: 20-Objects_in_3D-Space
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1171939206
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1171939205}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children:
+  - {fileID: 1691551307}
+  - {fileID: 2145374289}
+  - {fileID: 937826803}
+  - {fileID: 233087639}
+  - {fileID: 484802928}
+  - {fileID: 1700244165}
+  - {fileID: 1844614710}
+  - {fileID: 1813831370}
+  - {fileID: 601376821}
+  - {fileID: 1901161786}
+  - {fileID: 1669180076}
+  - {fileID: 129502868}
+  - {fileID: 1494933132}
+  - {fileID: 1912149047}
+  - {fileID: 1975497717}
+  - {fileID: 1700440442}
+  - {fileID: 1567055816}
+  - {fileID: 1678158074}
+  - {fileID: 361521779}
+  - {fileID: 696841031}
+  m_Father: {fileID: 0}
+  m_RootOrder: 1
+--- !u!1 &1276860390
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1276860391}
+  - 114: {fileID: 1276860392}
+  m_Layer: 0
+  m_Name: ScoreFlashLayout-ML
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1276860391
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1276860390}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1399363178}
+  m_RootOrder: 16
+--- !u!114 &1276860392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1276860390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f55138f36c629488497b4bd79835a07e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  testMessageDelaySeconds: 0.6
+  isDesignMode: 1
+  enableDeselectHack: 0
+  designText: +1024
+  lockScreenAlign: 0
+  screenAlign: -2
+  position: {x: 0, y: 0}
+  lockInnerAnchor: 1
+  innerAnchor: -2
+  minPaddingX: 20
+  maxWidth: 600
+  freezeOnRead: 0
+  defaultScoreFlash: {fileID: 0}
+--- !u!1 &1359778398
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1359778399}
+  - 114: {fileID: 1359778400}
+  m_Layer: 0
+  m_Name: ScoreFlashLayout-BL
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1359778399
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1359778398}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1399363178}
+  m_RootOrder: 9
+--- !u!114 &1359778400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1359778398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f55138f36c629488497b4bd79835a07e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  testMessageDelaySeconds: 0.6
+  isDesignMode: 1
+  enableDeselectHack: 0
+  designText: +1024
+  lockScreenAlign: 0
+  screenAlign: -1
+  position: {x: 0, y: 0}
+  lockInnerAnchor: 1
+  innerAnchor: -1
+  minPaddingX: 20
+  maxWidth: 600
+  freezeOnRead: 0
+  defaultScoreFlash: {fileID: 0}
+--- !u!1 &1399363177
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1399363178}
+  m_Layer: 0
+  m_Name: 25-Objects_in_2D-Space
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1399363178
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1399363177}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children:
+  - {fileID: 896608207}
+  - {fileID: 1652407333}
+  - {fileID: 1767720839}
+  - {fileID: 1804001181}
+  - {fileID: 352639174}
+  - {fileID: 608566741}
+  - {fileID: 14343146}
+  - {fileID: 256498361}
+  - {fileID: 212590045}
+  - {fileID: 1359778399}
+  - {fileID: 1631349943}
+  - {fileID: 1572104465}
+  - {fileID: 1165918681}
+  - {fileID: 2109145445}
+  - {fileID: 1639524462}
+  - {fileID: 434386358}
+  - {fileID: 1276860391}
+  - {fileID: 1894269283}
+  - {fileID: 641450976}
+  - {fileID: 1743149442}
+  - {fileID: 1947658920}
+  - {fileID: 1434738739}
+  - {fileID: 1110780295}
+  - {fileID: 1442395791}
+  - {fileID: 2108392215}
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
+--- !u!1 &1434738738
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1434738739}
+  - 114: {fileID: 1434738740}
+  m_Layer: 0
+  m_Name: ScoreFlashLayout-MR
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1434738739
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1434738738}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1399363178}
+  m_RootOrder: 21
+--- !u!114 &1434738740
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1434738738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f55138f36c629488497b4bd79835a07e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  testMessageDelaySeconds: 0.6
+  isDesignMode: 1
+  enableDeselectHack: 0
+  designText: +1024
+  lockScreenAlign: 0
+  screenAlign: 7
+  position: {x: 0, y: 0}
+  lockInnerAnchor: 1
+  innerAnchor: 7
+  minPaddingX: 20
+  maxWidth: 600
+  freezeOnRead: 0
+  defaultScoreFlash: {fileID: 0}
+--- !u!1 &1442395790
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1442395791}
+  - 114: {fileID: 1442395792}
+  m_Layer: 0
+  m_Name: ScoreFlashLayout-MR
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1442395791
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1442395790}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1399363178}
+  m_RootOrder: 23
+--- !u!114 &1442395792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1442395790}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f55138f36c629488497b4bd79835a07e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  testMessageDelaySeconds: 0.6
+  isDesignMode: 1
+  enableDeselectHack: 0
+  designText: +1024
+  lockScreenAlign: 0
+  screenAlign: 7
+  position: {x: 0, y: 0}
+  lockInnerAnchor: 1
+  innerAnchor: 7
+  minPaddingX: 20
+  maxWidth: 600
+  freezeOnRead: 0
+  defaultScoreFlash: {fileID: 0}
+--- !u!1 &1494933131
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1494933132}
+  - 33: {fileID: 1494933134}
+  - 23: {fileID: 1494933133}
+  - 114: {fileID: 1494933135}
+  m_Layer: 0
+  m_Name: ScoreFlashFollow3D
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1494933132
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1494933131}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1171939206}
+  m_RootOrder: 12
+--- !u!23 &1494933133
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1494933131}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 59e67fa6309b14259a2f8245eccf260f, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_SelectedWireframeHidden: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!33 &1494933134
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1494933131}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1494933135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1494933131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be6fac2be9cf848dbb3d24bed79e8852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  pushLocally: 1
+  testMessageDelaySeconds: 0.5
+  scoreFlashTestInstances: []
+  targetRenderer: {fileID: 1494933133}
+  hasSentTargetRendererError: 0
+  isDesignMode: 0
+  enableDeselectHack: 0
+  designText: +1024
+  keepStatic: 0
+  leaveBehind: 0
+  loseMomentum: 1
+  screenPositionOffset: {x: 0, y: 0}
+  worldPositionOffset: {x: 0, y: 1, z: 0}
+  innerAnchor: 1
+  freezeOnRead: 0
+  referenceCamera: {fileID: 33}
+  defaultScoreFlash: {fileID: 73}
+--- !u!1 &1567055815
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1567055816}
+  - 33: {fileID: 1567055818}
+  - 23: {fileID: 1567055817}
+  - 114: {fileID: 1567055819}
+  m_Layer: 0
+  m_Name: ScoreFlashFollow3D
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1567055816
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1567055815}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1171939206}
+  m_RootOrder: 16
+--- !u!23 &1567055817
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1567055815}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 59e67fa6309b14259a2f8245eccf260f, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_SelectedWireframeHidden: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!33 &1567055818
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1567055815}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1567055819
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1567055815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be6fac2be9cf848dbb3d24bed79e8852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  pushLocally: 1
+  testMessageDelaySeconds: 0.5
+  scoreFlashTestInstances: []
+  targetRenderer: {fileID: 1567055817}
+  hasSentTargetRendererError: 0
+  isDesignMode: 0
+  enableDeselectHack: 0
+  designText: +1024
+  keepStatic: 0
+  leaveBehind: 0
+  loseMomentum: 1
+  screenPositionOffset: {x: 0, y: 0}
+  worldPositionOffset: {x: 0, y: 1, z: 0}
+  innerAnchor: 1
+  freezeOnRead: 0
+  referenceCamera: {fileID: 33}
+  defaultScoreFlash: {fileID: 73}
+--- !u!1 &1572104464
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1572104465}
+  - 114: {fileID: 1572104466}
+  m_Layer: 0
+  m_Name: ScoreFlashLayout-BR
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1572104465
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1572104464}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1399363178}
+  m_RootOrder: 11
+--- !u!114 &1572104466
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1572104464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f55138f36c629488497b4bd79835a07e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  testMessageDelaySeconds: 0.6
+  isDesignMode: 1
+  enableDeselectHack: 0
+  designText: +1024
+  lockScreenAlign: 0
+  screenAlign: 8
+  position: {x: 0, y: 0}
+  lockInnerAnchor: 1
+  innerAnchor: 8
+  minPaddingX: 20
+  maxWidth: 600
+  freezeOnRead: 0
+  defaultScoreFlash: {fileID: 0}
+--- !u!1 &1631349942
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1631349943}
+  - 114: {fileID: 1631349944}
+  m_Layer: 0
+  m_Name: ScoreFlashLayout-BR
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1631349943
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1631349942}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1399363178}
+  m_RootOrder: 10
+--- !u!114 &1631349944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1631349942}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f55138f36c629488497b4bd79835a07e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  testMessageDelaySeconds: 0.6
+  isDesignMode: 1
+  enableDeselectHack: 0
+  designText: +1024
+  lockScreenAlign: 0
+  screenAlign: 8
+  position: {x: 0, y: 0}
+  lockInnerAnchor: 1
+  innerAnchor: 8
+  minPaddingX: 20
+  maxWidth: 600
+  freezeOnRead: 0
+  defaultScoreFlash: {fileID: 0}
+--- !u!1 &1639524461
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1639524462}
+  - 114: {fileID: 1639524463}
+  m_Layer: 0
+  m_Name: ScoreFlashLayout-ML
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1639524462
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1639524461}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1399363178}
+  m_RootOrder: 14
+--- !u!114 &1639524463
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1639524461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f55138f36c629488497b4bd79835a07e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  testMessageDelaySeconds: 0.6
+  isDesignMode: 1
+  enableDeselectHack: 0
+  designText: +1024
+  lockScreenAlign: 0
+  screenAlign: -2
+  position: {x: 0, y: 0}
+  lockInnerAnchor: 1
+  innerAnchor: -2
+  minPaddingX: 20
+  maxWidth: 600
+  freezeOnRead: 0
+  defaultScoreFlash: {fileID: 0}
+--- !u!1 &1652407332
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1652407333}
+  - 114: {fileID: 1652407334}
+  m_Layer: 0
+  m_Name: ScoreFlashLayout-BC
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1652407333
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1652407332}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1399363178}
+  m_RootOrder: 1
+--- !u!114 &1652407334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1652407332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f55138f36c629488497b4bd79835a07e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  testMessageDelaySeconds: 0.6
+  isDesignMode: 1
+  enableDeselectHack: 0
+  designText: +1024
+  lockScreenAlign: 0
+  screenAlign: 2
+  position: {x: 0, y: 0}
+  lockInnerAnchor: 1
+  innerAnchor: 2
+  minPaddingX: 20
+  maxWidth: 600
+  freezeOnRead: 0
+  defaultScoreFlash: {fileID: 0}
+--- !u!1 &1669180075
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1669180076}
+  - 33: {fileID: 1669180078}
+  - 23: {fileID: 1669180077}
+  - 114: {fileID: 1669180079}
+  m_Layer: 0
+  m_Name: ScoreFlashFollow3D
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1669180076
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1669180075}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1171939206}
+  m_RootOrder: 10
+--- !u!23 &1669180077
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1669180075}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 59e67fa6309b14259a2f8245eccf260f, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_SelectedWireframeHidden: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!33 &1669180078
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1669180075}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1669180079
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1669180075}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be6fac2be9cf848dbb3d24bed79e8852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  pushLocally: 1
+  testMessageDelaySeconds: 0.5
+  scoreFlashTestInstances: []
+  targetRenderer: {fileID: 1669180077}
+  hasSentTargetRendererError: 0
+  isDesignMode: 0
+  enableDeselectHack: 0
+  designText: +1024
+  keepStatic: 0
+  leaveBehind: 0
+  loseMomentum: 1
+  screenPositionOffset: {x: 0, y: 0}
+  worldPositionOffset: {x: 0, y: 1, z: 0}
+  innerAnchor: 1
+  freezeOnRead: 0
+  referenceCamera: {fileID: 33}
+  defaultScoreFlash: {fileID: 73}
+--- !u!1 &1678158073
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1678158074}
+  - 33: {fileID: 1678158076}
+  - 23: {fileID: 1678158075}
+  - 114: {fileID: 1678158077}
+  m_Layer: 0
+  m_Name: ScoreFlashFollow3D
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1678158074
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1678158073}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1171939206}
+  m_RootOrder: 17
+--- !u!23 &1678158075
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1678158073}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 59e67fa6309b14259a2f8245eccf260f, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_SelectedWireframeHidden: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!33 &1678158076
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1678158073}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1678158077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1678158073}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be6fac2be9cf848dbb3d24bed79e8852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  pushLocally: 1
+  testMessageDelaySeconds: 0.5
+  scoreFlashTestInstances: []
+  targetRenderer: {fileID: 1678158075}
+  hasSentTargetRendererError: 0
+  isDesignMode: 0
+  enableDeselectHack: 0
+  designText: +1024
+  keepStatic: 0
+  leaveBehind: 0
+  loseMomentum: 1
+  screenPositionOffset: {x: 0, y: 0}
+  worldPositionOffset: {x: 0, y: 1, z: 0}
+  innerAnchor: 1
+  freezeOnRead: 0
+  referenceCamera: {fileID: 33}
+  defaultScoreFlash: {fileID: 73}
+--- !u!1 &1691551306
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1691551307}
+  - 33: {fileID: 1691551309}
+  - 23: {fileID: 1691551308}
+  - 114: {fileID: 1691551310}
+  m_Layer: 0
+  m_Name: ScoreFlashFollow3D
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1691551307
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1691551306}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1171939206}
+  m_RootOrder: 0
+--- !u!23 &1691551308
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1691551306}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 59e67fa6309b14259a2f8245eccf260f, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_SelectedWireframeHidden: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!33 &1691551309
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1691551306}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1691551310
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1691551306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be6fac2be9cf848dbb3d24bed79e8852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  pushLocally: 1
+  testMessageDelaySeconds: 0.5
+  scoreFlashTestInstances: []
+  targetRenderer: {fileID: 1691551308}
+  hasSentTargetRendererError: 0
+  isDesignMode: 0
+  enableDeselectHack: 0
+  designText: +1024
+  keepStatic: 0
+  leaveBehind: 0
+  loseMomentum: 1
+  screenPositionOffset: {x: 0, y: 0}
+  worldPositionOffset: {x: 0, y: 1, z: 0}
+  innerAnchor: 1
+  freezeOnRead: 0
+  referenceCamera: {fileID: 33}
+  defaultScoreFlash: {fileID: 73}
+--- !u!1 &1700244164
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1700244165}
+  - 33: {fileID: 1700244167}
+  - 23: {fileID: 1700244166}
+  - 114: {fileID: 1700244168}
+  m_Layer: 0
+  m_Name: ScoreFlashFollow3D
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1700244165
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1700244164}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1171939206}
+  m_RootOrder: 5
+--- !u!23 &1700244166
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1700244164}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 59e67fa6309b14259a2f8245eccf260f, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_SelectedWireframeHidden: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!33 &1700244167
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1700244164}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1700244168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1700244164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be6fac2be9cf848dbb3d24bed79e8852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  pushLocally: 1
+  testMessageDelaySeconds: 0.5
+  scoreFlashTestInstances: []
+  targetRenderer: {fileID: 1700244166}
+  hasSentTargetRendererError: 0
+  isDesignMode: 0
+  enableDeselectHack: 0
+  designText: +1024
+  keepStatic: 0
+  leaveBehind: 0
+  loseMomentum: 1
+  screenPositionOffset: {x: 0, y: 0}
+  worldPositionOffset: {x: 0, y: 1, z: 0}
+  innerAnchor: 1
+  freezeOnRead: 0
+  referenceCamera: {fileID: 33}
+  defaultScoreFlash: {fileID: 73}
+--- !u!1 &1700440441
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1700440442}
+  - 33: {fileID: 1700440444}
+  - 23: {fileID: 1700440443}
+  - 114: {fileID: 1700440445}
+  m_Layer: 0
+  m_Name: ScoreFlashFollow3D
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1700440442
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1700440441}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1171939206}
+  m_RootOrder: 15
+--- !u!23 &1700440443
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1700440441}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 59e67fa6309b14259a2f8245eccf260f, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_SelectedWireframeHidden: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!33 &1700440444
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1700440441}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1700440445
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1700440441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be6fac2be9cf848dbb3d24bed79e8852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  pushLocally: 1
+  testMessageDelaySeconds: 0.5
+  scoreFlashTestInstances: []
+  targetRenderer: {fileID: 1700440443}
+  hasSentTargetRendererError: 0
+  isDesignMode: 0
+  enableDeselectHack: 0
+  designText: +1024
+  keepStatic: 0
+  leaveBehind: 0
+  loseMomentum: 1
+  screenPositionOffset: {x: 0, y: 0}
+  worldPositionOffset: {x: 0, y: 1, z: 0}
+  innerAnchor: 1
+  freezeOnRead: 0
+  referenceCamera: {fileID: 33}
+  defaultScoreFlash: {fileID: 73}
+--- !u!1 &1743149441
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1743149442}
+  - 114: {fileID: 1743149443}
+  m_Layer: 0
+  m_Name: ScoreFlashLayout-ML
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1743149442
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1743149441}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1399363178}
+  m_RootOrder: 19
+--- !u!114 &1743149443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1743149441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f55138f36c629488497b4bd79835a07e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  testMessageDelaySeconds: 0.6
+  isDesignMode: 1
+  enableDeselectHack: 0
+  designText: +1024
+  lockScreenAlign: 0
+  screenAlign: -2
+  position: {x: 0, y: 0}
+  lockInnerAnchor: 1
+  innerAnchor: -2
+  minPaddingX: 20
+  maxWidth: 600
+  freezeOnRead: 0
+  defaultScoreFlash: {fileID: 0}
+--- !u!1 &1767720838
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1767720839}
+  - 114: {fileID: 1767720840}
+  m_Layer: 0
+  m_Name: ScoreFlashLayout-BC
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1767720839
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1767720838}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1399363178}
+  m_RootOrder: 2
+--- !u!114 &1767720840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1767720838}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f55138f36c629488497b4bd79835a07e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  testMessageDelaySeconds: 0.6
+  isDesignMode: 1
+  enableDeselectHack: 0
+  designText: +1024
+  lockScreenAlign: 0
+  screenAlign: 2
+  position: {x: 0, y: 0}
+  lockInnerAnchor: 1
+  innerAnchor: 2
+  minPaddingX: 20
+  maxWidth: 600
+  freezeOnRead: 0
+  defaultScoreFlash: {fileID: 0}
+--- !u!1 &1804001180
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1804001181}
+  - 114: {fileID: 1804001182}
+  m_Layer: 0
+  m_Name: ScoreFlashLayout-BC
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1804001181
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1804001180}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1399363178}
+  m_RootOrder: 3
+--- !u!114 &1804001182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1804001180}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f55138f36c629488497b4bd79835a07e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  testMessageDelaySeconds: 0.6
+  isDesignMode: 1
+  enableDeselectHack: 0
+  designText: +1024
+  lockScreenAlign: 0
+  screenAlign: 2
+  position: {x: 0, y: 0}
+  lockInnerAnchor: 1
+  innerAnchor: 2
+  minPaddingX: 20
+  maxWidth: 600
+  freezeOnRead: 0
+  defaultScoreFlash: {fileID: 0}
+--- !u!1 &1813831369
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1813831370}
+  - 33: {fileID: 1813831372}
+  - 23: {fileID: 1813831371}
+  - 114: {fileID: 1813831373}
+  m_Layer: 0
+  m_Name: ScoreFlashFollow3D
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1813831370
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1813831369}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1171939206}
+  m_RootOrder: 7
+--- !u!23 &1813831371
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1813831369}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 59e67fa6309b14259a2f8245eccf260f, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_SelectedWireframeHidden: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!33 &1813831372
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1813831369}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1813831373
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1813831369}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be6fac2be9cf848dbb3d24bed79e8852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  pushLocally: 1
+  testMessageDelaySeconds: 0.5
+  scoreFlashTestInstances: []
+  targetRenderer: {fileID: 1813831371}
+  hasSentTargetRendererError: 0
+  isDesignMode: 0
+  enableDeselectHack: 0
+  designText: +1024
+  keepStatic: 0
+  leaveBehind: 0
+  loseMomentum: 1
+  screenPositionOffset: {x: 0, y: 0}
+  worldPositionOffset: {x: 0, y: 1, z: 0}
+  innerAnchor: 1
+  freezeOnRead: 0
+  referenceCamera: {fileID: 33}
+  defaultScoreFlash: {fileID: 73}
+--- !u!1 &1844614709
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1844614710}
+  - 33: {fileID: 1844614712}
+  - 23: {fileID: 1844614711}
+  - 114: {fileID: 1844614713}
+  m_Layer: 0
+  m_Name: ScoreFlashFollow3D
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1844614710
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1844614709}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1171939206}
+  m_RootOrder: 6
+--- !u!23 &1844614711
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1844614709}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 59e67fa6309b14259a2f8245eccf260f, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_SelectedWireframeHidden: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!33 &1844614712
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1844614709}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1844614713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1844614709}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be6fac2be9cf848dbb3d24bed79e8852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  pushLocally: 1
+  testMessageDelaySeconds: 0.5
+  scoreFlashTestInstances: []
+  targetRenderer: {fileID: 1844614711}
+  hasSentTargetRendererError: 0
+  isDesignMode: 0
+  enableDeselectHack: 0
+  designText: +1024
+  keepStatic: 0
+  leaveBehind: 0
+  loseMomentum: 1
+  screenPositionOffset: {x: 0, y: 0}
+  worldPositionOffset: {x: 0, y: 1, z: 0}
+  innerAnchor: 1
+  freezeOnRead: 0
+  referenceCamera: {fileID: 33}
+  defaultScoreFlash: {fileID: 73}
+--- !u!1 &1894269282
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1894269283}
+  - 114: {fileID: 1894269284}
+  m_Layer: 0
+  m_Name: ScoreFlashLayout-ML
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1894269283
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1894269282}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1399363178}
+  m_RootOrder: 17
+--- !u!114 &1894269284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1894269282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f55138f36c629488497b4bd79835a07e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  testMessageDelaySeconds: 0.6
+  isDesignMode: 1
+  enableDeselectHack: 0
+  designText: +1024
+  lockScreenAlign: 0
+  screenAlign: -2
+  position: {x: 0, y: 0}
+  lockInnerAnchor: 1
+  innerAnchor: -2
+  minPaddingX: 20
+  maxWidth: 600
+  freezeOnRead: 0
+  defaultScoreFlash: {fileID: 0}
+--- !u!1 &1901161785
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1901161786}
+  - 33: {fileID: 1901161788}
+  - 23: {fileID: 1901161787}
+  - 114: {fileID: 1901161789}
+  m_Layer: 0
+  m_Name: ScoreFlashFollow3D
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1901161786
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1901161785}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1171939206}
+  m_RootOrder: 9
+--- !u!23 &1901161787
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1901161785}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 59e67fa6309b14259a2f8245eccf260f, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_SelectedWireframeHidden: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!33 &1901161788
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1901161785}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1901161789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1901161785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be6fac2be9cf848dbb3d24bed79e8852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  pushLocally: 1
+  testMessageDelaySeconds: 0.5
+  scoreFlashTestInstances: []
+  targetRenderer: {fileID: 1901161787}
+  hasSentTargetRendererError: 0
+  isDesignMode: 0
+  enableDeselectHack: 0
+  designText: +1024
+  keepStatic: 0
+  leaveBehind: 0
+  loseMomentum: 1
+  screenPositionOffset: {x: 0, y: 0}
+  worldPositionOffset: {x: 0, y: 1, z: 0}
+  innerAnchor: 1
+  freezeOnRead: 0
+  referenceCamera: {fileID: 33}
+  defaultScoreFlash: {fileID: 73}
+--- !u!1 &1912149046
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1912149047}
+  - 33: {fileID: 1912149049}
+  - 23: {fileID: 1912149048}
+  - 114: {fileID: 1912149050}
+  m_Layer: 0
+  m_Name: ScoreFlashFollow3D
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1912149047
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1912149046}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1171939206}
+  m_RootOrder: 13
+--- !u!23 &1912149048
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1912149046}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 59e67fa6309b14259a2f8245eccf260f, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_SelectedWireframeHidden: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!33 &1912149049
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1912149046}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1912149050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1912149046}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be6fac2be9cf848dbb3d24bed79e8852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  pushLocally: 1
+  testMessageDelaySeconds: 0.5
+  scoreFlashTestInstances: []
+  targetRenderer: {fileID: 1912149048}
+  hasSentTargetRendererError: 0
+  isDesignMode: 0
+  enableDeselectHack: 0
+  designText: +1024
+  keepStatic: 0
+  leaveBehind: 0
+  loseMomentum: 1
+  screenPositionOffset: {x: 0, y: 0}
+  worldPositionOffset: {x: 0, y: 1, z: 0}
+  innerAnchor: 1
+  freezeOnRead: 0
+  referenceCamera: {fileID: 33}
+  defaultScoreFlash: {fileID: 73}
+--- !u!1 &1947658919
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1947658920}
+  - 114: {fileID: 1947658921}
+  m_Layer: 0
+  m_Name: ScoreFlashLayout-MR
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1947658920
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1947658919}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1399363178}
+  m_RootOrder: 20
+--- !u!114 &1947658921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1947658919}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f55138f36c629488497b4bd79835a07e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  testMessageDelaySeconds: 0.6
+  isDesignMode: 1
+  enableDeselectHack: 0
+  designText: +1024
+  lockScreenAlign: 0
+  screenAlign: 7
+  position: {x: 0, y: 0}
+  lockInnerAnchor: 1
+  innerAnchor: 7
+  minPaddingX: 20
+  maxWidth: 600
+  freezeOnRead: 0
+  defaultScoreFlash: {fileID: 0}
+--- !u!1 &1975497716
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1975497717}
+  - 33: {fileID: 1975497719}
+  - 23: {fileID: 1975497718}
+  - 114: {fileID: 1975497720}
+  m_Layer: 0
+  m_Name: ScoreFlashFollow3D
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1975497717
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1975497716}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1171939206}
+  m_RootOrder: 14
+--- !u!23 &1975497718
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1975497716}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 59e67fa6309b14259a2f8245eccf260f, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_SelectedWireframeHidden: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!33 &1975497719
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1975497716}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1975497720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1975497716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be6fac2be9cf848dbb3d24bed79e8852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  pushLocally: 1
+  testMessageDelaySeconds: 0.5
+  scoreFlashTestInstances: []
+  targetRenderer: {fileID: 1975497718}
+  hasSentTargetRendererError: 0
+  isDesignMode: 0
+  enableDeselectHack: 0
+  designText: +1024
+  keepStatic: 0
+  leaveBehind: 0
+  loseMomentum: 1
+  screenPositionOffset: {x: 0, y: 0}
+  worldPositionOffset: {x: 0, y: 1, z: 0}
+  innerAnchor: 1
+  freezeOnRead: 0
+  referenceCamera: {fileID: 33}
+  defaultScoreFlash: {fileID: 73}
+--- !u!1 &2108392214
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 2108392215}
+  - 114: {fileID: 2108392216}
+  m_Layer: 0
+  m_Name: ScoreFlashLayout-MR
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2108392215
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2108392214}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1399363178}
+  m_RootOrder: 24
+--- !u!114 &2108392216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2108392214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f55138f36c629488497b4bd79835a07e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  testMessageDelaySeconds: 0.6
+  isDesignMode: 1
+  enableDeselectHack: 0
+  designText: +1024
+  lockScreenAlign: 0
+  screenAlign: 7
+  position: {x: 0, y: 0}
+  lockInnerAnchor: 1
+  innerAnchor: 7
+  minPaddingX: 20
+  maxWidth: 600
+  freezeOnRead: 0
+  defaultScoreFlash: {fileID: 0}
+--- !u!1 &2109145444
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 2109145445}
+  - 114: {fileID: 2109145446}
+  m_Layer: 0
+  m_Name: ScoreFlashLayout-BR
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2109145445
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2109145444}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1399363178}
+  m_RootOrder: 13
+--- !u!114 &2109145446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2109145444}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f55138f36c629488497b4bd79835a07e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  testMessageDelaySeconds: 0.6
+  isDesignMode: 1
+  enableDeselectHack: 0
+  designText: +1024
+  lockScreenAlign: 0
+  screenAlign: 8
+  position: {x: 0, y: 0}
+  lockInnerAnchor: 1
+  innerAnchor: 8
+  minPaddingX: 20
+  maxWidth: 600
+  freezeOnRead: 0
+  defaultScoreFlash: {fileID: 0}
+--- !u!1 &2145374288
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 2145374289}
+  - 33: {fileID: 2145374291}
+  - 23: {fileID: 2145374290}
+  - 114: {fileID: 2145374292}
+  m_Layer: 0
+  m_Name: ScoreFlashFollow3D
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2145374289
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2145374288}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1171939206}
+  m_RootOrder: 1
+--- !u!23 &2145374290
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2145374288}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 59e67fa6309b14259a2f8245eccf260f, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_SelectedWireframeHidden: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!33 &2145374291
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2145374288}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &2145374292
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2145374288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be6fac2be9cf848dbb3d24bed79e8852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5.0.0
+  tooltips: {fileID: 4900000, guid: bb21cf57649cf4a5480e100ee1efdd32, type: 3}
+  isTestAutogenerateMessages: 1
+  pushLocally: 1
+  testMessageDelaySeconds: 0.5
+  scoreFlashTestInstances: []
+  targetRenderer: {fileID: 2145374290}
+  hasSentTargetRendererError: 0
+  isDesignMode: 0
+  enableDeselectHack: 0
+  designText: +1024
+  keepStatic: 0
+  leaveBehind: 0
+  loseMomentum: 1
+  screenPositionOffset: {x: 0, y: 0}
+  worldPositionOffset: {x: 0, y: 1, z: 0}
+  innerAnchor: 1
+  freezeOnRead: 0
+  referenceCamera: {fileID: 33}
+  defaultScoreFlash: {fileID: 73}

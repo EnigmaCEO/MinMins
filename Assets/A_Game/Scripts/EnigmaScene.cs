@@ -8,7 +8,7 @@ namespace Enigma.CoreSystems {
         // Start is called before the first frame update
         public virtual void Awake()
         {
-            NetworkManager.SetServer("http://www.enigma-games.com/Shalwend");
+            NetworkManager.SetServer("https://www.enigma-games.com/MinMins");
             NetworkManager.SetGame(Application.productName.ToLower());
             Debug.Log(NetworkManager.GetGame());
         }

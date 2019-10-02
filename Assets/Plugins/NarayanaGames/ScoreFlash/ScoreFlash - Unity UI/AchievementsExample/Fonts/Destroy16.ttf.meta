@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 477d25868456f416eacc58f0f5fc3967
+labels:
+- UnityUI
+- UGUI
+TrueTypeFontImporter:
+  serializedVersion: 2
+  fontSize: 16
+  forceTextureCase: -1
+  characterSpacing: 1
+  characterPadding: 0
+  includeFontData: 1
+  use2xBehaviour: 0
+  fontNames:
+  - 
+  customCharacters: 
+  fontRenderingMode: 0
+  userData: 

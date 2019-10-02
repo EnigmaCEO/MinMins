@@ -389,6 +389,31 @@ PrefabInstance:
       propertyPath: m_AnchorMin.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2834292470379506056, guid: b955c6ab554fa6743829ede722e8c7c4,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2834292470379506056, guid: b955c6ab554fa6743829ede722e8c7c4,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2834292470379506056, guid: b955c6ab554fa6743829ede722e8c7c4,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2834292470672370804, guid: b955c6ab554fa6743829ede722e8c7c4,
+        type: 3}
+      propertyPath: m_ScreenMatchMode
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2834292470672370804, guid: b955c6ab554fa6743829ede722e8c7c4,
+        type: 3}
+      propertyPath: m_UiScaleMode
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b955c6ab554fa6743829ede722e8c7c4, type: 3}
 --- !u!1001 &954653820

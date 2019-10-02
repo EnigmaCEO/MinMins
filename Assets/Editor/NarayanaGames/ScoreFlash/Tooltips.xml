@@ -1,0 +1,612 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tooltips>
+  <classes>
+    <class name="ScoreFlash" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/T_ScoreFlash.htm">
+      <tooltip>ScoreFlash is gives you an easy way to let scores "flash up" on the screen, like a news flash. For detailed documentation of the various methods to push methods on screen, see [Type: ScoreFlashComponent.IScoreFlash].</tooltip>
+      <links>
+        <link title="Type: ScoreFlashComponent.IScoreFlash" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/T_NarayanaGames_ScoreFlashComponent_IScoreFlash.htm" />
+      </links>
+    </class>
+    <class name="ScoreFlashFollow3D" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/T_ScoreFlashFollow3D.htm">
+      <tooltip>Attach this to any game object you'd like to push score messages to using its world position.</tooltip>
+      <links />
+    </class>
+    <class name="ScoreFlashLayout" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/T_ScoreFlashLayout.htm">
+      <tooltip>ScoreFlashLayout can be used to have specific screen based locations for different messages. For example, you could have the players score shown oriented at the top left of the screen, and the current task of the player shown oriented at the top right of the screen; both using the same instance of ScoreFlash.</tooltip>
+      <links />
+    </class>
+    <class name="ScoreFlashManager" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/T_ScoreFlashManager.htm">
+      <tooltip>Manages several instances of [Type: ScoreFlash.]. For an example how to use this, see [Method: IScoreFlash.PushLocal(Object,GUIStyle,GUIStyle,Int32))].</tooltip>
+      <links>
+        <link title="Type: ScoreFlash." url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/T_ScoreFlash.htm" />
+        <link title="Method: IScoreFlash.PushLocal(Object,GUIStyle,GUIStyle,Int32))" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/M_NarayanaGames_ScoreFlashComponent_IScoreFlash_PushLocal(System_Object,UnityEngine_GUIStyle,UnityEngine_GUIStyle,System_Int32).htm" />
+      </links>
+    </class>
+  </classes>
+  <fields>
+    <field class="ScoreFlash" field="isTestAutogenerateMessages" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_isTestAutogenerateMessages.htm">
+      <tooltip>Use this to show random messages.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="testMessageDelaySeconds" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_testMessageDelaySeconds.htm">
+      <tooltip>The usual delay between two messages in seconds. Use this to increase or decrease the frequency in which test messages are being sent to ScoreFlash. NOTE: This does not have an effect on messages sent via includeMessageSpam (these are always sent in a burst without any delay. Also be aware that this is based on real time (so Time.timeScale has no effect).</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="includeMessageSpam" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_includeMessageSpam.htm">
+      <tooltip>This will send a burst of messages with no delay every once in a while (depends on whether includeVeryLongMessages is active). It ignores messageFrequencyMultiplier.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="includeVeryLongMessages" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_includeVeryLongMessages.htm">
+      <tooltip>Includes a few messages with very long text to see how that is handled.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="isTestForceHighDensity" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_isTestForceHighDensity.htm">
+      <tooltip>Use this to test high density screen layouts.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="isDesignMode" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_isDesignMode.htm">
+      <tooltip>Design mode allows you to use the scene view to set up the main layout of ScoreFlash. This works both while playing and while not playing.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="enableDeselectHack" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_enableDeselectHack.htm">
+      <tooltip>Unity doesn't properly support updating the GameView when an object is deselected, so if you disable this, the design will stay in the game view until it is updated once more. I have a hack for this - but unfortunately, it's causing trouble when the object is being deleted (there's an exception that I cannot catch). Both is not a real problem, it's just a little annoying.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="designText" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_designText.htm">
+      <tooltip>Message that is shown while in design mode.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="isDebugMode" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_isDebugMode.htm">
+      <tooltip>Renders debugging information instead of the actual messages. When using the default, UnityGUI based rendering, this also renders a box around the messages.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="currentDebugMode" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_currentDebugMode.htm">
+      <tooltip>What should be shown in the message when debug mode is activated.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="rendering" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_rendering.htm">
+      <tooltip>Select how ScoreFlash renders messages. See [Type: ScoreFlash.RenderingType].</tooltip>
+      <links>
+        <link title="Type: ScoreFlash.RenderingType" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/T_ScoreFlash_RenderingType.htm" />
+      </links>
+    </field>
+    <field class="ScoreFlash" field="skin" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_skin.htm">
+      <tooltip>Assign a skin that has the custom style ScoreFlash 
+For a tutorial on using GUISkins, GUIStyles and fonts with ScoreFlash, see [ScoreFlash-Tutorial: GUISkins, GUIStyles and Fonts]
+See [Field: RenderingType.UnityGUI_GUISkin].</tooltip>
+      <links>
+        <link title="ScoreFlash-Tutorial: GUISkins, GUIStyles and Fonts" url="http://www.youtube.com/watch?v=qM9dSNWVWvc" />
+        <link title="Field: RenderingType.UnityGUI_GUISkin" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_RenderingType_UnityGUI_GUISkin.htm" />
+      </links>
+    </field>
+    <field class="ScoreFlash" field="skinHighDensity" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_skinHighDensity.htm">
+      <tooltip>Optional skin for retina displays. Simply make a copy of the skin you are using for normal densities and use a font that's double the size in your custom style ScoreFlash . 
+For a tutorial on using GUISkins, GUIStyles and fonts with ScoreFlash, see [ScoreFlash-Tutorial: GUISkins, GUIStyles and Fonts]
+See [Field: RenderingType.UnityGUI_GUISkin].</tooltip>
+      <links>
+        <link title="ScoreFlash-Tutorial: GUISkins, GUIStyles and Fonts" url="http://www.youtube.com/watch?v=qM9dSNWVWvc" />
+        <link title="Field: RenderingType.UnityGUI_GUISkin" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_RenderingType_UnityGUI_GUISkin.htm" />
+      </links>
+    </field>
+    <field class="ScoreFlash" field="guiStyleName" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_guiStyleName.htm">
+      <tooltip>The name of either a default style of a custom style in [Field: ScoreFlash.skin](and [Field: ScoreFlash.skinHighDensity]if you also use that) that ScoreFlash uses to get font and style information. Default is ScoreFlash and the example skins that come with ScoreFlash all use this, so if you change the value, they will no longer work with your ScoreFlash instance! Changing this is very useful if you have multiple instances of ScoreFlash in one scene and want to use different fonts but don't want to create several GUISkins just to be able to handle those different fonts. It's recommended that you use the same name for the custom GUIStyle that you are also using for the game objects with the ScoreFlash instances. 
+For a tutorial on using GUISkins, GUIStyles and fonts with ScoreFlash, see [ScoreFlash-Tutorial: GUISkins, GUIStyles and Fonts]
+See [Field: RenderingType.UnityGUI_GUISkin].</tooltip>
+      <links>
+        <link title="Field: ScoreFlash.skin" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_skin.htm" />
+        <link title="Field: ScoreFlash.skinHighDensity" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_skinHighDensity.htm" />
+        <link title="ScoreFlash-Tutorial: GUISkins, GUIStyles and Fonts" url="http://www.youtube.com/watch?v=qM9dSNWVWvc" />
+        <link title="Field: RenderingType.UnityGUI_GUISkin" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_RenderingType_UnityGUI_GUISkin.htm" />
+      </links>
+    </field>
+    <field class="ScoreFlash" field="font" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_font.htm">
+      <tooltip>The font to be used by ScoreFlash. See [Field: RenderingType.UnityGUI_Font].</tooltip>
+      <links>
+        <link title="Field: RenderingType.UnityGUI_Font" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_RenderingType_UnityGUI_Font.htm" />
+      </links>
+    </field>
+    <field class="ScoreFlash" field="fontHighDensity" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_fontHighDensity.htm">
+      <tooltip>The (optional) font to be used by ScoreFlash when running on a device with a high density display (like Retina displays). See [Field: RenderingType.UnityGUI_Font].</tooltip>
+      <links>
+        <link title="Field: RenderingType.UnityGUI_Font" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_RenderingType_UnityGUI_Font.htm" />
+      </links>
+    </field>
+    <field class="ScoreFlash" field="scoreFlashRenderer" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_scoreFlashRenderer.htm">
+      <tooltip>Assign this if you want custom rendering, e.g. using GUIText or NGUI or EZ GUI. Custom renderers for GUIText and UnityGUI are already implemented (UnityGUI is just implement to give you an example of how this can be done). See [Type: ScoreFlashComponent.ScoreFlashRendererBase], [Type: ScoreFlashComponent.ScoreFlashRendererUnityGUI]and [Type: ScoreFlashComponent.ScoreFlashRendererGUIText]. 
+See [Field: RenderingType.CustomRenderer].</tooltip>
+      <links>
+        <link title="Type: ScoreFlashComponent.ScoreFlashRendererBase" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/T_NarayanaGames_ScoreFlashComponent_ScoreFlashRendererBase.htm" />
+        <link title="Type: ScoreFlashComponent.ScoreFlashRendererUnityGUI" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/T_NarayanaGames_ScoreFlashComponent_ScoreFlashRendererUnityGUI.htm" />
+        <link title="Type: ScoreFlashComponent.ScoreFlashRendererGUIText" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/T_NarayanaGames_ScoreFlashComponent_ScoreFlashRendererGUIText.htm" />
+        <link title="Field: RenderingType.CustomRenderer" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_RenderingType_CustomRenderer.htm" />
+      </links>
+    </field>
+    <field class="ScoreFlash" field="warmUpCount" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_warmUpCount.htm">
+      <tooltip>When using rendering via prefabs, this allows you to instantiate a number of these prefabs immediately on startup to prevent any hiccups later in the game. While this can prevent hiccups while playing the game, it does add a little time to scene loading.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="customParent" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_customParent.htm">
+      <tooltip>When using a ScoreFlashRenderer that returns true for [ScoreFlashRendererBase.RequiresCustomParent], this can be assigned to make sure that the instances of ScoreFlashRenderer are parented to this parent. This is needed for certain GUI systems (e.g. NGUI). 
+See [Field: RenderingType.CustomRenderer].</tooltip>
+      <links>
+        <link title="ScoreFlashRendererBase.RequiresCustomParent" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/P_NarayanaGames_ScoreFlashComponent_ScoreFlashRendererBase_RequiresCustomParent.htm" />
+        <link title="Field: RenderingType.CustomRenderer" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_RenderingType_CustomRenderer.htm" />
+      </links>
+    </field>
+    <field class="ScoreFlash" field="lockScreenAlign" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_lockScreenAlign.htm">
+      <tooltip>Locks the screen alignment. This is only used by the visual designer.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="screenAlign" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_screenAlign.htm">
+      <tooltip>Controls whether the message is aligned to top, middle or bottom of the screen. Defines how [Field: ScoreFlash.position]is applied. Possible values are defined by [Type: NGAlignment.ScreenAlign].</tooltip>
+      <links>
+        <link title="Field: ScoreFlash.position" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_position.htm" />
+        <link title="Type: NGAlignment.ScreenAlign" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/T_NarayanaGames_Common_UI_NGAlignment_ScreenAlign.htm" />
+      </links>
+    </field>
+    <field class="ScoreFlash" field="position" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_position.htm">
+      <tooltip>Position for messages pushed with [Method: IScoreFlash.PushLocal(Object))]in normalized pixels relative to [Type: NGAlignment.ScreenAlign]. For example, if [Field: ScoreFlash.screenAlign]is [Field: ScreenAlign.BottomRight], (15, 10) means 15 pixels left of the right border of the viewport, and 10 pixels above the bottom border. If a high density (Retina) display is recognized, these values are automatically multiplied with 2!</tooltip>
+      <links>
+        <link title="Method: IScoreFlash.PushLocal(Object))" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/M_NarayanaGames_ScoreFlashComponent_IScoreFlash_PushLocal(System_Object).htm" />
+        <link title="Type: NGAlignment.ScreenAlign" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/T_NarayanaGames_Common_UI_NGAlignment_ScreenAlign.htm" />
+        <link title="Field: ScoreFlash.screenAlign" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_screenAlign.htm" />
+        <link title="Field: ScreenAlign.BottomRight" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_NarayanaGames_Common_UI_NGAlignment_ScreenAlign_BottomRight.htm" />
+      </links>
+    </field>
+    <field class="ScoreFlash" field="lockInnerAnchor" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_lockInnerAnchor.htm">
+      <tooltip>Locks the [Field: ScoreFlash.innerAnchor]to [Field: ScoreFlash.screenAlign]. Most of the time, you'll want to have the set to true because most of the time, it just makes sense and is easier to configure. However, if you want to, for instance, have numbers right aligned but you want to position them relative to the left screen border, you'd set this to true and use screenAlign = *Left and innerAnchor = *Right (e.g. TopLeft, TopRight).</tooltip>
+      <links>
+        <link title="Field: ScoreFlash.innerAnchor" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_innerAnchor.htm" />
+        <link title="Field: ScoreFlash.screenAlign" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_screenAlign.htm" />
+      </links>
+    </field>
+    <field class="ScoreFlash" field="innerAnchor" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_innerAnchor.htm">
+      <tooltip>Controls the anchor of the message. Use this for left/center/right aligning the text messages. Possible values are defined by [Type: NGAlignment.ScreenAlign].</tooltip>
+      <links>
+        <link title="Type: NGAlignment.ScreenAlign" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/T_NarayanaGames_Common_UI_NGAlignment_ScreenAlign.htm" />
+      </links>
+    </field>
+    <field class="ScoreFlash" field="paddingY" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_paddingY.htm">
+      <tooltip>Obsolete (but I can't officially mark it obsolete because I have to use it myself to grab the value on updates when people have older versions of ScoreFlash. Some day, I'll make this obsolete and eventually remove it. Until then, it's best ignored. Thank you for reading this (you must be really interested if you came here ;-) ).</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="minPaddingX" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_minPaddingX.htm">
+      <tooltip>Minimum distance between the message and the left/right screen borders before the message is wrapped in two (or more) lines. This works together with [Field: ScoreFlash.maxWidth]. When center aligned (TopCenter, MiddleCenter, BottomCenter), this uses both screen edges; note that this may not give you perfectly correct results if using X-offsets! When left or right align (all the others), this uses the actual x-position and [Field: ScoreFlash.innerAnchor]to find out where the message is going and then assures that it doesn't get closer to the screen border the message is point to (i.e. left align results in padding against the right screen border, right align results in padding against the left screen boder). Default is 20F. This assumes scale = 1; with scale &gt; 1, the message might clip at the screen borders. Obviously, this only has an effect with long messages. MinPaddingX is used, when the resulting width is smaller than the one defined in [Field: ScoreFlash.maxWidth]. Set to a negative value if you only want to use maxWidth (padding will then be ignored). This uses normalized coordinates (i.e. if you are on a high density display, e.g. Retina, the value will be multiplied with 2).</tooltip>
+      <links>
+        <link title="Field: ScoreFlash.maxWidth" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_maxWidth.htm" />
+        <link title="Field: ScoreFlash.innerAnchor" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_innerAnchor.htm" />
+        <link title="Field: ScoreFlash.maxWidth" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_maxWidth.htm" />
+      </links>
+    </field>
+    <field class="ScoreFlash" field="maxWidth" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_maxWidth.htm">
+      <tooltip>Maximum width of the message before it's wrapped. This works together with [Field: ScoreFlash.minPaddingX]. Default is 260F. This assumes scale = 1; with scale &gt; 1, the message might clip at the screen borders. Obviously, this only has an effect with long messages. MaxWidth is used when it is smaller than the maximum width resulting from [Field: ScoreFlash.minPaddingX]. If you want to not use maxWidth, just set it to a very high value (e.g. 4000, which will be larger than any relevant screen ;-) ). This uses normalized coordinates (i.e. if you are on a high density display, e.g. Retina, the value will be multiplied with 2).</tooltip>
+      <links>
+        <link title="Field: ScoreFlash.minPaddingX" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_minPaddingX.htm" />
+        <link title="Field: ScoreFlash.minPaddingX" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_minPaddingX.htm" />
+      </links>
+    </field>
+    <field class="ScoreFlash" field="timeReference" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_timeReference.htm">
+      <tooltip>Which time reference shall ScoreFlash use - game time or real time? In other words: Should Time.timeScale have an effect (UseGameTime), or not (UseRealTime). Possible values are defined by [Type: ScoreFlash.TimeReference].</tooltip>
+      <links>
+        <link title="Type: ScoreFlash.TimeReference" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/T_ScoreFlash_TimeReference.htm" />
+      </links>
+    </field>
+    <field class="ScoreFlash" field="forceSingleMessageQueue" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_forceSingleMessageQueue.htm">
+      <tooltip>Set this to true if you want to enforce a single message queue. This can be useful if you want to use ScoreFlashFollow3D but still want to limit the number of messages shown at any given time.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="maxSimultanuousMessages" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_maxSimultanuousMessages.htm">
+      <tooltip>Maximum number of simultanuous messages before we start the "quick mode" which makes older messages age 8 times quicker than usual to avoid information (and drawcall) overflow. The number of messages can still be larger than this for a short moment (and depending on your other settings, even for a longer moment as this only increases how quickly the message ages).</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="minDistanceBetweenMessages" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_minDistanceBetweenMessages.htm">
+      <tooltip>When messages arrive quickly, there may be multiple shown simultanuously. This values controls how much distance ScoreFlash tries to keep between two messages. If the distance cannot be kept, old messages age quicker so they fade out sooner so there's more room for the new messages.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="spreadSpeed" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_spreadSpeed.htm">
+      <tooltip>How quickly should messages be spread to meet the minimum distance? Positive values make message move upwards, negative values make message spread downwards (it's important to make this fit the other velocities!)</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="spreadImmediately" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_spreadImmediately.htm">
+      <tooltip>If true , instead of waiting for the fade in phase to finish, messages immediately start pushing other messages. In most cases, that should be true .</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="replacePreviousMessage" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_replacePreviousMessage.htm">
+      <tooltip>If true , immediately replaces the previous message.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="forceOutlineOnMobile" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_forceOutlineOnMobile.htm">
+      <tooltip>Usually, outlines are disabled on mobile devices to reduce draw calls. Check this to also render outlines on mobile devices.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="disableOutlines" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_disableOutlines.htm">
+      <tooltip>If you don't want outlines to be rendered (which adds a few drawcalls), check this. This is the default on mobile devices. Readability is highly increased with outlines so it is recommended to read this to false unless you use this on a background that makes the texts easy to read!</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="colorOutline" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_colorOutline.htm">
+      <tooltip>Color of the outline - should usually be black. Alpha is used to multiply with current text color.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="colorSelectionMode" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_colorSelectionMode.htm">
+      <tooltip>How should ScoreFlash handle colors? Default is FadePhases. Possible values are defined by [Type: ScoreFlash.ColorControl]. For a tutorial on working with colors in ScoreFlash, see [ScoreFlash-Tutorial: Working with Colors]</tooltip>
+      <links>
+        <link title="Type: ScoreFlash.ColorControl" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/T_ScoreFlash_ColorControl.htm" />
+        <link title="ScoreFlash-Tutorial: Working with Colors" url="http://www.youtube.com/watch?v=fy-Oo6dg6kA" />
+      </links>
+    </field>
+    <field class="ScoreFlash" field="colors" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_colors.htm">
+      <tooltip>Colors used for [Field: ScoreFlash.colorSelectionMode]: [Field: ColorControl.Sequence]and [Field: ColorControl.Random]. For a tutorial on working with colors in ScoreFlash, see [ScoreFlash-Tutorial: Working with Colors]</tooltip>
+      <links>
+        <link title="Field: ScoreFlash.colorSelectionMode" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_colorSelectionMode.htm" />
+        <link title="Field: ColorControl.Sequence" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_ColorControl_Sequence.htm" />
+        <link title="Field: ColorControl.Random" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_ColorControl_Random.htm" />
+        <link title="ScoreFlash-Tutorial: Working with Colors" url="http://www.youtube.com/watch?v=fy-Oo6dg6kA" />
+      </links>
+    </field>
+    <field class="ScoreFlash" field="alphaFadeInMultiplier" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_alphaFadeInMultiplier.htm">
+      <tooltip>Initial alpha value. This is ignored for [Field: ColorControl.FadePhases]and used as multiplier for the value from the current color in the other colorSelectionMode modes. For a tutorial on working with colors in ScoreFlash, see [ScoreFlash-Tutorial: Working with Colors]</tooltip>
+      <links>
+        <link title="Field: ColorControl.FadePhases" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_ColorControl_FadePhases.htm" />
+        <link title="ScoreFlash-Tutorial: Working with Colors" url="http://www.youtube.com/watch?v=fy-Oo6dg6kA" />
+      </links>
+    </field>
+    <field class="ScoreFlash" field="alphaReadStartMultiplier" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_alphaReadStartMultiplier.htm">
+      <tooltip>Alpha value for Read Start. This is ignored for [Field: ColorControl.FadePhases]and used as multiplier for with the value from the current color in the other colorSelectionMode modes. For a tutorial on working with colors in ScoreFlash, see [ScoreFlash-Tutorial: Working with Colors]</tooltip>
+      <links>
+        <link title="Field: ColorControl.FadePhases" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_ColorControl_FadePhases.htm" />
+        <link title="ScoreFlash-Tutorial: Working with Colors" url="http://www.youtube.com/watch?v=fy-Oo6dg6kA" />
+      </links>
+    </field>
+    <field class="ScoreFlash" field="alphaReadEndMultiplier" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_alphaReadEndMultiplier.htm">
+      <tooltip>Alpha value for Read End. This is ignored for [Field: ColorControl.FadePhases]and used as multiplier for with the value from the current color in the other colorSelectionMode modes. For a tutorial on working with colors in ScoreFlash, see [ScoreFlash-Tutorial: Working with Colors]</tooltip>
+      <links>
+        <link title="Field: ColorControl.FadePhases" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_ColorControl_FadePhases.htm" />
+        <link title="ScoreFlash-Tutorial: Working with Colors" url="http://www.youtube.com/watch?v=fy-Oo6dg6kA" />
+      </links>
+    </field>
+    <field class="ScoreFlash" field="alphaFadeOutMultiplier" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_alphaFadeOutMultiplier.htm">
+      <tooltip>Alpha value for Fade Out. This is ignored for [Field: ColorControl.FadePhases]and used as multiplier for with the value from the current color in the other colorSelectionMode modes. For a tutorial on working with colors in ScoreFlash, see [ScoreFlash-Tutorial: Working with Colors]</tooltip>
+      <links>
+        <link title="Field: ColorControl.FadePhases" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_ColorControl_FadePhases.htm" />
+        <link title="ScoreFlash-Tutorial: Working with Colors" url="http://www.youtube.com/watch?v=fy-Oo6dg6kA" />
+      </links>
+    </field>
+    <field class="ScoreFlash" field="fadeInTimeSeconds" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_fadeInTimeSeconds.htm">
+      <tooltip>The time in seconds that it takes to fade in.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="fadeInColor" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_fadeInColor.htm">
+      <tooltip>Initial color. For a tutorial on working with colors in ScoreFlash, see [ScoreFlash-Tutorial: Working with Colors]</tooltip>
+      <links>
+        <link title="ScoreFlash-Tutorial: Working with Colors" url="http://www.youtube.com/watch?v=fy-Oo6dg6kA" />
+      </links>
+    </field>
+    <field class="ScoreFlash" field="fadeInColorCurve" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_fadeInColorCurve.htm">
+      <tooltip>The animation curve used to drive the color from colorFadeIn to colorReadStart. For a tutorial on working with colors in ScoreFlash, see [ScoreFlash-Tutorial: Working with Colors]</tooltip>
+      <links>
+        <link title="ScoreFlash-Tutorial: Working with Colors" url="http://www.youtube.com/watch?v=fy-Oo6dg6kA" />
+      </links>
+    </field>
+    <field class="ScoreFlash" field="fadeInOffsetX" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_fadeInOffsetX.htm">
+      <tooltip>The offset the message starts with relative to its main screen position. Positive values in X make the message come from right, negative messages make the message come from left. When using Alignment.ScreenAlign.Middle, both positive and negative values for Y do make sense. When using Alignment.ScreenAlign.Top, negative values make the message "drop" in from above (outside), with ScreenAlighn.Bottom and positive values, the message "rises" in from below (outside screen).</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="fadeInOffsetXCurve" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_fadeInOffsetXCurve.htm">
+      <tooltip>The animation curve used to drive fadeInOffset.y while fading in.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="fadeInOffsetY" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_fadeInOffsetY.htm">
+      <tooltip>The offset the message starts with relative to its main screen position. Positive values in Y make the message come from below, negative values make the message come from above. When using Alignment.ScreenAlign.Middle, both positive and negative values for Y do make sense. When using Alignment.ScreenAlign.Top, negative values make the message "drop" in from above (outside), with ScreenAlighn.Bottom and positive values, the message "rises" in from below (outside screen).</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="fadeInOffsetYCurve" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_fadeInOffsetYCurve.htm">
+      <tooltip>The animation curve used to drive fadeInOffset.y while fading in.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="fadeInScale" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_fadeInScale.htm">
+      <tooltip>The initial scale when the message appears.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="fadeInScaleCurve" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_fadeInScaleCurve.htm">
+      <tooltip>The animation curve used to drive the scale from fadeInScale to it's read start value (this is always 1 ).</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="readTimeSeconds" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_readTimeSeconds.htm">
+      <tooltip>The time the message is kept for the player to read (max to read),</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="readMinLengthCharsToAddTime" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_readMinLengthCharsToAddTime.htm">
+      <tooltip>This is the maximum length in characters before readTimeAdd is added to a message.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="readAddTimeSeconds" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_readAddTimeSeconds.htm">
+      <tooltip>To be able to read long texts, the player needs more time. This defines how much longer long messages remain visible if the message in question has more than minLengthCharsToAddTime characters.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="readColorStart" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_readColorStart.htm">
+      <tooltip>Color faded to from initial color in first phase. For a tutorial on working with colors in ScoreFlash, see [ScoreFlash-Tutorial: Working with Colors]</tooltip>
+      <links>
+        <link title="ScoreFlash-Tutorial: Working with Colors" url="http://www.youtube.com/watch?v=fy-Oo6dg6kA" />
+      </links>
+    </field>
+    <field class="ScoreFlash" field="readColorCurve" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_readColorCurve.htm">
+      <tooltip>The animation curve used to drive the color from colorReadStart to colorReadEnd. For a tutorial on working with colors in ScoreFlash, see [ScoreFlash-Tutorial: Working with Colors]</tooltip>
+      <links>
+        <link title="ScoreFlash-Tutorial: Working with Colors" url="http://www.youtube.com/watch?v=fy-Oo6dg6kA" />
+      </links>
+    </field>
+    <field class="ScoreFlash" field="readColorEnd" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_readColorEnd.htm">
+      <tooltip>Color faded to from max color in "read phase". For a tutorial on working with colors in ScoreFlash, see [ScoreFlash-Tutorial: Working with Colors]</tooltip>
+      <links>
+        <link title="ScoreFlash-Tutorial: Working with Colors" url="http://www.youtube.com/watch?v=fy-Oo6dg6kA" />
+      </links>
+    </field>
+    <field class="ScoreFlash" field="readVelocityXCurve" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_readVelocityXCurve.htm">
+      <tooltip>The animation curve used to drive the velocity on the x-axis from 0 to it's read end value readTimeFloatUpVelocity .</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="readFloatRightVelocity" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_readFloatRightVelocity.htm">
+      <tooltip>Speed with which the message floats right while it fades out. Use negative values to make it float left. WARNING: Values between than -15 and 15 (but not 0) may generate stuttering!</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="readVelocityCurve" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_readVelocityCurve.htm">
+      <tooltip>The animation curve used to drive the velocity on the y-axis from 0 to it's read end value readTimeFloatUpVelocity .</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="readFloatUpVelocity" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_readFloatUpVelocity.htm">
+      <tooltip>Speed with which the message floats up while it fades out. Use negative values to make it float down. When using negative values here, you should most likely also use negative values for [Field: ScoreFlash.spreadSpeed]!!! WARNING: Values between than -15 and 15 (but not 0) may generate stuttering!</tooltip>
+      <links>
+        <link title="Field: ScoreFlash.spreadSpeed" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_spreadSpeed.htm" />
+      </links>
+    </field>
+    <field class="ScoreFlash" field="readScaleCurve" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_readScaleCurve.htm">
+      <tooltip>The animation curve used to drive the scale from 1 to it's read end value readTimeScale .</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="readScale" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_readScale.htm">
+      <tooltip>Scale at the end of the read time. The message scales from 1 to this value while it is kept to be read.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="fadeOutTimeSeconds" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_fadeOutTimeSeconds.htm">
+      <tooltip>The time the message takes to fade out.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="fadeOutColorCurve" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_fadeOutColorCurve.htm">
+      <tooltip>The animation curve used to drive the color from colorReadEnd to colorFadeOut. For a tutorial on working with colors in ScoreFlash, see [ScoreFlash-Tutorial: Working with Colors]</tooltip>
+      <links>
+        <link title="ScoreFlash-Tutorial: Working with Colors" url="http://www.youtube.com/watch?v=fy-Oo6dg6kA" />
+      </links>
+    </field>
+    <field class="ScoreFlash" field="fadeOutColor" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_fadeOutColor.htm">
+      <tooltip>Color faded to from read color in fade out phase. Should have alpha = 0! WARNING: If "alpha != 0" =&gt; text disappears abruptly! For a tutorial on working with colors in ScoreFlash, see [ScoreFlash-Tutorial: Working with Colors]</tooltip>
+      <links>
+        <link title="ScoreFlash-Tutorial: Working with Colors" url="http://www.youtube.com/watch?v=fy-Oo6dg6kA" />
+      </links>
+    </field>
+    <field class="ScoreFlash" field="fadeOutVelocityXCurve" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_fadeOutVelocityXCurve.htm">
+      <tooltip>The animation curve used to drive the velocity on x from readTimeFloatUpVelocity to it's fade out end value fadeOutTimeFloatUpVelocity .</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="fadeOutFloatRightVelocity" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_fadeOutFloatRightVelocity.htm">
+      <tooltip>Speed with which the message floats right while it fades out. Use negative values to make it float left. WARNING: Values between -15 and 15 (but not 0) may generate stuttering!</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="fadeOutVelocityCurve" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_fadeOutVelocityCurve.htm">
+      <tooltip>The animation curve used to drive the velocity on y from readTimeFloatUpVelocity to it's fade out end value fadeOutTimeFloatUpVelocity .</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="fadeOutFloatUpVelocity" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_fadeOutFloatUpVelocity.htm">
+      <tooltip>Speed with which the message floats up while it fades out. Use negative values to make it float down. When using negative values here, you should most likely also use negative values for [Field: ScoreFlash.spreadSpeed]!!! WARNING: Values between -15 and 15 (but not 0) may generate stuttering!</tooltip>
+      <links>
+        <link title="Field: ScoreFlash.spreadSpeed" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_spreadSpeed.htm" />
+      </links>
+    </field>
+    <field class="ScoreFlash" field="fadeOutScaleCurve" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_fadeOutScaleCurve.htm">
+      <tooltip>The animation curve used to drive the scale from readTimeScale to it's fade out end value fadeOutTimeScale .</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="fadeOutScale" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_fadeOutScale.htm">
+      <tooltip>Scale at the end of the fade out time. The message scales from midScale to this value while it is kept to be read.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="fadeOutInitialRotationSpeed" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_fadeOutInitialRotationSpeed.htm">
+      <tooltip>This is the initial rotation speed the message gets immediately when moving into fading out. Use rotationAccelleration to make this a little smoother. Set to 0 to not have the message rotate on fading out (rotationAccelleration must also be 0).</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="fadeOutRotationAcceleration" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_fadeOutRotationAcceleration.htm">
+      <tooltip>Increases the rotation speed while the message fades out. Set to 0 to not have the message rotate on fading out (initialRotationSpeed must also be 0).</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="ensureSingleton" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_ensureSingleton.htm">
+      <tooltip>Assures that there is only one instance of ScoreFlash available in any scene by destroying any new instances that are being created. This needs to be true if you want to use ScoreFlash in the "usual way", i.e. by calling [Method: ScoreFlash.Push(Object))]. If you want to work with multiple configurations (e.g. for different timings), set this to false and make sure to have a reference to the actual instance. See also [ScoreFlash.Instance].</tooltip>
+      <links>
+        <link title="Method: ScoreFlash.Push(Object))" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/M_ScoreFlash_Push(System_Object).htm" />
+        <link title="ScoreFlash.Instance" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/P_ScoreFlash_Instance.htm" />
+      </links>
+    </field>
+    <field class="ScoreFlash" field="editorGUISkin" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_editorGUISkin.htm">
+      <tooltip>GUI skin for rendering the layout designer in the editor (scene view). Do not touch this!</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="editorIconSet" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_editorIconSet.htm">
+      <tooltip>Icon set with a couple of icons useful for the editor GUI. Do not touch this!</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="rendererPool" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_rendererPool.htm">
+      <tooltip>Pooling score flash renderers prevents quite a bit of object creation when you need to render lots of messages.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlash" field="guiStylePool" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlash_guiStylePool.htm">
+      <tooltip>Pooling gui styles prevents quite a bit of object creation when using custom renders that do not provide their own GUIStyle.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlashFollow3D" field="isTestAutogenerateMessages" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashFollow3D_isTestAutogenerateMessages.htm">
+      <tooltip>Use this to show random messages.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlashFollow3D" field="pushLocally" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashFollow3D_pushLocally.htm">
+      <tooltip>Should test messages be directly pushed on this ScoreFlashFollow3D using [Method: ScoreFlashFollow3D.Push(Object))]? If this is checked, you can also test the behavior of [Field: ScoreFlashFollow3D.freezeOnRead].</tooltip>
+      <links>
+        <link title="Method: ScoreFlashFollow3D.Push(Object))" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/M_ScoreFlashFollow3D_Push(System_Object).htm" />
+        <link title="Field: ScoreFlashFollow3D.freezeOnRead" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashFollow3D_freezeOnRead.htm" />
+      </links>
+    </field>
+    <field class="ScoreFlashFollow3D" field="testMessageDelaySeconds" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashFollow3D_testMessageDelaySeconds.htm">
+      <tooltip>The usual delay between two messages in seconds. Use this to increase or decrease the frequency in which test messages are being sent to ScoreFlash. NOTE: This does not have an effect on messages sent via includeMessageSpam (these are always sent in a burst without any delay. Also be aware that this is based on real time (so Time.timeScale has no effect).</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlashFollow3D" field="scoreFlashTestInstances" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashFollow3D_scoreFlashTestInstances.htm">
+      <tooltip>References to one or more instances of ScoreFlash for testing. If you do not assign any here, ScoreFlash.Instance is used instead; if you do, one instance after the other gets messages.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlashFollow3D" field="targetRenderer" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashFollow3D_targetRenderer.htm">
+      <tooltip>Renderer of the game object that this ScoreFlashFollow3D follows. This is very important because it is needed to determine whether the object is actually visible. Like, if it's behind the camera, for instance, you don't want those messages to show in front of you (and they will, if you forget to set this up correctly ;-) ). For this to fully work reliably, make sure to also assign the proper [Field: ScoreFlashFollow3D.referenceCamera].</tooltip>
+      <links>
+        <link title="Field: ScoreFlashFollow3D.referenceCamera" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashFollow3D_referenceCamera.htm" />
+      </links>
+    </field>
+    <field class="ScoreFlashFollow3D" field="isDesignMode" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashFollow3D_isDesignMode.htm">
+      <tooltip>Design mode allows you to use the scene view to set up the positioning of this ScoreFlashFollow3D. This works both while playing and while not playing, however, if you have moving options, you might want to pause the game to set things up (otherwise you might chase your messages around ;-) ).</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlashFollow3D" field="enableDeselectHack" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashFollow3D_enableDeselectHack.htm">
+      <tooltip>Unity doesn't properly support updating the GameView when an object is deselected, so if you disable this, the design will stay in the game view until it is updated once more. I have a hack for this - but unfortunately, it's causing trouble when the object is being deleted (there's an exception that I cannot catch). Both is not a real problem, it's just a little annoying.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlashFollow3D" field="designText" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashFollow3D_designText.htm">
+      <tooltip>Message that is shown while in design mode.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlashFollow3D" field="keepStatic" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashFollow3D_keepStatic.htm">
+      <tooltip>If this is set to true , ScoreFlash will actually not follow the object anymore but just use the settings to determine the position at the time the message is sent. This is useful if you want to use ScoreFlashFollow3D for configuration or to conveniently ensure ScoreFlash uses the correct message queues but don't want the messages to follow the objects.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlashFollow3D" field="leaveBehind" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashFollow3D_leaveBehind.htm">
+      <tooltip>Should the game object "leave" the messages behind or should the messages immediately follow the game object? Value between 0 and 1: 0 means messages immediately follow object, 1 means messages almost do not follow object. This has the strongest effect when [Field: ScoreFlashFollow3D.loseMomentum]is 0. With higher values in [Field: ScoreFlashFollow3D.loseMomentum], the effect of leaveBehind becomes less and less. Only has an effect as long as the object this is attached to is alive.</tooltip>
+      <links>
+        <link title="Field: ScoreFlashFollow3D.loseMomentum" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashFollow3D_loseMomentum.htm" />
+        <link title="Field: ScoreFlashFollow3D.loseMomentum" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashFollow3D_loseMomentum.htm" />
+      </links>
+    </field>
+    <field class="ScoreFlashFollow3D" field="loseMomentum" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashFollow3D_loseMomentum.htm">
+      <tooltip>When the game objects is destroyed, should the messages lose the momentum or not? Value between 0 and 1: 0 means, the messages keep the velocity the game object last had. 1 means, the messages immediately stop at the position they had when the object was destroyed. Any value in between will make the messages slow down and stop.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlashFollow3D" field="screenPositionOffset" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashFollow3D_screenPositionOffset.htm">
+      <tooltip>2D offset in screen coordinates.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlashFollow3D" field="worldPositionOffset" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashFollow3D_worldPositionOffset.htm">
+      <tooltip>3D offset in world coordinates.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlashFollow3D" field="innerAnchor" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashFollow3D_innerAnchor.htm">
+      <tooltip>Use this to control the anchor / alignment of the messages sent using this instance of ScoreFlashFollow3D. Most of the time, you'll want to keep this *Center (TopCenter, MiddleCenter or BottomCenter) but you could also right align scores, or left align chat messages, if you need to.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlashFollow3D" field="freezeOnRead" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashFollow3D_freezeOnRead.htm">
+      <tooltip>Freeze any message pushed directly to this ScoreFlashFollow3D at its read state. If checked, this will make any message pushed to this ScoreFlashFollow3D via [Method: ScoreFlashFollow3D.Push(Object))]or [Method: ScoreFlashFollow3D.Push(Object,Color))](directly on the ScoreFlashFollow3D instance) freeze at the beginning of their read phase, essentially making them persistent. You can use this for name tags, HUDs or whatever you can think of that requires being located relative to world objects. When pushing further messages, the current message will move on, so you can either change the ScoreMessage or generate a new one. See [ScoreMessage.FreezeOnRead].</tooltip>
+      <links>
+        <link title="Method: ScoreFlashFollow3D.Push(Object))" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/M_ScoreFlashFollow3D_Push(System_Object).htm" />
+        <link title="Method: ScoreFlashFollow3D.Push(Object,Color))" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/M_ScoreFlashFollow3D_Push(System_Object,UnityEngine_Color).htm" />
+        <link title="ScoreMessage.FreezeOnRead" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/P_NarayanaGames_ScoreFlashComponent_ScoreMessage_FreezeOnRead.htm" />
+      </links>
+    </field>
+    <field class="ScoreFlashFollow3D" field="referenceCamera" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashFollow3D_referenceCamera.htm">
+      <tooltip>The camera that shows this game object to the user. If this is not assigned, [Camera.main]is used, which should be fine in most cases; but if you have a weird scene setup, you can use this. If you want to use ScoreFlash in a split screen set up ... please contact me ;-)</tooltip>
+      <links>
+        <link title="Camera.main" url="http://docs.unity3d.com/Documentation/ScriptReference/Camera-main.html" />
+      </links>
+    </field>
+    <field class="ScoreFlashFollow3D" field="defaultScoreFlash" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashFollow3D_defaultScoreFlash.htm">
+      <tooltip>If assigned, instead of using ScoreFlash.Instance, this ScoreFlashFollow3D will use the assigned ScoreFlash instance when messages are pushed directly via [Method: ScoreFlashFollow3D.Push(Object))].</tooltip>
+      <links>
+        <link title="Method: ScoreFlashFollow3D.Push(Object))" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/M_ScoreFlashFollow3D_Push(System_Object).htm" />
+      </links>
+    </field>
+    <field class="ScoreFlashLayout" field="isTestAutogenerateMessages" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashLayout_isTestAutogenerateMessages.htm">
+      <tooltip>Use this to show random messages.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlashLayout" field="testMessageDelaySeconds" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashLayout_testMessageDelaySeconds.htm">
+      <tooltip>The usual delay between two messages in seconds. Use this to increase or decrease the frequency in which test messages are being sent to ScoreFlash. NOTE: This does not have an effect on messages sent via includeMessageSpam (these are always sent in a burst without any delay. Also be aware that this is based on real time (so Time.timeScale has no effect).</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlashLayout" field="isDesignMode" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashLayout_isDesignMode.htm">
+      <tooltip>Design mode allows you to use the scene view to set up the positioning of this ScoreFlashLayout. This works both while playing and while not playing, however, if you have moving options, you might want to pause the game to set things up (otherwise you might chase your messages around ;-) ).</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlashLayout" field="enableDeselectHack" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashLayout_enableDeselectHack.htm">
+      <tooltip>Unity doesn't properly support updating the GameView when an object is deselected, so if you disable this, the design will stay in the game view until it is updated once more. I have a hack for this - but unfortunately, it's causing trouble when the object is being deleted (there's an exception that I cannot catch). Both is not a real problem, it's just a little annoying.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlashLayout" field="designText" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashLayout_designText.htm">
+      <tooltip>Message that is shown while in design mode.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlashLayout" field="lockScreenAlign" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashLayout_lockScreenAlign.htm">
+      <tooltip>Locks the screen alignment. This is only used by the visual designer.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlashLayout" field="screenAlign" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashLayout_screenAlign.htm">
+      <tooltip>Controls whether the message is aligned to top, middle or bottom of the screen. Defines how [Field: ScoreFlashLayout.position]is applied. Possible values are defined by [Type: NGAlignment.ScreenAlign].</tooltip>
+      <links>
+        <link title="Field: ScoreFlashLayout.position" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashLayout_position.htm" />
+        <link title="Type: NGAlignment.ScreenAlign" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/T_NarayanaGames_Common_UI_NGAlignment_ScreenAlign.htm" />
+      </links>
+    </field>
+    <field class="ScoreFlashLayout" field="position" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashLayout_position.htm">
+      <tooltip>Position for messages pushed with [Method: IScoreFlash.PushLocal(Object))]in normalized pixels relative to [Type: NGAlignment.ScreenAlign]. For example, if [Field: ScoreFlashLayout.screenAlign]is [Field: ScreenAlign.BottomRight], (15, 10) means 15 pixels left of the right border of the viewport, and 10 pixels above the bottom border. If a high density (Retina) display is recognized, these values are automatically multiplied with 2!</tooltip>
+      <links>
+        <link title="Method: IScoreFlash.PushLocal(Object))" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/M_NarayanaGames_ScoreFlashComponent_IScoreFlash_PushLocal(System_Object).htm" />
+        <link title="Type: NGAlignment.ScreenAlign" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/T_NarayanaGames_Common_UI_NGAlignment_ScreenAlign.htm" />
+        <link title="Field: ScoreFlashLayout.screenAlign" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashLayout_screenAlign.htm" />
+        <link title="Field: ScreenAlign.BottomRight" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_NarayanaGames_Common_UI_NGAlignment_ScreenAlign_BottomRight.htm" />
+      </links>
+    </field>
+    <field class="ScoreFlashLayout" field="lockInnerAnchor" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashLayout_lockInnerAnchor.htm">
+      <tooltip>Locks the [Field: ScoreFlashLayout.innerAnchor]to [Field: ScoreFlashLayout.screenAlign]. Most of the time, you'll want to have the set to true because most of the time, it just makes sense and is easier to configure. However, if you want to, for instance, have numbers right aligned but you want to position them relative to the left screen border, you'd set this to true and use screenAlign = *Left and innerAnchor = *Right (e.g. TopLeft, TopRight).</tooltip>
+      <links>
+        <link title="Field: ScoreFlashLayout.innerAnchor" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashLayout_innerAnchor.htm" />
+        <link title="Field: ScoreFlashLayout.screenAlign" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashLayout_screenAlign.htm" />
+      </links>
+    </field>
+    <field class="ScoreFlashLayout" field="innerAnchor" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashLayout_innerAnchor.htm">
+      <tooltip>Use this to control the anchor / alignment of the messages sent using this instance of ScoreFlashLayout. Most of the time, you'll want to keep this *Center (TopCenter, MiddleCenter or BottomCenter) but you could also right align scores, or left align chat messages, if you need to.</tooltip>
+      <links />
+    </field>
+    <field class="ScoreFlashLayout" field="minPaddingX" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashLayout_minPaddingX.htm">
+      <tooltip>Minimum distance between the message and the left/right screen borders before the message is wrapped in two (or more) lines. This works together with [Field: ScoreFlashLayout.maxWidth]. When center aligned (TopCenter, MiddleCenter, BottomCenter), this uses both screen edges; note that this may not give you perfectly correct results if using X-offsets! When left or right align (all the others), this uses the actual x-position and [Field: ScoreFlashLayout.innerAnchor]to find out where the message is going and then assures that it doesn't get closer to the screen border the message is point to (i.e. left align results in padding against the right screen border, right align results in padding against the left screen boder). Default is 20F. This assumes scale = 1; with scale &gt; 1, the message might clip at the screen borders. Obviously, this only has an effect with long messages. MinPaddingX is used, when the resulting width is smaller than the one defined in [Field: ScoreFlashLayout.maxWidth]. Set to a negative value if you only want to use maxWidth (padding will then be ignored). This uses normalized coordinates (i.e. if you are on a high density display, e.g. Retina, the value will be multiplied with 2).</tooltip>
+      <links>
+        <link title="Field: ScoreFlashLayout.maxWidth" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashLayout_maxWidth.htm" />
+        <link title="Field: ScoreFlashLayout.innerAnchor" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashLayout_innerAnchor.htm" />
+        <link title="Field: ScoreFlashLayout.maxWidth" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashLayout_maxWidth.htm" />
+      </links>
+    </field>
+    <field class="ScoreFlashLayout" field="maxWidth" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashLayout_maxWidth.htm">
+      <tooltip>Maximum width of the message before it's wrapped. This works together with [Field: ScoreFlashLayout.minPaddingX]. Default is 260F. This assumes scale = 1; with scale &gt; 1, the message might clip at the screen borders. Obviously, this only has an effect with long messages. MaxWidth is used when it is smaller than the maximum width resulting from [Field: ScoreFlashLayout.minPaddingX]. If you want to not use maxWidth, just set it to a very high value (e.g. 4000, which will be larger than any relevant screen ;-) ). This uses normalized coordinates (i.e. if you are on a high density display, e.g. Retina, the value will be multiplied with 2).</tooltip>
+      <links>
+        <link title="Field: ScoreFlashLayout.minPaddingX" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashLayout_minPaddingX.htm" />
+        <link title="Field: ScoreFlashLayout.minPaddingX" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashLayout_minPaddingX.htm" />
+      </links>
+    </field>
+    <field class="ScoreFlashLayout" field="freezeOnRead" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashLayout_freezeOnRead.htm">
+      <tooltip>Freeze any message pushed directly to this ScoreFlashLayout at its read state. If checked, this will make any message pushed to this ScoreFlashLayout via [Method: ScoreFlashLayout.Push(Object))]or [Method: ScoreFlashLayout.Push(Object,Color))](directly on the ScoreFlashLayout instance) freeze at the beginning of their read phase, essentially making them persistent. You can use this for name tags, HUDs or whatever you can think of that requires being located relative to world objects. When pushing further messages, the current message will move on, so you can either change the ScoreMessage or generate a new one. See [ScoreMessage.FreezeOnRead].</tooltip>
+      <links>
+        <link title="Method: ScoreFlashLayout.Push(Object))" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/M_ScoreFlashLayout_Push(System_Object).htm" />
+        <link title="Method: ScoreFlashLayout.Push(Object,Color))" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/M_ScoreFlashLayout_Push(System_Object,UnityEngine_Color).htm" />
+        <link title="ScoreMessage.FreezeOnRead" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/P_NarayanaGames_ScoreFlashComponent_ScoreMessage_FreezeOnRead.htm" />
+      </links>
+    </field>
+    <field class="ScoreFlashLayout" field="defaultScoreFlash" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashLayout_defaultScoreFlash.htm">
+      <tooltip>If assigned, instead of using ScoreFlash.Instance, this ScoreFlashLayout will use the assigned ScoreFlash instance when messages are pushed directly via [Method: ScoreFlashLayout.Push(Object))].</tooltip>
+      <links>
+        <link title="Method: ScoreFlashLayout.Push(Object))" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/M_ScoreFlashLayout_Push(System_Object).htm" />
+      </links>
+    </field>
+    <field class="ScoreFlashManager" field="ensureSingleton" url="http://narayana-games.net/static/docs/assetstore/ScoreFlash/html/F_ScoreFlashManager_ensureSingleton.htm">
+      <tooltip>Assures that there is only one instance of ScoreFlashManager available in any scene by destroying any new instances that are being created. Check this if you want to use the same ScoreFlashManager setup in all scenes; uncheck this, if you want to use different setups in different scenes.</tooltip>
+      <links />
+    </field>
+  </fields>
+</tooltips>
