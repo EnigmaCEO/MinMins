@@ -22,6 +22,7 @@ public class EnjinLogin : MonoBehaviour
     public Button loginButton;
     public Button registerButton;
 
+
     public void closeDialog() {
         gameObject.SetActive(false);
     }
@@ -141,7 +142,7 @@ public class EnjinLogin : MonoBehaviour
 
             if (status == NetworkManager.StatusOptions.SUCCESS) {
                 // print("onRegistration SUCCESS");
-                // completeLogin(response_hash);
+                completeLogin(response_hash);
                 closeDialog();
             }
             else {
@@ -181,10 +182,7 @@ public class EnjinLogin : MonoBehaviour
             //if(true)  //hack
             if (enjinCode != "null")
             {
-                //_enjinWindow.SetActive(true);
-                //_enjinWindow.GetComponent<EnjinQRManager>().ShowImage(enjinCode);
-
-                //StartCoroutine(handleEnjinLinkingCheck(0));
+                GameObject.Find("/Main").GetComponent<Main>().StartEnjinQR(enjinCode);
             }
             else
             {
@@ -195,7 +193,7 @@ public class EnjinLogin : MonoBehaviour
         else
             print("User is not using Crypto.");
 
-        GameStats.Instance.IsEnjinLinked = true; //hack
+        //GameStats.Instance.IsEnjinLinked = true; //hack
     }
 
     private void onLogin(SimpleJSON.JSONNode response)
@@ -207,7 +205,7 @@ public class EnjinLogin : MonoBehaviour
 
             if (status == NetworkManager.StatusOptions.SUCCESS) {
                 // print("onRegistration SUCCESS");
-                // completeLogin(response_hash);
+                completeLogin(response_hash);
                 closeDialog();
             }
             else {
@@ -232,4 +230,8 @@ public class EnjinLogin : MonoBehaviour
             alertText.text = "Connection Error";
         }
     }
+
+    
+
+    
 }
