@@ -40,6 +40,8 @@ public class GameStore : MonoBehaviour
         _extraLootBoxPopUp.SetActive(false);
 
         refreshLootBoxesGrid();
+
+        handleFreeLootBoxGifts();
     }
 
     private void OnDestroy()
@@ -91,13 +93,7 @@ public class GameStore : MonoBehaviour
     public void OnLootBoxOpenPopUpDismissButtonDown()
     {
         _openLootBoxPopUp.Close();
-        GameInventory gameInventory = GameInventory.Instance;
-
-        if (!gameInventory.HasEnoughUnitsForBattle() && !gameInventory.HasAnyLootBox())
-        {
-            grantBox(GameInventory.Tiers.BRONZE);
-            _extraLootBoxPopUp.SetActive(true);
-        }
+        handleFreeLootBoxGifts();
     }
 
     public void OnBuyResultPopUpDismissButtonDown()
@@ -113,6 +109,16 @@ public class GameStore : MonoBehaviour
     public void OnBackButtonDown()
     {
         SceneManager.LoadScene(GameConstants.Scenes.MAIN);
+    }
+
+    private void handleFreeLootBoxGifts()
+    {
+        GameInventory gameInventory = GameInventory.Instance;
+        if (!gameInventory.HasEnoughUnitsForBattle() && !gameInventory.HasAnyLootBox())
+        {
+            grantBox(GameInventory.Tiers.BRONZE);
+            _extraLootBoxPopUp.SetActive(true);
+        }
     }
 
     private void refreshLootBoxesGrid()
@@ -146,7 +152,11 @@ public class GameStore : MonoBehaviour
     private void onLootBoxBuyConfirmButtonDown()
     {
         int packIndex = _selectedPackTier - 1;
-        IAPManager.BuyConsumable(packIndex);
+
+        //===============================================
+        //IAPManager.BuyConsumable(packIndex);  
+        handleCurrencyBuyResult(IAPManager.Instance.IAP_IDS[packIndex], true);  // Buy hack to work on android
+        //=========================================
         _lootBoxBuyConfirmPopUp.Close();
         //grantBuy(_selectedPackTier); //TODO: Remove hack
     }

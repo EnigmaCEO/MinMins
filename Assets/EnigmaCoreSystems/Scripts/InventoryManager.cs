@@ -21,6 +21,20 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>
         }
     }
 
+    public void RemoveItem(string groupName, string key, bool shouldCheckGroupExists = true)
+    {
+        if (!shouldCheckGroupExists || CheckGroupExists(groupName, false))
+        {
+            if (!_items[groupName].ContainsKey(key))
+                Debug.LogError("InventoryManager::RemoveItem -> Inventory does not contains key: " + key + " at group: " + groupName);
+            else
+            {
+                _items[groupName].Remove(key);
+                Debug.LogWarning("InventoryManager::RemoveItem -> Removed key: " + key + " at group: " + groupName);
+            }
+        }
+    }
+
     public void UpdateItem(string groupName, string key, object value, bool shouldCheckGroupExists = true)
     {
         if (shouldCheckGroupExists && !CheckGroupExists(groupName, false))

@@ -111,7 +111,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LifeTime: 2
-  CollisionTime: 2
+  CollisionTime: -1
   ActionTime: 2
   OwnerUnitName: 
   OwnerTeamName: 

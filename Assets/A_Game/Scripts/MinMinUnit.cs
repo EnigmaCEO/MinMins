@@ -42,12 +42,21 @@ public class MinMinUnit : NetworkEntity
     private Transform _spriteTransform;
 
     public string TeamName { get { return _teamName; } }
+    public int TeamIndex { get { return _teamIndex; } }
 
     protected override void Awake()
     {
         base.Awake();
 
         _spriteTransform = transform.Find("Sprite");
+
+        WarUnitSprite warUnitSprite = _spriteTransform.gameObject.AddComponent<WarUnitSprite>();
+        warUnitSprite.Unit = this.gameObject;
+
+        GameObject shadow = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/UI/battle_shadow"));
+        shadow.transform.parent = _spriteTransform;
+        shadow.transform.localPosition = new Vector2(0, 0);
+        shadow.transform.localScale = new Vector2(-1, 1);
 
         object[] data = base.GetInstantiationData();
         if (data != null)
@@ -67,14 +76,6 @@ public class MinMinUnit : NetworkEntity
         _teamName = teamName;
         _teamIndex = teamIndex;
 
-        WarUnitSprite warUnitSprite = _spriteTransform.gameObject.AddComponent<WarUnitSprite>();
-        warUnitSprite.Unit = this.gameObject;
-
-        GameObject shadow = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/UI/battle_shadow"));
-        shadow.transform.parent = _spriteTransform;
-        shadow.transform.localPosition = new Vector2(0, 0);
-        shadow.transform.localScale = new Vector2(-1, 1);
-
         bool isHost = (teamName == GameNetwork.TeamNames.HOST);
 
         if (!isHost)
@@ -84,23 +85,6 @@ public class MinMinUnit : NetworkEntity
         }
 
         _spriteTransform.localPosition = new Vector3(posX, posY, _spriteTransform.localPosition.z);
-
-        string gridName = War.GetTeamGridName(_teamName);
-        int slotNumber = _teamIndex + 1;
-        string slotFindPath = "Battlefield/" + gridName + "/slot" + slotNumber;
-
-        base.StartReadyOnSceneCheck(slotFindPath);
-    }
-
-    protected override void onReadyInScene(GameObject sceneObjectFound)
-    {
-        base.onReadyInScene(sceneObjectFound);
-
-        Transform parent = sceneObjectFound.transform;
-        transform.SetParent(parent);
-        transform.localPosition = Vector2.zero;
-
-        War.GetSceneInstance().RegisterUnit(_teamName, this);
     }
 
     public void SendDebugSettingsForWar(Types unitType)

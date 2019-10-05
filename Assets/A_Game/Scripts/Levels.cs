@@ -7,9 +7,12 @@ using UnityEngine.UI;
 public class Levels : MonoBehaviour
 {
     [SerializeField] private Transform _levelsGridContent;
+    [SerializeField] GameObject _notEnoughUnitsPopUp;
 
     void Start()
     {
+        _notEnoughUnitsPopUp.SetActive(false);
+
         //GameNetwork.SetLocalPlayerRating(150, GameNetwork.VirtualPlayerIds.HOST); 
         GameStats.Instance.Rating = 150; //TODO: Remove hack
         GameObject levelGridItemTemplate = _levelsGridContent.GetChild(0).gameObject;
@@ -36,8 +39,18 @@ public class Levels : MonoBehaviour
 
     private void onLevelFightButtonDown(int levelNumber)
     {
-        GameStats.Instance.SelectedLevelNumber = levelNumber;
-        SceneManager.LoadScene(GameConstants.Scenes.UNIT_SELECT);
+        if (GameInventory.Instance.HasEnoughUnitsForBattle())
+        {
+            GameStats.Instance.SelectedLevelNumber = levelNumber;
+            SceneManager.LoadScene(GameConstants.Scenes.UNIT_SELECT);
+        }
+        else
+            _notEnoughUnitsPopUp.SetActive(true);
+    }
+
+    public void OnNotEnoughUnitsPopUpDismissButtonDown()
+    {
+        SceneManager.LoadScene(GameConstants.Scenes.STORE);
     }
 
     public void OnBackButtonDown()

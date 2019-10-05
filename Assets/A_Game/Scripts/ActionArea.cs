@@ -42,16 +42,6 @@ public class ActionArea : NetworkEntity
         base.Update();
         if (_warRef.GetIsHost())
         {
-            if (LifeTime > 0)
-            {
-                LifeTime -= Time.deltaTime;
-                if (LifeTime < 0)
-                {
-                    LifeTime = 0;
-                    NetworkManager.NetworkDestroy(this.gameObject);
-                }
-            }
-
             if (CollisionTime > 0)
             {
                 CollisionTime -= Time.deltaTime;
@@ -59,6 +49,16 @@ public class ActionArea : NetworkEntity
                 {
                     CollisionTime = 0;
                     sendDisableCollider();
+                }
+            }
+
+            if (LifeTime > 0)
+            {
+                LifeTime -= Time.deltaTime;
+                if (LifeTime < 0)
+                {
+                    LifeTime = 0;
+                    NetworkManager.NetworkDestroy(this.gameObject);
                 }
             }
         }
@@ -79,16 +79,6 @@ public class ActionArea : NetworkEntity
         transform.localScale = new Vector3(scaleFactor * scale.x, scaleFactor * scale.y, scaleFactor * scale.z);
 
         setEffect(effectName);
-
-        StartReadyOnSceneCheck(ACTION_AREAS_PARENT_FIND_PATH + this.name + "sContainer");
-    }
-
-    protected override void onReadyInScene(GameObject sceneObjectFound)
-    {
-        base.onReadyInScene(sceneObjectFound);
-
-        Transform parent = sceneObjectFound.transform;
-        this.transform.SetParent(parent);
     }
 
     public static void DestroyActionAreaList(List<ActionArea> actionAreas)
@@ -147,6 +137,7 @@ public class ActionArea : NetworkEntity
     protected void dealDamage (string targetUnitName)
     {
         int damage = int.Parse(getOwnerUnitProperty(GameNetwork.UnitPlayerProperties.STRENGHT)); //TODO: Use damage formula if needed.
+        //damage = 50; // damage hack
         string targetUnitTeam = GameNetwork.GetOppositeTeamName(OwnerTeamName);
 
         //print("ActionArea virtual player Id: " + VirtualPlayerId);

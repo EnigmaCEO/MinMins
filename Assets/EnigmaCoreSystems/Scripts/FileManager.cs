@@ -61,9 +61,12 @@ public class FileManager : MonoBehaviour
         string dataToWrite = "";
 
         foreach (DictionaryEntry entry in hashtable)
-            dataToWrite += entry.Key.ToString() + _keyValueSeparator + entry.Value.ToString() + _entrySeparator;
+        {
+            if (dataToWrite != "")
+                dataToWrite += _entrySeparator;
 
-        dataToWrite = dataToWrite.Remove(dataToWrite.Length - 1);
+            dataToWrite += entry.Key.ToString() + _keyValueSeparator + entry.Value.ToString();
+        }
 
         PlayerPrefs.SetString(_secKey, Enigma.CoreSystems.NetworkManager.md5(dataToWrite + _egi));
         System.IO.File.WriteAllText(_filePath, dataToWrite);

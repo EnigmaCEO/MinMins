@@ -109,6 +109,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc8395a664cd4044f88156feb10d672d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _readyOnSceneCheckDelay: 1
   Strength: 1
   Defense: 2
   MaxHealth: 5
@@ -133,15 +134,15 @@ MonoBehaviour:
   group: 0
   OwnerShipWasTransfered: 0
   prefixBackup: -1
-  synchronization: 3
+  synchronization: 0
   onSerializeTransformOption: 3
   onSerializeRigidBodyOption: 2
   ownershipTransfer: 0
   ObservedComponents:
-  - {fileID: 4828501320085715436}
+  - {fileID: 0}
   ObservedComponentsFoldoutOpen: 1
-  viewIdField: 79
-  instantiationId: 79
+  viewIdField: 0
+  instantiationId: -1
   currentMasterID: -1
   isRuntimeInstantiated: 0
 --- !u!1 &100010

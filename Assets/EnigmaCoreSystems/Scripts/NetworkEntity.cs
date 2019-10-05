@@ -7,39 +7,18 @@ namespace Enigma.CoreSystems
     [RequireComponent(typeof(PhotonView))]
     public class NetworkEntity : MonoBehaviour
     {
-        [SerializeField] private float _readyOnSceneCheckDelay = 1;
         private PhotonView _photonView;
-
-        public delegate void CheckReadyOnSceneDelegate(GameObject objectToFind);
-        static public CheckReadyOnSceneDelegate OnReadyInSceneCallback;
-
-        private string _sceneObjectToFind = "";
-
-        public bool RequiresSceneReady { get; protected set; }
-
 
         protected virtual void Awake()
         {
             _photonView = GetComponent<PhotonView>();
-            if(!_photonView.ObservedComponents.Contains(this))
+            if (!_photonView.ObservedComponents.Contains(this))
                 _photonView.ObservedComponents.Add(this);
-
-            RequiresSceneReady = false;
         }
 
         protected virtual void Update()
         {
-            if (RequiresSceneReady) 
-            {
-                if (_sceneObjectToFind != "")
-                {
-                    GameObject sceneObject = GameObject.Find(_sceneObjectToFind);
-                    if (sceneObject != null)
-                        onReadyInScene(sceneObject);
-                    else
-                        Debug.LogWarning("NetworkEntity::LateUpdate -> sceneObjectToFind: " + _sceneObjectToFind + " not yet found by: " + this.name);
-                }
-            }
+            //Nothing here yet
         }
 
         protected virtual void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -47,17 +26,14 @@ namespace Enigma.CoreSystems
             //For now to prevent photon error when observing component
         }
 
-        protected void StartReadyOnSceneCheck(string sceneObjectToFind)
+        public int GetNetworkViewId()
         {
-            //Debug.LogWarning("NetworkEntity::StartReadyOnSceneCheck -> name: " + this.name + " sceneObjectToFind: " + sceneObjectToFind);
-            _sceneObjectToFind = sceneObjectToFind;
-            RequiresSceneReady = true;
+            return _photonView.viewID;
         }
 
-        protected virtual void onReadyInScene(GameObject sceneObjectFound)
+        static public NetworkEntity Find(int networkViewId)
         {
-            //Debug.LogWarning("NewtorkEntity::onReadyInScene -> name: " + this.name);
-            RequiresSceneReady = false;
+            return PhotonView.Find(networkViewId).GetComponent<NetworkEntity>();
         }
 
         protected void setNetworkViewId(int id)

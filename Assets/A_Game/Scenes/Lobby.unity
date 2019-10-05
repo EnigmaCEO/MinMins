@@ -494,30 +494,8 @@ PrefabInstance:
       propertyPath: instantiationId
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 9133879716181396368, guid: 54c91f6d08e98ec408208b979dcc765f,
-        type: 3}
-      propertyPath: synchronization
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 9133879716181396368, guid: 54c91f6d08e98ec408208b979dcc765f,
-        type: 3}
-      propertyPath: ObservedComponents.Array.data[0]
-      value: 
-      objectReference: {fileID: 5328782568173331077}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 54c91f6d08e98ec408208b979dcc765f, type: 3}
---- !u!114 &5328782568173331077 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5328782568797417175, guid: 54c91f6d08e98ec408208b979dcc765f,
-    type: 3}
-  m_PrefabInstance: {fileID: 5328782568173331076}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 42b5de34e7eb1454490edfffee5224ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &8003088121833194583
 PrefabInstance:
   m_ObjectHideFlags: 0

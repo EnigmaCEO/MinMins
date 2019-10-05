@@ -154,10 +154,10 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
         InventoryManager.Instance.UpdateItem(GroupNames.LOOT_BOXES, tier.ToString(), newtierLootBoxesAmount);
 
-        if(shouldSave)
+        if (shouldSave)
             saveLootBoxes();
     }
-    
+
     public List<string> OpenLootBox(int boxTier)
     {
         Dictionary<string, double> specialRarities = new Dictionary<string, double>();
@@ -212,6 +212,12 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         return unitPicks;
     }
 
+    public void HandleUnitDeath(string unitName)
+    {
+        InventoryManager.Instance.RemoveItem(GroupNames.UNITS, unitName);
+        SaveUnits();
+    }
+
     public int GetUnitTier(string unitName)
     {
         int unitTier = Tiers.BRONZE;
@@ -225,9 +231,11 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
     public void SaveUnits()
     {
+        _saveHashTable.Clear();
+
         InventoryManager inventoryManager = InventoryManager.Instance;
         foreach (string unitName in inventoryManager.GetGroupKeys(GroupNames.UNITS))
-            saveUnit(GroupNames.UNITS, unitName, false);
+            saveUnit(unitName, false);
 
         saveHashTableToFile();
     }
@@ -395,11 +403,12 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         saveHashTableToFile();
     }
 
-    private void saveUnit(string groupName, string unitName, bool isStandAlone = true)
+    private void saveUnit(string unitName, bool isStandAlone = true)
     {
+        string groupName = GroupNames.UNITS;
         int unitExp = InventoryManager.Instance.GetItem<int>(groupName, unitName);
         string hashKey = groupName + _parseSeparator + unitName;
-        print("SaveUnit -> hashKey: " + hashKey + " -> unitExp: " + unitExp);
+        Debug.LogWarning("GameInventory::saveUnit -> hashKey: " + hashKey + " -> unitExp: " + unitExp);
 
         if (_saveHashTable.ContainsKey(hashKey))
             _saveHashTable.Remove(hashKey);

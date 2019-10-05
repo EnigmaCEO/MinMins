@@ -286,7 +286,7 @@ public class War : NetworkEntity
 
     private void onReadyToFight(string teamName, bool ready)
     {
-        //Debug.LogWarning("War::onReadyToFight -> teamName: " + teamName + " ready: " + ready);
+        Debug.LogWarning("War::onReadyToFight -> teamName: " + teamName + " ready: " + ready);
         if (GetIsHost())
         {
             if (ready)
@@ -310,7 +310,7 @@ public class War : NetworkEntity
                     hostReady = bool.Parse(NetworkManager.GetAnyPlayerCustomProperty(GameNetwork.PlayerCustomProperties.READY_TO_FIGHT, GameNetwork.TeamNames.HOST, GameNetwork.GetTeamNetworkPlayerId(GameNetwork.TeamNames.HOST)));
                 }
 
-                //Debug.LogWarning("War::onReadyToFight -> hostReady: " + hostReady + " guestReady: " + guestReady);
+                Debug.LogWarning("War::onReadyToFight -> hostReady: " + hostReady + " guestReady: " + guestReady);
 
                 if (hostReady && guestReady)
                 {
@@ -346,18 +346,6 @@ public class War : NetworkEntity
 
         Image fillToUpdate = (team == _localPlayerTeam) ? _hostTeamHealthFill : _guestTeamHealthFill;
         fillToUpdate.fillAmount = (float)health / (float)teamMaxHealth;
-
-        //if (GetIsHost())
-        //{
-        //    if (_canCheckWinner)
-        //    {
-        //        string winnerTeam = checkSurvivorWinner();
-        //        if (winnerTeam != "")
-        //            handlMatchEnd(winnerTeam);
-        //    }
-        //    else
-        //        _canCheckWinner = true;
-        //}
     }
 
     private void handleUnitDeath(string teamName, string unitName)
@@ -365,6 +353,9 @@ public class War : NetworkEntity
         Dictionary<string, MinMinUnit> teamUnits = GetTeamUnitsDictionary(teamName);
         MinMinUnit unit = teamUnits[unitName];
         unit.gameObject.SetActive(false);
+
+        if ((GetUsesAi() && (teamName == GameNetwork.TeamNames.HOST)) || (teamName == _localPlayerTeam))
+            GameInventory.Instance.HandleUnitDeath(unitName);
 
         if (GetIsHost())
         {
@@ -685,6 +676,7 @@ public class War : NetworkEntity
     //Only Master Client uses this
     private void handleActionAreaCreation(Vector3 inputWorldPosition, List<Vector3> directions, MinMinUnit unit, string teamName, int networkPlayerId)
     {
+        string actionAreaNetworkViewIdsString = "";
         float actionTime = 0;
         foreach (Vector3 direction in directions)
         {
@@ -693,12 +685,39 @@ public class War : NetworkEntity
             object[] instantiationData = { actionAreaPrefabName, inputWorldPosition, direction, unit.name, unit.EffectName, teamName, networkPlayerId };
             GameObject actionAreaObject = NetworkManager.InstantiateObject(ActionArea.ACTION_AREAS_RESOURCES_FOLDER_PATH + actionAreaPrefabName, Vector3.zero, Quaternion.identity, 0, instantiationData);
 
+            if (actionAreaNetworkViewIdsString != "")
+                actionAreaNetworkViewIdsString += NetworkManager.Separators.KEYS;
+
+            int actionAreaNetworkViewId = actionAreaObject.GetComponent<NetworkEntity>().GetNetworkViewId();
+            actionAreaNetworkViewIdsString += actionAreaNetworkViewId.ToString();
+
             ActionArea actionArea = actionAreaObject.GetComponent<ActionArea>();
             actionTime = actionArea.ActionTime;
-            //actionArea.SendSetupData(actionAreaPrefabName, inputWorldPosition, direction, unit.name, unit.EffectName, teamName, networkPlayerId);
         }
 
+        sendActionAreaNetworkViewsIds(actionAreaNetworkViewIdsString);
         StartCoroutine(HandleActionTime(actionTime));
+    }
+
+    private void sendActionAreaNetworkViewsIds(string actionAreaNetworkViewIdsString)
+    {
+        base.SendRpcToAll("receiveActionAreaNetworkViewsIds", actionAreaNetworkViewIdsString);
+    }
+
+    [PunRPC]
+    private void receiveActionAreaNetworkViewsIds(string actionAreaNetworkViewIdsString)
+    {
+        string[] actionAreasNetworkViewsIds = actionAreaNetworkViewIdsString.Split(NetworkManager.Separators.KEYS);
+        foreach (string actionAreaNetworkViewId in actionAreasNetworkViewsIds)
+        {
+            NetworkEntity areaNetworkEntity = NetworkEntity.Find(int.Parse(actionAreaNetworkViewId));
+            ActionArea area = areaNetworkEntity.GetComponent<ActionArea>();
+
+            string parentPath = ActionArea.ACTION_AREAS_PARENT_FIND_PATH + area.name + "sContainer";
+            Transform parent = GameObject.Find(parentPath).transform;
+
+            area.transform.SetParent(parent);
+        }
     }
 
     //Only Master Client uses this
@@ -963,6 +982,8 @@ public class War : NetworkEntity
 
         int teamLength = teamUnits.Length;
         int networkPlayerId = GameNetwork.GetTeamNetworkPlayerId(teamName);
+        string unitNetworkViewsIdsString = "";
+
 
         for (int i = 0; i < teamLength; i++)
         {
@@ -982,19 +1003,25 @@ public class War : NetworkEntity
             object[] instantiationData = { unitName, teamName, i, posX, posY };
 
             GameObject unitGameObject = NetworkManager.InstantiateObject("Prefabs/MinMinUnits/" + unitName, Vector3.zero, Quaternion.identity, 0, instantiationData);
+            int unitNetworkViewId = unitGameObject.GetComponent<NetworkEntity>().GetNetworkViewId();
+
+            if (unitNetworkViewsIdsString != "")
+                unitNetworkViewsIdsString += NetworkManager.Separators.KEYS;
+
+            unitNetworkViewsIdsString += unitNetworkViewId.ToString();
 
             MinMinUnit unit = unitGameObject.GetComponent<MinMinUnit>();
 
             MinMinUnit.Types unitDebugType = MinMinUnit.Types.Bomber;
             //Type vs Type Test hack =======================================
             //if (teamName == GameNetwork.TeamNames.HOST)
-            //    unitDebugType = MinMinUnit.Types.Scout;
+            //    unitDebugType = MinMinUnit.Types.Destroyer;
             //else
-            //    unitDebugType = MinMinUnit.Types.Healer;
+            //    unitDebugType = MinMinUnit.Types.Scout;
             //==============================================================
 
             //Specific Type Test hack =======================================
-            //unitDebugType = MinMinUnit.Types.Scout;
+            //unitDebugType = MinMinUnit.Types.Destroyer;
             //==============================================================
 
             //Tanks against Bombers Test hack =======================================
@@ -1011,8 +1038,45 @@ public class War : NetworkEntity
             unit.SendDebugSettingsForWar(unitDebugType);
         }
 
+        sendTeamUnitsInstantiatedNetworkViewIds(teamName, unitNetworkViewsIdsString);
+        
         setTeamHealth(teamName, true);
         setTeamHealth(teamName, false);
+    }
+
+    private void sendTeamUnitsInstantiatedNetworkViewIds(string teamName, string unitNetworkViewsIdsString)
+    {
+        base.SendRpcToAll("receiveTeamUnitsInstantiatedNetworkViewIds", teamName, unitNetworkViewsIdsString);
+    }
+
+    [PunRPC]
+    private void receiveTeamUnitsInstantiatedNetworkViewIds(string teamName, string unitNetworkViewsIdsString)
+    {
+        string[] unitNetworkViewsIds = unitNetworkViewsIdsString.Split(NetworkManager.Separators.KEYS);
+
+        foreach (string unitNetworkViewId in unitNetworkViewsIds)
+        {
+            NetworkEntity networkEntity = NetworkEntity.Find(int.Parse(unitNetworkViewId));
+            MinMinUnit unit = networkEntity.GetComponent<MinMinUnit>();
+
+            string gridName = War.GetTeamGridName(teamName);
+            int slotNumber = unit.TeamIndex + 1;
+            string slotFindPath = "Battlefield/" + gridName + "/slot" + slotNumber;
+
+            GameObject sceneObject = GameObject.Find(slotFindPath);
+
+            Transform parent = sceneObject.transform;
+            unit.transform.SetParent(parent);
+            unit.transform.localPosition = Vector2.zero;
+
+            RegisterUnit(unit);
+        }
+
+        _readyByTeam[teamName] = true;
+
+        Debug.LogWarning("War::receiveTeamInstantiated -> _readyByTeam[GameNetwork.TeamNames.HOST]: " + _readyByTeam[GameNetwork.TeamNames.HOST] + " _readyByTeam[GameNetwork.TeamNames.GUEST] " + _readyByTeam[GameNetwork.TeamNames.GUEST]);
+        if (_readyByTeam[GameNetwork.TeamNames.HOST] && _readyByTeam[GameNetwork.TeamNames.GUEST])
+            NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.READY_TO_FIGHT, true.ToString(), _localPlayerTeam);
     }
 
     public void onMatchResultsDismissButtonDown()
@@ -1077,16 +1141,6 @@ public class War : NetworkEntity
         if (areasByOwnerByTargetByTeam[teamName].ContainsKey(targetName))
             areasByOwnerByTargetByTeam[teamName].Remove(targetName);
     }
-
-    //private void removeTankAreaForOwner(string teamName, string ownerUnitName)
-    //{
-    //    removeAreaForOwner<TankArea>(teamName, ownerUnitName, _tanksAreasByOwnerByTargetByTeam);
-    //}
-
-    //private void removeHealingAreaForOwner(string teamName, string ownerUnitName)
-    //{
-    //    removeAreaForOwner<HealerArea>(teamName, ownerUnitName, _healerAreasByOwnerByTargetByTeam);
-    //}
 
     private void removeAreaForOwner<T>(string teamName, string ownerUnitName, Dictionary<string, Dictionary<string, Dictionary<string, List<T>>>> areasByOwnerByTargetByTeam) where T: ActionArea
     {
@@ -1163,22 +1217,25 @@ public class War : NetworkEntity
             setTeamHealth(team, false);
     }
 
-    public void RegisterUnit(string teamName, MinMinUnit unit)
+    public void RegisterUnit(MinMinUnit unit)
     {
-        //Debug.LogWarning("War::RegisterUnit -> teamName: " + teamName + " unit: " + unit.name);
+        string teamName = unit.TeamName;
+
+        Debug.LogWarning("War::RegisterUnit -> teamName: " + teamName + " unit: " + unit.name);
         Dictionary<string, MinMinUnit> teamUnits = GetTeamUnitsDictionary(teamName);
         teamUnits.Add(unit.name, unit);
 
-        int teamPlayersAmount = GameNetwork.GetTeamUnitNames(teamName).Length;
+        //int teamPlayersAmount = GameNetwork.GetTeamUnitNames(teamName).Length;
         //Debug.LogWarning("War::RegisterUnit -> teamName: " + teamName + " unit: " + unit.name + " units on list: " + teamPlayersAmount + " units registered: " + teamUnits.Count);
-        if (teamUnits.Count == teamPlayersAmount)
-        {
-            _readyByTeam[teamName] = true;
+        //if (teamUnits.Count == teamPlayersAmount)
+        //{
+        //    _readyByTeam[teamName] = true;
 
-            if (_readyByTeam[GameNetwork.TeamNames.HOST] && _readyByTeam[GameNetwork.TeamNames.GUEST])
-                NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.READY_TO_FIGHT, true.ToString(), _localPlayerTeam);
+        //    Debug.LogWarning("War::RegisterUnit -> _readyByTeam[GameNetwork.TeamNames.HOST]: " + _readyByTeam[GameNetwork.TeamNames.HOST] + " _readyByTeam[GameNetwork.TeamNames.GUEST] " + _readyByTeam[GameNetwork.TeamNames.GUEST]);
+        //    if (_readyByTeam[GameNetwork.TeamNames.HOST] && _readyByTeam[GameNetwork.TeamNames.GUEST])
+        //        NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.READY_TO_FIGHT, true.ToString(), _localPlayerTeam);
 
-        }
+        //}
     }
 
     public Dictionary<string, MinMinUnit> GetTeamUnitsDictionary(string teamName)
@@ -1285,9 +1342,9 @@ public class War : NetworkEntity
                     expEarned = 10;
                 else
                     expEarned = 5;
-            }
 
-            gameInventory.AddExpToUnit(unitName, expEarned);
+                gameInventory.AddExpToUnit(unitName, expEarned);
+            }
         }
 
         gameInventory.SaveUnits();

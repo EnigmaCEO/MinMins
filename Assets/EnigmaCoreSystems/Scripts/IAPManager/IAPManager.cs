@@ -106,9 +106,10 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
 #else
             string store = GameOfWhales.STORE_GOOGLEPLAY;
 #endif
-
-            GameOfWhales.Init(store);
-            GameOfWhales.SetPushNotificationsEnable(true);
+            // TODO: Restore when Game of Whales is enabled======
+            //GameOfWhales.Init(store);  
+            //GameOfWhales.SetPushNotificationsEnable(true);
+            //===================================================
         }
 
         GameOfWhales.OnPurchaseVerified += OnPurchaseVerifiedCallback;
@@ -146,13 +147,16 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
     void OnDestroy()
     {
 #if (UNITY_ANDROID || UNITY_IOS)
-        if (GameOfWhales.Instance != null)
-        {
-            GameOfWhales.OnPurchaseVerified -= OnPurchaseVerifiedCallback;
-            GameOfWhales.OnSpecialOfferAppeared -= OnOfferAppearedCallback;
-            GameOfWhales.OnSpecialOfferedDisappeared -= OnOfferDisappearedCallback;
-            GameOfWhales.OnPushDelivered -= OnPushDeliveredCallback;
-        }
+
+        // TODO: Restore when GameOfWhales can be used =========================
+        //if (GameOfWhales.Instance != null)
+        //{
+        //    GameOfWhales.OnPurchaseVerified -= OnPurchaseVerifiedCallback;
+        //    GameOfWhales.OnSpecialOfferAppeared -= OnOfferAppearedCallback;
+        //    GameOfWhales.OnSpecialOfferedDisappeared -= OnOfferDisappearedCallback;
+        //    GameOfWhales.OnPushDelivered -= OnPushDeliveredCallback;
+        //}
+        //=====================================================================
 
         //Tap Joy callbacks and placement responses =========================
         Tapjoy.OnConnectSuccess -= handleConnectSuccess;
