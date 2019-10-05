@@ -24,6 +24,7 @@ namespace Enigma.CoreSystems
             public const int REGISTRATION = 5;
             public const int COINS_EARNED = 6;
             public const int HEART_BEAT = 14;
+            public const int ENJIN_LINKED = 15;
         }
 
         public class TransactionKeys
@@ -49,6 +50,7 @@ namespace Enigma.CoreSystems
             public const string USER_LOGIN = "user_login";
             public const string USER_DATA = "user_data";
             public const string COINS = "coins";
+            public const string ENJIN = "enjin";
         }
 
         public class EnjinTransKeys
@@ -384,6 +386,7 @@ namespace Enigma.CoreSystems
             hashtable.Add(TransactionKeys.EMAIL, email);
             hashtable.Add(TransactionKeys.GAME, game);
             hashtable.Add(TransactionKeys.BUNDLE_ID, bundleId);
+            hashtable.Add(TransactionKeys.ENJIN, ethAddress);
 
             if (extras != null)
                 hashtable.Merge(extras);
