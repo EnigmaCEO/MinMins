@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class LocalizationManagerEditor : MonoBehaviour
 {
+    /*
     public static void ChangeSpreadSheetByProductName()
     {
         GameObject languagesObject = (GameObject)AssetDatabase.LoadAssetAtPath("Assets/EnigmaCoreSystems/Resources/I2Languages.prefab", typeof(GameObject));
@@ -54,4 +55,5 @@ public class LocalizationManagerEditor : MonoBehaviour
         else
             Debug.LogError("onGoogleUpdate not completed: " + error);
     }
+    */
 }

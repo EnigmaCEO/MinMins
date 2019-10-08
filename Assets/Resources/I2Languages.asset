@@ -1,0 +1,597 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f0b0c553be8edd4682e9180fdd13e37, type: 3}
+  m_Name: I2Languages
+  m_EditorClassIdentifier: 
+  mSource:
+    UserAgreesToHaveItOnTheScene: 0
+    UserAgreesToHaveItInsideThePluginsFolder: 0
+    GoogleLiveSyncIsUptoDate: 1
+    mTerms:
+    - Term: New user
+      TermType: 0
+      Description: 
+      Languages:
+      - New user
+      - Nuevo usuario
+      Flags: 0000
+      Languages_Touch: []
+    - Term: LINK WALLET
+      TermType: 0
+      Description: 
+      Languages:
+      - LINK WALLET
+      - 'ENLAZAR BILLETERA '
+      Flags: 0000
+      Languages_Touch: []
+    - Term: PvP
+      TermType: 0
+      Description: 
+      Languages:
+      - PvP
+      - PvP
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Training
+      TermType: 0
+      Description: 
+      Languages:
+      - Training
+      - Entrenamiento
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Confirm
+      TermType: 0
+      Description: 
+      Languages:
+      - Confirm
+      - Confirmar
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Enjin Address
+      TermType: 0
+      Description: 
+      Languages:
+      - Enjin Address
+      - "Direcci\xF3n Enjin"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: TryAgain
+      TermType: 5
+      Description: 
+      Languages:
+      - Try again today
+      - Trata hoy de nuevo
+      Flags: 0000
+      Languages_Touch: []
+    - Term: WatchVideo
+      TermType: 0
+      Description: 
+      Languages:
+      - Watch video
+      - "Ver v\xEDdeo"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Score
+      TermType: 0
+      Description: 
+      Languages:
+      - Your score is
+      - Tu puntaje es
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Timer
+      TermType: 0
+      Description: 
+      Languages:
+      - Timer
+      - Reloj
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Start
+      TermType: 0
+      Description: 
+      Languages:
+      - Start
+      - Comenzar
+      Flags: 0000
+      Languages_Touch: []
+    - Term: LOGIN
+      TermType: 0
+      Description: 
+      Languages:
+      - LOGIN
+      - "INICIAR SESI\xD3N"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Login
+      TermType: 0
+      Description: 
+      Languages:
+      - Login
+      - "Iniciar Sesi\xF3n"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Logout
+      TermType: 0
+      Description: 
+      Languages:
+      - Logout
+      - "Cerrar Sesi\xF3n"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Register
+      TermType: 0
+      Description: 
+      Languages:
+      - Register
+      - Registrarse
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Guest
+      TermType: 0
+      Description: 
+      Languages:
+      - Guest
+      - "Hu\xE9sped"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Remember me
+      TermType: 0
+      Description: 
+      Languages:
+      - Remember me
+      - Recordarme
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Username
+      TermType: 0
+      Description: 
+      Languages:
+      - Username
+      - Nombre de usuario
+      Flags: 0000
+      Languages_Touch: []
+    - Term: WrongPassword
+      TermType: 0
+      Description: 
+      Languages:
+      - Wrong password
+      - "Contrase\xF1a equivocada"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Banned
+      TermType: 0
+      Description: 
+      Languages:
+      - Banned
+      - Suspendido
+      Flags: 0000
+      Languages_Touch: []
+    - Term: InvalidUsername
+      TermType: 0
+      Description: 
+      Languages:
+      - Invalid username
+      - "Usuario inv\xE1lido"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: InvalidPassword
+      TermType: 0
+      Description: 
+      Languages:
+      - Invalid password
+      - "Contrase\xF1a inv\xE1lida"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Name
+      TermType: 0
+      Description: 
+      Languages:
+      - Name
+      - Nombre de usuario
+      Flags: 0000
+      Languages_Touch: []
+    - Term: CurrentScore
+      TermType: 0
+      Description: 
+      Languages:
+      - Current Score
+      - Puntaje
+      Flags: 0000
+      Languages_Touch: []
+    - Term: HighScore
+      TermType: 0
+      Description: 
+      Languages:
+      - High Score
+      - Mejor Puntaje
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Title
+      TermType: 0
+      Description: 
+      Languages:
+      - Title
+      - "T\xEDtulo"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Password
+      TermType: 0
+      Description: 
+      Languages:
+      - Password
+      - "Contrase\xF1a"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: ConfirmPassword
+      TermType: 0
+      Description: 
+      Languages:
+      - Confirm Password
+      - "Confirmar Contrase\xF1a"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: PasswordConfirmFailed
+      TermType: 0
+      Description: 
+      Languages:
+      - Password confirm failed
+      - "La confirmaci\xF3n de contrase\xF1a fall\xF3"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Submit
+      TermType: 0
+      Description: 
+      Languages:
+      - Submit
+      - Enviar
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Email
+      TermType: 0
+      Description: 
+      Languages:
+      - E-mail
+      - "Correo Electr\xF3nico"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Back
+      TermType: 0
+      Description: 
+      Languages:
+      - Back
+      - "Atr\xE1s"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: RegisterError
+      TermType: 0
+      Description: 
+      Languages:
+      - Register Error
+      - Error de Registro
+      Flags: 0000
+      Languages_Touch: []
+    - Term: ServerError
+      TermType: 0
+      Description: 
+      Languages:
+      - Server Error
+      - Error de Servidor
+      Flags: 0000
+      Languages_Touch: []
+    - Term: ConnectionError
+      TermType: 0
+      Description: 
+      Languages:
+      - Connection Error
+      - "Error de conexi\xF3n"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Loading
+      TermType: 0
+      Description: 
+      Languages:
+      - Loading...
+      - Cargando...
+      Flags: 0000
+      Languages_Touch: []
+    - Term: WeeklyChallenge
+      TermType: 0
+      Description: 
+      Languages:
+      - Weekly Challenge
+      - "Desaf\xEDo Semanal"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Day
+      TermType: 0
+      Description: 
+      Languages:
+      - Day
+      - "D\xEDa"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Of7
+      TermType: 0
+      Description: 
+      Languages:
+      - of 7
+      - de 7
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Shop
+      TermType: 0
+      Description: 
+      Languages:
+      - Shop
+      - Tienda
+      Flags: 0000
+      Languages_Touch: []
+    - Term: ConfirmPurchase
+      TermType: 0
+      Description: 
+      Languages:
+      - Confirm purchase?
+      - "\xBFConfirma compra?"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: NotEnoughCurrency
+      TermType: 0
+      Description: 
+      Languages:
+      - Not enough currency.
+      - No hay suficientes monedas.
+      Flags: 0000
+      Languages_Touch: []
+    - Term: ThanksPurchase
+      TermType: 0
+      Description: 
+      Languages:
+      - Thanks for your purchase.
+      - Gracias por su compra.
+      Flags: 0000
+      Languages_Touch: []
+    - Term: PurchaseFailed
+      TermType: 0
+      Description: 
+      Languages:
+      - Purchase failed.
+      - "La compra fall\xF3."
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Leaderboards
+      TermType: 0
+      Description: 
+      Languages:
+      - Leaderboards
+      - "L\xEDderes"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: GotLoginBonus
+      TermType: 0
+      Description: 
+      Languages:
+      - Got Login Bonus!
+      - "\xA1Obtuvo Bono por Sesi\xF3n!"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: AdFailed
+      TermType: 0
+      Description: 
+      Languages:
+      - Ad Failed. Please try again.
+      - "Fall\xF3 el Ad. Favor intente otra vez."
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Currency
+      TermType: 0
+      Description: 
+      Languages:
+      - Currency
+      - Moneda
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Settings
+      TermType: 0
+      Description: 
+      Languages:
+      - Settings
+      - Ajustes
+      Flags: 0000
+      Languages_Touch: []
+    - Term: AudioEffects
+      TermType: 0
+      Description: 
+      Languages:
+      - Audio Effects
+      - Efectos de Sonido
+      Flags: 0000
+      Languages_Touch: []
+    - Term: SecondsToAnswer
+      TermType: 0
+      Description: 
+      Languages:
+      - Seconds to answer.
+      - Segundos para contestar.
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Continue
+      TermType: 0
+      Description: 
+      Languages:
+      - Continue
+      - Continuar
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Results
+      TermType: 0
+      Description: 
+      Languages:
+      - Results
+      - Resultados
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Time
+      TermType: 0
+      Description: 
+      Languages:
+      - Time
+      - Tiempo
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Points
+      TermType: 0
+      Description: 
+      Languages:
+      - Points
+      - Puntos
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Totals
+      TermType: 0
+      Description: 
+      Languages:
+      - Totals
+      - Totales
+      Flags: 0000
+      Languages_Touch: []
+    - Term: (Bonus)
+      TermType: 0
+      Description: 
+      Languages:
+      - (Bonus)
+      - (Bono)
+      Flags: 0000
+      Languages_Touch: []
+    - Term: avg
+      TermType: 0
+      Description: 
+      Languages:
+      - avg
+      - prom
+      Flags: 0000
+      Languages_Touch: []
+    - Term: 'Score:'
+      TermType: 0
+      Description: 
+      Languages:
+      - 'Score:'
+      - 'Puntaje:'
+      Flags: 0000
+      Languages_Touch: []
+    - Term: BestOffer
+      TermType: 0
+      Description: 
+      Languages:
+      - Best Offer!
+      - Mejor Oferta!
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Recommended
+      TermType: 0
+      Description: 
+      Languages:
+      - Recommended!
+      - Recomendado!
+      Flags: 0000
+      Languages_Touch: []
+    - Term: BasePriceOffer
+      TermType: 0
+      Description: 
+      Languages:
+      - Base Deal!
+      - Oferta Base!
+      Flags: 0000
+      Languages_Touch: []
+    - Term: SimplePack
+      TermType: 0
+      Description: 
+      Languages:
+      - Simple Pack
+      - Paquete Simple
+      Flags: 0000
+      Languages_Touch: []
+    - Term: AdvancedPack
+      TermType: 0
+      Description: 
+      Languages:
+      - Advanced Pack
+      - Paquete Avanzado
+      Flags: 0000
+      Languages_Touch: []
+    - Term: MasterPack
+      TermType: 0
+      Description: 
+      Languages:
+      - Master Pack
+      - Paquete Maestro
+      Flags: 0000
+      Languages_Touch: []
+    - Term: LegendaryPack
+      TermType: 0
+      Description: 
+      Languages:
+      - Legendary Pack
+      - Paquete Legendario
+      Flags: 0000
+      Languages_Touch: []
+    - Term: LoginNowForFreeCoins
+      TermType: 0
+      Description: 
+      Languages:
+      - Login now for free coins
+      - Ingresa ahora para monedas gratis
+      Flags: 0000
+      Languages_Touch: []
+    - Term: NewWeek
+      TermType: 0
+      Description: 
+      Languages:
+      - New week!
+      - "\xA1Nueva semana!"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: FreeCoins
+      TermType: 0
+      Description: 
+      Languages:
+      - Get free coins!
+      - "\xA1Obt\xE9n monedas gratis!"
+      Flags: 0000
+      Languages_Touch: []
+    CaseInsensitiveTerms: 0
+    OnMissingTranslation: 1
+    mTerm_AppName: 
+    mLanguages:
+    - Name: English
+      Code: en
+      Flags: 0
+    - Name: Spanish
+      Code: es
+      Flags: 0
+    IgnoreDeviceLanguage: 0
+    _AllowUnloadingLanguages: 0
+    Google_WebServiceURL: https://script.google.com/macros/s/AKfycbw05ISkGCPtIS0hMzFD5jshgfH09mIP6BAxRKhWsA/exec
+    Google_SpreadsheetKey: 1iIWCtExuyR2XXyYkJv6y83PTVMPC4FxzSITGGroefcg
+    Google_SpreadsheetName: I2Loc MinMins Localization
+    Google_LastUpdatedVersion: 1570576242590
+    Google_Password: shalwend
+    GoogleUpdateFrequency: 3
+    GoogleInEditorCheckFrequency: 2
+    GoogleUpdateSynchronization: 1
+    GoogleUpdateDelay: 0
+    Assets: []
+    Spreadsheet_LocalFileName: 
+    Spreadsheet_LocalCSVSeparator: ','
+    Spreadsheet_LocalCSVEncoding: utf-8
+    Spreadsheet_SpecializationAsRows: 1
