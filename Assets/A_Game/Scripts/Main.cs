@@ -8,11 +8,22 @@ public class Main : EnigmaScene
 
     [SerializeField] GameObject _enjinWindow;
     [SerializeField] private int _checkEnjinLinkingDelay = 2;
+    [SerializeField] GameObject _loginButton;
+    [SerializeField] GameObject _logoutButton;
 
     void Start()
     {
         NetworkManager.Disconnect();
         _loginModal.SetActive(false);
+        Init();
+    }
+
+    public void Init()
+    {
+        bool loggedIn = NetworkManager.LoggedIn;
+
+        _loginButton.gameObject.SetActive(!loggedIn);
+        _logoutButton.gameObject.SetActive(loggedIn);
     }
 
     public void OnSinglePlayerButtonDown()
@@ -38,6 +49,7 @@ public class Main : EnigmaScene
     public void ShowLoginForm()
     {
         _loginModal.SetActive(true);
+        _loginModal.GetComponent<EnjinLogin>().resetForm();
     }
 
     private void goToLevels()
@@ -154,5 +166,16 @@ public class Main : EnigmaScene
         }
 
         data.SaveData();*/
+    }
+
+    public void closeQRDialog()
+    {
+        _enjinWindow.gameObject.SetActive(false);
+    }
+
+    public void Logout()
+    {
+        NetworkManager.Logout();
+        Init();
     }
 }

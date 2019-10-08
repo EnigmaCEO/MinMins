@@ -194,6 +194,8 @@ public class EnjinLogin : MonoBehaviour
             print("User is not using Crypto.");
 
         //GameStats.Instance.IsEnjinLinked = true; //hack
+
+        GameObject.Find("/Main").GetComponent<Main>().Init();
     }
 
     private void onLogin(SimpleJSON.JSONNode response)
@@ -205,6 +207,7 @@ public class EnjinLogin : MonoBehaviour
 
             if (status == NetworkManager.StatusOptions.SUCCESS) {
                 // print("onRegistration SUCCESS");
+                
                 completeLogin(response_hash);
                 closeDialog();
             }
@@ -231,7 +234,12 @@ public class EnjinLogin : MonoBehaviour
         }
     }
 
-    
+    public void resetForm()
+    {
+        alertText.text = "";
+        switchToLogin();
+        loadingGroup.gameObject.SetActive(false);
+    }
 
     
 }

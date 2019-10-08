@@ -125,7 +125,7 @@ namespace Enigma.CoreSystems
 
         static private int _maxPlayersNotSpectating;
 
-        //static private bool LoggedIn = false;
+        static public bool LoggedIn = false;
         static private bool _stopGetRoomData = true;
 
         static public bool OriginalMaster = false;
@@ -403,7 +403,10 @@ namespace Enigma.CoreSystems
             Debug.Log("RegistrationResult: " + response_hash.ToString());
 
             if (status == StatusOptions.SUCCESS)
-                NetworkManager.SetSessionID(ssid);
+            {
+                SetSessionID(ssid);
+                LoggedIn = true;
+            }
         }
 
         static public void Login(string user, string pw, Callback callback = null, Hashtable extras = null)
@@ -418,6 +421,12 @@ namespace Enigma.CoreSystems
             Transaction(Transactions.LOGIN, hashtable, callback, LoginResult);
         }
 
+        static public void Logout()
+        {
+            LoggedIn = false;
+            SetSessionID(null);
+        }
+
         static private void LoginResult(JSONNode response)
         {
             if (response == null)
@@ -430,7 +439,10 @@ namespace Enigma.CoreSystems
             Debug.Log("LoginResult: " + response_hash.ToString());
 
             if (status == StatusOptions.SUCCESS)
-                NetworkManager.SetSessionID(ssid);
+            {
+                SetSessionID(ssid);
+                LoggedIn = true;
+            }
         }
 
         static public void SetData(string key, Hashtable val)
@@ -475,15 +487,15 @@ namespace Enigma.CoreSystems
             }
         }
 
-        static private IEnumerator heartbeat(NetworkManager.Callback onHeartBeat)
+        static private IEnumerator heartbeat(Callback onHeartBeat)
         {
             while (true)
             {
-                if (NetworkManager.GetSessionID() == null)
+                if (GetSessionID() == null)
                     yield return new WaitForSeconds(5f);
                 else
                 {
-                    NetworkManager.Transaction(Transactions.HEART_BEAT, onHeartBeat);
+                    Transaction(Transactions.HEART_BEAT, onHeartBeat);
                     yield return new WaitForSeconds(300.0f);
                 }
             }
