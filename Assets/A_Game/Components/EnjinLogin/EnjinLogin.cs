@@ -23,6 +23,14 @@ public class EnjinLogin : MonoBehaviour
     public Button registerButton;
 
 
+    public void Initialize()
+    {
+        loadingGroup.SetActive(false);
+        registerGroup.SetActive(false);
+
+        this.gameObject.SetActive(false);
+    }
+
     public void closeDialog() {
         gameObject.SetActive(false);
     }
