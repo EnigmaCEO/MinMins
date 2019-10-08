@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Linq;
-
+using UnityEngine.Networking;
 
 namespace I2.Loc
 {
@@ -26,7 +26,7 @@ namespace I2.Loc
 
     public class TranslationJob_WWW : TranslationJob
     {
-        public WWW www;
+        public UnityWebRequest www;
 
         public override void Dispose()
         {

@@ -22,7 +22,7 @@ namespace I2.Loc
 		public override void GetFinalTerms ( Localize cmp, string Main, string Secondary, out string primaryTerm, out string secondaryTerm )
 		{
 			primaryTerm = mTarget ? mTarget.spriteName : null;
-			secondaryTerm = (mTarget.atlas != null ? mTarget.atlas.name : string.Empty);
+			secondaryTerm = (mTarget.atlas as UIAtlas ? (mTarget.atlas as UIAtlas).name : string.Empty);
         }
 
 
@@ -34,10 +34,21 @@ namespace I2.Loc
             //--[ Localize Atlas ]----------
             UIAtlas newAtlas = cmp.GetSecondaryTranslatedObj<UIAtlas>(ref mainTranslation, ref secondaryTranslation);
             bool bChanged = false;
-            if (newAtlas != null && mTarget.atlas != newAtlas)
+            if (newAtlas != null && ((mTarget.atlas as UIAtlas) != newAtlas))
             {
                 mTarget.atlas = newAtlas;
                 bChanged = true;
+            }
+
+            if (newAtlas==null)
+            {
+                NGUIAtlas newNGUIAtlas = cmp.GetSecondaryTranslatedObj<NGUIAtlas>(ref mainTranslation, ref secondaryTranslation);
+                if (newAtlas != null && ((mTarget.atlas as NGUIAtlas) != newAtlas))
+                {
+                    mTarget.atlas = newAtlas;
+                    bChanged = true;
+                }
+
             }
 
             if (mTarget.spriteName != mainTranslation && mTarget.atlas.GetSprite(mainTranslation) != null)

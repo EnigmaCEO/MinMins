@@ -41,7 +41,7 @@ namespace I2.Loc
             Transform locTr = cmp.transform;
 
             var objName = mainTranslation;
-            var idx = mainTranslation.LastIndexOfAny(LanguageSource.CategorySeparators);
+            var idx = mainTranslation.LastIndexOfAny(LanguageSourceData.CategorySeparators);
             if (idx >= 0)
                 objName = objName.Substring(idx + 1);
 

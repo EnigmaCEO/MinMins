@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace I2.Loc
 {
-	public partial class LanguageSource
+	public partial class LanguageSourceData
 	{
 		public string Import_CSV( string Category, string CSVstring, eSpreadsheetUpdateMode UpdateMode = eSpreadsheetUpdateMode.Replace, char Separator = ',' )
 		{

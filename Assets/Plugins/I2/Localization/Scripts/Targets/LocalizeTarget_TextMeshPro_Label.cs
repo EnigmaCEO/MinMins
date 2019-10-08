@@ -38,8 +38,7 @@ namespace I2.Loc
 
                 if (newFont != null)
                 {
-                    if (mTarget.font != newFont)
-                        mTarget.font = newFont;
+                    SetFont(mTarget, newFont);
                 }
                 else
                 {
@@ -51,11 +50,11 @@ namespace I2.Loc
                         {
                             newFont = GetTMPFontFromMaterial(cmp, secondaryTranslation.EndsWith(newMat.name, StringComparison.Ordinal) ? secondaryTranslation : newMat.name);
                             if (newFont != null)
-                                mTarget.font = newFont;
+                                SetFont(mTarget, newFont);
                         }
-
-                        mTarget.fontSharedMaterial/* fontMaterial*/ = newMat;
+                        SetMaterial(mTarget, newMat); 
                     }
+                           
                 }
             }
             if (mInitializeAlignment)
@@ -158,6 +157,29 @@ namespace I2.Loc
                     case TMPro.TextAlignmentOptions.MidlineLeft: alignRTL = TMPro.TextAlignmentOptions.MidlineRight; break;
                     case TMPro.TextAlignmentOptions.CaplineLeft: alignRTL = TMPro.TextAlignmentOptions.CaplineRight; break;
                 }
+            }
+        }
+
+        internal static void SetFont(TMPro.TMP_Text label, TMPro.TMP_FontAsset newFont)
+        {
+            if (label.font != newFont)
+            {
+                label.font = newFont;
+            }
+            if (label.linkedTextComponent != null)
+            {
+                SetFont(label.linkedTextComponent, newFont);
+            }
+        }
+        internal static void SetMaterial(TMPro.TMP_Text label, Material newMat)
+        {
+            if (label.fontSharedMaterial != newMat)
+            {
+                label.fontSharedMaterial = newMat;
+            }
+            if (label.linkedTextComponent != null)
+            {
+                SetMaterial(label.linkedTextComponent, newMat);
             }
         }
         #endregion

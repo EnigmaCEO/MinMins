@@ -18,29 +18,41 @@ namespace I2.Loc
 
         public delegate object _GetParam(string param);
 
-        public static void ApplyLocalizationParams(ref string translation)
+        public static void AutoLoadGlobalParamManagers()
         {
-            ApplyLocalizationParams(ref translation, (p) => GetLocalizationParam(p, null));
+            foreach (var manager in Object.FindObjectsOfType<LocalizationParamsManager>())
+            {
+                if (manager._IsGlobalManager && !ParamManagers.Contains(manager))
+                {
+                    Debug.Log(manager);
+                    ParamManagers.Add(manager);
+                }
+            }
+        }
+
+        public static void ApplyLocalizationParams(ref string translation, bool allowLocalizedParameters = true)
+        {
+            ApplyLocalizationParams(ref translation, (p) => GetLocalizationParam(p, null), allowLocalizedParameters);
         }
 
 
-        public static void ApplyLocalizationParams(ref string translation, GameObject root)
+        public static void ApplyLocalizationParams(ref string translation, GameObject root, bool allowLocalizedParameters = true)
         {
-            ApplyLocalizationParams(ref translation, (p) => GetLocalizationParam(p, root));
+            ApplyLocalizationParams(ref translation, (p) => GetLocalizationParam(p, root), allowLocalizedParameters);
         }
 
-        public static void ApplyLocalizationParams(ref string translation, Dictionary<string, object> parameters)
+        public static void ApplyLocalizationParams(ref string translation, Dictionary<string, object> parameters, bool allowLocalizedParameters = true)
         {
             ApplyLocalizationParams(ref translation, (p) => {
                     object o = null;
                     if (parameters.TryGetValue(p, out o))
                         return o;
                     return null;
-                });
+                }, allowLocalizedParameters);
         }
 
 
-        public static void ApplyLocalizationParams(ref string translation, _GetParam getParam)
+        public static void ApplyLocalizationParams(ref string translation, _GetParam getParam, bool allowLocalizedParameters=true)
         {
             if (translation == null)
                 return;
@@ -70,10 +82,10 @@ namespace I2.Loc
                 var offset = translation[iParamStart + 2] == '#' ? 3 : 2;
                 var param = translation.Substring(iParamStart + offset, iParamEnd - iParamStart - offset);
                 var result = (string)getParam(param);
-                if (result != null)
+                if (result != null && allowLocalizedParameters)
                 {
                     // check if Param is Localized
-                    LanguageSource source;
+                    LanguageSourceData source;
                     var termData = LocalizationManager.GetTermData(result, out source);
                     if (termData != null)
                     {

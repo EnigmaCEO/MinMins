@@ -28,7 +28,7 @@ namespace I2.Loc
 					GO.hideFlags = GO.hideFlags | HideFlags.HideAndDontSave;	// Only hide it if this manager was autocreated
 					mInstance = GO.GetComponent<ResourceManager>();
 					#if UNITY_5_4_OR_NEWER
-					UnityEngine.SceneManagement.SceneManager.sceneLoaded += MyOnLevelWasLoaded;
+					SceneManager.sceneLoaded += MyOnLevelWasLoaded;
 					#endif
 				}
 
@@ -116,23 +116,25 @@ namespace I2.Loc
 
 				T obj = null;
 
-				if (Path.EndsWith( "]", System.StringComparison.OrdinalIgnoreCase ))	// Handle sprites (Multiple) loaded from resources :   "SpritePath[SpriteName]"
-				{
-					int idx = Path.LastIndexOf( "[", System.StringComparison.OrdinalIgnoreCase );
-					int len = Path.Length-idx-2;
-					string MultiSpriteName = Path.Substring( idx+1, len );
-					Path = Path.Substring( 0, idx );
+                if (Path.EndsWith("]", System.StringComparison.OrdinalIgnoreCase))  // Handle sprites (Multiple) loaded from resources :   "SpritePath[SpriteName]"
+                {
+                    int idx = Path.LastIndexOf("[", System.StringComparison.OrdinalIgnoreCase);
+                    int len = Path.Length - idx - 2;
+                    string MultiSpriteName = Path.Substring(idx + 1, len);
+                    Path = Path.Substring(0, idx);
 
-					T[] objs = Resources.LoadAll<T>( Path );
-					for (int j=0, jmax=objs.Length; j<jmax; ++j)
-						if (objs[j].name.Equals( MultiSpriteName ))
-						{
-							obj = objs[j];
-							break;
-						}
-				}
-				else
-					obj = Resources.Load( Path, typeof(T) ) as T;
+                    T[] objs = Resources.LoadAll<T>(Path);
+                    for (int j = 0, jmax = objs.Length; j < jmax; ++j)
+                        if (objs[j].name.Equals(MultiSpriteName))
+                        {
+                            obj = objs[j];
+                            break;
+                        }
+                }
+                else
+                {
+                    obj = Resources.Load(Path, typeof(T)) as T;
+                }
 
 				if (obj == null)
 					obj = LoadFromBundle<T>( Path );

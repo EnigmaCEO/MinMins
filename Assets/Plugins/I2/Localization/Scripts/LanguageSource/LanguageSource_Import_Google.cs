@@ -1,33 +1,14 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections;
-using UnityEditor;
+using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 namespace I2.Loc
 {
-	public partial class LanguageSource
+	public partial class LanguageSourceData
 	{
-		#region Variables
-
-		public string Google_WebServiceURL;
-		public string Google_SpreadsheetKey;
-		public string Google_SpreadsheetName;
-		public string Google_LastUpdatedVersion;
-
-        #if UNITY_EDITOR
-        public string Google_Password = "change_this";
-        #endif
-
-        public enum eGoogleUpdateFrequency { Always, Never, Daily, Weekly, Monthly, OnlyOnce }
-		public eGoogleUpdateFrequency GoogleUpdateFrequency = eGoogleUpdateFrequency.Weekly;
-		public eGoogleUpdateFrequency GoogleInEditorCheckFrequency = eGoogleUpdateFrequency.Daily;
-
-		public float GoogleUpdateDelay = 5; // How many second to delay downloading data from google (to avoid lag on the startup)
-
-		public event Action<LanguageSource, bool, string> Event_OnSourceUpdateFromGoogle;    // (LanguageSource, bool ReceivedNewData, string errorMsg)
-		
-		#endregion
-
+        private string mDelayedGoogleData;  // Data that was downloaded and is waiting for a levelLoaded event to apply the localization without a lag in performance
 		#region Connection to Web Service 
 
 		public static void FreeUnusedLanguages()
@@ -104,16 +85,13 @@ namespace I2.Loc
 		}
 
         // When JustCheck is true, importing from google will not download any data, just detect if the Spreadsheet is up-to-date
-		public void Import_Google( bool ForceUpdate, bool justCheck, bool isEditorCommandImport = false)
+		public void Import_Google( bool ForceUpdate, bool justCheck)
 		{
             if (!ForceUpdate && GoogleUpdateFrequency==eGoogleUpdateFrequency.Never)
 				return;
 
-            if (!isEditorCommandImport)
-            {
-                if (!I2Utils.IsPlaying())
-                    return;
-            }
+            if (!I2Utils.IsPlaying())
+                return;
 
             #if UNITY_EDITOR
             if (justCheck && GoogleInEditorCheckFrequency==eGoogleUpdateFrequency.Never)
@@ -150,6 +128,8 @@ namespace I2.Loc
 							case eGoogleUpdateFrequency.Monthly: if (TimeDifference<31) return;
 								break;
 							case eGoogleUpdateFrequency.OnlyOnce: return;
+							case eGoogleUpdateFrequency.EveryOtherDay : if (TimeDifference < 2) return;
+								break;
 						}
 					}
 				}
@@ -163,18 +143,20 @@ namespace I2.Loc
             #endif
 
 			//--[ Checking google for updated data ]-----------------
-			CoroutineManager.Start(Import_Google_Coroutine(justCheck, isEditorCommandImport));
+			CoroutineManager.Start(Import_Google_Coroutine(justCheck));
 		}
 
 		string GetSourcePlayerPrefName()
 		{
-            string sourceName = name;
+            if (owner == null)
+                return null;
+            string sourceName = (owner as UnityEngine.Object).name;
             if (!string.IsNullOrEmpty(Google_SpreadsheetKey))
             {
                 sourceName += Google_SpreadsheetKey;
             }
             // If its a global source, use its name, otherwise, use the name and the level it is in
-            if (Array.IndexOf(LocalizationManager.GlobalSources, name)>=0)
+            if (Array.IndexOf(LocalizationManager.GlobalSources, (owner as UnityEngine.Object).name)>=0)
 				return sourceName;
 			else
 			{
@@ -186,22 +168,22 @@ namespace I2.Loc
 			}
 		}
 
-		IEnumerator Import_Google_Coroutine(bool JustCheck, bool isEditorCommandImport = false)
+		IEnumerator Import_Google_Coroutine(bool JustCheck)
 		{
-			WWW www = Import_Google_CreateWWWcall(isEditorCommandImport, JustCheck);
+            UnityWebRequest www = Import_Google_CreateWWWcall(false, JustCheck);
 			if (www==null)
 				yield break;
 
 			while (!www.isDone)
 				yield return null;
 
-			Debug.Log ("Google Result: " + www.text);
+			//Debug.Log ("Google Result: " + www.text);
 			bool notError = string.IsNullOrEmpty(www.error);
 			string wwwText = null;
 
 			if (notError)
 			{
-				var bytes = www.bytes;
+				var bytes = www.downloadHandler.data;
 				wwwText = System.Text.Encoding.UTF8.GetString(bytes, 0, bytes.Length); //www.text
 
                 bool isEmpty = string.IsNullOrEmpty(wwwText) || wwwText == "\"\"";
@@ -219,21 +201,22 @@ namespace I2.Loc
 
                 if (!isEmpty)
                 {
-                    var errorMsg = Import_Google_Result(wwwText, eSpreadsheetUpdateMode.Replace, !isEditorCommandImport);
-                    if (string.IsNullOrEmpty(errorMsg))
-                    {
-                        if (Event_OnSourceUpdateFromGoogle != null)
-                            Event_OnSourceUpdateFromGoogle(this, true, www.error);
+                    mDelayedGoogleData = wwwText;
 
-                        LocalizationManager.LocalizeAll(true);
-                        Debug.Log("Done Google Sync");
-                    }
-                    else
+                    switch (GoogleUpdateSynchronization)
                     {
-                        if (Event_OnSourceUpdateFromGoogle != null)
-                            Event_OnSourceUpdateFromGoogle(this, false, www.error);
-
-                        Debug.Log("Done Google Sync: source was up-to-date");
+                        case eGoogleUpdateSynchronization.AsSoonAsDownloaded:
+                            {
+                                ApplyDownloadedDataFromGoogle();
+                                break;
+                            }
+                        case eGoogleUpdateSynchronization.Manual:
+                            break;
+                        case eGoogleUpdateSynchronization.OnSceneLoaded:
+                            {
+                                SceneManager.sceneLoaded += ApplyDownloadedDataOnSceneLoaded;
+                                break;
+                            }
                     }
 
                     yield break;
@@ -244,9 +227,38 @@ namespace I2.Loc
 				Event_OnSourceUpdateFromGoogle(this, false, www.error);
 
 			Debug.Log("Language Source was up-to-date with Google Spreadsheet");
+		}
+
+        void ApplyDownloadedDataOnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            SceneManager.sceneLoaded -= ApplyDownloadedDataOnSceneLoaded;
+            ApplyDownloadedDataFromGoogle();
         }
 
-		public WWW Import_Google_CreateWWWcall( bool ForceUpdate, bool justCheck )
+        public void ApplyDownloadedDataFromGoogle()
+        {
+            if (string.IsNullOrEmpty(mDelayedGoogleData))
+                return;
+
+            var errorMsg = Import_Google_Result(mDelayedGoogleData, eSpreadsheetUpdateMode.Replace, true);
+            if (string.IsNullOrEmpty(errorMsg))
+            {
+                if (Event_OnSourceUpdateFromGoogle != null)
+                    Event_OnSourceUpdateFromGoogle(this, true, "");
+
+                LocalizationManager.LocalizeAll(true);
+                Debug.Log("Done Google Sync");
+            }
+            else
+            {
+                if (Event_OnSourceUpdateFromGoogle != null)
+                    Event_OnSourceUpdateFromGoogle(this, false, "");
+
+                Debug.Log("Done Google Sync: source was up-to-date");
+            }
+        }
+
+		public UnityWebRequest Import_Google_CreateWWWcall( bool ForceUpdate, bool justCheck )
 		{
 			if (!HasGoogleSpreadsheet())
 				return null;
@@ -270,8 +282,9 @@ namespace I2.Loc
                 query += "&justcheck=true";
             }
 #endif
-            WWW www = new WWW(query);
-			return www;
+            UnityWebRequest www = UnityWebRequest.Get(query);
+            I2Utils.SendWebRequest(www);
+            return www;
 		}
 
 		public bool HasGoogleSpreadsheet()
@@ -322,7 +335,7 @@ namespace I2.Loc
                 if (saveInPlayerPrefs)
                 {
                     string PlayerPrefName = GetSourcePlayerPrefName();
-                    PersistentStorage.SaveFile(PersistentStorage.eFileType.Persistent, "I2Source_" + PlayerPrefName, "[i2e]" + StringObfucator.Encode(JsonString) + ".loc");
+                    PersistentStorage.SaveFile(PersistentStorage.eFileType.Persistent, "I2Source_" + PlayerPrefName + ".loc", "[i2e]" + StringObfucator.Encode(JsonString));
                     PersistentStorage.SetSetting_String("I2SourceVersion_" + PlayerPrefName, newSpreadsheetVersion);
                     PersistentStorage.ForceSaveSettings();
                 }
@@ -357,10 +370,8 @@ namespace I2.Loc
                     SaveLanguages(true);
                 }
 
-#if UNITY_EDITOR
                 if (!string.IsNullOrEmpty(ErrorMsg))
-                    UnityEditor.EditorUtility.SetDirty(this);
-#endif
+                    Editor_SetDirty();
                 return ErrorMsg;
             }
             catch (System.Exception e)

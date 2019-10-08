@@ -8,7 +8,7 @@ namespace I2.Loc
 	public class StringObfucator
 	{
         // Change this for your projects if you need extra security
-        public static char[] StringObfuscatorPassword = "ÝúbUu¸CÁÂ§*4PÚ©-á©¾@T6Dl±ÒWâuzÅm4GÐóØ$=Í g,¥Q	ë®iKEß r¡×60Ít 4öÃ~^«y:Èd1<QÛÝúbUu¸CÁÂ§*4PÚ©-á©¾@T6Dl±ÒWâuzÅm4GÐóØ$=Í g,¥Q	ë®iKEß r¡×60Ít 4öÃ~^«y:Èd".ToCharArray();
+        public static char[] StringObfuscatorPassword = "ÝúbUu¸CÁÂ§*4PÚ©-á©¾@T6Dl±ÒWâuzÅm4GÐóØ$=Íg,¥Që®iKEßr¡×60Ít4öÃ~^«y:Èd1<QÛÝúbUu¸CÁÂ§*4PÚ©-á©¾@T6Dl±ÒWâuzÅm4GÐóØ$=Íg,¥Që®iKEßr¡×60Ít4öÃ~^«y:Èd".ToCharArray();
 
         public static string Encode(string NormalString)
         {

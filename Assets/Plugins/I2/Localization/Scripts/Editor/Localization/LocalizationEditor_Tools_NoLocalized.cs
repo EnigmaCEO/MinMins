@@ -27,7 +27,7 @@ namespace I2.Loc
 			GUILayout.Space (5);
 			
 			GUI.backgroundColor = Color.Lerp (Color.gray, Color.white, 0.2f);
-			GUILayout.BeginVertical(EditorStyles.textArea, GUILayout.Height(1));
+			GUILayout.BeginVertical(LocalizeInspector.GUIStyle_OldTextArea, GUILayout.Height(1));
 			GUI.backgroundColor = Color.white;
 			
 			EditorGUILayout.HelpBox(_Help_Tool_NoLocalized, MessageType.Info);

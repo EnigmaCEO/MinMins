@@ -8,58 +8,96 @@ namespace I2.Loc
 {
     [AddComponentMenu("I2/Localization/Source")]
     [ExecuteInEditMode]
-	public partial class LanguageSource : MonoBehaviour
+	public class LanguageSource : MonoBehaviour, ISerializationCallbackReceiver, ILanguageSource
     {
-		#region Variables
+        public LanguageSourceData SourceData
+        {
+            get { return mSource; }
+            set { mSource = value; }
+        }
+        public LanguageSourceData mSource = new LanguageSourceData();
 
-		public bool NeverDestroy = false;  	// Keep between scenes (will call DontDestroyOnLoad )
+        // Because of Unity2018.3 change in Prefabs, now all the source variables are moved into LanguageSourceData
+        // But to avoid loosing previously serialized data, these vars are copied into mSource.XXXX when deserializing)
+        // These are going to be removed once everyone port their projects to the new I2L version.
+        #region Legacy Variables 
+
+        // TODO: also copy         public string name;   and owner
+
+        public int version = 0;
+        public bool NeverDestroy = false;  	// Keep between scenes (will call DontDestroyOnLoad )
 
 		public bool UserAgreesToHaveItOnTheScene = false;
 		public bool UserAgreesToHaveItInsideThePluginsFolder = false;
         public bool GoogleLiveSyncIsUptoDate = true;
 
-        [NonSerialized] public bool mIsGlobalSource;
+        public List<Object> Assets = new List<Object>();	// References to Fonts, Atlasses and other objects the localization may need
+
+        public string Google_WebServiceURL;
+        public string Google_SpreadsheetKey;
+        public string Google_SpreadsheetName;
+        public string Google_LastUpdatedVersion;
+
+
+        public LanguageSourceData.eGoogleUpdateFrequency GoogleUpdateFrequency = LanguageSourceData.eGoogleUpdateFrequency.Weekly;
+
+        public float GoogleUpdateDelay = 5; // How many second to delay downloading data from google (to avoid lag on the startup)
+
+        public delegate void fnOnSourceUpdated(LanguageSourceData source, bool ReceivedNewData, string errorMsg);
+        public event fnOnSourceUpdated Event_OnSourceUpdateFromGoogle;
+
+        public List<LanguageData> mLanguages = new List<LanguageData>();
+
+        public bool IgnoreDeviceLanguage; // If false, it will use the Device's language as the initial Language, otherwise it will use the first language in the source.
+
+        public LanguageSourceData.eAllowUnloadLanguages _AllowUnloadingLanguages = LanguageSourceData.eAllowUnloadLanguages.Never;
+
+        public List<TermData> mTerms = new List<TermData>();
+
+        public bool CaseInsensitiveTerms = false;
+
+        public LanguageSourceData.MissingTranslationAction OnMissingTranslation = LanguageSourceData.MissingTranslationAction.Fallback;
+
+        public string mTerm_AppName;
 
         #endregion
 
         #region EditorVariables
-#if UNITY_EDITOR
+        #if UNITY_EDITOR
 
-        public string Spreadsheet_LocalFileName;
-		public string Spreadsheet_LocalCSVSeparator = ",";
-        public string Spreadsheet_LocalCSVEncoding = "utf-8";
-        public bool Spreadsheet_SpecializationAsRows = true;
+            public string Spreadsheet_LocalFileName;
+		    public string Spreadsheet_LocalCSVSeparator = ",";
+            public string Spreadsheet_LocalCSVEncoding = "utf-8";
+            public bool Spreadsheet_SpecializationAsRows = true;
 
+            public string Google_Password = "change_this";
+            public LanguageSourceData.eGoogleUpdateFrequency GoogleInEditorCheckFrequency = LanguageSourceData.eGoogleUpdateFrequency.Daily;
 #endif
         #endregion
 
-        #region Language
-
         void Awake()
-		{
+        {
             #if UNITY_EDITOR
             if (UnityEditor.BuildPipeline.isBuildingPlayer)
                 return;
             #endif
-            NeverDestroy = false;
+   //         NeverDestroy = false;
 
-            if (NeverDestroy)
-			{
-				if (ManagerHasASimilarSource())
-				{
-					Destroy (this);
-					return;
-				}
-				else
-				{
-					if (Application.isPlaying)
-						DontDestroyOnLoad (gameObject);
-				}
-			}
-			LocalizationManager.AddSource (this);
-			UpdateDictionary();
-            UpdateAssetDictionary();
-            LocalizationManager.LocalizeAll(true);
+   //         if (NeverDestroy)
+			//{
+			//	if (mSource.ManagerHasASimilarSource())
+			//	{
+			//		Object.Destroy (this);
+			//		return;
+			//	}
+			//	else
+			//	{
+			//		if (Application.isPlaying)
+			//			DontDestroyOnLoad (gameObject);
+			//	}
+			//}
+            mSource.owner = this;
+            mSource.Awake();
         }
 
         private void OnDestroy()
@@ -68,66 +106,75 @@ namespace I2.Loc
 
             if (!NeverDestroy)
             {
-                LocalizationManager.RemoveSource(this);
+               mSource.OnDestroy();
             }
         }
- 
-		public string GetSourceName()
-		{
-			string s = gameObject.name;
-			Transform tr = transform.parent;
-			while (tr)
-			{
-				s = string.Concat(tr.name, "_", s);
-				tr = tr.parent;
-			}
-			return s;
-		}
 
-
-		public bool IsEqualTo( LanguageSource Source )
-		{
-			if (Source.mLanguages.Count != mLanguages.Count)
-				return false;
-
-			for (int i=0, imax=mLanguages.Count; i<imax; ++i)
-				if (Source.GetLanguageIndex( mLanguages[i].Name ) < 0)
-					return false;
-
-			if (Source.mTerms.Count != mTerms.Count)
-				return false;
-
-			for (int i=0; i<mTerms.Count; ++i)
-				if (Source.GetTermData(mTerms[i].Term)==null)
-					return false;
-
-			return true;
-		}
-
-		internal bool ManagerHasASimilarSource()
-		{
-			for (int i=0, imax=LocalizationManager.Sources.Count; i<imax; ++i)
-			{
-				LanguageSource source = (LocalizationManager.Sources[i] as LanguageSource);
-				if (source!=null && source.IsEqualTo(this) && source!=this)
-					return true;
-			}
-			return false;
-		}
-
-		public void ClearAllData()
-		{
-			mTerms.Clear ();
-			mLanguages.Clear ();
-			mDictionary.Clear();
-            mAssetDictionary.Clear();
-		}
-
-        public bool IsGlobalSource()
+        public string GetSourceName()
         {
-            return mIsGlobalSource;
+            string s = gameObject.name;
+            Transform tr = transform.parent;
+            while (tr)
+            {
+                s = string.Concat(tr.name, "_", s);
+                tr = tr.parent;
+            }
+            return s;
         }
 
-		#endregion
-	}
+        public void OnBeforeSerialize()
+        {
+            version = 1;
+        }
+
+        public void OnAfterDeserialize()
+        {
+            if (version==0 || mSource==null)
+            {
+                mSource = new LanguageSourceData();
+                mSource.owner = this;
+                mSource.UserAgreesToHaveItOnTheScene = UserAgreesToHaveItOnTheScene;
+                mSource.UserAgreesToHaveItInsideThePluginsFolder = UserAgreesToHaveItInsideThePluginsFolder;
+                mSource.IgnoreDeviceLanguage = IgnoreDeviceLanguage;
+                mSource._AllowUnloadingLanguages = _AllowUnloadingLanguages;
+                mSource.CaseInsensitiveTerms = CaseInsensitiveTerms;
+                mSource.OnMissingTranslation = OnMissingTranslation;
+                mSource.mTerm_AppName = mTerm_AppName;
+
+                mSource.GoogleLiveSyncIsUptoDate = GoogleLiveSyncIsUptoDate;
+                mSource.Google_WebServiceURL = Google_WebServiceURL;
+                mSource.Google_SpreadsheetKey = Google_SpreadsheetKey;
+                mSource.Google_SpreadsheetName = Google_SpreadsheetName;
+                mSource.Google_LastUpdatedVersion = Google_LastUpdatedVersion;
+                mSource.GoogleUpdateFrequency = GoogleUpdateFrequency;
+                mSource.GoogleUpdateDelay = GoogleUpdateDelay;
+                
+                mSource.Event_OnSourceUpdateFromGoogle += Event_OnSourceUpdateFromGoogle;
+
+                if (mLanguages != null && mLanguages.Count>0)
+                {
+                    mSource.mLanguages.Clear();
+                    mSource.mLanguages.AddRange(mLanguages);
+                    mLanguages.Clear();
+                }
+                if (Assets != null && Assets.Count > 0)
+                {
+                    mSource.Assets.Clear();
+                    mSource.Assets.AddRange(Assets);
+                    Assets.Clear();
+                }
+                if (mTerms != null && mTerms.Count>0)
+                {
+                    mSource.mTerms.Clear();
+                    for (int i=0; i<mTerms.Count; ++i)
+                        mSource.mTerms.Add(mTerms[i]);
+                    mTerms.Clear();
+                }
+
+                version = 1;
+
+                Event_OnSourceUpdateFromGoogle = null;
+            }
+        }
+    }
 }

@@ -1,6 +1,6 @@
 ﻿----------------------------------------------
               I2 Localization
-                  2.8.7 f1
+                  2.8.13 f2
         http://www.inter-illusion.com
           inter.illusion@gmail.com
 ----------------------------------------------
@@ -32,6 +32,19 @@ Also its presented how to convert an existing NGUI localization into the I2 Loca
 
 
 -----------------------
+PLAYMAKER
+-----------------------
+
+If you use PlayMaker, please, install:
+   - Assets\I2\Localization\I2Localization_PlayMaker.unitypackage 
+   - PlayMaker Unity UI Addon  (from the Playmaker website - only needed for the example scenes that use Unity UI)
+
+That will install custom actions to access and modify the localization.
+More details can be found in the example scene 
+    Assets\I2\Localization PlayMaker\Playmaker Localization.unity
+
+
+-----------------------
  Ratings
 -----------------------
 
@@ -53,6 +66,61 @@ AssetStore Deals   - A bot that constantly checks the Store to find you the late
 -----------------------
  Version History
 -----------------------
+2.8.13
+NEW: Added UpdateFrequency EveryOtherDay to allow checking the spreadsheet every 48h
+NEW: Added a function to retrieve an asset by using the term name (e.g. font, sprite) LocalizationManager.GetTranslatedObjectByTermName<t>(TermName)
+FIX: Replaced all events using Action<..> by delegate function that clearly show what the parameters are for
+FIX: Inspector was not showing correctly when in the latest alpha/beta of Unity 2019.2+
+FIX: Bug where Languages coudn't be enabled at runtime  (thanks to bschug for submitting a fix)
+FIX: To reduce memory usage, Term descriptions are now only used in the editor (not in the final build) If needed, use a disabled language to store it
+FIX: Inspector Width should now be detected more accurately
+
+
+2.8.12
+NEW: Now is possible to dynamically create a LanguageSourceData without a LanguageSource and use it at runtime.
+NEW: LocalizationParamsManager now have a Manager Type (Local/Global) to define if it applies to ALL Localize or just the one in the same object.
+FIX: Term's list is not longer fully expanded all the time.
+FIX: Specialization bar in the Term's translations now shows the selected specialization as a tab-button
+FIX: Adding new specializations now copies the translation from the current specialization, so the user can create several in sequence.
+FIX: Terms can now have any letter, digit or any of the following symbols .-_$#@*()[]{}+:?!&'`,^=<>~
+FIX: Removed invalid character from the StringObfucator that were causing build issues in XBox
+FIX: RTL Fixer (Arabic, Persian, etc) was detecting tags like <xx>, only [xx]
+
+
+2.8.11
+NEW: Term's name can now have any of the following symbols ".-_$#@*)(][}{+:?!&'"
+NEW: Now the plugin localizes MeshRenderer  (Mesh + Material)
+NEW: New parameter in the Google Spreadsheet tab to control when to apply the downloaded data (OnSceneLoaded, Manual, AsSoonAsDownloaded)
+FIX: Inferring terms with '/' no longer generates a Category
+FIX: Updated NGUI target to be compatible with the latest version
+FIX: Localize inspector, the options in the dropdown for "ForceLocalize" and "Allow Localized Parameters" were in the wrong order
+FIX: Inspector for the Google Spreadsheet tab in the LanguageSource was cutting when the Inspector was too narrow
+FIX: Button "Open Source" in the Localize Inspector now works for both LanguageSources and LanguageSourceAssets
+FIX: Terms name can now have Non latin letters (e.g. Chinese, Korean, etc), but no symbols, extra spaces, etc
+
+2.8.10
+NEW: LocalizationManager.GetCurrentDevice(true) will now force get the Device Language without using the startup language from the cache
+FIX: Updated Playmaker actions to new Prefab system
+FIX: Menu option: Tools/I2 Localization/Open I2Languages
+FIX: When inferring terms, any tag (e.g. <color>) or invalid characters (e.g. ^/\`) are removed to form the term name
+
+2.8.9
+NEW: I2Languages.prefab is now an ScriptableObject instead of a prefab to avoid the locking issues of Unity 2018.3
+FIX: Compatibility with Unity 2018.3
+FIX: Plural rules for some Slavic languages were using the wrong settings.
+FIX: Improved performance when using assets from Resources and in general only calling Resource.UnloadAll when loading scenes
+
+2.8.8
+NEW: Added a flag to disable Localized Parameters 
+     (http://inter-illusion.com/forum/i2-localization/1163-localization-params-auto-translating-design-flaw#3195)
+NEW: Merged all checkboxes in the Localize component into an "Options" popup to make the Localize's inspector use less space
+NEW: Find all terms in the Scene/Scripts now also detects those in your code using [TermsPopup] and LocalizedString
+FIX: Changing the Font or Material in a TextMeshPro now updates the linkedTextComponent
+FIX: Startup language now ignores the disabled Languages if the "Default Language" is set to "Device Language"
+FIX: Updated Playmaker example scene to show that it needs the Unity UI Addon.
+FIX: Prevented a null reference on the GetSourcePlayerPrefName function when using Google Live Synchronization in Scene's sources
+FIX: Google Live Synchronization was failing to load the downloaded data from the cache.
+
 2.8.7
 NEW: WebService now has a password to restrict other players from modifying the localization data
 NEW: Importing a CSV file from script will now update the temporal files while playing
@@ -318,7 +386,7 @@ FIX: Copy/Paste a Localize component into a new GameObject will properly update 
 FIX: If the WebService was set in a LanguageSource inside the scene and not in the I2Languages.prefab, Google Translate/Export/Import wasn't working.
 FIX: Compile erors when using an old version of TextMeshPro (requiring TextMeshPro_Pre53)
 FIX: Texts for Right-To-Left languages containing multiple lines was showing extra lines when using \r\n for new lines
-FIX: LanguageSource.Import_Google was not executing when Auto-Update was set to NEVER  (even if ForceUpdate was true)
+FIX: LanguageSourceData.Import_Google was not executing when Auto-Update was set to NEVER  (even if ForceUpdate was true)
 FIX: Accessing www.text was returning an Encoding error in the latest patch releases (5.4.1p3 and 5.3.5p7)
 
 2.6.7
@@ -449,7 +517,7 @@ NEW: Localize.FinalTerm and .FinalSecondaryTerm are now public variables that ca
 FIX: Switched loc order of Main and SecondaryTerms to localice the text/sprite after the font/atlas was changed
 FIX: Editor UI for the Terms translation was overflowing. 
 FIX: Automatically Importing from Google will not longer clear the localization data
-FIX: Faster startup by avoding calling LanguageSource.UpdateDictionary multiple times
+FIX: Faster startup by avoding calling LanguageSourceData.UpdateDictionary multiple times
 DEL: Projects using Unity new UI no longer have to add UGUI to their Scripting Define Symbols
 DEL: Projects using TextMeshPro no longer have to add TMProBeta to their Scripting Define Symbols
 DEL: Cleaned some variables in the Inspectors that were not longer needed

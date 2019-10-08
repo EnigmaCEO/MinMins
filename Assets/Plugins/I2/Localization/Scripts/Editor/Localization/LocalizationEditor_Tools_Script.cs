@@ -10,9 +10,6 @@ namespace I2.Loc
 	{
 		#region Variables
 
-		const string ValidChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
-		const string NumberChars = "0123456789";
-
 		int Script_Tool_MaxVariableLength = 50;
 
 		#endregion
@@ -26,7 +23,7 @@ namespace I2.Loc
 			//GUILayout.Space (5);
 			
 			GUI.backgroundColor = Color.Lerp (Color.gray, Color.white, 0.2f);
-			GUILayout.BeginVertical(EditorStyles.textArea, GUILayout.Height(1));
+			GUILayout.BeginVertical(LocalizeInspector.GUIStyle_OldTextArea, GUILayout.Height(1));
 			GUI.backgroundColor = Color.white;
 			
 			EditorGUILayout.HelpBox("This tool creates the ScriptLocalization.cs with the selected terms.\nThis allows for Compile Time Checking on the used Terms referenced in scripts", MessageType.Info);
@@ -151,7 +148,7 @@ namespace I2.Loc
 
                 sbTrans.AppendLine();
                 sbTerms.AppendLine();
-                if (Category != LanguageSource.EmptyCategory)
+                if (Category != LanguageSourceData.EmptyCategory)
 				{
                     sbTrans.AppendLine("		public static class " + ScriptTool_AdjustTerm(Category,true));
                     sbTrans.AppendLine("		{");
@@ -162,7 +159,7 @@ namespace I2.Loc
 
                 BuildScriptCategory( sbTrans, sbTerms, Category, AdjustedCategoryTerms, CategoryTerms );
 
-				if (Category != LanguageSource.EmptyCategory)
+				if (Category != LanguageSourceData.EmptyCategory)
 				{
                     sbTrans.AppendLine("		}");
                     sbTerms.AppendLine("		}");
@@ -175,10 +172,10 @@ namespace I2.Loc
 			List<string> list = new List<string>();
 			foreach (string FullKey in mSelectedKeys)
 			{
-				string categ =  LanguageSource.GetCategoryFromFullTerm(FullKey);
+				string categ =  LanguageSourceData.GetCategoryFromFullTerm(FullKey);
 				if (categ == Category && ShouldShowTerm(FullKey))
 				{
-					list.Add(  LanguageSource.GetKeyFromFullTerm(FullKey) );
+					list.Add(  LanguageSourceData.GetKeyFromFullTerm(FullKey) );
 				}
 			}
 
@@ -187,7 +184,7 @@ namespace I2.Loc
 
 		void BuildScriptCategory( StringBuilder sbTrans, StringBuilder sbTerms, string Category, List<string> AdjustedTerms, List<string> Terms )
 		{
-			if (Category==LanguageSource.EmptyCategory)
+			if (Category==LanguageSourceData.EmptyCategory)
 			{
                 for (int i = 0; i < Terms.Count; ++i)
                 {
@@ -205,8 +202,10 @@ namespace I2.Loc
 
 		string ScriptTool_AdjustTerm( string Term, bool allowFullLength = false )
 		{
+            Term = I2Utils.GetValidTermName(Term);
+
 			// C# IDs can't start with a number
-			if (NumberChars.IndexOf(Term[0])>=0)
+			if (I2Utils.NumberChars.IndexOf(Term[0])>=0)
 				Term = "_"+Term;
 			
 			if (!allowFullLength && Term.Length>Script_Tool_MaxVariableLength)
@@ -215,7 +214,7 @@ namespace I2.Loc
 			// Remove invalid characters
 			char[] chars = Term.ToCharArray();
 			for (int i=0, imax=chars.Length; i<imax; ++i)
-				if (ValidChars.IndexOf(chars[i])<0)
+				if (I2Utils.ValidChars.IndexOf(chars[i])<0)
 					chars[i]='_';
 			return new string(chars);
 		}

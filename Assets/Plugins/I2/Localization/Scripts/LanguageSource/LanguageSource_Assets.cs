@@ -6,23 +6,16 @@ using Object = UnityEngine.Object;
 
 namespace I2.Loc
 {
-	public partial class LanguageSource
+	public partial class LanguageSourceData
 	{
-        #region Variables
-
-        public List<Object> Assets = new List<Object>();	// References to Fonts, Atlasses and other objects the localization may need
-
-        //This is used to overcome the issue with Unity not serializing Dictionaries
-        [NonSerialized] public Dictionary<string, Object> mAssetDictionary = new Dictionary<string, Object>(StringComparer.Ordinal);
-
-        #endregion
-
         #region Assets
 
         public void UpdateAssetDictionary()
         {
             Assets.RemoveAll(x => x == null);
-            mAssetDictionary = Assets.Distinct().ToDictionary(o => o.name);
+            mAssetDictionary = Assets.Distinct()
+                                     .GroupBy(o => o.name)
+                                     .ToDictionary(g => g.Key, g => g.First());
         }
 
         public Object FindAsset( string Name )

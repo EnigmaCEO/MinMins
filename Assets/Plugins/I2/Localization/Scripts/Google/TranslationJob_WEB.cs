@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Linq;
-
+using UnityEngine.Networking;
 
 namespace I2.Loc
 {
@@ -14,7 +14,7 @@ namespace I2.Loc
     public class TranslationJob_WEB : TranslationJob_WWW
     {
         TranslationDictionary _requests;
-        Action<TranslationDictionary, string> _OnTranslationReady;
+        GoogleTranslation.fnOnTranslationReady _OnTranslationReady;
         public string mErrorMessage;
 
         string mCurrentBatch_ToLanguageCode;
@@ -23,7 +23,7 @@ namespace I2.Loc
 
         List<KeyValuePair<string, string>> mQueries;
 
-        public TranslationJob_WEB(TranslationDictionary requests, Action<TranslationDictionary, string> OnTranslationReady)
+        public TranslationJob_WEB(TranslationDictionary requests, GoogleTranslation.fnOnTranslationReady OnTranslationReady)
         {
             _requests = requests;
             _OnTranslationReady = OnTranslationReady;
@@ -86,14 +86,15 @@ namespace I2.Loc
             string url = string.Format ("http://www.google.com/translate_t?hl=en&vi=c&ie=UTF8&oe=UTF8&submit=Translate&langpair={0}|{1}&text={2}", mCurrentBatch_FromLanguageCode, mCurrentBatch_ToLanguageCode, Uri.EscapeUriString( sb.ToString() ));
             Debug.Log(url);
 
-            www = new WWW(url);
+            www = UnityWebRequest.Get(url);
+            I2Utils.SendWebRequest(www);
         }
 
         public override eJobState GetState()
         {
             if (www != null && www.isDone)
             {
-                ProcessResult(www.bytes, www.error);
+                ProcessResult(www.downloadHandler.data, www.error);
                 www.Dispose();
                 www = null;
             }

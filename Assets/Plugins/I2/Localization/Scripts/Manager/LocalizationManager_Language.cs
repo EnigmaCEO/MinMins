@@ -176,7 +176,7 @@ namespace I2.Loc
             // Try selecting the System Language
             // But fallback to the first language found  if the System Language is not available in any source
 
-			if (!string.IsNullOrEmpty(SavedLanguage) && HasLanguage(SavedLanguage, Initialize: false))
+			if (!string.IsNullOrEmpty(SavedLanguage) && HasLanguage(SavedLanguage, Initialize: false, SkipDisabled:true))
             {
                 SetLanguageAndCode(SavedLanguage, GetLanguageCode(SavedLanguage));
                 return;
@@ -186,7 +186,7 @@ namespace I2.Loc
 			{
 				// Check if the device language is supported. 
 				// Also recognize when not region is set ("English (United State") will be used if sysLanguage is "English")
-				string ValidLanguage = GetSupportedLanguage (SysLanguage);
+				string ValidLanguage = GetSupportedLanguage (SysLanguage, true);
 				if (!string.IsNullOrEmpty (ValidLanguage)) {
 					SetLanguageAndCode (ValidLanguage, GetLanguageCode (ValidLanguage), false);
 					return;
@@ -229,7 +229,7 @@ namespace I2.Loc
 
 		// Returns the provided language or a similar one without the Region 
 		//(e.g. "English (Canada)" could be mapped to "english" or "English (United States)" if "English (Canada)" is not found
-		public static string GetSupportedLanguage( string Language )
+		public static string GetSupportedLanguage( string Language, bool ignoreDisabled=false )
 		{
             // First try finding the language that matches one of the official languages
             string code = GoogleLanguages.GetLanguageCode(Language, false);
@@ -238,7 +238,7 @@ namespace I2.Loc
                 // First try finding if the exact language code is in one source
                 for (int i = 0, imax = Sources.Count; i < imax; ++i)
                 {
-                    int Idx = Sources[i].GetLanguageIndexFromCode(code, true);
+                    int Idx = Sources[i].GetLanguageIndexFromCode(code, true, ignoreDisabled);
                     if (Idx >= 0)
                         return Sources[i].mLanguages[Idx].Name;
                 }
@@ -246,7 +246,7 @@ namespace I2.Loc
                 // If not, try checking without the region
                 for (int i = 0, imax = Sources.Count; i < imax; ++i)
                 {
-                    int Idx = Sources[i].GetLanguageIndexFromCode(code, false);
+                    int Idx = Sources[i].GetLanguageIndexFromCode(code, false, ignoreDisabled);
                     if (Idx >= 0)
                         return Sources[i].mLanguages[Idx].Name;
                 }
@@ -255,7 +255,7 @@ namespace I2.Loc
             // If not found, then try finding an exact match for the name
             for (int i=0, imax=Sources.Count; i<imax; ++i)
 			{
-				int Idx = Sources[i].GetLanguageIndex(Language, false);
+				int Idx = Sources[i].GetLanguageIndex(Language, false, ignoreDisabled);
 				if (Idx>=0)
 					return Sources[i].mLanguages[Idx].Name;
 			}
@@ -263,7 +263,7 @@ namespace I2.Loc
 			// Then allow matching "English (Canada)" to "english"
 			for (int i=0, imax=Sources.Count; i<imax; ++i)
 			{
-				int Idx = Sources[i].GetLanguageIndex(Language, true);
+				int Idx = Sources[i].GetLanguageIndex(Language, true, ignoreDisabled);
 				if (Idx>=0)
 					return Sources[i].mLanguages[Idx].Name;
 			}

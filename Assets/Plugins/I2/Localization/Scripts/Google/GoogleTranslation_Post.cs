@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using UnityEngine.Networking;
 
 namespace I2.Loc
 {
@@ -12,12 +13,14 @@ namespace I2.Loc
 
 	public static partial class GoogleTranslation
 	{
-		static List<WWW> mCurrentTranslations = new List<WWW>();
+		static List<UnityWebRequest> mCurrentTranslations = new List<UnityWebRequest>();
         static List<TranslationJob> mTranslationJobs = new List<TranslationJob>();
+
+        public delegate void fnOnTranslationReady(TranslationDictionary dict, string error);
 
 #region Multiple Translations
 
-		public static void Translate( TranslationDictionary requests, Action<TranslationDictionary, string> OnTranslationReady, bool usePOST = true )
+		public static void Translate( TranslationDictionary requests, fnOnTranslationReady OnTranslationReady, bool usePOST = true )
 		{
             //WWW www = GetTranslationWWW( requests, usePOST );
             //I2.Loc.CoroutineManager.Start(WaitForTranslation(www, OnTranslationReady, requests));

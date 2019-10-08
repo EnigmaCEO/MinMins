@@ -23,7 +23,8 @@ namespace I2.Loc
                 (EditorUserBuildSettings.activeBuildTarget == BuildTarget.Android) &&
                 isFirstScene)
             {
-                string projPath = System.IO.Path.GetFullPath( Application.streamingAssetsPath + "/../../Temp/StagingArea");
+                string projPath = System.IO.Path.GetFullPath(Application.streamingAssetsPath + "/../../Temp/StagingArea");
+                //string projPath = System.IO.Path.GetFullPath(Application.dataPath+ "/Plugins/Android");
                 PostProcessAndroid(BuildTarget.Android, projPath);
             }
         }

@@ -11,9 +11,9 @@ namespace I2.Loc
     {
         static string mCurrentDeviceLanguage;
 
-        public static string GetCurrentDeviceLanguage()
+        public static string GetCurrentDeviceLanguage( bool force = false )
         {
-            if (string.IsNullOrEmpty(mCurrentDeviceLanguage))
+            if (force || string.IsNullOrEmpty(mCurrentDeviceLanguage))
                 DetectDeviceLanguage();
 
             return mCurrentDeviceLanguage;

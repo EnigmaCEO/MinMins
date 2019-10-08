@@ -3,11 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using System.Text.RegularExpressions;
+using UnityEngine.Networking;
 
 namespace I2.Loc
 {
     public static class I2Utils
     {
+        public const string ValidChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
+        public const string NumberChars = "0123456789";
+        public const string ValidNameSymbols = ".-_$#@*()[]{}+:?!&',^=<>~`";
+
         public static string ReverseText(string source)
         {
             var len = source.Length;
@@ -19,12 +24,58 @@ namespace I2.Loc
             return new string(output);
         }
 
+
         public static string RemoveNonASCII(string text, bool allowCategory = false)
         {
             if (string.IsNullOrEmpty(text))
                 return text;
 
-            return new string(text.ToCharArray().Select(c => (char.IsControl(c) || (c == '\\' && !allowCategory)) ? ' ' : c).ToArray());
+            //return new string(text.ToCharArray().Where(c => (ValidChars.IndexOf(c)>=0 || c==' ' || (c == '\\' && allowCategory) || (c == '/' && allowCategory))).ToArray());
+            //return new string(text.ToCharArray().Select(c => (char.IsControl(c) || (c == '\\' && !allowCategory) || (c == '\"') || (c == '/')) ? ' ' : c).ToArray());
+            //return new string(text.ToCharArray().Select(c => ((allowCategory && (c == '\\' || c == '\"' || (c == '/'))) || char.IsLetterOrDigit(c))?c:' ').ToArray());
+
+
+            // Remove Non-Letter/Digits and collapse all extra espaces into a single space
+            int current = 0;
+            char[] output = new char[text.Length];
+            bool skipped = false;
+
+            foreach (char cc in text.Trim().ToCharArray())
+            {
+                char c = ' ';
+                if ((allowCategory && (cc == '\\' || cc == '\"' || (cc == '/'))) ||
+                     char.IsLetterOrDigit(cc) ||
+                     ValidNameSymbols.IndexOf(cc) >= 0)
+                {
+                    c = cc;
+                }
+
+                if (char.IsWhiteSpace(c))
+                {
+                    if (!skipped)
+                    {
+                        if (current > 0)
+                            output[current++] = ' ';
+
+                        skipped = true;
+                    }
+                }
+                else
+                {
+                    skipped = false;
+                    output[current++] = c;
+                }
+            }
+
+            return new string(output, 0, current);
+        }
+
+        public static string GetValidTermName( string text, bool allowCategory = false)
+        {
+            if (text == null)
+                return null;
+            text = RemoveTags(text);
+            return RemoveNonASCII(text, allowCategory);
         }
 
         public static string SplitLine(string line, int maxCharacters)
@@ -85,7 +136,7 @@ namespace I2.Loc
 
             // Find where the tag starts
             for (tagStart = iStart; tagStart < len; ++tagStart)
-                if (line[tagStart] == '[' || line[tagStart] == '(' || line[tagStart] == '{')
+                if (line[tagStart] == '[' || line[tagStart] == '(' || line[tagStart] == '{' || line[tagStart] == '<')
                     break;
 
             if (tagStart == len)
@@ -95,7 +146,7 @@ namespace I2.Loc
             for (tagEnd = tagStart + 1; tagEnd < len; ++tagEnd)
             {
                 char c = line[tagEnd];
-                if (c == ']' || c == ')' || c == '}')
+                if (c == ']' || c == ')' || c == '}' || c=='>')
                 {
                     if (isArabic) return FindNextTag(line, tagEnd + 1, out tagStart, out tagEnd);
                     else return true;
@@ -105,6 +156,40 @@ namespace I2.Loc
 
             // there is an open, but not close character
             return false;
+        }
+
+        public static string RemoveTags(string text)
+        {
+            return Regex.Replace(text, @"\{\[(.*?)]}|\[(.*?)]|\<(.*?)>", "");
+        }
+
+        public static bool RemoveResourcesPath(ref string sPath)
+        {
+            int Ind1 = sPath.IndexOf("\\Resources\\");
+            int Ind2 = sPath.IndexOf("\\Resources/");
+            int Ind3 = sPath.IndexOf("/Resources\\");
+            int Ind4 = sPath.IndexOf("/Resources/");
+            int Index = Mathf.Max(Ind1, Ind2, Ind3, Ind4);
+            bool IsResource = false;
+            if (Index >= 0)
+            {
+                sPath = sPath.Substring(Index + 11);
+                IsResource = true;
+            }
+            else
+            {
+                // If its not in the Resources, then it has to be in the References
+                // Therefore, the path has to be stripped and let only the name
+                Index = sPath.LastIndexOfAny(LanguageSourceData.CategorySeparators);
+                if (Index > 0)
+                    sPath = sPath.Substring(Index + 1);
+            }
+
+            string Extension = System.IO.Path.GetExtension(sPath);
+            if (!string.IsNullOrEmpty(Extension))
+                sPath = sPath.Substring(0, sPath.Length - Extension.Length);
+
+            return IsResource;
         }
 
         public static bool IsPlaying()
@@ -190,6 +275,15 @@ namespace I2.Loc
                     return match.Groups[i].ToString();
                 }
             return match.ToString();
+        }
+
+        public static void SendWebRequest(UnityWebRequest www )
+        {
+            #if UNITY_2017_2_OR_NEWER
+                www.SendWebRequest();
+            #else
+                www.Send();
+            #endif
         }
     }
 }

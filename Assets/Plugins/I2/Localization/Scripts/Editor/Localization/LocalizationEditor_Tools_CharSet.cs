@@ -52,11 +52,13 @@ namespace I2.Loc
 
 			GUILayout.EndHorizontal ();
 
-			//--[ Language List ]--------------------------
+            //--[ Language List ]--------------------------
 
-			mScrollPos_Languages = GUILayout.BeginScrollView( mScrollPos_Languages, EditorStyles.textArea, GUILayout.MinHeight (100), GUILayout.MaxHeight(Screen.height), GUILayout.ExpandHeight(false));
+            GUI.backgroundColor = Color.Lerp(GUITools.LightGray, Color.white, 0.5f);
+            mScrollPos_Languages = GUILayout.BeginScrollView( mScrollPos_Languages, LocalizeInspector.GUIStyle_OldTextArea, GUILayout.MinHeight (100), GUILayout.MaxHeight(Screen.height), GUILayout.ExpandHeight(false));
+            GUI.backgroundColor = Color.white;
 
-			for (int i=0, imax=mLanguageSource.mLanguages.Count; i<imax; ++i)
+            for (int i=0, imax=mLanguageSource.mLanguages.Count; i<imax; ++i)
 			{
 				GUILayout.BeginHorizontal();
 					var language = mLanguageSource.mLanguages[i].Name;
@@ -81,7 +83,7 @@ namespace I2.Loc
 			//GUILayout.Space (5);
 			
 			GUI.backgroundColor = Color.Lerp (Color.gray, Color.white, 0.2f);
-			GUILayout.BeginVertical(EditorStyles.textArea, GUILayout.Height(1));
+			GUILayout.BeginVertical(LocalizeInspector.GUIStyle_OldTextArea, GUILayout.Height(1));
 			GUI.backgroundColor = Color.white;
 			
 			EditorGUILayout.HelpBox("This tool shows all characters used in the selected languages", MessageType.Info);

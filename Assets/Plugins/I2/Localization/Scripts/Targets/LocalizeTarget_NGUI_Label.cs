@@ -40,12 +40,19 @@ namespace I2.Loc
                 if (newFont != mTarget.ambigiousFont)
                     mTarget.ambigiousFont = newFont;
             }
-            else
+            if (newFont==null)
             {
                 UIFont newUIFont = cmp.GetSecondaryTranslatedObj<UIFont>(ref mainTranslation, ref secondaryTranslation);
                 if (newUIFont != null && mTarget.ambigiousFont != newUIFont)
                     mTarget.ambigiousFont = newUIFont;
             }
+            if (newFont == null)
+            {
+                NGUIFont newUIFont = cmp.GetSecondaryTranslatedObj<NGUIFont>(ref mainTranslation, ref secondaryTranslation);
+                if (newUIFont != null && mTarget.ambigiousFont != newUIFont)
+                    mTarget.ambigiousFont = newUIFont;
+            }
+
 
             if (mInitializeAlignment)
             {

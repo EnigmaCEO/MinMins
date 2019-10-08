@@ -35,7 +35,7 @@ namespace I2.Loc
 			OnGUI_ScenesList();
 
 			GUI.backgroundColor = Color.Lerp (Color.gray, Color.white, 0.2f);
-			GUILayout.BeginVertical(EditorStyles.textArea, GUILayout.Height(1));
+			GUILayout.BeginVertical(LocalizeInspector.GUIStyle_OldTextArea, GUILayout.Height(1));
 			GUI.backgroundColor = Color.white;
 
 			GUILayout.Space (5);
@@ -83,7 +83,7 @@ namespace I2.Loc
         static ParsedTerm AddParsedTerm( string FullTerm, string TermKey, string Category, int Usage )
         {
             if (TermKey==null)
-                LanguageSource.DeserializeFullTerm(FullTerm, out TermKey, out Category);
+                LanguageSourceData.DeserializeFullTerm(FullTerm, out TermKey, out Category);
 
             var data = new ParsedTerm();
             data.Usage    = Usage;
@@ -146,7 +146,10 @@ namespace I2.Loc
             mParsedCategories.Clear();
 
             if (ParseScripts)
-            	ParseTermsInScripts();
+            {
+                ParseTermsInScripts();
+                FindTermsInLocalizedStrings();
+            }
 
             if (mParseTermsIn_Scenes)
             {
@@ -204,7 +207,7 @@ namespace I2.Loc
 			for (int i=0, imax=Locals.Length; i<imax; ++i)
 			{
 				Localize localize = Locals[i];
-                if (localize==null || (localize.Source!=null && localize.Source!=mLanguageSource) || localize.gameObject==null || !GUITools.ObjectExistInScene(localize.gameObject))
+                if (localize==null || (localize.Source!=null && localize.Source.SourceData!=mLanguageSource) || localize.gameObject==null || !GUITools.ObjectExistInScene(localize.gameObject))
 					continue;
 				 
 				string Term, SecondaryTerm;
@@ -220,7 +223,68 @@ namespace I2.Loc
 			}
 		}
 
-		static void FindTermsNotUsed()
+        static void FindTermsInLocalizedStrings()
+        {
+            MonoBehaviour[] behaviors = (MonoBehaviour[])Resources.FindObjectsOfTypeAll(typeof(MonoBehaviour));
+            System.Type Type_localizedString = typeof(LocalizedString);
+            foreach (var cmp in behaviors)
+            {
+                if (cmp.GetType().Name.Contains("Example_LocalizedString"))
+                    continue;
+
+                var props = cmp.GetType()
+                               .GetProperties()
+                               .Where(x=> Type_localizedString.IsAssignableFrom(x.PropertyType) ||
+                                          Attribute.IsDefined(x, typeof(TermsPopup)));
+                foreach (var p in props)
+                {
+                    string value = null;
+                    if (Type_localizedString.IsAssignableFrom(p.PropertyType))
+                    {
+                        var varObj = p.GetValue(cmp,null);
+                        value = System.Convert.ToString(varObj.GetType().GetField("mTerm").GetValue(varObj));
+                    }
+                    else
+                    {
+                        value = System.Convert.ToString(p.GetValue(cmp,null));
+                    }
+                    if (!string.IsNullOrEmpty(value))
+                    {
+                        GetParsedTerm(value).Usage++;
+                    }
+
+                    //Debug.LogFormat("{0} ({1})", p.Name, p.PropertyType);
+                    //Debug.Log(value);
+                }
+
+
+                var variables = cmp.GetType()
+                                   .GetFields()
+                                   .Where(x => Type_localizedString.IsAssignableFrom(x.FieldType) ||
+                                               Attribute.IsDefined(x, typeof(TermsPopup)));
+                foreach (var v in variables)
+                {
+                    string value = null;
+                    if (Type_localizedString.IsAssignableFrom(v.FieldType))
+                    {
+                        var varObj = v.GetValue(cmp);
+                        value = System.Convert.ToString(varObj.GetType().GetField("mTerm").GetValue(varObj));
+                    }
+                    else
+                    {
+                        value = System.Convert.ToString(v.GetValue(cmp));
+                    }
+                    if (!string.IsNullOrEmpty(value))
+                    {
+                        GetParsedTerm(value).Usage++;
+                    }
+                    //Debug.LogFormat("{0} ({1})", v.Name, v.FieldType);
+                    //Debug.Log(value);
+                }
+            }
+        }
+
+        static void FindTermsNotUsed()
 		{
             // every Term that is in the DB but not in mParsedTerms
             if (mLanguageSource == null)
@@ -270,7 +334,7 @@ namespace I2.Loc
 
 			foreach (var localize in Locals) 
 			{
-				if (localize == null || (localize.Source != null && localize.Source != mLanguageSource) || localize.gameObject == null || !GUITools.ObjectExistInScene (localize.gameObject))
+				if (localize == null || (localize.Source != null && localize.Source.SourceData != mLanguageSource) || localize.gameObject == null || !GUITools.ObjectExistInScene (localize.gameObject))
 					continue;
 
 				if (!string.IsNullOrEmpty (localize.mTerm) && !string.IsNullOrEmpty (localize.SecondaryTerm))

@@ -10,7 +10,7 @@ namespace I2.Loc
 	{
         public UnityEvent _OnLocalize = new UnityEvent();
 		
-		public void Enable()
+		public void OnEnable()
 		{
             LocalizationManager.OnLocalizeEvent -= OnLocalize;
             LocalizationManager.OnLocalizeEvent += OnLocalize;

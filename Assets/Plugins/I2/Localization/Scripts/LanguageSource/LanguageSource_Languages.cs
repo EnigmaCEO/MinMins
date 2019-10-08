@@ -6,19 +6,8 @@ using Object = UnityEngine.Object;
 
 namespace I2.Loc
 {
-	public partial class LanguageSource
+	public partial class LanguageSourceData
 	{
-		#region Variables
-
-		public List<LanguageData> mLanguages = new List<LanguageData>();
-
-		public bool IgnoreDeviceLanguage; // If false, it will use the Device's language as the initial Language, otherwise it will use the first language in the source.
-
-        public enum eAllowUnloadLanguages { Never, OnlyInDevice, EditorAndDevice }
-        public eAllowUnloadLanguages _AllowUnloadingLanguages = eAllowUnloadLanguages.OnlyInDevice;
-
-		#endregion
-
 		#region Language
 
 		public int GetLanguageIndex( string language, bool AllowDiscartingRegion = true, bool SkipDisabled = true)
@@ -63,18 +52,28 @@ namespace I2.Loc
             return LocalizationManager.CurrentLanguage == mLanguages[languageIndex].Name;
         }
 
-        public int GetLanguageIndexFromCode( string Code, bool exactMatch=true )
+        public int GetLanguageIndexFromCode( string Code, bool exactMatch=true, bool ignoreDisabled = false)
 		{
-			for (int i=0, imax=mLanguages.Count; i<imax; ++i)
-				if (string.Compare(mLanguages[i].Code, Code, StringComparison.OrdinalIgnoreCase)==0)
-					return i;
+            for (int i = 0, imax = mLanguages.Count; i < imax; ++i)
+            {
+                if (ignoreDisabled && !mLanguages[i].IsEnabled())
+                    continue;
+
+                if (string.Compare(mLanguages[i].Code, Code, StringComparison.OrdinalIgnoreCase) == 0)
+                    return i;
+            }
 
 			if (!exactMatch)
 			{
-				// Find any match without using the Regions
-				for (int i=0, imax=mLanguages.Count; i<imax; ++i)
-					if (string.Compare( mLanguages[i].Code, 0, Code, 0, 2, StringComparison.OrdinalIgnoreCase )==0)
-						return i;
+                // Find any match without using the Regions
+                for (int i = 0, imax = mLanguages.Count; i < imax; ++i)
+                {
+                    if (ignoreDisabled && !mLanguages[i].IsEnabled())
+                        continue;
+
+                    if (string.Compare(mLanguages[i].Code, 0, Code, 0, 2, StringComparison.OrdinalIgnoreCase) == 0)
+                        return i;
+                }
 			}
 
 			return -1;
@@ -137,10 +136,8 @@ namespace I2.Loc
 				Array.Resize(ref mTerms[i].Languages, NewSize);
 				Array.Resize(ref mTerms[i].Flags, NewSize);
 			}
-			#if UNITY_EDITOR
-				UnityEditor.EditorUtility.SetDirty(this);
-			#endif
-		}
+            Editor_SetDirty();
+        }
 
 		public void RemoveLanguage( string LanguageName )
 		{
@@ -160,10 +157,9 @@ namespace I2.Loc
 				Array.Resize(ref mTerms[i].Flags, nLanguages-1);
 			}
 			mLanguages.RemoveAt(LangIndex);
-			#if UNITY_EDITOR
-				UnityEditor.EditorUtility.SetDirty(this);
-			#endif
-		}
+            Editor_SetDirty();
+
+        }
 
 		public List<string> GetLanguages( bool skipDisabled = true)
 		{
@@ -203,7 +199,7 @@ namespace I2.Loc
 
         public void EnableLanguage(string Language, bool bEnabled)
         {
-            int idx = GetLanguageIndex(Language, false);
+            int idx = GetLanguageIndex(Language, false, false);
             if (idx >= 0)
                 mLanguages[idx].SetEnabled(bEnabled);
         }

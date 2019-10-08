@@ -258,8 +258,8 @@ namespace I2.Loc
 
 		void Import_CSV( string FileName, eSpreadsheetUpdateMode UpdateMode )
 		{
-			LanguageSource source = (LanguageSource)target;
-			var encoding = System.Text.Encoding.GetEncoding (mProp_Spreadsheet_LocalCSVEncoding.stringValue);
+            LanguageSourceData source = GetSourceData();
+            var encoding = System.Text.Encoding.GetEncoding (mProp_Spreadsheet_LocalCSVEncoding.stringValue);
 			if (encoding == null)
 				encoding = System.Text.Encoding.UTF8;
 			string CSVstring = LocalizationReader.ReadCSVfile (FileName, encoding);
@@ -323,9 +323,9 @@ namespace I2.Loc
 
 		public void Export_CSV( string FileName, eSpreadsheetUpdateMode UpdateMode, char Separator, System.Text.Encoding encoding )
 		{
-			LanguageSource source = (LanguageSource)target;
-			
-			string CSVstring = source.Export_CSV(null, Separator, mProp_Spreadsheet_SpecializationAsRows.boolValue);
+            LanguageSourceData source = GetSourceData();
+
+            string CSVstring = source.Export_CSV(null, Separator, mProp_Spreadsheet_SpecializationAsRows.boolValue);
 			System.IO.File.WriteAllText (FileName, CSVstring, encoding);
 		}
 	}

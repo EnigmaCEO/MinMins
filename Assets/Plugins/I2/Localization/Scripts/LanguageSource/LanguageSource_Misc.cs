@@ -2,7 +2,7 @@
 
 namespace I2.Loc
 {
-	public partial class LanguageSource
+	public partial class LanguageSourceData
 	{
 		public static string EmptyCategory = "Default";
 		public static char[] CategorySeparators = "/\\".ToCharArray();

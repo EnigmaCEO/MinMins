@@ -8,7 +8,7 @@ namespace I2.Loc
 {
 	public enum eTermType 
 	{ 
-		Text, Font, Texture, AudioClip, GameObject, Sprite, Material, Child,
+		Text, Font, Texture, AudioClip, GameObject, Sprite, Material, Child, Mesh,
 		#if NGUI
 			UIAtlas, UIFont,
 		#endif
@@ -36,7 +36,12 @@ namespace I2.Loc
 	{
 		public string 			Term 			= string.Empty;
 		public eTermType		TermType 		= eTermType.Text;
+		
+		#if !UNITY_EDITOR
+		[NonSerialized]
+		#endif
 		public string 			Description;
+		
         public string[]         Languages = new string[0];
         public byte[]			Flags 			= new byte[0];  // flags for each translation
 
@@ -112,7 +117,7 @@ namespace I2.Loc
 			if (!allowCategoryMistmatch)
 				return name == Term;
 
-			return name == LanguageSource.GetKeyFromFullTerm (Term);
+			return name == LanguageSourceData.GetKeyFromFullTerm (Term);
 		}
 
         public bool HasSpecializations()

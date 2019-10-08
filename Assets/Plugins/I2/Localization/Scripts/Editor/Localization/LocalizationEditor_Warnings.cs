@@ -8,67 +8,67 @@ namespace I2.Loc
 	{
 		void OnGUI_Warning_SourceInScene()
 		{
-			if (mLanguageSource.UserAgreesToHaveItOnTheScene) return;
-			
-			LanguageSource source = (LanguageSource)target;
-			if (source.IsGlobalSource() && !GUITools.ObjectExistInScene(source.gameObject))
-				return;
-			
-			string Text = @"Its advised to only use the source in I2\Localization\Resources\I2Languages.prefab
+//			if (mLanguageSource.UserAgreesToHaveItOnTheScene) return;
 
-That works as a GLOBAL source accessible in ALL scenes. That’s why its recommended to add all your translations there.
-
-You don't need to instantiate that prefab into the scene, just click the prefab and add the Data.
-
-Only use Sources in the scene when the localization is meant to be ONLY used there.
-However, that's not advised and is only used in the Examples to keep them separated from your project localization.
-
-Furthermore, having a source in the scene require that any Localize component get a reference to that source to work properly. By dragging the source into the field at the bottom of the Localize component.";
-			EditorGUILayout.HelpBox(Text, MessageType.Warning);
+//            LanguageSourceData source = GetSourceData();
+//            if (source.IsGlobalSource() && !GUITools.ObjectExistInScene(source.gameObject))
+//				return;
 			
-			GUILayout.BeginHorizontal();
-			GUILayout.FlexibleSpace();
-			if (GUILayout.Button("Keep as is"))
-			{
-				SerializedProperty Agree = serializedObject.FindProperty("UserAgreesToHaveItOnTheScene");
-				Agree.boolValue = true;
-			}
-			
-			GUILayout.FlexibleSpace();
-			
-			if (GUILayout.Button("Open the Global Source"))
-			{
-				GameObject Prefab = (Resources.Load(LocalizationManager.GlobalSources[0]) as GameObject);
-				Selection.activeGameObject = Prefab;
-			}
-			
-			GUILayout.FlexibleSpace();
-			if (GUILayout.Button("Delete this and open the Global Source"))
-			{
-				EditorApplication.CallbackFunction Callback = null;
-				EditorApplication.update += Callback = ()=>
-				{
-					EditorApplication.update -= Callback;
+//			string Text = @"Its advised to only use the source in I2\Localization\Resources\I2Languages.prefab
 
-					if (source.GetComponents<Component>().Length<=2)
-					{
-						Debug.Log ("Deleting GameObject '" + source.name + "' and Openning the "+LocalizationManager.GlobalSources[0]+".prefab");
-						DestroyImmediate (source.gameObject);
-					}
-					else
-					{
-						Debug.Log ("Deleting the LanguageSource inside GameObject " + source.name + " and Openning the "+LocalizationManager.GlobalSources[0] +".prefab");
-						DestroyImmediate (source);
-					}
+//That works as a GLOBAL source accessible in ALL scenes. That’s why its recommended to add all your translations there.
 
-					GameObject Prefab = (Resources.Load(LocalizationManager.GlobalSources[0]) as GameObject);
-					Selection.activeGameObject = Prefab;
-				};
-			}
-			GUILayout.FlexibleSpace();
-			GUILayout.EndHorizontal();
+//You don't need to instantiate that prefab into the scene, just click the prefab and add the Data.
+
+//Only use Sources in the scene when the localization is meant to be ONLY used there.
+//However, that's not advised and is only used in the Examples to keep them separated from your project localization.
+
+//Furthermore, having a source in the scene require that any Localize component get a reference to that source to work properly. By dragging the source into the field at the bottom of the Localize component.";
+//			EditorGUILayout.HelpBox(Text, MessageType.Warning);
 			
-			GUILayout.Space(10);
+//			GUILayout.BeginHorizontal();
+//			GUILayout.FlexibleSpace();
+//			if (GUILayout.Button("Keep as is"))
+//			{
+//				SerializedProperty Agree = serializedObject.FindProperty("UserAgreesToHaveItOnTheScene");
+//				Agree.boolValue = true;
+//			}
+			
+//			GUILayout.FlexibleSpace();
+			
+//			if (GUILayout.Button("Open the Global Source"))
+//			{
+//				GameObject Prefab = (Resources.Load(LocalizationManager.GlobalSources[0]) as GameObject);
+//				Selection.activeGameObject = Prefab;
+//			}
+			
+//			GUILayout.FlexibleSpace();
+//			if (GUILayout.Button("Delete this and open the Global Source"))
+//			{
+//				EditorApplication.CallbackFunction Callback = null;
+//				EditorApplication.update += Callback = ()=>
+//				{
+//					EditorApplication.update -= Callback;
+
+//					if (source.GetComponents<Component>().Length<=2)
+//					{
+//						Debug.Log ("Deleting GameObject '" + source.name + "' and Openning the "+LocalizationManager.GlobalSources[0]+".prefab");
+//						DestroyImmediate (source.gameObject);
+//					}
+//					else
+//					{
+//						Debug.Log ("Deleting the LanguageSource inside GameObject " + source.name + " and Openning the "+LocalizationManager.GlobalSources[0] +".prefab");
+//						DestroyImmediate (source);
+//					}
+
+//					GameObject Prefab = (Resources.Load(LocalizationManager.GlobalSources[0]) as GameObject);
+//					Selection.activeGameObject = Prefab;
+//				};
+//			}
+//			GUILayout.FlexibleSpace();
+//			GUILayout.EndHorizontal();
+			
+//			GUILayout.Space(10);
 		}
 
 		private bool bSourceInsidePluginsFolder = true;
@@ -77,15 +77,14 @@ Furthermore, having a source in the scene require that any Localize component ge
 			if (!bSourceInsidePluginsFolder || mLanguageSource.UserAgreesToHaveItInsideThePluginsFolder)
 				return;
 			
-			LanguageSource source = (LanguageSource)target;
-			if (!source.IsGlobalSource())
+			if (!mLanguageSource.IsGlobalSource())
 			{
 				bSourceInsidePluginsFolder = false;
 				return;
 			}
 
 			string pluginPath = UpgradeManager.GetI2LocalizationPath();
-			string assetPath = AssetDatabase.GetAssetPath(source);
+			string assetPath = AssetDatabase.GetAssetPath(target);
 
 			if (!assetPath.StartsWith(pluginPath, StringComparison.OrdinalIgnoreCase))
 			{
@@ -144,10 +143,10 @@ Do you want the plugin to automatically move the LanguageSource to a folder outs
 			EditorApplication.delayCall -= MoveGlobalSource;
 
 			string pluginPath = UpgradeManager.GetI2LocalizationPath();
-			string assetPath = AssetDatabase.GetAssetPath(mLanguageSource);
+			string assetPath = AssetDatabase.GetAssetPath(mLanguageSource.ownerObject);
 
 			string I2Path = pluginPath.Substring(0, pluginPath.Length-"/Localization".Length);
-			string newPath = I2Path + "/Resources/" + mLanguageSource.name + ".prefab";
+			string newPath = I2Path + "/Resources/" + (mLanguageSource.ownerObject).name + ".prefab";
 
 			string fullresFolder = Application.dataPath + I2Path.Replace("Assets","") + "/Resources";
 			bool folderExists = System.IO.Directory.Exists (fullresFolder);

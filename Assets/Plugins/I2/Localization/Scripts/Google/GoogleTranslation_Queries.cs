@@ -197,6 +197,8 @@ namespace I2.Loc
 	            s += "+";
 	        return s;
 	    }
+
+
         static void ParseNonTranslatableElements( ref TranslationQuery query )
         {
             //\[i2nt].*\[\/i2nt]

@@ -6,24 +6,8 @@ using Object = UnityEngine.Object;
 
 namespace I2.Loc
 {
-	public partial class LanguageSource
+	public partial class LanguageSourceData
 	{
-		#region Variables
-
-		public List<TermData> mTerms = new List<TermData>();
-
-		public bool CaseInsensitiveTerms = false;
-
-        //This is used to overcome the issue with Unity not serializing Dictionaries
-        [NonSerialized] public Dictionary<string, TermData> mDictionary = new Dictionary<string, TermData>(StringComparer.Ordinal);
-
-		public enum MissingTranslationAction { Empty, Fallback, ShowWarning };
-		public MissingTranslationAction OnMissingTranslation = MissingTranslationAction.Fallback;
-
-		public string mTerm_AppName;
-
-        #endregion
-
         #region Language
 
         public void UpdateDictionary(bool force = false)
@@ -104,9 +88,16 @@ namespace I2.Loc
                     Translation = string.Empty;
                     return true;
                 }
-			}
+                else
+                if (OnMissingTranslation == MissingTranslationAction.ShowTerm)
+                {
+                    Translation = term;
+                    return true;
+                }
 
-			Translation = null;
+            }
+
+            Translation = null;
 			return false;
 		}
 
@@ -231,7 +222,7 @@ namespace I2.Loc
 				#if UNITY_EDITOR
 				if (SaveSource)
 				{
-					UnityEditor.EditorUtility.SetDirty (this);
+                    Editor_SetDirty();
 					UnityEditor.AssetDatabase.SaveAssets();
 				}
 				#endif
@@ -260,10 +251,10 @@ namespace I2.Loc
 				if (Term.Length>EmptyCategory.Length && Term[EmptyCategory.Length]=='/')
 					Term = Term.Substring(EmptyCategory.Length+1);
 			}
-            Term = I2Utils.RemoveNonASCII(Term, true);
-		}
+            Term = I2Utils.GetValidTermName(Term, true);
+        }
 
 
-		#endregion
-	}
+        #endregion
+    }
 }

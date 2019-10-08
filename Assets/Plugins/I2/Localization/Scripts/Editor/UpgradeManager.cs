@@ -73,6 +73,16 @@ namespace I2.Loc
         }
 
 
+        [MenuItem("Tools/I2 Localization/Create Temp")]
+        public static void CreateTemp()
+        {
+            LanguageSourceData source = LocalizationManager.Sources[0];
+            for (int i = 0; i < 1000; ++i)
+                source.AddTerm("Term " + i, eTermType.Text, false);
+            source.UpdateDictionary(true);
+        }
+
+
 
 
         public static void EnablePlugins( bool bForce = false )
@@ -172,28 +182,50 @@ namespace I2.Loc
 				return;
 			
 			Object GlobalSource = Resources.Load(LocalizationManager.GlobalSources[0]);
-			if (GlobalSource!=null)
-				return;
-			
-			//string PluginPath = GetI2LocalizationPath();
-            string ResourcesFolder = "Assets/Resources";//PluginPath.Substring(0, PluginPath.Length-"/Localization".Length) + "/Resources";
-			
-			string fullresFolder = Application.dataPath + ResourcesFolder.Replace("Assets","");
-			if (!System.IO.Directory.Exists(fullresFolder))
-				System.IO.Directory.CreateDirectory(fullresFolder);
-			//string guid = AssetDatabase.AssetPathToGUID(/*ResourcesFolder*/);
-			/*if (string.IsNullOrEmpty(guid)) // Folder doesn't exist
-			{
-				AssetDatabase.CreateFolder(PluginPath, "Resources");
-			}*/
-			
-			GameObject go = new GameObject(LocalizationManager.GlobalSources[0]);
-			go.AddComponent<LanguageSource>();
-			PrefabUtility.CreatePrefab(ResourcesFolder + "/" + LocalizationManager.GlobalSources[0] + ".prefab", go);
-			Object.DestroyImmediate(go);
-			
-			AssetDatabase.SaveAssets();
-			AssetDatabase.Refresh();
+            LanguageSourceData sourceData = null;
+            string sourcePath = null;
+
+            if (GlobalSource != null)
+            {
+                if (GlobalSource is GameObject)
+                {
+                    // I2Languages was a prefab before 2018.3, it should be converted to an ScriptableObject
+                    sourcePath = AssetDatabase.GetAssetPath(GlobalSource);
+                    LanguageSource langSourceObj = (GlobalSource as GameObject).GetComponent<LanguageSource>();
+                    sourceData = langSourceObj.mSource;
+                }
+                else
+                {
+                    return;
+                }
+            }
+
+            LanguageSourceAsset asset = ScriptableObject.CreateInstance<LanguageSourceAsset>();
+            if (sourceData != null)
+            {
+                asset.mSource = sourceData;
+                AssetDatabase.DeleteAsset(sourcePath);
+            }
+
+            if (string.IsNullOrEmpty(sourcePath))
+            {
+                //string PluginPath = GetI2LocalizationPath();
+                string ResourcesFolder = "Assets/Resources";//PluginPath.Substring(0, PluginPath.Length-"/Localization".Length) + "/Resources";
+
+                string fullresFolder = Application.dataPath + ResourcesFolder.Replace("Assets", "");
+                if (!System.IO.Directory.Exists(fullresFolder))
+                    System.IO.Directory.CreateDirectory(fullresFolder);
+
+                sourcePath = ResourcesFolder + "/" + LocalizationManager.GlobalSources[0] + ".asset";
+            }
+            else
+            {
+                sourcePath = sourcePath.Replace(".prefab", ".asset");
+            }
+
+            AssetDatabase.CreateAsset(asset, sourcePath);
+            AssetDatabase.SaveAssets();
+		    AssetDatabase.Refresh();
 		}
 
         [MenuItem("Tools/I2 Localization/Help", false, 30)]
@@ -203,15 +235,15 @@ namespace I2.Loc
             Application.OpenURL(LocalizeInspector.HelpURL_Documentation);
         }
 
-        [MenuItem("Tools/I2 Localization/Open I2Languages.prefab", false, 0)]
+        [MenuItem("Tools/I2 Localization/Open I2Languages.asset", false, 0)]
         public static void OpenGlobalSource()
         {
             CreateLanguageSources();
-            GameObject GO = Resources.Load<GameObject>(LocalizationManager.GlobalSources[0]);
+            LanguageSourceAsset GO = Resources.Load<LanguageSourceAsset>(LocalizationManager.GlobalSources[0]);
             if (GO == null)
-                Debug.Log("Unable to find Global Language at Assets/Resources/" + LocalizationManager.GlobalSources[0] + ".prefab");
+                Debug.Log("Unable to find Global Language at Assets/Resources/" + LocalizationManager.GlobalSources[0] + ".asset");
             
-            Selection.activeGameObject = GO;
+            Selection.activeObject = GO;
         }
 
 

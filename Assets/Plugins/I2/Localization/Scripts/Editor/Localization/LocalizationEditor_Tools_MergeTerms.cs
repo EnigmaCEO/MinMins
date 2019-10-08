@@ -17,7 +17,7 @@ namespace I2.Loc
 			OnGUI_ScenesList(true);
 			
 			GUI.backgroundColor = Color.Lerp (Color.gray, Color.white, 0.2f);
-			GUILayout.BeginVertical(EditorStyles.textArea, GUILayout.Height(1));
+			GUILayout.BeginVertical(LocalizeInspector.GUIStyle_OldTextArea, GUILayout.Height(1));
 			GUI.backgroundColor = Color.white;
 			GUILayout.Space (5);
 			
@@ -36,7 +36,7 @@ namespace I2.Loc
 				mKeyToExplore = string.Empty;
 
 			GUI.backgroundColor = Color.Lerp (Color.gray, Color.white, 0.2f);
-			GUILayout.BeginVertical(EditorStyles.textArea, GUILayout.Height(1));
+			GUILayout.BeginVertical(LocalizeInspector.GUIStyle_OldTextArea, GUILayout.Height(1));
 			GUI.backgroundColor = Color.white;
 				GUILayout.Space(5);
 				GUILayout.Label("Replace By:");
@@ -47,7 +47,7 @@ namespace I2.Loc
 				mKeyToExplore = GUILayout.TextField(mKeyToExplore, EditorStyles.toolbarTextField, GUILayout.ExpandWidth(true));
 				if (GUILayout.Button("Create", "toolbarbutton", GUILayout.Width(60)))
 				{
-					LanguageSource.ValidateFullTerm( ref mKeyToExplore );
+					LanguageSourceData.ValidateFullTerm( ref mKeyToExplore );
 					EditorApplication.update += ReplaceSelectedTerms;
 				}
 			GUILayout.EndHorizontal();
@@ -127,9 +127,9 @@ namespace I2.Loc
 			DoParseTermsInCurrentScene();
 
 			//--[ Update Selected Categories ]-------------
-			string mNewCategory = LanguageSource.GetCategoryFromFullTerm(sNewKey);
+			string mNewCategory = LanguageSourceData.GetCategoryFromFullTerm(sNewKey);
 			if (mNewCategory == string.Empty)
-				mNewCategory = LanguageSource.EmptyCategory;
+				mNewCategory = LanguageSourceData.EmptyCategory;
 			if (!mSelectedCategories.Contains(mNewCategory))
 				mSelectedCategories.Add (mNewCategory);
 			//RemoveUnusedCategoriesFromSelected();

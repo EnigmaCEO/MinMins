@@ -28,6 +28,7 @@ namespace I2.Loc
 
             if (string.IsNullOrEmpty(mCurrentLanguage) || Sources.Count == 0)
             {
+                AutoLoadGlobalParamManagers();
                 UpdateSources();
                 SelectStartupLanguage();
             }
@@ -35,7 +36,7 @@ namespace I2.Loc
 
         public static string GetVersion()
 		{
-			return "2.8.7 f1";
+			return "2.8.13 f2";
 		}
 
 		public static int GetRequiredWebServiceVersion()
@@ -43,7 +44,7 @@ namespace I2.Loc
 			return 5;
 		}
 
-		public static string GetWebServiceURL( LanguageSource source = null )
+		public static string GetWebServiceURL( LanguageSourceData source = null )
 		{
 			if (source != null && !string.IsNullOrEmpty(source.Google_WebServiceURL))
 				return source.Google_WebServiceURL;

@@ -30,6 +30,8 @@ namespace I2.Loc
             secondaryTerm = (mTarget.font != null ? mTarget.font.name : string.Empty);
         }
 
+
+
         public override void DoLocalize(Localize cmp, string mainTranslation, string secondaryTranslation)
         {
             {
@@ -38,8 +40,7 @@ namespace I2.Loc
 
                 if (newFont != null)
                 {
-                    if (mTarget.font != newFont)
-                        mTarget.font = newFont;
+                    LocalizeTarget_TextMeshPro_Label.SetFont(mTarget, newFont);
                 }
                 else
                 {
@@ -51,9 +52,9 @@ namespace I2.Loc
                         {
                             newFont = LocalizeTarget_TextMeshPro_Label.GetTMPFontFromMaterial(cmp, secondaryTranslation.EndsWith(newMat.name, StringComparison.Ordinal) ? secondaryTranslation : newMat.name);
                             if (newFont != null)
-                                mTarget.font = newFont;
+                                LocalizeTarget_TextMeshPro_Label.SetFont(mTarget, newFont);
                         }
-                        mTarget.fontSharedMaterial = newMat;
+                        LocalizeTarget_TextMeshPro_Label.SetMaterial( mTarget, newMat );
                     }
                 }
             }

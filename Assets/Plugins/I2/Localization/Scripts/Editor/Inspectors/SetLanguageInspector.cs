@@ -18,8 +18,8 @@ namespace I2.Loc
 		public override void OnInspectorGUI()
 		{
 			string[] Languages;
-			LanguageSource source = setLan.mSource;
-			if (source==null)
+			LanguageSource sourceObj = setLan.mSource;
+			if (sourceObj == null)
 			{
 				LocalizationManager.UpdateSources();
 				Languages = LocalizationManager.GetAllLanguages().ToArray();
@@ -27,11 +27,11 @@ namespace I2.Loc
 			}
 			else
 			{
-				Languages = source.GetLanguages().ToArray();
+				Languages = sourceObj.mSource.GetLanguages().ToArray();
 				System.Array.Sort(Languages);
 			}
 
-			int index = System.Array.IndexOf(Languages, mProp_Language.stringValue);
+            int index = System.Array.IndexOf(Languages, mProp_Language.stringValue);
 
 			GUI.changed = false;
 			index = EditorGUILayout.Popup("Language", index, Languages);
@@ -47,11 +47,11 @@ namespace I2.Loc
 
 			GUILayout.Space(5);
 			if (setLan.mSource==null) GUI.contentColor = Color.Lerp (Color.gray, Color.yellow, 0.1f);
-			source = EditorGUILayout.ObjectField("Language Source:", source, typeof(LanguageSource), true) as LanguageSource;
+			sourceObj = EditorGUILayout.ObjectField("Language Source:", sourceObj, typeof(LanguageSource), true) as LanguageSource;
 			GUI.contentColor = Color.white;
 
 			if (GUI.changed)
-				setLan.mSource = source;
+				setLan.mSource = sourceObj;
 
 			serializedObject.ApplyModifiedProperties();
 		}

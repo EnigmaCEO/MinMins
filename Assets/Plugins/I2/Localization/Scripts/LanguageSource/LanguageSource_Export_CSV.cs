@@ -3,7 +3,7 @@ using System.Text;
 
 namespace I2.Loc
 {
-	public partial class LanguageSource
+	public partial class LanguageSourceData
 	{
 		#region I2CSV format
 
@@ -21,6 +21,8 @@ namespace I2.Loc
 				Builder.Append ( GoogleLanguages.GetCodedLanguage(langData.Name, langData.Code) );
 			}
 			Builder.Append ("[ln]");
+			
+			mTerms.Sort((a, b) => string.CompareOrdinal(a.Term, b.Term));
 
 			int nLanguages = (mLanguages.Count);
 			bool firstLine = true;

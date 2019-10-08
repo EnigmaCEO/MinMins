@@ -12,7 +12,9 @@ namespace I2.Loc
 
 	public static partial class GoogleTranslation
 	{
-		public static bool CanTranslate ()
+        public delegate void fnOnTranslated(string Translation, string Error);
+
+        public static bool CanTranslate ()
 		{
 			return (LocalizationManager.Sources.Count > 0 && 
 					!string.IsNullOrEmpty (LocalizationManager.GetWebServiceURL()));
@@ -22,7 +24,7 @@ namespace I2.Loc
         // LanguageCodeFrom can be "auto"
         // After the translation is returned from Google, it will call OnTranslationReady(TranslationResult, ErrorMsg)
         // TranslationResult will be null if translation failed
-        public static void Translate( string text, string LanguageCodeFrom, string LanguageCodeTo, Action<string, string> OnTranslationReady )
+        public static void Translate( string text, string LanguageCodeFrom, string LanguageCodeTo, fnOnTranslated OnTranslationReady )
 		{
             LocalizationManager.InitializeIfNeeded();
             if (!GoogleTranslation.CanTranslate())

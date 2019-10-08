@@ -12,7 +12,7 @@ namespace I2.Loc
 
         #region Variables: Misc
 
-        public static List<LanguageSource> Sources = new List<LanguageSource>();
+        public static List<LanguageSourceData> Sources = new List<LanguageSourceData>();
         public static string[] GlobalSources = { "I2Languages" };
 
         #endregion
@@ -38,10 +38,12 @@ namespace I2.Loc
 		static void RegisterSceneSources()
 		{
 			LanguageSource[] sceneSources = (LanguageSource[])Resources.FindObjectsOfTypeAll( typeof(LanguageSource) );
-			for (int i=0, imax=sceneSources.Length; i<imax; ++i)
-				if (!Sources.Contains(sceneSources[i]))
+            foreach (LanguageSource source in sceneSources)
+				if (!Sources.Contains(source.mSource))
 				{
-					AddSource( sceneSources[i] );
+                    if (source.mSource.owner == null)
+                        source.mSource.owner = source;
+                    AddSource( source.mSource );
 				}
 		}		
 
@@ -50,25 +52,26 @@ namespace I2.Loc
 			// Find the Source that its on the Resources Folder
 			foreach (string SourceName in GlobalSources)
 			{
-				GameObject Prefab = (ResourceManager.pInstance.GetAsset<GameObject>(SourceName));
-				LanguageSource GlobalSource = (Prefab ? Prefab.GetComponent<LanguageSource>() : null);
+				LanguageSourceAsset sourceAsset = (ResourceManager.pInstance.GetAsset<LanguageSourceAsset>(SourceName));
 				
-				if (GlobalSource && !Sources.Contains(GlobalSource))
+				if (sourceAsset && !Sources.Contains(sourceAsset.mSource))
                 {
-                    GlobalSource.mIsGlobalSource = true;
-                    AddSource(GlobalSource);
+                    if (!sourceAsset.mSource.mIsGlobalSource)
+                        sourceAsset.mSource.mIsGlobalSource = true;
+                    sourceAsset.mSource.owner = sourceAsset;
+                    AddSource(sourceAsset.mSource);
                 }
             }
 		}		
 
-		internal static void AddSource ( LanguageSource Source )
+		internal static void AddSource ( LanguageSourceData Source )
 		{
 			if (Sources.Contains (Source))
 				return;
 
             Sources.Add( Source );
 
-			if (Source.HasGoogleSpreadsheet() && Source.GoogleUpdateFrequency != LanguageSource.eGoogleUpdateFrequency.Never)
+			if (Source.HasGoogleSpreadsheet() && Source.GoogleUpdateFrequency != LanguageSourceData.eGoogleUpdateFrequency.Never)
 			{
                 #if !UNITY_EDITOR
                     Source.Import_Google_FromCache();
@@ -92,13 +95,16 @@ namespace I2.Loc
 				Source.UpdateDictionary(true);
 		}
 
-		static IEnumerator Delayed_Import_Google ( LanguageSource source, float delay, bool justCheck )
+		static IEnumerator Delayed_Import_Google ( LanguageSourceData source, float delay, bool justCheck )
 		{
 			yield return new WaitForSeconds( delay );
-			source.Import_Google(false, justCheck);
+            if (source != null) // handle cases where the source is already deleted
+            {
+                source.Import_Google(false, justCheck);
+            }
 		}
 
-		internal static void RemoveSource (LanguageSource Source )
+		internal static void RemoveSource (LanguageSourceData Source )
 		{
 			//Debug.Log ("RemoveSource " + Source+" " + Source.GetInstanceID());
 			Sources.Remove( Source );
@@ -109,7 +115,7 @@ namespace I2.Loc
 			return System.Array.IndexOf(GlobalSources, SourceName)>=0;
 		}
 
-		public static LanguageSource GetSourceContaining( string term, bool fallbackToFirst = true )
+		public static LanguageSourceData GetSourceContaining( string term, bool fallbackToFirst = true )
 		{
 			if (!string.IsNullOrEmpty(term))
 			{
@@ -134,7 +140,15 @@ namespace I2.Loc
 			return null;
 		}
 
+        public static void ApplyDownloadedDataFromGoogle()
+        {
+            for (int i = 0, imax = Sources.Count; i < imax; ++i)
+            {
+                Sources[i].ApplyDownloadedDataFromGoogle();
+            }
+        }
+
         #endregion
 
- 	}
+    }
 }

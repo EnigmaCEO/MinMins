@@ -115,7 +115,7 @@ namespace I2.Loc
             {
 			    serializedObject.ApplyModifiedProperties();
                 foreach (var obj in serializedObject.targetObjects)
-                    (obj as LanguageSource).UpdateAssetDictionary();
+                    (obj as LanguageSource).mSource.UpdateAssetDictionary();
             }
         }	
 
@@ -173,35 +173,6 @@ namespace I2.Loc
 			else
 				if (!IsEnabled && WasEnabled)
 					Selections.Remove(Element);
-		}
-
-		static bool RemoveResourcesPath( ref string sPath )
-		{
-			int Ind1 = sPath.IndexOf("\\Resources\\");
-			int Ind2 = sPath.IndexOf("\\Resources/");
-			int Ind3 = sPath.IndexOf("/Resources\\");
-			int Ind4 = sPath.IndexOf("/Resources/");
-			int Index = Mathf.Max (Ind1, Ind2, Ind3, Ind4);
-			bool IsResource = false;
-			if (Index>=0)
-			{
-				sPath = sPath.Substring(Index+11);
-				IsResource = true;
-			}
-			else
-			{
-				// If its not in the Resources, then it has to be in the References
-				// Therefore, the path has to be stripped and let only the name
-				Index = sPath.LastIndexOfAny(LanguageSource.CategorySeparators);
-				if (Index>0)
-					sPath = sPath.Substring(Index+1);
-			}
-
-			string Extension = System.IO.Path.GetExtension(sPath);
-			if (!string.IsNullOrEmpty(Extension))
-				sPath = sPath.Substring(0, sPath.Length-Extension.Length);
-
-			return IsResource;
 		}
 
         static bool InTestAction( eTest_ActionType testType )

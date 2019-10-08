@@ -13,7 +13,7 @@ namespace I2.Loc
 		void Start ()
 		{
 			UIPopupList mList = GetComponent<UIPopupList>();
-			mList.items = Source.GetLanguages();
+			mList.items = Source.mSource.GetLanguages();
 
 			EventDelegate.Add(mList.onChange, OnValueChange);
 			int idx = mList.items.IndexOf(LocalizationManager.CurrentLanguage);
