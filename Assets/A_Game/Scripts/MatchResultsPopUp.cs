@@ -75,15 +75,21 @@ public class MatchResultsPopUp : MonoBehaviour
         Dictionary<int, int> boxTiersWithAmountRewards = matchLocalData.BoxTiersWithAmountsRewards;
         GameObject rewardGridItemTemplate = _rewardsGridContent.GetChild(0).gameObject;
 
-        foreach (KeyValuePair<int, int> tiersWithAmount in boxTiersWithAmountRewards)
+        GameInventory gameInventory = GameInventory.Instance;
+
+        foreach (KeyValuePair<int, int> amountByTier in boxTiersWithAmountRewards)
         {
-            int count = tiersWithAmount.Value;
+            int count = amountByTier.Value;
             for (int i = 0; i < count; i++)
             {
                 GameObject reward = Instantiate<GameObject>(rewardGridItemTemplate, _rewardsGridContent);
-                reward.GetComponent<RewardGridItem>().SetUp(tiersWithAmount.Key);
+                reward.GetComponent<RewardGridItem>().SetUp(amountByTier.Key);
+
+                gameInventory.ChangeLootBoxAmount(amountByTier.Value, amountByTier.Key, true, false);
             }
         }
+
+        gameInventory.SaveLootBoxes();
 
         rewardGridItemTemplate.SetActive(false);
     }

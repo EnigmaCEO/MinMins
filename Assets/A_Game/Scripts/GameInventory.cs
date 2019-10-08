@@ -155,7 +155,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         InventoryManager.Instance.UpdateItem(GroupNames.LOOT_BOXES, tier.ToString(), newtierLootBoxesAmount);
 
         if (shouldSave)
-            saveLootBoxes();
+            SaveLootBoxes();
     }
 
     public List<string> OpenLootBox(int boxTier)
@@ -236,6 +236,25 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         InventoryManager inventoryManager = InventoryManager.Instance;
         foreach (string unitName in inventoryManager.GetGroupKeys(GroupNames.UNITS))
             saveUnit(unitName, false);
+
+        saveHashTableToFile();
+    }
+
+    public void SaveLootBoxes()
+    {
+        InventoryManager inventoryManager = InventoryManager.Instance;
+        foreach (string tier in inventoryManager.GetGroupKeys(GroupNames.LOOT_BOXES))
+        {
+            int tierAmount = InventoryManager.Instance.GetItem<int>(GroupNames.LOOT_BOXES, tier);
+            string hashKey = GroupNames.LOOT_BOXES + _parseSeparator + tier;
+
+            print("SaveLootBoxes -> hashKey: " + hashKey + " -> tierAmount: " + tierAmount.ToString());
+
+            if (_saveHashTable.ContainsKey(hashKey))
+                _saveHashTable.Remove(hashKey);
+
+            _saveHashTable.Add(hashKey, tierAmount);
+        }
 
         saveHashTableToFile();
     }
@@ -321,13 +340,16 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         InventoryManager inventoryManager = InventoryManager.Instance;
         inventoryManager.ClearAllGroups();
 
+        //Set default values ========================================================================
         inventoryManager.AddItem(GroupNames.STATS, ItemKeys.SINGLE_PLAYER_LEVEL, 1);
 
         for(int tier = 1; tier <= _lootBoxTiersAmount; tier++)
             inventoryManager.AddItem(GroupNames.LOOT_BOXES, tier.ToString(), 0);
+        //===========================================================================================
 
-        bool isThereAnyUnit = false;
-        bool isThereAnyLootBox = false;
+        //bool isThereAnyUnit = false;
+        //bool isThereAnyLootBox = false;
+
 
         foreach (DictionaryEntry entry in _saveHashTable)
         {
@@ -341,7 +363,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
                 //print("LoadData -> groupName: " + groupName + " -> unitName: " + unitName + " -> unit exp: " + unitExp.ToString());
                 inventoryManager.AddItem(groupName, unitName, unitExp);
 
-                isThereAnyUnit = true;
+                //isThereAnyUnit = true;
             }
             else if (groupName == GroupNames.LOOT_BOXES)
             {
@@ -350,7 +372,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
                 //print("LoadData -> box tier: " + tier + " amount: " + tierAmount);
                 inventoryManager.UpdateItem(GroupNames.LOOT_BOXES, tier.ToString(), tierAmount, false);
 
-                isThereAnyLootBox = true;
+                //isThereAnyLootBox = true;
             }
             else if (groupName == GroupNames.STATS)
             {
@@ -359,11 +381,11 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
             }
         }
 
-        if (!isThereAnyUnit && !isThereAnyLootBox)
-        {
-            inventoryManager.UpdateItem(GroupNames.LOOT_BOXES, Tiers.BRONZE.ToString(), _initialBronzeLootBoxes, false);
-            saveLootBoxes();
-        }
+        //if (!isThereAnyUnit && !isThereAnyLootBox)
+        //{
+        //    inventoryManager.UpdateItem(GroupNames.LOOT_BOXES, Tiers.BRONZE.ToString(), _initialBronzeLootBoxes, false);
+        //    saveLootBoxes();
+        //}
     }
 
     //private void saveRating()
@@ -377,29 +399,13 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
     private void saveSinglePlayerLevelNumber()
     {
-        if (_saveHashTable.ContainsKey(ItemKeys.SINGLE_PLAYER_LEVEL))
-            _saveHashTable.Remove(ItemKeys.SINGLE_PLAYER_LEVEL);
+        int level = InventoryManager.Instance.GetItem<int>(GroupNames.STATS, ItemKeys.SINGLE_PLAYER_LEVEL);
+        string hashKey = GroupNames.STATS + _parseSeparator + ItemKeys.SINGLE_PLAYER_LEVEL;
 
-        _saveHashTable.Add(ItemKeys.SINGLE_PLAYER_LEVEL, GetSinglePlayerLevel());
-        saveHashTableToFile();
-    }
+        if (_saveHashTable.ContainsKey(hashKey))
+            _saveHashTable.Remove(hashKey);
 
-    private void saveLootBoxes()
-    {
-        InventoryManager inventoryManager = InventoryManager.Instance;
-        foreach (string tier in inventoryManager.GetGroupKeys(GroupNames.LOOT_BOXES))
-        {
-            int tierAmount = InventoryManager.Instance.GetItem<int>(GroupNames.LOOT_BOXES, tier);
-            string hashKey = GroupNames.LOOT_BOXES + _parseSeparator + tier;
-
-            print("SaveLootBoxes -> hashKey: " + hashKey + " -> tierAmount: " + tierAmount.ToString());
-
-            if (_saveHashTable.ContainsKey(hashKey))
-                _saveHashTable.Remove(hashKey);
-
-            _saveHashTable.Add(hashKey, tierAmount);
-        }
-
+        _saveHashTable.Add(hashKey, GetSinglePlayerLevel());
         saveHashTableToFile();
     }
 

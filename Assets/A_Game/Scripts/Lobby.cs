@@ -24,8 +24,10 @@ public class Lobby : NetworkEntity
         GameStats.Instance.UsesAiForPvp = false;
     }
 
-    void Update()
+    override protected void Update()
     {
+        base.Update();
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             NetworkManager.LeaveLobby();
@@ -35,6 +37,7 @@ public class Lobby : NetworkEntity
 
     private void OnDestroy()
     {
+        Debug.LogWarning("Lobby::OnDestroy");
         removeDelegates();
     }
 
@@ -77,11 +80,13 @@ public class Lobby : NetworkEntity
 
     private void onJoinedRoom()
     {
-        print("Lobby::OnJoinedRoom -> Is Master Client: " + NetworkManager.GetIsMasterClient());
+        Debug.LogWarning("Lobby::OnJoinedRoom -> Is Master Client: " + NetworkManager.GetIsMasterClient());
+        GameNetwork gameNetwork = GameNetwork.Instance;
+
         if (NetworkManager.GetIsMasterClient())
         {
-            print("Lobby::OnJoinedRoom -> room.CustomProperties: " + NetworkManager.GetRoom().CustomProperties.ToStringFull());
-            GameNetwork.Instance.HostPlayerId = NetworkManager.GetLocalPlayerId();
+            //print("Lobby::OnJoinedRoom -> room.CustomProperties: " + NetworkManager.GetRoom().CustomProperties.ToStringFull());
+            gameNetwork.HostPlayerId = NetworkManager.GetLocalPlayerId();
             NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.HOST_ID, GameNetwork.Instance.HostPlayerId);
 
             _waitingPopUp.SetActive(true);
@@ -89,17 +94,21 @@ public class Lobby : NetworkEntity
         }
         else
         {
-            GameNetwork.Instance.GuestPlayerId = NetworkManager.GetLocalPlayerId();
-            GameNetwork.Instance.HostPlayerId = NetworkManager.GetRoomCustomPropertyAsInt(GameNetwork.RoomCustomProperties.HOST_ID);
+            gameNetwork.GuestPlayerId = NetworkManager.GetLocalPlayerId();
+            gameNetwork.HostPlayerId = NetworkManager.GetRoomCustomPropertyAsInt(GameNetwork.RoomCustomProperties.HOST_ID);
             GameNetwork.SetLocalPlayerRating(GameStats.Instance.Rating, GameNetwork.TeamNames.GUEST);
             NetworkManager.GetRoom().IsOpen = false;
         }
+
+        Debug.LogWarning("Lobby::OnJoinedRoom -> HostPlayerId: " + gameNetwork.HostPlayerId + " GuestPlayerId: " + gameNetwork.GuestPlayerId);
     }
 
     private void onPlayerConnected(int networkPlayerId)
     {
-        print("Lobby::onPlayerConnected");
+        print("Lobby::onPlayerConnected -> networkPlayerId " + networkPlayerId);
+        GameNetwork gameNetwork = GameNetwork.Instance;
         GameNetwork.Instance.GuestPlayerId = networkPlayerId;
+        Debug.LogWarning("Lobby::onPlayerConnected -> HostPlayerId: " + gameNetwork.HostPlayerId + " GuestPlayerId: " + gameNetwork.GuestPlayerId);
         StopCoroutine(handleWaitForAiRival());
         sendStartMatch();
     }

@@ -105,7 +105,7 @@ public class ActionArea : NetworkEntity
 
     virtual protected void OnTriggerEnter2D(Collider2D coll)
     {
-        //Debug.LogWarning("ActionArea::OnTriggerEnter2D: " + coll.name + " collided with " + this.name);
+        Debug.LogWarning("ActionArea::OnTriggerEnter2D: " + coll.name + " collided with " + this.name);
     }
 
     protected void checkFieldRewardBoxHit(Collider2D coll)
@@ -143,7 +143,7 @@ public class ActionArea : NetworkEntity
         //print("ActionArea virtual player Id: " + VirtualPlayerId);
         //print("Target Unit virtual player Id: " + oppositeTeam);
 
-        int targetUnitPlayerId = (targetUnitTeam == GameNetwork.TeamNames.HOST) ? NetworkManager.GetLocalPlayerId() : GameNetwork.Instance.GuestPlayerId;
+        int targetUnitPlayerId = GameNetwork.GetTeamNetworkPlayerId(targetUnitTeam); 
 
         int targetUnitHealth = GameNetwork.GetUnitRoomPropertyAsInt(GameNetwork.UnitRoomProperties.HEALTH, targetUnitTeam, targetUnitName);
         int targetUnitDefense = GameNetwork.GetAnyPlayerUnitPropertyAsInt(GameNetwork.UnitPlayerProperties.DEFENSE, targetUnitName, targetUnitTeam, targetUnitPlayerId);
@@ -151,12 +151,14 @@ public class ActionArea : NetworkEntity
         int finalDefense = targetUnitDefense + targetUnitSpecialDefense;
         int maxDefense = GameConfig.Instance.MaxUnitDefense;
 
-        //Debug.LogWarning("ActionArea::OnTriggerEnter2D -> targetUnitName: " + targetUnitName + " targetUnitDefense: " + targetUnitDefense + " targetUnitSpecialDefense: " + targetUnitSpecialDefense + " finalDefense uncapped: " + finalDefense);
+        Debug.LogWarning("ActionArea::dealDamage -> targetUnitName: " + targetUnitName + " targetUnitDefense: " + targetUnitDefense + " targetUnitSpecialDefense: " + targetUnitSpecialDefense + " finalDefense uncapped: " + finalDefense);
 
         if (finalDefense > maxDefense)
             finalDefense = maxDefense;
 
         int finalDamage = Mathf.FloorToInt((float)damage * (float)(1 - (finalDefense / 100.0f)));  //Defense is translated into damage reduction
+        if (finalDamage == 0)
+            finalDamage = 1;
 
         int damageDealt = GameNetwork.GetTeamRoomPropertyAsInt(GameNetwork.TeamRoomProperties.DAMAGE_DEALT, OwnerTeamName);
         GameNetwork.SetTeamRoomProperty(GameNetwork.TeamRoomProperties.DAMAGE_DEALT, OwnerTeamName, (damageDealt + finalDamage).ToString());
@@ -164,7 +166,7 @@ public class ActionArea : NetworkEntity
         int damageReceived = GameNetwork.GetTeamRoomPropertyAsInt(GameNetwork.TeamRoomProperties.DAMAGE_RECEIVED, targetUnitTeam);
         GameNetwork.SetTeamRoomProperty(GameNetwork.TeamRoomProperties.DAMAGE_RECEIVED, targetUnitTeam, (damageReceived + finalDamage).ToString());
         
-        //Debug.LogWarning("ActionArea::OnTriggerEnter2D -> finalDefense: " + finalDefense + " damage: " + damage + " finalDamage: " + finalDamageString);
+        Debug.LogWarning("ActionArea::dealDamage -> finalDefense: " + finalDefense + " damage: " + damage + " finalDamage: " + finalDamage.ToString());
 
         targetUnitHealth -= finalDamage;  
         if (targetUnitHealth < 0)

@@ -70,7 +70,7 @@ public class GameStore : MonoBehaviour
             }
 
             int boxTier = boxTierIndex + 1;
-            grantBox(boxTier);
+            grantBox(boxTier, 1);
             _buyResultPopUp.Open("Thanks for your Purchase!");
         }
         else
@@ -116,7 +116,7 @@ public class GameStore : MonoBehaviour
         GameInventory gameInventory = GameInventory.Instance;
         if (!gameInventory.HasEnoughUnitsForBattle() && !gameInventory.HasAnyLootBox())
         {
-            grantBox(GameInventory.Tiers.BRONZE);
+            grantBox(GameInventory.Tiers.BRONZE, 2);
             _extraLootBoxPopUp.SetActive(true);
         }
     }
@@ -166,9 +166,9 @@ public class GameStore : MonoBehaviour
         _lootBoxBuyConfirmPopUp.Close();
     }
 
-    private void grantBox(int lootBoxTier)
+    private void grantBox(int lootBoxTier, int amount)
     {
-        GameInventory.Instance.ChangeLootBoxAmount(1, lootBoxTier, true, true);
+        GameInventory.Instance.ChangeLootBoxAmount(amount, lootBoxTier, true, true);
         refreshLootBoxesGrid();
     }
 

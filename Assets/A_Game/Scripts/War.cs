@@ -148,6 +148,7 @@ public class War : NetworkEntity
 
     private void OnDestroy()
     {
+        Debug.LogWarning("War::OnDestroy");
         NetworkManager.OnJoinedRoomCallback -= onJoinedRoom;
 
         GameNetwork.OnPlayerTeamUnitsSetCallback -= onPlayerTeamUnitsSet;

@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameNetwork : SingletonNetworkEntity<GameNetwork>
+public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 {
     public const string TRANSACTION_GAME_NAME = "MinMins";
 
@@ -153,21 +153,23 @@ public class GameNetwork : SingletonNetworkEntity<GameNetwork>
 
     private Hashtable _matchResultshashTable = new Hashtable();
 
-    override protected void Awake()
+
+    /*override protected*/ void Awake()
     {
-        base.Awake();
+        //base.Awake();
 
         NetworkManager.OnPlayerCustomPropertiesChangedCallback += OnPlayerCustomPropertiesChanged;
         NetworkManager.OnRoomCustomPropertiesChangedCallback += OnRoomCustomPropertiesChanged;
     }
 
-    private void Start()
-    {
-        base.setNetworkViewId(1001);
-    }
+    //private void Start()
+    //{
+    //    base.setNetworkViewId(1001);
+    //}
 
     private void OnDestroy()
     {
+        Debug.LogWarning("GameNetwork::OnDestroy");
         NetworkManager.OnPlayerCustomPropertiesChangedCallback -= OnPlayerCustomPropertiesChanged;
         NetworkManager.OnRoomCustomPropertiesChangedCallback -= OnRoomCustomPropertiesChanged;
     }
@@ -196,7 +198,7 @@ public class GameNetwork : SingletonNetworkEntity<GameNetwork>
     { 
         int networkPlayerId = (teamName == TeamNames.HOST)? GameNetwork.Instance.HostPlayerId : GameNetwork.Instance.GuestPlayerId;
 
-        //Debug.LogWarning("GameNetwork::GetTeamNetworkPlayerId -> teamName: " + teamName + " networkPlayerId: " + networkPlayerId);
+        Debug.LogWarning("GameNetwork::GetTeamNetworkPlayerId -> teamName: " + teamName + " networkPlayerId: " + networkPlayerId);
 
         return networkPlayerId;
     }

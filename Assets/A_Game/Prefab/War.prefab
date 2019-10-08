@@ -44,7 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29cd9237fc5c7d641aa0d4b30acfbcbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _readyOnSceneCheckDelay: 1
   Ready: 1
   _battleFieldRightSideOffset: 0
   _actionAreaPosZ: -0.1
