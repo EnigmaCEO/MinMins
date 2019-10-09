@@ -9,12 +9,12 @@ public class LevelGridItem : MonoBehaviour
     public Button FightButton;
 
     [SerializeField] private Text _label;
-    [SerializeField] private Text _labelShadow;
+    //[SerializeField] private Text _labelShadow;
 
     public void SetLabel(string text)
     {
         _label.text = text;
-        _labelShadow.text = text;
+        //_labelShadow.text = text;
     }
 
     public void OnFightButtonDown()

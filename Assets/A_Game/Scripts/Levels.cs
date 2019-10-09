@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Levels : MonoBehaviour
+public class Levels : EnigmaScene
 {
     [SerializeField] private Transform _levelsGridContent;
     [SerializeField] GameObject _notEnoughUnitsPopUp;
@@ -22,7 +22,8 @@ public class Levels : MonoBehaviour
             levelsLenght = GameInventory.Instance.GetSinglePlayerLevel();
         else if (GameStats.Instance.Mode == GameStats.Modes.Pvp)
             levelsLenght = GameNetwork.Instance.GetLocalPlayerPvpLevelNumber();
-            
+        Debug.Log("Inventory: " + levelsLenght);
+
         for (int i = 0; i < levelsLenght; i++)
         {
             GameObject levelGameObject = Instantiate<GameObject>(levelGridItemTemplate, _levelsGridContent);
@@ -35,6 +36,7 @@ public class Levels : MonoBehaviour
         }
 
         levelGridItemTemplate.SetActive(false);
+        GameObject.Find("LevelsGrid").GetComponent<ScrollRect>().horizontalNormalizedPosition = 0;
     }
 
     private void onLevelFightButtonDown(int levelNumber)
