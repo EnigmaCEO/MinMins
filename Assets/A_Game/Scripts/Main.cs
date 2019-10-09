@@ -20,11 +20,6 @@ public class Main : EnigmaScene
 
     public void Init()
     {
-        LocalizationManager.Instance.ChangeLanguage(LocalizationManager.Languages.Spanish);  // Hack to test spanish
-        string currentLanguage = LocalizationManager.Instance.GetLanguage();
-        Debug.LogWarning("Main::Init -> currentLanguage: " + currentLanguage);
-        LocalizationManager.Instance.TranslateAllTextsInScene();
-
         bool loggedIn = NetworkManager.LoggedIn;
 
         _loginButton.gameObject.SetActive(!loggedIn);

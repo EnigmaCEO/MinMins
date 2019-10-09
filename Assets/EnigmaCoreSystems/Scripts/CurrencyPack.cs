@@ -25,7 +25,7 @@ public class CurrencyPack : MonoBehaviour
 
     public void SetLocalizeTerm(string term)
     {
-        LocalizationManager.Instance.TranslateText(_descriptionText, term);
+        LocalizationManager.TranslateText(_descriptionText, term);
     }
 
     public string GetDescription()
@@ -66,6 +66,6 @@ public class CurrencyPack : MonoBehaviour
 
     public void SetDealDescriptionTerm(string description)
     {
-        LocalizationManager.Instance.TranslateText(_dealDescriptionText, description);
+        LocalizationManager.TranslateText(_dealDescriptionText, description);
     }
 }

@@ -17,6 +17,23 @@ MonoBehaviour:
     UserAgreesToHaveItInsideThePluginsFolder: 0
     GoogleLiveSyncIsUptoDate: 1
     mTerms:
+    - Term: Waiting for Opponent...
+      TermType: 0
+      Description: 
+      Languages:
+      - Waiting for Opponent...
+      - Esperando Oponente...
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Not enough units to go into battle. Let's go to the Inventory to get some!
+      TermType: 0
+      Description: 
+      Languages:
+      - Not enough units to go into battle. Let's go to the Inventory to get some!
+      - "No hay suficientes unidades para ir a la batalla. \xA1Vamos al Inventario
+        para conseguir algunas!"
+      Flags: 0000
+      Languages_Touch: []
     - Term: New user
       TermType: 0
       Description: 
@@ -158,7 +175,7 @@ MonoBehaviour:
       Description: 
       Languages:
       - Username
-      - Nombre de usuario
+      - Usuario
       Flags: 0000
       Languages_Touch: []
     - Term: WrongPassword
@@ -584,7 +601,7 @@ MonoBehaviour:
     Google_WebServiceURL: https://script.google.com/macros/s/AKfycbw05ISkGCPtIS0hMzFD5jshgfH09mIP6BAxRKhWsA/exec
     Google_SpreadsheetKey: 1iIWCtExuyR2XXyYkJv6y83PTVMPC4FxzSITGGroefcg
     Google_SpreadsheetName: I2Loc MinMins Localization
-    Google_LastUpdatedVersion: 1570576242590
+    Google_LastUpdatedVersion: 1570581307232
     Google_Password: shalwend
     GoogleUpdateFrequency: 3
     GoogleInEditorCheckFrequency: 2

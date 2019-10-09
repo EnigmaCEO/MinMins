@@ -502,10 +502,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1870440656}
-    - target: {fileID: 1231107842573270915, guid: 40934c213103dc448bcb0effad9a4a44,
+    - target: {fileID: 1231107842948482567, guid: 40934c213103dc448bcb0effad9a4a44,
         type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnNotEnoughUnitsPopUpDismissButtonDown
+      propertyPath: m_FontData.m_Alignment
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 40934c213103dc448bcb0effad9a4a44, type: 3}
@@ -999,7 +999,7 @@ PrefabInstance:
     - target: {fileID: 114358418755427752, guid: d1ba8daa3f95bdd4894e096bcadb5f57,
         type: 3}
       propertyPath: _localizationManager
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114358418755427752, guid: d1ba8daa3f95bdd4894e096bcadb5f57,
         type: 3}
@@ -1340,7 +1340,7 @@ PrefabInstance:
     - target: {fileID: 3097089673593597773, guid: d574c84e3c192a84ca40feb1564d5cf5,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.0000121593475
+      value: 0.000073194504
       objectReference: {fileID: 0}
     - target: {fileID: 3097196227585360663, guid: d574c84e3c192a84ca40feb1564d5cf5,
         type: 3}

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class LocalizationManager : MonoBehaviour
@@ -21,10 +22,22 @@ public class LocalizationManager : MonoBehaviour
         Instance = this;
 
         load();
+
+        ChangeLanguage(Languages.Spanish);  //Language hack 
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded += onSceneLoaded;
+    }
+
+    private void OnDestroy()
+    {
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded -= onSceneLoaded;
+    }
+
+    private void onSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
         TranslateAllTextsInScene();
     }
 
-    public string GetTranslationTerm(Text text)
+    static public string GetTranslationTerm(Text text)
     {
         string term = "";
 
@@ -35,7 +48,7 @@ public class LocalizationManager : MonoBehaviour
         return term;
     }
 
-    public void TranslateAllTextsInScene()
+    static public void TranslateAllTextsInScene()
     {
         Text[] labels = GameObject.FindObjectsOfType<Text>();
         foreach (Text label in labels)
@@ -43,14 +56,14 @@ public class LocalizationManager : MonoBehaviour
     }
 
     //This overload will use label text as term if label has no Localize Component, and will do nothing if it already has it. 
-    public void TranslateText(Text label)
+    static public void TranslateText(Text label)
     {
         if(label.GetComponent<Localize>() == null)
             TranslateText(label, label.text);
     }
 
     //This will use or add a localize component, and set term into the component so label text is translated.  An empty term will empty the string, and remove localize, as it will ignore an empty term.
-    public void TranslateText(Text label, string term)
+    static public void TranslateText(Text label, string term)
     {
         Localize localize = label.GetComponent<Localize>();
 
@@ -70,27 +83,27 @@ public class LocalizationManager : MonoBehaviour
         }
     }
 
-    public void Save()
+    static public void Save()
     {
         PlayerPrefs.SetString("Language", I2.Loc.LocalizationManager.CurrentLanguage);
     }
 
-    public string GetLanguage()
+    static public string GetLanguage()
     {
         return I2.Loc.LocalizationManager.CurrentLanguage;
     }
 
-    public void ChangeLanguage(string language)
+    static public void ChangeLanguage(string language)
     {
         I2.Loc.LocalizationManager.CurrentLanguage = language;
     }
 
-    public void ChangeLanguage(Languages language)
+    static public void ChangeLanguage(Languages language)
     {
         ChangeLanguage(language.ToString());
     }
 
-    private void load()
+    static private void load()
     {
         string language = Languages.English.ToString();
 

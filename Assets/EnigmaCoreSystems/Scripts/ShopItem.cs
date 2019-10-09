@@ -1,5 +1,4 @@
-﻿using I2.Loc;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class ShopItem : MonoBehaviour
@@ -59,7 +58,7 @@ public class ShopItem : MonoBehaviour
 
     public void SetDealDescriptionTerm(string term)
     {
-        LocalizationManager.Instance.TranslateText(_dealDescriptionText, term);
+        LocalizationManager.TranslateText(_dealDescriptionText, term);
     }
 
     //public void SetDealDescriptionText(string text)

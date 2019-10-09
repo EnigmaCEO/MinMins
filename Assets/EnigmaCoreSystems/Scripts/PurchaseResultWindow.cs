@@ -23,7 +23,7 @@ public class PurchaseResultWindow : MonoBehaviour
         _freeCoinsButton.gameObject.SetActive((localizationTerm == "NotEnoughCurrency") || (localizationTerm == "PurchaseFailed"));
 #endif
 
-        LocalizationManager.Instance.TranslateText(_messageText, localizationTerm);
+        LocalizationManager.TranslateText(_messageText, localizationTerm);
         gameObject.SetActive(true);
     }
 
