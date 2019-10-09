@@ -149,6 +149,12 @@ public class GameStore : MonoBehaviour
         boxGridItemTemplate.SetActive(false);
     }
 
+    public void buyMasterBoxOffer() {
+        _selectedPackTier = 4;
+        onLootBoxBuyConfirmButtonDown();
+        _extraLootBoxPopUp.SetActive(false);
+    }
+
     private void onLootBoxBuyConfirmButtonDown()
     {
         int packIndex = _selectedPackTier - 1;
@@ -161,7 +167,7 @@ public class GameStore : MonoBehaviour
         //grantBuy(_selectedPackTier); //TODO: Remove hack
     }
 
-    private void onLootBoxBuyCancelButtonDown()
+    public void onLootBoxBuyCancelButtonDown()
     {
         _lootBoxBuyConfirmPopUp.Close();
     }

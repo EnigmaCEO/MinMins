@@ -217,9 +217,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _maxBoxTierNumber: 3
   _packNames:
-  - Bronze Pack
-  - Silver Pack
-  - Gold Pack
+  - STARTER BOX
+  - PREMIUM BOX
+  - MASTER BOX
   _packDescriptions:
   - No guarnatees.
   - Guarantees a Silver Unit.
@@ -229,9 +229,9 @@ MonoBehaviour:
   - {fileID: 1498823071}
   - {fileID: 1258333479}
   _packPrices:
-  - 5.00
-  - 10.00
-  - 15.00
+  - $0.99
+  - $1.99
+  - $4.99
   _lootBoxBuyConfirmPopUp: {fileID: 710730721}
   _openLootBoxPopUp: {fileID: 162382233}
   _buyResultPopUp: {fileID: 1473502415}
@@ -461,7 +461,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 24557416}
-        m_MethodName: onExtraLootBoxPopUpDismissButtonDown
+        m_MethodName: buyMasterBoxOffer
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1029,10 +1029,10 @@ RectTransform:
   - {fileID: 1983095834}
   - {fileID: 2618448872827562058}
   - {fileID: 486452689}
-  - {fileID: 1754289957}
   - {fileID: 1638084297}
   - {fileID: 1539860519}
   - {fileID: 1402700940}
+  - {fileID: 1754289957}
   - {fileID: 1150638133}
   m_Father: {fileID: 1570265899}
   m_RootOrder: 8
@@ -3097,7 +3097,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 710730720}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -3272,7 +3272,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 710730720}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -3612,7 +3612,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 710730720}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -3694,7 +3694,7 @@ RectTransform:
   - {fileID: 1324205195}
   - {fileID: 1256977209}
   m_Father: {fileID: 710730720}
-  m_RootOrder: 4
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -3740,7 +3740,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1754289959}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 24557416}
+        m_MethodName: onLootBoxBuyCancelButtonDown
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1754289959
@@ -4211,7 +4222,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 122.3}
+  m_AnchoredPosition: {x: 0, y: 120}
   m_SizeDelta: {x: 1627, y: 540}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2013727116
@@ -4714,7 +4725,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: -135}
+  m_AnchoredPosition: {x: 0, y: -130}
   m_SizeDelta: {x: 373, y: 130}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2097342021
@@ -4758,7 +4769,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 24557416}
-        m_MethodName: OnBuyResultPopUpDismissButtonDown
+        m_MethodName: OnLootBoxOpenPopUpDismissButtonDown
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7156,7 +7167,7 @@ PrefabInstance:
     - target: {fileID: 3974025628881558264, guid: 45c7553757fc97a47a714b1bd1d3b329,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -135
+      value: -130
       objectReference: {fileID: 0}
     - target: {fileID: 3974025628881558264, guid: 45c7553757fc97a47a714b1bd1d3b329,
         type: 3}
@@ -8164,7 +8175,7 @@ PrefabInstance:
     - target: {fileID: 5057991076884797306, guid: 203b8147031570b4f877da5fa3d74c1d,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 122.29999
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 5057991076884797306, guid: 203b8147031570b4f877da5fa3d74c1d,
         type: 3}
