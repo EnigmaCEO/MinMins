@@ -194,7 +194,7 @@ MonoBehaviour:
       - Suspendido
       Flags: 0000
       Languages_Touch: []
-    - Term: InvalidUsername
+    - Term: Invalid Username
       TermType: 0
       Description: 
       Languages:
@@ -202,7 +202,7 @@ MonoBehaviour:
       - "Usuario inv\xE1lido"
       Flags: 0000
       Languages_Touch: []
-    - Term: InvalidPassword
+    - Term: Invalid Password
       TermType: 0
       Description: 
       Languages:
@@ -290,7 +290,7 @@ MonoBehaviour:
       - "Atr\xE1s"
       Flags: 0000
       Languages_Touch: []
-    - Term: RegisterError
+    - Term: Register Error
       TermType: 0
       Description: 
       Languages:
@@ -298,7 +298,7 @@ MonoBehaviour:
       - Error de Registro
       Flags: 0000
       Languages_Touch: []
-    - Term: ServerError
+    - Term: Server Error
       TermType: 0
       Description: 
       Languages:
@@ -306,12 +306,124 @@ MonoBehaviour:
       - Error de Servidor
       Flags: 0000
       Languages_Touch: []
-    - Term: ConnectionError
+    - Term: Connection Error
       TermType: 0
       Description: 
       Languages:
       - Connection Error
       - "Error de conexi\xF3n"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: E-mail is not valid
+      TermType: 0
+      Description: 
+      Languages:
+      - E-mail is not valid
+      - "Correo electr\xF3nico inv\xE1lido"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Passwords don't match
+      TermType: 0
+      Description: 
+      Languages:
+      - Passwords don't match
+      - "Las contrase\xF1as no concuerdan"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Please fill the Enjin ETH address
+      TermType: 0
+      Description: 
+      Languages:
+      - Please fill the Enjin ETH address
+      - "Por favor llenar direcci\xF3n Enjin ETH"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Network Error
+      TermType: 0
+      Description: 
+      Languages:
+      - Network Error
+      - Error de Red
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Error connecting to the server. Restart the app and retry.
+      TermType: 0
+      Description: 
+      Languages:
+      - Error connecting to the server. Restart the app and retry.
+      - Error conectando al servidor. Recomience el app y reintente.
+      Flags: 0000
+      Languages_Touch: []
+    - Term: OK
+      TermType: 0
+      Description: 
+      Languages:
+      - OK
+      - OK
+      Flags: 0000
+      Languages_Touch: []
+    - Term: 'Damage Dealt:'
+      TermType: 0
+      Description: 
+      Languages:
+      - 'Damage Dealt:'
+      - "Da\xF1o dado:"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: 'Damage Received:'
+      TermType: 0
+      Description: 
+      Languages:
+      - 'Damage Received:'
+      - "Da\xF1o recibido:"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: 'Units Killed:'
+      TermType: 0
+      Description: 
+      Languages:
+      - 'Units Killed: '
+      - 'Unidades Matadas:'
+      Flags: 0000
+      Languages_Touch: []
+    - Term: 'Match Duration:'
+      TermType: 0
+      Description: 
+      Languages:
+      - 'Match Duration:'
+      - "Duraci\xF3n de la Partida:"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: 'Rewards:'
+      TermType: 0
+      Description: 
+      Languages:
+      - 'Rewards:'
+      - 'Recompensas:'
+      Flags: 0000
+      Languages_Touch: []
+    - Term: You win!
+      TermType: 0
+      Description: 
+      Languages:
+      - You win!
+      - "\xA1Has ganado!"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: You lose!
+      TermType: 0
+      Description: 
+      Languages:
+      - You lose!
+      - "\xA1Has perdido!"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: 'Time Left:'
+      TermType: 0
+      Description: 
+      Languages:
+      - 'Time Left:'
+      - 'Tiempo Restante:'
       Flags: 0000
       Languages_Touch: []
     - Term: Loading
@@ -601,7 +713,7 @@ MonoBehaviour:
     Google_WebServiceURL: https://script.google.com/macros/s/AKfycbw05ISkGCPtIS0hMzFD5jshgfH09mIP6BAxRKhWsA/exec
     Google_SpreadsheetKey: 1iIWCtExuyR2XXyYkJv6y83PTVMPC4FxzSITGGroefcg
     Google_SpreadsheetName: I2Loc MinMins Localization
-    Google_LastUpdatedVersion: 1570581307232
+    Google_LastUpdatedVersion: 1570653388235
     Google_Password: shalwend
     GoogleUpdateFrequency: 3
     GoogleInEditorCheckFrequency: 2

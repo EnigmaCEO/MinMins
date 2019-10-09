@@ -623,7 +623,7 @@ public class War : NetworkEntity
 
     private void updateTimeLeftDisplay()
     {
-        _timeLeftText.text = "Time Left: " + (Mathf.CeilToInt(((float)_timeLeftCount))).ToString();
+        _timeLeftText.text = LocalizationManager.GetTermTranslation("Time Left:") + " " + (Mathf.CeilToInt(((float)_timeLeftCount))).ToString();
     }
 
     private void sendPlayerTargetInput(Vector3 playerInputWorldPosition, string teamName)
@@ -1400,7 +1400,7 @@ public class War : NetworkEntity
         }
         else
         {
-            _errorText.text = message;
+            _errorText.text = LocalizationManager.GetTermTranslation(message);
             _errorText.gameObject.SetActive(true);
         }
 

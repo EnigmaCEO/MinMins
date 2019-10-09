@@ -58,7 +58,7 @@ public class LocalizationManager : MonoBehaviour
     //This overload will use label text as term if label has no Localize Component, and will do nothing if it already has it. 
     static public void TranslateText(Text label)
     {
-        if(label.GetComponent<Localize>() == null)
+        //if(label.GetComponent<Localize>() == null)
             TranslateText(label, label.text);
     }
 
@@ -101,6 +101,11 @@ public class LocalizationManager : MonoBehaviour
     static public void ChangeLanguage(Languages language)
     {
         ChangeLanguage(language.ToString());
+    }
+
+    static public string GetTermTranslation(string term)
+    {
+        return I2.Loc.LocalizationManager.GetTermTranslation(term);
     }
 
     static private void load()

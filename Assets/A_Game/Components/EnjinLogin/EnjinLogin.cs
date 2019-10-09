@@ -50,24 +50,27 @@ public class EnjinLogin : MonoBehaviour
     }
 
     public void validateRegisterData() {
-        alertText.text = "";
+         alertText.text = "";
         bool valid = registerUsername.text != "" && registerEmail.text != "" && registerPassword.text != "" && registerConfirm.text != "";
         bool reason;
 
         if (registerEmail.text != "") {
             reason = registerEmail.text.IndexOf('@') > 0;
             valid = valid && reason;
-            if (!reason) alertText.text = "E-mail is not valid";
+            if (!reason)
+                setAlert("E-mail is not valid");
         }
         if (registerPassword.text != "" && registerConfirm.text != "") {
             reason = registerPassword.text == registerConfirm.text;
             valid = valid && reason;
-            if (!reason) alertText.text = "Passwords don't match";
+            if (!reason)
+                setAlert("Passwords don't match");
         }
         if (ETHField.gameObject.activeSelf) {
             reason = ETHField.text != "";
             valid = valid && reason;
-            if (!reason) alertText.text = "Please fill the Enjin ETH address";
+            if (!reason)
+                setAlert("Please fill the Enjin ETH address");
         }
         if (valid) {
             alertText.text = "";
@@ -75,14 +78,14 @@ public class EnjinLogin : MonoBehaviour
 
         registerButton.interactable = valid;
         alertText.color = registerButton.interactable ? successColor : failColor;
-        alertText.text = registerButton.interactable ? "" : alertText.text;
+        setAlert(registerButton.interactable ? "" : alertText.text);
     }
 
     public void validateLoginData() {
         alertText.text = "";
         loginButton.interactable = loginUsername.text != "" && loginPassword.text != "";
         alertText.color = loginButton.interactable ? successColor : failColor;
-        alertText.text = loginButton.interactable ? "" : alertText.text;
+        setAlert(loginButton.interactable ? "" : alertText.text);
     }
 
     public void registerSubmit() {
@@ -167,12 +170,12 @@ public class EnjinLogin : MonoBehaviour
                     term = "Server Error";
 
                 alertText.color = failColor;
-                alertText.text = term;
+                setAlert(term);
             }
         } else {
             EnableLoginWindow();
             alertText.color = failColor;
-            alertText.text = "Connection Error";
+            setAlert("Connection Error");
         }
     }
 
@@ -233,13 +236,19 @@ public class EnjinLogin : MonoBehaviour
                     term = "Server Error";
 
                 alertText.color = failColor;
-                alertText.text = term;
+                setAlert(term);
             }
         } else {
             EnableLoginWindow();
             alertText.color = failColor;
-            alertText.text = "Connection Error";
+            setAlert("Connection Error");
         }
+    }
+
+    private void setAlert(string term)
+    {
+        alertText.text = term;
+        LocalizationManager.TranslateText(alertText);
     }
 
     public void resetForm()

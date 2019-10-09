@@ -45,6 +45,8 @@ public class MatchResultsPopUp : MonoBehaviour
         else
             _winnerText.text = "You lose!";
 
+        LocalizationManager.TranslateText(_winnerText);
+
         string localTeamName = _warRef.LocalPlayerTeam;
 
         _damageDealtValue.text = GameNetwork.GetTeamRoomProperty(GameNetwork.TeamRoomProperties.DAMAGE_DEALT, localTeamName);
