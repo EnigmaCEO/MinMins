@@ -16,6 +16,6 @@ public class BoxGridItem : MonoBehaviour
         for (int i = 0; i < starsContentLenght; i++)
             _tierStarsContent.GetChild(i).GetComponent<Image>().enabled = (i < tier);
 
-        _boxImage.sprite = (Sprite)Resources.Load<Sprite>("Images/LootBoxes/" + tier);
+        _boxImage.sprite = (Sprite)Resources.Load<Sprite>("Images/shop_chest" + tier);
     }
 }
