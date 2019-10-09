@@ -414,7 +414,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         string groupName = GroupNames.UNITS;
         int unitExp = InventoryManager.Instance.GetItem<int>(groupName, unitName);
         string hashKey = groupName + _parseSeparator + unitName;
-        Debug.LogWarning("GameInventory::saveUnit -> hashKey: " + hashKey + " -> unitExp: " + unitExp);
+        //Debug.LogWarning("GameInventory::saveUnit -> hashKey: " + hashKey + " -> unitExp: " + unitExp);
 
         if (_saveHashTable.ContainsKey(hashKey))
             _saveHashTable.Remove(hashKey);

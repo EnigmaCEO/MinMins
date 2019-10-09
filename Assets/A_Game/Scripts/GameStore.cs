@@ -8,11 +8,13 @@ public class GameStore : MonoBehaviour
 {
     [SerializeField] private int _maxBoxTierNumber = 3;
 
-    [SerializeField] private List<string> _packNames = new List<string>() { "Bronze Pack", "Silver Pack", "Gold Pack" };  
-    [SerializeField] private List<string> _packDescriptions = new List<string>() { "No guarantees.", "Guarantees a Silver Unit.", "Guarantees a Gold Unit." };
+    [SerializeField] private List<string> _confirmPopUpPackNames = new List<string>() { "Bronze Pack", "Silver Pack", "Gold Pack", "Starter Gold Pack." };  
+    [SerializeField] private List<string> _confirmPopUpPackDescriptions = new List<string>() { "No guarantees.", "Guarantees a Silver Unit.", "Guarantees a Gold Unit." };
 
-    [SerializeField] private List<Image> _packImages;
-    [SerializeField] private List<string> _packPrices = new List<string>() { "5.00", "10.00", "15.00" };
+    [SerializeField] private List<Image> _confirmPopUpPackImages;
+    [SerializeField] private List<string> _confirmPopUpPackPrices = new List<string>() { "5.00", "10.00", "15.00" };
+
+    [SerializeField] private List<int> _packTiers = new List<int> { 1, 2, 3, 3 };
 
     [SerializeField] private LootBoxBuyConfirmPopUp _lootBoxBuyConfirmPopUp;
     [SerializeField] private OpenLootBoxPopUp _openLootBoxPopUp;
@@ -21,7 +23,7 @@ public class GameStore : MonoBehaviour
 
     [SerializeField] private Transform _lootBoxGridContent;
 
-    private int _selectedPackTier;
+    private int _selectedPackIndex;
 
     private void Awake()
     {
@@ -69,7 +71,7 @@ public class GameStore : MonoBehaviour
                 }
             }
 
-            int boxTier = boxTierIndex + 1;
+            int boxTier = _packTiers[boxTierIndex];
             grantBox(boxTier, 1);
             _buyResultPopUp.Open("Thanks for your Purchase!");
         }
@@ -77,16 +79,15 @@ public class GameStore : MonoBehaviour
             _buyResultPopUp.Open("Purchase Failed. Please try again later.");
     }
 
-    public void OnPackBuyButtonDown(int tier)
+    public void OnPackBuyButtonDown(int packIndex)
     {
-        _selectedPackTier = tier;
-        int packIndex = tier - 1;
+        _selectedPackIndex = packIndex;
 
-        _lootBoxBuyConfirmPopUp.SetPackName(_packNames[packIndex]);
-        _lootBoxBuyConfirmPopUp.SetPackDescription(_packDescriptions[packIndex]);
-        _lootBoxBuyConfirmPopUp.SetStars(tier);
-        _lootBoxBuyConfirmPopUp.SetPackSprite(_packImages[packIndex].sprite);
-        _lootBoxBuyConfirmPopUp.SetPrice(_packPrices[packIndex]);
+        _lootBoxBuyConfirmPopUp.SetPackName(_confirmPopUpPackNames[packIndex]);
+        _lootBoxBuyConfirmPopUp.SetPackDescription(_confirmPopUpPackDescriptions[packIndex]);
+        _lootBoxBuyConfirmPopUp.SetStars(_packTiers[packIndex]);
+        _lootBoxBuyConfirmPopUp.SetPackSprite(_confirmPopUpPackImages[packIndex].sprite);
+        _lootBoxBuyConfirmPopUp.SetPrice(_confirmPopUpPackPrices[packIndex]);
         _lootBoxBuyConfirmPopUp.gameObject.SetActive(true);
     }
 
@@ -103,6 +104,7 @@ public class GameStore : MonoBehaviour
 
     public void onExtraLootBoxPopUpDismissButtonDown()
     {
+        grantBox(GameInventory.Tiers.BRONZE, 2);
         _extraLootBoxPopUp.SetActive(false);
     }
 
@@ -116,7 +118,7 @@ public class GameStore : MonoBehaviour
         GameInventory gameInventory = GameInventory.Instance;
         if (!gameInventory.HasEnoughUnitsForBattle() && !gameInventory.HasAnyLootBox())
         {
-            grantBox(GameInventory.Tiers.BRONZE, 2);
+            //grantBox(GameInventory.Tiers.BRONZE, 2);
             _extraLootBoxPopUp.SetActive(true);
         }
     }
@@ -149,19 +151,18 @@ public class GameStore : MonoBehaviour
         boxGridItemTemplate.SetActive(false);
     }
 
-    public void buyMasterBoxOffer() {
-        _selectedPackTier = 4;
+    public void BuyMasterBoxOffer()
+    {
+        _selectedPackIndex = 3;
         onLootBoxBuyConfirmButtonDown();
         _extraLootBoxPopUp.SetActive(false);
     }
 
     private void onLootBoxBuyConfirmButtonDown()
     {
-        int packIndex = _selectedPackTier - 1;
-
         //===============================================
         //IAPManager.BuyConsumable(packIndex);  
-        handleCurrencyBuyResult(IAPManager.Instance.IAP_IDS[packIndex], true);  // Buy hack to work on android
+        handleCurrencyBuyResult(IAPManager.Instance.IAP_IDS[_selectedPackIndex], true);  // Buy hack to work on android
         //=========================================
         _lootBoxBuyConfirmPopUp.Close();
         //grantBuy(_selectedPackTier); //TODO: Remove hack
