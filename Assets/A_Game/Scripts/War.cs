@@ -125,7 +125,8 @@ public class War : NetworkEntity
 
         determineLocalPlayerTeam();
 
-        NetworkManager.SetLocalPlayerNickName(_localPlayerTeam + "_Player");  // Nickname hack
+        if(!NetworkManager.LoggedIn)
+            NetworkManager.SetLocalPlayerNickName(_localPlayerTeam + "_Player");  // Nickname hack
 
         NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.READY_TO_FIGHT, false.ToString(), _localPlayerTeam);
 

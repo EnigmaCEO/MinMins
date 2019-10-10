@@ -5,6 +5,7 @@ using System.Collections;
 public class Main : EnigmaScene
 {
     [SerializeField] GameObject _loginModal;
+    [SerializeField] LoginForPvpPopUp _loginForPvpPopUp;
 
     [SerializeField] GameObject _enjinWindow;
     [SerializeField] private int _checkEnjinLinkingDelay = 2;
@@ -40,8 +41,14 @@ public class Main : EnigmaScene
     public void OnPvpButtonDown()
     {
         print("OnPvpButtonDown");
-        GameStats.Instance.Mode = GameStats.Modes.Pvp;
-        goToLevels();
+
+        if (NetworkManager.LoggedIn)
+        {
+            GameStats.Instance.Mode = GameStats.Modes.Pvp;
+            goToLevels();
+        }
+        else
+            _loginForPvpPopUp.Open();
     }
 
     public void OnStoreButtonDown()
@@ -120,9 +127,9 @@ public class Main : EnigmaScene
 
         SimpleJSON.JSONNode userData = response_hash["user_data"];
 
-        GameStats.Instance.HasEnjinWeapon = (userData["enjin_hammer"].AsInt == 1);
-        GameStats.Instance.HasEnjinShield = (userData["enjin_shield"].AsInt == 1);
-        GameStats.Instance.HasEnjinEnigmaToken = (userData["enigma_token"].AsInt == 1);
+        //GameStats.Instance.HasEnjinWeapon = (userData["enjin_hammer"].AsInt == 1);
+        //GameStats.Instance.HasEnjinShield = (userData["enjin_shield"].AsInt == 1);
+        //GameStats.Instance.HasEnjinEnigmaToken = (userData["enigma_token"].AsInt == 1);
 
 
         //Enjin gear Hack =============================

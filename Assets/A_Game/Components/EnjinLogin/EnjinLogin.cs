@@ -204,7 +204,8 @@ public class EnjinLogin : MonoBehaviour
     {
         print("Complete login:");
         GameStats.Instance.Rating = response_hash[NetworkManager.TransactionKeys.USER_DATA][GameNetwork.TransactionKeys.RATING].AsInt;
-        //GameNetwork.SetLocalPlayerRating(rating, GameNetwork.VirtualPlayerIds.HOST);
+        string userName = response_hash[NetworkManager.TransactionKeys.USER_DATA][GameNetwork.TransactionKeys.USERNAME];
+        NetworkManager.SetLocalPlayerNickName(userName);
 
         string enjinId = response_hash[NetworkManager.TransactionKeys.USER_DATA][NetworkManager.EnjinTransKeys.ENJIN_ID].ToString().Trim('"');
         //if(true)  //hack

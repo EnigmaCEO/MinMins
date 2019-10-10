@@ -18,6 +18,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     public class TransactionKeys
     {
         public const string RATING = "rating";
+        public const string USERNAME = "username";
 
         public const string WINNER_NICKNAME = "winner_nickname";
         public const string LOSER_NICKNAME = "loser_nickname";

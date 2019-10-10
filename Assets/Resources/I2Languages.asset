@@ -92,7 +92,7 @@ MonoBehaviour:
       Description: 
       Languages:
       - PvP
-      - PvP
+      - JcJ
       Flags: 0000
       Languages_Touch: []
     - Term: Training
@@ -311,7 +311,7 @@ MonoBehaviour:
       - Enviar
       Flags: 0000
       Languages_Touch: []
-    - Term: Email
+    - Term: E-mail
       TermType: 0
       Description: 
       Languages:
@@ -607,6 +607,14 @@ MonoBehaviour:
       - "La compra fall\xF3. Por favor reintente luego."
       Flags: 0000
       Languages_Touch: []
+    - Term: Please log in to access PvP.
+      TermType: 0
+      Description: 
+      Languages:
+      - 'Please log in to access PvP. '
+      - "Por favor inicie sesi\xF3n para accesar JcJ."
+      Flags: 0000
+      Languages_Touch: []
     - Term: NotEnoughCurrency
       TermType: 0
       Description: 
@@ -846,7 +854,7 @@ MonoBehaviour:
     Google_WebServiceURL: https://script.google.com/macros/s/AKfycbw05ISkGCPtIS0hMzFD5jshgfH09mIP6BAxRKhWsA/exec
     Google_SpreadsheetKey: 1iIWCtExuyR2XXyYkJv6y83PTVMPC4FxzSITGGroefcg
     Google_SpreadsheetName: I2Loc MinMins Localization
-    Google_LastUpdatedVersion: 1570667655573
+    Google_LastUpdatedVersion: 1570725231285
     Google_Password: shalwend
     GoogleUpdateFrequency: 3
     GoogleInEditorCheckFrequency: 2
