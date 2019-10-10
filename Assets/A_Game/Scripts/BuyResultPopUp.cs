@@ -10,6 +10,7 @@ public class BuyResultPopUp : MonoBehaviour
     public void Open(string message)
     {
         _message.text = message;
+        LocalizationManager.LocalizeText(_message);
         gameObject.SetActive(true);
     }
 

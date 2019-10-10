@@ -24,11 +24,13 @@ public class LootBoxBuyConfirmPopUp : MonoBehaviour
     public void SetPackName(string name)
     {
         _packNameText.text = name;
+        LocalizationManager.LocalizeText(_packNameText);
     }
 
     public void SetPackDescription(string description)
     {
         _packNameDescriptionText.text = description;
+        LocalizationManager.LocalizeText(_packNameDescriptionText);
     }
 
     public void SetPrice(string price)

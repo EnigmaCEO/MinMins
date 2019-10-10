@@ -34,7 +34,7 @@ public class LocalizationManager : MonoBehaviour
 
     private void onSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        TranslateAllTextsInScene();
+        LocalizeAllTextsInScene();
     }
 
     static public string GetTranslationTerm(Text text)
@@ -48,22 +48,22 @@ public class LocalizationManager : MonoBehaviour
         return term;
     }
 
-    static public void TranslateAllTextsInScene()
+    static public void LocalizeAllTextsInScene()
     {
         Text[] labels = GameObject.FindObjectsOfType<Text>();
         foreach (Text label in labels)
-            TranslateText(label);
+            LocalizeText(label);
     }
 
     //This overload will use label text as term if label has no Localize Component, and will do nothing if it already has it. 
-    static public void TranslateText(Text label)
+    static public void LocalizeText(Text label)
     {
         //if(label.GetComponent<Localize>() == null)
-            TranslateText(label, label.text);
+            LocalizeText(label, label.text);
     }
 
     //This will use or add a localize component, and set term into the component so label text is translated.  An empty term will empty the string, and remove localize, as it will ignore an empty term.
-    static public void TranslateText(Text label, string term)
+    static public void LocalizeText(Text label, string term)
     {
         Localize localize = label.GetComponent<Localize>();
 

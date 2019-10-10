@@ -58,7 +58,7 @@ public class ShopItem : MonoBehaviour
 
     public void SetDealDescriptionTerm(string term)
     {
-        LocalizationManager.TranslateText(_dealDescriptionText, term);
+        LocalizationManager.LocalizeText(_dealDescriptionText, term);
     }
 
     //public void SetDealDescriptionText(string text)

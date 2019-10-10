@@ -45,7 +45,7 @@ public class MatchResultsPopUp : MonoBehaviour
         else
             _winnerText.text = "You lose!";
 
-        LocalizationManager.TranslateText(_winnerText);
+        LocalizationManager.LocalizeText(_winnerText);
 
         string localTeamName = _warRef.LocalPlayerTeam;
 

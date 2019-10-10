@@ -8,11 +8,11 @@ public class GameStore : MonoBehaviour
 {
     [SerializeField] private int _maxBoxTierNumber = 3;
 
-    [SerializeField] private List<string> _confirmPopUpPackNames = new List<string>() { "Bronze Pack", "Silver Pack", "Gold Pack", "Starter Gold Pack." };  
+    [SerializeField] private List<string> _confirmPopUpPackNames = new List<string>() { "STARTER BOX", "PREMIUM BOX", "MASTER BOX" };  
     [SerializeField] private List<string> _confirmPopUpPackDescriptions = new List<string>() { "No guarantees.", "Guarantees a Silver Unit.", "Guarantees a Gold Unit." };
 
     [SerializeField] private List<Image> _confirmPopUpPackImages;
-    [SerializeField] private List<string> _confirmPopUpPackPrices = new List<string>() { "5.00", "10.00", "15.00" };
+    [SerializeField] private List<string> _confirmPopUpPackPrices = new List<string>() { "0.99", "1.99", "4.99" };
 
     [SerializeField] private List<int> _packTiers = new List<int> { 1, 2, 3, 3 };
 

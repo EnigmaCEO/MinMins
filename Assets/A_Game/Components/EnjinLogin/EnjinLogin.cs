@@ -40,9 +40,30 @@ public class EnjinLogin : MonoBehaviour
         registerGroup.SetActive(true);
     }
 
-    public void switchToLogin() {
+    public void switchToLogin()
+    {
         loginGroup.SetActive(true);
         registerGroup.SetActive(false);
+
+        //Errors display test  =========================
+        //string term = "";
+
+        //term = "Register Error";
+
+        //term = "Invalid Password";
+
+        //term = "Invalid Username";
+
+        //term = "Server Error";
+
+        //alertText.color = failColor;
+        //setAlert(term);
+
+        //setAlert("Connection Error");
+        //setAlert("E-mail is not valid");
+        //setAlert("Passwords don't match");
+        //setAlert("Please fill the Enjin ETH address");
+        //===================================================
     }
 
     public void switchETHField() {
@@ -248,7 +269,7 @@ public class EnjinLogin : MonoBehaviour
     private void setAlert(string term)
     {
         alertText.text = term;
-        LocalizationManager.TranslateText(alertText);
+        LocalizationManager.LocalizeText(alertText);
     }
 
     public void resetForm()

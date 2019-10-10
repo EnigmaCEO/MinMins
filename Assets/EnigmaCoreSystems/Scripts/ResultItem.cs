@@ -14,7 +14,7 @@ public class ResultItem : MonoBehaviour
     public void SetData(GameResults.ResultData resultData)
     {
         _questionName.text = "#" + resultData.QuestionNumber;
-        LocalizationManager.TranslateText(_answerText, resultData.AnswerTerm);
+        LocalizationManager.LocalizeText(_answerText, resultData.AnswerTerm);
         if (resultData.Points > 0)
             _answerText.color = Color.white;
         else

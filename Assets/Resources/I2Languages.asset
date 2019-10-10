@@ -25,13 +25,50 @@ MonoBehaviour:
       - Esperando Oponente...
       Flags: 0000
       Languages_Touch: []
-    - Term: Not enough units to go into battle. Let's go to the Inventory to get some!
+    - Term: ARENA SELECTION
       TermType: 0
       Description: 
       Languages:
-      - Not enough units to go into battle. Let's go to the Inventory to get some!
-      - "No hay suficientes unidades para ir a la batalla. \xA1Vamos al Inventario
-        para conseguir algunas!"
+      - ARENA SELECTION
+      - "SELECCI\xD3N DE ARENA"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: BATTLE ALERT!
+      TermType: 0
+      Description: 
+      Languages:
+      - BATTLE ALERT!
+      - "\xA1ALERTA DE COMBATE!"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: You need at least 5 units to start a battle. Return to the Shop for assistance
+        in rebuilding your Min Min army.
+      TermType: 0
+      Description: 
+      Languages:
+      - "You need at least 5 units to start a battle.\n \nReturn to the Shop for assistance
+        in rebuilding your Min Min army."
+      - "Necesitas al menos 5 unidades para comenzar un combate.\n \nRegresa a la
+        tienda por ayuda en reconstruir tu ej\xE9rcito Min Min."
+      Flags: 0000
+      Languages_Touch: []
+    - Term: You need at least 5 units for battle. We offer 2 free Starter Boxes or
+        40 off the Master Box!
+      TermType: 0
+      Description: 
+      Languages:
+      - "You need at least 5 units for battle. \n\nWe offer 2 free Starter Boxes or
+        40% off the Master Box!"
+      - "Necesitas al menos 5 unidades para el combate. \n\nOfrecemos estas 2 Cajas
+        de Inicio o 40% de la Caja Maestra!"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Free Boxes
+      TermType: 0
+      Description: 
+      Languages:
+      - Free Boxes
+      - Cajas Gratis
       Flags: 0000
       Languages_Touch: []
     - Term: New user
@@ -311,7 +348,7 @@ MonoBehaviour:
       Description: 
       Languages:
       - Connection Error
-      - "Error de conexi\xF3n"
+      - "Error de Conexi\xF3n"
       Flags: 0000
       Languages_Touch: []
     - Term: E-mail is not valid
@@ -466,12 +503,108 @@ MonoBehaviour:
       - Tienda
       Flags: 0000
       Languages_Touch: []
+    - Term: SHOP
+      TermType: 0
+      Description: 
+      Languages:
+      - SHOP
+      - TIENDA
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Starter Box
+      TermType: 0
+      Description: 
+      Languages:
+      - Starter Box
+      - Caja de Inicio
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Premium Box
+      TermType: 0
+      Description: 
+      Languages:
+      - Premium Box
+      - Caja Premium
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Master Box
+      TermType: 0
+      Description: 
+      Languages:
+      - Master Box
+      - Caja Master
+      Flags: 0000
+      Languages_Touch: []
+    - Term: CANCEL
+      TermType: 0
+      Description: 
+      Languages:
+      - CANCEL
+      - CANCELAR
+      Flags: 0000
+      Languages_Touch: []
+    - Term: PURCHASE
+      TermType: 0
+      Description: 
+      Languages:
+      - PURCHASE
+      - COMPRA
+      Flags: 0000
+      Languages_Touch: []
+    - Term: NEW MIN MINS!
+      TermType: 0
+      Description: 
+      Languages:
+      - NEW MIN MINS!
+      - NUEVOS MIN MINS!
+      Flags: 0000
+      Languages_Touch: []
+    - Term: No guarantees.
+      TermType: 0
+      Description: 
+      Languages:
+      - No guarantees.
+      - "Sin garant\xEDas."
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Guarantees a 2 Stars Unit.
+      TermType: 0
+      Description: 
+      Languages:
+      - Guarantees a 2 Stars Unit.
+      - Garantiza una Unidad de 2 Estrellas.
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Guarantees a 3 Stars Unit.
+      TermType: 0
+      Description: 
+      Languages:
+      - Guarantees a 3 Stars Unit.
+      - Garantiza una Unidad de 3 Estrellas.
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Thanks for your Purchase!
+      TermType: 0
+      Description: 
+      Languages:
+      - Thanks for your Purchase!
+      - "\xA1Gracias por su Compra!"
+      Flags: 0000
+      Languages_Touch: []
     - Term: ConfirmPurchase
       TermType: 0
       Description: 
       Languages:
       - Confirm purchase?
       - "\xBFConfirma compra?"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Purchase Failed. Please try again later.
+      TermType: 0
+      Description: 
+      Languages:
+      - Purchase Failed. Please try again later.
+      - "La compra fall\xF3. Por favor reintente luego."
       Flags: 0000
       Languages_Touch: []
     - Term: NotEnoughCurrency
@@ -713,7 +846,7 @@ MonoBehaviour:
     Google_WebServiceURL: https://script.google.com/macros/s/AKfycbw05ISkGCPtIS0hMzFD5jshgfH09mIP6BAxRKhWsA/exec
     Google_SpreadsheetKey: 1iIWCtExuyR2XXyYkJv6y83PTVMPC4FxzSITGGroefcg
     Google_SpreadsheetName: I2Loc MinMins Localization
-    Google_LastUpdatedVersion: 1570653388235
+    Google_LastUpdatedVersion: 1570667655573
     Google_Password: shalwend
     GoogleUpdateFrequency: 3
     GoogleInEditorCheckFrequency: 2
