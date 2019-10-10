@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Enigma.CoreSystems;
 
-public class UnitSelectManager : MonoBehaviour
+public class UnitSelectManager : EnigmaScene
 {
     [SerializeField] private float _uiMoveDistance = 5;
     [SerializeField] private float _uiMoveTime = 1;
@@ -50,11 +50,12 @@ public class UnitSelectManager : MonoBehaviour
             string unitName = inventoryUnitNames[i];
             unitTransform.name = unitName;
             unitTransform.Find("Sprite").GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/Units/" + unitName);
-            unitTransform.Find("FightButton").GetComponent<Button>().onClick.AddListener(() => { onUnitFightButtonDown(unitName); });
+            unitTransform.GetComponent<Button>().onClick.AddListener(() => { onUnitFightButtonDown(unitName); });
             unitTransform.Find("InfoButton").GetComponent<Button>().onClick.AddListener(() => { onUnitInfoButtonDown(unitName); });
         }
 
         unitGridItemTemplate.SetActive(false);
+        GameObject.Find("UnitsGrid").GetComponent<ScrollRect>().horizontalNormalizedPosition = 0;
 
         _teamGridContent = _teamGrid.transform.Find("Viewport/Content");
         int slotsLength = _teamGridContent.childCount;

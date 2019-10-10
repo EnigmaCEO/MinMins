@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Enigma.CoreSystems;
 
-public class WarPrepManager : MonoBehaviour
+public class WarPrepManager : EnigmaScene
 {
     [SerializeField] private Transform _slotsTeam1;
     [SerializeField] private Button _nextButton;
