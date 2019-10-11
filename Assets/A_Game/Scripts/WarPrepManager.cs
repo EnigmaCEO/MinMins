@@ -20,7 +20,8 @@ public class WarPrepManager : EnigmaScene
 
         _backButton.onClick.AddListener(() => { onBackButtonDown(); });
 
-        Transform warPrepGrid = GameObject.Find("/WarPrepGrid").transform;
+        Transform warPrepGrid = GameObject.Find("/Canvas/WarPrepGrid").transform;
+        
         List<string> unitNames = GameStats.Instance.TeamUnits;
         int unitsCount = unitNames.Count;
 
@@ -37,11 +38,37 @@ public class WarPrepManager : EnigmaScene
             prepMinMinSprite.SetManager(this);
             prepMinMinSprite.UnitName = unitName;
 
-            minMinTransform.parent = warPrepGrid.Find("slot" + (i + 1));
+            minMinObj.GetComponentInChildren<PolygonCollider2D>().isTrigger = true;
+
+            minMinTransform.parent = warPrepGrid.Find("Viewport/Content/slot" + (i + 1));
             minMinTransform.localPosition = new Vector2(0, 0);
 
             _slotsInPlay++;
         }
+
+        LineRenderer lineRenderer = gameObject.AddComponent<LineRenderer>();
+        lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+        lineRenderer.widthMultiplier = 0.1f;
+        lineRenderer.positionCount = 4;
+        lineRenderer.loop = true;
+        Gradient gradient = new Gradient();
+        gradient.SetKeys(
+            new GradientColorKey[] { new GradientColorKey(Color.cyan, 0.0f), new GradientColorKey(Color.cyan, 1.0f) },
+            new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(1.0f, 1.0f) }
+        );
+        lineRenderer.colorGradient = gradient;
+
+        lineRenderer.SetPosition(0, new Vector3(GameConfig.Instance.BattleFieldMinPos.x, GameConfig.Instance.BattleFieldMinPos.y, 0.0f));
+        lineRenderer.SetPosition(1, new Vector3(GameConfig.Instance.BattleFieldMinPos.x, GameConfig.Instance.BattleFieldMaxPos.y, 0.0f));
+        lineRenderer.SetPosition(2, new Vector3(GameConfig.Instance.BattleFieldMaxPos.x, GameConfig.Instance.BattleFieldMaxPos.y, 0.0f));
+        lineRenderer.SetPosition(3, new Vector3(GameConfig.Instance.BattleFieldMaxPos.x, GameConfig.Instance.BattleFieldMinPos.y, 0.0f));
+        //lineRenderer.SetPosition(4, new Vector3(GameConfig.Instance.BattleFieldMinPos.x, GameConfig.Instance.BattleFieldMinPos.y, 0.0f));
+
+    }
+
+    void Update()
+    {
+        
     }
 
     public void AddToSlotsReady()
@@ -49,7 +76,12 @@ public class WarPrepManager : EnigmaScene
         _slotsReady++;
 
         if (_slotsReady == _slotsInPlay)
+        {
             _nextButton.gameObject.SetActive(true);
+            GameObject.Find("/Team1").GetComponent<TweenPosition>().enabled = true;
+            gameObject.GetComponent<LineRenderer>().enabled = false;
+        }
+
     }
 
     private void onNextButtonDown()

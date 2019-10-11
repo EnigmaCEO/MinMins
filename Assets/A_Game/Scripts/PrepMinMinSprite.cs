@@ -76,12 +76,13 @@ public class PrepMinMinSprite : MonoBehaviour
             GameObject confirm = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/UI/confirm_ok"));
             confirm.transform.parent = _slot.transform;
             confirm.transform.localPosition = new Vector2(0, 0);
-            confirm.transform.localScale = new Vector2(2, 2);
+            //confirm.transform.localScale = new Vector2(2, 2);
 
-            GameObject shadow = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/UI/battle_shadow"));
+            /*GameObject shadow = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/UI/battle_shadow"));
             shadow.transform.parent = transform;
             shadow.transform.localPosition = new Vector2(0, 0);
-            shadow.transform.localScale = new Vector2(-1, 1);
+            shadow.transform.localScale = new Vector2(-1, 1);*/
+            GetComponentInChildren<PolygonCollider2D>().isTrigger = false;
 
             _manager.AddToSlotsReady();
         }
@@ -92,14 +93,14 @@ public class PrepMinMinSprite : MonoBehaviour
         GameConfig gameConfig = GameConfig.Instance;
 
         if (transform.localPosition.y < gameConfig.BattleFieldMinPos.y)
-            transform.localPosition = new Vector2(transform.localPosition.x, gameConfig.BattleFieldMinPos.y);
+            transform.localPosition = new Vector2(transform.localPosition.x, gameConfig.BattleFieldMinPos.y + 0.5f);
         else if (transform.localPosition.y > gameConfig.BattleFieldMaxPos.y)
-            transform.localPosition = new Vector2(transform.localPosition.x, gameConfig.BattleFieldMaxPos.y);
+            transform.localPosition = new Vector2(transform.localPosition.x, gameConfig.BattleFieldMaxPos.y - 0.5f);
 
         if (transform.localPosition.x > gameConfig.BattleFieldMaxPos.x)
-            transform.localPosition = new Vector2(gameConfig.BattleFieldMaxPos.x, transform.localPosition.y);
+            transform.localPosition = new Vector2(gameConfig.BattleFieldMaxPos.x - 0.5f, transform.localPosition.y);
         else if (transform.localPosition.x < gameConfig.BattleFieldMinPos.x)
-            transform.localPosition = new Vector2(gameConfig.BattleFieldMinPos.x, transform.localPosition.y);
+            transform.localPosition = new Vector2(gameConfig.BattleFieldMinPos.x + 0.5f, transform.localPosition.y);
     }
 
     void OnCollisionEnter2D(Collision2D coll)

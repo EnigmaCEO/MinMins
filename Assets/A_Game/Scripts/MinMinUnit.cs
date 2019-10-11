@@ -53,10 +53,10 @@ public class MinMinUnit : NetworkEntity
         WarUnitSprite warUnitSprite = _spriteTransform.gameObject.AddComponent<WarUnitSprite>();
         warUnitSprite.Unit = this.gameObject;
 
-        GameObject shadow = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/UI/battle_shadow"));
+        /*GameObject shadow = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/UI/battle_shadow"));
         shadow.transform.parent = _spriteTransform;
         shadow.transform.localPosition = new Vector2(0, 0);
-        shadow.transform.localScale = new Vector2(-1, 1);
+        shadow.transform.localScale = new Vector2(-1, 1);*/
 
         object[] data = base.GetInstantiationData();
         if (data != null)

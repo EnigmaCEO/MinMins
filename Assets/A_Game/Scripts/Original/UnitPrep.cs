@@ -58,12 +58,12 @@ public class UnitPrep : MonoBehaviour {
 			GameObject confirm = (GameObject)Instantiate(Resources.Load <GameObject> ("Prefabs/UI/confirm_ok"));
 			confirm.transform.parent = slot.transform;
 			confirm.transform.localPosition = new Vector2(0,0);
-			confirm.transform.localScale = new Vector2(2,2);
+			//confirm.transform.localScale = new Vector2(2,2);
 
-			GameObject shadow = (GameObject)Instantiate(Resources.Load <GameObject> ("Prefabs/UI/battle_shadow"));
+			/*GameObject shadow = (GameObject)Instantiate(Resources.Load <GameObject> ("Prefabs/UI/battle_shadow"));
 			shadow.transform.parent = transform;
 			shadow.transform.localPosition = new Vector2(0,0);
-			shadow.transform.localScale = new Vector2(-1,1);
+			shadow.transform.localScale = new Vector2(-1,1);*/
 
 			manager.GetComponent<TeamManager>().slots++;
 			if(manager.GetComponent<TeamManager>().slots >= 5) manager.GetComponent<TeamManager>().TeamReady();
