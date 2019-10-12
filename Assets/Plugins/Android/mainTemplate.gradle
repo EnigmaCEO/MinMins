@@ -15,6 +15,7 @@ allprojects {
     repositories {
         google()
         jcenter()
+		maven { url 'https://jitpack.io' }
         flatDir {
             dirs 'libs'
         }
@@ -26,6 +27,8 @@ apply plugin: 'com.android.application'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+	implementation 'com.github.kinecosystem.kin-sdk-android:kin-sdk-lib:1.0.5'
+    implementation 'com.github.kinecosystem.kin-sdk-android:kin-backup-and-restore-lib:1.0.5'
 **DEPS**}
 
 android {
@@ -35,6 +38,8 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+		sourceCompatibility 1.8
+        targetCompatibility 1.8
     }
 
     defaultConfig {
