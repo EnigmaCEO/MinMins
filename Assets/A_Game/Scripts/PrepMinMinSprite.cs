@@ -43,10 +43,14 @@ public class PrepMinMinSprite : MonoBehaviour
 
         _offset = gameObject.transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, _screenPoint.z));
 
+        _manager.UpdateInfo(transform.parent.GetComponentInChildren<MinMinUnit>().gameObject.name);
+
         _selected = true;
         //Debug.Log(name + " selected");
         if (transform.parent.parent.name.Contains("slot"))
             transform.parent = _team.transform.Find(transform.parent.parent.name);
+
+        
     }
 
     void OnMouseDrag()

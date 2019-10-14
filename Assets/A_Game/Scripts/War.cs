@@ -82,6 +82,8 @@ public class War : NetworkEntity
     public GameObject ActionPopup;
     public Button ActionButton;
 
+    public LineRenderer lineRenderer, lineRenderer2;
+
     override protected void Awake()
     {
         base.Awake();
@@ -150,7 +152,7 @@ public class War : NetworkEntity
         else
             setupWar();
 
-        LineRenderer lineRenderer = _battleField.Find(GridNames.TEAM_1).gameObject.AddComponent<LineRenderer>();
+        lineRenderer = _battleField.Find(GridNames.TEAM_1).gameObject.AddComponent<LineRenderer>();
         lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
         lineRenderer.widthMultiplier = 0.1f;
         lineRenderer.positionCount = 4;
@@ -168,22 +170,26 @@ public class War : NetworkEntity
         lineRenderer.SetPosition(3, new Vector3(GameConfig.Instance.BattleFieldMaxPos.x, GameConfig.Instance.BattleFieldMinPos.y, 0.0f));
         //lineRenderer.SetPosition(4, new Vector3(GameConfig.Instance.BattleFieldMinPos.x, GameConfig.Instance.BattleFieldMinPos.y, 0.0f));
 
-        lineRenderer = _battleField.Find(GridNames.TEAM_2).gameObject.AddComponent<LineRenderer>();
-        lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
-        lineRenderer.widthMultiplier = 0.1f;
-        lineRenderer.positionCount = 4;
-        lineRenderer.loop = true;
+        lineRenderer2 = _battleField.Find(GridNames.TEAM_2).gameObject.AddComponent<LineRenderer>();
+        lineRenderer2.material = new Material(Shader.Find("Sprites/Default"));
+        lineRenderer2.widthMultiplier = 0.1f;
+        lineRenderer2.positionCount = 4;
+        lineRenderer2.loop = true;
         gradient = new Gradient();
         gradient.SetKeys(
             new GradientColorKey[] { new GradientColorKey(Color.cyan, 0.0f), new GradientColorKey(Color.cyan, 1.0f) },
             new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(1.0f, 1.0f) }
         );
-        lineRenderer.colorGradient = gradient;
+        lineRenderer2.colorGradient = gradient;
 
-        lineRenderer.SetPosition(0, new Vector3(GameConfig.Instance.BattleFieldMinPos.x + 17, GameConfig.Instance.BattleFieldMinPos.y, 0.0f));
-        lineRenderer.SetPosition(1, new Vector3(GameConfig.Instance.BattleFieldMinPos.x + 17, GameConfig.Instance.BattleFieldMaxPos.y, 0.0f));
-        lineRenderer.SetPosition(2, new Vector3(GameConfig.Instance.BattleFieldMaxPos.x + 17, GameConfig.Instance.BattleFieldMaxPos.y, 0.0f));
-        lineRenderer.SetPosition(3, new Vector3(GameConfig.Instance.BattleFieldMaxPos.x + 17, GameConfig.Instance.BattleFieldMinPos.y, 0.0f));
+        lineRenderer2.SetPosition(0, new Vector3(GameConfig.Instance.BattleFieldMinPos.x + 17, GameConfig.Instance.BattleFieldMinPos.y, 0.0f));
+        lineRenderer2.SetPosition(1, new Vector3(GameConfig.Instance.BattleFieldMinPos.x + 17, GameConfig.Instance.BattleFieldMaxPos.y, 0.0f));
+        lineRenderer2.SetPosition(2, new Vector3(GameConfig.Instance.BattleFieldMaxPos.x + 17, GameConfig.Instance.BattleFieldMaxPos.y, 0.0f));
+        lineRenderer2.SetPosition(3, new Vector3(GameConfig.Instance.BattleFieldMaxPos.x + 17, GameConfig.Instance.BattleFieldMinPos.y, 0.0f));
+
+        lineRenderer.enabled = false;
+        lineRenderer2.enabled = false;
+        SetupLoadTeams();
     }
 
     private void OnDestroy()
@@ -355,7 +361,7 @@ public class War : NetworkEntity
 
                 if (hostReady && guestReady)
                 {
-                    Invoke("StartBattle", 5.0f);
+                    Invoke("StartBattle", 8.0f);
                 }
             }
         }
@@ -528,10 +534,30 @@ public class War : NetworkEntity
 
             if (unitHealth > 0)
             {
-                if (unit.Type == MinMinUnit.Types.Bomber || unit.Type == MinMinUnit.Types.Destroyer) ActionButton.GetComponentInChildren<Text>().text = "ATTACK";
-                if (unit.Type == MinMinUnit.Types.Scout) ActionButton.GetComponentInChildren<Text>().text = "SCOUT";
-                if (unit.Type == MinMinUnit.Types.Healer) ActionButton.GetComponentInChildren<Text>().text = "HEAL";
-                if (unit.Type == MinMinUnit.Types.Tank) ActionButton.GetComponentInChildren<Text>().text = "GUARD";
+                if (unit.Type == MinMinUnit.Types.Bomber || unit.Type == MinMinUnit.Types.Destroyer)
+                {
+                    ActionButton.GetComponentInChildren<Text>().text = "ATTACK";
+                    lineRenderer.enabled = false;
+                    lineRenderer2.enabled = true;
+                }
+                if (unit.Type == MinMinUnit.Types.Scout)
+                {
+                    ActionButton.GetComponentInChildren<Text>().text = "SCOUT";
+                    lineRenderer.enabled = false;
+                    lineRenderer2.enabled = true;
+                }
+                if (unit.Type == MinMinUnit.Types.Healer)
+                {
+                    ActionButton.GetComponentInChildren<Text>().text = "HEAL";
+                    lineRenderer.enabled = true;
+                    lineRenderer2.enabled = false;
+                }
+                if (unit.Type == MinMinUnit.Types.Tank)
+                {
+                    ActionButton.GetComponentInChildren<Text>().text = "GUARD";
+                    lineRenderer.enabled = true;
+                    lineRenderer2.enabled = false;
+                }
 
                 _unitTurnText.text = "Unit turn: " + unitName + " | Index: " + unitIndex;
                 handleHighlight(unitIndex, teamName);
@@ -575,6 +601,8 @@ public class War : NetworkEntity
             if (GetIsAiTurn())
             {
                 ActionButton.gameObject.SetActive(false);
+                lineRenderer.enabled = false;
+                lineRenderer2.enabled = false;
                 StartCoroutine(handleAiPlayerInput(teamInTurn));
             }
             else if (teamInTurn == _localPlayerTeam)
@@ -600,6 +628,9 @@ public class War : NetworkEntity
             if (delay <= 0)
             {
                 ActionPopup.SetActive(false);
+                lineRenderer.enabled = false;
+                lineRenderer2.enabled = false;
+
                 MinMinUnit unit = getUnitInTurn();
                 Dictionary<string, MinMinUnit> teamInTurnUnits = GetTeamUnitsDictionary(teamInTurn);
                 Vector2 aiWorldInput2D = _aiPlayer.GetWorldInput2D(unit.Type, teamInTurnUnits, _exposedUnitsByTeam, _healerAreasByOwnerByTargetByTeam);
@@ -904,6 +935,10 @@ public class War : NetworkEntity
                 warTeamGridItem.UnitName = unitName;
 
                 warTeamGridItem.View.sprite = Resources.Load<Sprite>("Images/Units/" + unitName);
+
+                int unitTier = GameInventory.Instance.GetUnitTier(unitName);
+                warTeamGridItem.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/unit_frame_t" + unitTier);
+                
             }
             else
                 warGridItemTransform.gameObject.SetActive(false);
@@ -1115,6 +1150,44 @@ public class War : NetworkEntity
         
         setTeamHealth(teamName, true);
         setTeamHealth(teamName, false);
+    }
+
+    void SetupLoadTeams()
+    {
+        string[] hostUnits = GameNetwork.GetTeamUnitNames(GameNetwork.TeamNames.HOST);
+        string[] guestUnits = GameNetwork.GetTeamUnitNames(GameNetwork.TeamNames.GUEST);
+
+        int itemNumber = 1;
+        foreach (string unitName in hostUnits)
+        {
+            // Setup team for loading screen
+            Transform Team1ItemTransform = ReadyPopup.transform.Find("ReadyTeam1/Viewport/Content/WarTeamGridItem" + itemNumber++);
+            WarTeamGridItem Team1GridItem = Team1ItemTransform.GetComponent<WarTeamGridItem>();
+
+            int unitTier = GameInventory.Instance.GetUnitTier(unitName);
+            Dictionary<string, MinMinUnit> teamUnits = GetTeamUnitsDictionary(GameNetwork.TeamNames.HOST);
+            MinMinUnit unit = teamUnits[unitName];
+            Team1ItemTransform.GetComponentInChildren<Text>().text = unit.Type.ToString();
+
+            Team1GridItem.View.sprite = Resources.Load<Sprite>("Images/Units/" + unitName);
+            Team1GridItem.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/unit_frame_t" + unitTier);
+        }
+
+        itemNumber = 1;
+        foreach (string unitName in guestUnits)
+        {
+            // Setup team for loading screen
+            Transform Team2ItemTransform = ReadyPopup.transform.Find("ReadyTeam2/Viewport/Content/WarTeamGridItem" + itemNumber++);
+            WarTeamGridItem Team2GridItem = Team2ItemTransform.GetComponent<WarTeamGridItem>();
+
+            int unitTier = GameInventory.Instance.GetUnitTier(unitName);
+            Dictionary<string, MinMinUnit> teamUnits = GetTeamUnitsDictionary(GameNetwork.TeamNames.GUEST);
+            MinMinUnit unit = teamUnits[unitName];
+            Team2ItemTransform.GetComponentInChildren<Text>().text = unit.Type.ToString();
+
+            Team2GridItem.View.sprite = Resources.Load<Sprite>("Images/Units/" + unitName);
+            Team2GridItem.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/unit_frame_t" + unitTier);
+        }
     }
 
     private void sendTeamUnitsInstantiatedNetworkViewIds(string teamName, string unitNetworkViewsIdsString)
