@@ -36,7 +36,10 @@ public class War : NetworkEntity
     [SerializeField] private Text _unitTurnText;
     [SerializeField] private Text _unitTypeTurnText;
     [SerializeField] private Text _unitTierTurnText;
+
     [SerializeField] private Text _roundNumberText;
+    [SerializeField] private Transform _roundDisplayGridContent;
+
     [SerializeField] private Text _actionsLeftText;
 
     [SerializeField] private Text _teamNameText1;
@@ -445,6 +448,7 @@ public class War : NetworkEntity
     {
        
         _roundNumberText.text = "Round: " + roundNumber.ToString();
+        updateRoundDisplay(roundNumber);
 
         if (GetIsHost())
         {
@@ -994,6 +998,13 @@ public class War : NetworkEntity
                 rewardBoxTransform.localScale = new Vector3(-localScale.x, localScale.y, localScale.z);
             }
         }
+    }
+
+    private void updateRoundDisplay(int round)
+    {
+        int roundContentLenght = _roundDisplayGridContent.childCount;
+        for (int i = 0; i < roundContentLenght; i++)
+            _roundDisplayGridContent.GetChild(i).GetComponent<Image>().enabled = (i < round);
     }
 
     private void onRewardBoxHit()

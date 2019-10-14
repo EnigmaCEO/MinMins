@@ -6041,6 +6041,12 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1496011181}
   m_PrefabAsset: {fileID: 0}
+--- !u!224 &1496011183 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1031012573810610783, guid: 4adb97f4c8d765f428eb4862ef02cb3f,
+    type: 3}
+  m_PrefabInstance: {fileID: 1496011181}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1509305576
 GameObject:
   m_ObjectHideFlags: 0
@@ -10275,6 +10281,11 @@ PrefabInstance:
       propertyPath: _teamNameText2
       value: 
       objectReference: {fileID: 1641284618}
+    - target: {fileID: 2185244040754804245, guid: 888af93ce4c573b4ea4da5665b909fbf,
+        type: 3}
+      propertyPath: _roundDisplayGridContent
+      value: 
+      objectReference: {fileID: 1496011183}
     - target: {fileID: 3122206619754247083, guid: 888af93ce4c573b4ea4da5665b909fbf,
         type: 3}
       propertyPath: viewIdField
