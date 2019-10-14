@@ -113,6 +113,7 @@ MonoBehaviour:
   LifeTime: 2
   CollisionTime: -1
   ActionTime: 2
+  ScaleFactorToParticleSizeFactor: 0.25
   OwnerUnitName: 
   OwnerTeamName: 
   OwnerNetworkPlayerId: 0

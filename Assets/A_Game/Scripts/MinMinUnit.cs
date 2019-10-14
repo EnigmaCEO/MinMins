@@ -16,11 +16,11 @@ public class MinMinUnit : NetworkEntity
 
     public enum EffectNames
     {
-        One = 1,
-        Two,
-        Three,
-        Four,
-        Five,
+        FireExplosion = 1,
+        LifeArea,
+        LightningProjectile,
+        ScoutLight,
+        ShieldEffect,
         Six
     }
 
@@ -65,6 +65,26 @@ public class MinMinUnit : NetworkEntity
             setUpUnitForWar((string)data[0], (string)data[1], (int)data[2], (float)data[3], (float)data[4]);
 
         Tier = GameInventory.Instance.GetUnitTier(gameObject.name);
+    }
+
+    static public EffectNames GetEffectName(MinMinUnit unit)
+    {
+        EffectNames effect = unit.EffectName;
+
+        //Hack: Effect selection  ======================
+        //if (unit.Type == Types.Bomber)
+        //    effect = EffectNames.FireExplosion;
+        //else if (unit.Type == Types.Destroyer)
+        //    effect = EffectNames.LightningProjectile;
+        //else if (unit.Type == Types.Healer)
+        //    effect = EffectNames.LifeArea;
+        //else if (unit.Type == Types.Scout)
+        //    effect = EffectNames.ScoutLight;
+        //else if (unit.Type == Types.Tank)
+        //    effect = EffectNames.ShieldEffect;
+        //=================================================
+
+        return effect;
     }
 
     public Vector3 GetBattlefieldPosition()

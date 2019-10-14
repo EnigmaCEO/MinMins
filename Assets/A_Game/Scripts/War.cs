@@ -750,7 +750,10 @@ public class War : NetworkEntity
         {
             string unitTypeString = unit.Type.ToString();
             string actionAreaPrefabName = unitTypeString + "Area";
-            object[] instantiationData = { actionAreaPrefabName, inputWorldPosition, direction, unit.name, unit.EffectName, teamName, networkPlayerId };
+
+            MinMinUnit.EffectNames effectName = MinMinUnit.GetEffectName(unit);
+
+            object[] instantiationData = { actionAreaPrefabName, inputWorldPosition, direction, unit.name, effectName, teamName, networkPlayerId };
             GameObject actionAreaObject = NetworkManager.InstantiateObject(ActionArea.ACTION_AREAS_RESOURCES_FOLDER_PATH + actionAreaPrefabName, Vector3.zero, Quaternion.identity, 0, instantiationData);
 
             if (actionAreaNetworkViewIdsString != "")
@@ -766,6 +769,8 @@ public class War : NetworkEntity
         sendActionAreaNetworkViewsIds(actionAreaNetworkViewIdsString);
         StartCoroutine(HandleActionTime(actionTime));
     }
+
+    
 
     private void sendActionAreaNetworkViewsIds(string actionAreaNetworkViewIdsString)
     {
@@ -1078,9 +1083,9 @@ public class War : NetworkEntity
 
             unitNetworkViewsIdsString += unitNetworkViewId.ToString();
 
-            MinMinUnit unit = unitGameObject.GetComponent<MinMinUnit>();
+            //MinMinUnit unit = unitGameObject.GetComponent<MinMinUnit>();
 
-            MinMinUnit.Types unitDebugType = MinMinUnit.Types.Bomber;
+            //MinMinUnit.Types unitDebugType = MinMinUnit.Types.Bomber;
             //Type vs Type Test hack =======================================
             //if (teamName == GameNetwork.TeamNames.HOST)
             //    unitDebugType = MinMinUnit.Types.Destroyer;
@@ -1100,10 +1105,10 @@ public class War : NetworkEntity
             //==============================================================
 
             //Random type Test hack =======================================
-            unitDebugType = (MinMinUnit.Types)Random.Range(0, 5);
+            //unitDebugType = (MinMinUnit.Types)Random.Range(0, 5);
             //==============================================================
 
-            unit.SendDebugSettingsForWar(unitDebugType);
+            //unit.SendDebugSettingsForWar(unitDebugType);
         }
 
         sendTeamUnitsInstantiatedNetworkViewIds(teamName, unitNetworkViewsIdsString);

@@ -162,7 +162,7 @@ public class GameStore : MonoBehaviour
     {
         //===============================================
         //IAPManager.BuyConsumable(packIndex);  
-        handleCurrencyBuyResult(IAPManager.Instance.IAP_IDS[_selectedPackIndex], true);  // Buy hack to work on android
+        //handleCurrencyBuyResult(IAPManager.Instance.IAP_IDS[_selectedPackIndex], true);  // Buy hack to work on android
         //=========================================
         _lootBoxBuyConfirmPopUp.Close();
         //grantBuy(_selectedPackTier); //TODO: Remove hack

@@ -15,6 +15,8 @@ public class ActionArea : NetworkEntity
 
     public float ActionTime = 2; //Used by War script
 
+    public float ScaleFactorToParticleSizeFactor = 1;
+
 
     [Header("Only for display. Set at runtime:")]
     public string OwnerUnitName;
@@ -75,6 +77,7 @@ public class ActionArea : NetworkEntity
         transform.position = position;
 
         float scaleFactor = float.Parse(getOwnerUnitProperty(GameNetwork.UnitPlayerProperties.EFFECT_SCALE));
+        //scaleFactor = 5; //Hack power scale
         Vector3 scale = transform.localScale;
         transform.localScale = new Vector3(scaleFactor * scale.x, scaleFactor * scale.y, scaleFactor * scale.z);
 
@@ -125,13 +128,19 @@ public class ActionArea : NetworkEntity
 
     private void setEffect(MinMinUnit.EffectNames effectName)
     {
-        string effectFullPath = EFFECTS_RESOURCES_FOLDER_PATH + ((int)effectName).ToString();
+        string effectFullPath = EFFECTS_RESOURCES_FOLDER_PATH + (effectName.ToString());
 
         //Debug.LogWarning("ActionArea::setEffect -> effectFullPath: " + effectFullPath);
 
         _effect = Instantiate<GameObject>(Resources.Load<GameObject>(effectFullPath));
         _effect.transform.parent = this.transform;
         _effect.transform.localPosition = Vector3.zero;
+
+        if (effectName == MinMinUnit.EffectNames.LightningProjectile)
+        {
+            foreach (ParticleSystem particles in _effect.GetComponentsInChildren<ParticleSystem>())
+                particles.startSize = this.transform.localScale.x * ScaleFactorToParticleSizeFactor;
+        }
     }
 
     protected void dealDamage (string targetUnitName)
