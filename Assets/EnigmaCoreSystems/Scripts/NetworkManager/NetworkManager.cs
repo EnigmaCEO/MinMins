@@ -101,6 +101,7 @@ namespace Enigma.CoreSystems
         }
 
         public const string _PHOTON_CONNECTION_GAME_VERSION_SETTINGS = "v1.0";
+        private const int _GUEST_NAME_MAX_RANDOM_INDEX = 1000;
 
         static private string _serverUrl;
         static private string _sessionID;
@@ -264,6 +265,11 @@ namespace Enigma.CoreSystems
         {
             Debug.Log(Instance);
             Instance.StartCoroutine(httpRequest(id, hashtable, externalCallback, localCallback, texture));
+        }
+
+        static public string GetRandomOnlineName()
+        {
+            return "Guest" + Random.Range(0, _GUEST_NAME_MAX_RANDOM_INDEX).ToString();
         }
 
         static private IEnumerator httpRequest(int id, Hashtable hashtable, Callback externalCallback, Callback localCallback, TextureCallback texture)

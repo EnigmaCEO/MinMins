@@ -39,6 +39,9 @@ public class War : NetworkEntity
     [SerializeField] private Text _roundNumberText;
     [SerializeField] private Text _actionsLeftText;
 
+    [SerializeField] private Text _teamNameText1;
+    [SerializeField] private Text _teamNameText2;
+
     [SerializeField] private Image _hostTeamHealthFill;
     [SerializeField] private Image _guestTeamHealthFill;
 
@@ -132,7 +135,18 @@ public class War : NetworkEntity
         determineLocalPlayerTeam();
 
         if(!NetworkManager.LoggedIn)
-            NetworkManager.SetLocalPlayerNickName(_localPlayerTeam + "_Player");  // Nickname hack
+            NetworkManager.SetLocalPlayerNickName(NetworkManager.GetRandomOnlineName());  // Nickname hack
+
+        _teamNameText1.text = NetworkManager.GetPlayerName();
+
+        if (GetUsesAi())
+            _teamNameText2.text = NetworkManager.GetRandomOnlineName();
+        else
+        {
+            string opponentTeamName = GameNetwork.GetOppositeTeamName(_localPlayerTeam);
+            int opponentNetworkPlayerId = GameNetwork.GetTeamNetworkPlayerId(opponentTeamName);
+            _teamNameText2.text = NetworkManager.GetNetworkPlayerNicknameById(opponentNetworkPlayerId);
+        }
 
         NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.READY_TO_FIGHT, false.ToString(), _localPlayerTeam);
 
@@ -1129,7 +1143,7 @@ public class War : NetworkEntity
             //==============================================================
 
             //Specific Type Test hack =======================================
-            //unitDebugType = MinMinUnit.Types.Destroyer;
+            //unitDebugType = MinMinUnit.Types.Bomber;
             //==============================================================
 
             //Tanks against Bombers Test hack =======================================
@@ -1439,7 +1453,7 @@ public class War : NetworkEntity
     {
         string winnerNickname = "";
         if (GetUsesAi() && (winnerTeam == GameNetwork.TeamNames.GUEST))
-            winnerNickname = "Ai_Player";
+            winnerNickname = _teamNameText2.text;
         else
             winnerNickname = GameNetwork.GetNicknameFromPlayerTeam(winnerTeam);
         

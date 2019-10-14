@@ -10265,6 +10265,16 @@ PrefabInstance:
       propertyPath: ActionButton
       value: 
       objectReference: {fileID: 3421622119815411320}
+    - target: {fileID: 2185244040754804245, guid: 888af93ce4c573b4ea4da5665b909fbf,
+        type: 3}
+      propertyPath: _teamNameText1
+      value: 
+      objectReference: {fileID: 7899320}
+    - target: {fileID: 2185244040754804245, guid: 888af93ce4c573b4ea4da5665b909fbf,
+        type: 3}
+      propertyPath: _teamNameText2
+      value: 
+      objectReference: {fileID: 1641284618}
     - target: {fileID: 3122206619754247083, guid: 888af93ce4c573b4ea4da5665b909fbf,
         type: 3}
       propertyPath: viewIdField
@@ -11266,7 +11276,7 @@ PrefabInstance:
     - target: {fileID: 757844435481458886, guid: 22ed8609c460bcf4a9b339891b39f4a9,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.000015258789
+      value: 0.000061035156
       objectReference: {fileID: 0}
     - target: {fileID: 757844435481458886, guid: 22ed8609c460bcf4a9b339891b39f4a9,
         type: 3}
@@ -11371,7 +11381,7 @@ PrefabInstance:
     - target: {fileID: 562898128920184180, guid: 22ed8609c460bcf4a9b339891b39f4a9,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.000015258789
+      value: 0.000061035156
       objectReference: {fileID: 0}
     - target: {fileID: 562898128920184180, guid: 22ed8609c460bcf4a9b339891b39f4a9,
         type: 3}
