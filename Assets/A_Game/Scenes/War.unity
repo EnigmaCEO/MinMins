@@ -10265,7 +10265,7 @@ PrefabInstance:
         type: 3}
       propertyPath: ActionPopup
       value: 
-      objectReference: {fileID: 3421622119307276687}
+      objectReference: {fileID: 3421622119307276688}
     - target: {fileID: 2185244040754804245, guid: 888af93ce4c573b4ea4da5665b909fbf,
         type: 3}
       propertyPath: ActionButton
@@ -10591,6 +10591,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3421622119307276684}
   - component: {fileID: 3421622119307276686}
+  - component: {fileID: 3421622119307276688}
   m_Layer: 5
   m_Name: ActionPopUp
   m_TagString: Untagged
@@ -10598,6 +10599,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &3421622119307276688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3421622119307276687}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6cc441006a9773449d5034e63656445, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UnitImage: {fileID: 1509305578}
 --- !u!114 &3421622119815411320
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11287,7 +11301,7 @@ PrefabInstance:
     - target: {fileID: 757844435481458886, guid: 22ed8609c460bcf4a9b339891b39f4a9,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.000061035156
+      value: 0.000045776367
       objectReference: {fileID: 0}
     - target: {fileID: 757844435481458886, guid: 22ed8609c460bcf4a9b339891b39f4a9,
         type: 3}
@@ -11392,7 +11406,7 @@ PrefabInstance:
     - target: {fileID: 562898128920184180, guid: 22ed8609c460bcf4a9b339891b39f4a9,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.000061035156
+      value: 0.000045776367
       objectReference: {fileID: 0}
     - target: {fileID: 562898128920184180, guid: 22ed8609c460bcf4a9b339891b39f4a9,
         type: 3}

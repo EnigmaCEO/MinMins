@@ -85,7 +85,7 @@ public class War : NetworkEntity
     private double _lastNetworkTime;
 
     public GameObject ReadyPopup;
-    public GameObject ActionPopup;
+    public ActionPopUp ActionPopup;
     public Button ActionButton;
 
     public LineRenderer lineRenderer, lineRenderer2;
@@ -518,7 +518,10 @@ public class War : NetworkEntity
         if (unitIndex == -1)
             return;
 
-        ActionPopup.SetActive(true);
+        MinMinUnit unit = units.Values.ElementAt(unitIndex);
+        string unitName = unit.name;
+
+        ActionPopup.Open(unitName);
 
         int teamUnitsCount = units.Count;
         if (unitIndex >= teamUnitsCount)
@@ -542,8 +545,8 @@ public class War : NetworkEntity
         }
         else
         {
-            MinMinUnit unit = units.Values.ElementAt(unitIndex);
-            string unitName = unit.name;
+            //MinMinUnit unit = units.Values.ElementAt(unitIndex);
+            //string unitName = unit.name;
 
             if (GetIsHost() && (unit.Type == MinMinUnit.Types.Tank))
                 removeAreaForOwner<TankArea>(teamName, unitName, _tanksAreasByOwnerByTargetByTeam);
@@ -614,7 +617,8 @@ public class War : NetworkEntity
 
         if (actionsLeft > 0)
         {
-            ActionPopup.SetActive(true);
+            MinMinUnit unit = getUnitInTurn();
+            ActionPopup.Open(unit.name);
 
             if (GetIsAiTurn())
             {
@@ -645,7 +649,7 @@ public class War : NetworkEntity
             delay -= Time.deltaTime;
             if (delay <= 0)
             {
-                ActionPopup.SetActive(false);
+                ActionPopup.Close();
                 lineRenderer.enabled = false;
                 lineRenderer2.enabled = false;
 
@@ -668,7 +672,7 @@ public class War : NetworkEntity
         //Debug.LogWarning("handlePlayerInput");
         while (true)
         {
-            if (!ActionPopup.GetActive() && Input.GetMouseButtonDown(0))
+            if (!ActionPopup.gameObject.GetActive() && Input.GetMouseButtonDown(0))
             {
                 Vector3 tapWorldPosition = _gameCamera.MyCamera.ScreenToWorldPoint(Input.mousePosition);
                 GameConfig gameConfig = GameConfig.Instance;
