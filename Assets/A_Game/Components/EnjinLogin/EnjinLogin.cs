@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using Enigma.CoreSystems;
+using CodeStage.AntiCheat.Storage;
 
 public class EnjinLogin : MonoBehaviour
 {
@@ -22,9 +23,19 @@ public class EnjinLogin : MonoBehaviour
     public Button loginButton;
     public Button registerButton;
 
+    [SerializeField] private Toggle _rememberMeToggle;
+
+    private string _lastUsername = "";
+    private string _lastPassword = "";
+
 
     public void Initialize()
     {
+        _rememberMeToggle.isOn = (ObscuredPrefs.GetInt("RememberMe", 0) == 1) ? true : false;
+
+        loginUsername.text = ObscuredPrefs.GetString("username", "");
+        loginPassword.text = ObscuredPrefs.GetString("password", "");
+
         loadingGroup.SetActive(false);
         registerGroup.SetActive(false);
 
@@ -119,6 +130,9 @@ public class EnjinLogin : MonoBehaviour
         extras.Add("ip", ipAddress);
         extras.Add("country", country);
 
+        //_lastUsername = registerUsername.text;
+        //_lastPassword = registerPassword.text;
+
         NetworkManager.Register(
             registerUsername.text,
             registerPassword.text,
@@ -139,6 +153,9 @@ public class EnjinLogin : MonoBehaviour
         string country = NetworkManager.Country;  
         extras.Add("ip", ipAddress);
         extras.Add("country", country);
+
+        _lastUsername = loginUsername.text;
+        _lastPassword = loginPassword.text;
 
         NetworkManager.Login(
             loginUsername.text,
@@ -203,6 +220,7 @@ public class EnjinLogin : MonoBehaviour
     private void completeLogin(SimpleJSON.JSONNode response_hash)
     {
         print("Complete login:");
+
         GameStats.Instance.Rating = response_hash[NetworkManager.TransactionKeys.USER_DATA][GameNetwork.TransactionKeys.RATING].AsInt;
         string userName = response_hash[NetworkManager.TransactionKeys.USER_DATA][GameNetwork.TransactionKeys.USERNAME];
         NetworkManager.SetLocalPlayerNickName(userName);
@@ -233,18 +251,37 @@ public class EnjinLogin : MonoBehaviour
 
     private void onLogin(SimpleJSON.JSONNode response)
     {
-        if (response != null) {
-
+        if (response != null)
+        {
             SimpleJSON.JSONNode response_hash = response[0];
             string status = response_hash[NetworkManager.TransactionKeys.STATUS].ToString().Trim('"');
 
-            if (status == NetworkManager.StatusOptions.SUCCESS) {
+            if (status == NetworkManager.StatusOptions.SUCCESS)
+            {
                 // print("onRegistration SUCCESS");
-                
+
+                if (_rememberMeToggle.isOn)
+                {
+                    ObscuredPrefs.SetString("username", _lastUsername);
+                    ObscuredPrefs.SetString("password", _lastPassword);
+
+                    ObscuredPrefs.SetInt("RememberMe", 1);
+                }
+                else
+                {
+                    ObscuredPrefs.DeleteKey("username");
+                    ObscuredPrefs.DeleteKey("password");
+
+                    ObscuredPrefs.DeleteKey("RememberMe");
+                }
+
+                ObscuredPrefs.Save();
+
                 completeLogin(response_hash);
                 closeDialog();
             }
-            else {
+            else
+            {
                 EnableLoginWindow();
                 string term = "";
 
@@ -260,7 +297,9 @@ public class EnjinLogin : MonoBehaviour
                 alertText.color = failColor;
                 setAlert(term);
             }
-        } else {
+        }
+        else
+        {
             EnableLoginWindow();
             alertText.color = failColor;
             setAlert("Connection Error");
