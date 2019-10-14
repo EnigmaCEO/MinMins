@@ -23,7 +23,7 @@ public class LocalizationManager : MonoBehaviour
 
         load();
 
-        ChangeLanguage(Languages.Spanish);  //Language hack 
+        //ChangeLanguage(Languages.Spanish);  //Language hack 
         UnityEngine.SceneManagement.SceneManager.sceneLoaded += onSceneLoaded;
     }
 
