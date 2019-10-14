@@ -341,6 +341,7 @@ MonoBehaviour:
   _slotsTeam1: {fileID: 2053372629}
   _nextButton: {fileID: 1114925911}
   _backButton: {fileID: 1256794395}
+  _infoPopUp: {fileID: 416855365}
 --- !u!4 &343801787
 Transform:
   m_ObjectHideFlags: 0
@@ -2030,7 +2031,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: (999/999)
+  m_Text: (0/10)
 --- !u!222 &1284948752
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2254,7 +2255,7 @@ MonoBehaviour:
   m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 0
-  m_FillAmount: 1
+  m_FillAmount: 0
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
