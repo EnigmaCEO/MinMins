@@ -107,8 +107,8 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
             string store = GameOfWhales.STORE_GOOGLEPLAY;
 #endif
             // TODO: Restore when Game of Whales is enabled======
-            //GameOfWhales.Init(store);  
-            //GameOfWhales.SetPushNotificationsEnable(true);
+            GameOfWhales.Init(store);  
+            GameOfWhales.SetPushNotificationsEnable(true);
             //===================================================
         }
 

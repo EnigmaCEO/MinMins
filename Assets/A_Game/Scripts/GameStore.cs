@@ -161,7 +161,7 @@ public class GameStore : MonoBehaviour
     private void onLootBoxBuyConfirmButtonDown()
     {
         //===============================================
-        //IAPManager.BuyConsumable(packIndex);  
+        IAPManager.BuyConsumable(_selectedPackIndex);  
         //handleCurrencyBuyResult(IAPManager.Instance.IAP_IDS[_selectedPackIndex], true);  // Buy hack to work on android
         //=========================================
         _lootBoxBuyConfirmPopUp.Close();
