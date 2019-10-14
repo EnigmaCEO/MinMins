@@ -11,6 +11,7 @@ public class Main : EnigmaScene
     [SerializeField] private int _checkEnjinLinkingDelay = 2;
     [SerializeField] GameObject _loginButton;
     [SerializeField] GameObject _logoutButton;
+    [SerializeField] GameObject _kinPopUp;
 
     void Start()
     {
@@ -28,7 +29,20 @@ public class Main : EnigmaScene
 
         _loginModal.GetComponent<EnjinLogin>().Initialize();
 
-        _enjinWindow.gameObject.SetActive(false);
+        _enjinWindow.SetActive(false);
+
+
+        string kin = PlayerPrefs.GetString("Kin", "0");
+
+        if (kin == "0")
+        {
+            _kinPopUp.SetActive(true);
+            PlayerPrefs.SetString("Kin", "1");
+        }
+        else
+            _kinPopUp.SetActive(false);
+
+        _kinPopUp.SetActive(true);
     }
 
     public void OnSinglePlayerButtonDown()
@@ -181,12 +195,17 @@ public class Main : EnigmaScene
 
     public void closeQRDialog()
     {
-        _enjinWindow.gameObject.SetActive(false);
+        _enjinWindow.SetActive(false);
     }
 
     public void Logout()
     {
         NetworkManager.Logout();
         Init();
+    }
+
+    public void closeKinDialog()
+    {
+        _kinPopUp.SetActive(false);
     }
 }

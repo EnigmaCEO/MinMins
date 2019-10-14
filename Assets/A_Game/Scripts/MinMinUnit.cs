@@ -44,6 +44,8 @@ public class MinMinUnit : NetworkEntity
     public string TeamName { get { return _teamName; } }
     public int TeamIndex { get { return _teamIndex; } }
 
+    public int Tier;
+
     protected override void Awake()
     {
         base.Awake();
@@ -61,6 +63,8 @@ public class MinMinUnit : NetworkEntity
         object[] data = base.GetInstantiationData();
         if (data != null)
             setUpUnitForWar((string)data[0], (string)data[1], (int)data[2], (float)data[3], (float)data[4]);
+
+        Tier = GameInventory.Instance.GetUnitTier(gameObject.name);
     }
 
     public Vector3 GetBattlefieldPosition()

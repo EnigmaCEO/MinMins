@@ -9,6 +9,7 @@ public class WarPrepManager : EnigmaScene
     [SerializeField] private Transform _slotsTeam1;
     [SerializeField] private Button _nextButton;
     [SerializeField] private Button _backButton;
+    [SerializeField] private GameObject _infoPopUp;
 
     private int _slotsInPlay = 0;
     private int _slotsReady = 0;
@@ -38,10 +39,15 @@ public class WarPrepManager : EnigmaScene
             prepMinMinSprite.SetManager(this);
             prepMinMinSprite.UnitName = unitName;
 
+            
             minMinObj.GetComponentInChildren<PolygonCollider2D>().isTrigger = true;
 
             minMinTransform.parent = warPrepGrid.Find("Viewport/Content/slot" + (i + 1));
             minMinTransform.localPosition = new Vector2(0, 0);
+
+            int unitTier = GameInventory.Instance.GetUnitTier(unitName);
+            minMinTransform.parent.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/unit_frame_t" + unitTier);
+            _infoPopUp.SetActive(false);
 
             _slotsInPlay++;
         }
@@ -62,8 +68,7 @@ public class WarPrepManager : EnigmaScene
         lineRenderer.SetPosition(1, new Vector3(GameConfig.Instance.BattleFieldMinPos.x, GameConfig.Instance.BattleFieldMaxPos.y, 0.0f));
         lineRenderer.SetPosition(2, new Vector3(GameConfig.Instance.BattleFieldMaxPos.x, GameConfig.Instance.BattleFieldMaxPos.y, 0.0f));
         lineRenderer.SetPosition(3, new Vector3(GameConfig.Instance.BattleFieldMaxPos.x, GameConfig.Instance.BattleFieldMinPos.y, 0.0f));
-        //lineRenderer.SetPosition(4, new Vector3(GameConfig.Instance.BattleFieldMinPos.x, GameConfig.Instance.BattleFieldMinPos.y, 0.0f));
-
+        
     }
 
     void Update()
@@ -74,6 +79,7 @@ public class WarPrepManager : EnigmaScene
     public void AddToSlotsReady()
     {
         _slotsReady++;
+        _infoPopUp.SetActive(false);
 
         if (_slotsReady == _slotsInPlay)
         {

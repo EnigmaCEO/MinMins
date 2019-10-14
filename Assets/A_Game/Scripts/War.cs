@@ -78,6 +78,10 @@ public class War : NetworkEntity
     private AiPlayer _aiPlayer;
     private double _lastNetworkTime;
 
+    public GameObject ReadyPopup;
+    public GameObject ActionPopup;
+    public Button ActionButton;
+
     override protected void Awake()
     {
         base.Awake();
@@ -145,6 +149,41 @@ public class War : NetworkEntity
             GameNetwork.Instance.JoinOrCreateRoom();
         else
             setupWar();
+
+        LineRenderer lineRenderer = _battleField.Find(GridNames.TEAM_1).gameObject.AddComponent<LineRenderer>();
+        lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+        lineRenderer.widthMultiplier = 0.1f;
+        lineRenderer.positionCount = 4;
+        lineRenderer.loop = true;
+        Gradient gradient = new Gradient();
+        gradient.SetKeys(
+            new GradientColorKey[] { new GradientColorKey(Color.cyan, 0.0f), new GradientColorKey(Color.cyan, 1.0f) },
+            new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(1.0f, 1.0f) }
+        );
+        lineRenderer.colorGradient = gradient;
+
+        lineRenderer.SetPosition(0, new Vector3(GameConfig.Instance.BattleFieldMinPos.x, GameConfig.Instance.BattleFieldMinPos.y, 0.0f));
+        lineRenderer.SetPosition(1, new Vector3(GameConfig.Instance.BattleFieldMinPos.x, GameConfig.Instance.BattleFieldMaxPos.y, 0.0f));
+        lineRenderer.SetPosition(2, new Vector3(GameConfig.Instance.BattleFieldMaxPos.x, GameConfig.Instance.BattleFieldMaxPos.y, 0.0f));
+        lineRenderer.SetPosition(3, new Vector3(GameConfig.Instance.BattleFieldMaxPos.x, GameConfig.Instance.BattleFieldMinPos.y, 0.0f));
+        //lineRenderer.SetPosition(4, new Vector3(GameConfig.Instance.BattleFieldMinPos.x, GameConfig.Instance.BattleFieldMinPos.y, 0.0f));
+
+        lineRenderer = _battleField.Find(GridNames.TEAM_2).gameObject.AddComponent<LineRenderer>();
+        lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+        lineRenderer.widthMultiplier = 0.1f;
+        lineRenderer.positionCount = 4;
+        lineRenderer.loop = true;
+        gradient = new Gradient();
+        gradient.SetKeys(
+            new GradientColorKey[] { new GradientColorKey(Color.cyan, 0.0f), new GradientColorKey(Color.cyan, 1.0f) },
+            new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(1.0f, 1.0f) }
+        );
+        lineRenderer.colorGradient = gradient;
+
+        lineRenderer.SetPosition(0, new Vector3(GameConfig.Instance.BattleFieldMinPos.x + 17, GameConfig.Instance.BattleFieldMinPos.y, 0.0f));
+        lineRenderer.SetPosition(1, new Vector3(GameConfig.Instance.BattleFieldMinPos.x + 17, GameConfig.Instance.BattleFieldMaxPos.y, 0.0f));
+        lineRenderer.SetPosition(2, new Vector3(GameConfig.Instance.BattleFieldMaxPos.x + 17, GameConfig.Instance.BattleFieldMaxPos.y, 0.0f));
+        lineRenderer.SetPosition(3, new Vector3(GameConfig.Instance.BattleFieldMaxPos.x + 17, GameConfig.Instance.BattleFieldMinPos.y, 0.0f));
     }
 
     private void OnDestroy()
@@ -316,11 +355,17 @@ public class War : NetworkEntity
 
                 if (hostReady && guestReady)
                 {
-                    NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.MATCH_START_TIME, NetworkManager.GetNetworkTime());
-                    NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.ROUND_COUNT, 1); //Starts combat cycle
+                    Invoke("StartBattle", 5.0f);
                 }
             }
         }
+    }
+
+    void StartBattle()
+    {
+        NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.MATCH_START_TIME, NetworkManager.GetNetworkTime());
+        NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.ROUND_COUNT, 1); //Starts combat cycle
+        ReadyPopup.SetActive(false);
     }
 
     private void onUnitHealthSet(string teamName, string unitName, int health)
@@ -378,6 +423,7 @@ public class War : NetworkEntity
 
     private void onRoundStarted(int roundNumber)
     {
+       
         _roundNumberText.text = "Round: " + roundNumber.ToString();
 
         if (GetIsHost())
@@ -392,7 +438,11 @@ public class War : NetworkEntity
 
     private void onTeamTurnChanged(string teamName)
     {
-        _teamTurnText.text = "Turn: " + teamName + " | Mine: " + _localPlayerTeam;
+        //_teamTurnText.text = "Turn: " + teamName + " | Mine: " + _localPlayerTeam;
+        if (teamName == _localPlayerTeam)
+            _teamTurnText.text = "YOUR TURN";
+        else
+            _teamTurnText.text = "ENEMY TURN";
 
         if (GetIsHost())
             skipUnitIndex(teamName);
@@ -444,6 +494,8 @@ public class War : NetworkEntity
         if (unitIndex == -1)
             return;
 
+        ActionPopup.SetActive(true);
+
         int teamUnitsCount = units.Count;
         if (unitIndex >= teamUnitsCount)
         {
@@ -476,6 +528,11 @@ public class War : NetworkEntity
 
             if (unitHealth > 0)
             {
+                if (unit.Type == MinMinUnit.Types.Bomber || unit.Type == MinMinUnit.Types.Destroyer) ActionButton.GetComponentInChildren<Text>().text = "ATTACK";
+                if (unit.Type == MinMinUnit.Types.Scout) ActionButton.GetComponentInChildren<Text>().text = "SCOUT";
+                if (unit.Type == MinMinUnit.Types.Healer) ActionButton.GetComponentInChildren<Text>().text = "HEAL";
+                if (unit.Type == MinMinUnit.Types.Tank) ActionButton.GetComponentInChildren<Text>().text = "GUARD";
+
                 _unitTurnText.text = "Unit turn: " + unitName + " | Index: " + unitIndex;
                 handleHighlight(unitIndex, teamName);
                 _gameCamera.HandleMovement(teamName, units[unitName].Type);
@@ -513,10 +570,18 @@ public class War : NetworkEntity
 
         if (actionsLeft > 0)
         {
+            ActionPopup.SetActive(true);
+
             if (GetIsAiTurn())
+            {
+                ActionButton.gameObject.SetActive(false);
                 StartCoroutine(handleAiPlayerInput(teamInTurn));
+            }
             else if (teamInTurn == _localPlayerTeam)
+            {
+                ActionButton.gameObject.SetActive(true);
                 StartCoroutine(handleHumanPlayerInput());
+            }
         }
         else if (GetIsHost())
             changeTurn(teamInTurn);
@@ -534,6 +599,7 @@ public class War : NetworkEntity
             delay -= Time.deltaTime;
             if (delay <= 0)
             {
+                ActionPopup.SetActive(false);
                 MinMinUnit unit = getUnitInTurn();
                 Dictionary<string, MinMinUnit> teamInTurnUnits = GetTeamUnitsDictionary(teamInTurn);
                 Vector2 aiWorldInput2D = _aiPlayer.GetWorldInput2D(unit.Type, teamInTurnUnits, _exposedUnitsByTeam, _healerAreasByOwnerByTargetByTeam);
@@ -553,7 +619,7 @@ public class War : NetworkEntity
         //Debug.LogWarning("handlePlayerInput");
         while (true)
         {
-            if (Input.GetMouseButtonDown(0))
+            if (!ActionPopup.GetActive() && Input.GetMouseButtonDown(0))
             {
                 Vector3 tapWorldPosition = _gameCamera.MyCamera.ScreenToWorldPoint(Input.mousePosition);
                 GameConfig gameConfig = GameConfig.Instance;
@@ -957,7 +1023,7 @@ public class War : NetworkEntity
     private Vector2 getRandomBattlefieldPosition()
     {
         GameConfig gameConfig = GameConfig.Instance;
-        return new Vector2(Random.Range(gameConfig.BattleFieldMinPos.x, gameConfig.BattleFieldMaxPos.x) + _battleFieldRightSideOffset, Random.Range(gameConfig.BattleFieldMinPos.y, gameConfig.BattleFieldMaxPos.y));
+        return new Vector2(Random.Range(gameConfig.BattleFieldMinPos.x + 0.5f, gameConfig.BattleFieldMaxPos.x - 0.5f) + _battleFieldRightSideOffset, Random.Range(gameConfig.BattleFieldMinPos.y + 0.5f, gameConfig.BattleFieldMaxPos.y - 0.5f));
     }
 
     private void instantiateTeam(string teamName, string[] teamUnits)
@@ -1517,5 +1583,10 @@ public class War : NetworkEntity
             BoxTiersWithAmountsRewards.Add(GameInventory.Tiers.SILVER, 0);
             BoxTiersWithAmountsRewards.Add(GameInventory.Tiers.GOLD, 0);
         }
+    }
+
+    public void ClosePopup(GameObject obj)
+    {
+        obj.transform.parent.gameObject.SetActive(false);
     }
 }

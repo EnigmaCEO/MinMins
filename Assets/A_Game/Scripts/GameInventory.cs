@@ -341,7 +341,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         inventoryManager.ClearAllGroups();
 
         //Set default values ========================================================================
-        inventoryManager.AddItem(GroupNames.STATS, ItemKeys.SINGLE_PLAYER_LEVEL, 10);
+        inventoryManager.AddItem(GroupNames.STATS, ItemKeys.SINGLE_PLAYER_LEVEL, 1);
 
         for(int tier = 1; tier <= _lootBoxTiersAmount; tier++)
             inventoryManager.AddItem(GroupNames.LOOT_BOXES, tier.ToString(), 0);

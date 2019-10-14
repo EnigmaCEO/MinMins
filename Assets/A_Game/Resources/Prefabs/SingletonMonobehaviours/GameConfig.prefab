@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PersistBetweenScenes: 0
-  BattleFieldMaxPos: {x: 8, y: 4.5}
+  BattleFieldMaxPos: {x: 6, y: 4.5}
   BattleFieldMinPos: {x: -6, y: -2}
   MaxUnitDefense: 50
   ProjectilesSpeed: 8

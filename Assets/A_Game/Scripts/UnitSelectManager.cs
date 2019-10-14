@@ -52,6 +52,15 @@ public class UnitSelectManager : EnigmaScene
             unitTransform.Find("Sprite").GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/Units/" + unitName);
             unitTransform.GetComponent<Button>().onClick.AddListener(() => { onUnitFightButtonDown(unitName); });
             unitTransform.Find("InfoButton").GetComponent<Button>().onClick.AddListener(() => { onUnitInfoButtonDown(unitName); });
+
+            int unitTier = GameInventory.Instance.GetUnitTier(unitName);
+            unitTransform.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/unit_frame_t" + unitTier);
+            
+            for(int x = 1; x < 4; x++)
+            {
+                if (unitTier < x) unitTransform.Find("StarsGrid/Viewport/Content/star" + x).gameObject.SetActive(false);
+            }
+                
         }
 
         unitGridItemTemplate.SetActive(false);
@@ -86,32 +95,6 @@ public class UnitSelectManager : EnigmaScene
         createDefaultSelectedUnits(slotsLength);
     }
 
-    void OnGUI()
-    {
-        if (_attack && _infoEnabled)
-        {
-            //Vector2 way = attack.GetComponent<SWS.BezierPathManager>().pathPoints[0]*12;
-            Color c = new Color(30f / 255f, 152f / 255f, 0f);
-
-            int wayPointsLength = _waypoints.Length;
-            Vector2[] finalwayPoints = new Vector2[wayPointsLength];
-            for (int i = 0; i < wayPointsLength; i++)
-                finalwayPoints[i] = _waypoints[i] + _attackPatternOffset;
-
-            if (finalwayPoints[2] == Vector2.zero)
-            {
-                DreamDrawing.DrawLine(finalwayPoints[0], finalwayPoints[1], 100f, 6f, Color.black, finalwayPoints[0], 0f);
-                DreamDrawing.DrawLine(finalwayPoints[0], finalwayPoints[1], 100f, 4f, c, finalwayPoints[0], 0f);
-            }
-            else
-            {
-                DreamDrawing.DrawCurve(finalwayPoints[0], finalwayPoints[1], finalwayPoints[2], finalwayPoints[3], 100f, 6f, Color.black, finalwayPoints[0], 0f);
-                DreamDrawing.DrawCurve(finalwayPoints[0], finalwayPoints[1], finalwayPoints[2], finalwayPoints[3], 100f, 4f, c, finalwayPoints[0], 0f);
-            }
-        }
-
-    }
-
     private void createDefaultSelectedUnits(int amount)
     {
         GameStats gameStats = GameStats.Instance;
@@ -122,17 +105,19 @@ public class UnitSelectManager : EnigmaScene
 
     private void enableUnitInfo()
     {
-        iTween.MoveBy(_infoPopUp, iTween.Hash("y", _uiMoveDistance, "easeType", _uiMoveEaseType.ToString(), "loopType", iTween.LoopType.none.ToString(), "delay", _uiInDelay, "time", _uiMoveTime));
-        _infoEnabled = true;
+        /*iTween.MoveBy(_infoPopUp, iTween.Hash("y", _uiMoveDistance, "easeType", _uiMoveEaseType.ToString(), "loopType", iTween.LoopType.none.ToString(), "delay", _uiInDelay, "time", _uiMoveTime));
+        _infoEnabled = true;*/
+        _infoPopUp.SetActive(true);
     }
 
     private void disableUnitInfo(bool immediate = false)
     {
-        float outTime = immediate? 0 : _uiMoveTime;
+        /*float outTime = immediate? 0 : _uiMoveTime;
         float outDelay = immediate ? 0 : _uiOutDelay;
         iTween.MoveBy(_infoPopUp, iTween.Hash("y", -_uiMoveDistance, "easeType", _uiMoveEaseType.ToString(), "loopType", iTween.LoopType.none.ToString(), "delay", outDelay, "time", outTime));
 
-        _infoEnabled = false;
+        _infoEnabled = false;*/
+        _infoPopUp.SetActive(false);
     }
 
     private void enableTeamGrid()
@@ -188,6 +173,8 @@ public class UnitSelectManager : EnigmaScene
             disableUnitInfo();
             enableTeamGrid();
         }
+
+        loadUnitInfo();
     }
 
     private void onUnitInfoButtonDown(string unitName)
@@ -219,8 +206,11 @@ public class UnitSelectManager : EnigmaScene
         slotImage.sprite = Resources.Load<Sprite>("Images/Units/" + unitName);
         slotImage.enabled = true;
 
-        GameStats.Instance.TeamUnits[slotIndex] = unitName;
+        int unitTier = GameInventory.Instance.GetUnitTier(unitName);
+        slotImage.transform.parent.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/unit_frame_t" + unitTier);
 
+        GameStats.Instance.TeamUnits[slotIndex] = unitName;
+        disableUnitInfo();
         checkTeamReady();
     }
 
@@ -242,6 +232,7 @@ public class UnitSelectManager : EnigmaScene
 
     private void loadUnitInfo()
     {
+        enableUnitInfo();
         print("loadUnitInfo -> selectedUnitName: " + _selectedUnitName);
         MinMinUnit minMin = GameInventory.Instance.GetMinMinFromResources(_selectedUnitName);
         _slotInfoImage.sprite = minMin.transform.Find("Sprite").GetComponent<SpriteRenderer>().sprite;
@@ -254,60 +245,16 @@ public class UnitSelectManager : EnigmaScene
         for (int i = 0; i < powerContentLenght; i++)
             _armorGridContent.GetChild(i).GetComponent<Image>().enabled = (i < minMin.Defense);
 
-        // Attack Patterns
-        GameObject temp = GameObject.Find("Canvas/PopUp/PatternBG/UnitInfo");
-        if (temp)
+        _infoPopUp.transform.Find("UnitName").GetComponent<Text>().text = "Min-Min #" + _selectedUnitName;
+        _infoPopUp.transform.Find("UnitType").GetComponent<Text>().text = minMin.Type.ToString();
+
+        for (int x = 1; x < 6; x++)
         {
-            DestroyImmediate(temp);
-            _attack = null;
-        }
+            _infoPopUp.transform.Find("PowerStarsGrid/Viewport/Content/star" + x).gameObject.SetActive(true);
+            _infoPopUp.transform.Find("ArmorStarsGrid/Viewport/Content/star" + x).gameObject.SetActive(true);
 
-        GameObject container = new GameObject("UnitInfo");
-        //container.transform.SetParent(_patternBG);
-        //container.transform.localPosition = Vector3.zero;
-
-        _waypoints = new Vector2[4];
-        int pattern = minMin.Attacks[0];
-
-        _attack = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/Patterns/Attack" + pattern));
-        _attack.transform.parent = container.transform;
-        _attack.transform.localPosition = new Vector2(53.5f, 33f);
-        _attack.GetComponent<SWS.BezierPathManager>().CalculatePath();
-
-        Vector2 add = new Vector2(120, 0);
-        Vector2 add2 = new Vector2(60, 0);
-
-        for (int i = 0; i < 4; i++)
-        {
-            Transform t = null;
-
-            if (_attack.transform.childCount == 2)
-            {
-                t = _attack.transform.Find("Waypoint " + i);
-            }
-            else
-            {
-                if (i == 0) t = _attack.transform.Find("Waypoint " + i);
-                if (i == 1) t = _attack.transform.Find("Waypoint " + i + "/Left");
-                if (i == 2) t = _attack.transform.Find("Waypoint " + (i - 1) + "/Right");
-                if (i == 3) t = _attack.transform.Find("Waypoint " + (i - 1));
-            }
-
-
-            if (t)
-            {
-                _waypoints[i] = t.position * 12;
-                if (_waypoints[i].x == 642 || _waypoints[i].x == 738 || _waypoints[i].x == 582 || _waypoints[i].x == 702) _waypoints[i] -= add2;
-                if (_waypoints[i].x == 762) _waypoints[i] -= add;
-
-                _waypoints[i].y += (414 - _waypoints[i].y) * 2;
-                Debug.Log(i + ": " + _waypoints[i].y);
-            }
-            else
-            {
-                _waypoints[i] = Vector2.zero;
-                //Debug.Log(i +": "+waypoints[i].x);
-            }
+            if (minMin.Strength < x) _infoPopUp.transform.Find("PowerStarsGrid/Viewport/Content/star" + x).gameObject.SetActive(false);
+            if (minMin.Defense < x) _infoPopUp.transform.Find("ArmorStarsGrid/Viewport/Content/star" + x).gameObject.SetActive(false);
         }
     }
 }

@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class AiPlayer
 {
-    public const float _MAX_DECISION_DELAY = 1.5f;
-    public const float _MIN_DECISION_DELAY = 0.5f;
+    public const float _MAX_DECISION_DELAY = 3.5f;
+    public const float _MIN_DECISION_DELAY = 1.5f;
 
     public bool LastBomberAttackWasSuccessful = false;
     public bool LastDestroyerAttackWasSuccessful = false;

@@ -13,16 +13,24 @@ namespace Enigma.CoreSystems
 
         private KinClient _kinClient;
         private KinAccount _kinAccount;  //Multiple can be created using AddAccount
+        public bool _isNew = false;
+        public bool _isAccountCreated = false;
 
-        void Start()
+        void Awake()
         {
             _kinClient = new KinClient(Kin.Environment.Test, _appId, _storeKey);
+            
+            StartCoroutine(StartKin());
+        }
 
-            CreateAccount();
+        IEnumerator StartKin()
+        {
+            AddAccount();
 
-            _kinAccount.AddPaymentListener(this);
-            _kinAccount.AddBalanceListener(this);
-            _kinAccount.AddAccountCreationListener(this);
+            yield return StartCoroutine(CreateAccount());
+
+            yield return StartCoroutine(CheckAccountStatus(AccountStatus.Created));
+            
         }
 
         void OnDestroy()
@@ -47,12 +55,22 @@ namespace Enigma.CoreSystems
             Debug.Log("On Account Created");
         }
 
-        public void CreateAccount()
+        public void AddAccount()
         {
             try
             {
                 if (!_kinClient.HasAccount())
+                {
                     _kinAccount = _kinClient.AddAccount();
+                    _kinAccount.AddAccountCreationListener(this);
+                    _isNew = true;
+                    //yield return StartCoroutine( CheckAccountStatus( AccountStatus.Created ) );
+                    
+                } else
+                {
+                    _kinAccount.AddPaymentListener(this);
+                    _kinAccount.AddBalanceListener(this);
+                }
             }
             catch (Exception e)
             {
@@ -67,11 +85,37 @@ namespace Enigma.CoreSystems
 
         public KinAccount RetrieveKinAccount()
         {
-            KinAccount account = null;
             if (_kinClient.HasAccount())
-                return _kinClient.GetAccount(0);
+            {
+                _kinAccount = _kinClient.GetAccount(0);
+                return _kinAccount;
+            }
 
-            return account;
+            return null;
+        }
+
+        protected IEnumerator CreateAccount()
+        {
+            yield return StartCoroutine(KinOnboarding.CreateAccount(_kinAccount.GetPublicAddress(), OnCompleteCreateAccount));
+        }
+
+        void OnCompleteCreateAccount(bool didSucceed)
+        {
+            _isAccountCreated = true;
+            Debug.Log("Account Created! - " + _kinAccount.GetPublicAddress());
+            _kinAccount.AddPaymentListener(this);
+            _kinAccount.AddBalanceListener(this);
+        }
+
+        protected IEnumerator CheckAccountStatus(AccountStatus statusShouldBe)
+        {
+            var hasResult = false;
+            _kinAccount.GetStatus((ex, status) =>
+            {
+                hasResult = true;
+            });
+
+            yield return new WaitUntil(() => hasResult);
         }
 
         public string GetAccountPublicAddress()

@@ -44,24 +44,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PersistBetweenScenes: 0
-  _unitSpecialRarities:
-  - Index: 1
-    Rarity: 0.1
-  - Index: 2
-    Rarity: 0.1
-  - Index: 3
-    Rarity: 0.1
-  - Index: 4
-    Rarity: 0.1
-  - Index: 5
-    Rarity: 0.1
-  - Index: 6
-    Rarity: 0.1
-  - Index: 7
-    Rarity: 0.1
-  - Index: 8
-    Rarity: 0.1
-  - Index: 9
-    Rarity: 0.1
-  - Index: 10
-    Rarity: 0.1
+  _maxArenaLevel: 6
+  _unitsNecessaryToBattle: 5
+  _unitsAmount: 80
+  _initialBronzeLootBoxes: 2
+  _lootBoxSize: 3
+  _lootBoxTiersAmount: 3
+  _guaranteedUnitTierAmount: 1
+  _parseSeparator: 124
+  _expToAddOnDuplicateUnit: 10
+  _lastTierBronze_unitNumber: 40
+  _lastTierSilver_unitNumber: 70
+  _lastTierGold_unitNumber: 80
+  _tierBronze_unitsAmount: 40
+  _tierSilver_unitsAmount: 30
+  _tierGold_unitsAmount: 10
+  _tierBronze_GroupRarity: 0.7
+  _tierSilver_GroupRarity: 0.2
+  _tierGold_GroupRarity: 0.1
