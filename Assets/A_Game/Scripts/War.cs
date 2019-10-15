@@ -1127,7 +1127,8 @@ public class War : NetworkEntity
             string unitName = teamUnits[i];
 
             int unitExp = GameNetwork.GetAnyPlayerUnitPropertyAsInt(GameNetwork.UnitPlayerProperties.EXPERIENCE, unitName, teamName, networkPlayerId);
-            gameNetwork.BuildUnitLevels(unitName, unitExp, networkPlayerId, teamName);
+            int unitLevel = GameInventory.Instance.GetUnitExpData(unitExp).Level;
+            gameNetwork.BuildUnitLevels(unitName, unitLevel, networkPlayerId, teamName);
 
             string positionString = GameNetwork.GetAnyPlayerUnitProperty(GameNetwork.UnitPlayerProperties.POSITION, unitName, teamName, networkPlayerId);
             string[] positionCoords = positionString.Split(NetworkManager.Separators.VALUES);

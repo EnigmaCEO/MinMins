@@ -23,6 +23,8 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         public const string SINGLE_PLAYER_LEVEL = "SinglePlayerLevel";
     }
 
+    [SerializeField] List<int> _experienceNeededPerUnitLevel = new List<int>() { 0, 10, 30, 70, 150, 310 };  //Rule: Doubles each level
+
     [SerializeField] private int _maxArenaLevel = 6;
 
     [SerializeField] private int _unitsNecessaryToBattle = 5;
@@ -109,7 +111,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         int unitExp = InventoryManager.Instance.GetItem<int>(GroupNames.UNITS, unitName);
         unitExp += expToAdd;
 
-        int maxExp = GameNetwork.Instance.GetMaxUnitExperience();
+        int maxExp = getMaxUnitExperience();
         if (unitExp > maxExp)
             unitExp = maxExp;
 
@@ -119,6 +121,11 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     public int GetLocalUnitExp(string unitName)
     {
         return InventoryManager.Instance.GetItem<int>(GroupNames.UNITS, unitName);
+    }
+
+    public int GetLocalUnitLevel(string unitName)
+    {
+        return GetLocalUnitExpData(unitName).Level;
     }
 
     public MinMinUnit GetMinMinFromResources(string unitName)
@@ -270,6 +277,38 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         List<string> unitNames = LootBoxManager.Instance.PickRandomizedNames(amount, true, tierUnits);
 
         return unitNames;
+    }
+
+    public ExpData GetLocalUnitExpData(string unitName)
+    {
+        int unitExp = GetLocalUnitExp(unitName);
+        return GetUnitExpData(unitExp);
+    }
+
+    public ExpData GetUnitExpData(int unitExp)
+    {
+        ExpData expData = new ExpData();
+
+        int thresholdAmountToCheck = _experienceNeededPerUnitLevel.Count - 1;
+        for (int i = 0; i < thresholdAmountToCheck; i++)
+        {
+            int threshold = _experienceNeededPerUnitLevel[i];
+            if (unitExp >= threshold)
+            {
+                expData.ExpForPreviousLevel = threshold;
+                expData.Level = i + 1;
+                expData.ExpForNextLevel = _experienceNeededPerUnitLevel[i + 1];
+            }
+        }
+
+        return expData;
+    }
+
+    private int getMaxUnitExperience()
+    {
+        int maxLevelIndexToCheck = _experienceNeededPerUnitLevel.Count - 2;
+        int maxExp = _experienceNeededPerUnitLevel[maxLevelIndexToCheck + 1];
+        return maxExp;
     }
 
     private void createUnitTierLists()
@@ -441,5 +480,12 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
             UnitName = unitName;
             Rarity = rarity;
         }
+    }
+
+    public class ExpData
+    {
+        public int Level;
+        public int ExpForPreviousLevel;
+        public int ExpForNextLevel;
     }
 }

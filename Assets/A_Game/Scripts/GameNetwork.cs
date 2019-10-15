@@ -146,7 +146,6 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
     [SerializeField] private float _statIncreaseByLevel = 1.1f;
     [SerializeField] private float _retrySendingResultsDelay = 5;
-    [SerializeField] List<int> _experienceNeededPerUnitLevel = new List<int>() { 10, 30, 70, 150, 310 };  //Rule: Doubles each level
     [SerializeField] List<int> _ratingsForArena = new List<int>() { 0, 300, 600, 900, 1200, 1500 };
 
     [SerializeField] private int _roomMaxPlayers = 2;
@@ -332,27 +331,8 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         performResultsSendingTransaction();
     }
 
-    public int GetMaxUnitExperience()
+    public void BuildUnitLevels(string unitName, int unitLevel, int networkPlayerId, string teamName)
     {
-        int maxLevelIndexToCheck = _experienceNeededPerUnitLevel.Count - 2;
-        int maxExp = _experienceNeededPerUnitLevel[maxLevelIndexToCheck + 1];
-        return maxExp;
-    }
-
-    public void BuildUnitLevels(string unitName, int unitExp, int networkPlayerId, string teamName)
-    {
-        int unitLevel = 1;
-        int maxLevelIndexToCheck = _experienceNeededPerUnitLevel.Count - 2;
-
-        for (int i = maxLevelIndexToCheck; i >= 0; i--)
-        {
-            if (unitExp >= _experienceNeededPerUnitLevel[i])
-            {
-                unitLevel = i + 1;
-                break;
-            }
-        }
-
         MinMinUnit minMin = GameInventory.Instance.GetMinMinFromResources(unitName);
         SetAnyPlayerUnitProperty(UnitPlayerProperties.LEVEL, unitName, unitLevel.ToString(), teamName, networkPlayerId);
         SetAnyPlayerUnitProperty(UnitPlayerProperties.STRENGHT, unitName, getStatByLevel(minMin.Strength, unitLevel), teamName, networkPlayerId);
