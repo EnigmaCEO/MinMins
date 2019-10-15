@@ -76,13 +76,15 @@ public class WarPrepManager : EnigmaScene
         
     }
 
-    public void UpdateInfo(string unitNname)
+    public void UpdateInfo(string unitName)
     {
         _infoPopUp.SetActive(true);
-        _infoPopUp.transform.Find("UnitName").GetComponent<Text>().text = "Min-Min #" + unitNname;
-        MinMinUnit minMin = GameInventory.Instance.GetMinMinFromResources(unitNname);
+        _infoPopUp.transform.Find("UnitName").GetComponent<Text>().text = "Min-Min #" + unitName;
+        MinMinUnit minMin = GameInventory.Instance.GetMinMinFromResources(unitName);
 
         _infoPopUp.transform.Find("UnitType").GetComponent<Text>().text = minMin.Type.ToString();
+
+        _infoPopUp.GetComponent<UnitInfoPopUp>().UpdateExpInfo(unitName);
     }
 
     public void AddToSlotsReady()

@@ -250,12 +250,7 @@ public class UnitSelectManager : EnigmaScene
         _infoPopUp.transform.Find("UnitName").GetComponent<Text>().text = "Min-Min #" + _selectedUnitName;
         _infoPopUp.transform.Find("UnitType").GetComponent<Text>().text = minMin.Type.ToString();
 
-        int unitExp = gameInventory.GetLocalUnitExp(_selectedUnitName);
-        GameInventory.ExpData unitExpData = gameInventory.GetUnitExpData(unitExp);
-
-        _infoPopUp.transform.Find("UnitLevel").GetComponent<Text>().text = "Level " + unitExpData.Level;
-        _infoPopUp.transform.Find("UnitExp").GetComponent<Text>().text = "(" + unitExp + "/" + unitExpData.ExpForNextLevel + ")";
-        _infoPopUp.transform.Find("ExpProgress").GetComponent<Slider>().value = (unitExp - unitExpData.ExpForPreviousLevel) /(unitExpData.ExpForNextLevel - unitExpData.ExpForPreviousLevel);
+        _infoPopUp.GetComponent<UnitInfoPopUp>().UpdateExpInfo(_selectedUnitName);
 
         for (int x = 1; x < 6; x++)
         {

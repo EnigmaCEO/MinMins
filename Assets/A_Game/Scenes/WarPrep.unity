@@ -367,6 +367,7 @@ GameObject:
   - component: {fileID: 416855366}
   - component: {fileID: 416855368}
   - component: {fileID: 416855367}
+  - component: {fileID: 416855369}
   m_Layer: 5
   m_Name: InfoFrame
   m_TagString: Untagged
@@ -433,6 +434,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 416855365}
   m_CullTransparentMesh: 0
+--- !u!114 &416855369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 416855365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d87d2c5a8d0232143a8d0d253458362b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _level: {fileID: 1484488161}
+  _exp: {fileID: 1284948751}
+  _progress: {fileID: 978437155}
 --- !u!1 &639103820
 GameObject:
   m_ObjectHideFlags: 0
@@ -2255,7 +2271,7 @@ MonoBehaviour:
   m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 0
-  m_FillAmount: 0
+  m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
