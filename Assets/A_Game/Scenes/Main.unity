@@ -2949,6 +2949,11 @@ PrefabInstance:
       propertyPath: _ratingManager
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114358418755427752, guid: d1ba8daa3f95bdd4894e096bcadb5f57,
+        type: 3}
+      propertyPath: _soundManager
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d1ba8daa3f95bdd4894e096bcadb5f57, type: 3}
 --- !u!1 &1971694093

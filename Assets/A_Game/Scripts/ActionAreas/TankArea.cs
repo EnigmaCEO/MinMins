@@ -5,14 +5,6 @@ using UnityEngine;
 
 public class TankArea : ActionArea
 {
-    public int Defense = 0;
-
-    protected override void Awake()
-    {
-        base.Awake();
-        Defense = int.Parse(getOwnerUnitProperty(GameNetwork.UnitPlayerProperties.STRENGHT));
-    }
-
     override protected void OnTriggerEnter2D(Collider2D coll)
     {
         base.OnTriggerEnter2D(coll);

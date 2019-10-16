@@ -6,15 +6,11 @@ public class ScoutArea : ActionArea
     public const string SCOUT_SPRITE_MASKS_PARENT_FIND_PATH = "/ScoutSpriteMasksContainer";
     public const string SCOUTS_SPRITE_MASK_RESOURCE_PATH = "Prefabs/ScoutSpriteMask";
 
-    public int Power = 0;
     public float DisplayTime = 2;
 
     protected override void Awake()
     {
         base.Awake();
-
-        Power = int.Parse(getOwnerUnitProperty(GameNetwork.UnitPlayerProperties.STRENGHT));
-        //Power = Random.Range(1, 6); // Power hack.
 
         if (OwnerTeamName != _warRef.LocalPlayerTeam)
             GetComponent<SpriteMask>().enabled = false;  //Not needed.
@@ -46,7 +42,7 @@ public class ScoutArea : ActionArea
             HealerArea healerArea = coll.GetComponent<HealerArea>();
             if (healerArea != null)
             {
-                if (Power > healerArea.Strenght)
+                if (Strenght > healerArea.Strenght)
                 {
                     _warRef.RemoveHealerArea(healerArea);
                     //Debug.LogWarning("HealerArea of owner: " + healerArea.OwnerUnitName + " and team: " + healerArea.OwnerTeamName + " and Healing: " + healerArea.Healing + " was removed by scoutArea of owner " + OwnerUnitName + " and team: " + OwnerTeamName + " and Power: " + Power);
@@ -59,7 +55,7 @@ public class ScoutArea : ActionArea
                 TankArea tankArea = coll.GetComponent<TankArea>();
                 if (tankArea != null)
                 {
-                    if (Power > tankArea.Defense)
+                    if (Strenght > tankArea.Strenght)
                     {
                         _warRef.RemoveTankArea(tankArea);
                         //Debug.LogWarning("TankArea of owner: " + tankArea.OwnerUnitName + " and team: " + tankArea.OwnerTeamName + " and Defense: " + tankArea.Defense + " was removed by scoutArea of owner " + OwnerUnitName + " and team: " + OwnerTeamName + " and Power: " + Power);

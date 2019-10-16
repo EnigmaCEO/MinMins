@@ -22,6 +22,7 @@ public class ActionArea : NetworkEntity
     public string OwnerUnitName;
     public string OwnerTeamName;
     public int OwnerNetworkPlayerId;
+    public float Strenght;
 
     protected War _warRef;
     protected Collider2D _collider;
@@ -37,6 +38,8 @@ public class ActionArea : NetworkEntity
 
         object[] data = base.GetInstantiationData();
         setUpActionArea((string)data[0], (Vector3)data[1], (Vector3)data[2], (string)data[3], (MinMinUnit.EffectNames)data[4], (string)data[5], (int)data[6]);
+
+        Strenght = float.Parse(getOwnerUnitProperty(GameNetwork.UnitPlayerProperties.STRENGHT));
     }
 
     override protected void Update()
@@ -145,8 +148,6 @@ public class ActionArea : NetworkEntity
 
     protected void dealDamage (string targetUnitName)
     {
-        int ownerStrenght = int.Parse(getOwnerUnitProperty(GameNetwork.UnitPlayerProperties.STRENGHT)); //TODO: Use damage formula if needed.
-
         string targetUnitTeam = GameNetwork.GetOppositeTeamName(OwnerTeamName);
 
         //print("ActionArea virtual player Id: " + VirtualPlayerId);
@@ -155,18 +156,19 @@ public class ActionArea : NetworkEntity
         int targetUnitPlayerId = GameNetwork.GetTeamNetworkPlayerId(targetUnitTeam); 
 
         int targetUnitHealth = GameNetwork.GetUnitRoomPropertyAsInt(GameNetwork.UnitRoomProperties.HEALTH, targetUnitTeam, targetUnitName);
-        int targetUnitDefense = GameNetwork.GetAnyPlayerUnitPropertyAsInt(GameNetwork.UnitPlayerProperties.DEFENSE, targetUnitName, targetUnitTeam, targetUnitPlayerId);
-        int targetUnitTankDefense = _warRef.GetUnitTankDefense(targetUnitTeam, targetUnitName);
+
+        float targetUnitDefense = float.Parse(GameNetwork.GetAnyPlayerUnitProperty(GameNetwork.UnitPlayerProperties.DEFENSE, targetUnitName, targetUnitTeam, targetUnitPlayerId));
+        float targetUnitTankDefense = _warRef.GetUnitTankDefense(targetUnitTeam, targetUnitName);
         //int finalDefense = targetUnitDefense + targetUnitTankDefense;
         //int maxDefense = GameConfig.Instance.MaxUnitDefense;
 
-        Debug.LogWarning("ActionArea::dealDamage -> ownerStrenght: " + ownerStrenght + " targetUnitName: " + targetUnitName + " targetUnitDefense: " + targetUnitDefense + " targetUnitSpecialDefense: " + targetUnitTankDefense/* + " finalDefense uncapped: " + finalDefense*/);
+        Debug.LogWarning("ActionArea::dealDamage -> Strenght: " + Strenght + " targetUnitName: " + targetUnitName + " targetUnitDefense: " + targetUnitDefense + " targetUnitSpecialDefense: " + targetUnitTankDefense/* + " finalDefense uncapped: " + finalDefense*/);
 
         //if (finalDefense > maxDefense)
         //    finalDefense = maxDefense;
 
         //int damage = Mathf.FloorToInt((float)ownerStrenght * (float)(1 - (finalDefense / 100.0f)));  //Defense is translated into damage reduction
-        int damage = Mathf.FloorToInt(((float)ownerStrenght * 10.0f) * (1.0f - (float)targetUnitDefense/10.0f) * (1 - (float)targetUnitTankDefense/10));
+        int damage = Mathf.RoundToInt((Strenght * 10.0f) * (1.0f - targetUnitDefense/10.0f) * (1 - targetUnitTankDefense/10.0f));
 
         //if (damage == 0)
         //    damage = 1;

@@ -2074,7 +2074,7 @@ PrefabInstance:
     - target: {fileID: 114358418755427752, guid: d1ba8daa3f95bdd4894e096bcadb5f57,
         type: 3}
       propertyPath: _soundManager
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d1ba8daa3f95bdd4894e096bcadb5f57, type: 3}
@@ -8321,7 +8321,7 @@ PrefabInstance:
     - target: {fileID: 8825368578050500684, guid: 203b8147031570b4f877da5fa3d74c1d,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.000002861023
+      value: -0.000027656555
       objectReference: {fileID: 0}
     - target: {fileID: 8825368578050500684, guid: 203b8147031570b4f877da5fa3d74c1d,
         type: 3}
@@ -8426,7 +8426,7 @@ PrefabInstance:
     - target: {fileID: 8588846438857692670, guid: 203b8147031570b4f877da5fa3d74c1d,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.000002861023
+      value: -0.000027656555
       objectReference: {fileID: 0}
     - target: {fileID: 8588846438857692670, guid: 203b8147031570b4f877da5fa3d74c1d,
         type: 3}
@@ -8792,7 +8792,7 @@ PrefabInstance:
     - target: {fileID: 8376337921850932159, guid: b6332aa36cd40594e9ee07b9972ed456,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.0000104904175
+      value: -0.00002002716
       objectReference: {fileID: 0}
     - target: {fileID: 8376337921850932159, guid: b6332aa36cd40594e9ee07b9972ed456,
         type: 3}
@@ -8897,7 +8897,7 @@ PrefabInstance:
     - target: {fileID: 8975142548236225374, guid: b6332aa36cd40594e9ee07b9972ed456,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.0000104904175
+      value: -0.00002002716
       objectReference: {fileID: 0}
     - target: {fileID: 8975142548236225374, guid: b6332aa36cd40594e9ee07b9972ed456,
         type: 3}
@@ -9037,7 +9037,7 @@ PrefabInstance:
     - target: {fileID: 9007550363330372229, guid: b6332aa36cd40594e9ee07b9972ed456,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.00005054474
+      value: -0.00003528595
       objectReference: {fileID: 0}
     - target: {fileID: 9007550363330372229, guid: b6332aa36cd40594e9ee07b9972ed456,
         type: 3}
@@ -9142,7 +9142,7 @@ PrefabInstance:
     - target: {fileID: 8480728045490852452, guid: b6332aa36cd40594e9ee07b9972ed456,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.00005054474
+      value: -0.00003528595
       objectReference: {fileID: 0}
     - target: {fileID: 8480728045490852452, guid: b6332aa36cd40594e9ee07b9972ed456,
         type: 3}

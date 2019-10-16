@@ -1274,7 +1274,7 @@ public class War : NetworkEntity
 
     public void SetUnitSpecialDefense(string targetName, TankArea tankArea)
     {
-        Debug.LogWarning("War::SetUnitSpecialDefense -> defense: " + tankArea.Defense);
+        Debug.LogWarning("War::SetUnitSpecialDefense -> strenght: " + tankArea.Strenght);
         setUnitForActionArea<TankArea>(targetName, tankArea, _tanksAreasByOwnerByTargetByTeam);
     }
 
@@ -1293,10 +1293,10 @@ public class War : NetworkEntity
         areasByOwnerByTargetByTeam[team][targetName][owner].Add(area);
     }
 
-    public int GetUnitTankDefense(string team, string unitName)
+    public float GetUnitTankDefense(string team, string unitName)
     {
         //Debug.LogWarning("War::GetUnitTankDefense -> team: " + team + " unitName: " + unitName);
-        int strongerTankDefense = 0;
+        float strongerTankDefense = 0;
 
         if (_tanksAreasByOwnerByTargetByTeam[team].ContainsKey(unitName))
         {
@@ -1304,7 +1304,7 @@ public class War : NetworkEntity
             {
                 foreach (TankArea tankArea in _tanksAreasByOwnerByTargetByTeam[team][unitName][ownerUnitName])
                 {
-                    int tankDefense = tankArea.Defense;
+                    float tankDefense = tankArea.Strenght;
                     //Debug.LogWarning("War::GetUnitSpecialDefense -> ownerUnitName: " + ownerUnitName + " tankArea: " + tankArea + " tankDefense: " + tankDefense);
                     if(tankDefense > strongerTankDefense)
                         strongerTankDefense = tankDefense;
@@ -1461,12 +1461,12 @@ public class War : NetworkEntity
         {
             foreach (string unitName in _healerAreasByOwnerByTargetByTeam[team].Keys)
             {
-                int highestStrenght = 0;
+                float highestStrenght = 0;
                 foreach (string owner in _healerAreasByOwnerByTargetByTeam[team][unitName].Keys)
                 {              
                     foreach (HealerArea healerArea in _healerAreasByOwnerByTargetByTeam[team][unitName][owner])
                     {
-                        int strenght = healerArea.Strenght;
+                        float strenght = healerArea.Strenght;
                         if (strenght > highestStrenght)
                             highestStrenght = strenght;
 
@@ -1478,10 +1478,10 @@ public class War : NetworkEntity
                 int unitHealth = GameNetwork.GetUnitRoomPropertyAsInt(GameNetwork.UnitRoomProperties.HEALTH, team, unitName);
                 int unitMaxHealth = GameNetwork.GetUnitRoomPropertyAsInt(GameNetwork.UnitRoomProperties.MAX_HEALTH, team, unitName);
 
-                int heal = Mathf.FloorToInt((float)unitMaxHealth * ((float)highestStrenght / 25));
-                Debug.LogWarning("War::processUnitsHealing -> highestStrenght: " + highestStrenght + " unitMaxHealth: " + unitMaxHealth + " heal: " + heal);
+                int healing = Mathf.RoundToInt((float)unitMaxHealth * (highestStrenght / 25));
+                Debug.LogWarning("War::processUnitsHealing -> highestStrenght: " + highestStrenght + " unitMaxHealth: " + unitMaxHealth + " heal: " + healing);
 
-                unitHealth += highestStrenght;  
+                unitHealth += healing;  
                 if (unitHealth > unitMaxHealth)
                     unitHealth = unitMaxHealth;
 

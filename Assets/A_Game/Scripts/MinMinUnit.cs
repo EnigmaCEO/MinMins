@@ -24,8 +24,9 @@ public class MinMinUnit : NetworkEntity
         Six
     }
 
-    public int Strength = 1;
-    public int Defense = 1;
+    public float Strength = 1;
+    public float Defense = 1;
+
     public int MaxHealth = 5;
 
     public float EffectScale = 1;

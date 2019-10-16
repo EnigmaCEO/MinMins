@@ -335,17 +335,28 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
     public void BuildUnitLevels(string unitName, int unitLevel, int networkPlayerId, string teamName)
     {
+        //unitLevel = 5;  //Level Hack
+        unitLevel = Random.Range(1, 20);  //Level Hack
+
         MinMinUnit minMin = GameInventory.Instance.GetMinMinFromResources(unitName);
         SetAnyPlayerUnitProperty(UnitPlayerProperties.LEVEL, unitName, unitLevel.ToString(), teamName, networkPlayerId);
-        SetAnyPlayerUnitProperty(UnitPlayerProperties.STRENGHT, unitName, getStatByLevel(minMin.Strength, unitLevel), teamName, networkPlayerId);
-        SetAnyPlayerUnitProperty(UnitPlayerProperties.DEFENSE, unitName, getStatByLevel(minMin.Defense, unitLevel), teamName, networkPlayerId);
-        SetAnyPlayerUnitProperty(UnitPlayerProperties.EFFECT_SCALE, unitName, getStatByLevel(minMin.EffectScale, unitLevel), teamName, networkPlayerId);
+
+        string strenghtAtLevel = getStatByLevel(minMin.Strength, unitLevel);
+        string defenseAtLevel = getStatByLevel(minMin.Defense, unitLevel);
+        string effectScaleAtLevel = getStatByLevel(minMin.EffectScale, unitLevel);
+
+        SetAnyPlayerUnitProperty(UnitPlayerProperties.STRENGHT, unitName, strenghtAtLevel, teamName, networkPlayerId);
+        SetAnyPlayerUnitProperty(UnitPlayerProperties.DEFENSE, unitName, defenseAtLevel, teamName, networkPlayerId);
+        SetAnyPlayerUnitProperty(UnitPlayerProperties.EFFECT_SCALE, unitName, effectScaleAtLevel, teamName, networkPlayerId);
 
         int unitTier = GameInventory.Instance.GetUnitTier(unitName);
         string maxHealth = (unitTier * _unitHealthByTier).ToString();
         SetUnitRoomProperty(UnitRoomProperties.MAX_HEALTH, teamName, unitName, maxHealth);
         SetUnitHealth(teamName, unitName, int.Parse(maxHealth));
         //SetUnitHealth(teamName, unitName, (int.Parse(maxHealth))/4); //TODO: Remove text hack
+
+        Debug.LogWarning("BuildUnitLevels -> unitName: " + unitName + " tier: " + unitTier + " baseStrenght: " + minMin.Strength + " baseDefense: " + minMin.Defense + " baseEffectScale: " + minMin.EffectScale);
+        Debug.LogWarning("BuildUnitLevels -> unitLevel: " + unitLevel + " maxHealth: " + maxHealth + " strenghtAtLevel: " + strenghtAtLevel + " defenseAtLevel: " + defenseAtLevel + " effectScaleAtLevel: " + effectScaleAtLevel);
     }
 
     public int GetLocalPlayerPvpLevelNumber()
@@ -376,10 +387,10 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         return (baseValue * (1 + _statIncreaseByLevel * (float)level)).ToString();
     }
 
-    private string getStatByLevel(int baseValue, int level)
-    {
-        return (Mathf.RoundToInt((float)baseValue * (1 + _statIncreaseByLevel * (float)level))).ToString();
-    }
+    //private string getStatByLevel(int baseValue, int level)
+    //{
+    //    return (Mathf.RoundToInt((float)baseValue * (1 + _statIncreaseByLevel * (float)level))).ToString();
+    //}
 
     private void performResultsSendingTransaction()
     {
