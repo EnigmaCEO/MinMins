@@ -114,6 +114,8 @@ public class War : NetworkEntity
 
     private void Start()
     {
+        ActionPopup.Close();
+
         if (GetUsesAi())
         {
             _aiPlayer = new AiPlayer();
@@ -288,7 +290,7 @@ public class War : NetworkEntity
         string teamInTurn = GameNetwork.GetTeamInTurn();
         int playerId = -1;
 
-        if (!GetIsHost())
+        if (GetIsHost())
             playerId = NetworkManager.GetLocalPlayerId();
         else
             playerId = GameNetwork.Instance.GuestPlayerId;
@@ -469,7 +471,7 @@ public class War : NetworkEntity
             _teamTurnText.text = "ENEMY TURN";
 
         if (GetIsHost())
-            skipUnitIndex(teamName);
+            advanceUnitIndex(teamName);
     }
 
     private int getTeamUnitIndex(string teamName)
@@ -482,7 +484,7 @@ public class War : NetworkEntity
         return unitIndex;
     }
 
-    private void skipUnitIndex(string teamName)
+    private void advanceUnitIndex(string teamName)
     {
         string roomProperty = GameNetwork.RoomCustomProperties.HOST_UNIT_INDEX;
         if (teamName == GameNetwork.TeamNames.GUEST)
@@ -518,10 +520,10 @@ public class War : NetworkEntity
         if (unitIndex == -1)
             return;
 
-        MinMinUnit unit = units.Values.ElementAt(unitIndex);
-        string unitName = unit.name;
+        //MinMinUnit unit = units.Values.ElementAt(unitIndex);
+        //string unitName = unit.name;
 
-        ActionPopup.Open(unitName);
+        //ActionPopup.Open(unitName);
 
         int teamUnitsCount = units.Count;
         if (unitIndex >= teamUnitsCount)
@@ -545,8 +547,8 @@ public class War : NetworkEntity
         }
         else
         {
-            //MinMinUnit unit = units.Values.ElementAt(unitIndex);
-            //string unitName = unit.name;
+            MinMinUnit unit = units.Values.ElementAt(unitIndex);
+            string unitName = unit.name;
 
             if (GetIsHost() && (unit.Type == MinMinUnit.Types.Tank))
                 removeAreaForOwner<TankArea>(teamName, unitName, _tanksAreasByOwnerByTargetByTeam);
@@ -583,13 +585,15 @@ public class War : NetworkEntity
                 _unitTurnText.text = "Unit turn: " + unitName + " | Index: " + unitIndex;
                 handleHighlight(unitIndex, teamName);
                 _gameCamera.HandleMovement(teamName, units[unitName].Type);
+
+                //ActionPopup.Open(unitName);
             }
             else if (GetIsHost())
             {
                 if ((unitIndex + 1) >= teamUnitsCount)
                     changeTurn(teamName);
                 else
-                    skipUnitIndex(teamName);
+                    advanceUnitIndex(teamName);
             }
         }
     }
@@ -617,9 +621,6 @@ public class War : NetworkEntity
 
         if (actionsLeft > 0)
         {
-            MinMinUnit unit = getUnitInTurn();
-            ActionPopup.Open(unit.name);
-
             if (GetIsAiTurn())
             {
                 ActionButton.gameObject.SetActive(false);
@@ -632,6 +633,9 @@ public class War : NetworkEntity
                 ActionButton.gameObject.SetActive(true);
                 StartCoroutine(handleHumanPlayerInput());
             }
+
+            MinMinUnit unit = getUnitInTurn();
+            ActionPopup.Open(unit.name);
         }
         else if (GetIsHost())
             changeTurn(teamInTurn);
@@ -1148,9 +1152,9 @@ public class War : NetworkEntity
 
             unitNetworkViewsIdsString += unitNetworkViewId.ToString();
 
-            //MinMinUnit unit = unitGameObject.GetComponent<MinMinUnit>();
+            MinMinUnit unit = unitGameObject.GetComponent<MinMinUnit>();
 
-            //MinMinUnit.Types unitDebugType = MinMinUnit.Types.Bomber;
+            MinMinUnit.Types unitDebugType = MinMinUnit.Types.Bomber;
             //Type vs Type Test hack =======================================
             //if (teamName == GameNetwork.TeamNames.HOST)
             //    unitDebugType = MinMinUnit.Types.Destroyer;
@@ -1170,7 +1174,7 @@ public class War : NetworkEntity
             //==============================================================
 
             //Random type Test hack =======================================
-            //unitDebugType = (MinMinUnit.Types)Random.Range(0, 5);
+            unitDebugType = (MinMinUnit.Types)Random.Range(0, 5);
             //==============================================================
 
             //unit.SendDebugSettingsForWar(unitDebugType);
@@ -1264,7 +1268,7 @@ public class War : NetworkEntity
 
     public void SetUnitForHealing(string targetName, HealerArea healerArea)
     {
-        Debug.LogWarning("War::SetUnitForHealing -> healing: " + healerArea.Healing);
+        Debug.LogWarning("War::SetUnitForHealing -> healing: " + healerArea.Strenght);
         setUnitForActionArea<HealerArea>(targetName, healerArea, _healerAreasByOwnerByTargetByTeam);
     }
 
@@ -1289,10 +1293,10 @@ public class War : NetworkEntity
         areasByOwnerByTargetByTeam[team][targetName][owner].Add(area);
     }
 
-    public int GetUnitSpecialDefense(string team, string unitName)
+    public int GetUnitTankDefense(string team, string unitName)
     {
-        //Debug.LogWarning("War::GetUnitSpecialDefense -> team: " + team + " unitName: " + unitName);
-        int unitSpecialDefense = 0;
+        //Debug.LogWarning("War::GetUnitTankDefense -> team: " + team + " unitName: " + unitName);
+        int strongerTankDefense = 0;
 
         if (_tanksAreasByOwnerByTargetByTeam[team].ContainsKey(unitName))
         {
@@ -1300,17 +1304,41 @@ public class War : NetworkEntity
             {
                 foreach (TankArea tankArea in _tanksAreasByOwnerByTargetByTeam[team][unitName][ownerUnitName])
                 {
-                    int defenseInput = tankArea.Defense;
-                    //Debug.LogWarning("War::GetUnitSpecialDefense -> ownerUnitName: " + ownerUnitName + " tankArea: " + tankArea + " defenseInput: " + defenseInput);
-                    unitSpecialDefense += defenseInput;
+                    int tankDefense = tankArea.Defense;
+                    //Debug.LogWarning("War::GetUnitSpecialDefense -> ownerUnitName: " + ownerUnitName + " tankArea: " + tankArea + " tankDefense: " + tankDefense);
+                    if(tankDefense > strongerTankDefense)
+                        strongerTankDefense = tankDefense;
                 }
             }
         }
 
-        //Debug.LogWarning("War::GetUnitSpecialDefense -> unitSpecialDefense: " + unitSpecialDefense);
+        //Debug.LogWarning("War::GetUnitTankDefense -> strongerTankDefense: " + strongerTankDefense);
 
-        return unitSpecialDefense;
+        return strongerTankDefense;
     }
+
+    //public int GetUnitSpecialDefense(string team, string unitName)
+    //{
+    //    //Debug.LogWarning("War::GetUnitSpecialDefense -> team: " + team + " unitName: " + unitName);
+    //    int unitSpecialDefense = 0;
+
+    //    if (_tanksAreasByOwnerByTargetByTeam[team].ContainsKey(unitName))
+    //    {
+    //        foreach (string ownerUnitName in _tanksAreasByOwnerByTargetByTeam[team][unitName].Keys)
+    //        {
+    //            foreach (TankArea tankArea in _tanksAreasByOwnerByTargetByTeam[team][unitName][ownerUnitName])
+    //            {
+    //                int defenseInput = tankArea.Defense;
+    //                //Debug.LogWarning("War::GetUnitSpecialDefense -> ownerUnitName: " + ownerUnitName + " tankArea: " + tankArea + " defenseInput: " + defenseInput);
+    //                unitSpecialDefense += defenseInput;
+    //            }
+    //        }
+    //    }
+
+    //    //Debug.LogWarning("War::GetUnitSpecialDefense -> unitSpecialDefense: " + unitSpecialDefense);
+
+    //    return unitSpecialDefense;
+    //}
 
     private void removeTargetFromAreas<T>(string teamName, string targetName, Dictionary<string, Dictionary<string, Dictionary<string, List<T>>>> areasByOwnerByTargetByTeam) where T : ActionArea
     {
@@ -1433,14 +1461,14 @@ public class War : NetworkEntity
         {
             foreach (string unitName in _healerAreasByOwnerByTargetByTeam[team].Keys)
             {
-                int strongerHealing = 0;
+                int highestStrenght = 0;
                 foreach (string owner in _healerAreasByOwnerByTargetByTeam[team][unitName].Keys)
                 {              
                     foreach (HealerArea healerArea in _healerAreasByOwnerByTargetByTeam[team][unitName][owner])
                     {
-                        int healing = healerArea.Healing;
-                        if (healing > strongerHealing)
-                            strongerHealing = healing;
+                        int strenght = healerArea.Strenght;
+                        if (strenght > highestStrenght)
+                            highestStrenght = strenght;
 
                         if (!healerAreasToDestroy.Contains(healerArea))
                             healerAreasToDestroy.Add(healerArea);
@@ -1450,7 +1478,10 @@ public class War : NetworkEntity
                 int unitHealth = GameNetwork.GetUnitRoomPropertyAsInt(GameNetwork.UnitRoomProperties.HEALTH, team, unitName);
                 int unitMaxHealth = GameNetwork.GetUnitRoomPropertyAsInt(GameNetwork.UnitRoomProperties.MAX_HEALTH, team, unitName);
 
-                unitHealth += strongerHealing;  //TODO: Check if healing formula is needed;
+                int heal = Mathf.FloorToInt((float)unitMaxHealth * ((float)highestStrenght / 25));
+                Debug.LogWarning("War::processUnitsHealing -> highestStrenght: " + highestStrenght + " unitMaxHealth: " + unitMaxHealth + " heal: " + heal);
+
+                unitHealth += highestStrenght;  
                 if (unitHealth > unitMaxHealth)
                     unitHealth = unitMaxHealth;
 

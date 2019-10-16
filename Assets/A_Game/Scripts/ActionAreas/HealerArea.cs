@@ -5,12 +5,12 @@ using UnityEngine;
 
 public class HealerArea : ActionArea
 {
-    public int Healing = 0;
+    public int Strenght = 0;
 
     override protected void Awake()
     {
         base.Awake();
-        Healing = int.Parse(getOwnerUnitProperty(GameNetwork.UnitPlayerProperties.STRENGHT));
+        Strenght = int.Parse(getOwnerUnitProperty(GameNetwork.UnitPlayerProperties.STRENGHT));
     }
 
     override protected void OnTriggerEnter2D(Collider2D coll)

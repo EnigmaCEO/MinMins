@@ -144,7 +144,9 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     [SerializeField] private int TeamsAmount = 2;
     [SerializeField] private int TeamSize = 6;
 
-    [SerializeField] private float _statIncreaseByLevel = 1.1f;
+    [SerializeField] private int _unitHealthByTier = 50;
+
+    [SerializeField] private float _statIncreaseByLevel = 0.1f;
     [SerializeField] private float _retrySendingResultsDelay = 5;
     [SerializeField] List<int> _ratingsForArena = new List<int>() { 0, 300, 600, 900, 1200, 1500 };
 
@@ -339,7 +341,8 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         SetAnyPlayerUnitProperty(UnitPlayerProperties.DEFENSE, unitName, getStatByLevel(minMin.Defense, unitLevel), teamName, networkPlayerId);
         SetAnyPlayerUnitProperty(UnitPlayerProperties.EFFECT_SCALE, unitName, getStatByLevel(minMin.EffectScale, unitLevel), teamName, networkPlayerId);
 
-        string maxHealth = getStatByLevel(minMin.MaxHealth, unitLevel);
+        int unitTier = GameInventory.Instance.GetUnitTier(unitName);
+        string maxHealth = (unitTier * _unitHealthByTier).ToString();
         SetUnitRoomProperty(UnitRoomProperties.MAX_HEALTH, teamName, unitName, maxHealth);
         SetUnitHealth(teamName, unitName, int.Parse(maxHealth));
         //SetUnitHealth(teamName, unitName, (int.Parse(maxHealth))/4); //TODO: Remove text hack
@@ -370,12 +373,12 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
     private string getStatByLevel(float baseValue, int level)
     {
-        return (baseValue * _statIncreaseByLevel * (float)level).ToString();
+        return (baseValue * (1 + _statIncreaseByLevel * (float)level)).ToString();
     }
 
     private string getStatByLevel(int baseValue, int level)
     {
-        return (Mathf.RoundToInt((float)baseValue * _statIncreaseByLevel * (float)level)).ToString();
+        return (Mathf.RoundToInt((float)baseValue * (1 + _statIncreaseByLevel * (float)level))).ToString();
     }
 
     private void performResultsSendingTransaction()

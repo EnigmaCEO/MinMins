@@ -145,8 +145,8 @@ public class ActionArea : NetworkEntity
 
     protected void dealDamage (string targetUnitName)
     {
-        int damage = int.Parse(getOwnerUnitProperty(GameNetwork.UnitPlayerProperties.STRENGHT)); //TODO: Use damage formula if needed.
-        //damage = 50; // damage hack
+        int ownerStrenght = int.Parse(getOwnerUnitProperty(GameNetwork.UnitPlayerProperties.STRENGHT)); //TODO: Use damage formula if needed.
+
         string targetUnitTeam = GameNetwork.GetOppositeTeamName(OwnerTeamName);
 
         //print("ActionArea virtual player Id: " + VirtualPlayerId);
@@ -156,28 +156,30 @@ public class ActionArea : NetworkEntity
 
         int targetUnitHealth = GameNetwork.GetUnitRoomPropertyAsInt(GameNetwork.UnitRoomProperties.HEALTH, targetUnitTeam, targetUnitName);
         int targetUnitDefense = GameNetwork.GetAnyPlayerUnitPropertyAsInt(GameNetwork.UnitPlayerProperties.DEFENSE, targetUnitName, targetUnitTeam, targetUnitPlayerId);
-        int targetUnitSpecialDefense = _warRef.GetUnitSpecialDefense(targetUnitTeam, targetUnitName);
-        int finalDefense = targetUnitDefense + targetUnitSpecialDefense;
-        int maxDefense = GameConfig.Instance.MaxUnitDefense;
+        int targetUnitTankDefense = _warRef.GetUnitTankDefense(targetUnitTeam, targetUnitName);
+        //int finalDefense = targetUnitDefense + targetUnitTankDefense;
+        //int maxDefense = GameConfig.Instance.MaxUnitDefense;
 
-        Debug.LogWarning("ActionArea::dealDamage -> targetUnitName: " + targetUnitName + " targetUnitDefense: " + targetUnitDefense + " targetUnitSpecialDefense: " + targetUnitSpecialDefense + " finalDefense uncapped: " + finalDefense);
+        Debug.LogWarning("ActionArea::dealDamage -> ownerStrenght: " + ownerStrenght + " targetUnitName: " + targetUnitName + " targetUnitDefense: " + targetUnitDefense + " targetUnitSpecialDefense: " + targetUnitTankDefense/* + " finalDefense uncapped: " + finalDefense*/);
 
-        if (finalDefense > maxDefense)
-            finalDefense = maxDefense;
+        //if (finalDefense > maxDefense)
+        //    finalDefense = maxDefense;
 
-        int finalDamage = Mathf.FloorToInt((float)damage * (float)(1 - (finalDefense / 100.0f)));  //Defense is translated into damage reduction
-        if (finalDamage == 0)
-            finalDamage = 1;
+        //int damage = Mathf.FloorToInt((float)ownerStrenght * (float)(1 - (finalDefense / 100.0f)));  //Defense is translated into damage reduction
+        int damage = Mathf.FloorToInt(((float)ownerStrenght * 10.0f) * (1.0f - (float)targetUnitDefense/10.0f) * (1 - (float)targetUnitTankDefense/10));
+
+        //if (damage == 0)
+        //    damage = 1;
 
         int damageDealt = GameNetwork.GetTeamRoomPropertyAsInt(GameNetwork.TeamRoomProperties.DAMAGE_DEALT, OwnerTeamName);
-        GameNetwork.SetTeamRoomProperty(GameNetwork.TeamRoomProperties.DAMAGE_DEALT, OwnerTeamName, (damageDealt + finalDamage).ToString());
+        GameNetwork.SetTeamRoomProperty(GameNetwork.TeamRoomProperties.DAMAGE_DEALT, OwnerTeamName, (damageDealt + damage).ToString());
 
         int damageReceived = GameNetwork.GetTeamRoomPropertyAsInt(GameNetwork.TeamRoomProperties.DAMAGE_RECEIVED, targetUnitTeam);
-        GameNetwork.SetTeamRoomProperty(GameNetwork.TeamRoomProperties.DAMAGE_RECEIVED, targetUnitTeam, (damageReceived + finalDamage).ToString());
+        GameNetwork.SetTeamRoomProperty(GameNetwork.TeamRoomProperties.DAMAGE_RECEIVED, targetUnitTeam, (damageReceived + damage).ToString());
         
-        Debug.LogWarning("ActionArea::dealDamage -> finalDefense: " + finalDefense + " damage: " + damage + " finalDamage: " + finalDamage.ToString());
+        Debug.LogWarning("ActionArea::dealDamage -> damage: " + damage.ToString());
 
-        targetUnitHealth -= finalDamage;  
+        targetUnitHealth -= damage;  
         if (targetUnitHealth < 0)
             targetUnitHealth = 0;
 

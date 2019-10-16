@@ -46,7 +46,7 @@ public class ScoutArea : ActionArea
             HealerArea healerArea = coll.GetComponent<HealerArea>();
             if (healerArea != null)
             {
-                if (Power > healerArea.Healing)
+                if (Power > healerArea.Strenght)
                 {
                     _warRef.RemoveHealerArea(healerArea);
                     //Debug.LogWarning("HealerArea of owner: " + healerArea.OwnerUnitName + " and team: " + healerArea.OwnerTeamName + " and Healing: " + healerArea.Healing + " was removed by scoutArea of owner " + OwnerUnitName + " and team: " + OwnerTeamName + " and Power: " + Power);

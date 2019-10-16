@@ -47,7 +47,7 @@ MonoBehaviour:
   Ready: 1
   _battleFieldRightSideOffset: 0
   _actionAreaPosZ: -0.1
-  _maxRoundsCount: 3
+  _maxRoundsCount: 5
   _maxDecisionTime: 10
   _fieldRewardChestsAmount: 1
   _teamGridContent: {fileID: 0}
@@ -61,12 +61,20 @@ MonoBehaviour:
   _unitTypeTurnText: {fileID: 0}
   _unitTierTurnText: {fileID: 0}
   _roundNumberText: {fileID: 0}
+  _roundDisplayGridContent: {fileID: 0}
   _actionsLeftText: {fileID: 0}
+  _teamNameText1: {fileID: 0}
+  _teamNameText2: {fileID: 0}
   _hostTeamHealthFill: {fileID: 0}
   _guestTeamHealthFill: {fileID: 0}
   UnitTurnHighlightTransform: {fileID: 0}
   _battleField: {fileID: 0}
   _gameCamera: {fileID: 0}
+  ReadyPopup: {fileID: 0}
+  ActionPopup: {fileID: 0}
+  ActionButton: {fileID: 0}
+  lineRenderer: {fileID: 0}
+  lineRenderer2: {fileID: 0}
 --- !u!114 &3122206619754247083
 MonoBehaviour:
   m_ObjectHideFlags: 0

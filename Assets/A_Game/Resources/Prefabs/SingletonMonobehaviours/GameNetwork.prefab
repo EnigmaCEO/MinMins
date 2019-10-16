@@ -48,9 +48,8 @@ MonoBehaviour:
   GuestPlayerId: -1
   TeamsAmount: 2
   TeamSize: 6
-  _statIncreaseByLevel: 1.1
+  _statIncreaseByLevel: 0.1
   _retrySendingResultsDelay: 5
-  _experienceNeededPerUnitLevel: 0a0000001e000000460000009600000036010000
   _ratingsForArena: 000000002c0100005802000084030000b0040000dc050000
   _roomMaxPlayers: 2
   _roomMaxPlayersNotExpectating: 2
