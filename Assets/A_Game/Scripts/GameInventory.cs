@@ -15,7 +15,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     {
         public const string LOOT_BOXES = "Lootboxes";
         public const string STATS = "Stats";
-        public const string UNITS = "Units";
+        public const string UNITS_EXP = "Units";
     }
 
     public class ItemKeys
@@ -84,9 +84,9 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
         InventoryManager inventoryManager = InventoryManager.Instance;
 
-        if (inventoryManager.CheckGroupExists(GroupNames.UNITS, false))
+        if (inventoryManager.CheckGroupExists(GroupNames.UNITS_EXP, false))
         {
-            foreach (string unitName in inventoryManager.GetGroupKeys(GroupNames.UNITS))
+            foreach (string unitName in inventoryManager.GetGroupKeys(GroupNames.UNITS_EXP))
                 inventoryUnitIndexes.Add(unitName);
         }
 
@@ -108,19 +108,19 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
     public void AddExpToUnit(string unitName, int expToAdd)
     {
-        int unitExp = InventoryManager.Instance.GetItem<int>(GroupNames.UNITS, unitName);
+        int unitExp = InventoryManager.Instance.GetItem<int>(GroupNames.UNITS_EXP, unitName);
         unitExp += expToAdd;
 
         int maxExp = getMaxUnitExperience();
         if (unitExp > maxExp)
             unitExp = maxExp;
 
-        InventoryManager.Instance.UpdateItem(GroupNames.UNITS, unitName, unitExp);
+        InventoryManager.Instance.UpdateItem(GroupNames.UNITS_EXP, unitName, unitExp);
     }
 
     public int GetLocalUnitExp(string unitName)
     {
-        return InventoryManager.Instance.GetItem<int>(GroupNames.UNITS, unitName);
+        return InventoryManager.Instance.GetItem<int>(GroupNames.UNITS_EXP, unitName);
     }
 
     public int GetLocalUnitLevel(string unitName)
@@ -204,13 +204,13 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         {
             print("LootBoxUnitName got: " + lootBoxUnitName);
             string unitName = lootBoxUnitName.ToString();
-            if (inventoryManager.HasItem(GroupNames.UNITS, unitName, false))
+            if (inventoryManager.HasItem(GroupNames.UNITS_EXP, unitName, false))
             {
                 AddExpToUnit(unitName, _expToAddOnDuplicateUnit);
                 print("Added " + _expToAddOnDuplicateUnit + " exp to unit " + unitName);
             }
             else
-                inventoryManager.AddItem(GroupNames.UNITS, unitName, 0);
+                inventoryManager.AddItem(GroupNames.UNITS_EXP, unitName, 0);
         }
 
         SaveUnits();
@@ -221,7 +221,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
     public void HandleUnitDeath(string unitName)
     {
-        InventoryManager.Instance.RemoveItem(GroupNames.UNITS, unitName);
+        InventoryManager.Instance.RemoveItem(GroupNames.UNITS_EXP, unitName);
         SaveUnits();
     }
 
@@ -241,7 +241,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         _saveHashTable.Clear();
 
         InventoryManager inventoryManager = InventoryManager.Instance;
-        foreach (string unitName in inventoryManager.GetGroupKeys(GroupNames.UNITS))
+        foreach (string unitName in inventoryManager.GetGroupKeys(GroupNames.UNITS_EXP))
             saveUnit(unitName, false);
 
         saveHashTableToFile();
@@ -368,7 +368,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
     private void addMinMinUnit(string unitName)
     {
-        InventoryManager.Instance.AddItem(GroupNames.UNITS, unitName, 0);
+        InventoryManager.Instance.AddItem(GroupNames.UNITS_EXP, unitName, 0);
     }
 
     private void loadData()
@@ -395,7 +395,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
             string[] terms = entry.Key.ToString().Split(_parseSeparator);
             string groupName = terms[0];
 
-            if (groupName == GroupNames.UNITS)
+            if (groupName == GroupNames.UNITS_EXP)
             {
                 string unitName = terms[1];
                 int unitExp = int.Parse(entry.Value.ToString());
@@ -450,7 +450,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
     private void saveUnit(string unitName, bool isStandAlone = true)
     {
-        string groupName = GroupNames.UNITS;
+        string groupName = GroupNames.UNITS_EXP;
         int unitExp = InventoryManager.Instance.GetItem<int>(groupName, unitName);
         string hashKey = groupName + _parseSeparator + unitName;
         //Debug.LogWarning("GameInventory::saveUnit -> hashKey: " + hashKey + " -> unitExp: " + unitExp);
