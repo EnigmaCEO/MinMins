@@ -210,13 +210,18 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
                 print("Added " + _expToAddOnDuplicateUnit + " exp to unit " + unitName);
             }
             else
-                inventoryManager.AddItem(GroupNames.UNITS_EXP, unitName, 0);
+                AddUnit(unitName, 0);
         }
 
         SaveUnits();
         ChangeLootBoxAmount(1, boxTier, false, true);
 
         return unitPicks;
+    }
+
+    public void AddUnit(string unitName, int exp)
+    {
+        InventoryManager.Instance.AddItem(GroupNames.UNITS_EXP, unitName, exp);
     }
 
     public void HandleUnitDeath(string unitName)
