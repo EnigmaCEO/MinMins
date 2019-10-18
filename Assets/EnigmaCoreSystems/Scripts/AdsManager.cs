@@ -25,7 +25,6 @@ public class AdsManager : MonoBehaviour
     void Awake()
     {
         Instance = this;
-        //enabled = false; //TODO: Remove hack
     }
 
     // Use this for initialization

@@ -23,7 +23,9 @@ public class LocalizationManager : MonoBehaviour
 
         load();
 
-        //ChangeLanguage(Languages.Spanish);  //Language hack 
+        if(EnigmaHacks.Instance.Language.Enabled)
+            ChangeLanguage(EnigmaHacks.Instance.Language.GetValueAsEnum<Languages>());  
+
         UnityEngine.SceneManagement.SceneManager.sceneLoaded += onSceneLoaded;
     }
 

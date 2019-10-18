@@ -7,10 +7,12 @@ using Enigma.CoreSystems;
 using SimpleJSON;
 using UnityEngine.Purchasing;
 using TapjoyUnity;
+using UnityEngine.Purchasing.Extension;
+using UnityEngine.Purchasing.Security;
 
 public delegate void IAPManagerPurchaseCompleteCallback();
 
-public class IAPManager : Manageable<IAPManager>, IStoreListener
+public class IAPManager : Manageable<IAPManager>, IStoreListener 
 {
     public string APPLE_IOS_KEY = "";
     public string ANDROID_GOOGLE_PLAY_KEY = "";
@@ -469,20 +471,129 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
 
     PurchaseProcessingResult IStoreListener.ProcessPurchase(PurchaseEventArgs args)
     {
-#if (UNITY_ANDROID || UNITY_IOS)
-        GameOfWhales.InAppPurchased(
-                                            args.purchasedProduct.definition.id,
-                                            (float)args.purchasedProduct.metadata.localizedPrice,
-                                            args.purchasedProduct.metadata.isoCurrencyCode,
-                                            args.purchasedProduct.transactionID,
-                                            args.purchasedProduct.receipt
-                                            );
+        bool validPurchase = true; // Presume valid for platforms with no R.V.
 
+        // Unity IAP's validation logic is only included on these platforms.
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX
+        // Prepare the validator with the secrets we prepared in the Editor
+        // obfuscation window.
+        CrossPlatformValidator validator = new CrossPlatformValidator(GooglePlayTangle.Data(), AppleTangle.Data(), Application.identifier);
+        string purchaseToken = "";
+        string transactionId = "";
+        string productId = "";
 
-        Debug.Log("Receipt: " + args.purchasedProduct.receipt);
-        IAPResult(args.purchasedProduct.definition.id, true);
+        try
+        {
+            // On Google Play, result has a single product ID.
+            // On Apple stores, receipts contain multiple products.
+            IPurchaseReceipt[] result = validator.Validate(args.purchasedProduct.receipt);
+            // For informational purposes, we list the receipt(s)
+            Debug.Log("Receipt is valid. Contents:");
+            foreach (IPurchaseReceipt productReceipt in result)
+            {
+                Debug.Log(productReceipt.productID);
+                Debug.Log(productReceipt.purchaseDate);
+                Debug.Log(productReceipt.transactionID);
+
+                GooglePlayReceipt google = productReceipt as GooglePlayReceipt;
+                if (null != google)
+                {
+                    // This is Google's Order ID.
+                    // Note that it is null when testing in the sandbox
+                    // because Google's sandbox does not provide Order IDs.
+                    Debug.Log(google.transactionID);
+                    Debug.Log(google.purchaseState);
+                    Debug.Log(google.purchaseToken);
+                }
+
+                AppleInAppPurchaseReceipt apple = productReceipt as AppleInAppPurchaseReceipt;
+                if (null != apple)
+                {
+                    Debug.Log(apple.originalTransactionIdentifier);
+                    Debug.Log(apple.subscriptionExpirationDate);
+                    Debug.Log(apple.cancellationDate);
+                    Debug.Log(apple.quantity);
+                }
+
+                purchaseToken = google.purchaseToken;
+                transactionId = productReceipt.transactionID;
+                productId = productReceipt.productID;         
+            }
+        }
+        catch (IAPSecurityException)
+        {
+            Debug.Log("Invalid receipt, not unlocking content");
+            validPurchase = false;
+        }
 #endif
+
+        // Unlock the appropriate content here.
+#if (UNITY_ANDROID || UNITY_IOS)
+        if (validPurchase)
+        {
+
+            GameOfWhales.InAppPurchased(
+                                                args.purchasedProduct.definition.id,
+                                                (float)args.purchasedProduct.metadata.localizedPrice,
+                                                args.purchasedProduct.metadata.isoCurrencyCode,
+                                                args.purchasedProduct.transactionID,
+                                                args.purchasedProduct.receipt
+                                                );
+
+
+            Debug.Log("Receipt: " + args.purchasedProduct.receipt);
+
+            Hashtable hashtable = new Hashtable();
+            hashtable.Add("purchase_token", purchaseToken);
+            hashtable.Add("transaction_id", transactionId);
+            hashtable.Add("product_id", productId);
+            NetworkManager.Transaction(NetworkManager.Transactions.PURCHASE_SUCCESSFUL, hashtable, onPurchaseSuccesfulTransaction);
+        }
+
+        IAPResult(productId, validPurchase);
+
+#endif
+
         return PurchaseProcessingResult.Complete;
+    }
+
+    private void onPurchaseSuccesfulTransaction(JSONNode response)
+    {
+        if (response != null)
+        {
+
+            JSONNode response_hash = response[0];
+            string status = response_hash["status"].ToString().Trim('"');
+
+            print("onPurchaseSuccesfulTransaction -> response: "  + response.ToString() + " status: " + status);
+
+            if (status == "SUCCESS")
+            {               
+                //handleLogin(response_hash);
+            }
+            else
+            {
+                //string term = "";
+
+                //if (status == "ERR_REGISTER")
+                //    term = "RegisterError";
+                //else if (status == "ERR_INVALID_PASSWORD")
+                //    term = "InvalidPassword";
+                //else if (status == "ERR_INVALID_USERNAME")
+                //    term = "InvalidUsername";
+                //else
+                //    term = "ServerError";
+
+                //enableLoginRegisterUI();
+                //GameLogicRef.DisplayErrorText(term);
+            }
+        }
+        else
+        {
+            //enableLoginRegisterUI();
+            //GameLogicRef.DisplayErrorText("ConnectionError");
+            Debug.LogError("onPurchaseSuccesfulTransaction: CONNECTION ERROR"); 
+        }
     }
 
 #if (UNITY_ANDROID || UNITY_IOS)

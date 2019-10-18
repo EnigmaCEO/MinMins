@@ -378,15 +378,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc8395a664cd4044f88156feb10d672d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _readyOnSceneCheckDelay: 1
   Strength: 1
   Defense: 1
   MaxHealth: 5
   EffectScale: 1
   Effect: 6
-  Type: 0
+  Type: 2
   Attacks: 0a000000
   EffectName: 1
+  Tier: 0
 --- !u!114 &6198350893618814342
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -7,6 +7,7 @@ public class MinMinUnit : NetworkEntity
 {
     public enum Types
     {
+        None,
         Healer,
         Bomber,
         Tank,
@@ -16,6 +17,7 @@ public class MinMinUnit : NetworkEntity
 
     public enum EffectNames
     {
+        None,
         FireExplosion = 1,
         LifeArea,
         LightningProjectile,
@@ -45,7 +47,7 @@ public class MinMinUnit : NetworkEntity
     public string TeamName { get { return _teamName; } }
     public int TeamIndex { get { return _teamIndex; } }
 
-    public int Tier;
+    [HideInInspector] public int Tier = 1;  //Not supposed to be set by inspector but my GameInventory using index thresholds.
 
     protected override void Awake()
     {
@@ -72,18 +74,19 @@ public class MinMinUnit : NetworkEntity
     {
         EffectNames effect = unit.EffectName;
 
-        //Hack: Effect selection  ======================
-        //if (unit.Type == Types.Bomber)
-        //    effect = EffectNames.FireExplosion;
-        //else if (unit.Type == Types.Destroyer)
-        //    effect = EffectNames.LightningProjectile;
-        //else if (unit.Type == Types.Healer)
-        //    effect = EffectNames.LifeArea;
-        //else if (unit.Type == Types.Scout)
-        //    effect = EffectNames.ScoutLight;
-        //else if (unit.Type == Types.Tank)
-        //    effect = EffectNames.ShieldEffect;
-        //=================================================
+        if (GameHacks.Instance.AssignEffectByType)
+        {
+            if (unit.Type == Types.Bomber)
+                effect = EffectNames.FireExplosion;
+            else if (unit.Type == Types.Destroyer)
+                effect = EffectNames.LightningProjectile;
+            else if (unit.Type == Types.Healer)
+                effect = EffectNames.LifeArea;
+            else if (unit.Type == Types.Scout)
+                effect = EffectNames.ScoutLight;
+            else if (unit.Type == Types.Tank)
+                effect = EffectNames.ShieldEffect;
+        }
 
         return effect;
     }

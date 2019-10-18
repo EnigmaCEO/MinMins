@@ -80,7 +80,10 @@ public class ActionArea : NetworkEntity
         transform.position = position;
 
         float scaleFactor = float.Parse(getOwnerUnitProperty(GameNetwork.UnitPlayerProperties.EFFECT_SCALE));
-        //scaleFactor = 5; //Hack power scale
+
+        if (GameHacks.Instance.PowerScale.Enabled)
+            scaleFactor = GameHacks.Instance.PowerScale.ValueAsFloat;
+
         Vector3 scale = transform.localScale;
         transform.localScale = new Vector3(scaleFactor * scale.x, scaleFactor * scale.y, scaleFactor * scale.z);
 

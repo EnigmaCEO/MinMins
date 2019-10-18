@@ -335,8 +335,12 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
     public void BuildUnitLevels(string unitName, int unitLevel, int networkPlayerId, string teamName)
     {
-        //unitLevel = 5;  //Level Hack
-        //unitLevel = Random.Range(1, 20);  //Level Hack
+        GameHacks gameHacks = GameHacks.Instance;
+        if (gameHacks.RandomizeUnitLevelWithMaxLevel.Enabled)
+            unitLevel = UnityEngine.Random.Range(1, gameHacks.RandomizeUnitLevelWithMaxLevel.ValueAsInt);
+
+        if (gameHacks.UnitLevel.Enabled)
+            unitLevel = gameHacks.UnitLevel.ValueAsInt;
 
         MinMinUnit minMin = GameInventory.Instance.GetMinMinFromResources(unitName);
         SetAnyPlayerUnitProperty(UnitPlayerProperties.LEVEL, unitName, unitLevel.ToString(), teamName, networkPlayerId);
@@ -356,8 +360,11 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
 
         SetUnitRoomProperty(UnitRoomProperties.MAX_HEALTH, teamName, unitName, maxHealth);
-        SetUnitHealth(teamName, unitName, int.Parse(maxHealth));
-        //SetUnitHealth(teamName, unitName, (int.Parse(maxHealth))/4); //TODO: Remove text hack
+        
+        if(GameHacks.Instance.FractionOfStartingHealth.Enabled)
+            SetUnitHealth(teamName, unitName, (int.Parse(maxHealth))/GameHacks.Instance.FractionOfStartingHealth.ValueAsInt); //TODO: Remove text hack
+        else
+            SetUnitHealth(teamName, unitName, int.Parse(maxHealth));
 
         Debug.LogWarning("BuildUnitLevels -> unitName: " + unitName + " tier: " + unitTier + " baseStrenght: " + minMin.Strength + " baseDefense: " + minMin.Defense + " baseEffectScale: " + minMin.EffectScale);
         Debug.LogWarning("BuildUnitLevels -> unitLevel: " + unitLevel + " maxHealth: " + maxHealth + " strenghtAtLevel: " + strenghtAtLevel + " defenseAtLevel: " + defenseAtLevel + " effectScaleAtLevel: " + effectScaleAtLevel);

@@ -226,12 +226,13 @@ public class EnjinLogin : MonoBehaviour
         NetworkManager.SetLocalPlayerNickName(userName);
 
         string enjinId = response_hash[NetworkManager.TransactionKeys.USER_DATA][NetworkManager.EnjinTransKeys.ENJIN_ID].ToString().Trim('"');
-        //if(true)  //hack
-        if (enjinId != "null")
+        EnigmaHacks enigmaHacks = EnigmaHacks.Instance;
+
+        if ((enjinId != "null") || enigmaHacks.EnjinIdNotNull)
         {
             string enjinCode = response_hash[NetworkManager.TransactionKeys.USER_DATA][NetworkManager.EnjinTransKeys.ENJIN_CODE].ToString().Trim('"');
-            //if(true)  //hack
-            if (enjinCode != "null")
+
+            if ((enjinCode != "null") || enigmaHacks.EnjinCodeNotNull)
             {
                 GameObject.Find("/Main").GetComponent<Main>().StartEnjinQR(enjinCode);
             }
@@ -244,7 +245,7 @@ public class EnjinLogin : MonoBehaviour
         else
             print("User is not using Crypto.");
 
-        //GameStats.Instance.IsEnjinLinked = true; //hack
+        GameStats.Instance.IsEnjinLinked = enigmaHacks.EnjinLinked;
 
         GameObject.Find("/Main").GetComponent<Main>().Init();
     }

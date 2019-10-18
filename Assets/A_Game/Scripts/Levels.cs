@@ -12,9 +12,10 @@ public class Levels : EnigmaScene
     void Start()
     {
         _notEnoughUnitsPopUp.SetActive(false);
+ 
+        if(GameHacks.Instance.Rating.Enabled)
+            GameStats.Instance.Rating = GameHacks.Instance.Rating.ValueAsInt; 
 
-        //GameNetwork.SetLocalPlayerRating(150, GameNetwork.VirtualPlayerIds.HOST); 
-        GameStats.Instance.Rating = 150; //TODO: Remove hack
         GameObject levelGridItemTemplate = _levelsGridContent.GetChild(0).gameObject;
 
         int levelsLenght = 0;

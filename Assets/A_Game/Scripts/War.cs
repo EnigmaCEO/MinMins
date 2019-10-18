@@ -1,4 +1,5 @@
 ﻿using Enigma.CoreSystems;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ public class War : NetworkEntity
     [SerializeField] private float _battleFieldRightSideOffset = 0;
     [SerializeField] private float _actionAreaPosZ = -0.1f;
 
-    [SerializeField] private int _maxRoundsCount = 3;
+    [SerializeField] private int _maxRoundsCount = 5;
     [SerializeField] private double _maxDecisionTime = 10;
     [SerializeField] private int _fieldRewardChestsAmount = 1;
 
@@ -139,8 +140,8 @@ public class War : NetworkEntity
 
         determineLocalPlayerTeam();
 
-        if(!NetworkManager.LoggedIn)
-            NetworkManager.SetLocalPlayerNickName(NetworkManager.GetRandomOnlineName());  // Nickname hack
+        if (!NetworkManager.LoggedIn)
+            NetworkManager.SetLocalPlayerNickName(NetworkManager.GetRandomOnlineName()); 
 
         _teamNameText1.text = NetworkManager.GetPlayerName();
 
@@ -603,7 +604,8 @@ public class War : NetworkEntity
         MinMinUnit unit = getUnitInTurn();
         int unitTier = GameInventory.Instance.GetUnitTier(unit.name);
 
-        //unitTier = 1; //Unit tier hack
+        if (GameHacks.Instance.UnitTier.Enabled)
+            unitTier = GameHacks.Instance.UnitTier.ValueAsInt;
 
         _unitTierTurnText.text = "Unit tier: " + unitTier.ToString();
         _unitTypeTurnText.text = "Unit type: " + unit.Type.ToString();
@@ -644,7 +646,7 @@ public class War : NetworkEntity
     private IEnumerator handleAiPlayerInput(string teamInTurn)
     {
         //resetDecisionTimeCount();
-        float delay = Random.Range(AiPlayer._MIN_DECISION_DELAY, AiPlayer._MAX_DECISION_DELAY);
+        float delay = UnityEngine.Random.Range(AiPlayer._MIN_DECISION_DELAY, AiPlayer._MAX_DECISION_DELAY);
 
         while (true)
         {
@@ -724,7 +726,8 @@ public class War : NetworkEntity
 
     private bool reduceDecisionTimeCount()
     {
-        //return false; // decisition time hack
+        if (GameHacks.Instance.DecisionTimeFreeze)
+            return false;
         
         bool isOver = false;
 
@@ -853,7 +856,8 @@ public class War : NetworkEntity
     //Only Master Client uses this
     private IEnumerator HandleActionTime(float actionTime)
     {
-        //time = 60; // Actions time hack
+        if (GameHacks.Instance.ActionTimeHack.Enabled)
+            actionTime = GameHacks.Instance.ActionTimeHack.ValueAsFloat;
 
         yield return new WaitForSeconds(actionTime);
 
@@ -902,7 +906,6 @@ public class War : NetworkEntity
     {
         if (_localPlayerTeam == GameNetwork.TeamNames.GUEST)
         {
-            //if(_localPlayerTeam == GameNetwork.VirtualPlayerIds.HOST)  //Test hack
             _gameCamera.SetCameraForGuest();
             moveCloudsToOppositeSide();
         }
@@ -1096,7 +1099,7 @@ public class War : NetworkEntity
     private Vector2 getRandomBattlefieldPosition()
     {
         GameConfig gameConfig = GameConfig.Instance;
-        return new Vector2(Random.Range(gameConfig.BattleFieldMinPos.x + 0.5f, gameConfig.BattleFieldMaxPos.x - 0.5f) + _battleFieldRightSideOffset, Random.Range(gameConfig.BattleFieldMinPos.y + 0.5f, gameConfig.BattleFieldMaxPos.y - 0.5f));
+        return new Vector2(UnityEngine.Random.Range(gameConfig.BattleFieldMinPos.x + 0.5f, gameConfig.BattleFieldMaxPos.x - 0.5f) + _battleFieldRightSideOffset, UnityEngine.Random.Range(gameConfig.BattleFieldMinPos.y + 0.5f, gameConfig.BattleFieldMaxPos.y - 0.5f));
     }
 
     private void instantiateTeam(string teamName, string[] teamUnits)
@@ -1116,7 +1119,7 @@ public class War : NetworkEntity
         GameConfig gameConfig = GameConfig.Instance;
 
         bool requiresHorizontalInversion = (!GetUsesAi() && (teamName == GameNetwork.TeamNames.GUEST));
-        //requiresHorizontalInversion = true;  // test hack
+
         float battlefieldCenterX = 0;
         if(requiresHorizontalInversion)
             battlefieldCenterX = (gameConfig.BattleFieldMaxPos.x + gameConfig.BattleFieldMinPos.x) * 0.5f;
@@ -1154,30 +1157,23 @@ public class War : NetworkEntity
 
             MinMinUnit unit = unitGameObject.GetComponent<MinMinUnit>();
 
-            MinMinUnit.Types unitDebugType = MinMinUnit.Types.Bomber;
-            //Type vs Type Test hack =======================================
-            //if (teamName == GameNetwork.TeamNames.HOST)
-            //    unitDebugType = MinMinUnit.Types.Destroyer;
-            //else
-            //    unitDebugType = MinMinUnit.Types.Scout;
-            //==============================================================
+            GameHacks gameHacks = GameHacks.Instance;
+            MinMinUnit.Types unitHackType = MinMinUnit.Types.None;
 
-            //Specific Type Test hack =======================================
-            //unitDebugType = MinMinUnit.Types.Bomber;
-            //==============================================================
+            if (GameHacks.Instance.RandomizeUnitTypes)
+                unitHackType = (MinMinUnit.Types)UnityEngine.Random.Range(1, 6);
 
-            //Tanks against Bombers Test hack =======================================
-            //if (teamName == GameNetwork.TeamNames.HOST)
-            //    unitDebugType = (MinMinUnit.Types)Random.Range(0, 5);
-            //else
-            //    unitDebugType = MinMinUnit.Types.Tank;
-            //==============================================================
+            if (gameHacks.SetHostUnitType.Enabled &&  (teamName == GameNetwork.TeamNames.HOST))
+                unitHackType = gameHacks.SetHostUnitType.GetValueAsEnum<MinMinUnit.Types>();
+            
+            if(gameHacks.SetGuestUnitType.Enabled && (teamName == GameNetwork.TeamNames.GUEST))
+                unitHackType = gameHacks.SetGuestUnitType.GetValueAsEnum<MinMinUnit.Types>();
 
-            //Random type Test hack =======================================
-            unitDebugType = (MinMinUnit.Types)Random.Range(0, 5);
-            //==============================================================
+            if(gameHacks.SetAllUnitsType.Enabled)
+                unitHackType = gameHacks.SetGuestUnitType.GetValueAsEnum<MinMinUnit.Types>();
 
-            //unit.SendDebugSettingsForWar(unitDebugType);
+            if(unitHackType != MinMinUnit.Types.None)
+                unit.SendDebugSettingsForWar(unitHackType);
         }
 
         sendTeamUnitsInstantiatedNetworkViewIds(teamName, unitNetworkViewsIdsString);
@@ -1643,7 +1639,12 @@ public class War : NetworkEntity
     {
         string winnerTeam  = "";
 
-        if (roundCount >= _maxRoundsCount)
+        int maxRounds = _maxRoundsCount;
+
+        if (GameHacks.Instance.RoundCount.Enabled)
+            maxRounds = GameHacks.Instance.RoundCount.ValueAsInt;
+
+        if (roundCount >= maxRounds)
         {
             string hostTeam = GameNetwork.TeamNames.HOST;
             string guestTeam = GameNetwork.TeamNames.GUEST;

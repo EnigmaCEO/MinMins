@@ -11,7 +11,6 @@ public class FileManager : MonoBehaviour
     [SerializeField] private char _entrySeparator = '/';
     [SerializeField] private char _keyValueSeparator = '=';
 
-    [SerializeField] private bool _resetAtStart = false; //Hack for testing
 
     private string _filePath = "";
 
@@ -23,7 +22,7 @@ public class FileManager : MonoBehaviour
         Instance = this;
         _filePath = Application.persistentDataPath + "/" + _fileName;
 
-        if (_resetAtStart)
+        if (EnigmaHacks.Instance.ResetFileManagerAtStart)
             FileManager.Instance.ClearData();
     }
 

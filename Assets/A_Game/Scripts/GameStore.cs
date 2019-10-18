@@ -56,7 +56,9 @@ public class GameStore : MonoBehaviour
 
     private void handleCurrencyBuyResult(string id, bool result)
     {
-        //result = false; //Hack
+        if(GameHacks.Instance.BuyResultFalse)
+            result = false; 
+
         if (result)
         {
             IAPManager iapManager = IAPManager.Instance;
@@ -160,12 +162,12 @@ public class GameStore : MonoBehaviour
 
     private void onLootBoxBuyConfirmButtonDown()
     {
-        //===============================================
-        IAPManager.BuyConsumable(_selectedPackIndex);  
-        //handleCurrencyBuyResult(IAPManager.Instance.IAP_IDS[_selectedPackIndex], true);  // Buy hack to work on android
-        //=========================================
+        if(GameHacks.Instance.BuyAndroid)
+            handleCurrencyBuyResult(IAPManager.Instance.IAP_IDS[_selectedPackIndex], true);  // Buy hack to work on android
+        else
+            IAPManager.BuyConsumable(_selectedPackIndex);
+
         _lootBoxBuyConfirmPopUp.Close();
-        //grantBuy(_selectedPackTier); //TODO: Remove hack
     }
 
     public void onLootBoxBuyCancelButtonDown()

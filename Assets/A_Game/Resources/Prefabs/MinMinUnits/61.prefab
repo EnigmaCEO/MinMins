@@ -383,9 +383,10 @@ MonoBehaviour:
   MaxHealth: 5
   EffectScale: 1
   Effect: 6
-  Type: 0
+  Type: 2
   Attacks: 0a000000
   EffectName: 1
+  Tier: 0
 --- !u!114 &964609659241325510
 MonoBehaviour:
   m_ObjectHideFlags: 0
