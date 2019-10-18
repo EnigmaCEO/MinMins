@@ -61,4 +61,5 @@ MonoBehaviour:
   - receiveMatchResultsServerResponse
   - receiveActionAreaNetworkViewsIds
   - receiveTeamUnitsInstantiatedNetworkViewIds
+  - receiveEnableCollider
   DisableAutoOpenWizard: 1

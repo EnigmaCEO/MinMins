@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Enigma.CoreSystems {
+namespace Enigma.CoreSystems
+{
     public abstract class EnigmaScene : MonoBehaviour
     {
         // Start is called before the first frame update

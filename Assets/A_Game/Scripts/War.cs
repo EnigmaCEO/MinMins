@@ -1170,7 +1170,7 @@ public class War : NetworkEntity
                 unitHackType = gameHacks.SetGuestUnitType.GetValueAsEnum<MinMinUnit.Types>();
 
             if(gameHacks.SetAllUnitsType.Enabled)
-                unitHackType = gameHacks.SetGuestUnitType.GetValueAsEnum<MinMinUnit.Types>();
+                unitHackType = gameHacks.SetAllUnitsType.GetValueAsEnum<MinMinUnit.Types>();
 
             if(unitHackType != MinMinUnit.Types.None)
                 unit.SendDebugSettingsForWar(unitHackType);

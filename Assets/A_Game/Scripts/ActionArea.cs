@@ -12,6 +12,7 @@ public class ActionArea : NetworkEntity
 
     public float LifeTime = -1; //Unlimited
     public float CollisionTime = -1;  //Unlimited
+    public float CollisionDelay = 0;
 
     public float ActionTime = 2; //Used by War script
 
@@ -35,6 +36,13 @@ public class ActionArea : NetworkEntity
 
         _warRef = War.GetSceneInstance();
         _collider = GetComponent<Collider2D>();
+        _collider.enabled = false;
+
+        if (_warRef.GetIsHost())
+        {
+            if (CollisionDelay == 0)
+                sendEnableCollider(true);
+        }
 
         object[] data = base.GetInstantiationData();
         setUpActionArea((string)data[0], (Vector3)data[1], (Vector3)data[2], (string)data[3], (MinMinUnit.EffectNames)data[4], (string)data[5], (int)data[6]);
@@ -47,13 +55,28 @@ public class ActionArea : NetworkEntity
         base.Update();
         if (_warRef.GetIsHost())
         {
-            if (CollisionTime > 0)
+            if (_collider.enabled)
             {
-                CollisionTime -= Time.deltaTime;
-                if (CollisionTime < 0)
+                if (CollisionTime > 0)
                 {
-                    CollisionTime = 0;
-                    sendDisableCollider();
+                    CollisionTime -= Time.deltaTime;
+                    if (CollisionTime < 0)
+                    {
+                        CollisionTime = 0;
+                        sendEnableCollider(false);
+                    }
+                }
+            }
+            else  //collider disabled
+            {
+                if (CollisionDelay > 0)
+                {
+                    CollisionDelay -= Time.deltaTime;
+                    if (CollisionDelay < 0)
+                    {
+                        CollisionDelay = 0;
+                        sendEnableCollider(true);
+                    }
                 }
             }
 
@@ -101,20 +124,39 @@ public class ActionArea : NetworkEntity
         }
     }
 
-    private void sendDisableCollider()
+    private void sendEnableCollider(bool enabled)
     {
-        base.SendRpcToAll("receiveDisableCollider");
+        base.SendRpcToAll("receiveEnableCollider", enabled);
     }
 
     [PunRPC]
-    protected void receiveDisableCollider()
+    protected void receiveEnableCollider(bool enabled)
     {
-        _collider.enabled = false;
+        enableCollider(enabled);
+    }
+
+    virtual protected void enableCollider(bool enabled)
+    {
+        _collider.enabled = enabled;
     }
 
     virtual protected void OnTriggerEnter2D(Collider2D coll)
     {
         Debug.LogWarning("ActionArea::OnTriggerEnter2D: " + coll.name + " collided with " + this.name);
+    }
+
+    virtual protected void setEffect(MinMinUnit.EffectNames effectName)
+    {
+        string effectFullPath = EFFECTS_RESOURCES_FOLDER_PATH + (effectName.ToString());
+
+        //Debug.LogWarning("ActionArea::setEffect -> effectFullPath: " + effectFullPath);
+
+        _effect = Instantiate<GameObject>(Resources.Load<GameObject>(effectFullPath));
+
+        Transform effectTransform = _effect.transform;
+        effectTransform.localScale = this.transform.localScale;
+        effectTransform.SetParent(this.transform);
+        effectTransform.localPosition = Vector3.zero;
     }
 
     protected void checkFieldRewardBoxHit(Collider2D coll)
@@ -130,23 +172,6 @@ public class ActionArea : NetworkEntity
             return null;
 
         return coll.transform.parent.GetComponent<MinMinUnit>();
-    }
-
-    private void setEffect(MinMinUnit.EffectNames effectName)
-    {
-        string effectFullPath = EFFECTS_RESOURCES_FOLDER_PATH + (effectName.ToString());
-
-        //Debug.LogWarning("ActionArea::setEffect -> effectFullPath: " + effectFullPath);
-
-        _effect = Instantiate<GameObject>(Resources.Load<GameObject>(effectFullPath));
-        _effect.transform.parent = this.transform;
-        _effect.transform.localPosition = Vector3.zero;
-
-        if (effectName == MinMinUnit.EffectNames.LightningProjectile)
-        {
-            foreach (ParticleSystem particles in _effect.GetComponentsInChildren<ParticleSystem>())
-                particles.startSize = this.transform.localScale.x * ScaleFactorToParticleSizeFactor;
-        }
     }
 
     protected void dealDamage (string targetUnitName)

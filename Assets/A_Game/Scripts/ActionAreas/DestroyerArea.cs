@@ -19,6 +19,17 @@ public class DestroyerArea : ActionArea
         _velocity = direction * GameConfig.Instance.ProjectilesSpeed;
     }
 
+    override protected void setEffect(MinMinUnit.EffectNames effectName)
+    {
+        base.setEffect(effectName);
+
+        if (effectName == MinMinUnit.EffectNames.LightningProjectile)
+        {
+            foreach (ParticleSystem particles in _effect.GetComponentsInChildren<ParticleSystem>())
+                particles.startSize = this.transform.localScale.x * ScaleFactorToParticleSizeFactor;
+        }
+    }
+
     override protected void OnTriggerEnter2D(Collider2D coll)
     {
         base.OnTriggerEnter2D(coll);

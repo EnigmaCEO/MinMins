@@ -45,8 +45,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PersistBetweenScenes: 1
   DecisionTimeFreeze: 0
-  RandomizeUnitTypes: 1
-  AssignEffectByType: 1
+  RandomizeUnitTypes: 0
+  AssignEffectByType: 0
   BuyResultFalse: 0
   BuyAndroid: 0
   UnitTier:
@@ -63,7 +63,7 @@ MonoBehaviour:
     Value: Tank
   SetAllUnitsType:
     Enabled: 0
-    Value: Destroyer
+    Value: Bomber
   PowerScale:
     Enabled: 0
     Value: 5
@@ -71,7 +71,7 @@ MonoBehaviour:
     Enabled: 0
     Value: 5
   RandomizeUnitLevelWithMaxLevel:
-    Enabled: 1
+    Enabled: 0
     Value: 20
   FractionOfStartingHealth:
     Enabled: 0
@@ -80,5 +80,5 @@ MonoBehaviour:
     Enabled: 0
     Value: 150
   RoundCount:
-    Enabled: 1
+    Enabled: 0
     Value: 2

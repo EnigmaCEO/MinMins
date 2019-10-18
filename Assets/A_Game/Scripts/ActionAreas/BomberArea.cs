@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class BomberArea : ActionArea
 {
+    private GameObject _colliderEffect;
+    private GameObject _chargeEffect;
+
     override protected void OnTriggerEnter2D(Collider2D coll)
     {
         base.OnTriggerEnter2D(coll);
@@ -17,5 +20,32 @@ public class BomberArea : ActionArea
             if((unit != null) && (unit.TeamName != OwnerTeamName))
                 dealDamage(unit.name);
         }
+    }
+
+    override protected void setEffect(MinMinUnit.EffectNames effectName)
+    {
+        base.setEffect(effectName);
+
+        if (effectName == MinMinUnit.EffectNames.FireExplosion)
+        {
+            _colliderEffect = _effect.transform.Find("FireBurst").gameObject;
+            _colliderEffect.SetActive(false);
+
+            _chargeEffect = _effect.transform.Find("FireCharge").gameObject;
+        }
+
+        if (_colliderEffect != null)
+            _colliderEffect.SetActive(false);
+    }
+
+    protected override void enableCollider(bool enabled)
+    {
+        base.enableCollider(enabled);
+
+        if(_colliderEffect != null)
+            _colliderEffect.SetActive(true);
+
+        if (_chargeEffect != null)
+            _chargeEffect.SetActive(false);
     }
 }

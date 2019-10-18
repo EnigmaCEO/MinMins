@@ -10,5 +10,7 @@ public class EnigmaHacks : SingletonMonobehaviour<EnigmaHacks>
 
     public bool ResetFileManagerAtStart;
 
+    public bool ByPassIAPReceiptCheck;
+
     public ValueHack Language = new ValueHack("Spanish");
 }

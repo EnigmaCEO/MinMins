@@ -47,3 +47,8 @@ MonoBehaviour:
   EnjinIdNotNull: 0
   EnjinCodeNotNull: 0
   EnjinLinked: 0
+  ResetFileManagerAtStart: 0
+  ByPassIAPReceiptCheck: 0
+  Language:
+    Enabled: 0
+    Value: Spanish

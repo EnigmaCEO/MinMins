@@ -110,12 +110,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71664dbe824b63f4aae0c65a1d4bedb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LifeTime: 2
+  LifeTime: 2.5
   CollisionTime: -1
-  ActionTime: 2
+  CollisionDelay: 1.5
+  ActionTime: 3
+  ScaleFactorToParticleSizeFactor: 1
   OwnerUnitName: 
   OwnerTeamName: 
   OwnerNetworkPlayerId: 0
+  Strenght: 0
 --- !u!114 &7557868115546809441
 MonoBehaviour:
   m_ObjectHideFlags: 0
