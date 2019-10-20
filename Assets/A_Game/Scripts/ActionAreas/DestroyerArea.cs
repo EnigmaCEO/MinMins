@@ -17,11 +17,6 @@ public class DestroyerArea : ActionArea
     {
         base.setUpActionArea(areaName, position, direction, unitName, effectName, teamName, networkPlayerId);
         _velocity = direction * GameConfig.Instance.ProjectilesSpeed;
-    }
-
-    override protected void setEffect(MinMinUnit.EffectNames effectName)
-    {
-        base.setEffect(effectName);
 
         if (effectName == MinMinUnit.EffectNames.LightningProjectile)
         {

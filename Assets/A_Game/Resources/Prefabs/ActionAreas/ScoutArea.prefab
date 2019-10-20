@@ -114,11 +114,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LifeTime: -1
   CollisionTime: 2
+  CollisionDelay: 0
   ActionTime: 2
+  ScaleFactorToParticleSizeFactor: 1
   OwnerUnitName: 
   OwnerTeamName: 
   OwnerNetworkPlayerId: 0
-  Power: 0
+  Strenght: 0
   DisplayTime: 2
 --- !u!331 &5438409091266802463
 SpriteMask:

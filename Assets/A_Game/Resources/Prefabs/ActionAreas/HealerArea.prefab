@@ -112,11 +112,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LifeTime: -1
   CollisionTime: -1
+  CollisionDelay: 0
   ActionTime: 2
+  ScaleFactorToParticleSizeFactor: 1
   OwnerUnitName: 
   OwnerTeamName: 
   OwnerNetworkPlayerId: 0
-  Healing: 0
+  Strenght: 0
 --- !u!114 &6794080864892628726
 MonoBehaviour:
   m_ObjectHideFlags: 0

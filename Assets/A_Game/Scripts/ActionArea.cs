@@ -29,6 +29,8 @@ public class ActionArea : NetworkEntity
     protected Collider2D _collider;
     protected GameObject _effect;
 
+    protected MinMinUnit.EffectNames _effectName;
+
 
     override protected void Awake()
     {
@@ -94,6 +96,7 @@ public class ActionArea : NetworkEntity
 
     virtual protected void setUpActionArea(string areaName, Vector3 position, Vector3 direction, string unitName, MinMinUnit.EffectNames effectName, string teamName, int networkPlayerId)
     {
+        _effectName = effectName;
         this.name = areaName;
 
         OwnerUnitName = unitName;
@@ -102,6 +105,8 @@ public class ActionArea : NetworkEntity
 
         transform.position = position;
 
+        setEffect(effectName);
+
         float scaleFactor = float.Parse(getOwnerUnitProperty(GameNetwork.UnitPlayerProperties.EFFECT_SCALE));
 
         if (GameHacks.Instance.PowerScale.Enabled)
@@ -109,8 +114,6 @@ public class ActionArea : NetworkEntity
 
         Vector3 scale = transform.localScale;
         transform.localScale = new Vector3(scaleFactor * scale.x, scaleFactor * scale.y, scaleFactor * scale.z);
-
-        setEffect(effectName);
     }
 
     public static void DestroyActionAreaList(List<ActionArea> actionAreas)
@@ -154,7 +157,7 @@ public class ActionArea : NetworkEntity
         _effect = Instantiate<GameObject>(Resources.Load<GameObject>(effectFullPath));
 
         Transform effectTransform = _effect.transform;
-        effectTransform.localScale = this.transform.localScale;
+
         effectTransform.SetParent(this.transform);
         effectTransform.localPosition = Vector3.zero;
     }
