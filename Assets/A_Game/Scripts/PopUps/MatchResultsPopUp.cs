@@ -68,8 +68,11 @@ public class MatchResultsPopUp : MonoBehaviour
             int unitHealth = GameNetwork.GetUnitRoomPropertyAsInt(GameNetwork.UnitRoomProperties.HEALTH, localTeam, unitName);
             bool unitIsAlive = (unitHealth > 0);
 
-            GameObject unit = Instantiate<GameObject>(unitGridItemTemplate, _unitsAliveGridContent);
-            unit.GetComponent<UnitAliveGridItem>().SetUp(unitName, unitIsAlive);
+            if (!unitIsAlive)
+            {
+                GameObject unit = Instantiate<GameObject>(unitGridItemTemplate, _unitsAliveGridContent);
+                unit.GetComponent<UnitAliveGridItem>().SetUp(unitName, unitIsAlive);
+            }
         }
 
         unitGridItemTemplate.SetActive(false);

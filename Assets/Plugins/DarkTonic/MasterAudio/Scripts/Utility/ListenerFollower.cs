@@ -9,22 +9,28 @@ public class ListenerFollower : MonoBehaviour {
     private GameObject _goToFollow;
     private Transform _trans;
     private GameObject _go;
+#if !PHY3D_MISSING
     private SphereCollider _collider;
+#endif
 
     // ReSharper disable once UnusedMember.Local
     void Awake() {
+#if !PHY3D_MISSING
         var trig = Trigger;
         if (trig == null) { } // get rid of warning
+#endif
     }
 
-    public void StartFollowing(Transform transToFollow, string soundType, float trigRadius) {
+    public void StartFollowing(Transform transToFollow, float trigRadius) {
         _transToFollow = transToFollow;
         _goToFollow = transToFollow.gameObject;
+#if !PHY3D_MISSING
         Trigger.radius = trigRadius;
+#endif
     }
 
     // ReSharper disable once UnusedMember.Local
-    void LateUpdate() {
+    public void ManualUpdate() {
         BatchOcclusionRaycasts();
 
         if (_transToFollow == null || !DTMonoHelper.IsActive(_goToFollow)) {
@@ -59,6 +65,7 @@ public class ListenerFollower : MonoBehaviour {
         }
     }
 
+#if !PHY3D_MISSING
     public SphereCollider Trigger {
         get {
             if (_collider != null) {
@@ -71,6 +78,7 @@ public class ListenerFollower : MonoBehaviour {
             return _collider;
         }
     }
+#endif
 
     public GameObject GameObj {
         get {

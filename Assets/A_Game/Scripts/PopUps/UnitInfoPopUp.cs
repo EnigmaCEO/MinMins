@@ -17,6 +17,6 @@ public class UnitInfoPopUp : MonoBehaviour
 
         _level.text = "Level " + unitExpData.Level;
         _exp.text = "(" + unitExp + "/" + unitExpData.ExpForNextLevel + ")";
-        _progress.value = (unitExp - unitExpData.ExpForPreviousLevel) / (unitExpData.ExpForNextLevel - unitExpData.ExpForPreviousLevel);
+        _progress.value = (float)(unitExp) / (unitExpData.ExpForNextLevel);
     }
 }

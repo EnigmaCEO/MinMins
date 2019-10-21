@@ -40,6 +40,12 @@ public class UnitSelectManager : EnigmaScene
 
     void Start()
     {
+        SoundManager.FadeCurrentSong(1f, () => {
+            int arena = Random.Range(1, 3);
+            SoundManager.Stop();
+            SoundManager.Play("arena" + arena, SoundManager.AudioTypes.Music, "", true);
+        });
+
         List<string> inventoryUnitNames = GameInventory.Instance.GetInventoryUnitNames();  //TODO: Check if this needs to return stats
         int unitsLength = inventoryUnitNames.Count;
         GameObject unitGridItemTemplate = _unitsGridContent.GetChild(0).gameObject;
@@ -60,7 +66,9 @@ public class UnitSelectManager : EnigmaScene
             {
                 if (unitTier < x) unitTransform.Find("StarsGrid/Viewport/Content/star" + x).gameObject.SetActive(false);
             }
-                
+
+            unitTransform.Find("level/txt_level").GetComponent<Text>().text = GameInventory.Instance.GetLocalUnitLevel(unitName).ToString();
+
         }
 
         unitGridItemTemplate.SetActive(false);
@@ -208,6 +216,8 @@ public class UnitSelectManager : EnigmaScene
 
         int unitTier = GameInventory.Instance.GetUnitTier(unitName);
         slotImage.transform.parent.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/unit_frame_t" + unitTier);
+
+        slotImage.transform.parent.Find("level/txt_level").GetComponent<Text>().text = GameInventory.Instance.GetLocalUnitLevel(unitName).ToString();
 
         GameStats.Instance.TeamUnits[slotIndex] = unitName;
         disableUnitInfo();

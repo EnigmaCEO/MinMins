@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using DarkTonic.MasterAudio;
 using UnityEditor;
 using UnityEngine;
-
-#if UNITY_5 || UNITY_2017_1_OR_NEWER
 using UnityEngine.Audio;
-#endif
 
 [CustomEditor(typeof(DynamicSoundGroupCreator))]
 // ReSharper disable once CheckNamespace
@@ -114,6 +112,15 @@ public class DynamicSoundGroupCreatorInspector : Editor {
         }
 
         var allowPreview = !DTGUIHelper.IsPrefabInProjectView(_creator);
+
+        EditorGUI.indentLevel = 0;  // Space will handle this for the header
+
+        if (!allowPreview) {
+            DTGUIHelper.ShowLargeBarAlert("You are in Project View or have not made your own prefab and cannot use this Game Object.");
+            DTGUIHelper.ShowRedError("Create this prefab from Master Audio Manager window. Do not drag into Scene! Then make your own prefab.");
+            return;
+        }
+
         AudioSource previewer;
 
         var sliderIndicatorChars = 6;
@@ -268,27 +275,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
         var state = _creator.showMusicDucking;
         var text = "Dynamic Music Ducking";
 
-        // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
-        if (!state) {
-            GUI.backgroundColor = DTGUIHelper.InactiveHeaderColor;
-        } else {
-            GUI.backgroundColor = DTGUIHelper.ActiveHeaderColor;
-        }
-
-        DTGUIHelper.AddSpaceForNonU5(2);
-
-        GUILayout.BeginHorizontal();
-
-        text = "<b><size=11>" + text + "</size></b>";
-
-        if (state) {
-            text = "\u25BC " + text;
-        } else {
-            text = "\u25BA " + text;
-        }
-        if (!GUILayout.Toggle(true, text, "dragtab", GUILayout.MinWidth(20f))) {
-            state = !state;
-        }
+        DTGUIHelper.ShowCollapsibleSection(ref state, text);
 
         GUILayout.Space(2f);
 
@@ -299,7 +286,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
             _creator.showMusicDucking = state;
         }
 
-        DTGUIHelper.AddHelpIcon("http://www.dtdevtools.com/docs/masteraudio/DynamicSoundGroupCreators.htm#Ducking");
+        DTGUIHelper.AddHelpIconNoStyle("http://www.dtdevtools.com/docs/masteraudio/DynamicSoundGroupCreators.htm#Ducking");
 
         EditorGUILayout.EndHorizontal();
         GUI.color = Color.white;
@@ -405,7 +392,6 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 
                     EditorGUILayout.EndHorizontal();
                     DTGUIHelper.EndGroupHeader();
-                    DTGUIHelper.AddSpaceForNonU5(2);
                 }
 
                 if (duckSoundToRemove.HasValue) {
@@ -425,25 +411,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
         state = _creator.soundGroupsAreExpanded;
         text = "Dynamic Group Mixer";
 
-        // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
-        if (!state) {
-            GUI.backgroundColor = DTGUIHelper.InactiveHeaderColor;
-        } else {
-            GUI.backgroundColor = DTGUIHelper.ActiveHeaderColor;
-        }
-
-        GUILayout.BeginHorizontal();
-
-        text = "<b><size=11>" + text + "</size></b>";
-
-        if (state) {
-            text = "\u25BC " + text;
-        } else {
-            text = "\u25BA " + text;
-        }
-        if (!GUILayout.Toggle(true, text, "dragtab", GUILayout.MinWidth(20f))) {
-            state = !state;
-        }
+        DTGUIHelper.ShowCollapsibleSection(ref state, text);
 
         GUILayout.Space(2f);
 
@@ -454,7 +422,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
         }
 
         var applyTemplateToAll = false;
-        DTGUIHelper.AddHelpIcon("http://www.dtdevtools.com/docs/masteraudio/DynamicSoundGroupCreators.htm#Mixer");
+        DTGUIHelper.AddHelpIconNoStyle("http://www.dtdevtools.com/docs/masteraudio/DynamicSoundGroupCreators.htm#Mixer");
 
         EditorGUILayout.EndHorizontal();
         GUI.color = Color.white;
@@ -595,7 +563,6 @@ public class DynamicSoundGroupCreatorInspector : Editor {
                             var clips = new List<AudioClip>();
 
                             foreach (var dragged in DragAndDrop.objectReferences) {
-#if UNITY_5_2 || UNITY_5_3 || UNITY_5_4 || UNITY_5_5 || UNITY_5_6 || UNITY_2017_1_OR_NEWER
                                 if (dragged is DefaultAsset) {
                                     var assetPaths = AssetDatabase.FindAssets("t:AudioClip", DragAndDrop.paths);
                                     foreach (var assetPath in assetPaths) {
@@ -609,7 +576,6 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 
                                     continue;
                                 }
-#endif
 
                                 var aClip = dragged as AudioClip;
                                 if (aClip == null) {
@@ -860,7 +826,6 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 
                     EditorGUILayout.EndHorizontal();
 
-#if UNITY_5 || UNITY_2017_1_OR_NEWER
                     if (showingMixer) {
                         var newChan = (AudioMixerGroup)EditorGUILayout.ObjectField(aBus.mixerChannel, typeof(AudioMixerGroup), false);
                         if (newChan != aBus.mixerChannel) {
@@ -887,15 +852,20 @@ public class DynamicSoundGroupCreatorInspector : Editor {
                                 aBus.isUsingOcclusion = newOcc;
                             }
                         }
+
+                        GUILayout.Label("Color");
+                        var newBusColor = EditorGUILayout.ColorField(aBus.busColor);
+                        if (newBusColor != aBus.busColor) {
+                            AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "change Bus Color");
+                            aBus.busColor = newBusColor;
+                        }
+
                         GUILayout.FlexibleSpace();
 
                         EditorGUILayout.EndHorizontal();
                     }
 
-#endif
-
                     EditorGUILayout.EndVertical();
-                    DTGUIHelper.AddSpaceForNonU5(2);
                 }
 
                 if (showOcclusion && _creator.groupBuses.Count > 0 && !maInScene) {
@@ -906,7 +876,6 @@ public class DynamicSoundGroupCreatorInspector : Editor {
                     DeleteBus(busToDelete.Value);
                 }
 
-#if UNITY_5 || UNITY_2017_1_OR_NEWER
                 EditorGUILayout.BeginHorizontal();
                 GUILayout.Space(6);
 
@@ -922,7 +891,6 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 
                 GUI.contentColor = Color.white;
                 EditorGUILayout.EndHorizontal();
-#endif
             }
 
             DTGUIHelper.EndGroupedControls();
@@ -950,25 +918,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
         state = _creator.playListExpanded;
         text = "Dynamic Playlist Settings";
 
-        // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
-        if (!state) {
-            GUI.backgroundColor = DTGUIHelper.InactiveHeaderColor;
-        } else {
-            GUI.backgroundColor = DTGUIHelper.ActiveHeaderColor;
-        }
-
-        GUILayout.BeginHorizontal();
-
-        text = "<b><size=11>" + text + "</size></b>";
-
-        if (state) {
-            text = "\u25BC " + text;
-        } else {
-            text = "\u25BA " + text;
-        }
-        if (!GUILayout.Toggle(true, text, "dragtab", GUILayout.MinWidth(20f))) {
-            state = !state;
-        }
+        DTGUIHelper.ShowCollapsibleSection(ref state, text);
 
         GUILayout.Space(2f);
 
@@ -978,7 +928,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
             _creator.playListExpanded = state;
         }
 
-        DTGUIHelper.AddHelpIcon("http://www.dtdevtools.com/docs/masteraudio/DynamicSoundGroupCreators.htm#Playlists");
+        DTGUIHelper.AddHelpIconNoStyle("http://www.dtdevtools.com/docs/masteraudio/DynamicSoundGroupCreators.htm#Playlists");
 
         EditorGUILayout.EndHorizontal();
         GUI.color = Color.white;
@@ -1047,7 +997,272 @@ public class DynamicSoundGroupCreatorInspector : Editor {
                     EditorGUILayout.EndVertical();
 
                     if (aList.isExpanded) {
+                        DTGUIHelper.StartGroupHeader(1);
                         EditorGUI.indentLevel = 0;
+                        var exp2 = EditorGUILayout.BeginToggleGroup(" Show Song Metadata", aList.showMetadata);
+                        if (exp2 != aList.showMetadata) {
+                            AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "toggle expand Show Song Metadata");
+                            aList.showMetadata = exp2;
+                        }
+                        DTGUIHelper.EndGroupHeader();
+
+                        if (aList.showMetadata) {
+                            if (!Application.isPlaying) {
+                                var newPropName = EditorGUILayout.TextField("Property Name", aList.newMetadataPropName);
+                                if (newPropName != aList.newMetadataPropName) {
+                                    AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "change Property Name");
+                                    aList.newMetadataPropName = newPropName;
+                                }
+
+                                var newPropType = (SongMetadataProperty.MetadataPropertyType)EditorGUILayout.EnumPopup("Property Type", aList.newMetadataPropType);
+                                if (newPropType != aList.newMetadataPropType) {
+                                    AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "change Property Name");
+                                    aList.newMetadataPropType = newPropType;
+                                }
+
+                                var newPropRequired = EditorGUILayout.Toggle("Is Required", aList.newMetadataPropRequired);
+                                if (newPropRequired != aList.newMetadataPropRequired) {
+                                    AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "toggle Is Required");
+                                    aList.newMetadataPropRequired = newPropRequired;
+                                }
+
+                                var newPropMult = EditorGUILayout.Toggle("Song Can Have Multiple", aList.newMetadataPropCanHaveMult);
+                                if (newPropMult != aList.newMetadataPropCanHaveMult) {
+                                    AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "change Song Can Have Multiple");
+                                    aList.newMetadataPropCanHaveMult = newPropMult;
+                                }
+
+                                GUI.contentColor = DTGUIHelper.BrightButtonColor;
+                                if (GUILayout.Button(new GUIContent("Create Metadata Property"), EditorStyles.toolbarButton, GUILayout.Width(140))) {
+                                    CreateMetadataProperty(aList, aList.newMetadataPropName, aList.newMetadataPropType, aList.newMetadataPropRequired, aList.newMetadataPropCanHaveMult);
+                                }
+                            }
+                            GUI.contentColor = Color.white;
+
+                            var metaLabelText = "Metadata Properties";
+                            if (aList.songMetadataProps.Count > 0) {
+                                metaLabelText += "(" + aList.songMetadataProps.Count + ")";
+                            }
+
+                            GUILayout.Label(metaLabelText, EditorStyles.boldLabel);
+
+                            if (aList.songMetadataProps.Count == 0) {
+                                DTGUIHelper.ShowColorWarning("You have no Metadata. Add some properties above.");
+                            }
+
+                            int? propIndexToDelete = null;
+
+                            for (var s = 0; s < aList.songMetadataProps.Count; s++) {
+                                var property = aList.songMetadataProps[s];
+
+                                GUI.backgroundColor = Color.white;
+                                DTGUIHelper.StartGroupHeader(0, false);
+
+                                EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
+
+                                if (property.IsEditing) {
+                                    GUI.backgroundColor = DTGUIHelper.BrightTextColor;
+                                    var propName = EditorGUILayout.TextField("", property.ProspectiveName);
+                                    if (propName != property.ProspectiveName) {
+                                        AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "change Property Name");
+                                        property.ProspectiveName = propName;
+                                    }
+
+                                    var buttonPressed = DTGUIHelper.AddCancelSaveButtons("Song Metadata Property");
+
+                                    switch (buttonPressed) {
+                                        case DTGUIHelper.DTFunctionButtons.Cancel:
+                                            property.IsEditing = false;
+                                            property.ProspectiveName = property.PropertyName;
+                                            _isDirty = true;
+                                            break;
+                                        case DTGUIHelper.DTFunctionButtons.Save:
+                                            if (propName != null) {
+                                                propName = propName.Replace(" ", "");
+                                            }
+                                            if (string.IsNullOrEmpty(propName)) {
+                                                DTGUIHelper.ShowAlert("You must give a name to your new Meta Property.");
+                                                break;
+                                            }
+
+                                            var match = aList.songMetadataProps.Find(delegate (SongMetadataProperty p) {
+                                                return p.PropertyName == propName;
+                                            });
+
+                                            if (match != null) {
+                                                DTGUIHelper.ShowAlert("You already have a Metadata Property named '" + propName + "'. Names must be unique.");
+                                                break;
+                                            }
+
+                                            AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "change Property Name");
+
+                                            var newName = property.ProspectiveName;
+                                            var oldName = property.PropertyName;
+
+                                            // update all songs to have the new Property Name
+                                            for (var t = 0; t < aList.MusicSettings.Count; t++) {
+                                                var aSong = aList.MusicSettings[t];
+
+
+                                                switch (property.PropertyType) {
+                                                    case SongMetadataProperty.MetadataPropertyType.String:
+                                                        var sMatches = aSong.metadataStringValues.FindAll(delegate (SongMetadataStringValue v) {
+                                                            return v.PropertyName == oldName;
+                                                        });
+
+                                                        for (var loop = 0; loop < sMatches.Count; loop++) {
+                                                            sMatches[loop].PropertyName = newName;
+                                                        }
+                                                        break;
+                                                    case SongMetadataProperty.MetadataPropertyType.Boolean:
+                                                        var bMatches = aSong.metadataBoolValues.FindAll(delegate (SongMetadataBoolValue v) {
+                                                            return v.PropertyName == oldName;
+                                                        });
+
+                                                        for (var loop = 0; loop < bMatches.Count; loop++) {
+                                                            bMatches[loop].PropertyName = newName;
+                                                        }
+                                                        break;
+                                                    case SongMetadataProperty.MetadataPropertyType.Integer:
+                                                        var iMatches = aSong.metadataIntValues.FindAll(delegate (SongMetadataIntValue v) {
+                                                            return v.PropertyName == oldName;
+                                                        });
+
+                                                        for (var loop = 0; loop < iMatches.Count; loop++) {
+                                                            iMatches[loop].PropertyName = newName;
+                                                        }
+                                                        break;
+                                                    case SongMetadataProperty.MetadataPropertyType.Float:
+                                                        var fMatches = aSong.metadataFloatValues.FindAll(delegate (SongMetadataFloatValue v) {
+                                                            return v.PropertyName == oldName;
+                                                        });
+
+                                                        for (var loop = 0; loop < fMatches.Count; loop++) {
+                                                            fMatches[loop].PropertyName = newName;
+                                                        }
+                                                        break;
+                                                }
+                                            }
+
+                                            property.PropertyName = newName;
+                                            property.IsEditing = false;
+                                            break;
+                                    }
+
+                                } else {
+                                    EditorGUI.indentLevel = 1;
+                                    var newEditing = EditorGUILayout.Foldout(property.PropertyExpanded, property.PropertyName + " (" + property.PropertyType.ToString() + ")");
+                                    if (newEditing != property.PropertyExpanded) {
+                                        AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "toggle expand Property");
+                                        property.PropertyExpanded = newEditing;
+                                    }
+
+                                    GUILayout.FlexibleSpace();
+                                    var settingsIcon = new GUIContent(MasterAudioInspectorResources.GearTexture, "Click to edit Property");
+
+                                    if (!Application.isPlaying) {
+                                        GUI.backgroundColor = Color.white;
+                                        if (GUILayout.Button(settingsIcon, EditorStyles.toolbarButton, GUILayout.Width(24), GUILayout.Height(16))) {
+                                            property.IsEditing = true;
+                                        }
+                                        if (GUILayout.Button(new GUIContent(MasterAudioInspectorResources.DeleteTexture, "Click to delete Property"), EditorStyles.toolbarButton, GUILayout.MaxWidth(36)))
+                                        {
+                                            propIndexToDelete = s;
+                                        }
+                                    }
+                                }
+
+                                GUI.backgroundColor = Color.white;
+
+                                EditorGUILayout.EndHorizontal();
+
+                                if (property.PropertyExpanded) {
+                                    EditorGUI.indentLevel = 0;
+
+                                    if (Application.isPlaying) {
+                                        DTGUIHelper.ShowColorWarning("Can't edit at runtime.");
+                                    } else {
+                                        var newRequired = EditorGUILayout.Toggle("Is Required", property.AllSongsMustContain);
+                                        if (newRequired != property.AllSongsMustContain) {
+                                            AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "toggle Is Required");
+                                            property.AllSongsMustContain = newRequired;
+                                            if (newRequired) {
+                                                MakePropertyRequired(property, aList);
+                                            }
+                                        }
+                                        var newMult = EditorGUILayout.Toggle("Song Can Have Multiple", property.CanSongHaveMultiple);
+                                        if (newMult != property.CanSongHaveMultiple) {
+                                            var sbSongsWithMult = new StringBuilder();
+                                            if (!newMult) { // turned off the checkbox
+                                                for (var x = 0; x < aList.MusicSettings.Count; x++) {
+                                                    var aSong = aList.MusicSettings[x];
+
+                                                    switch (property.PropertyType) {
+                                                        case SongMetadataProperty.MetadataPropertyType.String:
+                                                            if (aSong.metadataStringValues.FindAll(delegate (SongMetadataStringValue v) {
+                                                                return v.PropertyName == property.PropertyName;
+                                                            }).Count > 1) {
+                                                                if (sbSongsWithMult.Length > 0) {
+                                                                    sbSongsWithMult.Append(",");
+                                                                }
+                                                                sbSongsWithMult.Append(aSong.songName);
+                                                            }
+                                                            break;
+                                                        case SongMetadataProperty.MetadataPropertyType.Boolean:
+                                                            if (aSong.metadataBoolValues.FindAll(delegate (SongMetadataBoolValue v) {
+                                                                return v.PropertyName == property.PropertyName;
+                                                            }).Count > 1) {
+                                                                if (sbSongsWithMult.Length > 0) {
+                                                                    sbSongsWithMult.Append(",");
+                                                                }
+                                                                sbSongsWithMult.Append(aSong.songName);
+                                                            }
+                                                            break;
+                                                        case SongMetadataProperty.MetadataPropertyType.Integer:
+                                                            if (aSong.metadataIntValues.FindAll(delegate (SongMetadataIntValue v) {
+                                                                return v.PropertyName == property.PropertyName;
+                                                            }).Count > 1) {
+                                                                if (sbSongsWithMult.Length > 0) {
+                                                                    sbSongsWithMult.Append(",");
+                                                                }
+                                                                sbSongsWithMult.Append(aSong.songName);
+                                                            }
+                                                            break;
+                                                        case SongMetadataProperty.MetadataPropertyType.Float:
+                                                            if (aSong.metadataFloatValues.FindAll(delegate (SongMetadataFloatValue v) {
+                                                                return v.PropertyName == property.PropertyName;
+                                                            }).Count > 1) {
+                                                                if (sbSongsWithMult.Length > 0) {
+                                                                    sbSongsWithMult.Append(",");
+                                                                }
+                                                                sbSongsWithMult.Append(aSong.songName);
+                                                            }
+                                                            break;
+                                                    }
+                                                }
+                                            }
+
+                                            if (sbSongsWithMult.Length > 0) {
+                                                DTGUIHelper.ShowAlert("Cannot turn off 'Song Can Have Multiple' because you have song(s) with multiple values for this property: " + sbSongsWithMult.ToString() + ". We cannot choose which value to keep, so you must make sure there is no more than one before turning off this checkbox.");
+                                            } else {
+                                                AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "toggle Song Can Have Multiple");
+                                                property.CanSongHaveMultiple = newMult;
+                                            }
+                                        }
+                                    }
+                                }
+
+                                EditorGUILayout.EndVertical();
+                            }
+
+                            if (propIndexToDelete.HasValue) {
+                                DeleteMetadataProperty(aList, propIndexToDelete.Value);
+                            }
+                        }
+                        EditorGUILayout.EndToggleGroup();
+                        GUI.backgroundColor = Color.white;
+                        EditorGUI.indentLevel = 0;
+
                         var newPlaylist = EditorGUILayout.TextField("Name", aList.playlistName);
                         if (newPlaylist != aList.playlistName) {
                             AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "change Name");
@@ -1105,7 +1320,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
                             break;
                         }
 
-                        if (MasterAudio.HasAsyncResourceLoaderFeature() && playlistHasResource) {
+                        if (playlistHasResource) {
                             if (!maInScene || !ma.resourceClipsAllLoadAsync) {
                                 var newAsync = EditorGUILayout.Toggle(new GUIContent("Load Resources Async", "Checking this means Resource files in this Playlist will be loaded asynchronously."), aList.resourceClipsAllLoadAsync);
                                 if (newAsync != aList.resourceClipsAllLoadAsync) {
@@ -1170,7 +1385,6 @@ public class DynamicSoundGroupCreatorInspector : Editor {
                                     DragAndDrop.AcceptDrag();
 
                                     foreach (var dragged in DragAndDrop.objectReferences) {
-#if UNITY_5_2 || UNITY_5_3 || UNITY_5_4 || UNITY_5_5 || UNITY_5_6 || UNITY_2017_1_OR_NEWER
                                         if (dragged is DefaultAsset) {
                                             var assetPaths = AssetDatabase.FindAssets("t:AudioClip", DragAndDrop.paths);
                                             foreach (var assetPath in assetPaths) {
@@ -1184,7 +1398,6 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 
                                             continue;
                                         }
-#endif
 
                                         var aClip = dragged as AudioClip;
                                         if (aClip == null) {
@@ -1258,7 +1471,280 @@ public class DynamicSoundGroupCreatorInspector : Editor {
                             if (aSong.isExpanded) {
                                 EditorGUI.indentLevel = 0;
 
-                                var newName = EditorGUILayout.TextField(new GUIContent("Song Alias (optional)", "When you 'Play song by name', Song Aliases will be searched first before audio file name."), aSong.alias);
+                                if (aList.showMetadata) {
+                                    var oldBG = GUI.backgroundColor;
+
+                                    DTGUIHelper.StartGroupHeader(0, false);
+
+                                    EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
+
+                                    EditorGUI.indentLevel = 1;
+                                    var metaLabelText = "Song Metadata";
+
+                                    if (aSong.HasMetadataProperties) {
+                                        metaLabelText += " (" + aSong.MetadataPropertyCount + ")";
+                                    }
+
+                                    var newExp = EditorGUILayout.Foldout(aSong.metadataExpanded, metaLabelText);
+                                    if (newExp != aSong.metadataExpanded) {
+                                        AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "toggle expand Song Metadata");
+                                        aSong.metadataExpanded = newExp;
+                                    }
+
+                                    EditorGUILayout.EndHorizontal();
+
+                                    if (aSong.metadataExpanded) {
+                                        EditorGUI.indentLevel = 0;
+
+                                        var propertiesToAdd = new List<string>();
+                                        propertiesToAdd.Add("[Select a Property]");
+                                        for (var p = 0; p < aList.songMetadataProps.Count; p++) {
+                                            var aProp = aList.songMetadataProps[p];
+                                            if (aProp.CanSongHaveMultiple) {
+                                                propertiesToAdd.Add(aProp.PropertyName);
+                                                continue;
+                                            }
+
+                                            if (aProp.AllSongsMustContain) {
+                                                continue;
+                                            }
+
+                                            // not required. If you don't have one, you can add.
+                                            switch (aProp.PropertyType) {
+                                                case SongMetadataProperty.MetadataPropertyType.Boolean:
+                                                    if (aSong.metadataBoolValues.FindAll(delegate (SongMetadataBoolValue v) {
+                                                        return v.PropertyName == aProp.PropertyName;
+                                                    }).Count == 0) {
+                                                        propertiesToAdd.Add(aProp.PropertyName);
+                                                    }
+                                                    break;
+                                                case SongMetadataProperty.MetadataPropertyType.Integer:
+                                                    if (aSong.metadataIntValues.FindAll(delegate (SongMetadataIntValue v) {
+                                                        return v.PropertyName == aProp.PropertyName;
+                                                    }).Count == 0) {
+                                                        propertiesToAdd.Add(aProp.PropertyName);
+                                                    }
+                                                    break;
+                                                case SongMetadataProperty.MetadataPropertyType.Float:
+                                                    if (aSong.metadataFloatValues.FindAll(delegate (SongMetadataFloatValue v) {
+                                                        return v.PropertyName == aProp.PropertyName;
+                                                    }).Count == 0) {
+                                                        propertiesToAdd.Add(aProp.PropertyName);
+                                                    }
+                                                    break;
+                                                case SongMetadataProperty.MetadataPropertyType.String:
+                                                    if (aSong.metadataStringValues.FindAll(delegate (SongMetadataStringValue v) {
+                                                        return v.PropertyName == aProp.PropertyName;
+                                                    }).Count == 0) {
+                                                        propertiesToAdd.Add(aProp.PropertyName);
+                                                    }
+                                                    break;
+                                            }
+                                        }
+
+                                        var oldBG2 = GUI.backgroundColor;
+
+                                        if (!Application.isPlaying) {
+                                            var propIndex = EditorGUILayout.Popup("Add Metadata Property", 0, propertiesToAdd.ToArray());
+                                            if (propIndex != 0) {
+                                                var propName = propertiesToAdd[propIndex];
+                                                var propToAdd = aList.songMetadataProps.Find(delegate (SongMetadataProperty p) {
+                                                    return p.PropertyName == propName;
+                                                });
+
+                                                AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "add Property");
+
+                                                switch (propToAdd.PropertyType) {
+                                                    case SongMetadataProperty.MetadataPropertyType.Boolean:
+                                                        aSong.metadataBoolValues.Add(new SongMetadataBoolValue(propToAdd));
+                                                        break;
+                                                    case SongMetadataProperty.MetadataPropertyType.String:
+                                                        aSong.metadataStringValues.Add(new SongMetadataStringValue(propToAdd));
+                                                        break;
+                                                    case SongMetadataProperty.MetadataPropertyType.Integer:
+                                                        aSong.metadataIntValues.Add(new SongMetadataIntValue(propToAdd));
+                                                        break;
+                                                    case SongMetadataProperty.MetadataPropertyType.Float:
+                                                        aSong.metadataFloatValues.Add(new SongMetadataFloatValue(propToAdd));
+                                                        break;
+                                                }
+                                            }
+                                        }
+
+                                        if (!aSong.HasMetadataProperties) {
+                                            DTGUIHelper.ShowColorWarning("This song has no metadata.");
+                                        }
+
+                                        int? sIndexToDelete = null;
+                                        for (var m = 0; m < aSong.metadataStringValues.Count; m++) {
+                                            GUI.backgroundColor = oldBG2;
+                                            var aVal = aSong.metadataStringValues[m];
+
+                                            EditorGUILayout.BeginHorizontal();
+
+                                            var newVal = EditorGUILayout.TextField(aVal.PropertyName, aVal.Value);
+                                            if (newVal != aVal.Value) {
+                                                AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "change Property value");
+                                                aVal.Value = newVal;
+                                            }
+
+                                            if (GUILayout.Button(new GUIContent(MasterAudioInspectorResources.DeleteTexture, "Click to delete Property"), EditorStyles.toolbarButton, GUILayout.MaxWidth(36))) { 
+                                                sIndexToDelete = m;
+                                            }
+
+                                            EditorGUILayout.EndHorizontal();
+                                        }
+
+                                        GUI.backgroundColor = oldBG2;
+                                        int? bIndexToDelete = null;
+                                        for (var m = 0; m < aSong.metadataBoolValues.Count; m++) {
+                                            var aVal = aSong.metadataBoolValues[m];
+                                            EditorGUILayout.BeginHorizontal();
+
+                                            var newVal = EditorGUILayout.Toggle(aVal.PropertyName, aVal.Value);
+                                            if (newVal != aVal.Value) {
+                                                AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "change Property value");
+                                                aVal.Value = newVal;
+                                            }
+
+                                            if (GUILayout.Button(new GUIContent(MasterAudioInspectorResources.DeleteTexture, "Click to delete Property"), EditorStyles.toolbarButton, GUILayout.MaxWidth(36)))
+                                            {
+                                                bIndexToDelete = m;
+                                            }
+
+                                            EditorGUILayout.EndHorizontal();
+                                        }
+
+                                        GUI.backgroundColor = oldBG2;
+                                        int? iIndexToDelete = null;
+                                        for (var m = 0; m < aSong.metadataIntValues.Count; m++) {
+                                            GUI.backgroundColor = oldBG2;
+                                            var aVal = aSong.metadataIntValues[m];
+                                            EditorGUILayout.BeginHorizontal();
+
+                                            var newVal = EditorGUILayout.IntField(aVal.PropertyName, aVal.Value);
+                                            if (newVal != aVal.Value) {
+                                                AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "change Property value");
+                                                aVal.Value = newVal;
+                                            }
+
+                                            if (GUILayout.Button(new GUIContent(MasterAudioInspectorResources.DeleteTexture, "Click to delete Property"), EditorStyles.toolbarButton, GUILayout.MaxWidth(36)))
+                                            {
+                                                iIndexToDelete = m;
+                                            }
+
+                                            EditorGUILayout.EndHorizontal();
+                                        }
+
+                                        GUI.backgroundColor = oldBG2;
+                                        int? fIndexToDelete = null;
+                                        for (var m = 0; m < aSong.metadataFloatValues.Count; m++) {
+                                            GUI.backgroundColor = oldBG2;
+                                            var aVal = aSong.metadataFloatValues[m];
+                                            EditorGUILayout.BeginHorizontal();
+
+                                            var newVal = EditorGUILayout.FloatField(aVal.PropertyName, aVal.Value);
+                                            if (newVal != aVal.Value) {
+                                                AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "change Property value");
+                                                aVal.Value = newVal;
+                                            }
+
+                                            if (GUILayout.Button(new GUIContent(MasterAudioInspectorResources.DeleteTexture, "Click to delete Property"), EditorStyles.toolbarButton, GUILayout.MaxWidth(36)))
+                                            {
+                                                fIndexToDelete = m;
+                                            }
+
+                                            EditorGUILayout.EndHorizontal();
+                                        }
+
+                                        if (sIndexToDelete.HasValue) {
+                                            var deadProp = aSong.metadataStringValues[sIndexToDelete.Value];
+                                            var srcProp = aList.songMetadataProps.Find(delegate (SongMetadataProperty p) {
+                                                return p.PropertyName == deadProp.PropertyName;
+                                            });
+                                            if (srcProp == null || !srcProp.AllSongsMustContain) {
+                                                AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "delete Property");
+                                                aSong.metadataStringValues.RemoveAt(sIndexToDelete.Value);
+                                            } else {
+                                                var propMatches = aSong.metadataStringValues.FindAll(delegate (SongMetadataStringValue s) {
+                                                    return s.PropertyName == deadProp.PropertyName;
+                                                });
+                                                if (propMatches.Count <= 1) {
+                                                    DTGUIHelper.ShowAlert("This Property is required. You cannot delete all instances of it from a song.");
+                                                } else {
+                                                    AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "delete Property");
+                                                    aSong.metadataStringValues.RemoveAt(sIndexToDelete.Value);
+                                                }
+                                            }
+                                        }
+                                        if (bIndexToDelete.HasValue) {
+                                            var deadProp = aSong.metadataBoolValues[bIndexToDelete.Value];
+                                            var srcProp = aList.songMetadataProps.Find(delegate (SongMetadataProperty p) {
+                                                return p.PropertyName == deadProp.PropertyName;
+                                            });
+                                            if (srcProp == null || !srcProp.AllSongsMustContain) {
+                                                AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "delete Property");
+                                                aSong.metadataBoolValues.RemoveAt(bIndexToDelete.Value);
+                                            } else {
+                                                var propMatches = aSong.metadataBoolValues.FindAll(delegate (SongMetadataBoolValue s) {
+                                                    return s.PropertyName == deadProp.PropertyName;
+                                                });
+                                                if (propMatches.Count <= 1) {
+                                                    DTGUIHelper.ShowAlert("This Property is required. You cannot delete all instances of it from a song.");
+                                                } else {
+                                                    AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "delete Property");
+                                                    aSong.metadataBoolValues.RemoveAt(bIndexToDelete.Value);
+                                                }
+                                            }
+                                        }
+                                        if (iIndexToDelete.HasValue) {
+                                            var deadProp = aSong.metadataIntValues[iIndexToDelete.Value];
+                                            var srcProp = aList.songMetadataProps.Find(delegate (SongMetadataProperty p) {
+                                                return p.PropertyName == deadProp.PropertyName;
+                                            });
+                                            if (srcProp == null || !srcProp.AllSongsMustContain) {
+                                                AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "delete Property");
+                                                aSong.metadataIntValues.RemoveAt(iIndexToDelete.Value);
+                                            } else {
+                                                var propMatches = aSong.metadataIntValues.FindAll(delegate (SongMetadataIntValue s) {
+                                                    return s.PropertyName == deadProp.PropertyName;
+                                                });
+                                                if (propMatches.Count <= 1) {
+                                                    DTGUIHelper.ShowAlert("This Property is required. You cannot delete all instances of it from a song.");
+                                                } else {
+                                                    AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "delete Property");
+                                                    aSong.metadataIntValues.RemoveAt(iIndexToDelete.Value);
+                                                }
+                                            }
+                                        }
+                                        if (fIndexToDelete.HasValue) {
+                                            var deadProp = aSong.metadataFloatValues[fIndexToDelete.Value];
+                                            var srcProp = aList.songMetadataProps.Find(delegate (SongMetadataProperty p) {
+                                                return p.PropertyName == deadProp.PropertyName;
+                                            });
+                                            if (srcProp == null || !srcProp.AllSongsMustContain) {
+                                                AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "delete Property");
+                                                aSong.metadataFloatValues.RemoveAt(fIndexToDelete.Value);
+                                            } else {
+                                                var propMatches = aSong.metadataFloatValues.FindAll(delegate (SongMetadataFloatValue s) {
+                                                    return s.PropertyName == deadProp.PropertyName;
+                                                });
+                                                if (propMatches.Count <= 1) {
+                                                    DTGUIHelper.ShowAlert("This Property is required. You cannot delete all instances of it from a song.");
+                                                } else {
+                                                    AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "delete Property");
+                                                    aSong.metadataFloatValues.RemoveAt(fIndexToDelete.Value);
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    EditorGUILayout.EndVertical();
+                                    GUI.backgroundColor = oldBG;
+                                }
+
+                                EditorGUI.indentLevel = 0;
+                                var newName = EditorGUILayout.TextField(new GUIContent("Song Id (optional)", "When you 'Play song by name', Song Id's will be searched first before audio file name."), aSong.alias);
                                 if (newName != aSong.alias) {
                                     AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "change Song Id");
                                     aSong.alias = newName;
@@ -1586,7 +2072,6 @@ public class DynamicSoundGroupCreatorInspector : Editor {
                             }
 
                             EditorGUILayout.EndVertical();
-                            DTGUIHelper.AddSpaceForNonU5(2);
                         }
 
                         if (addIndex.HasValue) {
@@ -1613,7 +2098,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
                             aList.MusicSettings.RemoveAt(index + 1);
                         } else if (indexToClone.HasValue) {
                             AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "clone song");
-                            aList.MusicSettings.Insert(indexToClone.Value, MusicSetting.Clone(aList.MusicSettings[indexToClone.Value]));
+                            aList.MusicSettings.Insert(indexToClone.Value, MusicSetting.Clone(aList.MusicSettings[indexToClone.Value], aList));
                         }
                     }
 
@@ -1633,7 +2118,6 @@ public class DynamicSoundGroupCreatorInspector : Editor {
                     }
 
                     EditorGUILayout.EndVertical();
-                    DTGUIHelper.AddSpaceForNonU5(4);
                 }
 
 
@@ -1682,25 +2166,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
         state = _creator.showCustomEvents;
         text = "Dynamic Custom Events";
 
-        // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
-        if (!state) {
-            GUI.backgroundColor = DTGUIHelper.InactiveHeaderColor;
-        } else {
-            GUI.backgroundColor = DTGUIHelper.ActiveHeaderColor;
-        }
-
-        GUILayout.BeginHorizontal();
-
-        text = "<b><size=11>" + text + "</size></b>";
-
-        if (state) {
-            text = "\u25BC " + text;
-        } else {
-            text = "\u25BA " + text;
-        }
-        if (!GUILayout.Toggle(true, text, "dragtab", GUILayout.MinWidth(20f))) {
-            state = !state;
-        }
+        DTGUIHelper.ShowCollapsibleSection(ref state, text);
 
         GUILayout.Space(2f);
 
@@ -1709,7 +2175,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
             _creator.showCustomEvents = state;
         }
 
-        DTGUIHelper.AddHelpIcon("http://www.dtdevtools.com/docs/masteraudio/DynamicSoundGroupCreators.htm#CustomEvents");
+        DTGUIHelper.AddHelpIconNoStyle("http://www.dtdevtools.com/docs/masteraudio/DynamicSoundGroupCreators.htm#CustomEvents");
         EditorGUILayout.EndHorizontal();
         GUI.color = Color.white;
 
@@ -1753,8 +2219,6 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 			EditorGUILayout.EndHorizontal();
 			EditorGUILayout.EndVertical();
 			
-			DTGUIHelper.AddSpaceForNonU5(2);
-			
 			DTGUIHelper.StartGroupHeader(0, false);
 			DTGUIHelper.ResetColors();
 			var newCat = EditorGUILayout.TextField("New Category Name", _creator.newCustomEventCategoryName);
@@ -1777,7 +2241,6 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 			EditorGUILayout.EndVertical();
 			DTGUIHelper.ResetColors();
 			
-			DTGUIHelper.AddSpaceForNonU5(2);
 			GUI.backgroundColor = DTGUIHelper.BrightButtonColor;
 			
 			var newIndex = EditorGUILayout.Popup("Default Event Category", selCatIndex, catNames.ToArray());
@@ -1838,8 +2301,6 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 				
 				var hasItems = matchingItems.Count > 0;
 				
-				EditorGUILayout.BeginHorizontal();
-				
 				if (!cat.IsEditing || Application.isPlaying) {
 					var catName = cat.CatName;
 					
@@ -1847,24 +2308,8 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 					
 					var state2 = cat.IsExpanded;
 					var text2 = catName;
-					
-					// ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
-					if (!state2) {
-						GUI.backgroundColor = DTGUIHelper.InactiveHeaderColor;
-					} else {
-						GUI.backgroundColor = DTGUIHelper.BrightButtonColor;
-					}
-					
-					text2 = "<b><size=11>" + text2 + "</size></b>";
-					
-					if (state2) {
-						text2 = "\u25BC " + text2;
-					} else {
-						text2 = "\u25BA " + text2;
-					}
-					if (!GUILayout.Toggle(true, text2, "dragtab", GUILayout.MinWidth(20f))) {
-						state2 = !state2;
-					}
+
+                    DTGUIHelper.ShowCollapsibleSectionInline(ref state2, text2);
 					
 					GUILayout.Space(2f);
 					
@@ -1872,8 +2317,15 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 						AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "toggle expand Custom Event Category");
 						cat.IsExpanded = state2;
 					}
-					
-					var catItemsCollapsed = true;
+
+                    var headerStyle = new GUIStyle();
+                    headerStyle.margin = new RectOffset(0, 0, 2, 0);
+                    headerStyle.padding = new RectOffset(6, 0, 1, 2);
+                    headerStyle.fixedHeight = 18;
+
+                    EditorGUILayout.BeginHorizontal(headerStyle, GUILayout.MaxWidth(50));
+
+                    var catItemsCollapsed = true;
 					
 					for (var i = 0; i < matchingItems.Count; i++) {
 						var item = matchingItems[i];
@@ -1927,19 +2379,21 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 						                     GUILayout.Height(16))) {
 							catEditing = cat;
 						}
-						GUI.backgroundColor = DTGUIHelper.DeleteButtonColor;
-						if (GUILayout.Button(new GUIContent("Delete", "Click to delete Category"),
-						                     EditorStyles.miniButton, GUILayout.MaxWidth(45))) {
+                        if (GUILayout.Button(new GUIContent(MasterAudioInspectorResources.DeleteTexture, "Click to delete Category"), EditorStyles.toolbarButton, GUILayout.MaxWidth(36)))
+                        {
 							catToDelete = cat;
 						}
 						
-						GUILayout.Space(2);
+						GUILayout.Space(6);
 					} else {
 						GUILayout.Space(4);
 					}
-					
+
+                    EditorGUILayout.EndHorizontal();
 				} else {
-					GUI.backgroundColor = DTGUIHelper.BrightTextColor;
+                    EditorGUILayout.BeginHorizontal();
+
+                    GUI.backgroundColor = DTGUIHelper.BrightTextColor;
 					var tex = EditorGUILayout.TextField("", cat.ProspectiveName);
 					if (tex != cat.ProspectiveName) {
 						cat.ProspectiveName = tex;
@@ -1992,7 +2446,6 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 						EditorGUI.indentLevel = 1;
 						var anEvent = matchingItems[i];
 						
-						DTGUIHelper.AddSpaceForNonU5(2);
 						DTGUIHelper.StartGroupHeader();
 						
 						EditorGUILayout.BeginHorizontal();
@@ -2026,11 +2479,10 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 								                     GUILayout.Height(16))) {
 									eventEditing = anEvent;
 								}
-								
-								GUI.backgroundColor = DTGUIHelper.DeleteButtonColor;
-								if (GUILayout.Button(new GUIContent("Delete", "Click to delete Event"),
-								                     EditorStyles.miniButton, GUILayout.MaxWidth(45))) {
-									eventToDelete = anEvent;
+
+                                if (GUILayout.Button(new GUIContent(MasterAudioInspectorResources.DeleteTexture, "Click to delete Event"), EditorStyles.toolbarButton, GUILayout.MaxWidth(36)))
+                                {
+                                    eventToDelete = anEvent;
 								}
 							}
 							GUI.contentColor = Color.white;
@@ -2652,6 +3104,31 @@ public class DynamicSoundGroupCreatorInspector : Editor {
                     break;
             }
 
+            foreach (var property in pList.songMetadataProps) {
+                if (!property.AllSongsMustContain) {
+                    continue;
+                }
+
+                switch (property.PropertyType) {
+                    case SongMetadataProperty.MetadataPropertyType.Boolean:
+                        var bVal = new SongMetadataBoolValue(property);
+                        mus.metadataBoolValues.Add(bVal);
+                        break;
+                    case SongMetadataProperty.MetadataPropertyType.String:
+                        var sVal = new SongMetadataStringValue(property);
+                        mus.metadataStringValues.Add(sVal);
+                        break;
+                    case SongMetadataProperty.MetadataPropertyType.Integer:
+                        var iVal = new SongMetadataIntValue(property);
+                        mus.metadataIntValues.Add(iVal);
+                        break;
+                    case SongMetadataProperty.MetadataPropertyType.Float:
+                        var fVal = new SongMetadataFloatValue(property);
+                        mus.metadataFloatValues.Add(fVal);
+                        break;
+                }
+            }
+
             pList.MusicSettings.Add(mus);
         }
     }
@@ -2757,6 +3234,143 @@ public class DynamicSoundGroupCreatorInspector : Editor {
         });
 
         return selTemplate;
+    }
+
+    private void CreateMetadataProperty(MasterAudio.Playlist list, string propName, SongMetadataProperty.MetadataPropertyType propType, bool required, bool canHaveMult) {
+        if (propName != null) {
+            propName = propName.Replace(" ", "");
+        }
+        if (string.IsNullOrEmpty(propName)) {
+            DTGUIHelper.ShowAlert("You must give a name to your new Meta Property.");
+            return;
+        }
+
+        var match = list.songMetadataProps.Find(delegate (SongMetadataProperty p) {
+            return p.PropertyName == propName;
+        });
+
+        if (match != null) {
+            DTGUIHelper.ShowAlert("You already have a Metadata Property named '" + propName + "'. Names must be unique.");
+            return;
+        }
+
+        if (propType == SongMetadataProperty.MetadataPropertyType.Boolean) {
+            canHaveMult = false;
+        }
+
+        var newProp = new SongMetadataProperty(propName, propType, required, canHaveMult);
+
+        AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "Create Metadata Property");
+
+        if (required) {
+            for (var s = 0; s < list.MusicSettings.Count; s++) {
+                var aSong = list.MusicSettings[s];
+
+                switch (propType) {
+                    case SongMetadataProperty.MetadataPropertyType.Boolean:
+                        var bVal = new SongMetadataBoolValue(newProp);
+                        aSong.metadataBoolValues.Add(bVal);
+                        break;
+                    case SongMetadataProperty.MetadataPropertyType.String:
+                        var sVal = new SongMetadataStringValue(newProp);
+                        aSong.metadataStringValues.Add(sVal);
+                        break;
+                    case SongMetadataProperty.MetadataPropertyType.Integer:
+                        var iVal = new SongMetadataIntValue(newProp);
+                        aSong.metadataIntValues.Add(iVal);
+                        break;
+                    case SongMetadataProperty.MetadataPropertyType.Float:
+                        var fVal = new SongMetadataFloatValue(newProp);
+                        aSong.metadataFloatValues.Add(fVal);
+                        break;
+                }
+            }
+        }
+
+        list.songMetadataProps.Add(newProp);
+    }
+
+    private void MakePropertyRequired(SongMetadataProperty property, MasterAudio.Playlist aList) {
+        // add one if there isn't one.
+        for (var i = 0; i < aList.MusicSettings.Count; i++) {
+            var aSong = aList.MusicSettings[i];
+
+            switch (property.PropertyType) {
+                case SongMetadataProperty.MetadataPropertyType.String:
+                    if (aSong.metadataStringValues.FindIndex(delegate (SongMetadataStringValue v) {
+                        return v.PropertyName == property.PropertyName;
+                    }) < 0) {
+                        aSong.metadataStringValues.Add(new SongMetadataStringValue(property));
+                    }
+                    break;
+                case SongMetadataProperty.MetadataPropertyType.Boolean:
+                    if (aSong.metadataBoolValues.FindIndex(delegate (SongMetadataBoolValue b) {
+                        return b.PropertyName == property.PropertyName;
+                    }) < 0) {
+                        aSong.metadataBoolValues.Add(new SongMetadataBoolValue(property));
+                    }
+                    break;
+                case SongMetadataProperty.MetadataPropertyType.Integer:
+                    if (aSong.metadataIntValues.FindIndex(delegate (SongMetadataIntValue n) {
+                        return n.PropertyName == property.PropertyName;
+                    }) < 0) {
+                        aSong.metadataIntValues.Add(new SongMetadataIntValue(property));
+                    }
+                    break;
+                case SongMetadataProperty.MetadataPropertyType.Float:
+                    if (aSong.metadataFloatValues.FindIndex(delegate (SongMetadataFloatValue f) {
+                        return f.PropertyName == property.PropertyName;
+                    }) < 0) {
+                        aSong.metadataFloatValues.Add(new SongMetadataFloatValue(property));
+                    }
+                    break;
+            }
+        }
+    }
+
+    private void DeleteMetadataProperty(MasterAudio.Playlist aList, int index) {
+        AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "Delete Metadata Property");
+
+        var deadProperty = aList.songMetadataProps[index];
+        var deadName = deadProperty.PropertyName;
+
+        switch (deadProperty.PropertyType) {
+            case SongMetadataProperty.MetadataPropertyType.String:
+                for (var i = 0; i < aList.MusicSettings.Count; i++) {
+                    var aSong = aList.MusicSettings[i];
+
+                    aSong.metadataStringValues.RemoveAll(delegate (SongMetadataStringValue val) {
+                        return val.PropertyName == deadName;
+                    });
+                }
+                break;
+            case SongMetadataProperty.MetadataPropertyType.Boolean:
+                for (var i = 0; i < aList.MusicSettings.Count; i++) {
+                    var aSong = aList.MusicSettings[i];
+                    aSong.metadataBoolValues.RemoveAll(delegate (SongMetadataBoolValue val) {
+                        return val.PropertyName == deadName;
+                    });
+                }
+                break;
+            case SongMetadataProperty.MetadataPropertyType.Integer:
+                for (var i = 0; i < aList.MusicSettings.Count; i++) {
+                    var aSong = aList.MusicSettings[i];
+                    aSong.metadataIntValues.RemoveAll(delegate (SongMetadataIntValue val) {
+                        return val.PropertyName == deadName;
+                    });
+                }
+                break;
+            case SongMetadataProperty.MetadataPropertyType.Float:
+                for (var i = 0; i < aList.MusicSettings.Count; i++) {
+                    var aSong = aList.MusicSettings[i];
+                    aSong.metadataFloatValues.RemoveAll(delegate (SongMetadataFloatValue val) {
+                        return val.PropertyName == deadName;
+                    });
+                }
+                break;
+        }
+
+        aList.songMetadataProps.Remove(deadProperty);
     }
 
     public static void CopyFromAudioSourceTemplate(DynamicSoundGroupCreator creator, AudioSource oldAudSrc, bool showError) {

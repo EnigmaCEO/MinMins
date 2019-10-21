@@ -378,14 +378,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc8395a664cd4044f88156feb10d672d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Strength: 1
-  Defense: 1
+  Strength: 4
+  Defense: 2
   MaxHealth: 5
   EffectScale: 1
   Effect: 6
-  Type: 2
+  Type: 1
   Attacks: 0a000000
-  EffectName: 1
+  EffectName: 2
   Tier: 0
 --- !u!114 &6790466263768774383
 MonoBehaviour:
@@ -485,7 +485,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 10
-  m_Sprite: {fileID: 21300000, guid: b08ed13ff17d9334ab37088225b8c9ff, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0012062a2822d0d418bc08edb3358e7f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

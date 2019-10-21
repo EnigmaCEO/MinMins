@@ -203,10 +203,9 @@ namespace DarkTonic.MasterAudio {
                 }
                 createdBus.voiceLimit = aBus.voiceLimit;
                 createdBus.stopOldest = aBus.stopOldest;
-#if UNITY_5 || UNITY_2017_1_OR_NEWER
                 createdBus.forceTo2D = aBus.forceTo2D;
                 createdBus.mixerChannel = aBus.mixerChannel;
-#endif
+                createdBus.busColor = aBus.busColor;
                 createdBus.isUsingOcclusion = aBus.isUsingOcclusion;
             }
 
@@ -340,11 +339,7 @@ namespace DarkTonic.MasterAudio {
         /*! \cond PRIVATE */
         public bool ShouldShowUnityAudioMixerGroupAssignments {
             get {
-#if UNITY_5 || UNITY_2017_1_OR_NEWER
                 return showUnityMixerGroupAssignment;
-#else
-                return false;
-#endif
             }
         }
         /*! \endcond */

@@ -31,7 +31,7 @@ public class Misc
 
     public static void HandleScreenFade(float startTime, string sceneToLoad)
     {
-        float timer = 8 - Mathf.FloorToInt(Time.time - startTime);
+        float timer = 5 - Mathf.FloorToInt(Time.time - startTime);
 
         if (timer < 0)
             timer = 0;
@@ -42,7 +42,7 @@ public class Misc
         if (timer == 0)
         {
             //Debug.Log("zero");
-            //SoundManager.Stop();
+            SoundManager.Stop();
             SceneManager.LoadScene(sceneToLoad);
         }
     }

@@ -115,6 +115,11 @@ public class War : NetworkEntity
 
     private void Start()
     {
+        SoundManager.FadeCurrentSong(1f, () => {
+            SoundManager.Stop();
+            SoundManager.Play("war", SoundManager.AudioTypes.Music, "", true);
+        });
+
         ActionPopup.Close();
 
         if (GetUsesAi())
@@ -967,7 +972,9 @@ public class War : NetworkEntity
 
                 int unitTier = GameInventory.Instance.GetUnitTier(unitName);
                 warTeamGridItem.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/unit_frame_t" + unitTier);
-                
+
+                warTeamGridItem.transform.Find("level/txt_level").GetComponent<Text>().text = GameInventory.Instance.GetLocalUnitLevel(unitName).ToString();
+
             }
             else
                 warGridItemTransform.gameObject.SetActive(false);
@@ -1191,7 +1198,7 @@ public class War : NetworkEntity
         foreach (string unitName in hostUnits)
         {
             // Setup team for loading screen
-            Transform Team1ItemTransform = ReadyPopup.transform.Find("ReadyTeam1/Viewport/Content/WarTeamGridItem" + itemNumber++);
+            Transform Team1ItemTransform = ReadyPopup.transform.Find("panel1/ReadyTeam1/Viewport/Content/WarTeamGridItem" + itemNumber++);
             WarTeamGridItem Team1GridItem = Team1ItemTransform.GetComponent<WarTeamGridItem>();
 
             int unitTier = GameInventory.Instance.GetUnitTier(unitName);
@@ -1201,13 +1208,16 @@ public class War : NetworkEntity
 
             Team1GridItem.View.sprite = Resources.Load<Sprite>("Images/Units/" + unitName);
             Team1GridItem.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/unit_frame_t" + unitTier);
+
+            Team1ItemTransform.Find("level/txt_level").GetComponent<Text>().text = GameInventory.Instance.GetLocalUnitLevel(unitName).ToString();
+
         }
 
         itemNumber = 1;
         foreach (string unitName in guestUnits)
         {
             // Setup team for loading screen
-            Transform Team2ItemTransform = ReadyPopup.transform.Find("ReadyTeam2/Viewport/Content/WarTeamGridItem" + itemNumber++);
+            Transform Team2ItemTransform = ReadyPopup.transform.Find("panel2/ReadyTeam2/Viewport/Content/WarTeamGridItem" + itemNumber++);
             WarTeamGridItem Team2GridItem = Team2ItemTransform.GetComponent<WarTeamGridItem>();
 
             int unitTier = GameInventory.Instance.GetUnitTier(unitName);
@@ -1217,6 +1227,9 @@ public class War : NetworkEntity
 
             Team2GridItem.View.sprite = Resources.Load<Sprite>("Images/Units/" + unitName);
             Team2GridItem.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/unit_frame_t" + unitTier);
+
+            Team2ItemTransform.Find("level/txt_level").GetComponent<Text>().text = "?";
+
         }
     }
 

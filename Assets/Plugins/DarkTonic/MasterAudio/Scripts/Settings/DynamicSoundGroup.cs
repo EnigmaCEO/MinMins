@@ -28,6 +28,7 @@ namespace DarkTonic.MasterAudio {
         public float dialogFadeOutTime = .5f;
 
         public bool resourceClipsAllLoadAsync = true;
+        public string comments;
         public bool logSound = false;
 
         public bool soundPlayedEventActive = false;
@@ -35,10 +36,8 @@ namespace DarkTonic.MasterAudio {
 
         public int busIndex = -1;
 
-#if UNITY_5 || UNITY_2017_1_OR_NEWER
         public MasterAudio.ItemSpatialBlendType spatialBlendType = MasterAudio.ItemSpatialBlendType.ForceTo3D;
 		public float spatialBlend = 1f;
-#endif
 
         public string busName = string.Empty; // only used to remember the bus name during group creation.
 		public bool isExistingBus; // marked from DGSC's only
@@ -63,7 +62,6 @@ namespace DarkTonic.MasterAudio {
         public float occlusionMinCutoffFreq = AudioUtil.DefaultMinOcclusionCutoffFrequency;
 
         public bool copySettingsExpanded = false;
-        public int selectedVariationIndex = 0;
 
         public bool expandLinkedGroups = false;
         public List<string> childSoundGroups = new List<string>();

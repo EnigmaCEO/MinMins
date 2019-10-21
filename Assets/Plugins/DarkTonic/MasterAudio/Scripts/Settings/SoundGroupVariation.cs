@@ -81,6 +81,7 @@ namespace DarkTonic.MasterAudio {
         private SoundGroupVariationUpdater _varUpdater;
         private int _previousSoundFinishedFrame = -1;
         private string _soundGroupName;
+        private bool _isPaused;
 
 		/*! \endcond */
 
@@ -183,8 +184,7 @@ namespace DarkTonic.MasterAudio {
             if (c != null || g != null) { } // to disable the warning for not using it.
 
             if (VarAudio.playOnAwake) {
-                Debug.LogWarning("The 'Play on Awake' checkbox in the Audio Source for Sound Group '" + ParentGroup.name +
-                                 "', Variation '" + name +
+                Debug.LogWarning("The 'Play on Awake' checkbox in the Variation named: '" + name +
                                  "' is checked. This is not used in Master Audio and can lead to buggy behavior. Make sure to uncheck it before hitting Play next time. To play ambient sounds, use an EventSounds component and activate the Start event to play a Sound Group of your choice.");
             }
         }
@@ -208,10 +208,8 @@ namespace DarkTonic.MasterAudio {
                     break;
             }
 
-#if UNITY_5 || UNITY_2017_1_OR_NEWER
             SetMixerGroup();
             SetSpatialBlend();
-#endif
 
             SetPriority();
 
@@ -220,7 +218,7 @@ namespace DarkTonic.MasterAudio {
             SpatializerHelper.TurnOnSpatializerIfEnabled(VarAudio);
         }
 
-#if UNITY_5 || UNITY_2017_1_OR_NEWER
+        /*! \cond PRIVATE */
         public void SetMixerGroup() {
             var aBus = ParentGroup.BusForGroup;
             // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
@@ -242,9 +240,7 @@ namespace DarkTonic.MasterAudio {
                 VarAudio.spatialBlend = 0;
             }
         }
-#endif
 
-        /*! \cond PRIVATE */
         public void LoadInternetFile() {
             StartCoroutine(AudioResourceOptimizer.PopulateSourceWithInternetFile(internetFileUrl, this, InternetFileLoaded, InternetFileFailedToLoad));
         }
@@ -283,7 +279,8 @@ namespace DarkTonic.MasterAudio {
             }
         }
 
-        /// <summary>
+		/*! \cond PRIVATE */
+		/// <summary>
         /// Do not call this! It's called by Master Audio after it is  done initializing.
         /// </summary>
         public void DisableUpdater() {
@@ -293,6 +290,7 @@ namespace DarkTonic.MasterAudio {
 
             VariationUpdater.enabled = false;
         }
+		/*! \endcond */
 
         // ReSharper disable once UnusedMember.Local
         private void OnDestroy() {
@@ -310,13 +308,6 @@ namespace DarkTonic.MasterAudio {
             }
 
             Stop(); // maybe unload clip from Resources
-        }
-
-        // ReSharper disable once UnusedMember.Local
-        private void OnDrawGizmos() {
-            if (MasterAudio.Instance.showGizmos && IsPlaying) {
-                Gizmos.DrawIcon(transform.position, MasterAudio.GizmoFileName, true);
-            }
         }
 
         /*! \cond PRIVATE */
@@ -358,12 +349,13 @@ namespace DarkTonic.MasterAudio {
 
             MaybeCleanupFinishedDelegate();
             _hasStartedEndLinkedGroups = false;
+            _isPaused = false;
 
             SetPlaySoundParams(gameObjectName, volPercent, targetVol, targetPitch, sourceTrans, attach, delayTime, timeToSchedulePlay, isChaining, isSingleSubscribedPlay);
 
             SetPriority(); // reset it back to normal priority in case you're playing 2D this time.
 
-            if (MasterAudio.HasAsyncResourceLoaderFeature() && ShouldLoadAsync) {
+            if (ShouldLoadAsync) {
                 StopAllCoroutines(); // The only Coroutine right now requires pro version and Unity 4.5.3
             }
 
@@ -385,10 +377,8 @@ namespace DarkTonic.MasterAudio {
                 VarAudio.pitch = OriginalPitch;
             }
 
-#if UNITY_5 || UNITY_2017_1_OR_NEWER
             // in case it was changed at runtime.
             SetSpatialBlend();
-#endif
 
             // set fade mode
             curFadeMode = FadeMode.None;
@@ -406,7 +396,7 @@ namespace DarkTonic.MasterAudio {
                     FinishSetupToPlay();
                     return;
                 case MasterAudio.AudioLocation.ResourceFile:
-                    if (MasterAudio.HasAsyncResourceLoaderFeature() && ShouldLoadAsync) {
+                    if (ShouldLoadAsync) {
                         StartCoroutine(AudioResourceOptimizer.PopulateSourcesWithResourceClipAsync(ResFileName, this,
                             FinishSetupToPlay, ResourceFailedToLoad));
                     } else {
@@ -493,7 +483,7 @@ namespace DarkTonic.MasterAudio {
             VarAudio.loop = AudioLoops;
             // restore original loop setting in case it got lost by loop setting code below for a previous play.
 
-            if (_playSndParam.IsPlaying && (_playSndParam.IsChainLoop || _playSndParam.IsSingleSubscribedPlay || useRandomStartTime)) {
+            if (_playSndParam.IsPlaying && (_playSndParam.IsChainLoop || _playSndParam.IsSingleSubscribedPlay || (useRandomStartTime && randomEndPercent != 100f))) {
                 VarAudio.loop = false;
             }
 
@@ -623,12 +613,34 @@ namespace DarkTonic.MasterAudio {
                 }
             }
 
+            _isPaused = true;
             VarAudio.Pause();
             if (VariationUpdater.enabled) {
                 VariationUpdater.Pause();
             }
             curFadeMode = FadeMode.None;
             curPitchMode = PitchMode.None;
+        }
+
+        /// <summary>
+        /// This method allows you to unpause the audio being played by this Variation.
+        /// </summary>
+        public void Unpause() {
+            if (!_isPaused) { // do not unpause if not paused.
+                return;
+            }
+
+            if (!IsPlaying) {
+                return; // do not unpause if not playing (stopped)
+            }
+
+            _isPaused = false;
+            VarAudio.Play();
+
+            if (VariationUpdater != null) {
+                VariationUpdater.enabled = true;
+                VariationUpdater.Unpause();
+            }
         }
 
         /*! \cond PRIVATE */
@@ -704,6 +716,7 @@ namespace DarkTonic.MasterAudio {
         /// <param name="stopEndDetection">Do not ever pass this in.</param>
         /// <param name="skipLinked">Do not ever pass this in.</param>
         public void Stop(bool stopEndDetection = false, bool skipLinked = false) {
+            _isPaused = false;
             var waitStopped = false;
 
             if (stopEndDetection) {
@@ -1167,11 +1180,7 @@ namespace DarkTonic.MasterAudio {
 
         private bool Is2D {
             get {
-#if UNITY_5 || UNITY_2017_1_OR_NEWER
                 return VarAudio.spatialBlend <= 0;
-#else
-				return false;
-#endif
             }
         }
 
@@ -1189,6 +1198,21 @@ namespace DarkTonic.MasterAudio {
             get {
                 if (!VariationUpdater.MAThisFrame.useOcclusion) {
                     return false;
+                }
+
+                switch (VariationUpdater.MAThisFrame.occlusionRaycastMode) {
+                    case MasterAudio.RaycastMode.Physics2D:
+#if PHY2D_MISSING
+                        return false;
+#else
+                        break;
+#endif
+                    case MasterAudio.RaycastMode.Physics3D:
+#if PHY3D_MISSING
+                        return false;
+#else
+                        break;
+#endif
                 }
 
                 if (Is2D) {
@@ -1211,6 +1235,12 @@ namespace DarkTonic.MasterAudio {
 
                         return false;
                 }
+            }
+        }
+
+        public bool IsPaused {
+            get {
+                return _isPaused;
             }
         }
 

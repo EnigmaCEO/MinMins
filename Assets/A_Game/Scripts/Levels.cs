@@ -11,6 +11,12 @@ public class Levels : EnigmaScene
 
     void Start()
     {
+        SoundManager.FadeCurrentSong(1f, () => {
+            int level = Random.Range(1, 5);
+            SoundManager.Stop();
+            SoundManager.Play("level" + level, SoundManager.AudioTypes.Music, "", true);
+        });
+        
         _notEnoughUnitsPopUp.SetActive(false);
  
         if(GameHacks.Instance.Rating.Enabled)

@@ -22,6 +22,10 @@ public class Main : EnigmaScene
 
     public void Init()
     {
+        SoundManager.Stop();
+        SoundManager.MusicVolume = 0.5f;
+        SoundManager.Play("main", SoundManager.AudioTypes.Music, "", true);
+
         bool loggedIn = NetworkManager.LoggedIn;
 
         _loginButton.gameObject.SetActive(!loggedIn);

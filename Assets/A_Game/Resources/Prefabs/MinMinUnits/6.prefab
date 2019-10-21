@@ -601,9 +601,9 @@ MonoBehaviour:
   MaxHealth: 5
   EffectScale: 1
   Effect: 3
-  Type: 2
+  Type: 4
   Attacks: 06000000
-  EffectName: 1
+  EffectName: 3
   Tier: 0
 --- !u!114 &2969726226738796600
 MonoBehaviour:

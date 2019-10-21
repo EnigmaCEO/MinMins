@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-
-#if UNITY_5 || UNITY_2017_1_OR_NEWER
+using UnityEngine;
 using UnityEngine.Audio;
-#endif
 
 // ReSharper disable once CheckNamespace
 namespace DarkTonic.MasterAudio {
@@ -24,13 +22,11 @@ namespace DarkTonic.MasterAudio {
         public bool isExisting = false; // for Dynamic Sound Group - referenced Buses
 		public bool isTemporary = false;
 		public bool isUsingOcclusion = false;
+        public Color busColor = Color.white;
 
-#if UNITY_5 || UNITY_2017_1_OR_NEWER
         public AudioMixerGroup mixerChannel = null;
         public bool forceTo2D = false;
-#else
-		public bool forceTo2D = false;
-#endif
+
         // ReSharper restore InconsistentNaming
         private readonly List<int> _activeAudioSourcesIds = new List<int>(50);
         private float _originalVolume = 1;

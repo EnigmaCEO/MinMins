@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 /*! \cond PRIVATE */
@@ -8,10 +9,14 @@ namespace DarkTonic.MasterAudio {
         public const string FollowerHolderName = "_Followers";
         public const string ListenerFollowerName = "~ListenerFollower~";
         public const float ListenerFollowerTrigRadius = .01f;
+        public const int IgnoreRaycastLayerNumber = 2;
 
         private static Transform _followerHolder;
         private static ListenerFollower _listenerFollower;
+#if !PHY3D_MISSING
         private static Rigidbody _listenerFollowerRB;
+#endif
+        private static List<TransformFollower> _transformFollowers = new List<TransformFollower>();
 
         public static void InitFollowerHolder() {
             var h = FollowerHolder;
@@ -26,18 +31,33 @@ namespace DarkTonic.MasterAudio {
                 return false;
             }
 
+#if PHY3D_MISSING
+            return false; // there is no Ambient Sound script functionality without Physics.
+#else
             var follower = ListenerFollower;
             if (follower == null) {
                 return false;
             }
 
-            follower.StartFollowing(listener, MasterAudio.NoGroupName, ListenerFollowerTrigRadius);
+            follower.StartFollowing(listener, ListenerFollowerTrigRadius);
             return true;
+#endif
         }
 
-        public static Transform InitAudioSourceFollower(Transform transToFollow, string followerName, string soundGroupName, bool willFollowSource, bool willPositionOnClosestColliderPoint, 
-            bool useTopCollider, bool useChildColliders) {
+        public static void RemoveTransformFollower(TransformFollower follower) {
+            _transformFollowers.Remove(follower);
+        }
 
+        public static Transform InitAudioSourceFollower(Transform transToFollow, string followerName, string soundGroupName, string variationName, 
+            float volume,
+            bool willFollowSource, bool willPositionOnClosestColliderPoint,
+            bool useTopCollider, bool useChildColliders, 
+            MasterAudio.AmbientSoundExitMode exitMode, float exitFadeTime,
+            MasterAudio.AmbientSoundReEnterMode reEnterMode, float reEnterFadeTime) {
+
+#if PHY3D_MISSING
+            return null; // there is no Ambient Sound script functionality without Physics.
+#else
             if (ListenerFollower == null || FollowerHolder == null) {
                 return null;
             }
@@ -51,7 +71,21 @@ namespace DarkTonic.MasterAudio {
                 return null;
             }
 
-            var triggerRadius = grp.groupVariations[0].VarAudio.maxDistance;
+            SoundGroupVariation variation = null;
+            if (!string.IsNullOrEmpty(variationName)) {
+                variation = grp.groupVariations.Find(delegate (SoundGroupVariation v) {
+                    return v.name == variationName;
+                });
+
+                if (variation == null) {
+                    Debug.LogError("Could not find Variation '" + variationName + "' in Sound Group '" + soundGroupName);
+                    return null;
+                }
+            } else {
+                variation = grp.groupVariations[0];
+            }
+
+            var triggerRadius = variation.VarAudio.maxDistance;
 
             var follower = new GameObject(followerName);
             var existingDupe = FollowerHolder.GetChildTransform(followerName);
@@ -60,11 +94,16 @@ namespace DarkTonic.MasterAudio {
             }
 
             follower.transform.parent = FollowerHolder;
-			follower.gameObject.layer = FollowerHolder.gameObject.layer;
-			var followerScript = follower.gameObject.AddComponent<TransformFollower>();
+            follower.gameObject.layer = FollowerHolder.gameObject.layer;
+            var followerScript = follower.gameObject.AddComponent<TransformFollower>();
 
-            followerScript.StartFollowing(transToFollow, soundGroupName, triggerRadius, willFollowSource, willPositionOnClosestColliderPoint, useTopCollider, useChildColliders);
+            followerScript.StartFollowing(transToFollow, soundGroupName, variationName, volume, triggerRadius, willFollowSource, willPositionOnClosestColliderPoint, useTopCollider,
+                useChildColliders, exitMode, exitFadeTime, reEnterMode, reEnterFadeTime);
+
+            _transformFollowers.Add(followerScript);
+
             return follower.transform;
+#endif
         }
 
         public static ListenerFollower ListenerFollower {
@@ -81,7 +120,7 @@ namespace DarkTonic.MasterAudio {
                 if (follower == null) {
                     follower = new GameObject(ListenerFollowerName).transform;
                     follower.parent = FollowerHolder;
-					follower.gameObject.layer = FollowerHolder.gameObject.layer;
+                    follower.gameObject.layer = FollowerHolder.gameObject.layer;
                 }
 
                 _listenerFollower = follower.GetComponent<ListenerFollower>();
@@ -89,6 +128,7 @@ namespace DarkTonic.MasterAudio {
                     _listenerFollower = follower.gameObject.AddComponent<ListenerFollower>();
                 }
 
+#if !PHY3D_MISSING
                 if (MasterAudio.Instance.listenerFollowerHasRigidBody) {
                     var rb = follower.gameObject.GetComponent<Rigidbody>();
                     if (rb == null) {
@@ -96,7 +136,8 @@ namespace DarkTonic.MasterAudio {
                     }
                     rb.useGravity = false;
                     _listenerFollowerRB = rb;
-                } 
+            }
+#endif
 
                 return _listenerFollower;
             }
@@ -121,9 +162,24 @@ namespace DarkTonic.MasterAudio {
 
                 _followerHolder = new GameObject(FollowerHolderName).transform;
                 _followerHolder.parent = ma;
-				_followerHolder.gameObject.layer = ma.gameObject.layer;
+                _followerHolder.gameObject.layer = ma.gameObject.layer;
 
                 return _followerHolder;
+            }
+        }
+
+        public static void ManualUpdate() {
+            UpdateListenerFollower();
+
+            // manually update Transform Followers
+            for (var i = 0; i < _transformFollowers.Count; i++) {
+                _transformFollowers[i].ManualUpdate();
+            }
+        }
+
+        private static void UpdateListenerFollower() {
+            if (_listenerFollower != null) {
+                _listenerFollower.ManualUpdate();
             }
         }
 
@@ -132,7 +188,13 @@ namespace DarkTonic.MasterAudio {
         }
 
         public static bool HasListenerFolowerRigidBody {
-            get { return _listenerFollowerRB != null; }
+            get {
+#if !PHY3D_MISSING
+                return _listenerFollowerRB != null;
+#else
+                return false;
+#endif
+            }
         }
     }
 }

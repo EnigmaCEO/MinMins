@@ -15,8 +15,10 @@ public class Init : EnigmaScene
 
     //private const int SCHEDULED_NOTIFICATION_TIME = 1440; // 1440 minutes, thus 24 hours
 
-    void Awake()
+    override public void Awake()
     {
+        base.Awake();
+
 #if UNITY_ANDROID || UNITY_IOS
         //Screen.SetResolution(1920, 1080, true, 60);
         Screen.SetResolution(1280, 720, true, 60);
@@ -35,22 +37,24 @@ public class Init : EnigmaScene
         //Screen.SetResolution(1680, 1050, false);
 #endif
 
+        
+
         try
         {
-			//SoundManager.MusicVolume = PlayerPrefs.GetFloat(Settings.SAVED_MUSIC_PREF, 1.0f);
+			SoundManager.MusicVolume = PlayerPrefs.GetFloat(SoundManager.SAVED_MUSIC_PREF, 0.5f);
 		}
 		catch (PlayerPrefsException e)
 		{
-			//SoundManager.MusicVolume = 0.5f;
+			SoundManager.MusicVolume = 0.5f;
 		}
 		
 		try
 		{
-			//SoundManager.SfxVolume = PlayerPrefs.GetFloat(Settings.SAVED_SOUND_EFFECTS_PREF, 1.0f); 
+			SoundManager.SfxVolume = PlayerPrefs.GetFloat(SoundManager.SAVED_SOUND_EFFECTS_PREF, 1.0f); 
 		}
 		catch (PlayerPrefsException e)
 		{
-			//SoundManager.SfxVolume = 1.0f;
+			SoundManager.SfxVolume = 1.0f;
 		}
     }
     // Use this for initialization
@@ -59,7 +63,7 @@ public class Init : EnigmaScene
 		_startTime = Time.time;
 
         //handleNotifications();
-        //SoundManager.Play("intro", SoundManager.AudioTypes.Sfx);
+        SoundManager.Play("intro", SoundManager.AudioTypes.Sfx);
     }
 
     // Update is called once per frame

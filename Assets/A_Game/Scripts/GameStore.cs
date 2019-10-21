@@ -19,7 +19,10 @@ public class GameStore : MonoBehaviour
     [SerializeField] private LootBoxBuyConfirmPopUp _lootBoxBuyConfirmPopUp;
     [SerializeField] private OpenLootBoxPopUp _openLootBoxPopUp;
     [SerializeField] private BuyResultPopUp _buyResultPopUp;
+    [SerializeField] private BuyResultPopUp _summonResultPopUp;
     [SerializeField] private GameObject _extraLootBoxPopUp;
+    [SerializeField] private GameObject _enjinmftPopUp;
+    [SerializeField] private GameObject _minminPopUp;
 
     [SerializeField] private Transform _lootBoxGridContent;
 
@@ -32,14 +35,23 @@ public class GameStore : MonoBehaviour
 
     void Start()
     {
+        SoundManager.FadeCurrentSong(1f, () => {
+            int shop = Random.Range(1, 2);
+            SoundManager.Stop();
+            SoundManager.Play("shop" + shop, SoundManager.AudioTypes.Music, "", true);
+        });
+
         _lootBoxBuyConfirmPopUp.ConfirmButton.onClick.AddListener(() => onLootBoxBuyConfirmButtonDown());
         _lootBoxBuyConfirmPopUp.CancelButton.onClick.AddListener(() => onLootBoxBuyCancelButtonDown());
         _lootBoxBuyConfirmPopUp.Close();
 
         _openLootBoxPopUp.Close();
         _buyResultPopUp.Close();
+        _summonResultPopUp.Close();
 
         _extraLootBoxPopUp.SetActive(false);
+        _enjinmftPopUp.SetActive(false);
+        _minminPopUp.SetActive(false);
 
         refreshLootBoxesGrid();
 
@@ -108,6 +120,26 @@ public class GameStore : MonoBehaviour
     {
         grantBox(GameInventory.Tiers.BRONZE, 2);
         _extraLootBoxPopUp.SetActive(false);
+    }
+
+    public void onEnjinPopUpDismissButtonDown()
+    {
+        _enjinmftPopUp.SetActive(false);
+    }
+
+    public void onMinMinPopUpDismissButtonDown()
+    {
+        _minminPopUp.SetActive(false);
+    }
+
+    public void openEnjinPopUp()
+    {
+        _enjinmftPopUp.SetActive(true);
+    }
+
+    public void openMinMinPopUp()
+    {
+        _minminPopUp.SetActive(true);
     }
 
     public void OnBackButtonDown()

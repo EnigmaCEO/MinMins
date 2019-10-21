@@ -31,6 +31,7 @@ namespace DarkTonic.MasterAudio {
             OnTriggerEnter2D
         }
 
+#if !PHY3D_MISSING
         // ReSharper disable once UnusedMember.Local
         private void OnTriggerEnter(Collider other) {
             if (footstepEvent != FootstepTriggerMode.OnTriggerEnter) {
@@ -48,7 +49,9 @@ namespace DarkTonic.MasterAudio {
 
             PlaySoundsIfMatch(collision.gameObject);
         }
+#endif
 
+#if !PHY2D_MISSING
         // ReSharper disable once UnusedMember.Local
         private void OnCollisionEnter2D(Collision2D collision) {
             if (footstepEvent != FootstepTriggerMode.OnCollision2D) {
@@ -66,6 +69,7 @@ namespace DarkTonic.MasterAudio {
 
             PlaySoundsIfMatch(other.gameObject);
         }
+#endif
 
         private bool CheckForRetriggerLimit() {
             // check for limiting restraints

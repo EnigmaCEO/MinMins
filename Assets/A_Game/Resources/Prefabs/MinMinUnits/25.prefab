@@ -379,13 +379,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Strength: 1
-  Defense: 1
+  Defense: 3
   MaxHealth: 5
   EffectScale: 1
   Effect: 6
-  Type: 2
+  Type: 1
   Attacks: 0a000000
-  EffectName: 1
+  EffectName: 2
   Tier: 0
 --- !u!114 &565218713148248244
 MonoBehaviour:

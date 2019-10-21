@@ -15,18 +15,23 @@ public class MA_EnemyOne : MonoBehaviour {
 		_trans = transform;
         _speed = Random.Range(-3, -8) * AudioUtil.FrameTime;
         _horizSpeed = Random.Range(-3, 3) * AudioUtil.FrameTime;
-	}
-	
+
+#if PHY3D_MISSING
+        Debug.LogError("MA_EnemyOne and this example Scene will not work properly without Physics3D package installed.");
+#endif
+    }
+
+#if !PHY3D_MISSING
     // ReSharper disable once UnusedMember.Local
     // ReSharper disable once UnusedParameter.Local
-	void OnCollisionEnter(Collision collision) {
+    void OnCollisionEnter(Collision collision) {
 		Instantiate(ExplosionParticlePrefab, _trans.position, Quaternion.identity);
 	}
-	
-	
-	// Update is called once per frame
+#endif
+
+    // Update is called once per frame
     // ReSharper disable once UnusedMember.Local
-	void Update () {
+    void Update () {
 		var pos = _trans.position;
 		pos.x += _horizSpeed;
 		pos.y += _speed;

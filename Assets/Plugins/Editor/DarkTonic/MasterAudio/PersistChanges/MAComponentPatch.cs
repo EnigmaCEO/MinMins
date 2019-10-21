@@ -10,7 +10,7 @@ using DarkTonic.MasterAudio;
 
 // ReSharper disable once CheckNamespace
 public class MAComponentPatch {
-    private const string IgnoredPropertyNames = ";useConeFriction;sleepVelocity;sleepAngularVelocity;WillCleanUpDelegatesAfterStop;";
+    private const string IgnoredPropertyNames = ";useConeFriction;sleepVelocity;sleepAngularVelocity;WillCleanUpDelegatesAfterStop;roomRolloffFactor;";
 
     private Dictionary<string, object> _values;
 

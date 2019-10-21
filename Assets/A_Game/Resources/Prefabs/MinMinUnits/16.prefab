@@ -379,7 +379,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Strength: 1
-  Defense: 1
+  Defense: 3
   MaxHealth: 5
   EffectScale: 1
   Effect: 6

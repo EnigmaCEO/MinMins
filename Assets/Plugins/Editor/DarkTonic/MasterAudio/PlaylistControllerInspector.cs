@@ -2,10 +2,7 @@ using System.Collections.Generic;
 using DarkTonic.MasterAudio;
 using UnityEditor;
 using UnityEngine;
-
-#if UNITY_5 || UNITY_2017_1_OR_NEWER
 using UnityEngine.Audio;
-#endif
 
 [CustomEditor(typeof(PlaylistController))]
 // ReSharper disable once CheckNamespace
@@ -127,7 +124,6 @@ public class PlaylistControllerInspector : Editor {
 
         EditorGUI.indentLevel = 0;
 
-#if UNITY_5 || UNITY_2017_1_OR_NEWER
         var newChan = (AudioMixerGroup)EditorGUILayout.ObjectField("Mixer Group", controller.mixerChannel, typeof(AudioMixerGroup), false);
         if (newChan != controller.mixerChannel) {
             AudioUndoHelper.RecordObjectPropertyForUndo(ref isDirty, controller, "change Unity Mixer Group");
@@ -168,7 +164,6 @@ public class PlaylistControllerInspector : Editor {
             DTGUIHelper.ShowLargeBarAlert("Spatial Blend is currently controlled globally in the Master Audio prefab.");
         }
 
-#endif
 
         if (maInScene && Application.isPlaying) {
             MasterAudioInspector.DisplayJukebox(new List<PlaylistController> { controller }, playlistNames);
@@ -274,7 +269,6 @@ public class PlaylistControllerInspector : Editor {
         }
 
         EditorGUILayout.EndToggleGroup();
-        DTGUIHelper.AddSpaceForNonU5(2);
 
 		DTGUIHelper.StartGroupHeader();
 		
@@ -348,7 +342,6 @@ public class PlaylistControllerInspector : Editor {
 		}
 		
 		EditorGUILayout.EndToggleGroup();
-		DTGUIHelper.AddSpaceForNonU5(2);
 
 		DTGUIHelper.StartGroupHeader();
 		
@@ -422,7 +415,6 @@ public class PlaylistControllerInspector : Editor {
 		}
 		
 		EditorGUILayout.EndToggleGroup();
-		DTGUIHelper.AddSpaceForNonU5(2);
 
 		DTGUIHelper.StartGroupHeader();
 		
@@ -496,7 +488,6 @@ public class PlaylistControllerInspector : Editor {
 		}
 		
 		EditorGUILayout.EndToggleGroup();
-		DTGUIHelper.AddSpaceForNonU5(2);
 
         DTGUIHelper.StartGroupHeader();
 
@@ -570,7 +561,6 @@ public class PlaylistControllerInspector : Editor {
         }
 
         EditorGUILayout.EndToggleGroup();
-        DTGUIHelper.AddSpaceForNonU5(2);
 
         DTGUIHelper.StartGroupHeader();
 
@@ -643,7 +633,6 @@ public class PlaylistControllerInspector : Editor {
             }
         }
         EditorGUILayout.EndToggleGroup();
-		DTGUIHelper.AddSpaceForNonU5(2);
 
 		DTGUIHelper.StartGroupHeader();
 		

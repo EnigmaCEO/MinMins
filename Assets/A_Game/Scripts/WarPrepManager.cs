@@ -47,6 +47,9 @@ public class WarPrepManager : EnigmaScene
 
             int unitTier = GameInventory.Instance.GetUnitTier(unitName);
             minMinTransform.parent.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/unit_frame_t" + unitTier);
+
+            minMinTransform.parent.Find("level/txt_level").GetComponent<Text>().text = GameInventory.Instance.GetLocalUnitLevel(unitName).ToString();
+
             _infoPopUp.SetActive(false);
 
             _slotsInPlay++;

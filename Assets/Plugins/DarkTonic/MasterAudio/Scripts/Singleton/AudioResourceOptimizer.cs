@@ -5,6 +5,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+#if UNITY_2018_3_OR_NEWER
+using UnityEngine.Networking;
+#endif
 
 // ReSharper disable once CheckNamespace
 namespace DarkTonic.MasterAudio {
@@ -149,7 +152,6 @@ namespace DarkTonic.MasterAudio {
             clips.Add(resAudioClip); // even needs to add duplicates
         }
 
-#if UNITY_4_5_3 || UNITY_4_5_4 || UNITY_4_5_5 || UNITY_4_6 || UNITY_4_7 || UNITY_5 || UNITY_2017_1_OR_NEWER
         public static IEnumerator PopulateResourceSongToPlaylistControllerAsync(string songResourceName,
             string playlistName, PlaylistController controller, PlaylistController.AudioPlayType playType) {
             var asyncRes = Resources.LoadAsync(songResourceName, typeof(AudioClip));
@@ -202,6 +204,30 @@ namespace DarkTonic.MasterAudio {
 
             AudioClip internetClip;
 
+#if UNITY_2018_3_OR_NEWER
+            using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(fileUrl, AudioType.UNKNOWN)) {
+                yield return www.SendWebRequest();
+
+                if (www.isNetworkError) {
+                    if (string.IsNullOrEmpty(fileUrl)) {
+                        MasterAudio.LogWarning("Internet file is EMPTY for a Variation of Sound Group '" + variation.ParentGroup.name + "' could not be loaded.");
+                    } else {
+                        MasterAudio.LogWarning("Internet file '" + fileUrl + "' in a Variation of Sound Group '" + variation.ParentGroup.name + "' could not be loaded. This can happen if the URL is incorrect or you are not online.");
+                    }
+                    if (failureAction != null) {
+                        failureAction();
+                    }
+
+                    yield break;
+                } else {
+                    internetClip = DownloadHandlerAudioClip.GetContent(www);
+
+                    // assign clip name
+                    string[] urlParts = new Uri(fileUrl).Segments;
+                    internetClip.name = Path.GetFileNameWithoutExtension(urlParts[urlParts.Length - 1]);
+                }
+            }
+#else
             using (var fileRequest = new WWW(fileUrl)) {
                 yield return fileRequest;
 
@@ -217,16 +243,17 @@ namespace DarkTonic.MasterAudio {
                     yield break;
                 }
 
-#if UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_5_0 || UNITY_5_1 || UNITY_5_2 || UNITY_5_3 || UNITY_5_4 || UNITY_5_5
+        #if UNITY_5_2 || UNITY_5_3 || UNITY_5_4 || UNITY_5_5
                 internetClip = fileRequest.audioClip;
-#else
+        #else
                 internetClip = fileRequest.GetAudioClip();
-#endif
+        #endif
 
                 // assign clip name
                 string[] urlParts = new Uri(fileUrl).Segments;
 				internetClip.name = Path.GetFileNameWithoutExtension(urlParts[urlParts.Length - 1]);
             }
+#endif
 
             if (!AudioResourceTargetsByName.ContainsKey(fileUrl)) {
                 MasterAudio.LogError("No Audio Sources found to add Internet File '" + fileUrl + "' to.");
@@ -351,17 +378,6 @@ namespace DarkTonic.MasterAudio {
                 successAction();
             }
         }
-#else
-        public static IEnumerator PopulateResourceSongToPlaylistControllerAsync(string songResourceName, string playlistName, PlaylistController controller, PlaylistController.AudioPlayType playType) {
-		MasterAudio.LogError("If this method got called, please report it to Dark Tonic immediately. It should not happen.");
-		yield break;
-	}
-
-	public static IEnumerator PopulateSourcesWithResourceClipAsync(string clipName, SoundGroupVariation variation, Action successAction, Action failureAction) {
-		MasterAudio.LogError("If this method got called, please report it to Dark Tonic immediately. It should not happen.");
-		yield break;
-	}
-#endif
 
         public static void UnloadPlaylistSongIfUnused(string controllerName, AudioClip clipToRemove) {
             if (clipToRemove == null) {

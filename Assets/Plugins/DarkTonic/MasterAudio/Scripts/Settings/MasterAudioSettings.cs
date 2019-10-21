@@ -8,7 +8,8 @@ namespace DarkTonic.MasterAudio {
         public const string ResourcePath = "MasterAudio/MasterAudioSettings";
 
         public bool UseDbScale;
-		public bool UseCentsPitch;
+        public bool RemoveUnplayedDueToProbabilityVariation = true;
+        public bool UseCentsPitch;
 		public bool HideLogoNav;
 		public bool EditMAFolder;
 		public string InstallationFolderPath = MasterAudio.MasterAudioDefaultFolder;

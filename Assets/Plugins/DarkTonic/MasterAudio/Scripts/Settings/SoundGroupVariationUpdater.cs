@@ -336,26 +336,29 @@ namespace DarkTonic.MasterAudio {
                 GrpVariation.LowPassFilter = newFilter;
             }
 
-#if UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_5_0 || UNITY_5_1
-            // no option for this
-			if (is2DRaycast) { }
-#else
+#if !PHY2D_MISSING
             var oldQueriesStart = Physics2D.queriesStartInColliders;
             if (is2DRaycast) {
                 Physics2D.queriesStartInColliders = _maThisFrame.occlusionIncludeStartRaycast2DCollider;
             }
+#endif
 
+#if !PHY2D_MISSING || !PHY3D_MISSING
             var oldRaycastsHitTriggers = true;
+#endif
 
             // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
             if (is2DRaycast) {
+#if !PHY2D_MISSING
                 oldRaycastsHitTriggers = Physics2D.queriesHitTriggers;
                 Physics2D.queriesHitTriggers = _maThisFrame.occlusionRaycastsHitTriggers;
+#endif
             } else {
+#if !PHY3D_MISSING
                 oldRaycastsHitTriggers = Physics.queriesHitTriggers;
                 Physics.queriesHitTriggers = _maThisFrame.occlusionRaycastsHitTriggers;
-            }
 #endif
+            }
 
             var hitPoint = Vector3.zero;
             float? hitDistance = null;
@@ -364,56 +367,61 @@ namespace DarkTonic.MasterAudio {
             if (_maThisFrame.occlusionUseLayerMask) {
                 switch (_maThisFrame.occlusionRaycastMode) {
                     case MasterAudio.RaycastMode.Physics3D:
+#if !PHY3D_MISSING
                         RaycastHit hitObject;
                         if (Physics.Raycast(raycastOrigin, direction, out hitObject, distanceToListener, _maThisFrame.occlusionLayerMask.value)) {
                             isHit = true;
                             hitPoint = hitObject.point;
                             hitDistance = hitObject.distance;
                         }
-
+#endif
                         break;
                     case MasterAudio.RaycastMode.Physics2D:
+#if !PHY2D_MISSING
                         var castHit2D = Physics2D.Raycast(raycastOrigin, direction, distanceToListener, _maThisFrame.occlusionLayerMask.value);
                         if (castHit2D.transform != null) {
                             isHit = true;
                             hitPoint = castHit2D.point;
                             hitDistance = castHit2D.distance;
                         }
-
+#endif
                         break;
                 }
             } else {
                 switch (_maThisFrame.occlusionRaycastMode) {
                     case MasterAudio.RaycastMode.Physics3D:
+#if !PHY3D_MISSING
                         RaycastHit hitObject;
                         if (Physics.Raycast(raycastOrigin, direction, out hitObject, distanceToListener)) {
                             isHit = true;
                             hitPoint = hitObject.point;
                             hitDistance = hitObject.distance;
                         }
-
+#endif
                         break;
                     case MasterAudio.RaycastMode.Physics2D:
+#if !PHY2D_MISSING
                         var castHit2D = Physics2D.Raycast(raycastOrigin, direction, distanceToListener);
                         if (castHit2D.transform != null) {
                             isHit = true;
                             hitPoint = castHit2D.point;
                             hitDistance = castHit2D.distance;
                         }
-
+#endif
                         break;
                 }
             }
 
-#if UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_5_0 || UNITY_5_1
-#else
             if (is2DRaycast) {
+#if !PHY2D_MISSING
                 Physics2D.queriesStartInColliders = oldQueriesStart;
                 Physics2D.queriesHitTriggers = oldRaycastsHitTriggers;
-            } else {
-                Physics.queriesHitTriggers = oldRaycastsHitTriggers;
-            }
 #endif
+            } else {
+#if !PHY3D_MISSING
+                Physics.queriesHitTriggers = oldRaycastsHitTriggers;
+#endif
+            }
 
             if (_maThisFrame.occlusionShowRaycasts) {
                 var endPoint = isHit ? hitPoint : _listenerThisFrame.position;
@@ -475,20 +483,48 @@ namespace DarkTonic.MasterAudio {
 
             if (GrpVariation.useRandomStartTime) {
                 VarAudio.time = ClipStartPosition;
-                var playableLength = AudioUtil.AdjustAudioClipDurationForPitch(ClipEndPosition - ClipStartPosition, VarAudio);
-                _clipSchedEndTime = startTime + playableLength;
-                VarAudio.SetScheduledEndTime(_clipSchedEndTime.Value);
+
+                if (!VarAudio.loop) { // don't stop it if it's going to loop.
+                    var playableLength = AudioUtil.AdjustAudioClipDurationForPitch(ClipEndPosition - ClipStartPosition, VarAudio);
+                    _clipSchedEndTime = startTime + playableLength;
+                    VarAudio.SetScheduledEndTime(_clipSchedEndTime.Value);
+                }
             }
 
             GrpVariation.LastTimePlayed = AudioUtil.Time;
 
-            // sound play worked! Duck music if a ducking sound.
-            MasterAudio.DuckSoundGroup(ParentGroup.GameObjectName, VarAudio);
+            DuckIfNotSilent();
 
             _isPlayingBackward = GrpVariation.OriginalPitch < 0;
             _lastFrameClipTime = _isPlayingBackward ? ClipEndPosition + 1 : -1f;
 
             _waitMode = WaitForSoundFinishMode.WaitForEnd;
+        }
+
+        private void DuckIfNotSilent() {
+            bool isSilent = false;
+
+            if (GrpVariation.PlaySoundParm.VolumePercentage <= 0) {
+                isSilent = true;
+            } else if (GrpVariation.ParentGroup.groupMasterVolume <= 0) {
+                isSilent = true;
+            } else if (GrpVariation.VarAudio.mute) { // other group soloed
+                isSilent = true;
+            } else if (MasterAudio.MixerMuted) { 
+                isSilent = true;
+            } else if (GrpVariation.ParentGroup.isMuted) {
+                isSilent = true;
+            } else {
+                var bus = GrpVariation.ParentGroup.BusForGroup;
+                if (bus != null && bus.isMuted) {
+                    isSilent = true;
+                }
+            }
+
+            // sound play worked! Duck music if a ducking sound and sound is not silent.
+            if (!isSilent) {
+                MasterAudio.DuckSoundGroup(ParentGroup.GameObjectName, VarAudio);
+            }
         }
 
         private void StopOrChain() {
@@ -646,9 +682,9 @@ namespace DarkTonic.MasterAudio {
             }
         }
 
-        #endregion
+#endregion
 
-        #region MonoBehavior events
+#region MonoBehavior events
 
         // ReSharper disable once UnusedMember.Local
         private void OnEnable() {
@@ -793,9 +829,9 @@ namespace DarkTonic.MasterAudio {
             }
         }
 
-        #endregion
+#endregion
 
-        #region Properties
+#region Properties
 
         public float ClipStartPosition {
             get {
@@ -935,7 +971,7 @@ namespace DarkTonic.MasterAudio {
                 return false;
             }
         }
-        #endregion
+#endregion
     }
 }
 /*! \endcond */

@@ -2,10 +2,7 @@
 using System;
 // ReSharper disable once RedundantUsingDirective
 using System.Collections.Generic;
-
-#if UNITY_5 || UNITY_2017_1_OR_NEWER
 using UnityEngine.Audio;
-#endif
 
 // ReSharper disable once CheckNamespace
 namespace DarkTonic.MasterAudio {
@@ -37,12 +34,10 @@ namespace DarkTonic.MasterAudio {
         public MasterAudio.BusCommand currentBusCommand = MasterAudio.BusCommand.None;
         public MasterAudio.CustomEventCommand currentCustomEventCommand = MasterAudio.CustomEventCommand.None;
         public MasterAudio.GlobalCommand currentGlobalCommand = MasterAudio.GlobalCommand.None;
-#if UNITY_5 || UNITY_2017_1_OR_NEWER
-    public MasterAudio.UnityMixerCommand currentMixerCommand = MasterAudio.UnityMixerCommand.None;
-	public AudioMixerSnapshot snapshotToTransitionTo = null;
-	public float snapshotTransitionTime = 1f;
-	public List<MA_SnapshotInfo> snapshotsToBlend = new List<MA_SnapshotInfo>() { new MA_SnapshotInfo(null, 1f) };
-#endif
+        public MasterAudio.UnityMixerCommand currentMixerCommand = MasterAudio.UnityMixerCommand.None;
+	    public AudioMixerSnapshot snapshotToTransitionTo = null;
+	    public float snapshotTransitionTime = 1f;
+	    public List<MA_SnapshotInfo> snapshotsToBlend = new List<MA_SnapshotInfo>() { new MA_SnapshotInfo(null, 1f) };
 
         public MasterAudio.PersistentSettingsCommand currentPersistentSettingsCommand =
             MasterAudio.PersistentSettingsCommand.None;
@@ -53,12 +48,15 @@ namespace DarkTonic.MasterAudio {
         public bool startPlaylist = true;
         public float fadeVolume = 0f;
         public float fadeTime = 1f;
-		public bool stopAfterFade = false;
+        public float minAge = 1f;
+        public bool stopAfterFade = false;
 		public bool restoreVolumeAfterFade = false;
         public TargetVolumeMode targetVolMode = TargetVolumeMode.UseSliderValue;
         public string clipName = "[None]";
         public EventSounds.VariationType variationType = EventSounds.VariationType.PlayRandom;
         public string variationName = string.Empty;
+        public float colliderMaxDistance;
+        public bool showSphereGizmo = false;
 
         // custom event fields
         public string theCustomEventName = string.Empty;
@@ -69,7 +67,6 @@ namespace DarkTonic.MasterAudio {
             UseSpecificValue
         }
 
-#if UNITY_5 || UNITY_2017_1_OR_NEWER
     [Serializable]
 	public class MA_SnapshotInfo {
 		public AudioMixerSnapshot snapshot;
@@ -80,7 +77,6 @@ namespace DarkTonic.MasterAudio {
 			weight = wt;
 		}
 	}
-#endif
 
         public bool IsFadeCommand {
             get {

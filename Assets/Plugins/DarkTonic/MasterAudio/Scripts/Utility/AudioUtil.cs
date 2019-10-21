@@ -91,14 +91,16 @@ namespace DarkTonic.MasterAudio {
         }
 
         /// <summary>
-        /// This method returns whether an AudioSource is paused or not.
+        /// This method returns whether an AudioSource is paused or not. Only used by PlaylistControllers.
         /// </summary>
         /// <param name="source">The Audio Source in question.</param>
         /// <returns>True or false</returns>
-        public static bool IsAudioPaused(AudioSource source) {
+        public static bool IsClipPaused(AudioSource source) {
             return !source.isPlaying && GetAudioPlayedPercentage(source) > 0f;
         }
 
+
+        /*! \cond PRIVATE */
         public static void ClipPlayed(AudioClip clip, GameObject actor) {
             if (AudioClipWillPreload(clip)) {
                 return;
@@ -107,8 +109,6 @@ namespace DarkTonic.MasterAudio {
             AudioLoaderOptimizer.AddNonPreloadedPlayingClip(clip, actor);
         }
 
-        /*! \cond PRIVATE */
-#if UNITY_5 || UNITY_2017_1_OR_NEWER
         public static void UnloadNonPreloadedAudioData(AudioClip clip, GameObject actor) {
             if (clip == null) {
 				return;
@@ -126,13 +126,7 @@ namespace DarkTonic.MasterAudio {
 
 			clip.UnloadAudioData(); // restore memory
         }
-#else
-        public static void UnloadNonPreloadedAudioData(AudioClip clip, GameObject actor) {
-            // do nothing
-        }
-#endif
 
-#if UNITY_5 || UNITY_2017_1_OR_NEWER
         public static bool AudioClipWillPreload(AudioClip clip) {
             if (clip == null) {
                 return false;
@@ -140,18 +134,9 @@ namespace DarkTonic.MasterAudio {
 
             return clip.preloadAudioData;
         }
-#else
-        public static bool AudioClipWillPreload(AudioClip clip) {
-            return true;
-        }
-#endif
 
         public static bool IsClipReadyToPlay(this AudioClip clip) {
-#if UNITY_5 || UNITY_2017_1_OR_NEWER
             return clip != null && clip.loadType != AudioClipLoadType.Streaming;
-#else
-            return clip != null && clip.isReadyToPlay;
-#endif
         }
 
         private static float GetPositiveUsablePitch(AudioSource source) {

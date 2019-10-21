@@ -1,4 +1,3 @@
-#if UNITY_5 || UNITY_2017_1_OR_NEWER
 
 using System;
 using System.Collections.Generic;
@@ -1043,5 +1042,3 @@ public class BulkAudioImporter : EditorWindow {
         }
     }
 }
-
-#endif
