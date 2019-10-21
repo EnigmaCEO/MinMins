@@ -116,16 +116,16 @@ public class ActionArea : NetworkEntity
         transform.localScale = new Vector3(scaleFactor * scale.x, scaleFactor * scale.y, scaleFactor * scale.z);
     }
 
-    public static void DestroyActionAreaList(List<ActionArea> actionAreas)
-    {
-        while (actionAreas.Count > 0)
-        {
-            ActionArea area = actionAreas[0];
-            //Debug.LogWarning("ActionArea::DestroyActionAreaList -> actionAreaToDestroy: " + area.name + " ownerTeamName: " + area.OwnerTeamName + " owerName: " + area.OwnerUnitName);
-            actionAreas.RemoveAt(0);
-            NetworkManager.NetworkDestroy(area.gameObject);
-        }
-    }
+    //public static void DestroyActionAreaList(List<ActionArea> actionAreas)
+    //{
+    //    while (actionAreas.Count > 0)
+    //    {
+    //        ActionArea area = actionAreas[0];
+    //        //Debug.LogWarning("ActionArea::DestroyActionAreaList -> actionAreaToDestroy: " + area.name + " ownerTeamName: " + area.OwnerTeamName + " owerName: " + area.OwnerUnitName);
+    //        actionAreas.RemoveAt(0);
+    //        NetworkManager.NetworkDestroy(area.gameObject);
+    //    }
+    //}
 
     private void sendEnableCollider(bool enabled)
     {
@@ -145,7 +145,7 @@ public class ActionArea : NetworkEntity
 
     virtual protected void OnTriggerEnter2D(Collider2D coll)
     {
-        Debug.LogWarning("ActionArea::OnTriggerEnter2D: " + coll.name + " collided with " + this.name);
+        //Debug.LogWarning("ActionArea::OnTriggerEnter2D: " + coll.name + " collided with " + this.name);
     }
 
     virtual protected void setEffect(MinMinUnit.EffectNames effectName)
@@ -200,6 +200,9 @@ public class ActionArea : NetworkEntity
 
         //int damage = Mathf.FloorToInt((float)ownerStrenght * (float)(1 - (finalDefense / 100.0f)));  //Defense is translated into damage reduction
         int damage = Mathf.RoundToInt((Strenght * 10.0f) * (1.0f - targetUnitDefense/10.0f) * (1 - targetUnitTankDefense/10.0f));
+
+        if (GameHacks.Instance.Damage.Enabled)
+            damage = GameHacks.Instance.Damage.ValueAsInt;
 
         //if (damage == 0)
         //    damage = 1;

@@ -5,6 +5,14 @@ using UnityEngine;
 
 public class TankArea : ActionArea
 {
+    override protected void Awake()
+    {
+        base.Awake();
+
+        if (_warRef.GetIsHost())
+            _warRef.AddTankArea(this);
+    }
+
     override protected void OnTriggerEnter2D(Collider2D coll)
     {
         base.OnTriggerEnter2D(coll);

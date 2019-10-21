@@ -26,7 +26,7 @@ public class AiPlayer
         createGridTargets();
     }
 
-    public Vector2 GetWorldInput2D(MinMinUnit.Types unitType, Dictionary<string, MinMinUnit> aiPlayerTeamUnits, Dictionary<string, List<MinMinUnit>> exposedUnitsByTeam,  Dictionary<string, Dictionary<string, Dictionary<string, List<HealerArea>>>> healerAreasByOwnerByTargetByTeam)
+    public Vector2 GetWorldInput2D(MinMinUnit.Types unitType, Dictionary<string, MinMinUnit> aiPlayerTeamUnits, Dictionary<string, List<MinMinUnit>> exposedUnitsByTeam,  Dictionary<string, Dictionary<string, List<HealerArea>>> healerAreasByTargetByTeam)
     {
         int targetIndex = -1;
         Vector2 input = Vector2.zero;
@@ -53,7 +53,7 @@ public class AiPlayer
         else if (unitType == MinMinUnit.Types.Tank)
             input = getTankTargetPosition(aiPlayerTeamUnits);
         else if (unitType == MinMinUnit.Types.Healer)
-            input = getHealerTargetPosition(aiPlayerTeamUnits, exposedUnitsByTeam, healerAreasByOwnerByTargetByTeam);
+            input = getHealerTargetPosition(aiPlayerTeamUnits, exposedUnitsByTeam, healerAreasByTargetByTeam);
 
         return input;
     }
@@ -181,7 +181,7 @@ public class AiPlayer
         return input;
     }
 
-    private Vector2 getHealerTargetPosition(Dictionary<string, MinMinUnit> aiPlayerTeamUnits, Dictionary<string, List<MinMinUnit>> exposedUnitsByTeam, Dictionary<string, Dictionary<string, Dictionary<string, List<HealerArea>>>> healerAreasByOwnerByTargetByTeam)
+    private Vector2 getHealerTargetPosition(Dictionary<string, MinMinUnit> aiPlayerTeamUnits, Dictionary<string, List<MinMinUnit>> exposedUnitsByTeam, Dictionary<string, Dictionary<string, List<HealerArea>>> healerAreasByTargetByTeam)
     {
         Vector2 input = Vector2.zero;
 
@@ -200,7 +200,7 @@ public class AiPlayer
                 int injury = GetUnitInjury(unit.name);
                 if (injury > 0)
                 {
-                    if (!healerAreasByOwnerByTargetByTeam[GameNetwork.TeamNames.GUEST].ContainsKey(unit.name))
+                    if (!healerAreasByTargetByTeam[GameNetwork.TeamNames.GUEST].ContainsKey(unit.name))
                     {
                         //Debug.LogWarning("AiPlayer::getHealerTargetPosition -> injured unit with no healing: " + unit.name + " unit.Type: " + unit.Type + " injury: " + injury);
 

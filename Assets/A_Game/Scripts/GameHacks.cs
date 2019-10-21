@@ -12,6 +12,8 @@ public class GameHacks : SingletonMonobehaviour<GameHacks>
     public bool BuyResultFalse;
     public bool BuyAndroid;
 
+    public bool HideClouds;
+
     public ValueHack UnitTier = new ValueHack("1");
     public ValueHack ActionTimeHack = new ValueHack("60");
     public ValueHack SetHostUnitType = new ValueHack("Bomber");
@@ -23,4 +25,5 @@ public class GameHacks : SingletonMonobehaviour<GameHacks>
     public ValueHack FractionOfStartingHealth = new ValueHack("2");
     public ValueHack Rating = new ValueHack("150");
     public ValueHack RoundCount = new ValueHack("2");
+    public ValueHack Damage = new ValueHack("1000");
 }
