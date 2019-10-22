@@ -1470,7 +1470,7 @@ public class War : NetworkEntity
 
     public void RemoveTankArea(TankArea tankArea)
     {
-        removeArea<TankArea>(tankArea, _tankAreasByTargetByTeam, _tankAreasByTargetByTeam);
+        removeArea<TankArea>(tankArea, _tankAreasByOwnerByTeam, _tankAreasByTargetByTeam);
     }
 
     private void removeArea<T>(T area, Dictionary<string, Dictionary<string, List<T>>> areasByOwnerByTeam, Dictionary<string, Dictionary<string, List<T>>> areasByTargetByTeam) where T : ActionArea

@@ -17,11 +17,15 @@ public class PrepMinMinSprite : MonoBehaviour
     private Vector3 _screenPoint;
     private Vector3 _offset;
 
+    private string _unitName;
+
     // Use this for initialization
     void Start()
     {
         _team = GameObject.Find("/Team1");
         _slot = transform.parent.gameObject;
+
+        _unitName = transform.parent.GetComponentInChildren<MinMinUnit>().gameObject.name;
     }
 
     // Update is called once per frame
@@ -43,7 +47,7 @@ public class PrepMinMinSprite : MonoBehaviour
 
         _offset = gameObject.transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, _screenPoint.z));
 
-        _manager.UpdateInfo(transform.parent.GetComponentInChildren<MinMinUnit>().gameObject.name);
+        _manager.UpdateInfo(_unitName);
 
         _selected = true;
         //Debug.Log(name + " selected");
@@ -71,6 +75,7 @@ public class PrepMinMinSprite : MonoBehaviour
 
     private void dropOnBattlefield()
     {
+        _manager.CloseInfoPopUp();
         _selected = false;
 
         limitPosition();

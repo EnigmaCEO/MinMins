@@ -90,10 +90,15 @@ public class WarPrepManager : EnigmaScene
         _infoPopUp.GetComponent<UnitInfoPopUp>().UpdateExpInfo(unitName);
     }
 
+    public void CloseInfoPopUp()
+    {
+        _infoPopUp.SetActive(false);
+    }
+
     public void AddToSlotsReady()
     {
         _slotsReady++;
-        _infoPopUp.SetActive(false);
+        //_infoPopUp.SetActive(false);
 
         if (_slotsReady == _slotsInPlay)
         {
