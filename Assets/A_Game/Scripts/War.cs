@@ -20,6 +20,7 @@ public class War : NetworkEntity
     [SerializeField] private float _actionAreaPosZ = -0.1f;
 
     [SerializeField] private int _maxRoundsCount = 5;
+    [SerializeField] private int _roundFinishDelay = 2;
     [SerializeField] private double _maxDecisionTime = 10;
     [SerializeField] private int _fieldRewardChestsAmount = 1;
 
@@ -55,6 +56,9 @@ public class War : NetworkEntity
     [SerializeField] private GameCamera _gameCamera;
 
     [SerializeField] private Transform _cloudsContainer;
+
+    [SerializeField] private GameObject _roundPopUp;
+    [SerializeField] private Text _roundPopUpText;
 
     private Transform _hostGrid;
     private Transform _guestGrid;
@@ -132,6 +136,7 @@ public class War : NetworkEntity
             _cloudsContainer.gameObject.SetActive(false);
 
         ActionPopup.Close();
+        _roundPopUp.SetActive(false);
 
         if (GetUsesAi())
         {
@@ -483,9 +488,27 @@ public class War : NetworkEntity
 
     private void onRoundStarted(int roundNumber)
     {
-       
+        StartCoroutine(endRoundFinishPause(roundNumber));
+    }
+
+    private IEnumerator endRoundFinishPause(int roundNumber)
+    {
+        bool isThereDelay = (roundNumber > 1);
+        float delay = isThereDelay? _roundFinishDelay : 0;
+
+        if (isThereDelay)
+        {
+            _roundPopUpText.text = "Round: " + roundNumber.ToString();
+            _roundPopUp.SetActive(true);
+        }
+
+        yield return new WaitForSeconds(delay);
+
         _roundNumberText.text = "Round: " + roundNumber.ToString();
         updateRoundDisplay(roundNumber);
+
+        if (isThereDelay)
+            _roundPopUp.SetActive(false);
 
         if (GetIsHost())
         {
