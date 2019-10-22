@@ -48,6 +48,8 @@ MonoBehaviour:
   _battleFieldRightSideOffset: 0
   _actionAreaPosZ: -0.1
   _maxRoundsCount: 5
+  _roundFinishDelay: 2
+  _roundPopUpDuration: 2
   _maxDecisionTime: 10
   _fieldRewardChestsAmount: 1
   _teamGridContent: {fileID: 0}
@@ -70,6 +72,9 @@ MonoBehaviour:
   UnitTurnHighlightTransform: {fileID: 0}
   _battleField: {fileID: 0}
   _gameCamera: {fileID: 0}
+  _cloudsContainer: {fileID: 0}
+  _roundPopUp: {fileID: 0}
+  _roundPopUpText: {fileID: 0}
   ReadyPopup: {fileID: 0}
   ActionPopup: {fileID: 0}
   ActionButton: {fileID: 0}

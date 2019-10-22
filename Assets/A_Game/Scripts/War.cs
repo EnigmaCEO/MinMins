@@ -20,7 +20,8 @@ public class War : NetworkEntity
     [SerializeField] private float _actionAreaPosZ = -0.1f;
 
     [SerializeField] private int _maxRoundsCount = 5;
-    [SerializeField] private int _roundFinishDelay = 2;
+    [SerializeField] private float _roundFinishDelay = 2;
+    [SerializeField] private float _roundPopUpDuration = 2;
     [SerializeField] private double _maxDecisionTime = 10;
     [SerializeField] private int _fieldRewardChestsAmount = 1;
 
@@ -496,16 +497,20 @@ public class War : NetworkEntity
         bool isThereDelay = (roundNumber > 1);
         float delay = isThereDelay? _roundFinishDelay : 0;
 
+        yield return new WaitForSeconds(delay);
+
         if (isThereDelay)
         {
             _roundPopUpText.text = "Round: " + roundNumber.ToString();
             _roundPopUp.SetActive(true);
         }
 
-        yield return new WaitForSeconds(delay);
-
         _roundNumberText.text = "Round: " + roundNumber.ToString();
         updateRoundDisplay(roundNumber);
+
+        delay = isThereDelay ? _roundPopUpDuration : 0;
+
+        yield return new WaitForSeconds(delay);
 
         if (isThereDelay)
             _roundPopUp.SetActive(false);
