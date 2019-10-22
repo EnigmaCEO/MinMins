@@ -19,7 +19,7 @@ public class War : NetworkEntity
     [SerializeField] private float _battleFieldRightSideOffset = 0;
     [SerializeField] private float _actionAreaPosZ = -0.1f;
 
-    [SerializeField] private int _maxRoundsCount = 5;
+    [SerializeField] private int _maxRoundsCount = 3;
     [SerializeField] private float _roundFinishDelay = 2;
     [SerializeField] private float _roundPopUpDuration = 2;
     [SerializeField] private double _maxDecisionTime = 10;

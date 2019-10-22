@@ -475,15 +475,16 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
 
         if (!EnigmaHacks.Instance.ByPassIAPReceiptCheck)
         {
-
-            // Unity IAP's validation logic is only included on these platforms.
-#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX
-            // Prepare the validator with the secrets we prepared in the Editor
-            // obfuscation window.
-            CrossPlatformValidator validator = new CrossPlatformValidator(GooglePlayTangle.Data(), AppleTangle.Data(), Application.identifier);
             string purchaseToken = "";
             string transactionId = "";
             string productId = "";
+
+            // Unity IAP's validation logic is only included on these platforms.
+#if !UNITY_EDITOR && (UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX)
+            // Prepare the validator with the secrets we prepared in the Editor
+            // obfuscation window.
+            CrossPlatformValidator validator = new CrossPlatformValidator(GooglePlayTangle.Data(), AppleTangle.Data(), Application.identifier);
+            
 
             try
             {
@@ -535,21 +536,21 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
             if (validPurchase)
             {
 
-                GameOfWhales.InAppPurchased(
+                /*GameOfWhales.InAppPurchased(
                                                     args.purchasedProduct.definition.id,
                                                     (float)args.purchasedProduct.metadata.localizedPrice,
                                                     args.purchasedProduct.metadata.isoCurrencyCode,
                                                     args.purchasedProduct.transactionID,
                                                     args.purchasedProduct.receipt
                                                     );
-
+*/
 
                 Debug.Log("Receipt: " + args.purchasedProduct.receipt);
 
                 Hashtable hashtable = new Hashtable();
-                hashtable.Add("purchase_token", purchaseToken);
-                hashtable.Add("transaction_id", transactionId);
-                hashtable.Add("product_id", productId);
+                hashtable.Add("receipt", args.purchasedProduct.receipt);
+                hashtable.Add("transaction_id", args.purchasedProduct.transactionID);
+                hashtable.Add("product_id", args.purchasedProduct.definition.id);
                 NetworkManager.Transaction(NetworkManager.Transactions.PURCHASE_SUCCESSFUL, hashtable, onPurchaseSuccesfulTransaction);
             }
         }

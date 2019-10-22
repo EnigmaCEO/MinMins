@@ -206,6 +206,7 @@ public class ActionArea : NetworkEntity
 
         //if (damage == 0)
         //    damage = 1;
+        ScoreFlash.Instance.PushWorld(gameObject.transform.localPosition, gameObject.transform.position, damage, Color.red);
 
         int damageDealt = GameNetwork.GetTeamRoomPropertyAsInt(GameNetwork.TeamRoomProperties.DAMAGE_DEALT, OwnerTeamName);
         GameNetwork.SetTeamRoomProperty(GameNetwork.TeamRoomProperties.DAMAGE_DEALT, OwnerTeamName, (damageDealt + damage).ToString());

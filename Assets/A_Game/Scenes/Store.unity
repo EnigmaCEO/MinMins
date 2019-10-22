@@ -370,6 +370,8 @@ MonoBehaviour:
   _enjinmftPopUp: {fileID: 4283515689750505813}
   _minminPopUp: {fileID: 188046907}
   _lootBoxGridContent: {fileID: 445924678}
+  giftProgress: {fileID: 64111628}
+  giftText: {fileID: 884131314}
 --- !u!4 &24557417
 Transform:
   m_ObjectHideFlags: 0
@@ -3461,7 +3463,7 @@ PrefabInstance:
     - target: {fileID: 114358418755427752, guid: d1ba8daa3f95bdd4894e096bcadb5f57,
         type: 3}
       propertyPath: _networkManager
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114358418755427752, guid: d1ba8daa3f95bdd4894e096bcadb5f57,
         type: 3}

@@ -3,8 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using SimpleJSON;
 
-public class GameStore : MonoBehaviour
+public class GameStore : EnigmaScene
 {
     [SerializeField] private int _maxBoxTierNumber = 3;
 
@@ -25,10 +26,12 @@ public class GameStore : MonoBehaviour
     [SerializeField] private GameObject _minminPopUp;
 
     [SerializeField] private Transform _lootBoxGridContent;
+    [SerializeField] private Image giftProgress;
+    [SerializeField] private Text giftText;
 
     private int _selectedPackIndex;
 
-    private void Awake()
+    override public void Awake()
     {
         IAPManager.IAPResult += handleCurrencyBuyResult;
     }
@@ -54,6 +57,9 @@ public class GameStore : MonoBehaviour
         _minminPopUp.SetActive(false);
 
         refreshLootBoxesGrid();
+
+        NetworkManager.Transaction(NetworkManager.Transactions.GIFT_PROGRESS, new Hashtable(), onGiftProgress);
+
 
         handleFreeLootBoxGifts();
     }
@@ -226,5 +232,25 @@ public class GameStore : MonoBehaviour
 
         _openLootBoxPopUp.Feed(unitsWithTier);
         _openLootBoxPopUp.Open();
+    }
+
+    private void onGiftProgress(JSONNode response)
+    {
+        if (response != null)
+        {
+
+            JSONNode response_hash = response[0];
+            string status = response_hash["status"].ToString().Trim('"');
+
+            print("onGiftProgress -> response: " + response.ToString() + " status: " + status);
+
+            if (status == "SUCCESS")
+            {
+                string progress = response_hash["progress"].ToString().Trim('"');
+                giftProgress.fillAmount = float.Parse(progress) / 1000.0f;
+                giftText.text = "$"+ progress + " / $1000";
+            }
+            
+        }
     }
 }

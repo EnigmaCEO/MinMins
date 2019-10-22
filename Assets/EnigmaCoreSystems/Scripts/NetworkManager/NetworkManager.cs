@@ -25,6 +25,7 @@ namespace Enigma.CoreSystems
             public const int COINS_EARNED = 6;
             public const int HEART_BEAT = 14;
             public const int ENJIN_LINKED = 15;
+            public const int GIFT_PROGRESS = 21;
             public const int PURCHASE_SUCCESSFUL = 22;
         }
 
