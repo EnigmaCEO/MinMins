@@ -87,15 +87,22 @@ public class MatchResultsPopUp : MonoBehaviour
             int count = amountByTier.Value;
             for (int i = 0; i < count; i++)
             {
-                GameObject reward = Instantiate<GameObject>(rewardGridItemTemplate, _rewardsGridContent);
-                reward.GetComponent<RewardGridItem>().SetUp(amountByTier.Key);
-
+                createRewardGridItem(rewardGridItemTemplate, amountByTier.Key, false);
                 gameInventory.ChangeLootBoxAmount(amountByTier.Value, amountByTier.Key, true, false);
             }
         }
 
         gameInventory.SaveLootBoxes();
 
+        if (matchLocalData.EnjinCollected)
+            createRewardGridItem(rewardGridItemTemplate, GameInventory.Tiers.GOLD, true);
+
         rewardGridItemTemplate.SetActive(false);
+    }
+
+    private void createRewardGridItem(GameObject rewardGridItemTemplate, int tier, bool isEnjin)
+    {
+        GameObject reward = Instantiate<GameObject>(rewardGridItemTemplate, _rewardsGridContent);
+        reward.GetComponent<RewardGridItem>().SetUp(tier, isEnjin);
     }
 }

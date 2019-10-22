@@ -14,6 +14,10 @@ public class GameHacks : SingletonMonobehaviour<GameHacks>
 
     public bool HideClouds;
 
+    public bool ForceEnjinRewardOnChest;
+    public bool WarVictory;
+    public bool ChestHit;
+
     public ValueHack UnitTier = new ValueHack("1");
     public ValueHack ActionTimeHack = new ValueHack("60");
     public ValueHack SetHostUnitType = new ValueHack("Bomber");

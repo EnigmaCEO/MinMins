@@ -12,7 +12,6 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     {
         public const int CHANGE_RATING = 15;
         public const int RANK_CHANGED_TRANSACTION_ID = 16;
-        public const int ENJIN_ITEM_COLLECTED_TRANSACTION = 17;
     }
 
     public class TransactionKeys
@@ -152,6 +151,14 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
     [SerializeField] private int _roomMaxPlayers = 2;
     [SerializeField] private int _roomMaxPlayersNotExpectating = 2;
+
+    [Header("Only for display. Set at runtime:")]
+    public bool IsEnjinLinked = false;
+    public bool HasEnjinWeapon = false;
+    public bool HasEnjinShield = false;
+    public bool HasEnjinEnigmaToken = false;
+    public bool HasEnjinMft = false;
+    [Header("=================================")]
 
     private Hashtable _matchResultshashTable = new Hashtable();
 

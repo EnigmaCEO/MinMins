@@ -221,16 +221,18 @@ public class EnjinLogin : MonoBehaviour
     {
         print("Complete login:");
 
+        GameNetwork gameNetwork = GameNetwork.Instance;
+
         GameStats.Instance.Rating = response_hash[NetworkManager.TransactionKeys.USER_DATA][GameNetwork.TransactionKeys.RATING].AsInt;
         string userName = response_hash[NetworkManager.TransactionKeys.USER_DATA][GameNetwork.TransactionKeys.USERNAME];
         NetworkManager.SetLocalPlayerNickName(userName);
 
-        string enjinId = response_hash[NetworkManager.TransactionKeys.USER_DATA][NetworkManager.EnjinTransKeys.ENJIN_ID].ToString().Trim('"');
+        string enjinId = response_hash[NetworkManager.TransactionKeys.USER_DATA][NetworkManager.EnjinTransResponseKeys.ENJIN_ID].ToString().Trim('"');
         EnigmaHacks enigmaHacks = EnigmaHacks.Instance;
 
         if ((enjinId != "null") || enigmaHacks.EnjinIdNotNull)
         {
-            string enjinCode = response_hash[NetworkManager.TransactionKeys.USER_DATA][NetworkManager.EnjinTransKeys.ENJIN_CODE].ToString().Trim('"');
+            string enjinCode = response_hash[NetworkManager.TransactionKeys.USER_DATA][NetworkManager.EnjinTransResponseKeys.ENJIN_CODE].ToString().Trim('"');
 
             if ((enjinCode != "null") || enigmaHacks.EnjinCodeNotNull)
             {
@@ -239,13 +241,17 @@ public class EnjinLogin : MonoBehaviour
             else
             {
                 print("User has already linked with Enjin");
-                GameStats.Instance.IsEnjinLinked = true;
+                GameNetwork.Instance.IsEnjinLinked = true;
             }
+
+            string enjin_mft = response_hash[NetworkManager.TransactionKeys.USER_DATA][NetworkManager.EnjinTransResponseKeys.ENJIN_MFT];
+            GameNetwork.Instance.HasEnjinMft = (enjin_mft == "1");
         }
         else
             print("User is not using Crypto.");
 
-        GameStats.Instance.IsEnjinLinked = enigmaHacks.EnjinLinked;
+        if(enigmaHacks.EnjinLinked)
+            GameNetwork.Instance.IsEnjinLinked = true;
 
         GameObject.Find("/Main").GetComponent<Main>().Init();
     }

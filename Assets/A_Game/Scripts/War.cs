@@ -16,7 +16,7 @@ public class War : NetworkEntity
 
     [HideInInspector] public bool Ready = true;
 
-    [SerializeField] private float _battleFieldRightSideOffset = 0;
+    [SerializeField] private float _battleFieldRightSideBaseOffset = 0;
     [SerializeField] private float _actionAreaPosZ = -0.1f;
 
     [SerializeField] private int _maxRoundsCount = 3;
@@ -29,6 +29,10 @@ public class War : NetworkEntity
     [SerializeField] private float _readyCheckDelay = 2;
 
     [SerializeField] private float _team1_CloudsLocalPosX = 0.07f;
+    [SerializeField] private float _rightSideOffsetAdjustment = 0.3f;
+
+    [SerializeField] private int _baseEnjinItemChance = 5;
+    [SerializeField] private int _mftEnjinItemChance = 10;
 
     [SerializeField] private Text _errorText;
     [SerializeField] private MatchResultsPopUp _matchResultsPopUp;
@@ -159,6 +163,8 @@ public class War : NetworkEntity
 
         _hostGrid = _battleField.Find(GridNames.TEAM_1);
         _guestGrid = _battleField.Find(GridNames.TEAM_2);
+
+        _battleFieldRightSideBaseOffset = _guestGrid.transform.position.x - _hostGrid.transform.position.x;
 
         determineLocalPlayerTeam();
 
@@ -748,8 +754,17 @@ public class War : NetworkEntity
                 Vector3 tapWorldPosition = _gameCamera.MyCamera.ScreenToWorldPoint(Input.mousePosition);
                 GameConfig gameConfig = GameConfig.Instance;
 
-                if ((tapWorldPosition.y > gameConfig.BattleFieldMinPos.y) || (tapWorldPosition.y < gameConfig.BattleFieldMaxPos.y)
-                || (tapWorldPosition.x < gameConfig.BattleFieldMaxPos.x) || (tapWorldPosition.x > gameConfig.BattleFieldMinPos.x))
+                float minPosX = gameConfig.BattleFieldMinPos.x;
+                float maxPosX = gameConfig.BattleFieldMaxPos.x;
+
+                if (_gameCamera.IsAtOppponentSide)
+                {
+                    minPosX += _battleFieldRightSideBaseOffset + _rightSideOffsetAdjustment;
+                    maxPosX += _battleFieldRightSideBaseOffset + _rightSideOffsetAdjustment;
+                }
+
+                if ((tapWorldPosition.y > gameConfig.BattleFieldMinPos.y) && (tapWorldPosition.y < gameConfig.BattleFieldMaxPos.y)
+                && (tapWorldPosition.x < maxPosX) && (tapWorldPosition.x > minPosX))
                 {
                     sendPlayerTargetInput(tapWorldPosition, _localPlayerTeam);
                     enableTimeLeftDisplay(false);
@@ -1083,7 +1098,7 @@ public class War : NetworkEntity
     private void onRewardBoxHit()
     {
         //Debug.LogWarning("onRewardBoxHit");
-        rewardWithRandomBox();
+        _matchLocalData.RewardChestWasHit = true;
     }
 
     private void setUpSinglePlayerAiTeamUnits()
@@ -1161,7 +1176,7 @@ public class War : NetworkEntity
     private Vector2 getRandomBattlefieldPosition()
     {
         GameConfig gameConfig = GameConfig.Instance;
-        return new Vector2(UnityEngine.Random.Range(gameConfig.BattleFieldMinPos.x + 0.5f, gameConfig.BattleFieldMaxPos.x - 0.5f) + _battleFieldRightSideOffset, UnityEngine.Random.Range(gameConfig.BattleFieldMinPos.y + 0.5f, gameConfig.BattleFieldMaxPos.y - 0.5f));
+        return new Vector2(UnityEngine.Random.Range(gameConfig.BattleFieldMinPos.x + 0.5f, gameConfig.BattleFieldMaxPos.x - 0.5f), UnityEngine.Random.Range(gameConfig.BattleFieldMinPos.y + 0.5f, gameConfig.BattleFieldMaxPos.y - 0.5f));
     }
 
     private void instantiateTeam(string teamName, string[] teamUnits)
@@ -1638,6 +1653,10 @@ public class War : NetworkEntity
     {
         bool isVictory = (winner == _localPlayerTeam);
 
+        GameHacks gameHacks = GameHacks.Instance;
+        if (gameHacks.WarVictory)
+            isVictory = true;
+
         GameInventory gameInventory = GameInventory.Instance;
 
         foreach (Transform slot in _teamGridContent)
@@ -1664,7 +1683,29 @@ public class War : NetworkEntity
 
         if (isVictory)
         {
-            rewardWithRandomBox();
+            if (_matchLocalData.RewardChestWasHit || gameHacks.ChestHit)
+            {
+                GameNetwork gameNetwork = GameNetwork.Instance;
+                if (NetworkManager.LoggedIn && gameNetwork.IsEnjinLinked)
+                {
+                    int chance = _baseEnjinItemChance;
+
+                    if (gameNetwork.HasEnjinMft)
+                        chance = _mftEnjinItemChance;
+
+                    int randomNumber = UnityEngine.Random.Range(1, 101);
+                    if (randomNumber <= chance)
+                        _matchLocalData.EnjinCollected = true;
+                }
+
+                if (gameHacks.ForceEnjinRewardOnChest)
+                    _matchLocalData.EnjinCollected = true;
+
+                if(_matchLocalData.EnjinCollected)
+                    NetworkManager.Instance.SendEnjinCollectedTransaction();
+                else if (!_matchLocalData.EnjinCollected)
+                    rewardWithTierBox(GameInventory.Tiers.BRONZE);
+            }
 
             if (GameStats.Instance.Mode == GameStats.Modes.SinglePlayer)
                 gameInventory.SetSinglePlayerLevel(gameInventory.GetSinglePlayerLevel() + 1);
@@ -1682,6 +1723,11 @@ public class War : NetworkEntity
     private void rewardWithRandomBox()
     {
         int rewardBoxTier = GameInventory.Instance.GetRandomTier();
+        rewardWithTierBox(rewardBoxTier);
+    }
+
+    private void rewardWithTierBox(int rewardBoxTier)
+    {
         _matchLocalData.BoxTiersWithAmountsRewards[rewardBoxTier]++;
     }
 
@@ -1708,7 +1754,7 @@ public class War : NetworkEntity
             int updatedLevel = GameNetwork.Instance.GetPvpLevelNumberByRating(updatedRating);
 
             if (updatedLevel > oldArenaLevel)
-                rewardWithRandomBox();
+                rewardWithTierBox(GameInventory.Tiers.GOLD);
         }
         else
         {
@@ -1826,6 +1872,8 @@ public class War : NetworkEntity
     public class MatchLocalData
     {
         public Dictionary<int, int> BoxTiersWithAmountsRewards = new Dictionary<int, int>();
+        public bool RewardChestWasHit = false;
+        public bool EnjinCollected = false;
 
         public MatchLocalData()
         {

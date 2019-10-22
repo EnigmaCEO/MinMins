@@ -25,6 +25,7 @@ namespace Enigma.CoreSystems
             public const int COINS_EARNED = 6;
             public const int HEART_BEAT = 14;
             public const int ENJIN_LINKED = 15;
+            public const int ENJIN_ITEM_COLLECTED_TRANSACTION = 17;
             public const int GIFT_PROGRESS = 21;
             public const int PURCHASE_SUCCESSFUL = 22;
         }
@@ -55,10 +56,11 @@ namespace Enigma.CoreSystems
             public const string ENJIN = "enjin";
         }
 
-        public class EnjinTransKeys
+        public class EnjinTransResponseKeys
         {
             public const string ENJIN_ID = "enjin_id";
             public const string ENJIN_CODE = "enjin_code";
+            public const string ENJIN_MFT = "enjin_mft";
         }
 
         public class PlayerPropertyOptions
@@ -1045,6 +1047,25 @@ namespace Enigma.CoreSystems
         static public GameObject GetLocalPlayerCharacter()
         {
             return _localPlayerCharacter;
+        }
+
+        public void SendEnjinCollectedTransaction()
+        {
+            var val = new System.Collections.Hashtable();
+            val.Add("game", GameNetwork.TRANSACTION_GAME_NAME);
+            NetworkManager.Transaction(Transactions.ENJIN_ITEM_COLLECTED_TRANSACTION, val, onEnjinItemCollectedTransaction);
+        }
+
+        private void onEnjinItemCollectedTransaction(JSONNode response)
+        {
+            JSONNode response_hash = response[0];
+            Debug.Log("onEnjinItemCollectedTransaction response: " + response_hash.ToString());
+            string status = response_hash["status"].ToString().Trim('"');
+
+            if (status == "SUCCESS")
+                Debug.Log("Enjin Item Collected Transaction successful.");
+            else
+                Debug.LogError("Enjin Item Collected Transaction failed.");
         }
 
         //PUN event callbacks

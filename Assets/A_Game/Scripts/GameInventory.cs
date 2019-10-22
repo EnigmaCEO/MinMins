@@ -95,10 +95,14 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
     public void SetSinglePlayerLevel(int level)
     {
-        if (level > _maxArenaLevel)
-            level = _maxArenaLevel;
+        int currentLevel = GetSinglePlayerLevel();
+        if (level > currentLevel)
+        {
+            if (level > _maxArenaLevel)
+                level = _maxArenaLevel;
 
-        InventoryManager.Instance.UpdateItem(GroupNames.STATS, ItemKeys.SINGLE_PLAYER_LEVEL, level, true);
+            InventoryManager.Instance.UpdateItem(GroupNames.STATS, ItemKeys.SINGLE_PLAYER_LEVEL, level, true);
+        }
     }
 
     public int GetSinglePlayerLevel()

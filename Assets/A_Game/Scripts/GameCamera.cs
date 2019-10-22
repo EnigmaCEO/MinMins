@@ -17,6 +17,8 @@ public class GameCamera : MonoBehaviour
     public delegate void OnMovementCompletedDelegate(string teamName);
     static public OnMovementCompletedDelegate OnMovementCompletedCallback;
 
+    public bool IsAtOppponentSide { get; private set; }
+
     public void SetCameraForGuest()
     {
         _positionSideTeam = GameNetwork.TeamNames.GUEST;
@@ -31,9 +33,15 @@ public class GameCamera : MonoBehaviour
         string oppositeTeam = GameNetwork.GetOppositeTeamName(teamInTurn);
 
         if ((unitType == MinMinUnit.Types.Bomber) || (unitType == MinMinUnit.Types.Destroyer) || (unitType == MinMinUnit.Types.Scout))
+        {
             moveToSide(oppositeTeam);
+            IsAtOppponentSide = true;
+        }
         else if (unitType != MinMinUnit.Types.None)
+        {
             moveToSide(teamInTurn);
+            IsAtOppponentSide = false;
+        }
     }
 
     private void moveToSide(string sideToMoveTeam)
