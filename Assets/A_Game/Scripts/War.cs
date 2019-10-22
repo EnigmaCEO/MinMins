@@ -1278,8 +1278,8 @@ public class War : NetworkEntity
             Team2GridItem.View.sprite = Resources.Load<Sprite>("Images/Units/" + unitName);
             Team2GridItem.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/unit_frame_t" + unitTier);
 
-            Team2ItemTransform.Find("level/txt_level").GetComponent<Text>().text = "?";
-
+            //Team2ItemTransform.Find("level/txt_level").GetComponent<Text>().text = "?";
+            Team2ItemTransform.Find("level/txt_level").GetComponent<Text>().text = GameNetwork.GetAnyPlayerUnitProperty(GameNetwork.UnitPlayerProperties.LEVEL, unitName, GameNetwork.TeamNames.GUEST, GameNetwork.Instance.GuestPlayerId);
         }
     }
 
