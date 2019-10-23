@@ -9,7 +9,7 @@ public class GameStore : EnigmaScene
 {
     [SerializeField] private int _maxBoxTierNumber = 3;
 
-    [SerializeField] private List<string> _confirmPopUpPackNames = new List<string>() { "STARTER BOX", "PREMIUM BOX", "MASTER BOX" };  
+    [SerializeField] private List<string> _confirmPopUpPackNames = new List<string>() { "STARTER BOX", "PREMIUM BOX", "MASTER BOX" };
     [SerializeField] private List<string> _confirmPopUpPackDescriptions = new List<string>() { "No guarantees.", "Guarantees a Silver Unit.", "Guarantees a Gold Unit." };
 
     [SerializeField] private List<Image> _confirmPopUpPackImages;
@@ -74,8 +74,8 @@ public class GameStore : EnigmaScene
 
     private void handleCurrencyBuyResult(string id, bool result)
     {
-        if(GameHacks.Instance.BuyResultFalse)
-            result = false; 
+        if (GameHacks.Instance.BuyResultFalse)
+            result = false;
 
         if (result)
         {
@@ -130,6 +130,8 @@ public class GameStore : EnigmaScene
 
     public void onEnjinPopUpDismissButtonDown()
     {
+        GameInventory.Instance.AddMissingEnjinUnits();
+
         _enjinmftPopUp.SetActive(false);
     }
 
@@ -142,19 +144,34 @@ public class GameStore : EnigmaScene
 
     public void openEnjinPopUp()
     {
-        GameInventory.Instance.AddMissingEnjinUnits();
+        setupEnjinLegendsDisplay(_enjinmftPopUp);
 
         _enjinmftPopUp.SetActive(true);
     }
 
     public void openMinMinPopUp()
     {
+        setupEnjinLegendsDisplay(_minminPopUp);
+
         _minminPopUp.SetActive(true);
     }
 
     public void OnBackButtonDown()
     {
         SceneManager.LoadScene(GameConstants.Scenes.MAIN);
+    }
+
+    private void setupEnjinLegendsDisplay(GameObject popUp)
+    {
+        Transform enjinContent = popUp.transform.Find("EnjinGrid/Viewport/Content");
+        GameInventory gameInventory = GameInventory.Instance;
+
+        foreach (Transform enjinTransform in enjinContent)
+        {
+            string unitName = enjinTransform.name;
+            if (gameInventory.HasUnit(unitName))
+                enjinTransform.gameObject.SetActive(false);
+        }
     }
 
     private void handleFreeLootBoxGifts()
