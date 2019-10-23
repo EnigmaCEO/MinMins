@@ -221,16 +221,18 @@ public class EnjinLogin : MonoBehaviour
     {
         print("Complete login:");
 
+        GameNetwork gameNetwork = GameNetwork.Instance;
+
         GameStats.Instance.Rating = response_hash[NetworkManager.TransactionKeys.USER_DATA][GameNetwork.TransactionKeys.RATING].AsInt;
         string userName = response_hash[NetworkManager.TransactionKeys.USER_DATA][GameNetwork.TransactionKeys.USERNAME];
         NetworkManager.SetLocalPlayerNickName(userName);
 
-        string enjinId = response_hash[NetworkManager.TransactionKeys.USER_DATA][NetworkManager.EnjinTransKeys.ENJIN_ID].ToString().Trim('"');
+        string enjinId = response_hash[NetworkManager.TransactionKeys.USER_DATA][NetworkManager.TransactionKeys.ENJIN_ID].ToString().Trim('"');
         EnigmaHacks enigmaHacks = EnigmaHacks.Instance;
 
         if ((enjinId != "null") || enigmaHacks.EnjinIdNotNull)
         {
-            string enjinCode = response_hash[NetworkManager.TransactionKeys.USER_DATA][NetworkManager.EnjinTransKeys.ENJIN_CODE].ToString().Trim('"');
+            string enjinCode = response_hash[NetworkManager.TransactionKeys.USER_DATA][NetworkManager.TransactionKeys.ENJIN_CODE].ToString().Trim('"');
 
             if ((enjinCode != "null") || enigmaHacks.EnjinCodeNotNull)
             {
@@ -239,15 +241,30 @@ public class EnjinLogin : MonoBehaviour
             else
             {
                 print("User has already linked with Enjin");
-                GameStats.Instance.IsEnjinLinked = true;
+                gameNetwork.IsEnjinLinked = true;
             }
+
+            gameNetwork.HasEnjinMft = checkTokenAvailable(response_hash, NetworkManager.TransactionKeys.ENJIN_MFT);
+
+            gameNetwork.HasEnjinBryana = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.ENJIN_BRYANA);
+            gameNetwork.HasEnjinMaxim = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.ENJIN_MAXIM);
+            gameNetwork.HasEnjinSimon = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.ENJIN_SIMON);
+            gameNetwork.HasEnjinTassio = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.ENJIN_TASSIO);
+            gameNetwork.HasEnjinWitek = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.ENJIN_WITEK);
         }
         else
             print("User is not using Crypto.");
 
-        GameStats.Instance.IsEnjinLinked = enigmaHacks.EnjinLinked;
+        if(enigmaHacks.EnjinLinked)
+            GameNetwork.Instance.IsEnjinLinked = true;
 
         GameObject.Find("/Main").GetComponent<Main>().Init();
+    }
+
+    private bool checkTokenAvailable(SimpleJSON.JSONNode response_hash, string key)
+    {
+        string tokenAvailable = response_hash[NetworkManager.TransactionKeys.USER_DATA][key];
+        return (tokenAvailable == "1");
     }
 
     private void onLogin(SimpleJSON.JSONNode response)

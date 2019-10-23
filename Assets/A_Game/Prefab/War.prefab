@@ -55,6 +55,7 @@ MonoBehaviour:
   _teamGridContent: {fileID: 0}
   _readyCheckDelay: 2
   _team1_CloudsLocalPosX: 0.07
+  _rightSideOffsetExtra: 0.3
   _errorText: {fileID: 0}
   _matchResultsPopUp: {fileID: 0}
   _timeLeftText: {fileID: 0}

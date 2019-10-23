@@ -16,10 +16,6 @@ public class GameStats : SingletonMonobehaviour<GameStats>
     public int SelectedLevelNumber = 0;
 
     public bool UsesAiForPvp = false;
-    public bool IsEnjinLinked = false;
-    public bool HasEnjinWeapon = false;
-    public bool HasEnjinShield = false;
-    public bool HasEnjinEnigmaToken = false;
 
     public List<Vector3> PreparationPositions = new List<Vector3>();
     public List<string> TeamUnits = new List<string>();

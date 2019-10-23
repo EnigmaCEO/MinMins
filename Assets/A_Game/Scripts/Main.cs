@@ -123,7 +123,7 @@ public class Main : EnigmaScene
             string enjinCode = response_hash["user_data"]["enjin_code"].ToString().Trim('"');
             if (enjinCode == "null")
             {
-                GameStats.Instance.IsEnjinLinked = true;
+                GameNetwork.Instance.IsEnjinLinked = true;
                 //enjinSupport.gameObject.SetActive(true);
 
                 updateEnjinItems(response_hash);
@@ -205,6 +205,7 @@ public class Main : EnigmaScene
     public void Logout()
     {
         NetworkManager.Logout();
+        GameNetwork.Instance.ResetLoginValues();
         Init();
     }
 

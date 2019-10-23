@@ -135,11 +135,15 @@ public class GameStore : EnigmaScene
 
     public void onMinMinPopUpDismissButtonDown()
     {
+        GameInventory.Instance.AddMissingEnjinUnits();
+
         _minminPopUp.SetActive(false);
     }
 
     public void openEnjinPopUp()
     {
+        GameInventory.Instance.AddMissingEnjinUnits();
+
         _enjinmftPopUp.SetActive(true);
     }
 
