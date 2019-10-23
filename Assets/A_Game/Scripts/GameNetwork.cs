@@ -29,6 +29,12 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         public const string LOSER_UNITS_KILLED = "loser_units_killed";
 
         public const string MATCH_DURATION = "match_duration";
+
+        public const string ENJIN_MAXIM = "enjin_maxim";
+        public const string ENJIN_WITEK = "enjin_witek";
+        public const string ENJIN_BRYANA = "enjin_bryana";
+        public const string ENJIN_TASSIO = "enjin_tassio";
+        public const string ENJIN_SIMON = "enjin_simon";
     }
 
     public class ServerResponseMessages
@@ -158,6 +164,12 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     public bool HasEnjinShield = false;
     public bool HasEnjinEnigmaToken = false;
     public bool HasEnjinMft = false;
+
+    public bool HasEnjinMaxim = false;
+    public bool HasEnjinBryana = false;
+    public bool HasEnjinWitek = false;
+    public bool HasEnjinTassio = false;
+    public bool HasEnjinSimon = false;
     [Header("=================================")]
 
     private Hashtable _matchResultshashTable = new Hashtable();
@@ -223,6 +235,21 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
         string[] unitNames = unitsString.Split(NetworkManager.Separators.VALUES);
         return unitNames;
+    }
+
+    public void ResetLoginValues()
+    {
+        IsEnjinLinked = false;
+        HasEnjinWeapon = false;
+        HasEnjinShield = false;
+        HasEnjinEnigmaToken = false;
+        HasEnjinMft = false;
+
+        HasEnjinMaxim = false;
+        HasEnjinBryana = false;
+        HasEnjinWitek = false;
+        HasEnjinTassio = false;
+        HasEnjinSimon = false;
     }
 
     public void OnRoomCustomPropertiesChanged(Hashtable updatedProperties)

@@ -54,10 +54,7 @@ namespace Enigma.CoreSystems
             public const string USER_DATA = "user_data";
             public const string COINS = "coins";
             public const string ENJIN = "enjin";
-        }
 
-        public class EnjinTransResponseKeys
-        {
             public const string ENJIN_ID = "enjin_id";
             public const string ENJIN_CODE = "enjin_code";
             public const string ENJIN_MFT = "enjin_mft";

@@ -205,6 +205,7 @@ public class Main : EnigmaScene
     public void Logout()
     {
         NetworkManager.Logout();
+        GameNetwork.Instance.ResetLoginValues();
         Init();
     }
 

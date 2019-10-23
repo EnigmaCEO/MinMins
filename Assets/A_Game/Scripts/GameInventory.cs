@@ -47,9 +47,14 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     [SerializeField] private int _tierSilver_unitsAmount = 30;
     [SerializeField] private int _tierGold_unitsAmount = 10;
 
+    [SerializeField] private int _enjin_firstUnitNumber = 100;
+    [SerializeField] private int _enjin_lastUnitNumer = 104;
+
     [SerializeField] private float _tierBronze_GroupRarity = 0.5f;
     [SerializeField] private float _tierSilver_GroupRarity = 0.3f;
     [SerializeField] private float _tierGold_GroupRarity = 0.2f;
+
+    [SerializeField] private int _enjinUnitStartingLevel = 3;
 
     private Hashtable _saveHashTable = new Hashtable();
 
@@ -223,9 +228,17 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         return unitPicks;
     }
 
-    public void AddUnit(string unitName, int exp)
+    public void AddUnit(string unitName, int exp, bool save = true)
     {
         InventoryManager.Instance.AddItem(GroupNames.UNITS_EXP, unitName, exp);
+
+        if (save)
+            SaveUnits();
+    }
+
+    public bool HasUnit(string unitName)
+    {
+        return InventoryManager.Instance.HasItem(GroupNames.UNITS_EXP, unitName, false);
     }
 
     public void HandleUnitDeath(string unitName)
@@ -313,6 +326,38 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         return expData;
     }
 
+    public void AddMissingEnjinUnits()
+    {
+        int enjinUnitStartingExperience = _experienceNeededPerUnitLevel[_enjinUnitStartingLevel - 1];
+
+        for (int i = _enjin_firstUnitNumber; i <= _enjin_lastUnitNumer; i++)
+        {
+            string unitName = i.ToString();
+            if (!HasUnit(unitName))
+                AddUnit(unitName, enjinUnitStartingExperience);
+        }
+
+        SaveUnits();
+    }
+
+    public bool HasAllEnjinUnits()
+    {
+        bool hasAllEnjinUnits = true;
+
+        for (int i = _enjin_firstUnitNumber; i <= _enjin_lastUnitNumer; i++)
+        {
+            string unitName = i.ToString();
+
+            if (!HasUnit(unitName))
+            {
+                hasAllEnjinUnits = false;
+                break;
+            }
+        }
+        return hasAllEnjinUnits;
+    }
+
+
     private int getMaxUnitExperience()
     {
         int maxLevelIndexToCheck = _experienceNeededPerUnitLevel.Count - 2;
@@ -333,6 +378,14 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         int firstTierGold_number = _lastTierSilver_unitNumber + 1;
         for (int unitNumber = firstTierGold_number; unitNumber <= _lastTierGold_unitNumber; unitNumber++)
             _tierGold_units.Add(unitNumber.ToString());
+
+        addEnjinUnitsToTierGoldList();
+    }
+
+    private void addEnjinUnitsToTierGoldList()
+    {
+        for(int i = _enjin_firstUnitNumber; i <=  _enjin_lastUnitNumer; i++)
+            _tierGold_units.Add(i.ToString());
     }
 
     private void createRarity()
