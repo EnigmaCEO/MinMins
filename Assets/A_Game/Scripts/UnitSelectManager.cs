@@ -41,7 +41,7 @@ public class UnitSelectManager : EnigmaScene
     void Start()
     {
         SoundManager.FadeCurrentSong(1f, () => {
-            int arena = Random.Range(1, 3);
+            int arena = Random.Range(1, 4);
             SoundManager.Stop();
             SoundManager.Play("arena" + arena, SoundManager.AudioTypes.Music, "", true);
         });

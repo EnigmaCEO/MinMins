@@ -11,6 +11,13 @@ public class LevelGridItem : MonoBehaviour
     [SerializeField] private Text _label;
     //[SerializeField] private Text _labelShadow;
 
+    private void Start()
+    {
+        int level = GameInventory.Instance.GetSinglePlayerLevel();
+        Debug.Log("Status: " + level);
+    }
+
+
     public void SetLabel(string text)
     {
         _label.text = text;
@@ -19,7 +26,6 @@ public class LevelGridItem : MonoBehaviour
 
     public void OnFightButtonDown()
     {
-        if(name == "1")
-            SceneManager.LoadScene(GameConstants.Scenes.UNIT_SELECT);
+        
     }
 }

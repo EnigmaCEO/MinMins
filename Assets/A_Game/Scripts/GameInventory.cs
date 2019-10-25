@@ -21,11 +21,12 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     public class ItemKeys
     {
         public const string SINGLE_PLAYER_LEVEL = "SinglePlayerLevel";
+        public const string ENJIN_ATTEMPTS = "EnjinAttempts";
     }
 
     [SerializeField] List<int> _experienceNeededPerUnitLevel = new List<int>() { 0, 10, 30, 70, 150, 310 };  //Rule: Doubles each level
 
-    [SerializeField] private int _maxArenaLevel = 6;
+    [SerializeField] private int _maxArenaLevel = 30;
 
     [SerializeField] private int _unitsNecessaryToBattle = 5;
 
@@ -108,6 +109,8 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
             InventoryManager.Instance.UpdateItem(GroupNames.STATS, ItemKeys.SINGLE_PLAYER_LEVEL, level, true);
         }
+
+        saveSinglePlayerLevelNumber();
     }
 
     public int GetSinglePlayerLevel()
@@ -115,8 +118,15 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         return InventoryManager.Instance.GetItem<int>(GroupNames.STATS, ItemKeys.SINGLE_PLAYER_LEVEL);
     }
 
+    public int GetEnjinAttempts()
+    {
+        return InventoryManager.Instance.GetItem<int>(GroupNames.STATS, ItemKeys.ENJIN_ATTEMPTS);
+    }
+
     public void AddExpToUnit(string unitName, int expToAdd)
     {
+        if (GameNetwork.Instance.HasEnjinMinMinsToken) expToAdd *= 2; // Min Min Token perk
+
         int unitExp = InventoryManager.Instance.GetItem<int>(GroupNames.UNITS_EXP, unitName);
         unitExp += expToAdd;
 
@@ -334,7 +344,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         {
             string unitName = i.ToString();
             if (!HasUnit(unitName))
-                AddUnit(unitName, enjinUnitStartingExperience);
+                AddUnit(unitName, 0);
         }
 
         SaveUnits();
@@ -443,8 +453,9 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
         //Set default values ========================================================================
         inventoryManager.AddItem(GroupNames.STATS, ItemKeys.SINGLE_PLAYER_LEVEL, 1);
+        inventoryManager.AddItem(GroupNames.STATS, ItemKeys.ENJIN_ATTEMPTS, 5);
 
-        for(int tier = 1; tier <= _lootBoxTiersAmount; tier++)
+        for (int tier = 1; tier <= _lootBoxTiersAmount; tier++)
             inventoryManager.AddItem(GroupNames.LOOT_BOXES, tier.ToString(), 0);
         //===========================================================================================
 
@@ -477,8 +488,8 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
             }
             else if (groupName == GroupNames.STATS)
             {
-                int singlePlayerLevel = int.Parse(terms[1]);
-                inventoryManager.UpdateItem(GroupNames.STATS, ItemKeys.SINGLE_PLAYER_LEVEL, singlePlayerLevel);
+                string key = terms[1];
+                inventoryManager.UpdateItem(GroupNames.STATS, key, int.Parse((string)entry.Value));
             }
         }
 
@@ -500,13 +511,24 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
     private void saveSinglePlayerLevelNumber()
     {
-        int level = InventoryManager.Instance.GetItem<int>(GroupNames.STATS, ItemKeys.SINGLE_PLAYER_LEVEL);
+        //int level = InventoryManager.Instance.GetItem<int>(GroupNames.STATS, ItemKeys.SINGLE_PLAYER_LEVEL);
         string hashKey = GroupNames.STATS + _parseSeparator + ItemKeys.SINGLE_PLAYER_LEVEL;
 
         if (_saveHashTable.ContainsKey(hashKey))
             _saveHashTable.Remove(hashKey);
 
         _saveHashTable.Add(hashKey, GetSinglePlayerLevel());
+        saveHashTableToFile();
+    }
+
+    private void saveEnjinAttempts(int number)
+    {
+        string hashKey = GroupNames.STATS + _parseSeparator + ItemKeys.ENJIN_ATTEMPTS;
+
+        if (_saveHashTable.ContainsKey(hashKey))
+            _saveHashTable.Remove(hashKey);
+
+        _saveHashTable.Add(hashKey, number);
         saveHashTableToFile();
     }
 

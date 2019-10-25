@@ -39,7 +39,7 @@ public class GameStore : EnigmaScene
     void Start()
     {
         SoundManager.FadeCurrentSong(1f, () => {
-            int shop = Random.Range(1, 2);
+            int shop = Random.Range(1, 3);
             SoundManager.Stop();
             SoundManager.Play("shop" + shop, SoundManager.AudioTypes.Music, "", true);
         });
@@ -58,10 +58,19 @@ public class GameStore : EnigmaScene
 
         refreshLootBoxesGrid();
 
-        NetworkManager.Transaction(NetworkManager.Transactions.GIFT_PROGRESS, new Hashtable(), onGiftProgress);
+        if (NetworkManager.LoggedIn)
+        {
+            NetworkManager.Transaction(NetworkManager.Transactions.GIFT_PROGRESS, new Hashtable(), onGiftProgress);
+            handleFreeLootBoxGifts();
+        } else
+        {
+            GameObject.Find("gift_panel").gameObject.SetActive(false);
+        }
 
-
-        handleFreeLootBoxGifts();
+        if(!GameNetwork.Instance.IsEnjinLinked)
+        {
+            GameObject.Find("enjin_panel").gameObject.SetActive(false);
+        }
     }
 
     private void OnDestroy()
@@ -156,6 +165,11 @@ public class GameStore : EnigmaScene
         _minminPopUp.SetActive(true);
     }
 
+    public void closePopup(GameObject obj)
+    {
+        obj.SetActive(false);
+    }
+
     public void OnBackButtonDown()
     {
         SceneManager.LoadScene(GameConstants.Scenes.MAIN);
@@ -170,7 +184,10 @@ public class GameStore : EnigmaScene
         {
             string unitName = enjinTransform.name;
             if (gameInventory.HasUnit(unitName))
+            {
+                Debug.Log(unitName);
                 enjinTransform.gameObject.SetActive(false);
+            }
         }
     }
 

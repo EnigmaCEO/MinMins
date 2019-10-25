@@ -164,6 +164,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     public bool HasEnjinShield = false;
     public bool HasEnjinEnigmaToken = false;
     public bool HasEnjinMft = false;
+    public bool HasEnjinMinMinsToken = false;
 
     public bool HasEnjinMaxim = false;
     public bool HasEnjinBryana = false;

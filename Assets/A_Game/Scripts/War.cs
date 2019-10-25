@@ -1069,6 +1069,11 @@ public class War : NetworkEntity
 
     private void instantiateRewardChests(string gridName)
     {
+        if (GameStats.Instance.Mode == GameStats.Modes.SinglePlayer && GameStats.Instance.SelectedLevelNumber < GameInventory.Instance.GetSinglePlayerLevel())
+        {
+            return; // no chest for replaying levels
+        }
+
         Transform rewardBoxesContainer = _battleField.Find(gridName + "/RewardBoxesContainer");
 
         for (int i = 0; i < _fieldRewardChestsAmount; i++)
@@ -1103,8 +1108,49 @@ public class War : NetworkEntity
 
     private void setUpSinglePlayerAiTeamUnits()
     {
-        //print("War::setUpSinglePlayerAiTeamUnits");
-        setUpPvpAiTeamUnits();
+        print("War::setUpSinglePlayerAiTeamUnits");
+        int level = GameStats.Instance.SelectedLevelNumber;
+        string unitsString = "";
+        int exp = 0;
+
+        switch (level)
+        {
+            case 1:
+                unitsString = "1|2|3|4|5";
+                break;
+            case 2:
+                unitsString = "6|7|8|9|10";
+                break;
+            case 3:
+                unitsString = "11|12|13|14|15";
+                break;
+            case 4:
+                unitsString = "16|17|18|19|20";
+                break;
+            case 5:
+                unitsString = "21|22|23|24|25";
+                break;
+            case 6:
+                unitsString = "26|27|28|29|30";
+                break;
+            case 7:
+                unitsString = "31|32|33|34|35";
+                break;
+            case 8:
+                unitsString = "36|37|38|39|40";
+                break;
+        }
+
+        for (int i = 0; i < 5; i++)
+        {
+            GameNetwork.SetLocalPlayerUnitProperty(GameNetwork.UnitPlayerProperties.EXPERIENCE, unitsString.Split("|"[0])[i], exp.ToString(), GameNetwork.TeamNames.GUEST);
+
+            Vector2 pos = getRandomBattlefieldPosition();
+            string posString = pos.x.ToString() + NetworkManager.Separators.VALUES + pos.y.ToString();
+            GameNetwork.SetLocalPlayerUnitProperty(GameNetwork.UnitPlayerProperties.POSITION, unitsString.Split("|"[0])[i], posString, GameNetwork.TeamNames.GUEST);
+        }
+
+        NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.TEAM_UNITS, unitsString, GameNetwork.TeamNames.GUEST);
     }
 
     private void setUpPvpAiTeamUnits()
@@ -1592,9 +1638,15 @@ public class War : NetworkEntity
                 int unitHealth = GameNetwork.GetUnitRoomPropertyAsInt(GameNetwork.UnitRoomProperties.HEALTH, targetTeamName, targetUnitName);
                 int unitMaxHealth = GameNetwork.GetUnitRoomPropertyAsInt(GameNetwork.UnitRoomProperties.MAX_HEALTH, targetTeamName, targetUnitName);
 
+                Dictionary<string, MinMinUnit> teamUnits = GetTeamUnitsDictionary(targetTeamName);
+                MinMinUnit unit = teamUnits[targetUnitName];
+
                 int healing = Mathf.RoundToInt((float)unitMaxHealth * (highestStrenght / 25));
                 Debug.LogWarning("War::processUnitsHealing -> highestStrenght: " + highestStrenght + " unitMaxHealth: " + unitMaxHealth + " heal: " + healing);
 
+                ScoreFlash.Instance.PushWorld(unit.gameObject.transform.localPosition, unit.gameObject.transform.position, healing, Color.green);
+
+            
                 unitHealth += healing;  
                 if (unitHealth > unitMaxHealth)
                     unitHealth = unitMaxHealth;
@@ -1670,10 +1722,20 @@ public class War : NetworkEntity
             int minMinHealth = GameNetwork.GetUnitRoomPropertyAsInt(GameNetwork.UnitRoomProperties.HEALTH, _localPlayerTeam, unitName);
             if (minMinHealth > 0)
             {
-                if (isVictory)
-                    expEarned = 10;
+                if (GameStats.Instance.Mode == GameStats.Modes.SinglePlayer)
+                {
+                    if (isVictory)
+                        expEarned = GameStats.Instance.SelectedLevelNumber*2;
+                    else
+                        expEarned = 0;
+                }
                 else
-                    expEarned = 5;
+                {
+                    if (isVictory)
+                        expEarned = 10;
+                    else
+                        expEarned = 5;
+                }
 
                 gameInventory.AddExpToUnit(unitName, expEarned);
             }
@@ -1688,27 +1750,33 @@ public class War : NetworkEntity
                 GameNetwork gameNetwork = GameNetwork.Instance;
                 if (NetworkManager.LoggedIn && gameNetwork.IsEnjinLinked)
                 {
-                    int chance = _baseEnjinItemChance;
+                    int chance = 5;
 
-                    if (gameNetwork.HasEnjinMft)
-                        chance = _mftEnjinItemChance;
+                    if (gameNetwork.HasEnjinMinMinsToken)
+                        chance = 10;
 
-                    int randomNumber = UnityEngine.Random.Range(1, 101);
-                    if (randomNumber <= chance)
+                    if (UnityEngine.Random.Range(1, 101) <= chance)
+                    {
+                        NetworkManager.Instance.SendEnjinCollectedTransaction();
                         _matchLocalData.EnjinCollected = true;
+                    }
+                        
                 }
 
                 if (gameHacks.ForceEnjinRewardOnChest)
                     _matchLocalData.EnjinCollected = true;
-
-                if(_matchLocalData.EnjinCollected)
-                    NetworkManager.Instance.SendEnjinCollectedTransaction();
-                else if (!_matchLocalData.EnjinCollected)
+   
+                if (!_matchLocalData.EnjinCollected)
                     rewardWithTierBox(GameInventory.Tiers.BRONZE);
             }
 
             if (GameStats.Instance.Mode == GameStats.Modes.SinglePlayer)
-                gameInventory.SetSinglePlayerLevel(gameInventory.GetSinglePlayerLevel() + 1);
+            {
+                if(gameInventory.GetSinglePlayerLevel() == GameStats.Instance.SelectedLevelNumber)
+                    gameInventory.SetSinglePlayerLevel(gameInventory.GetSinglePlayerLevel() + 1);
+                else
+                    gameInventory.SetSinglePlayerLevel(gameInventory.GetSinglePlayerLevel());
+            }
         }
 
         if (GameStats.Instance.Mode == GameStats.Modes.Pvp)

@@ -44,7 +44,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PersistBetweenScenes: 0
-  _maxArenaLevel: 6
+  _experienceNeededPerUnitLevel: 000000000a0000001e000000460000009600000036010000
+  _maxArenaLevel: 30
   _unitsNecessaryToBattle: 5
   _unitsAmount: 80
   _initialBronzeLootBoxes: 2
@@ -59,6 +60,9 @@ MonoBehaviour:
   _tierBronze_unitsAmount: 40
   _tierSilver_unitsAmount: 30
   _tierGold_unitsAmount: 10
+  _enjin_firstUnitNumber: 100
+  _enjin_lastUnitNumer: 104
   _tierBronze_GroupRarity: 0.7
   _tierSilver_GroupRarity: 0.2
   _tierGold_GroupRarity: 0.1
+  _enjinUnitStartingLevel: 3

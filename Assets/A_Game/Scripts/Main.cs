@@ -1,6 +1,7 @@
 ﻿using Enigma.CoreSystems;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class Main : EnigmaScene
 {
@@ -12,11 +13,13 @@ public class Main : EnigmaScene
     [SerializeField] GameObject _loginButton;
     [SerializeField] GameObject _logoutButton;
     [SerializeField] GameObject _kinPopUp;
+    [SerializeField] GameObject _enjinIcon;
+    [SerializeField] Text _pvprating;
 
     void Start()
     {
-        NetworkManager.Disconnect();
         _loginModal.SetActive(false);
+        _enjinIcon.SetActive(false);
         Init();
     }
 
@@ -33,20 +36,35 @@ public class Main : EnigmaScene
 
         _loginModal.GetComponent<EnjinLogin>().Initialize();
 
-        _enjinWindow.SetActive(false);
+        if (!NetworkManager.LoggedIn && _loginModal.GetComponent<EnjinLogin>().loginUsername.text != "" && _loginModal.GetComponent<EnjinLogin>().loginPassword.text != "")
+        {
+            _loginModal.GetComponent<EnjinLogin>().loginSubmit();
+        }
 
+        _enjinWindow.SetActive(false);
+        _pvprating.text = "";
 
         string kin = PlayerPrefs.GetString("Kin", "0");
 
         if (kin == "0")
         {
-            _kinPopUp.SetActive(true);
+            _kinPopUp.SetActive(false);
             PlayerPrefs.SetString("Kin", "1");
         }
         else
             _kinPopUp.SetActive(false);
 
-        _kinPopUp.SetActive(true);
+        //_kinPopUp.SetActive(true);
+
+        if(GameNetwork.Instance.IsEnjinLinked)
+        {
+            _enjinIcon.SetActive(true);
+        }
+
+        if(loggedIn)
+        {
+            _pvprating.text = "PvP Rating: " + GameStats.Instance.Rating;
+        }
     }
 
     public void OnSinglePlayerButtonDown()
@@ -206,7 +224,12 @@ public class Main : EnigmaScene
     {
         NetworkManager.Logout();
         GameNetwork.Instance.ResetLoginValues();
-        Init();
+        bool loggedIn = NetworkManager.LoggedIn;
+
+        _loginButton.gameObject.SetActive(!loggedIn);
+        _logoutButton.gameObject.SetActive(loggedIn);
+        _enjinIcon.SetActive(true);
+        _pvprating.text = "";
     }
 
     public void closeKinDialog()
