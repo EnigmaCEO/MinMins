@@ -101,6 +101,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
     public void SetSinglePlayerLevel(int level)
     {
+        Debug.LogWarning("GameInventory::SetSinglePlayerLevel -> level: " + level);
         int currentLevel = GetSinglePlayerLevel();
         if (level > currentLevel)
         {
@@ -108,9 +109,8 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
                 level = _maxArenaLevel;
 
             InventoryManager.Instance.UpdateItem(GroupNames.STATS, ItemKeys.SINGLE_PLAYER_LEVEL, level, true);
+            saveSinglePlayerLevelNumber();
         }
-
-        saveSinglePlayerLevelNumber();
     }
 
     public int GetSinglePlayerLevel()
@@ -270,13 +270,29 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
     public void SaveUnits()
     {
-        _saveHashTable.Clear();
+        removeGroupFromSaveHashTable(GroupNames.UNITS_EXP);
 
         InventoryManager inventoryManager = InventoryManager.Instance;
         foreach (string unitName in inventoryManager.GetGroupKeys(GroupNames.UNITS_EXP))
             saveUnit(unitName, false);
 
         saveHashTableToFile();
+    }
+
+    private void removeGroupFromSaveHashTable(string groupName)
+    {
+        List<object> keysToRemove = new List<object>();
+
+        foreach (DictionaryEntry entry in _saveHashTable)
+        {
+            string[] terms = entry.Key.ToString().Split(_parseSeparator);
+
+            if (groupName == terms[0])
+                keysToRemove.Add(entry.Key);
+        }
+
+        foreach(object key in keysToRemove)
+            _saveHashTable.Remove(key);
     }
 
     public void SaveLootBoxes()
@@ -445,6 +461,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
     private void loadData()
     {
+        Debug.LogWarning("GameInventory::loadData");
         _saveHashTable.Clear();
         _saveHashTable = FileManager.Instance.LoadData();
 
@@ -489,7 +506,15 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
             else if (groupName == GroupNames.STATS)
             {
                 string key = terms[1];
-                inventoryManager.UpdateItem(GroupNames.STATS, key, int.Parse((string)entry.Value));
+
+                if ((key == GameInventory.ItemKeys.SINGLE_PLAYER_LEVEL) || (key == GameInventory.ItemKeys.ENJIN_ATTEMPTS))
+                {             
+                    int value = int.Parse((string)entry.Value);
+                    Debug.LogWarning("GameInventory::loadData -> key loaded: " + key + " and value: " + value.ToString());
+                    inventoryManager.UpdateItem(GroupNames.STATS, key, value);
+                }
+                else
+                    Debug.LogError("GameInventory::loadData -> Unknow stats key loaded: " + key);
             }
         }
 
@@ -511,13 +536,15 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
     private void saveSinglePlayerLevelNumber()
     {
-        //int level = InventoryManager.Instance.GetItem<int>(GroupNames.STATS, ItemKeys.SINGLE_PLAYER_LEVEL);
+        int level = InventoryManager.Instance.GetItem<int>(GroupNames.STATS, ItemKeys.SINGLE_PLAYER_LEVEL);
         string hashKey = GroupNames.STATS + _parseSeparator + ItemKeys.SINGLE_PLAYER_LEVEL;
 
         if (_saveHashTable.ContainsKey(hashKey))
             _saveHashTable.Remove(hashKey);
 
-        _saveHashTable.Add(hashKey, GetSinglePlayerLevel());
+        Debug.LogWarning("GameInventory::saveSinglePlayerLevelNumber: " + level);
+
+        _saveHashTable.Add(hashKey, level);
         saveHashTableToFile();
     }
 
@@ -550,6 +577,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
     private void saveHashTableToFile()
     {
+        Debug.LogWarning("saveHashTableToFile -> _saveHashTable: " + _saveHashTable.ToStringFull());
         FileManager.Instance.SaveData(_saveHashTable);
     }
 

@@ -41,7 +41,10 @@ public class FileManager : MonoBehaviour
 
         //Set default values to 0 if security code wasn't matched
         if (fileSec != PlayerPrefs.GetString(_secKey, ""))
-            return data;  
+        {
+            Debug.LogWarning("LoadData::Security Breach.");
+            return data;
+        }
         else
         {
             string[] entriesString = dataString.Split(_entrySeparator);

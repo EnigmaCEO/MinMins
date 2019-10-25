@@ -246,7 +246,7 @@ public class EnjinLogin : MonoBehaviour
             }
 
             gameNetwork.HasEnjinMft = checkTokenAvailable(response_hash, NetworkManager.TransactionKeys.ENJIN_MFT);
-            gameNetwork.HasEnjinMinMinsToken = checkTokenAvailable(response_hash, NetworkManager.TransactionKeys.MINMINS_TOKEN);
+            //gameNetwork.HasEnjinMinMinsToken = checkTokenAvailable(response_hash, NetworkManager.TransactionKeys.MINMINS_TOKEN);
 
             gameNetwork.HasEnjinBryana = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.ENJIN_BRYANA);
             gameNetwork.HasEnjinMaxim = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.ENJIN_MAXIM);

@@ -1770,13 +1770,16 @@ public class War : NetworkEntity
                     rewardWithTierBox(GameInventory.Tiers.BRONZE);
             }
 
+            //if (GameStats.Instance.Mode == GameStats.Modes.SinglePlayer)
+            //{
+            //    if(gameInventory.GetSinglePlayerLevel() == GameStats.Instance.SelectedLevelNumber)
+            //        gameInventory.SetSinglePlayerLevel(gameInventory.GetSinglePlayerLevel() + 1);
+            //    else
+            //        gameInventory.SetSinglePlayerLevel(gameInventory.GetSinglePlayerLevel());
+            //}
+
             if (GameStats.Instance.Mode == GameStats.Modes.SinglePlayer)
-            {
-                if(gameInventory.GetSinglePlayerLevel() == GameStats.Instance.SelectedLevelNumber)
-                    gameInventory.SetSinglePlayerLevel(gameInventory.GetSinglePlayerLevel() + 1);
-                else
-                    gameInventory.SetSinglePlayerLevel(gameInventory.GetSinglePlayerLevel());
-            }
+                gameInventory.SetSinglePlayerLevel(GameStats.Instance.SelectedLevelNumber + 1);
         }
 
         if (GameStats.Instance.Mode == GameStats.Modes.Pvp)

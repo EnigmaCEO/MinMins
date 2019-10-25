@@ -29,7 +29,7 @@ public class Levels : EnigmaScene
             levelsLenght = GameInventory.Instance.GetSinglePlayerLevel();
         else if (GameStats.Instance.Mode == GameStats.Modes.Pvp)
             levelsLenght = GameNetwork.Instance.GetLocalPlayerPvpLevelNumber();
-        Debug.Log("Inventory: " + levelsLenght);
+        Debug.LogWarning(">Levels::Start -> Levels lenght: " + levelsLenght);
 
         for (int i = 0; i < levelsLenght; i++)
         {
