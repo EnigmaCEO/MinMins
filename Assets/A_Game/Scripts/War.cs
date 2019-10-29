@@ -253,7 +253,7 @@ public class War : NetworkEntity
 
         lineRenderer.enabled = false;
         lineRenderer2.enabled = false;
-        SetupLoadTeams();
+        
     }
 
     private void OnDestroy()
@@ -384,6 +384,8 @@ public class War : NetworkEntity
                     if (gameStats.UsesAiForPvp)
                         setUpPvpAiTeamUnits();
                 }
+
+
             }
             else // Team set is Host
                 instantiateRewardChests(GridNames.TEAM_2);
@@ -393,6 +395,8 @@ public class War : NetworkEntity
             if (isTeamSetHost)
                 instantiateRewardChests(GridNames.TEAM_1);
         }
+
+        SetupLoadTeams();
     }
 
     private void onReadyToFight(string teamName, bool ready)
@@ -411,7 +415,10 @@ public class War : NetworkEntity
 
                     GameStats gameStats = GameStats.Instance;
                     if (GetUsesAi())
+                    {
                         guestReady = true;
+                       
+                    }
                     else
                         guestReady = bool.Parse(NetworkManager.GetAnyPlayerCustomProperty(GameNetwork.PlayerCustomProperties.READY_TO_FIGHT, GameNetwork.TeamNames.GUEST, GameNetwork.GetTeamNetworkPlayerId(GameNetwork.TeamNames.GUEST)));
                 }
@@ -1117,27 +1124,123 @@ public class War : NetworkEntity
         {
             case 1:
                 unitsString = "1|2|3|4|5";
+                exp = 0;
                 break;
             case 2:
                 unitsString = "6|7|8|9|10";
+                exp = 0;
                 break;
             case 3:
                 unitsString = "11|12|13|14|15";
+                exp = 0;
                 break;
             case 4:
                 unitsString = "16|17|18|19|20";
+                exp = 10;
                 break;
             case 5:
                 unitsString = "21|22|23|24|25";
+                exp = 10;
                 break;
             case 6:
                 unitsString = "26|27|28|29|30";
+                exp = 30;
                 break;
             case 7:
                 unitsString = "31|32|33|34|35";
+                exp = 30;
                 break;
             case 8:
                 unitsString = "36|37|38|39|40";
+                exp = 70;
+                break;
+            case 9:
+                unitsString = "41|42|43|44|45";
+                exp = 30;
+                break;
+            case 10:
+                unitsString = "46|47|48|49|50";
+                exp = 30;
+                break;
+            case 11:
+                unitsString = "51|52|53|54|55";
+                exp = 70;
+                break;
+            case 12:
+                unitsString = "56|57|58|59|60";
+                exp = 70;
+                break;
+            case 13:
+                unitsString = "61|62|63|64|65";
+                exp = 150;
+                break;
+            case 14:
+                unitsString = "66|67|68|69|70";
+                exp = 150;
+                break;
+            case 15:
+                unitsString = "71|72|73|74|75";
+                exp = 70;
+                break;
+            case 16:
+                unitsString = "76|77|78|79|80";
+                exp = 70;
+                break;
+            case 17:
+                unitsString = "71|72|78|79|80";
+                exp = 150;
+                break;
+            case 18:
+                unitsString = "76|77|73|74|75";
+                exp = 150;
+                break;
+            case 19:
+                unitsString = "61|62|63|64|65";
+                exp = 310;
+                break;
+            case 20:
+                unitsString = "66|67|68|69|70";
+                exp = 310;
+                break;
+            case 21:
+                unitsString = "71|72|73|74|75";
+                exp = 310;
+                break;
+            case 22:
+                unitsString = "76|77|78|79|80";
+                exp = 310;
+                break;
+            case 23:
+                unitsString = "100|101|78|79|80";
+                exp = 310;
+                break;
+            case 24:
+                unitsString = "100|101|78|74|75";
+                exp = 310;
+                break;
+            case 25:
+                unitsString = "71|72|102|103|80";
+                exp = 310;
+                break;
+            case 26:
+                unitsString = "76|101|78|79|104";
+                exp = 310;
+                break;
+            case 27:
+                unitsString = "100|101|75|76|104";
+                exp = 310;
+                break;
+            case 28:
+                unitsString = "80|79|75|72|101";
+                exp = 310;
+                break;
+            case 29:
+                unitsString = "100|102|104|74|73";
+                exp = 310;
+                break;
+            case 30:
+                unitsString = "100|101|102|103|104";
+                exp = 310;
                 break;
         }
 
@@ -1206,7 +1309,9 @@ public class War : NetworkEntity
                 unitsString += guestUnitNames[i];
 
                 //Give guest AI same exp as host units of the same tier. When team is created the levels will be built.  
-                int hostUnitExp = GameNetwork.GetLocalPlayerUnitPropertyAsInt(GameNetwork.UnitPlayerProperties.EXPERIENCE, hostUnitNames[i], GameNetwork.TeamNames.HOST);
+                int hostUnitExp = GameNetwork.GetLocalPlayerUnitPropertyAsInt(GameNetwork.UnitPlayerProperties.EXPERIENCE, hostUnitNames[i], GameNetwork.TeamNames.HOST) + 1;
+                if (hostUnitExp > 5) hostUnitExp = 5;
+
                 GameNetwork.SetLocalPlayerUnitProperty(GameNetwork.UnitPlayerProperties.EXPERIENCE, guestUnitNames[i], hostUnitExp.ToString(), GameNetwork.TeamNames.GUEST);
 
                 ////Set random position
@@ -1381,13 +1486,16 @@ public class War : NetworkEntity
 
         //Debug.LogWarning("War::receiveTeamInstantiated -> _readyByTeam[GameNetwork.TeamNames.HOST]: " + _readyByTeam[GameNetwork.TeamNames.HOST] + " _readyByTeam[GameNetwork.TeamNames.GUEST] " + _readyByTeam[GameNetwork.TeamNames.GUEST]);
         if (_readyByTeam[GameNetwork.TeamNames.HOST] && _readyByTeam[GameNetwork.TeamNames.GUEST])
+        {
             NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.READY_TO_FIGHT, true.ToString(), _localPlayerTeam);
+
+        }
     }
 
     public void onMatchResultsDismissButtonDown()
     {
         GameNetwork.ClearLocalTeamUnits(_localPlayerTeam);
-        NetworkManager.LeaveRoom();
+        NetworkManager.Disconnect();
         SceneManager.LoadScene(GameConstants.Scenes.LEVELS);
     }
 
@@ -1641,7 +1749,7 @@ public class War : NetworkEntity
                 Dictionary<string, MinMinUnit> teamUnits = GetTeamUnitsDictionary(targetTeamName);
                 MinMinUnit unit = teamUnits[targetUnitName];
 
-                int healing = Mathf.RoundToInt((float)unitMaxHealth * (highestStrenght / 25));
+                int healing = Mathf.RoundToInt((float)unitMaxHealth * (highestStrenght / 15));
                 Debug.LogWarning("War::processUnitsHealing -> highestStrenght: " + highestStrenght + " unitMaxHealth: " + unitMaxHealth + " heal: " + healing);
 
                 ScoreFlash.Instance.PushWorld(unit.gameObject.transform.localPosition, unit.gameObject.transform.position, healing, Color.green);
@@ -1673,7 +1781,7 @@ public class War : NetworkEntity
     {
         string winnerNickname = "";
         if (GetUsesAi() && (winnerTeam == GameNetwork.TeamNames.GUEST))
-            winnerNickname = _teamNameText2.text;
+            winnerNickname = "AI";
         else
             winnerNickname = GameNetwork.GetNicknameFromPlayerTeam(winnerTeam);
         
@@ -1681,6 +1789,12 @@ public class War : NetworkEntity
 
         string loserTeam = GameNetwork.GetOppositeTeamName(winnerTeam);
         string loserNickname = GameNetwork.GetNicknameFromPlayerTeam(loserTeam);
+
+        if (GetUsesAi() && (loserTeam == GameNetwork.TeamNames.GUEST))
+        {
+            loserNickname = "AI";
+        }
+
         NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.LOSER_NICKNAME, loserNickname);
 
         double endTime = NetworkManager.GetNetworkTime();

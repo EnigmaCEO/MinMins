@@ -194,6 +194,103 @@ namespace Enigma.CoreSystems
         // global active player
         static public JSONNode ActiveCharacter;
 
+        static string[] onlineName = {
+            "Adreea",
+            "Amon",
+            "Anath",
+            "Anubis",
+            "Aonghus",
+            "Apophis",
+            "Arawn",
+            "Arcane",
+            "Artemis",
+            "Atum",
+            "Avenge",
+            "Aviron",
+            "Balder",
+            "Balikar",
+            "Barimoor",
+            "Belledia",
+            "Biggrin",
+            "Bloodjinn",
+            "Brightblade",
+            "Brigit",
+            "Bumbos",
+            "Bvaine",
+            "Ceridwen",
+            "Cernunnus",
+            "Colayd",
+            "Cuchulainn",
+            "Dabokel",
+            "Dagda",
+            "Danjirus",
+            "Danu",
+            "Darkpally",
+            "Darkside",
+            "Darkspyre",
+            "Dizz",
+            "Duramas",
+            "Espiritu",
+            "Fizi",
+            "Freya",
+            "Frigga",
+            "Gozza",
+            "Gronnd",
+            "Hazred",
+            "Heimdall",
+            "Hel",
+            "Horus",
+            "Isis",
+            "Kai",
+            "Kamakani",
+            "Khonsu",
+            "Khor",
+            "Kina",
+            "Lagarto",
+            "Legba",
+            "Lexi",
+            "Lithnu",
+            "Lokahi",
+            "Lokcin",
+            "Loki",
+            "Lugh",
+            "Matilde",
+            "Medb",
+            "Molarchael",
+            "Montanya",
+            "Morrigan",
+            "Murdoc",
+            "Neith",
+            "Nephthys",
+            "Nodens",
+            "Norad",
+            "Nott",
+            "Odin",
+            "Osiris",
+            "Phaeton",
+            "Prefect",
+            "Profet",
+            "Qila",
+            "Ragnark",
+            "Runvus",
+            "Savral",
+            "Sekhmet",
+            "Semi",
+            "Shalwend",
+            "Sintos",
+            "Slick",
+            "Slyzer",
+            "Starman",
+            "Thor",
+            "Trace",
+            "Tyr",
+            "Ull",
+            "Valdrea",
+            "Valkrine",
+            "Vili",
+            "Westwood",
+            "Wyand",
+            "Yurad" };
 
         protected override void Awake()
         {
@@ -271,7 +368,8 @@ namespace Enigma.CoreSystems
 
         static public string GetRandomOnlineName()
         {
-            return "Guest" + Random.Range(0, _GUEST_NAME_MAX_RANDOM_INDEX).ToString();
+
+            return onlineName[Random.Range(0, onlineName.Length)];
         }
 
         static private IEnumerator httpRequest(int id, Hashtable hashtable, Callback externalCallback, Callback localCallback, TextureCallback texture)
@@ -869,7 +967,7 @@ namespace Enigma.CoreSystems
             else  // Online
             {
                 print("NetworkManager::GetAnyPlayerCustomProperty -> networkPlayerId: " + networkPlayerId + " player.CustomProperties.ToStringFull(): " + PhotonPlayer.Find(networkPlayerId).CustomProperties.ToStringFull());
-                    
+
                 return GetNetworkPlayerById(networkPlayerId).CustomProperties[virtualPlayerKey].ToString();
             }
         }
@@ -907,7 +1005,7 @@ namespace Enigma.CoreSystems
 
                 Hashtable roomData = Data[DataGroups.INFO][DataKeys.ROOM] as Hashtable;
 
-                if (!roomData.ContainsKey(key)) 
+                if (!roomData.ContainsKey(key))
                     roomData.Add(key, value);
                 else
                     roomData[key] = value;

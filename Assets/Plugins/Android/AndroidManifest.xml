@@ -33,5 +33,6 @@
 			<action android:name="com.oneaudience.action.CONFIGURATION"/>
 		</intent-filter>
 		</receiver>
+  
     </application>
 </manifest>

@@ -39,7 +39,7 @@ public class Init : EnigmaScene
 
         
 
-        try
+        /*try
         {
 			SoundManager.MusicVolume = PlayerPrefs.GetFloat(SoundManager.SAVED_MUSIC_PREF, 0.5f);
 		}
@@ -55,7 +55,7 @@ public class Init : EnigmaScene
 		catch (PlayerPrefsException e)
 		{
 			SoundManager.SfxVolume = 1.0f;
-		}
+		}*/
     }
     // Use this for initialization
     void Start()

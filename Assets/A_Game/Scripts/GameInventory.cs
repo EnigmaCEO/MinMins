@@ -354,12 +354,31 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
     public void AddMissingEnjinUnits()
     {
+        if (GetEnjinAttempts() < 1) return;
+
+        saveEnjinAttempts(GetEnjinAttempts() - 1);
         int enjinUnitStartingExperience = _experienceNeededPerUnitLevel[_enjinUnitStartingLevel - 1];
 
         for (int i = _enjin_firstUnitNumber; i <= _enjin_lastUnitNumer; i++)
         {
             string unitName = i.ToString();
             if (!HasUnit(unitName))
+                AddUnit(unitName, 0);
+        }
+
+        SaveUnits();
+    }
+
+    public void AddMinMinEnjinUnits()
+    {
+        for (int i = _enjin_firstUnitNumber; i <= _enjin_lastUnitNumer; i++)
+        {
+            string unitName = i.ToString();
+            if ((unitName == "100" && GameNetwork.Instance.HasEnjinMaxim && !HasUnit(unitName)) ||
+                (unitName == "101" && GameNetwork.Instance.HasEnjinWitek && !HasUnit(unitName)) ||
+                (unitName == "102" && GameNetwork.Instance.HasEnjinBryana && !HasUnit(unitName)) ||
+                (unitName == "103" && GameNetwork.Instance.HasEnjinTassio && !HasUnit(unitName)) ||
+                (unitName == "104" && GameNetwork.Instance.HasEnjinSimon && !HasUnit(unitName)))
                 AddUnit(unitName, 0);
         }
 
@@ -548,9 +567,12 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         saveHashTableToFile();
     }
 
-    private void saveEnjinAttempts(int number)
+    public void saveEnjinAttempts(int number)
     {
+        Debug.Log("Attempts Remaining: " + number);
         string hashKey = GroupNames.STATS + _parseSeparator + ItemKeys.ENJIN_ATTEMPTS;
+
+        InventoryManager.Instance.UpdateItem(GroupNames.STATS, ItemKeys.ENJIN_ATTEMPTS, number, true);
 
         if (_saveHashTable.ContainsKey(hashKey))
             _saveHashTable.Remove(hashKey);

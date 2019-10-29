@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using Enigma.CoreSystems;
 using SimpleJSON;
 using UnityEngine.Purchasing;
-using TapjoyUnity;
 using UnityEngine.Purchasing.Extension;
 using UnityEngine.Purchasing.Security;
 
@@ -42,7 +41,7 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
     static private StoreObjectIAP store_item;
     static private JSONNode iapEnigmaCallbackValue;
 
-    private TJPlacement _tapJoyPlacement;
+ 
 #endif
 
     static public StoreObjectIAP[] iapItems;
@@ -79,17 +78,7 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
         for (int i = 0; i < idsCount; i++)
             IAP_IDS[i] = appId + IAP_IDS[i];
 
-        //Tap Joy callbacks and placement responses =========================
-        Tapjoy.OnConnectSuccess += handleConnectSuccess;
-        TJPlacement.OnRequestSuccess += HandlePlacementRequestSuccess;
-        TJPlacement.OnRequestFailure += HandlePlacementRequestFailure;
-        TJPlacement.OnContentReady += HandlePlacementContentReady;
-        TJPlacement.OnContentShow += HandlePlacementContentShow;
-        TJPlacement.OnContentDismiss += HandlePlacementContentDismiss;
-        Tapjoy.OnEarnedCurrency += handleEarnedCurrency;
-        Tapjoy.OnSetUserIDSuccess += onTapJoySetUserIdSuccess;
-        Tapjoy.OnSetUserIDFailure += onTapJoySetUserIdFailure;
-        //====================================================================
+
 #endif
     }
 
@@ -160,18 +149,7 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
         //}
         //=====================================================================
 
-        //Tap Joy callbacks and placement responses =========================
-        Tapjoy.OnConnectSuccess -= handleConnectSuccess;
-        TJPlacement.OnRequestSuccess -= HandlePlacementRequestSuccess;
-        TJPlacement.OnRequestFailure -= HandlePlacementRequestFailure;
-        TJPlacement.OnContentReady -= HandlePlacementContentReady;
-        TJPlacement.OnContentShow -= HandlePlacementContentShow;
-        TJPlacement.OnContentDismiss -= HandlePlacementContentDismiss;
-        //TJPlacement.OnRewardRequest -= HandleOnRewardRequest;
-        Tapjoy.OnEarnedCurrency -= handleEarnedCurrency;
-        Tapjoy.OnSetUserIDSuccess -= onTapJoySetUserIdSuccess;
-        Tapjoy.OnSetUserIDFailure -= onTapJoySetUserIdFailure;
-        //====================================================================
+
 #endif
     }
 
@@ -480,7 +458,7 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
             string productId = "";
 
             // Unity IAP's validation logic is only included on these platforms.
-#if !UNITY_EDITOR && (UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX)
+#if (UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX)
             // Prepare the validator with the secrets we prepared in the Editor
             // obfuscation window.
             CrossPlatformValidator validator = new CrossPlatformValidator(GooglePlayTangle.Data(), AppleTangle.Data(), Application.identifier);
@@ -522,6 +500,8 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
                     purchaseToken = google.purchaseToken;
                     transactionId = productReceipt.transactionID;
                     productId = productReceipt.productID;
+
+                    if(!args.purchasedProduct.definition.id.Contains(Application.identifier)) validPurchase = false;
                 }
             }
             catch (IAPSecurityException)
@@ -551,6 +531,14 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
                 hashtable.Add("receipt", args.purchasedProduct.receipt);
                 hashtable.Add("transaction_id", args.purchasedProduct.transactionID);
                 hashtable.Add("product_id", args.purchasedProduct.definition.id);
+                NetworkManager.Transaction(NetworkManager.Transactions.PURCHASE_SUCCESSFUL, hashtable, onPurchaseSuccesfulTransaction);
+            } else
+            {
+                Hashtable hashtable = new Hashtable();
+                hashtable.Add("receipt", args.purchasedProduct.receipt);
+                hashtable.Add("transaction_id", args.purchasedProduct.transactionID);
+                hashtable.Add("product_id", args.purchasedProduct.definition.id);
+                hashtable.Add("results", "fail");
                 NetworkManager.Transaction(NetworkManager.Transactions.PURCHASE_SUCCESSFUL, hashtable, onPurchaseSuccesfulTransaction);
             }
         }
@@ -634,175 +622,5 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
 #endif
     #endregion
 
-    #region TapJoy
-    public void InitPlacements()
-    {
-        GameObject tapJoyObjectPrefab = Resources.Load<GameObject>("Prefabs/TapjoyUnity");
-        GameObject tapjoyObject = Instantiate<GameObject>(tapJoyObjectPrefab);
-        tapjoyObject.name = tapJoyObjectPrefab.name;
-        if (tapjoyObject != null)
-            Debug.Log("Tapjoy object successfully created: " + tapjoyObject.ToString());
-        else
-            Debug.Log("Tapjoy object was not created.");
-    }
-
-    public void PreloadOfferWall()
-    {
-        StartCoroutine(handleTapJoyPreloading());
-    }
-
-    public void ShowOfferwall()
-    {
-        StartCoroutine(handleTapJoyShowContent());
-    }
-
-    private IEnumerator handleTapJoyPreloading()
-    {
-        while (true)
-        {
-            if (Tapjoy.IsConnected)
-            {
-                Debug.Log("Tapjoy is connected.");
-
-                // Now that we are connected we can start preloading our placements
-                _tapJoyPlacement = TJPlacement.CreatePlacement("Offerwall");
-                _tapJoyPlacement.RequestContent();
-
-                yield break;
-            }
-            else
-            {
-               // Debug.LogWarning("Tapjoy SDK must be connected before you can request content.");
-                yield return 0;
-            }
-        }
-    }
-
-    private IEnumerator handleTapJoyShowContent()
-    {
-        while (true)
-        {
-            if ((_tapJoyPlacement != null) && _tapJoyPlacement.IsContentReady())
-            {
-                Debug.Log("Show content");
-                _tapJoyPlacement.ShowContent();
-                PreloadOfferWall();
-                yield break;
-            }
-            else
-            {
-                // Code to handle situation where content is not ready goes here
-                //Debug.Log("Content wasn't ready");
-                yield return 0;
-            }
-        }
-    }
-
-    // Connect success
-    private void handleConnectSuccess()
-    {
-        Debug.Log("Connect Success");
-
-        //PlayerPrefs.DeleteKey(_TAPJOY_PLAYER_PREF_KEY); //TODO: REMOVE THIS TEST HACK
-        _tapJoyUserId = PlayerPrefs.GetString(_TAPJOY_PLAYER_PREF_KEY, "");
-        if (_tapJoyUserId == "")
-        {
-            _tapJoyUserId = createRandomTapJoyId();
-            PlayerPrefs.SetString(_TAPJOY_PLAYER_PREF_KEY, _tapJoyUserId);
-        }
-
-        Tapjoy.SetUserID(_tapJoyUserId);
-    }
-
-    public void HandlePlacementRequestSuccess(TJPlacement placement)
-    {
-        print("HandlePlacementRequestSuccess " + placement.ToString());
-    }
-
-    public void HandlePlacementRequestFailure(TJPlacement placement, string error)
-    {
-        print("HandlePlacementRequestFailure " + placement.ToString() + " error: " + error.ToString());
-    }
-
-    public void HandlePlacementContentReady(TJPlacement placement)
-    {
-        // This gets called when content is ready to show.
-        print("HandlePlacementContentReady " + placement.ToString());
-    }
-
-    public void HandlePlacementContentShow(TJPlacement placement)
-    {
-        print("HandlePlacementContentShow " + placement.ToString());
-    }
-
-    public void HandlePlacementContentDismiss(TJPlacement placement)
-    {
-        print("HandlePlacementContentDismiss " + placement.ToString());
-        NetworkManager.Transaction(NetworkManager.Transactions.COINS_EARNED, NetworkManager.TransactionKeys.USER, _tapJoyUserId, onCoinsEarned);
-    }
-
-    //public void HandleOnRewardRequest(TJPlacement placement, TJActionRequest request, string itemId, int quantity)
-    //{
-    //    print("HandleOnRewardRequest itemId: " + itemId + " quantity: " + quantity);
-    //}
-
-    private void handleEarnedCurrency(string currencyName, int amount)
-    {
-        Debug.Log("C#: HandleEarnedCurrency: currencyName: " + currencyName + ", amount: " + amount);
-    }
-
-    private void onTapJoySetUserIdSuccess()
-    {
-        print("onTapJoySetUserIdSuccess");
-    }
-
-    private void onTapJoySetUserIdFailure(string errorMessage)
-    {
-        print("onTapJoySetUserIdFailure: " + errorMessage);
-    }
-
-    private string createRandomTapJoyId()
-    {
-        string id = "";
-
-        for (int i = 1; i <= _TAPJOY_ID_DIGITS_AMOUNT; i++)
-        {
-            id += UnityEngine.Random.Range(0, 10);
-            if ((i != _TAPJOY_ID_DIGITS_AMOUNT) && (i % _TAPJOY_ID_BLOCK_SIZE) == 0)
-                id += "-";
-        }
-
-        print("TapJoyId: " + id);
-
-        return id;
-    }
-
-    private void onCoinsEarned(JSONNode response)
-    {
-        if (response != null)
-        {
-            Debug.Log("onCoinsEarned: " + response.ToString());
-
-            JSONNode response_hash = response[0];
-            string status = response_hash[NetworkManager.TransactionKeys.STATUS].ToString().Trim('"');
-
-            if (status == NetworkManager.StatusOptions.SUCCESS)
-            {
-                int coinsEarned = response_hash[NetworkManager.TransactionKeys.COINS].AsInt;
-                if (OnCoinsEarned != null)
-                {
-                    if(coinsEarned > 0)
-                        OnCoinsEarned(coinsEarned);
-                }
-
-                if (OnHideTransactionError != null)
-                    OnHideTransactionError();
-            }
-            else if(OnTransactionError != null)
-                OnTransactionError("ServerError");
-        }
-        else if (OnTransactionError != null)
-            OnTransactionError("ConnectionError");
-    }
-    #endregion
+    
 }

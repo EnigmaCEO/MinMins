@@ -18,6 +18,11 @@ public class Main : EnigmaScene
 
     void Start()
     {
+        SoundManager.Stop();
+        SoundManager.MusicVolume = 0.5f;
+        SoundManager.Play("main", SoundManager.AudioTypes.Music, "", true);
+
+        NetworkManager.Disconnect();
         _loginModal.SetActive(false);
         _enjinIcon.SetActive(false);
         Init();
@@ -25,9 +30,7 @@ public class Main : EnigmaScene
 
     public void Init()
     {
-        SoundManager.Stop();
-        SoundManager.MusicVolume = 0.5f;
-        SoundManager.Play("main", SoundManager.AudioTypes.Music, "", true);
+        
 
         bool loggedIn = NetworkManager.LoggedIn;
 

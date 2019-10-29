@@ -139,30 +139,47 @@ public class GameStore : EnigmaScene
 
     public void onEnjinPopUpDismissButtonDown()
     {
-        GameInventory.Instance.AddMissingEnjinUnits();
+        if (GameInventory.Instance.GetEnjinAttempts() < 1) return;
 
+        GameInventory.Instance.AddMissingEnjinUnits();
+        
         _enjinmftPopUp.SetActive(false);
     }
 
     public void onMinMinPopUpDismissButtonDown()
     {
-        GameInventory.Instance.AddMissingEnjinUnits();
+        GameInventory.Instance.AddMinMinEnjinUnits();
 
         _minminPopUp.SetActive(false);
     }
 
     public void openEnjinPopUp()
     {
-        setupEnjinLegendsDisplay(_enjinmftPopUp);
+        int count = setupEnjinLegendsDisplay(_enjinmftPopUp);
+        if(count == 0 || !GameNetwork.Instance.HasEnjinMft) _enjinmftPopUp.transform.Find("DismissButton").gameObject.SetActive(false);
 
+        int attempts = GameInventory.Instance.GetEnjinAttempts();
+        
         _enjinmftPopUp.SetActive(true);
+
+        if(GameNetwork.Instance.HasEnjinMft)
+            _enjinmftPopUp.transform.Find("WindowMessage").GetComponent<Text>().text = attempts + " Summons remaining";
+        else
+            _enjinmftPopUp.transform.Find("WindowMessage").GetComponent<Text>().text = "Enjin MFT required";
     }
 
     public void openMinMinPopUp()
     {
-        setupEnjinLegendsDisplay(_minminPopUp);
+        int count = setupEnjinLegendsMinMinsDisplay(_minminPopUp);
+        Debug.Log("count: " + count);
+        if (count == 0 || !GameNetwork.Instance.HasEnjinMinMinsToken) _minminPopUp.transform.Find("DismissButton").gameObject.SetActive(false);
 
         _minminPopUp.SetActive(true);
+
+        if (GameNetwork.Instance.HasEnjinMinMinsToken)
+            _minminPopUp.transform.Find("WindowMessage").GetComponent<Text>().text = "Enjin Legend tokens required";
+        else
+            _enjinmftPopUp.transform.Find("WindowMessage").GetComponent<Text>().text = "Min-Mins Token required";
     }
 
     public void closePopup(GameObject obj)
@@ -175,8 +192,9 @@ public class GameStore : EnigmaScene
         SceneManager.LoadScene(GameConstants.Scenes.MAIN);
     }
 
-    private void setupEnjinLegendsDisplay(GameObject popUp)
+    private int setupEnjinLegendsDisplay(GameObject popUp)
     {
+        int count = 5;
         Transform enjinContent = popUp.transform.Find("EnjinGrid/Viewport/Content");
         GameInventory gameInventory = GameInventory.Instance;
 
@@ -187,8 +205,51 @@ public class GameStore : EnigmaScene
             {
                 Debug.Log(unitName);
                 enjinTransform.gameObject.SetActive(false);
+                count--;
             }
         }
+
+        return count;
+    }
+
+    private int setupEnjinLegendsMinMinsDisplay(GameObject popUp)
+    {
+        int count = 5;
+        Transform enjinContent = popUp.transform.Find("EnjinGrid/Viewport/Content");
+        GameInventory gameInventory = GameInventory.Instance;
+
+        foreach (Transform enjinTransform in enjinContent)
+        {
+            string unitName = enjinTransform.name;
+            
+            if(unitName == "100" && (!GameNetwork.Instance.HasEnjinMaxim || gameInventory.HasUnit(unitName)))
+            {
+                enjinTransform.gameObject.SetActive(false);
+                count--;
+            }
+            if (unitName == "101" && (!GameNetwork.Instance.HasEnjinWitek || gameInventory.HasUnit(unitName)))
+            {
+                enjinTransform.gameObject.SetActive(false);
+                count--;
+            }
+            if (unitName == "102" && (!GameNetwork.Instance.HasEnjinBryana || gameInventory.HasUnit(unitName)))
+            {
+                enjinTransform.gameObject.SetActive(false);
+                count--;
+            }
+            if (unitName == "103" && (!GameNetwork.Instance.HasEnjinTassio || gameInventory.HasUnit(unitName)))
+            {
+                enjinTransform.gameObject.SetActive(false);
+                count--;
+            }
+            if (unitName == "104" && (!GameNetwork.Instance.HasEnjinSimon || gameInventory.HasUnit(unitName)))
+            {
+                enjinTransform.gameObject.SetActive(false);
+                count--;
+            }
+        }
+
+        return count;
     }
 
     private void handleFreeLootBoxGifts()

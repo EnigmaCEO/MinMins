@@ -201,6 +201,10 @@ public class ActionArea : NetworkEntity
         //int damage = Mathf.FloorToInt((float)ownerStrenght * (float)(1 - (finalDefense / 100.0f)));  //Defense is translated into damage reduction
         int damage = Mathf.RoundToInt((Strenght * 10.0f) * (1.0f - targetUnitDefense/10.0f) * (1 - targetUnitTankDefense/10.0f));
 
+        if (this is BomberArea) {
+            damage = Mathf.FloorToInt(damage * 1.3f);
+        }
+
         if (GameHacks.Instance.Damage.Enabled)
             damage = GameHacks.Instance.Damage.ValueAsInt;
 

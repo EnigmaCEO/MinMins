@@ -39,6 +39,6 @@ public class PurchaseResultWindow : MonoBehaviour
 
     public void OnFreeCoinsButtonDown()
     {
-        IAPManager.Instance.ShowOfferwall();
+        
     }
 }
