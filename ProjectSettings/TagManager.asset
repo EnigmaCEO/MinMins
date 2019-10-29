@@ -3,7 +3,10 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - missile
+  - WeaponHand
+  - ShieldHand
   layers:
   - Default
   - TransparentFX
@@ -21,7 +24,7 @@ TagManager:
   - HealerAreas
   - ScoutAreas
   - TankAreas
-  - 
+  - Info
   - 
   - 
   - 
@@ -40,4 +43,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Info
+    uniqueID: 1502254431
     locked: 0
