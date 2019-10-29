@@ -36,15 +36,15 @@ public class ActionArea : NetworkEntity
     {
         base.Awake();
 
-        _warRef = War.GetSceneInstance();
+        //_warRef = War.GetSceneInstance();
         _collider = GetComponent<Collider2D>();
         _collider.enabled = false;
 
-        if (_warRef.GetIsHost())
+        /*if (_warRef.GetIsHost())
         {
             if (CollisionDelay == 0)
                 sendEnableCollider(true);
-        }
+        }*/
 
         object[] data = base.GetInstantiationData();
         setUpActionArea((string)data[0], (Vector3)data[1], (Vector3)data[2], (string)data[3], (MinMinUnit.EffectNames)data[4], (string)data[5], (int)data[6]);
@@ -52,9 +52,22 @@ public class ActionArea : NetworkEntity
         Strenght = float.Parse(getOwnerUnitProperty(GameNetwork.UnitPlayerProperties.STRENGHT));
     }
 
+    public void SetWarRef(War warRef)
+    {
+        _warRef = warRef;
+
+        if (_warRef.GetIsHost())
+        {
+            if (CollisionDelay == 0)
+                sendEnableCollider(true);
+        }
+    }
+
     override protected void Update()
     {
         base.Update();
+        if (!_warRef) return;
+
         if (_warRef.GetIsHost())
         {
             if (_collider.enabled)

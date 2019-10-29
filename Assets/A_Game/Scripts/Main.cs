@@ -47,17 +47,32 @@ public class Main : EnigmaScene
         _enjinWindow.SetActive(false);
         _pvprating.text = "";
 
-        string kin = PlayerPrefs.GetString("Kin", "0");
+        /*string kin = KinManager.Instance.GetUserPublicAddress();
 
-        if (kin == "0")
+        if (kin != null && kin != "")
         {
-            _kinPopUp.SetActive(false);
-            PlayerPrefs.SetString("Kin", "1");
+            Debug.Log(kin);
+            KinManager.Instance.RegisterCallback((obj, val) => {
+                _pvprating.text += "\n" + val;
+                decimal updatedBalanace = KinManager.Instance.GetBalance();
+                Text text = GameObject.Find("/Canvas/kin_icon/Text").GetComponent<Text>();
+                text.text = updatedBalanace.ToString();
+                
+            });
+
+            decimal balance = KinManager.Instance.GetBalance();
+            if (balance == 0)
+            {
+                _pvprating.text += kin + "\n" + balance;
+                _kinPopUp.SetActive(true);
+                //PlayerPrefs.SetString("Kin", "2");
+                KinManager.Instance.EarnKin(50, "First 50 Kin from Min-Mins");
+            }
         }
         else
             _kinPopUp.SetActive(false);
 
-        //_kinPopUp.SetActive(true);
+        //_kinPopUp.SetActive(true);*/
 
         if(GameNetwork.Instance.IsEnjinLinked)
         {
@@ -68,6 +83,7 @@ public class Main : EnigmaScene
         {
             _pvprating.text = "PvP Rating: " + GameStats.Instance.Rating;
         }
+        
     }
 
     public void OnSinglePlayerButtonDown()

@@ -395,8 +395,7 @@ public class War : NetworkEntity
             if (isTeamSetHost)
                 instantiateRewardChests(GridNames.TEAM_1);
         }
-
-        SetupLoadTeams();
+        
     }
 
     private void onReadyToFight(string teamName, bool ready)
@@ -937,6 +936,7 @@ public class War : NetworkEntity
             Transform parent = GameObject.Find(parentPath).transform;
 
             area.transform.SetParent(parent);
+            area.SetWarRef(this);
         }
     }
 
@@ -1310,7 +1310,7 @@ public class War : NetworkEntity
 
                 //Give guest AI same exp as host units of the same tier. When team is created the levels will be built.  
                 int hostUnitExp = GameNetwork.GetLocalPlayerUnitPropertyAsInt(GameNetwork.UnitPlayerProperties.EXPERIENCE, hostUnitNames[i], GameNetwork.TeamNames.HOST) + 1;
-                if (hostUnitExp > 5) hostUnitExp = 5;
+                //if (hostUnitExp > 5) hostUnitExp = 5;
 
                 GameNetwork.SetLocalPlayerUnitProperty(GameNetwork.UnitPlayerProperties.EXPERIENCE, guestUnitNames[i], hostUnitExp.ToString(), GameNetwork.TeamNames.GUEST);
 
@@ -1487,6 +1487,7 @@ public class War : NetworkEntity
         //Debug.LogWarning("War::receiveTeamInstantiated -> _readyByTeam[GameNetwork.TeamNames.HOST]: " + _readyByTeam[GameNetwork.TeamNames.HOST] + " _readyByTeam[GameNetwork.TeamNames.GUEST] " + _readyByTeam[GameNetwork.TeamNames.GUEST]);
         if (_readyByTeam[GameNetwork.TeamNames.HOST] && _readyByTeam[GameNetwork.TeamNames.GUEST])
         {
+            SetupLoadTeams();
             NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.READY_TO_FIGHT, true.ToString(), _localPlayerTeam);
 
         }
