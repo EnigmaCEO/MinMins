@@ -441,7 +441,6 @@ public class War : NetworkEntity
     {
         NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.MATCH_START_TIME, NetworkManager.GetNetworkTime());
         NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.ROUND_COUNT, 1); //Starts combat cycle
-        ReadyPopup.SetActive(false);
     }
 
     private void onUnitHealthSet(string teamName, string unitName, int health)
@@ -501,6 +500,8 @@ public class War : NetworkEntity
 
     private void onRoundStarted(int roundNumber)
     {
+        ReadyPopup.SetActive(false);
+
         StartCoroutine(endRoundFinishPause(roundNumber));
     }
 
@@ -700,18 +701,22 @@ public class War : NetworkEntity
 
         if (actionsLeft > 0)
         {
+            bool isthisPlayerTurn = (teamInTurn == _localPlayerTeam);
+
             if (GetIsAiTurn())
             {
-                ActionButton.gameObject.SetActive(false);
+                //ActionButton.gameObject.SetActive(false);
                 lineRenderer.enabled = false;
                 lineRenderer2.enabled = false;
                 StartCoroutine(handleAiPlayerInput(teamInTurn));
             }
-            else if (teamInTurn == _localPlayerTeam)
+            else if (isthisPlayerTurn)
             {
                 ActionButton.gameObject.SetActive(true);
                 StartCoroutine(handleHumanPlayerInput());
             }
+
+            ActionButton.gameObject.SetActive(isthisPlayerTurn);
 
             MinMinUnit unit = getUnitInTurn();
             ActionPopup.Open(unit.name);
