@@ -1430,7 +1430,7 @@ public class War : NetworkEntity
             Team1GridItem.View.sprite = Resources.Load<Sprite>("Images/Units/" + unitName);
             Team1GridItem.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/unit_frame_t" + unitTier);
 
-            Team1ItemTransform.Find("level/txt_level").GetComponent<Text>().text = GameInventory.Instance.GetLocalUnitLevel(unitName).ToString();
+            Team1ItemTransform.Find("level/txt_level").GetComponent<Text>().text = GameNetwork.GetAnyPlayerUnitProperty(GameNetwork.UnitPlayerProperties.LEVEL, unitName, GameNetwork.TeamNames.HOST, GameNetwork.Instance.HostPlayerId);
 
         }
 
