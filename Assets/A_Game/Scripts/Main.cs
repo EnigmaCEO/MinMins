@@ -186,9 +186,10 @@ public class Main : EnigmaScene
                 //enjinSupport.gameObject.SetActive(true);
 
                 updateEnjinItems(response_hash);
-                _enjinWindow.gameObject.SetActive(false);
+                if(_enjinWindow)
+                    _enjinWindow.gameObject.SetActive(false);
             }
-            else if (_enjinWindow.GetActive())
+            else if ((_enjinWindow  != null) && _enjinWindow.GetActive())
                 StartCoroutine(handleEnjinLinkingCheck(_checkEnjinLinkingDelay));
         }
         //else

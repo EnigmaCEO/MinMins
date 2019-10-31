@@ -8,9 +8,10 @@ public class ScoutArea : ActionArea
 
     public float DisplayTime = 2;
 
-    protected override void Awake()
+
+    public override void SetWarRef(War warRef)
     {
-        base.Awake();
+        base.SetWarRef(warRef);
 
         if (OwnerTeamName != _warRef.LocalPlayerTeam)
             GetComponent<SpriteMask>().enabled = false;  //Not needed.

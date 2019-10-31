@@ -52,7 +52,7 @@ public class ActionArea : NetworkEntity
         Strenght = float.Parse(getOwnerUnitProperty(GameNetwork.UnitPlayerProperties.STRENGHT));
     }
 
-    public void SetWarRef(War warRef)
+    virtual public void SetWarRef(War warRef)
     {
         _warRef = warRef;
 
