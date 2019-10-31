@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using System.Collections;
 
@@ -20,8 +21,16 @@ public class MaterialPerOwner : Photon.MonoBehaviour
         if( this.photonView.ownerId != assignedColorForUserId )
         {
             int index = System.Array.IndexOf(ExitGames.UtilityScripts.PlayerRoomIndexing.instance.PlayerIds, this.photonView.ownerId);
-            m_Renderer.material.color = FindObjectOfType<ColorPerPlayer>().Colors[index];
-            this.assignedColorForUserId = this.photonView.ownerId;
+            try
+            {
+                m_Renderer.material.color = FindObjectOfType<ColorPerPlayer>().Colors[index];
+                this.assignedColorForUserId = this.photonView.ownerId;
+            }
+            catch (Exception e)
+            {
+                //nothing
+            }
+           
             //Debug.Log("Switched Material to: " + this.assignedColorForUserId + " " + this.renderer.material.GetInstanceID());
         }
     }

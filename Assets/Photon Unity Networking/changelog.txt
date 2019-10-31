@@ -1,5 +1,16 @@
 PUN Classic Change Log
 
+
+v1.99 (20. August 2019)
+    Fixed: PlayerRoomIndexing is now working properly when Room Max Player property is 0. MaterialPerOwner is also secured against no indexing and doesn't fire an exception.
+    Updated: Rpc List handling based on PUN2, making it compatible with Unity 2018 and 2019
+    Fixed: Editor help icon is no agnostic to the 'Photon Unity Networking' location within the 'Assets' folder
+    Updated: Photon3Unity3d.dll library to 4.1.2.17, rev5187. 
+        Removed: Obsolete StatusCode values: DisconnectByServer is now DisconnectByServerTimeout. Other values are simply removed.
+        Updated: Used StatusCode.DisconnectByServer to DisconnectByServerTimeout. A follow up to renaming and removing the code. Some implementations of IPhotonSocket can be in existing projects and may still use the old naming. Simply rename.
+        Changed: PeerBase.timeInt is now a property which calculates the current time: SupportClass.GetTickCount() - this.timeBase.
+        Fixed: The change for timeInt fixes a problem with TCP connections which go entirely silent and would no longer update the PhotonPeer.ConnectionTime.
+        
 v1.98 (25. June 2019)
     Added: Options for OpFindFriends to filter which rooms should be returned by the server. The default is the same as before but now the friend list may exclude rooms which are not yet on the game server, invisible, closed (or any combination).
     Fixed: SerializationProtocol selection for WebGL.

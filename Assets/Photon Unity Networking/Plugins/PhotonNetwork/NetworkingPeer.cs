@@ -3612,7 +3612,7 @@ internal class NetworkingPeer : LoadBalancingPeer, IPhotonPeerListener
                 {
                     if (view.didAwake)
                     {
-                        //Debug.LogWarning("Had to lookup view that wasn't in photonViewList: " + view);
+                        Debug.LogWarning("Had to lookup view that wasn't in photonViewList: " + view);
                     }
                     return view;
                 }

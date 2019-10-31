@@ -1938,6 +1938,9 @@ using ExitGames.Client.Photon;
 
         /// <summary>Authenticates users by their HTC VIVEPORT Account and user token. Set AuthGetParameters to "userToken=[userToken]"</summary>
         Viveport = 10,
+		
+        /// <summary>Authenticates users by their NSA ID.</summary>
+        NintendoSwitch = 11,
 
         /// <summary>Disables custom authentification. Same as not providing any AuthenticationValues for connect (more precisely for: OpAuthenticate).</summary>
         None = byte.MaxValue

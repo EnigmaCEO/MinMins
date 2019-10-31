@@ -28,7 +28,7 @@ using System.IO;
 public static class PhotonNetwork
 {
     /// <summary>Version number of PUN. Also used in GameVersion to separate client version from each other.</summary>
-    public const string versionPUN = "1.98";
+    public const string versionPUN = "1.99";
 
     /// <summary>Version string for your this build. Can be used to separate incompatible clients. Sent during connect.</summary>
     /// <remarks>This is only sent when you connect so that is also the place you set it usually (e.g. in ConnectUsingSettings).</remarks>
@@ -3197,7 +3197,7 @@ public static class PhotonNetwork
     /// </param>
     public static void LoadLevel(int levelNumber)
     {
-		networkingPeer.AsynchLevelLoadCall = false;
+        networkingPeer.AsynchLevelLoadCall = false;
 
 		if (PhotonNetwork.automaticallySyncScene) {
 			networkingPeer.SetLevelInPropsIfSynced (levelNumber,true);
@@ -3229,7 +3229,7 @@ public static class PhotonNetwork
 	/// </param>
 	public static AsyncOperation LoadLevelAsync(int levelNumber)
 	{
-		networkingPeer.AsynchLevelLoadCall = true;
+        networkingPeer.AsynchLevelLoadCall = true;
 
 		if (PhotonNetwork.automaticallySyncScene) {
 			networkingPeer.SetLevelInPropsIfSynced (levelNumber,true);
@@ -3260,7 +3260,7 @@ public static class PhotonNetwork
     /// </param>
     public static void LoadLevel(string levelName)
     {
-		networkingPeer.AsynchLevelLoadCall = false;
+        networkingPeer.AsynchLevelLoadCall = false;
 
 		if (PhotonNetwork.automaticallySyncScene) {
 			networkingPeer.SetLevelInPropsIfSynced (levelName,true);
@@ -3293,7 +3293,7 @@ public static class PhotonNetwork
 	/// <param name="mode">LoadSceneMode either single or additive</param>
 	public static AsyncOperation LoadLevelAsync(string levelName)
 	{
-		networkingPeer.AsynchLevelLoadCall = true;
+        networkingPeer.AsynchLevelLoadCall = true;
 
 		if (PhotonNetwork.automaticallySyncScene) {
 			networkingPeer.SetLevelInPropsIfSynced (levelName,true);
