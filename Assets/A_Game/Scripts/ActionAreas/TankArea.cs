@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class TankArea : ActionArea
 {
-    override protected void Awake()
+    public override void SetWarRef(War warRef)
     {
-        base.Awake();
+        base.SetWarRef(warRef);
 
         if (_warRef.GetIsHost())
             _warRef.AddTankArea(this);

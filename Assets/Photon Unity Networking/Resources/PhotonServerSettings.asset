@@ -62,4 +62,8 @@ MonoBehaviour:
   - receiveActionAreaNetworkViewsIds
   - receiveTeamUnitsInstantiatedNetworkViewIds
   - receiveEnableCollider
+  - receiveActionPopUpClose
+  - receiveActionPopUpOpen
+  - receiveReadyPopUpDismiss
+  - receiveSetupLoadTeams
   DisableAutoOpenWizard: 1

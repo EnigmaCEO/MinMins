@@ -103,10 +103,12 @@ public class War : NetworkEntity
     private double _lastNetworkTime;
 
     public GameObject ReadyPopup;
-    public ActionPopUp ActionPopup;
     public Button ActionButton;
 
-    public LineRenderer lineRenderer, lineRenderer2;
+    [SerializeField] private ActionPopUp _actionPopUp;
+
+    LineRenderer _lineRenderer1;
+    LineRenderer _lineRenderer2;
 
     override protected void Awake()
     {
@@ -128,6 +130,8 @@ public class War : NetworkEntity
 
         _readyByTeam.Add(GameNetwork.TeamNames.HOST, false);
         _readyByTeam.Add(GameNetwork.TeamNames.GUEST, false);
+
+        _actionPopUp.DismissButton.onClick.AddListener(() => { onActionPopUpDismissButtonDown(); });
     }
 
     private void Start()
@@ -140,7 +144,7 @@ public class War : NetworkEntity
         if (GameHacks.Instance.HideClouds)
             _cloudsContainer.gameObject.SetActive(false);
 
-        ActionPopup.Close();
+        _actionPopUp.Close();
         _roundPopUp.SetActive(false);
 
         if (GetUsesAi())
@@ -154,7 +158,7 @@ public class War : NetworkEntity
         _errorText.gameObject.SetActive(false);
         enableTimeLeftDisplay(false);
 
-        _matchResultsPopUp.DismissButton.onClick.AddListener(() => onMatchResultsDismissButtonDown());
+        _matchResultsPopUp.DismissButton.onClick.AddListener(() => OnMatchResultsDismissButtonDown());
         _matchResultsPopUp.gameObject.SetActive(false);
 
         UnitTurnHighlightTransform.gameObject.SetActive(false);
@@ -215,45 +219,47 @@ public class War : NetworkEntity
             GameNetwork.Instance.JoinOrCreateRoom();
         else
             setupWar();
-
-        lineRenderer = _battleField.Find(GridNames.TEAM_1).gameObject.AddComponent<LineRenderer>();
-        lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
-        lineRenderer.widthMultiplier = 0.1f;
-        lineRenderer.positionCount = 4;
-        lineRenderer.loop = true;
+        
+        _lineRenderer1 = _battleField.Find(GridNames.TEAM_1).gameObject.AddComponent<LineRenderer>();
+        _lineRenderer1.material = new Material(Shader.Find("Sprites/Default"));
+        _lineRenderer1.widthMultiplier = 0.1f;
+        _lineRenderer1.positionCount = 4;
+        _lineRenderer1.loop = true;
         Gradient gradient = new Gradient();
         gradient.SetKeys(
             new GradientColorKey[] { new GradientColorKey(Color.cyan, 0.0f), new GradientColorKey(Color.cyan, 1.0f) },
             new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(1.0f, 1.0f) }
         );
-        lineRenderer.colorGradient = gradient;
+        _lineRenderer1.colorGradient = gradient;
 
-        lineRenderer.SetPosition(0, new Vector3(GameConfig.Instance.BattleFieldMinPos.x, GameConfig.Instance.BattleFieldMinPos.y, 0.0f));
-        lineRenderer.SetPosition(1, new Vector3(GameConfig.Instance.BattleFieldMinPos.x, GameConfig.Instance.BattleFieldMaxPos.y, 0.0f));
-        lineRenderer.SetPosition(2, new Vector3(GameConfig.Instance.BattleFieldMaxPos.x, GameConfig.Instance.BattleFieldMaxPos.y, 0.0f));
-        lineRenderer.SetPosition(3, new Vector3(GameConfig.Instance.BattleFieldMaxPos.x, GameConfig.Instance.BattleFieldMinPos.y, 0.0f));
+        _lineRenderer1.SetPosition(0, new Vector3(GameConfig.Instance.BattleFieldMinPos.x, GameConfig.Instance.BattleFieldMinPos.y, 0.0f));
+        _lineRenderer1.SetPosition(1, new Vector3(GameConfig.Instance.BattleFieldMinPos.x, GameConfig.Instance.BattleFieldMaxPos.y, 0.0f));
+        _lineRenderer1.SetPosition(2, new Vector3(GameConfig.Instance.BattleFieldMaxPos.x, GameConfig.Instance.BattleFieldMaxPos.y, 0.0f));
+        _lineRenderer1.SetPosition(3, new Vector3(GameConfig.Instance.BattleFieldMaxPos.x, GameConfig.Instance.BattleFieldMinPos.y, 0.0f));
         //lineRenderer.SetPosition(4, new Vector3(GameConfig.Instance.BattleFieldMinPos.x, GameConfig.Instance.BattleFieldMinPos.y, 0.0f));
+        _lineRenderer1.GetComponent<Renderer>().sortingOrder = 303;
 
-        lineRenderer2 = _battleField.Find(GridNames.TEAM_2).gameObject.AddComponent<LineRenderer>();
-        lineRenderer2.material = new Material(Shader.Find("Sprites/Default"));
-        lineRenderer2.widthMultiplier = 0.1f;
-        lineRenderer2.positionCount = 4;
-        lineRenderer2.loop = true;
+        _lineRenderer2 = _battleField.Find(GridNames.TEAM_2).gameObject.AddComponent<LineRenderer>();
+        _lineRenderer2.material = new Material(Shader.Find("Sprites/Default"));
+        _lineRenderer2.widthMultiplier = 0.1f;
+        _lineRenderer2.positionCount = 4;
+        _lineRenderer2.loop = true;
         gradient = new Gradient();
         gradient.SetKeys(
             new GradientColorKey[] { new GradientColorKey(Color.cyan, 0.0f), new GradientColorKey(Color.cyan, 1.0f) },
             new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(1.0f, 1.0f) }
         );
-        lineRenderer2.colorGradient = gradient;
+        _lineRenderer2.colorGradient = gradient;
 
-        lineRenderer2.SetPosition(0, new Vector3(GameConfig.Instance.BattleFieldMinPos.x + 17, GameConfig.Instance.BattleFieldMinPos.y, 0.0f));
-        lineRenderer2.SetPosition(1, new Vector3(GameConfig.Instance.BattleFieldMinPos.x + 17, GameConfig.Instance.BattleFieldMaxPos.y, 0.0f));
-        lineRenderer2.SetPosition(2, new Vector3(GameConfig.Instance.BattleFieldMaxPos.x + 17, GameConfig.Instance.BattleFieldMaxPos.y, 0.0f));
-        lineRenderer2.SetPosition(3, new Vector3(GameConfig.Instance.BattleFieldMaxPos.x + 17, GameConfig.Instance.BattleFieldMinPos.y, 0.0f));
+        _lineRenderer2.SetPosition(0, new Vector3(GameConfig.Instance.BattleFieldMinPos.x + 17, GameConfig.Instance.BattleFieldMinPos.y, 0.0f));
+        _lineRenderer2.SetPosition(1, new Vector3(GameConfig.Instance.BattleFieldMinPos.x + 17, GameConfig.Instance.BattleFieldMaxPos.y, 0.0f));
+        _lineRenderer2.SetPosition(2, new Vector3(GameConfig.Instance.BattleFieldMaxPos.x + 17, GameConfig.Instance.BattleFieldMaxPos.y, 0.0f));
+        _lineRenderer2.SetPosition(3, new Vector3(GameConfig.Instance.BattleFieldMaxPos.x + 17, GameConfig.Instance.BattleFieldMinPos.y, 0.0f));
 
-        lineRenderer.enabled = false;
-        lineRenderer2.enabled = false;
-        
+        _lineRenderer1.enabled = false;
+        _lineRenderer2.enabled = false;
+
+        _lineRenderer2.GetComponent<Renderer>().sortingOrder = 303;
     }
 
     private void OnDestroy()
@@ -431,7 +437,8 @@ public class War : NetworkEntity
 
                 if (hostReady && guestReady)
                 {
-                    Invoke("StartBattle", 8.0f);
+                    sendSetupLoadTeams();
+                    Invoke(nameof(StartBattle), 8.0f);
                 }
             }
         }
@@ -441,6 +448,18 @@ public class War : NetworkEntity
     {
         NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.MATCH_START_TIME, NetworkManager.GetNetworkTime());
         NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.ROUND_COUNT, 1); //Starts combat cycle
+        sendReadyPopUpDismiss();
+    }
+
+    private void sendReadyPopUpDismiss()
+    {
+        base.SendRpcToAll(nameof(receiveReadyPopUpDismiss));
+    }
+
+    [PunRPC]
+    private void receiveReadyPopUpDismiss()
+    {
+        ReadyPopup.SetActive(false);
     }
 
     private void onUnitHealthSet(string teamName, string unitName, int health)
@@ -500,8 +519,6 @@ public class War : NetworkEntity
 
     private void onRoundStarted(int roundNumber)
     {
-        ReadyPopup.SetActive(false);
-
         StartCoroutine(endRoundFinishPause(roundNumber));
     }
 
@@ -596,6 +613,9 @@ public class War : NetworkEntity
         if (unitIndex == -1)
             return;
 
+        _lineRenderer1.enabled = false;
+        _lineRenderer2.enabled = false;
+
         //MinMinUnit unit = units.Values.ElementAt(unitIndex);
         //string unitName = unit.name;
 
@@ -636,30 +656,30 @@ public class War : NetworkEntity
 
             if (unitHealth > 0)
             {
-                if (unit.Type == MinMinUnit.Types.Bomber || unit.Type == MinMinUnit.Types.Destroyer)
-                {
-                    ActionButton.GetComponentInChildren<Text>().text = "ATTACK";
-                    lineRenderer.enabled = false;
-                    lineRenderer2.enabled = true;
-                }
-                if (unit.Type == MinMinUnit.Types.Scout)
-                {
-                    ActionButton.GetComponentInChildren<Text>().text = "SCOUT";
-                    lineRenderer.enabled = false;
-                    lineRenderer2.enabled = true;
-                }
-                if (unit.Type == MinMinUnit.Types.Healer)
-                {
-                    ActionButton.GetComponentInChildren<Text>().text = "HEAL";
-                    lineRenderer.enabled = true;
-                    lineRenderer2.enabled = false;
-                }
-                if (unit.Type == MinMinUnit.Types.Tank)
-                {
-                    ActionButton.GetComponentInChildren<Text>().text = "GUARD";
-                    lineRenderer.enabled = true;
-                    lineRenderer2.enabled = false;
-                }
+                //if (unit.Type == MinMinUnit.Types.Bomber || unit.Type == MinMinUnit.Types.Destroyer)
+                //{
+                //    //ActionButton.GetComponentInChildren<Text>().text = "ATTACK";
+                //    lineRenderer.enabled = false;
+                //    lineRenderer2.enabled = true;
+                //}
+                //if (unit.Type == MinMinUnit.Types.Scout)
+                //{
+                //    //ActionButton.GetComponentInChildren<Text>().text = "SCOUT";
+                //    lineRenderer.enabled = false;
+                //    lineRenderer2.enabled = true;
+                //}
+                //if (unit.Type == MinMinUnit.Types.Healer)
+                //{
+                //    //.GetComponentInChildren<Text>().text = "HEAL";
+                //    lineRenderer.enabled = true;
+                //    lineRenderer2.enabled = false;
+                //}
+                //if (unit.Type == MinMinUnit.Types.Tank)
+                //{
+                //    //ActionButton.GetComponentInChildren<Text>().text = "GUARD";
+                //    lineRenderer.enabled = true;
+                //    lineRenderer2.enabled = false;
+                //}
 
                 _unitTurnText.text = "Unit turn: " + unitName + " | Index: " + unitIndex;
                 handleHighlight(unitIndex, teamName);
@@ -690,6 +710,21 @@ public class War : NetworkEntity
 
         if (GetIsHost())
             NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.ACTIONS_LEFT, unitTier.ToString());
+
+        string teamInTurn = GameNetwork.GetTeamInTurn();
+        if (_localPlayerTeam == teamInTurn)
+        {
+            if (sideTeam == GameNetwork.TeamNames.HOST)
+            {
+                _lineRenderer1.enabled = true;
+                _lineRenderer2.enabled = false;
+            }
+            else if (sideTeam == GameNetwork.TeamNames.GUEST)
+            {
+                _lineRenderer1.enabled = false;
+                _lineRenderer2.enabled = true;
+            }
+        }
     }
 
     private void onActionStarted(int actionsLeft)
@@ -706,23 +741,46 @@ public class War : NetworkEntity
             if (GetIsAiTurn())
             {
                 //ActionButton.gameObject.SetActive(false);
-                lineRenderer.enabled = false;
-                lineRenderer2.enabled = false;
+                //_lineRenderer1.enabled = false;
+                //_lineRenderer2.enabled = false;
                 StartCoroutine(handleAiPlayerInput(teamInTurn));
             }
             else if (isthisPlayerTurn)
             {
-                ActionButton.gameObject.SetActive(true);
                 StartCoroutine(handleHumanPlayerInput());
             }
 
-            ActionButton.gameObject.SetActive(isthisPlayerTurn);
-
-            MinMinUnit unit = getUnitInTurn();
-            ActionPopup.Open(unit.name);
+            if (GetIsHost())
+            {
+                MinMinUnit unit = getUnitInTurn();
+                sendActionPopUpOpen(unit.name, unit.Type);
+            }
         }
         else if (GetIsHost())
             changeTurn(teamInTurn);
+    }
+
+    private void sendActionPopUpOpen(string unitName, MinMinUnit.Types unitType)
+    {
+        base.SendRpcToAll(nameof(receiveActionPopUpOpen), unitName, unitType);
+    }
+
+    [PunRPC]
+    private void receiveActionPopUpOpen(string unitName, MinMinUnit.Types unitType)
+    {
+        string teamInTurn = GameNetwork.GetTeamInTurn();
+        _actionPopUp.Open(unitName, unitType, (teamInTurn == _localPlayerTeam));
+    }
+
+    private void sendActionPopUpClose()
+    {
+        base.SendRpcToAll(nameof(receiveActionPopUpClose));
+    }
+
+    [PunRPC]
+    private void receiveActionPopUpClose()
+    {
+        _actionPopUp.Close();
     }
 
     private IEnumerator handleAiPlayerInput(string teamInTurn)
@@ -737,9 +795,10 @@ public class War : NetworkEntity
             delay -= Time.deltaTime;
             if (delay <= 0)
             {
-                ActionPopup.Close();
-                lineRenderer.enabled = false;
-                lineRenderer2.enabled = false;
+                _actionPopUp.Close();
+
+                //_lineRenderer1.enabled = false;
+                //_lineRenderer2.enabled = false;
 
                 MinMinUnit unit = getUnitInTurn();
                 Dictionary<string, MinMinUnit> teamInTurnUnits = GetTeamUnitsDictionary(teamInTurn);
@@ -760,7 +819,7 @@ public class War : NetworkEntity
         //Debug.LogWarning("handlePlayerInput");
         while (true)
         {
-            if (!ActionPopup.gameObject.GetActive() && Input.GetMouseButtonDown(0))
+            if (!_actionPopUp.gameObject.GetActive() && Input.GetMouseButtonDown(0))
             {
                 Vector3 tapWorldPosition = _gameCamera.MyCamera.ScreenToWorldPoint(Input.mousePosition);
                 GameConfig gameConfig = GameConfig.Instance;
@@ -768,7 +827,8 @@ public class War : NetworkEntity
                 float minPosX = gameConfig.BattleFieldMinPos.x;
                 float maxPosX = gameConfig.BattleFieldMaxPos.x;
 
-                if (_gameCamera.IsAtOppponentSide)
+                if ((_gameCamera.IsAtOppponentSide && (_localPlayerTeam == GameNetwork.TeamNames.HOST))
+                    || (!_gameCamera.IsAtOppponentSide && (_localPlayerTeam == GameNetwork.TeamNames.GUEST)))
                 {
                     minPosX += _battleFieldRightSideBaseOffset + _rightSideOffsetAdjustment;
                     maxPosX += _battleFieldRightSideBaseOffset + _rightSideOffsetAdjustment;
@@ -996,7 +1056,7 @@ public class War : NetworkEntity
 
     private void setupWar()
     {
-        if (_localPlayerTeam == GameNetwork.TeamNames.GUEST)
+        if ((_localPlayerTeam == GameNetwork.TeamNames.GUEST) || GameHacks.Instance.GuestCameraAsHost)
         {
             _gameCamera.SetCameraForGuest();
             moveCloudsToOppositeSide();
@@ -1415,7 +1475,13 @@ public class War : NetworkEntity
         setTeamHealth(teamName, false);
     }
 
-    void SetupLoadTeams()
+    private void sendSetupLoadTeams()
+    {
+        base.SendRpcToAll(nameof(receiveSetupLoadTeams));
+    }
+
+    [PunRPC]
+    private void receiveSetupLoadTeams()
     {
         string[] hostUnits = GameNetwork.GetTeamUnitNames(GameNetwork.TeamNames.HOST);
         string[] guestUnits = GameNetwork.GetTeamUnitNames(GameNetwork.TeamNames.GUEST);
@@ -1461,7 +1527,7 @@ public class War : NetworkEntity
 
     private void sendTeamUnitsInstantiatedNetworkViewIds(string teamName, string unitNetworkViewsIdsString)
     {
-        base.SendRpcToAll("receiveTeamUnitsInstantiatedNetworkViewIds", teamName, unitNetworkViewsIdsString);
+        base.SendRpcToAll(nameof(receiveTeamUnitsInstantiatedNetworkViewIds), teamName, unitNetworkViewsIdsString);
     }
 
     [PunRPC]
@@ -1492,13 +1558,17 @@ public class War : NetworkEntity
         //Debug.LogWarning("War::receiveTeamInstantiated -> _readyByTeam[GameNetwork.TeamNames.HOST]: " + _readyByTeam[GameNetwork.TeamNames.HOST] + " _readyByTeam[GameNetwork.TeamNames.GUEST] " + _readyByTeam[GameNetwork.TeamNames.GUEST]);
         if (_readyByTeam[GameNetwork.TeamNames.HOST] && _readyByTeam[GameNetwork.TeamNames.GUEST])
         {
-            SetupLoadTeams();
             NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.READY_TO_FIGHT, true.ToString(), _localPlayerTeam);
 
         }
     }
 
-    public void onMatchResultsDismissButtonDown()
+    public void onActionPopUpDismissButtonDown()
+    {
+        sendActionPopUpClose();
+    }
+
+    public void OnMatchResultsDismissButtonDown()
     {
         GameNetwork.ClearLocalTeamUnits(_localPlayerTeam);
         NetworkManager.Disconnect();
