@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using CodeStage.AntiCheat.Storage;
 
 public class Main : EnigmaScene
 {
@@ -15,6 +16,7 @@ public class Main : EnigmaScene
     [SerializeField] GameObject _kinPopUp;
     [SerializeField] GameObject _enjinIcon;
     [SerializeField] Text _pvprating;
+    KinManager _kinWrapper;
 
     void Start()
     {
@@ -25,6 +27,51 @@ public class Main : EnigmaScene
         NetworkManager.Disconnect();
         _loginModal.SetActive(false);
         _enjinIcon.SetActive(false);
+
+        _kinWrapper = GameObject.Find("/KinManager").GetComponent<KinManager>();
+        
+        _kinWrapper.RegisterCallback((obj, val) =>
+        {
+            //_pvprating.text += "\n" + obj.ToString();
+
+            if (obj.ToString() == "Account funded")
+            {
+                Text text = GameObject.Find("/Canvas/kin_icon/Text").GetComponent<Text>();
+                text.text = "50";
+                ObscuredPrefs.SetFloat("KinBalanceUser", 50f);
+            }
+
+
+        });
+        
+
+        _pvprating.text = "";
+
+        string kin = _kinWrapper.GetUserPublicAddress();
+
+        if (kin != null && kin != "")
+        {
+            Debug.Log(kin);
+
+
+            decimal balance = _kinWrapper.GetBalance();
+            if (balance == 0)
+            {
+                //_pvprating.text += kin + "\n" + balance;
+                _kinPopUp.SetActive(true);
+                //ObscurePrefs.SetString("Kin", "2");
+                //_kinWrapper.FundKin();
+            } else
+            {
+
+                Text text = GameObject.Find("/Canvas/kin_icon/Text").GetComponent<Text>();
+                text.text = balance.ToString();
+                
+            }
+        }
+        else
+            _kinPopUp.SetActive(false);
+
         Init();
     }
 
@@ -45,34 +92,9 @@ public class Main : EnigmaScene
         }
 
         _enjinWindow.SetActive(false);
-        _pvprating.text = "";
+        
 
-        /*string kin = KinManager.Instance.GetUserPublicAddress();
-
-        if (kin != null && kin != "")
-        {
-            Debug.Log(kin);
-            KinManager.Instance.RegisterCallback((obj, val) => {
-                _pvprating.text += "\n" + val;
-                decimal updatedBalanace = KinManager.Instance.GetBalance();
-                Text text = GameObject.Find("/Canvas/kin_icon/Text").GetComponent<Text>();
-                text.text = updatedBalanace.ToString();
-                
-            });
-
-            decimal balance = KinManager.Instance.GetBalance();
-            if (balance == 0)
-            {
-                _pvprating.text += kin + "\n" + balance;
-                _kinPopUp.SetActive(true);
-                //PlayerPrefs.SetString("Kin", "2");
-                KinManager.Instance.EarnKin(50, "First 50 Kin from Min-Mins");
-            }
-        }
-        else
-            _kinPopUp.SetActive(false);
-
-        //_kinPopUp.SetActive(true);*/
+        //_kinPopUp.SetActive(true);
 
         if(GameNetwork.Instance.IsEnjinLinked)
         {
@@ -81,7 +103,7 @@ public class Main : EnigmaScene
 
         if(loggedIn)
         {
-            _pvprating.text = "PvP Rating: " + GameStats.Instance.Rating;
+            _pvprating.text += "PvP Rating: " + GameStats.Instance.Rating;
         }
         
     }
@@ -253,6 +275,11 @@ public class Main : EnigmaScene
 
     public void closeKinDialog()
     {
+        decimal balance = _kinWrapper.GetBalance();
+        if (balance == 0)
+        {
+            _kinWrapper.FundKin();
+        }
         _kinPopUp.SetActive(false);
     }
 }
