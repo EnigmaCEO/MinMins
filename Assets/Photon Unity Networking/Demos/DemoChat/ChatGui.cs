@@ -60,7 +60,7 @@ public class ChatGui : MonoBehaviour, IChatClientListener
 	
 	// private static string WelcomeText = "Welcome to chat. Type \\help to list commands.";
 	private static string HelpText = "\n    -- HELP --\n" +
-		"To subscribe to channel(s):\n" +
+		"To subscribe to channel(s) (channelNames are case sensitive):\n" +
 			"\t<color=#E07B00>\\subscribe</color> <color=green><list of channelnames></color>\n" +
 			"\tor\n" +
 			"\t<color=#E07B00>\\s</color> <color=green><list of channelnames></color>\n" +
@@ -75,7 +75,7 @@ public class ChatGui : MonoBehaviour, IChatClientListener
 			"\tor\n" +
 			"\t<color=#E07B00>\\j</color> <color=green><channelname></color>\n" +
 			"\n" +
-			"To send a private message:\n" +
+			"To send a private message (username are case sensitive):\n" +
 			"\t\\<color=#E07B00>msg</color> <color=green><username></color> <color=green><message></color>\n" +
 			"\n" +
 			"To change status:\n" +
