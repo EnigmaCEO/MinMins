@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PersistBetweenScenes: 1
-  _url: https://min-mins.herokuapp.com/
+  _url: https://min-mins.herokuapp.com
   _serverAddress: GCHFGWHCU7GUF2E773D54XHFFE4662PP7BVPJZCDXC2ZNEJUVXXYEDVA
 --- !u!114 &2937421053759360211
 MonoBehaviour:

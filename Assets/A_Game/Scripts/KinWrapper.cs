@@ -12,6 +12,7 @@ using System;
 using System.Text;
 using System.Collections;
 using UnityEngine.Networking;
+using CodeStage.AntiCheat.Storage;
 
 
 public class KinWrapper : MonoBehaviour, IPaymentListener, IBalanceListener
@@ -24,8 +25,8 @@ public class KinWrapper : MonoBehaviour, IPaymentListener, IBalanceListener
     private string baseURL = "";// e.g."https://yourkinserver.com";
 
     //appId assigned by Kin foundation. Use "1acd" for testing
-    private readonly string appId = "1acd";
-    private readonly Kin.Environment environment = Kin.Environment.Test;
+    private readonly string appId = "zdWB";
+    private readonly Kin.Environment environment = Kin.Environment.Production;
 
     //Your server URL  for client to request whitelisting
     private readonly string whitelistURL = "?whitelist=1";
@@ -107,18 +108,12 @@ public class KinWrapper : MonoBehaviour, IPaymentListener, IBalanceListener
         if (initializationRetries >= maxInitializes) return;
         //Check if the user has been onboarded (registered on the blockchain)
         //This will only be done once, then we persist it locally so we don't have to keep checking
-        if (PlayerPrefs.GetInt("UserAccountOnboarded", 0) == 0)
+        if (ObscuredPrefs.GetInt("UserAccountOnboarded", 0) == 0)
         {
             //https://github.com/kinecosystem/kin-sdk-unity#query-account-status
             if (verbose) listenerCallback?.Invoke("Initializing", "log");
             if (verbose) listenerCallback?.Invoke("Getting account status", "log");
             kinAccount.GetStatus(GetStatusCallback); //check if onboarded and onboard if necessary
-        }
-        else if (fetchedUserBalance == false)
-        {
-            //https://github.com/kinecosystem/kin-sdk-unity#retrieving-balance
-            if (verbose) listenerCallback?.Invoke("Updating account balance", "log");
-            kinAccount.GetBalance(GetBalanceCallback); //Get the user's balance and persist it locally
         }
         else if (listenersActive == false)
         {
@@ -128,6 +123,12 @@ public class KinWrapper : MonoBehaviour, IPaymentListener, IBalanceListener
             AddListeners();
             isInitialized = true;
             if (verbose) listenerCallback?.Invoke("Listening to blockchain", "log");
+        }
+        else if (fetchedUserBalance == false)
+        {
+            //https://github.com/kinecosystem/kin-sdk-unity#retrieving-balance
+            if (verbose) listenerCallback?.Invoke("Updating account balance", "log");
+            kinAccount.GetBalance(GetBalanceCallback); //Get the user's balance and persist it locally
         }
     }
     #endregion
@@ -149,7 +150,7 @@ public class KinWrapper : MonoBehaviour, IPaymentListener, IBalanceListener
     /// <returns>User's Kin balance</returns>
     public decimal Balance()
     {
-        decimal balance = (decimal)PlayerPrefs.GetFloat("KinBalanceUser", 0f);
+        decimal balance = (decimal)ObscuredPrefs.GetFloat("KinBalanceUser", 0f);
         return (balance);
     }
 
@@ -169,7 +170,7 @@ public class KinWrapper : MonoBehaviour, IPaymentListener, IBalanceListener
     /// <param name="callback"></param>
     public void RegisterCallback(Action<System.Object, String> callback)
     {
-        listenerCallback += callback;
+        listenerCallback = callback;
     }
 
 
@@ -243,6 +244,11 @@ public class KinWrapper : MonoBehaviour, IPaymentListener, IBalanceListener
         StartCoroutine(RequestPayment(amount, memo));
     }
 
+    public void FundKin()
+    {
+        StartCoroutine(RequestPayment(50m, "Inital funding", FundAccountCallback, true));
+    }
+
 
     /// <summary>
     /// Delete the user's account
@@ -252,8 +258,8 @@ public class KinWrapper : MonoBehaviour, IPaymentListener, IBalanceListener
         //https://github.com/kinecosystem/kin-sdk-unity#creating-and-retrieving-a-kin-account
         kinClient.DeleteAccount();
         //Also delete our local caches
-        PlayerPrefs.SetInt("UserAccountOnboarded", 0);
-        PlayerPrefs.SetFloat("KinBalanceUser", 0f);
+        ObscuredPrefs.SetInt("UserAccountOnboarded", 0);
+        ObscuredPrefs.SetFloat("KinBalanceUser", 0f);
         isInitialized = false;
         return (true);
     }
@@ -374,7 +380,7 @@ public class KinWrapper : MonoBehaviour, IPaymentListener, IBalanceListener
             if (status == AccountStatus.Created)
             {
                 if (verbose) listenerCallback?.Invoke("Account created", "log");
-                PlayerPrefs.SetInt("UserAccountOnboarded", 1); //save this so we don't have to check next time
+                ObscuredPrefs.SetInt("UserAccountOnboarded", 1); //save this so we don't have to check next time
                 InitializeKin();// continue with initialization of the wrapper (next step)
             }
             else
@@ -397,7 +403,7 @@ public class KinWrapper : MonoBehaviour, IPaymentListener, IBalanceListener
         if (success)
         {
             if (verbose) listenerCallback?.Invoke("Account funded", "log");
-            PlayerPrefs.SetInt("UserAccountOnboarded", 1);// mark as onboarded so we don't have to check again
+            ObscuredPrefs.SetInt("UserAccountOnboarded", 1);// mark as onboarded so we don't have to check again
             InitializeKin();// continue with initialization of the wrapper (next step)
         }
         else
@@ -414,7 +420,7 @@ public class KinWrapper : MonoBehaviour, IPaymentListener, IBalanceListener
         if (ex == null)
         {
             if (verbose) listenerCallback?.Invoke("Account balance fetched", "log");
-            PlayerPrefs.SetFloat("KinBalanceUser", (float)(balance)); //save this so we can access it instantaneously
+            ObscuredPrefs.SetFloat("KinBalanceUser", (float)(balance)); //save this so we can access it instantaneously
             fetchedUserBalance = true;
             InitializeKin();// continue with initialization of the wrapper (next step)
         }
@@ -447,7 +453,7 @@ public class KinWrapper : MonoBehaviour, IPaymentListener, IBalanceListener
     public void OnEvent(decimal balance)
     {
         if (verbose) listenerCallback?.Invoke("Balance event detected", "log");
-        PlayerPrefs.SetFloat("KinBalanceUser", (float)(balance)); //save this so we can access it instantaneously
+        ObscuredPrefs.SetFloat("KinBalanceUser", (float)(balance)); //save this so we can access it instantaneously
         listenerCallback?.Invoke(balance, "balance");
     }
     #endregion

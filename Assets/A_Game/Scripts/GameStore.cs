@@ -61,7 +61,7 @@ public class GameStore : EnigmaScene
         if (NetworkManager.LoggedIn)
         {
             NetworkManager.Transaction(NetworkManager.Transactions.GIFT_PROGRESS, new Hashtable(), onGiftProgress);
-            handleFreeLootBoxGifts();
+            
         } else
         {
             GameObject.Find("gift_panel").gameObject.SetActive(false);
@@ -71,6 +71,8 @@ public class GameStore : EnigmaScene
         {
             GameObject.Find("enjin_panel").gameObject.SetActive(false);
         }
+
+        handleFreeLootBoxGifts();
     }
 
     private void OnDestroy()

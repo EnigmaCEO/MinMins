@@ -4691,13 +4691,14 @@ GameObject:
   - component: {fileID: 841677274}
   - component: {fileID: 841677273}
   - component: {fileID: 841677272}
+  - component: {fileID: 841677275}
   m_Layer: 5
   m_Name: GiftButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &841677271
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4761,7 +4762,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 841677273}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 841677275}
+        m_MethodName: Send
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &841677273
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4798,6 +4810,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 841677270}
   m_CullTransparentMesh: 0
+--- !u!114 &841677275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 841677270}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 107b41d9e375e4e40b3a3894f007fc96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  giftMsg: {fileID: 1876763584}
 --- !u!1 &851447984
 GameObject:
   m_ObjectHideFlags: 0
@@ -10815,7 +10840,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1876763583
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12062,16 +12087,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameCamera
       objectReference: {fileID: 0}
-    - target: {fileID: 792222247839000169, guid: 7df0bbed38be870468499b48eabd88f4,
-        type: 3}
-      propertyPath: _team1_transform
-      value: 
-      objectReference: {fileID: 1717247812}
-    - target: {fileID: 792222247839000169, guid: 7df0bbed38be870468499b48eabd88f4,
-        type: 3}
-      propertyPath: _team2_transform
-      value: 
-      objectReference: {fileID: 447504676}
     - target: {fileID: 792222247839000162, guid: 7df0bbed38be870468499b48eabd88f4,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -12137,6 +12152,16 @@ PrefabInstance:
       propertyPath: m_ClearFlags
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 792222247839000169, guid: 7df0bbed38be870468499b48eabd88f4,
+        type: 3}
+      propertyPath: _team1_transform
+      value: 
+      objectReference: {fileID: 1717247812}
+    - target: {fileID: 792222247839000169, guid: 7df0bbed38be870468499b48eabd88f4,
+        type: 3}
+      propertyPath: _team2_transform
+      value: 
+      objectReference: {fileID: 447504676}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7df0bbed38be870468499b48eabd88f4, type: 3}
 --- !u!1001 &1300747342492910780

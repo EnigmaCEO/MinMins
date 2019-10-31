@@ -98,15 +98,15 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
             string store = GameOfWhales.STORE_GOOGLEPLAY;
 #endif
             // TODO: Restore when Game of Whales is enabled======
-            GameOfWhales.Init(store);  
-            GameOfWhales.SetPushNotificationsEnable(true);
+           // GameOfWhales.Init(store);  
+         //   GameOfWhales.SetPushNotificationsEnable(true);
             //===================================================
         }
 
-        GameOfWhales.OnPurchaseVerified += OnPurchaseVerifiedCallback;
+       /* GameOfWhales.OnPurchaseVerified += OnPurchaseVerifiedCallback;
         GameOfWhales.OnSpecialOfferAppeared += OnOfferAppearedCallback;
         GameOfWhales.OnSpecialOfferedDisappeared += OnOfferDisappearedCallback;
-        GameOfWhales.OnPushDelivered += OnPushDeliveredCallback;
+        GameOfWhales.OnPushDelivered += OnPushDeliveredCallback;*/
 #endif
 
 #if Kongregate

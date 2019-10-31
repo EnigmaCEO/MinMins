@@ -10,8 +10,8 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
     public class Transactions
     {
-        public const int CHANGE_RATING = 15;
-        public const int RANK_CHANGED_TRANSACTION_ID = 16;
+        public const int CHANGE_RATING = 18;
+        public const int RANK_CHANGED_TRANSACTION_ID = 19;
     }
 
     public class TransactionKeys

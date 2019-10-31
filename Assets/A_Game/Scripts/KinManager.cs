@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class KinManager : SingletonMonobehaviour<KinManager>
 {
-    [SerializeField] string _url = "https://min-mins.herokuapp.com/"; 
+    [SerializeField] string _url = "https://min-mins.herokuapp.com"; 
     [SerializeField] string _serverAddress = "GCHFGWHCU7GUF2E773D54XHFFE4662PP7BVPJZCDXC2ZNEJUVXXYEDVA"; 
 
     private KinWrapper _kinWrapper;
@@ -42,14 +42,19 @@ public class KinManager : SingletonMonobehaviour<KinManager>
         return _kinWrapper.DeleteAccount();
     }
 
-    public void SendKin(decimal amount, string memo)
+    public void SendKin(decimal amount, string memo, string address = "")
     {
-        _kinWrapper.SendKin(5m, memo);
+        _kinWrapper.SendKin(amount, memo, address);
     }
 
     public void EarnKin(decimal amount, string memo)
     {
-        _kinWrapper.EarnKin(10m, memo);
+        _kinWrapper.EarnKin(amount, memo);
+    }
+
+    public void FundKin()
+    {
+        _kinWrapper.FundKin();
     }
 
     private void ListenKin(object eventData, string type)

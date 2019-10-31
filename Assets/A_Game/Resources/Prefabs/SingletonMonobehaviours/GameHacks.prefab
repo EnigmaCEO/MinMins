@@ -49,6 +49,10 @@ MonoBehaviour:
   AssignEffectByType: 0
   BuyResultFalse: 0
   BuyAndroid: 0
+  HideClouds: 0
+  ForceEnjinRewardOnChest: 0
+  WarVictory: 0
+  ChestHit: 0
   UnitTier:
     Enabled: 0
     Value: 1
@@ -82,3 +86,6 @@ MonoBehaviour:
   RoundCount:
     Enabled: 0
     Value: 2
+  Damage:
+    Enabled: 0
+    Value: 1000
