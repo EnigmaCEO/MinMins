@@ -35,35 +35,24 @@ MonoBehaviour:
   - Flash
   - InstantiateRpc
   - Marco
-  - NotifyClientsToSendPlayerInfoMessage
   - PickupItemInit
   - Polo
   - PunPickup
   - PunPickupSimple
   - PunRespawn
-  - RequestForPickupItems
-  - RequestForPickupTimes
-  - SyncPlayerInfoMessage
-  - TaggedPlayer
-  - startMatch
-  - setForWar
-  - sendPlayerTargetInput
-  - handlePlayerTargetInput
-  - receivePlayerTargetInput
-  - receiveSettingsForWar
-  - receiveStartMatch
-  - receiveSetupData
-  - receiveMatchResults
-  - receiveDebugSettingsForWar
-  - disableCollider
-  - receiveDisableCollider
-  - setUpActionArea
-  - receiveMatchResultsServerResponse
   - receiveActionAreaNetworkViewsIds
-  - receiveTeamUnitsInstantiatedNetworkViewIds
-  - receiveEnableCollider
   - receiveActionPopUpClose
   - receiveActionPopUpOpen
+  - receiveDebugSettingsForWar
+  - receiveEnableCollider
+  - receiveMatchResults
+  - receiveMatchResultsServerResponse
+  - receivePlayerTargetInput
   - receiveReadyPopUpDismiss
   - receiveSetupLoadTeams
+  - receiveStartMatch
+  - receiveUnitsNetworkIds
+  - RequestForPickupItems
+  - RequestForPickupTimes
+  - TaggedPlayer
   DisableAutoOpenWizard: 1

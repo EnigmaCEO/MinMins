@@ -1469,7 +1469,7 @@ public class War : NetworkEntity
                 unit.SendDebugSettingsForWar(unitHackType);
         }
 
-        sendTeamUnitsInstantiatedNetworkViewIds(teamName, unitNetworkViewsIdsString);
+        sendUnitsNetworkIds(teamName, unitNetworkViewsIdsString);
         
         setTeamHealth(teamName, true);
         setTeamHealth(teamName, false);
@@ -1525,13 +1525,13 @@ public class War : NetworkEntity
         }
     }
 
-    private void sendTeamUnitsInstantiatedNetworkViewIds(string teamName, string unitNetworkViewsIdsString)
+    private void sendUnitsNetworkIds(string teamName, string unitNetworkViewsIdsString)
     {
-        base.SendRpcToAll(nameof(receiveTeamUnitsInstantiatedNetworkViewIds), teamName, unitNetworkViewsIdsString);
+        base.SendRpcToAll(nameof(receiveUnitsNetworkIds), teamName, unitNetworkViewsIdsString);
     }
 
     [PunRPC]
-    private void receiveTeamUnitsInstantiatedNetworkViewIds(string teamName, string unitNetworkViewsIdsString)
+    private void receiveUnitsNetworkIds(string teamName, string unitNetworkViewsIdsString)
     {
         string[] unitNetworkViewsIds = unitNetworkViewsIdsString.Split(NetworkManager.Separators.KEYS);
 
