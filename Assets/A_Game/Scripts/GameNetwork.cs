@@ -3,6 +3,7 @@ using SimpleJSON;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 {
@@ -110,6 +111,12 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         public const string GUEST = "Guest";
     }
 
+    public class PopUpMessages
+    {
+        public const string OPPONENT_DISCONNECTED = "Your opponent has disconnected.";
+        public const string PLAYER_DISCONNECTED = "You have disconnected.";
+    }
+
     public delegate void OnReadyToFightDelegate(string teamName, bool ready);
     static public OnReadyToFightDelegate OnReadyToFightCallback;
 
@@ -126,7 +133,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     static public OnGuestUnitIndexChangedDelegate OnGuestUnitIndexChangedCallback;
 
     public delegate void OnActionStartedDelegate(int actionsLeft);
-    static public OnActionStartedDelegate OnActionStartedCallback; 
+    static public OnActionStartedDelegate OnActionStartedCallback;
 
     public delegate void OnUnitHealthSetDelegate(string team, string unitName, int health);
     static public OnUnitHealthSetDelegate OnUnitHealthSetCallback;
@@ -158,6 +165,8 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     [SerializeField] private int _roomMaxPlayers = 2;
     [SerializeField] private int _roomMaxPlayersNotExpectating = 2;
 
+    private MessagePopUp _messagePopUp;
+
     [Header("Only for display. Set at runtime:")]
     public bool IsEnjinLinked = false;
     public bool HasEnjinWeapon = false;
@@ -176,24 +185,96 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     private Hashtable _matchResultshashTable = new Hashtable();
 
 
-    /*override protected*/ void Awake()
+    void Awake()
     {
-        //base.Awake();
-
         NetworkManager.OnPlayerCustomPropertiesChangedCallback += OnPlayerCustomPropertiesChanged;
         NetworkManager.OnRoomCustomPropertiesChangedCallback += OnRoomCustomPropertiesChanged;
+
+        NetworkManager.OnPlayerDisconnectedCallback += onPlayerDisconnected;
+        NetworkManager.OnDisconnectedFromNetworkCallback += onDisconnectedFromNetwork;
+
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded += onSceneLoaded;
     }
 
-    //private void Start()
-    //{
-    //    base.setNetworkViewId(1001);
-    //}
+    private void onPlayerDisconnected(int disconnectedPlayerId)
+    {
+        _messagePopUp.Open(PopUpMessages.OPPONENT_DISCONNECTED);
+    }
+
+    private void onDisconnectedFromNetwork()
+    {
+        if(GameStats.Instance.Mode == GameStats.Modes.Pvp)
+            _messagePopUp.Open(PopUpMessages.PLAYER_DISCONNECTED);
+    }
+
+    private void onSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        _messagePopUp = GameObject.FindObjectOfType<MessagePopUp>();
+        if (_messagePopUp)
+        {
+            _messagePopUp.OnDismissButtonDownCallback += onMessagePopUpDismissButtonDown;
+        }
+    }
+
+    private void Update()
+    {
+        GameHacks gameHacks = GameHacks.Instance;
+
+        if (gameHacks.TriggerPlayerDisconnectPopUp.Enabled)
+        {
+            if (Input.GetKeyDown(gameHacks.TriggerPlayerDisconnectPopUp.GetValueAsEnum<KeyCode>()))
+            {
+                if (_messagePopUp)
+                {
+                    _messagePopUp.Open(PopUpMessages.PLAYER_DISCONNECTED);
+                }
+                else
+                {
+                    Debug.LogWarning("There is no message pop up object in scene for message: " + PopUpMessages.PLAYER_DISCONNECTED);
+                }
+            }
+        }
+
+        if (gameHacks.TriggerOpponentDisconnectPopUp.Enabled)
+        {
+            if (Input.GetKeyDown(gameHacks.TriggerOpponentDisconnectPopUp.GetValueAsEnum<KeyCode>()))
+            {
+                if (_messagePopUp != null)
+                {
+                    _messagePopUp.Open(PopUpMessages.OPPONENT_DISCONNECTED);
+                }
+                else
+                {
+                    Debug.LogWarning("There is no message pop up object in scene for message: " + PopUpMessages.OPPONENT_DISCONNECTED);
+                }
+            }
+        }
+    }
 
     private void OnDestroy()
     {
         //Debug.LogWarning("GameNetwork::OnDestroy");
         NetworkManager.OnPlayerCustomPropertiesChangedCallback -= OnPlayerCustomPropertiesChanged;
         NetworkManager.OnRoomCustomPropertiesChangedCallback -= OnRoomCustomPropertiesChanged;
+
+        NetworkManager.OnPlayerDisconnectedCallback -= onPlayerDisconnected;
+        NetworkManager.OnDisconnectedFromNetworkCallback -= onDisconnectedFromNetwork;
+
+        if (_messagePopUp != null)
+        {
+            _messagePopUp.OnDismissButtonDownCallback -= onMessagePopUpDismissButtonDown;
+        }
+    }
+
+    private void onMessagePopUpDismissButtonDown(string message)
+    {
+        Debug.LogWarning("GameNetwork::onMessagePopUpDismissButtonDown -> message: " + message);
+
+        if ((message == PopUpMessages.OPPONENT_DISCONNECTED) || (message == PopUpMessages.PLAYER_DISCONNECTED))
+        {
+            NetworkManager.Disconnect();
+            Enigma.CoreSystems.SceneManager.LoadScene(GameConstants.Scenes.LEVELS);
+        }
     }
 
     static public string GetNicknameFromPlayerTeam(string teamName)
@@ -231,7 +312,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
         string unitsString = NetworkManager.GetAnyPlayerCustomProperty(GameNetwork.PlayerCustomProperties.TEAM_UNITS, teamName, networkPlayerId);
 
-        if (unitsString == null)
+        if (unitsString == "")
             return null;
 
         string[] unitNames = unitsString.Split(NetworkManager.Separators.VALUES);
@@ -531,16 +612,19 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     {
         string[] teamUnits = GameNetwork.GetTeamUnitNames(teamName);
 
-        foreach (string unitName in teamUnits)
+        if (teamUnits != null)
         {
-            SetLocalPlayerUnitProperty(UnitPlayerProperties.LEVEL, unitName, null, teamName);
-            SetLocalPlayerUnitProperty(UnitPlayerProperties.STRENGHT, unitName, null, teamName);
-            SetLocalPlayerUnitProperty(UnitPlayerProperties.DEFENSE, unitName, null, teamName);
-            SetLocalPlayerUnitProperty(UnitPlayerProperties.EFFECT_SCALE, unitName, null, teamName);
-            SetLocalPlayerUnitProperty(UnitPlayerProperties.POSITION, unitName, null, teamName);
-        }
+            foreach (string unitName in teamUnits)
+            {
+                SetLocalPlayerUnitProperty(UnitPlayerProperties.LEVEL, unitName, null, teamName);
+                SetLocalPlayerUnitProperty(UnitPlayerProperties.STRENGHT, unitName, null, teamName);
+                SetLocalPlayerUnitProperty(UnitPlayerProperties.DEFENSE, unitName, null, teamName);
+                SetLocalPlayerUnitProperty(UnitPlayerProperties.EFFECT_SCALE, unitName, null, teamName);
+                SetLocalPlayerUnitProperty(UnitPlayerProperties.POSITION, unitName, null, teamName);
+            }
 
-        NetworkManager.SetLocalPlayerCustomProperty(PlayerCustomProperties.TEAM_UNITS, null, teamName);
+            NetworkManager.SetLocalPlayerCustomProperty(PlayerCustomProperties.TEAM_UNITS, null, teamName);
+        }
     }
 
     static public void SetLocalPlayerUnitProperty(string property, string unitName, string value, string teamName)

@@ -160,7 +160,7 @@ namespace Enigma.CoreSystems
         public delegate void OnPlayerConnectedDelegate(int connectedPlayerId);
         static public OnPlayerConnectedDelegate OnPlayerConnectedCallback;
 
-        public delegate void OnPlayerDisconnectedDelegate(PhotonPlayer disconnectedPlayer);
+        public delegate void OnPlayerDisconnectedDelegate(int disconnectedPlayerId);
         static public OnPlayerDisconnectedDelegate OnPlayerDisconnectedCallback;
 
         public delegate void OnPlayerCustomPropertiesChangedDelegate(PhotonPlayer player, Hashtable updatedProperties);
@@ -186,7 +186,7 @@ namespace Enigma.CoreSystems
         static public SimpleDelegate OnLeftRoomCallback;
 
         static public SimpleDelegate OnUpdatedFriendListCallback;
-        static public SimpleDelegate OnDisconnectedFromPhotonCallback;
+        static public SimpleDelegate OnDisconnectedFromNetworkCallback;
 
         static public SimpleDelegate OnReceivedRoomListUpdateCallback;
         static public SimpleDelegate OnConnectedToMasterCallback;
@@ -962,13 +962,30 @@ namespace Enigma.CoreSystems
 
                 Hashtable userData = Data[DataGroups.INFO][DataKeys.PLAYER] as Hashtable;
                 print("NetworkManager::GetAnyPlayerCustomProperty -> networkPlayerId: " + networkPlayerId + " userData.ToStringFull(): " + userData.ToStringFull());
-                return userData[virtualPlayerKey].ToString().Trim('"');
+
+                if (userData.ContainsKey(virtualPlayerKey))
+                {
+                    return userData[virtualPlayerKey].ToString().Trim('"');
+                }
+                else
+                {
+                    print("NetworkManager::GetAnyPlayerCustomProperty -> Player with virtualPlayerId: " + virtualPlayerId + " does not have a custom property with key: " + virtualPlayerKey);
+                    return "";
+                }
             }
             else  // Online
             {
                 print("NetworkManager::GetAnyPlayerCustomProperty -> networkPlayerId: " + networkPlayerId + " player.CustomProperties.ToStringFull(): " + PhotonPlayer.Find(networkPlayerId).CustomProperties.ToStringFull());
-
-                return GetNetworkPlayerById(networkPlayerId).CustomProperties[virtualPlayerKey].ToString();
+                PhotonPlayer photonPlayer = GetNetworkPlayerById(networkPlayerId);
+                if (photonPlayer.CustomProperties.ContainsKey(virtualPlayerKey))
+                {
+                    return photonPlayer.CustomProperties[virtualPlayerKey].ToString();
+                }
+                else
+                {
+                    print("NetworkManager::GetAnyPlayerCustomProperty -> Player with networkId: " + networkPlayerId + " and name: " + photonPlayer.NickName + " does not have a custom property with key: " + virtualPlayerKey);
+                    return "";
+                }
             }
         }
 
@@ -1044,12 +1061,30 @@ namespace Enigma.CoreSystems
 
                 Hashtable userData = Data[DataGroups.INFO][DataKeys.ROOM] as Hashtable;
                 Debug.Log("GetRoomCustomProperty -> userData.ToStringFull(): " + userData.ToStringFull());
-                return userData[key].ToString().Trim('"');
+
+                if (userData.ContainsKey(key))
+                {
+                    return userData[key].ToString().Trim('"');
+                }
+                else
+                {
+                    Debug.Log("GetRoomCustomProperty -> There is no room offline property with key: " + key);
+                    return "";
+                }
             }
             else  // Online
             {
                 Debug.Log("GetRoomCustomProperty -> PhotonNetwork.room.CustomProperties.ToStringFull(): " + PhotonNetwork.room.CustomProperties.ToStringFull());
-                return PhotonNetwork.room.CustomProperties[key].ToString();
+
+                if (PhotonNetwork.room.CustomProperties.ContainsKey(key))
+                {
+                    return PhotonNetwork.room.CustomProperties[key].ToString();
+                }
+                else
+                {
+                    Debug.Log("GetRoomCustomProperty -> There is no online room property with key: " + key);
+                    return "";
+                }
             }
         }
 
@@ -1247,7 +1282,7 @@ namespace Enigma.CoreSystems
             Debug.Log("NetworkManager::Player: " + disconnectedPlayer.NickName + " disconnected");
 
             if (OnPlayerDisconnectedCallback != null)
-                OnPlayerDisconnectedCallback(disconnectedPlayer);
+                OnPlayerDisconnectedCallback(disconnectedPlayer.ID);
         }
 
         void OnPhotonPlayerPropertiesChanged(object[] playerAndUpdatedProps)
@@ -1307,8 +1342,8 @@ namespace Enigma.CoreSystems
             //FOR TESTING
             //Application.Quit();
 
-            if (OnDisconnectedFromPhotonCallback != null)
-                OnDisconnectedFromPhotonCallback();
+            if (OnDisconnectedFromNetworkCallback != null)
+                OnDisconnectedFromNetworkCallback();
         }
 
         //Methods for Chat.cs

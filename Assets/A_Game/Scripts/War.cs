@@ -65,6 +65,7 @@ public class War : NetworkEntity
     [SerializeField] private GameObject _roundPopUp;
     [SerializeField] private Text _roundPopUpText;
 
+
     private Transform _hostGrid;
     private Transform _guestGrid;
 
@@ -115,6 +116,8 @@ public class War : NetworkEntity
         base.Awake();
 
         NetworkManager.OnJoinedRoomCallback += onJoinedRoom;
+        NetworkManager.OnPlayerDisconnectedCallback += onPlayerDisconnected;
+        NetworkManager.OnDisconnectedFromNetworkCallback += onDisconnectedFromNetwork;
 
         GameNetwork.OnPlayerTeamUnitsSetCallback += onPlayerTeamUnitsSet;
         GameNetwork.OnReadyToFightCallback += onReadyToFight;
@@ -205,14 +208,6 @@ public class War : NetworkEntity
             _tankAreasByTargetByTeam = new Dictionary<string, Dictionary<string, List<TankArea>>>();
             _tankAreasByTargetByTeam.Add(GameNetwork.TeamNames.HOST, new Dictionary<string, List<TankArea>>());
             _tankAreasByTargetByTeam.Add(GameNetwork.TeamNames.GUEST, new Dictionary<string, List<TankArea>>());
-
-            //_healerAreasByOwnerByTargetByTeam = new Dictionary<string, Dictionary<string, Dictionary<string, List<HealerArea>>>>();
-            //_healerAreasByOwnerByTargetByTeam.Add(GameNetwork.TeamNames.HOST, new Dictionary<string, Dictionary<string, List<HealerArea>>>());
-            //_healerAreasByOwnerByTargetByTeam.Add(GameNetwork.TeamNames.GUEST, new Dictionary<string, Dictionary<string, List<HealerArea>>>());
-
-            //_tanksAreasByOwnerByTargetByTeam = new Dictionary<string, Dictionary<string, Dictionary<string, List<TankArea>>>>();
-            //_tanksAreasByOwnerByTargetByTeam.Add(GameNetwork.TeamNames.HOST, new Dictionary<string, Dictionary<string, List<TankArea>>>());
-            //_tanksAreasByOwnerByTargetByTeam.Add(GameNetwork.TeamNames.GUEST, new Dictionary<string, Dictionary<string, List<TankArea>>>());
         }
 
         if (GameStats.Instance.Mode == GameStats.Modes.SinglePlayer)
@@ -266,6 +261,8 @@ public class War : NetworkEntity
     {
         //Debug.LogWarning("War::OnDestroy");
         NetworkManager.OnJoinedRoomCallback -= onJoinedRoom;
+        NetworkManager.OnPlayerDisconnectedCallback -= onPlayerDisconnected;
+        NetworkManager.OnDisconnectedFromNetworkCallback -= onDisconnectedFromNetwork;
 
         GameNetwork.OnPlayerTeamUnitsSetCallback -= onPlayerTeamUnitsSet;
         GameNetwork.OnReadyToFightCallback -= onReadyToFight;
@@ -361,6 +358,25 @@ public class War : NetworkEntity
 
         if (!_setupWasCalled)
             setupWar();
+    }
+
+    private void onPlayerDisconnected(int disconnectedPlayerId)
+    {
+        handleDisconnection();
+    }
+
+    private void onDisconnectedFromNetwork()
+    {
+        handleDisconnection();
+    }
+
+    private void handleDisconnection()
+    {
+        if (GameStats.Instance.Mode == GameStats.Modes.Pvp)  //Shouldn't be called, but just in case.
+        {
+            StopAllCoroutines();
+            CancelInvoke();
+        }
     }
 
     private void onPlayerTeamUnitsSet(string teamName, string unitsString)
@@ -1084,6 +1100,8 @@ public class War : NetworkEntity
 
     private void setLocalTeamUnits()
     {
+        GameNetwork.ClearLocalTeamUnits(_localPlayerTeam);
+
         GameStats gameStats = GameStats.Instance;
         GameInventory gameInventory = GameInventory.Instance;
 
@@ -1570,7 +1588,7 @@ public class War : NetworkEntity
 
     public void OnMatchResultsDismissButtonDown()
     {
-        GameNetwork.ClearLocalTeamUnits(_localPlayerTeam);
+        //GameNetwork.ClearLocalTeamUnits(_localPlayerTeam);
         NetworkManager.Disconnect();
         SceneManager.LoadScene(GameConstants.Scenes.LEVELS);
     }

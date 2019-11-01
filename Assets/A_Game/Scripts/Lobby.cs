@@ -48,6 +48,9 @@ public class Lobby : NetworkEntity
         NetworkManager.OnPlayerConnectedCallback += onPlayerConnected;
         NetworkManager.OnReceivedRoomListUpdateCallback += OnReceivedRoomListUpdate;
         NetworkManager.OnConnectedToMasterCallback += OnConnectedToMaster;
+
+        NetworkManager.OnPlayerDisconnectedCallback += onPlayerDisconnected;
+        NetworkManager.OnDisconnectedFromNetworkCallback += onDisconnectedFromNetwork;
     }
 
     private void removeDelegates()
@@ -57,6 +60,9 @@ public class Lobby : NetworkEntity
         NetworkManager.OnPlayerConnectedCallback -= onPlayerConnected;
         NetworkManager.OnReceivedRoomListUpdateCallback -= OnReceivedRoomListUpdate;
         NetworkManager.OnConnectedToMasterCallback -= OnConnectedToMaster;
+
+        NetworkManager.OnPlayerDisconnectedCallback -= onPlayerDisconnected;
+        NetworkManager.OnDisconnectedFromNetworkCallback -= onDisconnectedFromNetwork;
     }
 
     private void OnConnectedToMaster()
@@ -111,6 +117,22 @@ public class Lobby : NetworkEntity
         Debug.LogWarning("Lobby::onPlayerConnected -> HostPlayerId: " + gameNetwork.HostPlayerId + " GuestPlayerId: " + gameNetwork.GuestPlayerId);
         StopCoroutine(handleWaitForAiRival());
         sendStartMatch();
+    }
+
+    private void onPlayerDisconnected(int disconnectedPlayerId)
+    {
+        handleDisconnection();
+    }
+
+    private void onDisconnectedFromNetwork()
+    {
+        handleDisconnection();
+    }
+
+    private void handleDisconnection()
+    {
+        StopAllCoroutines();
+        CancelInvoke();
     }
 
     private void handleRoomCreationAndJoin()
