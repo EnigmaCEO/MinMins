@@ -55,6 +55,11 @@
 	[[TapjoyConnectPlugin sharedTapjoyConnectPlugin] contentDidDisappear:myGuid_ withName:placement.placementName];
 }
 
+- (void)didClick:(TJPlacement*)placement
+{
+	[[TapjoyConnectPlugin sharedTapjoyConnectPlugin] didClick:myGuid_ withName:placement.placementName];
+}
+
 - (void)placement:(TJPlacement*)placement didRequestPurchase:(TJActionRequest*)request productId:(NSString*)productId
 {
 	[[TapjoyConnectPlugin sharedTapjoyConnectPlugin] placement:myGuid_ withName:placement.placementName didRequestPurchase:request productId:productId];

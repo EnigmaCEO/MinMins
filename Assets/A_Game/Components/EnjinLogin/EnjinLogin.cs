@@ -154,6 +154,7 @@ public class EnjinLogin : MonoBehaviour
         string country = NetworkManager.Country;  
         extras.Add("ip", ipAddress);
         extras.Add("country", country);
+        extras.Add("kin_address", KinManager.Instance.GetUserPublicAddress());
 
         _lastUsername = loginUsername.text;
         _lastPassword = loginPassword.text;
@@ -231,10 +232,12 @@ public class EnjinLogin : MonoBehaviour
         string enjinId = response_hash[NetworkManager.TransactionKeys.USER_DATA][NetworkManager.TransactionKeys.ENJIN_ID].ToString().Trim('"');
         EnigmaHacks enigmaHacks = EnigmaHacks.Instance;
 
+        Debug.Log("Enjin ID: " + enjinId);
         if ((enjinId != "null") || enigmaHacks.EnjinIdNotNull)
         {
-            string enjinCode = response_hash[NetworkManager.TransactionKeys.USER_DATA][NetworkManager.TransactionKeys.ENJIN_CODE].ToString().Trim('"');
 
+            string enjinCode = response_hash[NetworkManager.TransactionKeys.USER_DATA][NetworkManager.TransactionKeys.ENJIN_CODE].ToString().Trim('"');
+            Debug.Log("Link Code: " + enjinCode);
             if ((enjinCode != "null") || enigmaHacks.EnjinCodeNotNull)
             {
                 GameObject.Find("/Main").GetComponent<Main>().StartEnjinQR(enjinCode);

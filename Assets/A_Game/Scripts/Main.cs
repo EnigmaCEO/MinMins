@@ -27,6 +27,8 @@ public class Main : EnigmaScene
         NetworkManager.Disconnect();
         _loginModal.SetActive(false);
         _enjinIcon.SetActive(false);
+        _enjinWindow.SetActive(false);
+
 
         _kinWrapper = GameObject.Find("/KinManager").GetComponent<KinManager>();
         
@@ -91,7 +93,6 @@ public class Main : EnigmaScene
             _loginModal.GetComponent<EnjinLogin>().loginSubmit();
         }
 
-        _enjinWindow.SetActive(false);
         
 
         //_kinPopUp.SetActive(true);
@@ -270,8 +271,10 @@ public class Main : EnigmaScene
 
         _loginButton.gameObject.SetActive(!loggedIn);
         _logoutButton.gameObject.SetActive(loggedIn);
-        _enjinIcon.SetActive(true);
+        _enjinIcon.SetActive(false);
         _pvprating.text = "";
+        StopCoroutine("handleEnjinLinkingCheck");
+        _enjinWindow.gameObject.SetActive(false);
     }
 
     public void closeKinDialog()

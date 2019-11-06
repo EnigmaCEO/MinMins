@@ -30,6 +30,7 @@
 - (void)contentIsReady:(NSString*)guid withName:(NSString*)placementName;
 - (void)contentDidAppear:(NSString*)guid withName:(NSString*)placementName;
 - (void)contentDidDisappear:(NSString*)guid withName:(NSString*)placementName;
+- (void)didClick:(NSString*)guid withName:(NSString*)placementName;
 - (void)placement:(NSString *)guid withName:(NSString*)placementName didRequestPurchase:(TJActionRequest*)request productId:(NSString*)productId;
 - (void)placement:(NSString *)guid withName:(NSString*)placementName didRequestReward:(TJActionRequest*)request itemId:(NSString*)itemId quantity:(int)quantity;
 

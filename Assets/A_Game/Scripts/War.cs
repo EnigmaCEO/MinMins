@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using CodeStage.AntiCheat.Storage;
 
 public class War : NetworkEntity
 {
@@ -1959,9 +1960,22 @@ public class War : NetworkEntity
                 if (NetworkManager.LoggedIn && gameNetwork.IsEnjinLinked)
                 {
                     int chance = 5;
+                    int enjinWins = 10;
 
                     if (gameNetwork.HasEnjinMinMinsToken)
-                        chance = 10;
+                    {
+                        chance = 25;
+                        enjinWins = 5;
+                    }
+                        
+                    if(ObscuredPrefs.GetInt("EnjinWins", 0) == enjinWins)
+                    {
+                        chance = 100;
+                        ObscuredPrefs.SetInt("EnjinWins", 0);
+                    } else
+                    {
+                        ObscuredPrefs.SetInt("EnjinWins", ObscuredPrefs.GetInt("EnjinWins", 0)+1);
+                    }
 
                     if (UnityEngine.Random.Range(1, 101) <= chance)
                     {

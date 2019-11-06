@@ -109,6 +109,13 @@ typedef enum TJCActionRequestTypeEnum {
  */
 - (void)contentDidDisappear:(TJPlacement*)placement;
 
+/**
+ * Called when a click event has occurred
+ * @param placement The TJPlacement that was sent
+ * @return n/a
+ */
+- (void)didClick:(TJPlacement*)placement;
+
 
 /**
  * Callback issued by TJ to publisher when the user has successfully completed a purchase request

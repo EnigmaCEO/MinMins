@@ -17,5 +17,6 @@
 - (void)contentIsReady:(TJPlacement*)placement;
 - (void)contentDidAppear:(TJPlacement*)placement;
 - (void)contentDidDisappear:(TJPlacement*)placement;
+- (void)didClick:(TJPlacement*)placement;
 
 @end

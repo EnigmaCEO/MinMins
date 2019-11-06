@@ -22,10 +22,6 @@
 
 typedef void (^currencyCompletion)(NSDictionary *parameters, NSError *error);
 typedef void (^networkCompletion)(BOOL success, NSError *error);
-typedef void (^urlCompletion)(NSURL *url, NSDate *expires, NSError *error);
-
-@interface TJCAdView : UIView <UIWebViewDelegate>
-@end
 
 @class TJCCurrencyManager;
 @class TJCVideoManager;
@@ -120,14 +116,6 @@ typedef void (^urlCompletion)(NSURL *url, NSDate *expires, NSError *error);
  * @return URL of Tapjoy support web page for specified currency
  */
 + (NSString*)getSupportURL:(NSString*)currencyID;
-
-/**
- * Attempts to get an URL of Offerwall to show it on an external browser, i.e. Safari.
- *
- * @param placementName The name of the placement that is configured for Offerwall.
- * @param completion The completion block that is invoked after the attempt has completed.
- */
-+ (void)getOfferwallURL:(NSString *)placementName completion:(urlCompletion)completion;
 
 /**
  * This method returns a user token for programmatic mediation.

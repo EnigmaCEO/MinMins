@@ -494,6 +494,7 @@ namespace tapjoy {
     virtual void onContentReady(TJPlacementHandle placementHandle, const char* placementName) {}
     virtual void onContentShow(TJPlacementHandle placementHandle, const char* placementName) {}
     virtual void onContentDismiss(TJPlacementHandle placementHandle, const char* placementName) {}
+    virtual void onClick(TJPlacementHandle placementHandle, const char* placementName) {}
     virtual void onPurchaseRequest(TJPlacementHandle placementHandle, const char* placementName, TJActionRequestHandle requestHandle, const char* requestId, const char* requestToken, const char* productId) {}
     virtual void onRewardRequest(TJPlacementHandle placementHandle, const char* placementName, TJActionRequestHandle requestHandle, const char* requestId, const char* requestToken, const char* itemId, int quantity) {}
   };

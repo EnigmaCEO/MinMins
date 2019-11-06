@@ -317,6 +317,18 @@ NSCharacterSet *URLFullCharacterSet;
 	UnitySendMessage([UNITY_GAME_OBJECT_NAME UTF8String], "OnNativePlacementCallback", [parameters UTF8String]);
 }
 
+- (void)didClick:(NSString *)guid withName:(NSString *)placementName
+{
+	placementName = [placementName stringByAddingPercentEncodingWithAllowedCharacters:URLFullCharacterSet];
+
+	NSMutableString *parameters = [[NSMutableString alloc] init];
+	[parameters appendString:@"OnPlacementClick,"];
+	[parameters appendString:guid];
+	[parameters appendString:@","];
+	[parameters appendString:placementName];
+	UnitySendMessage([UNITY_GAME_OBJECT_NAME UTF8String], "OnNativePlacementCallback", [parameters UTF8String]);
+}
+
 - (void)placement:(NSString *)guid withName:(NSString *)placementName didRequestPurchase:(TJActionRequest*)request productId:(NSString*)productId
 {
 	[actionRequestDict_ setObject:request forKey:guid];

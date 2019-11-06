@@ -517,6 +517,7 @@ namespace Enigma.CoreSystems
             {
                 SetSessionID(ssid);
                 LoggedIn = true;
+                StartHeartBeat((JSONNode node) => { });
             }
         }
 
@@ -553,6 +554,7 @@ namespace Enigma.CoreSystems
             {
                 SetSessionID(ssid);
                 LoggedIn = true;
+                StartHeartBeat((JSONNode node) => { });
             }
         }
 
