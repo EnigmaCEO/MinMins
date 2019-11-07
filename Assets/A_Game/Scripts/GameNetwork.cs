@@ -74,6 +74,8 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         public const string HOST_RATING = "Host_Rating";
         public const string HOST_ID = "Host_Id";
         //public const string MAX_PLAYERS = "mp";
+
+        public const string HAS_PVP_AI = "Has_Pvp_Ai";
     }
 
     public class UnitRoomProperties
@@ -146,6 +148,10 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
     public delegate void OnPlayerTeamUnitsSetDelegate(string team, string unitsString);
     static public OnPlayerTeamUnitsSetDelegate OnPlayerTeamUnitsSetCallback;
+
+    public delegate void OnPvpAiSetDelegate(bool enabled);
+
+    public OnPvpAiSetDelegate OnPvpAiSetCallback;
 
     public delegate void OnSendResultsDelegate(string message, int updatedRating);
     private OnSendResultsDelegate _onSendResultsCallback;
@@ -273,7 +279,8 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         if ((message == PopUpMessages.OPPONENT_DISCONNECTED) || (message == PopUpMessages.PLAYER_DISCONNECTED))
         {
             NetworkManager.Disconnect();
-            Enigma.CoreSystems.SceneManager.LoadScene(GameConstants.Scenes.LEVELS);
+            //Enigma.CoreSystems.SceneManager.LoadScene(GameConstants.Scenes.LEVELS);
+            NetworkManager.LoadScene(GameConstants.Scenes.LEVELS);
         }
     }
 
@@ -386,6 +393,11 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
                 if (OnTeamHealthSetCallback != null)
                     OnTeamHealthSetCallback(team, int.Parse(value));
+            }
+            else if (idPart == RoomCustomProperties.HAS_PVP_AI)
+            {
+                if (OnPvpAiSetCallback != null)
+                    OnPvpAiSetCallback(bool.Parse(value));
             }
         }
     }
@@ -675,7 +687,12 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     public void JoinOrCreateRoom()
     {
         string roomName = "1v1 - " + NetworkManager.GetPlayerName();
-        NetworkManager.JoinOrCreateRoom(roomName, true, true, _roomMaxPlayers, getCustomProps(), getCustomPropsForLobby(), _roomMaxPlayersNotExpectating);
+
+        bool isOpen = true;
+        if ((GameStats.Instance.Mode == GameStats.Modes.Pvp) && GameHacks.Instance.ForcePvpAi)
+            isOpen = false;
+
+        NetworkManager.JoinOrCreateRoom(roomName, true, isOpen, _roomMaxPlayers, getCustomProps(), getCustomPropsForLobby(), _roomMaxPlayersNotExpectating);
     }
 
     public void CreateRoom(string roomName)

@@ -372,6 +372,11 @@ namespace Enigma.CoreSystems
             return onlineName[Random.Range(0, onlineName.Length)];
         }
 
+        static public void LoadScene(string sceneName)
+        {
+            PhotonNetwork.LoadLevel(sceneName);
+        }
+
         static private IEnumerator httpRequest(int id, Hashtable hashtable, Callback externalCallback, Callback localCallback, TextureCallback texture)
         {
             string url = _serverUrl + "/trans/" + id + ".php";

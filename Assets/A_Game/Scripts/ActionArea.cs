@@ -142,7 +142,7 @@ public class ActionArea : NetworkEntity
 
     private void sendEnableCollider(bool enabled)
     {
-        base.SendRpcToAll("receiveEnableCollider", enabled);
+        base.SendRpcToAll(nameof(receiveEnableCollider), enabled);
     }
 
     [PunRPC]

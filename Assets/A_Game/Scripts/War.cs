@@ -470,12 +470,14 @@ public class War : NetworkEntity
 
     private void sendReadyPopUpDismiss()
     {
+        Debug.LogWarning("sendReadyPopUpDismiss");
         base.SendRpcToAll(nameof(receiveReadyPopUpDismiss));
     }
 
     [PunRPC]
     private void receiveReadyPopUpDismiss()
     {
+        Debug.LogWarning("receiveReadyPopUpDismiss");
         ReadyPopup.SetActive(false);
     }
 
@@ -924,7 +926,7 @@ public class War : NetworkEntity
     private void sendPlayerTargetInput(Vector3 playerInputWorldPosition, string teamName)
     {
         //Debug.LogWarning("sendPlayerTargetInput");
-        base.SendRpcToMasterClient("receivePlayerTargetInput", playerInputWorldPosition, teamName, NetworkManager.GetLocalPlayerId());
+        base.SendRpcToMasterClient(nameof(receivePlayerTargetInput), playerInputWorldPosition, teamName, NetworkManager.GetLocalPlayerId());
     }
 
     //Only Master Client uses this
@@ -1002,7 +1004,7 @@ public class War : NetworkEntity
 
     private void sendActionAreaNetworkViewsIds(string actionAreaNetworkViewIdsString)
     {
-        base.SendRpcToAll("receiveActionAreaNetworkViewsIds", actionAreaNetworkViewIdsString);
+        base.SendRpcToAll(nameof(receiveActionAreaNetworkViewsIds), actionAreaNetworkViewIdsString);
     }
 
     [PunRPC]
@@ -1496,12 +1498,15 @@ public class War : NetworkEntity
 
     private void sendSetupLoadTeams()
     {
+        Debug.LogWarning("sendSetupLoadTeams");
         base.SendRpcToAll(nameof(receiveSetupLoadTeams));
     }
 
     [PunRPC]
     private void receiveSetupLoadTeams()
     {
+        Debug.LogWarning("receiveSetupLoadTeams");
+
         string[] hostUnits = GameNetwork.GetTeamUnitNames(GameNetwork.TeamNames.HOST);
         string[] guestUnits = GameNetwork.GetTeamUnitNames(GameNetwork.TeamNames.GUEST);
 
@@ -1591,7 +1596,8 @@ public class War : NetworkEntity
     {
         //GameNetwork.ClearLocalTeamUnits(_localPlayerTeam);
         NetworkManager.Disconnect();
-        SceneManager.LoadScene(GameConstants.Scenes.LEVELS);
+        //SceneManager.LoadScene(GameConstants.Scenes.LEVELS);
+        NetworkManager.LoadScene(GameConstants.Scenes.LEVELS);
     }
 
     public void SetUnitForHealing(string targetName, HealerArea healerArea)
@@ -1905,10 +1911,9 @@ public class War : NetworkEntity
 
     private void sendMatchResults(string winner)
     {
-        base.SendRpcToAll("receiveMatchResults", winner);
+        base.SendRpcToAll(nameof(receiveMatchResults), winner);
     }
 
-    //Master Client Method
     [PunRPC]
     private void receiveMatchResults(string winner)
     {
@@ -2031,7 +2036,7 @@ public class War : NetworkEntity
 
     private void sendMatchResultsServerResponse(string message, int updatedRating)
     {
-        base.SendRpcToAll("receiveMatchResultsServerResponse", message, updatedRating);
+        base.SendRpcToAll(nameof(receiveMatchResultsServerResponse), message, updatedRating);
     }
 
     [PunRPC]

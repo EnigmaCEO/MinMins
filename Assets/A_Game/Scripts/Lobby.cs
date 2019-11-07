@@ -31,7 +31,8 @@ public class Lobby : NetworkEntity
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             NetworkManager.LeaveLobby();
-            SceneManager.LoadScene(GameConstants.Scenes.MAIN);
+            //SceneManager.LoadScene(GameConstants.Scenes.MAIN);
+            NetworkManager.LoadScene(GameConstants.Scenes.MAIN);
         }
     }
 
@@ -46,11 +47,13 @@ public class Lobby : NetworkEntity
         NetworkManager.OnJoinedLobbyCallback += onJoinedLobby;
         NetworkManager.OnJoinedRoomCallback += onJoinedRoom;
         NetworkManager.OnPlayerConnectedCallback += onPlayerConnected;
-        NetworkManager.OnReceivedRoomListUpdateCallback += OnReceivedRoomListUpdate;
+        NetworkManager.OnReceivedRoomListUpdateCallback += onReceivedRoomListUpdate;
         NetworkManager.OnConnectedToMasterCallback += OnConnectedToMaster;
 
         NetworkManager.OnPlayerDisconnectedCallback += onPlayerDisconnected;
         NetworkManager.OnDisconnectedFromNetworkCallback += onDisconnectedFromNetwork;
+
+        GameNetwork.Instance.OnPvpAiSetCallback += onPvpAiSet;
     }
 
     private void removeDelegates()
@@ -58,11 +61,25 @@ public class Lobby : NetworkEntity
         NetworkManager.OnJoinedLobbyCallback -= onJoinedLobby;
         NetworkManager.OnJoinedRoomCallback -= onJoinedRoom;
         NetworkManager.OnPlayerConnectedCallback -= onPlayerConnected;
-        NetworkManager.OnReceivedRoomListUpdateCallback -= OnReceivedRoomListUpdate;
+        NetworkManager.OnReceivedRoomListUpdateCallback -= onReceivedRoomListUpdate;
         NetworkManager.OnConnectedToMasterCallback -= OnConnectedToMaster;
 
         NetworkManager.OnPlayerDisconnectedCallback -= onPlayerDisconnected;
         NetworkManager.OnDisconnectedFromNetworkCallback -= onDisconnectedFromNetwork;
+
+        GameNetwork.Instance.OnPvpAiSetCallback -= onPvpAiSet;
+    }
+
+    private void onPvpAiSet(bool enabled)
+    {
+        Debug.LogWarning("Lobby::onPvpAiSet");
+
+        if (enabled)
+        {
+            GameStats.Instance.UsesAiForPvp = true;
+            GameNetwork.Instance.GuestPlayerId = NetworkManager.GetLocalPlayerId();
+            sendStartMatch();
+        }
     }
 
     private void OnConnectedToMaster()
@@ -77,7 +94,7 @@ public class Lobby : NetworkEntity
         NetworkManager.GetRoomList();  //Request room list. Wait for OnReceivedRoomListUpdate
     }
 
-    private void OnReceivedRoomListUpdate()
+    private void onReceivedRoomListUpdate()
     {
         print("Lobby::OnReceivedRoomListUpdate");
         if(!_isJoiningRoom)
@@ -96,7 +113,11 @@ public class Lobby : NetworkEntity
             NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.HOST_ID, GameNetwork.Instance.HostPlayerId);
 
             _waitingPopUp.SetActive(true);
-            StartCoroutine(handleWaitForAiRival());
+
+            if (GameHacks.Instance.ForcePvpAi)
+                assignAiRival();
+            else 
+                StartCoroutine(handleWaitForAiRival());
         }
         else
         {
@@ -138,9 +159,9 @@ public class Lobby : NetworkEntity
     private void handleRoomCreationAndJoin()
     {
         print("Lobby::handleRoomCreationAndJoin");
-        RoomInfo[] rooms = NetworkManager.GetRoomList();
+        RoomInfo[] rooms = NetworkManager.GetRoomList(); 
 
-        if (rooms.Length == 0)
+        if ((rooms.Length == 0) || GameHacks.Instance.ForcePvpAi)
             joinOrCreateRoom();
         else
         {
@@ -176,14 +197,15 @@ public class Lobby : NetworkEntity
 
     public void sendStartMatch()
     {
-        base.SendRpcToAll("receiveStartMatch");
+        base.SendRpcToAll(nameof(receiveStartMatch));
     }
 
     [PunRPC]
     private void receiveStartMatch()
     {
         Debug.Log("Lobby::receiveStartMatch");
-        SceneManager.LoadScene(GameConstants.Scenes.WAR);
+        //SceneManager.LoadScene(GameConstants.Scenes.WAR);
+        NetworkManager.LoadScene(GameConstants.Scenes.WAR);
     }
 
     private void joinOrCreateRoom()
@@ -195,14 +217,18 @@ public class Lobby : NetworkEntity
 
     private IEnumerator handleWaitForAiRival()
     {
-        yield return new WaitForSeconds(_timeToWaitBeforeAiRival);
+        float timeToWait = _timeToWaitBeforeAiRival;
+
+        if (GameHacks.Instance.TimeWaitAiPvp.Enabled)
+            timeToWait = GameHacks.Instance.TimeWaitAiPvp.ValueAsFloat;
+
+        yield return new WaitForSeconds(timeToWait);
         assignAiRival();
     }
 
     private void assignAiRival()
     {
-        GameStats.Instance.UsesAiForPvp = true;
-        GameNetwork.Instance.GuestPlayerId = NetworkManager.GetLocalPlayerId();
-        sendStartMatch();
+        NetworkManager.GetRoom().IsOpen = false;
+        NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.HAS_PVP_AI, "true");
     }
 }

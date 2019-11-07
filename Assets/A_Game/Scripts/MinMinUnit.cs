@@ -117,7 +117,7 @@ public class MinMinUnit : NetworkEntity
 
     public void SendDebugSettingsForWar(Types unitType)
     {
-        SendRpcToAll("receiveDebugSettingsForWar", (int)unitType);
+        SendRpcToAll(nameof(receiveDebugSettingsForWar), (int)unitType);
     }
 
     [PunRPC]
