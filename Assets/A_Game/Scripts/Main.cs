@@ -29,6 +29,7 @@ public class Main : EnigmaScene
         _enjinIcon.SetActive(false);
         _enjinWindow.SetActive(false);
 
+        _pvprating.text = "";
 
         _kinWrapper = GameObject.Find("/KinManager").GetComponent<KinManager>();
         
@@ -47,7 +48,7 @@ public class Main : EnigmaScene
         });
         
 
-        _pvprating.text = "";
+        
 
         string kin = _kinWrapper.GetUserPublicAddress();
 
@@ -100,6 +101,15 @@ public class Main : EnigmaScene
         if(GameNetwork.Instance.IsEnjinLinked)
         {
             _enjinIcon.SetActive(true);
+            Text text = _enjinIcon.GetComponentInChildren<Text>();
+            text.text = "";
+            if (GameNetwork.Instance.HasEnjinEnigmaToken) text.text += "\nEnjin MFT";
+            if (GameNetwork.Instance.HasEnjinMinMinsToken) text.text += "\nMin-Mins Token";
+            if (GameNetwork.Instance.HasEnjinMaxim) text.text += "\nMaxim Legend";
+            if (GameNetwork.Instance.HasEnjinWitek) text.text += "\nWitek Legend";
+            if (GameNetwork.Instance.HasEnjinBryana) text.text += "\nBryana Legend";
+            if (GameNetwork.Instance.HasEnjinTassio) text.text += "\nTassio Legend";
+            if (GameNetwork.Instance.HasEnjinSimon) text.text += "\nSimon Legend";
         }
 
         if(loggedIn)
@@ -271,6 +281,8 @@ public class Main : EnigmaScene
 
         _loginButton.gameObject.SetActive(!loggedIn);
         _logoutButton.gameObject.SetActive(loggedIn);
+        Text text = _enjinIcon.GetComponentInChildren<Text>();
+        text.text = "";
         _enjinIcon.SetActive(false);
         _pvprating.text = "";
         StopCoroutine("handleEnjinLinkingCheck");

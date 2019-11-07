@@ -506,6 +506,7 @@ public class War : NetworkEntity
 
         Image fillToUpdate = (team == _localPlayerTeam) ? _hostTeamHealthFill : _guestTeamHealthFill;
         fillToUpdate.fillAmount = (float)health / (float)teamMaxHealth;
+        fillToUpdate.transform.parent.GetComponentInChildren<Text>().text = health + "/" + teamMaxHealth;
     }
 
     private void handleUnitDeath(string teamName, string unitName)
