@@ -7,7 +7,8 @@ using UnityEngine;
 public class Lobby : NetworkEntity
 {
     [SerializeField] private int _maxRatingDifferenceToFight = 50;
-    [SerializeField] private float _timeToWaitBeforeAiRival = 30; // 30 seconds
+    [SerializeField] private float _roomSetWithPvpDelay = 30; 
+
     [SerializeField] private GameObject _waitingPopUp;
 
     private bool _isJoiningRoom = false;
@@ -39,6 +40,7 @@ public class Lobby : NetworkEntity
     private void OnDestroy()
     {
         Debug.LogWarning("Lobby::OnDestroy");
+        StopAllCoroutines();
         removeDelegates();
     }
 
@@ -72,13 +74,17 @@ public class Lobby : NetworkEntity
 
     private void onPvpAiSet(bool enabled)
     {
-        Debug.LogWarning("Lobby::onPvpAiSet");
+        Debug.LogWarning("Lobby::onPvpAiSet  -> pvp ai enabled: " + enabled);
 
-        if (enabled)
+        if (NetworkManager.GetIsMasterClient())
         {
-            GameStats.Instance.UsesAiForPvp = true;
-            GameNetwork.Instance.GuestPlayerId = NetworkManager.GetLocalPlayerId();
-            sendStartMatch();
+            Debug.LogWarning("Lobby::onPvpAiSet  -> Is Master Client: " + NetworkManager.GetIsMasterClient());
+
+            if (enabled)
+            {
+                Debug.LogWarning("Lobby::onPvpAiSet  ->  startMach");
+                startMatch();
+            }
         }
     }
 
@@ -108,23 +114,52 @@ public class Lobby : NetworkEntity
 
         if (NetworkManager.GetIsMasterClient())
         {
-            //print("Lobby::OnJoinedRoom -> room.CustomProperties: " + NetworkManager.GetRoom().CustomProperties.ToStringFull());
+            Room room = NetworkManager.GetRoom();
+            print("Lobby::OnJoinedRoom ->  Created Joined first as master client in room.Name: " + room.Name + " and room.CustomProperties: " + room.CustomProperties.ToStringFull());
             gameNetwork.HostPlayerId = NetworkManager.GetLocalPlayerId();
             NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.HOST_ID, GameNetwork.Instance.HostPlayerId);
+            NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.TIME_ROOM_STARTED, NetworkManager.GetNetworkTime());
 
             _waitingPopUp.SetActive(true);
 
             if (GameHacks.Instance.ForcePvpAi)
-                assignAiRival();
+                setRoomWithPvpAi();
             else 
-                StartCoroutine(handleWaitForAiRival());
+                StartCoroutine(handleWaitForPvpAiSet());
         }
         else
         {
-            gameNetwork.GuestPlayerId = NetworkManager.GetLocalPlayerId();
-            gameNetwork.HostPlayerId = NetworkManager.GetRoomCustomPropertyAsInt(GameNetwork.RoomCustomProperties.HOST_ID);
-            GameNetwork.SetLocalPlayerRating(GameStats.Instance.Rating, GameNetwork.TeamNames.GUEST);
-            NetworkManager.GetRoom().IsOpen = false;
+            double timeRoomStarted = double.Parse(NetworkManager.GetRoomCustomProperty(GameNetwork.RoomCustomProperties.TIME_ROOM_STARTED));
+            double currentTime = NetworkManager.GetNetworkTime();
+
+            double timeToWaitAi = double.Parse(_roomSetWithPvpDelay.ToString());
+
+            if (GameHacks.Instance.TimeWaitForRoomPvpAiSet.Enabled)
+            {
+                timeToWaitAi = GameHacks.Instance.TimeWaitForRoomPvpAiSet.ValueAsFloat;
+            }
+
+            double timeDiff = currentTime - timeRoomStarted;
+
+            Debug.LogWarning("Lobby::onJoinedRoom -> timeRoomStarted: " + timeRoomStarted + " currentTime: " + currentTime + "timeDiff: " + timeDiff + " timeToWaitAi: " + timeToWaitAi);
+
+            if (timeDiff > timeToWaitAi)
+            {
+                Debug.LogWarning("Lobby::onJoinedRoom -> leftRoom that had Ai");
+                NetworkManager.LeaveRoom();
+                StopCoroutine(handleWaitForPvpAiSet());
+                NetworkManager.LoadScene(GameConstants.Scenes.LOBBY);
+            }
+            else
+            {
+                gameNetwork.GuestPlayerId = NetworkManager.GetLocalPlayerId();
+                gameNetwork.HostPlayerId = NetworkManager.GetRoomCustomPropertyAsInt(GameNetwork.RoomCustomProperties.HOST_ID);
+
+                Debug.LogWarning("Lobby::onJoinedRoom -> joined room as guest id: " + gameNetwork.GuestPlayerId);
+
+                GameNetwork.SetLocalPlayerRating(GameStats.Instance.Rating, GameNetwork.TeamNames.GUEST);
+                NetworkManager.GetRoom().IsOpen = false;
+            }
         }
 
         Debug.LogWarning("Lobby::OnJoinedRoom -> HostPlayerId: " + gameNetwork.HostPlayerId + " GuestPlayerId: " + gameNetwork.GuestPlayerId);
@@ -133,11 +168,20 @@ public class Lobby : NetworkEntity
     private void onPlayerConnected(int networkPlayerId)
     {
         print("Lobby::onPlayerConnected -> networkPlayerId " + networkPlayerId);
-        GameNetwork gameNetwork = GameNetwork.Instance;
-        GameNetwork.Instance.GuestPlayerId = networkPlayerId;
-        Debug.LogWarning("Lobby::onPlayerConnected -> HostPlayerId: " + gameNetwork.HostPlayerId + " GuestPlayerId: " + gameNetwork.GuestPlayerId);
-        StopCoroutine(handleWaitForAiRival());
-        sendStartMatch();
+
+        if (GameStats.Instance.UsesAiForPvp)
+        {
+            Debug.LogWarning("Lobby::onPlayerConnected -> Player connected when Ai was already set. Ignoring pvp setup.");
+        }
+        else
+        {
+            StopCoroutine(handleWaitForPvpAiSet());
+
+            GameNetwork gameNetwork = GameNetwork.Instance;
+            GameNetwork.Instance.GuestPlayerId = networkPlayerId;
+            Debug.LogWarning("Lobby::onPlayerConnected -> HostPlayerId: " + gameNetwork.HostPlayerId + " GuestPlayerId: " + gameNetwork.GuestPlayerId);
+            sendStartMatch();
+        }
     }
 
     private void onPlayerDisconnected(int disconnectedPlayerId)
@@ -174,18 +218,31 @@ public class Lobby : NetworkEntity
             for (int i = 0; i < roomsCount; i++)
             {
                 RoomInfo room = rooms[i];
+                Debug.LogWarning("Lobby::handleRoomCreationAndJoin -> room.Name: " + room.Name + " room.IsOpen: " + room.IsOpen);
 
                 if (room.IsOpen)
                 {
-                    print("Lobby::handleRoomCreationAndJoin -> room.CustomProperties: " + room.CustomProperties.ToStringFull());
+                    Debug.LogWarning("Lobby::handleRoomCreationAndJoin -> room.CustomProperties: " + room.CustomProperties.ToStringFull());             
+          
                     int playerInRoomRating = (int)room.CustomProperties[GameNetwork.RoomCustomProperties.HOST_RATING];
+                    int ratingDifference = Mathf.Abs(playerInRoomRating - thisPlayerRating);
 
-                    if (Mathf.Abs(playerInRoomRating - thisPlayerRating) <= _maxRatingDifferenceToFight)
+                    Debug.LogWarning("Lobby::handleRoomCreationAndJoin-> playerInRoomRating: " + playerInRoomRating + " ratingDifference: " + ratingDifference + " _maxRatingDifferenceToFight: " + _maxRatingDifferenceToFight);
+
+                    if (ratingDifference <= _maxRatingDifferenceToFight)
                     {
-                        GameNetwork.SetLocalPlayerRating(GameStats.Instance.Rating, GameNetwork.TeamNames.GUEST);
-                        NetworkManager.JoinRoom(room.Name);
-                        foundRoom = true;
-                        break;
+                        bool hasPvpAi = bool.Parse(room.CustomProperties[GameNetwork.RoomCustomProperties.HAS_PVP_AI].ToString());
+                        Debug.LogWarning("Lobby::handleRoomCreationAndJoin -> room: " + room.Name + " hasPvpAi: " + hasPvpAi);
+
+                        if (!hasPvpAi)
+                        {
+                            Debug.LogWarning("Lobby::handleRoomCreationAndJoin -> joined room: " + room.Name);
+
+                            GameNetwork.SetLocalPlayerRating(GameStats.Instance.Rating, GameNetwork.TeamNames.GUEST);
+                            NetworkManager.JoinRoom(room.Name);
+                            foundRoom = true;
+                            break;
+                        }
                     }
                 }
             }
@@ -197,14 +254,21 @@ public class Lobby : NetworkEntity
 
     public void sendStartMatch()
     {
+        Debug.LogWarning("Lobby::sendStartMatch");
         base.SendRpcToAll(nameof(receiveStartMatch));
     }
 
     [PunRPC]
     private void receiveStartMatch()
     {
-        Debug.Log("Lobby::receiveStartMatch");
-        //SceneManager.LoadScene(GameConstants.Scenes.WAR);
+        Debug.LogWarning("Lobby::receiveStartMatch");
+
+        startMatch();
+    }
+
+    private void startMatch()
+    {
+        Debug.LogWarning("startMatch");
         NetworkManager.LoadScene(GameConstants.Scenes.WAR);
     }
 
@@ -215,20 +279,24 @@ public class Lobby : NetworkEntity
         _isJoiningRoom = true;
     }
 
-    private IEnumerator handleWaitForAiRival()
+    private IEnumerator handleWaitForPvpAiSet()
     {
-        float timeToWait = _timeToWaitBeforeAiRival;
+        float timeToWait = _roomSetWithPvpDelay;
 
-        if (GameHacks.Instance.TimeWaitAiPvp.Enabled)
-            timeToWait = GameHacks.Instance.TimeWaitAiPvp.ValueAsFloat;
+        if (GameHacks.Instance.TimeWaitForRoomPvpAiSet.Enabled)
+            timeToWait = GameHacks.Instance.TimeWaitForRoomPvpAiSet.ValueAsFloat;
+
+        Debug.LogWarning("handleWaitForPvpAiSet -> timeToWait: " + timeToWait);
 
         yield return new WaitForSeconds(timeToWait);
-        assignAiRival();
+        setRoomWithPvpAi();
     }
 
-    private void assignAiRival()
+    private void setRoomWithPvpAi()
     {
-        NetworkManager.GetRoom().IsOpen = false;
+        Debug.LogWarning("setRoomWithPvpAi");
+        GameStats.Instance.UsesAiForPvp = true;
+        GameNetwork.Instance.GuestPlayerId = NetworkManager.GetLocalPlayerId();
         NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.HAS_PVP_AI, "true");
     }
 }

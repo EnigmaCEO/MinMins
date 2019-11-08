@@ -363,17 +363,25 @@ public class War : NetworkEntity
 
     private void onPlayerDisconnected(int disconnectedPlayerId)
     {
-        handleDisconnection();
+        Debug.LogWarning("War::onPlayerDisconnected: " + disconnectedPlayerId);
+        if (GameNetwork.Instance.GuestPlayerId == disconnectedPlayerId)
+        {
+            handleDisconnection();
+        }
     }
 
     private void onDisconnectedFromNetwork()
     {
+        Debug.LogWarning("War::onDisconnectedFromNetwork");
         handleDisconnection();
     }
 
     private void handleDisconnection()
     {
-        if (GameStats.Instance.Mode == GameStats.Modes.Pvp)  //Shouldn't be called, but just in case.
+        bool isPvp = (GameStats.Instance.Mode == GameStats.Modes.Pvp);
+        Debug.LogWarning("War::HandleDisconnection -> isPvp: " + isPvp);
+
+        if(isPvp)   //Shouldn't be called, but just in case.
         {
             StopAllCoroutines();
             CancelInvoke();
@@ -439,7 +447,7 @@ public class War : NetworkEntity
                     if (GetUsesAi())
                     {
                         guestReady = true;
-                       
+                        Debug.LogWarning("War::onReadyToFight -> Guest was set ready because of Pvp Ai.");
                     }
                     else
                         guestReady = bool.Parse(NetworkManager.GetAnyPlayerCustomProperty(GameNetwork.PlayerCustomProperties.READY_TO_FIGHT, GameNetwork.TeamNames.GUEST, GameNetwork.GetTeamNetworkPlayerId(GameNetwork.TeamNames.GUEST)));

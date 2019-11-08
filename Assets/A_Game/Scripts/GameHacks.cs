@@ -22,7 +22,7 @@ public class GameHacks : SingletonMonobehaviour<GameHacks>
 
     public bool ForcePvpAi;
 
-    public ValueHack TimeWaitAiPvp = new ValueHack("3");
+    public ValueHack TimeWaitForRoomPvpAiSet = new ValueHack("10");
 
     public ValueHack TriggerPlayerDisconnectPopUp = new ValueHack("D");
     public ValueHack TriggerOpponentDisconnectPopUp = new ValueHack("O");
