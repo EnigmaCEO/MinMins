@@ -508,7 +508,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _maxRatingDifferenceToFight: 50
-  _timeToWaitBeforeAiRival: 30
+  _roomSetWithPvpDelay: 60
   _waitingPopUp: {fileID: 39140927}
 --- !u!1001 &1667541217
 PrefabInstance:

@@ -177,12 +177,21 @@ public class War : NetworkEntity
         determineLocalPlayerTeam();
 
         if (!NetworkManager.LoggedIn)
-            NetworkManager.SetLocalPlayerNickName(NetworkManager.GetRandomOnlineName()); 
+            NetworkManager.SetLocalPlayerNickName("Guest Player"); 
 
         _teamNameText1.text = NetworkManager.GetPlayerName();
 
         if (GetUsesAi())
-            _teamNameText2.text = NetworkManager.GetRandomOnlineName();
+        {
+            if (GameStats.Instance.Mode == GameStats.Modes.Pvp)
+            {
+                _teamNameText2.text = NetworkManager.GetRandomOnlineName();
+            } else
+            {
+                _teamNameText2.text = "Arena " + GameStats.Instance.SelectedLevelNumber;
+            }
+               
+        }
         else
         {
             string opponentTeamName = GameNetwork.GetOppositeTeamName(_localPlayerTeam);
