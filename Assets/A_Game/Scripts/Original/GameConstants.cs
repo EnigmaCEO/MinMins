@@ -3,8 +3,6 @@ public class GameConstants
 {
     public class Scenes
     {
-        public const string INIT = "Init";
-        public const string MAIN = "Main";
         public const string LEVELS = "Levels";
         public const string WAR_PREP = "WarPrep";
         public const string WAR = "War";

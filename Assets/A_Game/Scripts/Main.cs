@@ -20,6 +20,12 @@ public class Main : EnigmaScene
 
     void Start()
     {
+        if (!NetworkManager.LoggedIn)
+        {
+            NetworkManager.Disconnect();
+            GameNetwork.Instance.ResetLoginValues();
+        }
+
         SoundManager.Stop();
         SoundManager.MusicVolume = 0.5f;
         SoundManager.Play("main", SoundManager.AudioTypes.Music, "", true);
@@ -277,10 +283,10 @@ public class Main : EnigmaScene
     {
         NetworkManager.Logout();
         GameNetwork.Instance.ResetLoginValues();
-        bool loggedIn = NetworkManager.LoggedIn;
 
-        _loginButton.gameObject.SetActive(!loggedIn);
-        _logoutButton.gameObject.SetActive(loggedIn);
+        _loginButton.gameObject.SetActive(true);
+        _logoutButton.gameObject.SetActive(false);
+
         Text text = _enjinIcon.GetComponentInChildren<Text>();
         text.text = "";
         _enjinIcon.SetActive(false);

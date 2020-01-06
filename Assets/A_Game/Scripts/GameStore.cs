@@ -191,7 +191,7 @@ public class GameStore : EnigmaScene
 
     public void OnBackButtonDown()
     {
-        SceneManager.LoadScene(GameConstants.Scenes.MAIN);
+        SceneManager.LoadScene(EnigmaConstants.Scenes.MAIN);
     }
 
     private int setupEnjinLegendsDisplay(GameObject popUp)

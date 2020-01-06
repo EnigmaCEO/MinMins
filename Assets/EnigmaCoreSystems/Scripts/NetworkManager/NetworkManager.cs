@@ -103,7 +103,10 @@ namespace Enigma.CoreSystems
         }
 
         public const string _PHOTON_CONNECTION_GAME_VERSION_SETTINGS = "v1.0";
+
         private const int _GUEST_NAME_MAX_RANDOM_INDEX = 1000;
+        private const float _HEARTBEAT_SESSION_CHECK_DELAY = 5;
+        private const float _HEARTBEAT_DELAY = 300.0f;
 
         static private string _serverUrl;
         static private string _sessionID;
@@ -322,10 +325,15 @@ namespace Enigma.CoreSystems
             return _serverUrl;
         }
 
-        static public void StartHeartBeat(NetworkManager.Callback onHeartBeat)
+        static public void StartHeartBeat()
         {
-            Instance.StopCoroutine(heartbeat(onHeartBeat));
-            Instance.StartCoroutine(heartbeat(onHeartBeat));
+            StopHeartBeat();
+            Instance.StartCoroutine(heartbeat());
+        }
+
+        static public void StopHeartBeat()
+        {
+            Instance.StopCoroutine(heartbeat());
         }
 
         static public void SetSessionID(string id)
@@ -482,14 +490,16 @@ namespace Enigma.CoreSystems
         //Callback for Transaction 0 (getting user IP and country)
         void GetIpAndCountry(JSONNode response)
         {
-            JSONNode response_hash = response[0];
-            string status = response_hash["status"].ToString().Trim('"');
-
-            if (status == "SUCCESS")
+            if (response != null)
             {
-                //Debug.Log(response_hash);
-                Ip = response_hash["ip"].ToString().Trim('"');
-                Country = response_hash["country"].ToString().Trim('"');
+                print("GetIpAndCountry -> response: " + response);
+                JSONNode response_hash = response[0];
+                string status = response_hash["status"].ToString().Trim('"');
+
+                if (status != StatusOptions.SUCCESS)
+                {
+
+                }
             }
         }
 
@@ -522,7 +532,7 @@ namespace Enigma.CoreSystems
             {
                 SetSessionID(ssid);
                 LoggedIn = true;
-                StartHeartBeat((JSONNode node) => { });
+                StartHeartBeat();
             }
         }
 
@@ -559,7 +569,7 @@ namespace Enigma.CoreSystems
             {
                 SetSessionID(ssid);
                 LoggedIn = true;
-                StartHeartBeat((JSONNode node) => { });
+                StartHeartBeat();
             }
         }
 
@@ -605,17 +615,62 @@ namespace Enigma.CoreSystems
             }
         }
 
-        static private IEnumerator heartbeat(Callback onHeartBeat)
+        static private IEnumerator heartbeat()
         {
             while (true)
             {
                 if (GetSessionID() == null)
-                    yield return new WaitForSeconds(5f);
+                    yield return new WaitForSeconds(_HEARTBEAT_SESSION_CHECK_DELAY);
                 else
                 {
                     Transaction(Transactions.HEART_BEAT, onHeartBeat);
-                    yield return new WaitForSeconds(300.0f);
+
+                    float heartBeatDelay = _HEARTBEAT_DELAY;
+
+                    if (EnigmaHacks.Instance.HeartBeatDelay.Enabled)
+                    {
+                        heartBeatDelay = EnigmaHacks.Instance.HeartBeatDelay.ValueAsFloat;
+                    }
+
+                    yield return new WaitForSeconds(heartBeatDelay);
                 }
+            }
+        }
+
+        static private void onHeartBeat(JSONNode response)
+        {
+            string status = "";
+
+            if (!EnigmaHacks.Instance.FailHeartBeat)
+            {
+                if (response != null)
+                {
+                    Debug.Log("onHeartBeat: " + response.ToString());
+                    JSONNode response_hash = response[0];
+                    JSONNode statusRaw = null;
+
+                    statusRaw = response_hash[TransactionKeys.STATUS];
+
+                    if (statusRaw != null)
+                    {
+                        status = statusRaw.ToString().Trim('"');
+                    }
+                    else
+                    {
+                        Debug.LogError("onHeartBeat response does not have a status field.");
+                    }
+                }
+                else
+                {
+                    print("onHeartBeat response is null");
+                }
+            }
+
+            if (status != StatusOptions.SUCCESS)
+            {
+                StopHeartBeat();
+                Logout();
+                LoadScene(EnigmaConstants.Scenes.MAIN);
             }
         }
 

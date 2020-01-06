@@ -32,8 +32,7 @@ public class Lobby : NetworkEntity
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             NetworkManager.LeaveLobby();
-            //SceneManager.LoadScene(GameConstants.Scenes.MAIN);
-            NetworkManager.LoadScene(GameConstants.Scenes.MAIN);
+            NetworkManager.LoadScene(EnigmaConstants.Scenes.MAIN);
         }
     }
 

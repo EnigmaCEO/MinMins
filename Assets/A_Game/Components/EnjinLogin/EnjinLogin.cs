@@ -42,7 +42,8 @@ public class EnjinLogin : MonoBehaviour
         this.gameObject.SetActive(false);
     }
 
-    public void closeDialog() {
+    public void closeDialog()
+    {
         gameObject.SetActive(false);
     }
 
@@ -185,18 +186,21 @@ public class EnjinLogin : MonoBehaviour
 
     private void onRegistration(SimpleJSON.JSONNode response)
     {
-        if (response != null) {
+        if (response != null)
+        {
         //     print("onRegistration: " + response.ToString());
 
             SimpleJSON.JSONNode response_hash = response[0];
             string status = response_hash[NetworkManager.TransactionKeys.STATUS].ToString().Trim('"');
 
-            if (status == NetworkManager.StatusOptions.SUCCESS) {
+            if (status == NetworkManager.StatusOptions.SUCCESS)
+            {
                 // print("onRegistration SUCCESS");
                 completeLogin(response_hash);
                 closeDialog();
             }
-            else {
+            else
+            {
                 EnableLoginWindow();
                 string term = "";
 

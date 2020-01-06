@@ -4,8 +4,12 @@ using UnityEngine;
 
 namespace Enigma.CoreSystems
 {
-    public class Constants
+    public class EnigmaConstants
     {
-
+        public class Scenes
+        {
+            public const string INIT = "Init";
+            public const string MAIN = "Main";
+        }
     }
 }

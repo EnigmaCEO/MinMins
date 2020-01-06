@@ -12406,6 +12406,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameCamera
       objectReference: {fileID: 0}
+    - target: {fileID: 792222247839000169, guid: 7df0bbed38be870468499b48eabd88f4,
+        type: 3}
+      propertyPath: _team1_transform
+      value: 
+      objectReference: {fileID: 1717247812}
+    - target: {fileID: 792222247839000169, guid: 7df0bbed38be870468499b48eabd88f4,
+        type: 3}
+      propertyPath: _team2_transform
+      value: 
+      objectReference: {fileID: 447504676}
     - target: {fileID: 792222247839000162, guid: 7df0bbed38be870468499b48eabd88f4,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -12471,16 +12481,6 @@ PrefabInstance:
       propertyPath: m_ClearFlags
       value: 3
       objectReference: {fileID: 0}
-    - target: {fileID: 792222247839000169, guid: 7df0bbed38be870468499b48eabd88f4,
-        type: 3}
-      propertyPath: _team1_transform
-      value: 
-      objectReference: {fileID: 1717247812}
-    - target: {fileID: 792222247839000169, guid: 7df0bbed38be870468499b48eabd88f4,
-        type: 3}
-      propertyPath: _team2_transform
-      value: 
-      objectReference: {fileID: 447504676}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7df0bbed38be870468499b48eabd88f4, type: 3}
 --- !u!1001 &1300747342492910780
