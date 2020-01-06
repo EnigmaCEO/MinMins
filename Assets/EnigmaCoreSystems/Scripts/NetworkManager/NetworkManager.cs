@@ -670,6 +670,7 @@ namespace Enigma.CoreSystems
             {
                 StopHeartBeat();
                 Logout();
+                Disconnect();
                 LoadScene(EnigmaConstants.Scenes.MAIN);
             }
         }

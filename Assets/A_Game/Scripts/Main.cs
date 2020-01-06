@@ -22,7 +22,6 @@ public class Main : EnigmaScene
     {
         if (!NetworkManager.LoggedIn)
         {
-            NetworkManager.Disconnect();
             GameNetwork.Instance.ResetLoginValues();
         }
 
