@@ -9,8 +9,7 @@ public class BuyResultPopUp : MonoBehaviour
 
     public void Open(string message)
     {
-        _message.text = message;
-        LocalizationManager.LocalizeText(_message);
+        _message.text = LocalizationManager.GetTermTranslation(message);
         gameObject.SetActive(true);
     }
 

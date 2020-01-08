@@ -9,7 +9,6 @@ public class GameHacks : SingletonMonobehaviour<GameHacks>
     public bool RandomizeUnitTypes;
     public bool AssignEffectByType;
 
-    public bool BuyResultFalse;
     public bool BuyAndroid;
 
     public bool HideClouds;
@@ -21,6 +20,8 @@ public class GameHacks : SingletonMonobehaviour<GameHacks>
     public bool GuestCameraAsHost;
 
     public bool ForcePvpAi;
+
+    public ValueHack BuyResult = new ValueHack("true");
 
     public ValueHack TimeWaitForRoomPvpAiSet = new ValueHack("10");
 

@@ -85,8 +85,8 @@ public class GameStore : EnigmaScene
 
     private void handleCurrencyBuyResult(string id, bool result)
     {
-        if (GameHacks.Instance.BuyResultFalse)
-            result = false;
+        if (GameHacks.Instance.BuyResult.Enabled)
+            result = GameHacks.Instance.BuyResult.ValueAsBool;
 
         if (result)
         {
@@ -165,9 +165,9 @@ public class GameStore : EnigmaScene
         _enjinmftPopUp.SetActive(true);
 
         if(GameNetwork.Instance.HasEnjinMft)
-            _enjinmftPopUp.transform.Find("WindowMessage").GetComponent<Text>().text = attempts + " Summons remaining";
+            _enjinmftPopUp.transform.Find("WindowMessage").GetComponent<Text>().text = attempts + " " + LocalizationManager.GetTermTranslation("Summons remaining");
         else
-            _enjinmftPopUp.transform.Find("WindowMessage").GetComponent<Text>().text = "Enjin MFT required";
+            _enjinmftPopUp.transform.Find("WindowMessage").GetComponent<Text>().text = LocalizationManager.GetTermTranslation("Enjin MFT required");
     }
 
     public void openMinMinPopUp()
@@ -179,9 +179,9 @@ public class GameStore : EnigmaScene
         _minminPopUp.SetActive(true);
 
         if (GameNetwork.Instance.HasEnjinMinMinsToken)
-            _minminPopUp.transform.Find("WindowMessage").GetComponent<Text>().text = "Enjin Legend tokens required";
+            _minminPopUp.transform.Find("WindowMessage").GetComponent<Text>().text = LocalizationManager.GetTermTranslation("Enjin Legend tokens required");
         else
-            _enjinmftPopUp.transform.Find("WindowMessage").GetComponent<Text>().text = "Min-Mins Token required";
+            _enjinmftPopUp.transform.Find("WindowMessage").GetComponent<Text>().text = LocalizationManager.GetTermTranslation("Min-Mins Token required");
     }
 
     public void closePopup(GameObject obj)

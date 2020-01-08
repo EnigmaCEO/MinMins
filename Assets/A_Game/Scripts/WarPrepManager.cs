@@ -85,7 +85,7 @@ public class WarPrepManager : EnigmaScene
         _infoPopUp.transform.Find("UnitName").GetComponent<Text>().text = "Min-Min #" + unitName;
         MinMinUnit minMin = GameInventory.Instance.GetMinMinFromResources(unitName);
 
-        _infoPopUp.transform.Find("UnitType").GetComponent<Text>().text = minMin.Type.ToString();
+        _infoPopUp.transform.Find("UnitType").GetComponent<Text>().text = LocalizationManager.GetTermTranslation(minMin.Type.ToString());
 
         _infoPopUp.GetComponent<UnitInfoPopUp>().UpdateExpInfo(unitName);
     }

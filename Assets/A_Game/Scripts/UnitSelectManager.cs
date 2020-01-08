@@ -258,7 +258,7 @@ public class UnitSelectManager : EnigmaScene
             _armorGridContent.GetChild(i).GetComponent<Image>().enabled = (i < minMin.Defense);
 
         _infoPopUp.transform.Find("UnitName").GetComponent<Text>().text = "Min-Min #" + _selectedUnitName;
-        _infoPopUp.transform.Find("UnitType").GetComponent<Text>().text = minMin.Type.ToString();
+        _infoPopUp.transform.Find("UnitType").GetComponent<Text>().text = LocalizationManager.GetTermTranslation(minMin.Type.ToString());
 
         _infoPopUp.GetComponent<UnitInfoPopUp>().UpdateExpInfo(_selectedUnitName);
 

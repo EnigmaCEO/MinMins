@@ -21,9 +21,9 @@ public class MessagePopUp : MonoBehaviour
         Close();
     }
 
-    public void Open(string message)
+    public void Open(string term)
     {
-        _text.text = message;
+        _text.text = LocalizationManager.GetTermTranslation(term);
         gameObject.SetActive(true);
     }
 

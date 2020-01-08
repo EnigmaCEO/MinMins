@@ -14,7 +14,9 @@ public class LocalizationManager : MonoBehaviour
     public enum Languages
     {
         English = 0,
-        Spanish
+        Spanish,
+        Chinese_Simplified,
+        Chinese_Traditional
     }
 
     private void Awake()
@@ -115,11 +117,15 @@ public class LocalizationManager : MonoBehaviour
         string language = Languages.English.ToString();
 
         if (PlayerPrefs.HasKey("Language"))
+        {
             language = PlayerPrefs.GetString("Language");
+        }
         else
         {
             if (Application.systemLanguage == SystemLanguage.Spanish)
+            {
                 language = Languages.Spanish.ToString();
+            }
         }
 
         ChangeLanguage(language);

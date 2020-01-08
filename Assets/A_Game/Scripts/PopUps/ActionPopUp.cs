@@ -18,19 +18,19 @@ public class ActionPopUp : MonoBehaviour
         {
             if (unitType == MinMinUnit.Types.Bomber || unitType == MinMinUnit.Types.Destroyer)
             {
-                DismissButton.GetComponentInChildren<Text>().text = "ATTACK";
+                DismissButton.GetComponentInChildren<Text>().text = LocalizationManager.GetTermTranslation("ATTACK");
             }
             if (unitType == MinMinUnit.Types.Scout)
             {
-                DismissButton.GetComponentInChildren<Text>().text = "SCOUT";
+                DismissButton.GetComponentInChildren<Text>().text = LocalizationManager.GetTermTranslation("SCOUT");
             }
             if (unitType == MinMinUnit.Types.Healer)
             {
-                DismissButton.GetComponentInChildren<Text>().text = "HEAL";
+                DismissButton.GetComponentInChildren<Text>().text = LocalizationManager.GetTermTranslation("HEAL");
             }
             if (unitType == MinMinUnit.Types.Tank)
             {
-                DismissButton.GetComponentInChildren<Text>().text = "GUARD";
+                DismissButton.GetComponentInChildren<Text>().text = LocalizationManager.GetTermTranslation("GUARD");
             }
         }
 

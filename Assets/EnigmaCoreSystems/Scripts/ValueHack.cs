@@ -8,6 +8,7 @@ public class ValueHack
 
     public float ValueAsFloat { get { return float.Parse(Value); } }
     public int ValueAsInt { get { return int.Parse(Value); } }
+    public bool ValueAsBool { get { return bool.Parse(Value); } }
 
     public ValueHack(string value, bool enabled = false)
     {

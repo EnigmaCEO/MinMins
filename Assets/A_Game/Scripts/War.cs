@@ -188,9 +188,8 @@ public class War : NetworkEntity
                 _teamNameText2.text = NetworkManager.GetRandomOnlineName();
             } else
             {
-                _teamNameText2.text = "Arena " + GameStats.Instance.SelectedLevelNumber;
-            }
-               
+                _teamNameText2.text = LocalizationManager.GetTermTranslation("Arena") + " " + GameStats.Instance.SelectedLevelNumber;
+            }         
         }
         else
         {
@@ -566,13 +565,15 @@ public class War : NetworkEntity
 
         yield return new WaitForSeconds(delay);
 
+        string roundText = LocalizationManager.GetTermTranslation("Round") + ": " + roundNumber.ToString();
+
         if (isThereDelay)
         {
-            _roundPopUpText.text = "Round: " + roundNumber.ToString();
+            _roundPopUpText.text = roundText;
             _roundPopUp.SetActive(true);
         }
 
-        _roundNumberText.text = "Round: " + roundNumber.ToString();
+        _roundNumberText.text = roundText;
         updateRoundDisplay(roundNumber);
 
         delay = isThereDelay ? _roundPopUpDuration : 0;
@@ -596,9 +597,9 @@ public class War : NetworkEntity
     {
         //_teamTurnText.text = "Turn: " + teamName + " | Mine: " + _localPlayerTeam;
         if (teamName == _localPlayerTeam)
-            _teamTurnText.text = "YOUR TURN";
+            _teamTurnText.text = LocalizationManager.GetTermTranslation("YOUR TURN");
         else
-            _teamTurnText.text = "ENEMY TURN";
+            _teamTurnText.text = LocalizationManager.GetTermTranslation("ENEMY TURN");
 
         if (GetIsHost())
             advanceUnitIndex(teamName);
@@ -718,7 +719,7 @@ public class War : NetworkEntity
                 //    lineRenderer2.enabled = false;
                 //}
 
-                _unitTurnText.text = "Unit turn: " + unitName + " | Index: " + unitIndex;
+                _unitTurnText.text = LocalizationManager.GetTermTranslation("Unit turn") + ": " + unitName + " | " + LocalizationManager.GetTermTranslation("Index") + ": " + unitIndex;
                 handleHighlight(unitIndex, teamName);
                 _gameCamera.HandleMovement(teamName, units[unitName].Type);
 
@@ -742,8 +743,8 @@ public class War : NetworkEntity
         if (GameHacks.Instance.UnitTier.Enabled)
             unitTier = GameHacks.Instance.UnitTier.ValueAsInt;
 
-        _unitTierTurnText.text = "Unit tier: " + unitTier.ToString();
-        _unitTypeTurnText.text = "Unit type: " + unit.Type.ToString();
+        _unitTierTurnText.text = LocalizationManager.GetTermTranslation("Unit tier") + ": " + unitTier.ToString();
+        _unitTypeTurnText.text = LocalizationManager.GetTermTranslation("Unit type") + ": " + LocalizationManager.GetTermTranslation(unit.Type.ToString());
 
         if (GetIsHost())
             NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.ACTIONS_LEFT, unitTier.ToString());
@@ -766,7 +767,7 @@ public class War : NetworkEntity
 
     private void onActionStarted(int actionsLeft)
     {
-        _actionsLeftText.text = "Actions Left: " + actionsLeft;
+        _actionsLeftText.text = LocalizationManager.GetTermTranslation("Actions Left") + ": " + actionsLeft;
         string teamInTurn = GameNetwork.GetTeamInTurn();
 
         //Debug.LogWarning("War::onActionStarted: " + actionsLeft + " teamInTurn: " + teamInTurn);
@@ -1180,7 +1181,7 @@ public class War : NetworkEntity
 
     private void instantiateRewardChests(string gridName)
     {
-        if (GameStats.Instance.Mode == GameStats.Modes.SinglePlayer && GameStats.Instance.SelectedLevelNumber < GameInventory.Instance.GetSinglePlayerLevel())
+        if ((GameStats.Instance.Mode == GameStats.Modes.SinglePlayer) && (GameStats.Instance.SelectedLevelNumber < GameInventory.Instance.GetSinglePlayerLevel()))
         {
             return; // no chest for replaying levels
         }
@@ -1538,7 +1539,7 @@ public class War : NetworkEntity
             int unitTier = GameInventory.Instance.GetUnitTier(unitName);
             Dictionary<string, MinMinUnit> teamUnits = GetTeamUnitsDictionary(GameNetwork.TeamNames.HOST);
             MinMinUnit unit = teamUnits[unitName];
-            Team1ItemTransform.GetComponentInChildren<Text>().text = unit.Type.ToString();
+            Team1ItemTransform.GetComponentInChildren<Text>().text = LocalizationManager.GetTermTranslation(unit.Type.ToString());
 
             Team1GridItem.View.sprite = Resources.Load<Sprite>("Images/Units/" + unitName);
             Team1GridItem.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/unit_frame_t" + unitTier);
@@ -1557,7 +1558,7 @@ public class War : NetworkEntity
             int unitTier = GameInventory.Instance.GetUnitTier(unitName);
             Dictionary<string, MinMinUnit> teamUnits = GetTeamUnitsDictionary(GameNetwork.TeamNames.GUEST);
             MinMinUnit unit = teamUnits[unitName];
-            Team2ItemTransform.GetComponentInChildren<Text>().text = unit.Type.ToString();
+            Team2ItemTransform.GetComponentInChildren<Text>().text = LocalizationManager.GetTermTranslation(unit.Type.ToString());
 
             Team2GridItem.View.sprite = Resources.Load<Sprite>("Images/Units/" + unitName);
             Team2GridItem.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/unit_frame_t" + unitTier);
@@ -1957,7 +1958,7 @@ public class War : NetworkEntity
                 if (GameStats.Instance.Mode == GameStats.Modes.SinglePlayer)
                 {
                     if (isVictory)
-                        expEarned = GameStats.Instance.SelectedLevelNumber*2;
+                        expEarned = GameStats.Instance.SelectedLevelNumber * 2;
                     else
                         expEarned = 0;
                 }
@@ -2024,7 +2025,9 @@ public class War : NetworkEntity
             //}
 
             if (GameStats.Instance.Mode == GameStats.Modes.SinglePlayer)
+            {
                 gameInventory.SetSinglePlayerLevel(GameStats.Instance.SelectedLevelNumber + 1);
+            }
         }
 
         if (GameStats.Instance.Mode == GameStats.Modes.Pvp)

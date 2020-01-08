@@ -15,7 +15,7 @@ public class UnitInfoPopUp : MonoBehaviour
         int unitExp = gameInventory.GetLocalUnitExp(unitName);
         GameInventory.ExpData unitExpData = gameInventory.GetUnitExpData(unitExp);
 
-        _level.text = "Level " + unitExpData.Level;
+        _level.text = LocalizationManager.GetTermTranslation("Level") + " " + unitExpData.Level;
         _exp.text = "(" + unitExp + "/" + unitExpData.ExpForNextLevel + ")";
         _progress.value = (float)(unitExp) / (unitExpData.ExpForNextLevel);
     }
