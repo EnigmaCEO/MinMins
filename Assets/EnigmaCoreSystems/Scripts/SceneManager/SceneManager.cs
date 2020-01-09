@@ -6,8 +6,9 @@ namespace Enigma.CoreSystems
 {
     public class SceneManager : Manageable<SceneManager>
     {
-        static public string targetScene;
-        static public string tags;
+        static public string TargetScene;
+        static public bool TargetSceneUsesNetworkLoad = true; 
+        static public string Tags;
 
         // Use this for initialization
         protected override void Start()
@@ -29,16 +30,26 @@ namespace Enigma.CoreSystems
             //UIManager.LoadUI(xml.text);
         }
 
-        static public void LoadScene(string name)
+        static public void LoadScene(string name, bool usesLoadingScreen = false, bool usesNetworkSceneLoading = false)
         {
-            targetScene = name;
-            //      if (Application.CanStreamedLevelBeLoaded("Load") && (name == "Missions" || name == "Level"))
-            //          UnityEngine.SceneManagement.SceneManager.LoadScene("Load");
-            //      else if (Application.CanStreamedLevelBeLoaded("Load") && (name == "MissionsNetwork"))
-            //          UnityEngine.SceneManagement.SceneManager.LoadScene("LoadNetwork");
-            //else
-            UnityEngine.SceneManagement.SceneManager.LoadScene(name);
+            TargetScene = name;
+            TargetSceneUsesNetworkLoad = usesNetworkSceneLoading;
 
+            string sceneToLoad = name;
+        
+            if (usesLoadingScreen && Application.CanStreamedLevelBeLoaded(EnigmaConstants.Scenes.LOAD))
+            {
+                sceneToLoad = EnigmaConstants.Scenes.LOAD;
+            }
+
+            if (usesNetworkSceneLoading)
+            {
+                NetworkManager.LoadScene(sceneToLoad);
+            }
+            else
+            {
+                UnityEngine.SceneManagement.SceneManager.LoadScene(sceneToLoad);
+            }
         }
 
         static public void LoadSceneAdditive(string name)

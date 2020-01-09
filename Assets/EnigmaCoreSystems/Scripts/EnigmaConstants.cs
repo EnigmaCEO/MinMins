@@ -10,6 +10,7 @@ namespace Enigma.CoreSystems
         {
             public const string INIT = "Init";
             public const string MAIN = "Main";
+            public const string LOAD = "Load";
         }
     }
 }

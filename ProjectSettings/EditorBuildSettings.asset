@@ -15,6 +15,9 @@ EditorBuildSettings:
     path: Assets/A_Game/Scenes/UnitSelect.unity
     guid: 7930e59e5be1c464abf46ed75630b974
   - enabled: 1
+    path: Assets/A_Game/Scenes/Load.unity
+    guid: 1f5a58a0c23f3a7468a90fa5c764d650
+  - enabled: 1
     path: Assets/A_Game/Scenes/War.unity
     guid: 7e69142547eac3a4fb14d69176f51912
   - enabled: 1

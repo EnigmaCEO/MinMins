@@ -268,7 +268,8 @@ public class Lobby : NetworkEntity
     private void startMatch()
     {
         Debug.LogWarning("startMatch");
-        NetworkManager.LoadScene(GameConstants.Scenes.WAR);
+        //NetworkManager.LoadScene(GameConstants.Scenes.WAR);
+        SceneManager.LoadScene(GameConstants.Scenes.WAR, true, true);
     }
 
     private void joinOrCreateRoom()

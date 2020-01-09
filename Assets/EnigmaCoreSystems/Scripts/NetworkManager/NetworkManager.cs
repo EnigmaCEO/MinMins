@@ -385,6 +385,11 @@ namespace Enigma.CoreSystems
             PhotonNetwork.LoadLevel(sceneName);
         }
 
+        static public AsyncOperation LoadSceneAsync(string sceneName)
+        {
+            return PhotonNetwork.LoadLevelAsync(sceneName);
+        }
+
         static private IEnumerator httpRequest(int id, Hashtable hashtable, Callback externalCallback, Callback localCallback, TextureCallback texture)
         {
             string url = _serverUrl + "/trans/" + id + ".php";

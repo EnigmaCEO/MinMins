@@ -129,7 +129,7 @@ public class WarPrepManager : EnigmaScene
         if (gameMode == GameStats.Modes.SinglePlayer)
         {
             NetworkManager.Connect(true);
-            SceneManager.LoadScene(GameConstants.Scenes.WAR);
+            SceneManager.LoadScene(GameConstants.Scenes.WAR, true);
         }
         else if (gameMode == GameStats.Modes.Pvp)
         {
