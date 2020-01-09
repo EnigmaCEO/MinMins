@@ -40,4 +40,6 @@ public class GameHacks : SingletonMonobehaviour<GameHacks>
     public ValueHack Rating = new ValueHack("150");
     public ValueHack RoundCount = new ValueHack("2");
     public ValueHack Damage = new ValueHack("1000");
+    public ValueHack FightsWithoutAdsMaxCount = new ValueHack("2");
+    public ValueHack HasPurchased = new ValueHack("true");
 }

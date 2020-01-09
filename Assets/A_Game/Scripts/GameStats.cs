@@ -16,6 +16,8 @@ public class GameStats : SingletonMonobehaviour<GameStats>
     public int SelectedLevelNumber = 0;
 
     public bool UsesAiForPvp = false;
+    public bool HasPurchased = false;
+    public int FightWithoutAdsCount = 0;
 
     public List<Vector3> PreparationPositions = new List<Vector3>();
     public List<string> TeamUnits = new List<string>();

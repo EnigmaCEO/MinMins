@@ -106,7 +106,6 @@ public class WarPrepManager : EnigmaScene
             GameObject.Find("/Team1").GetComponent<TweenPosition>().enabled = true;
             gameObject.GetComponent<LineRenderer>().enabled = false;
         }
-
     }
 
     private void onNextButtonDown()
@@ -123,6 +122,32 @@ public class WarPrepManager : EnigmaScene
 
             Vector3 pos = unitSpriteTransform.localPosition;
             gameStats.PreparationPositions.Add(pos);
+        }
+
+        GameHacks gameHacks = GameHacks.Instance;
+
+        bool hasPurchased = GameStats.Instance.HasPurchased;
+        int fightsWithoutAdsMaxCount = GameConfig.Instance.FightsWithoutAdsMaxCount;
+
+        if (gameHacks.HasPurchased.Enabled)
+        {
+            hasPurchased = gameHacks.HasPurchased.ValueAsBool;
+        }
+
+        if (gameHacks.FightsWithoutAdsMaxCount.Enabled)
+        {
+            fightsWithoutAdsMaxCount = gameHacks.FightsWithoutAdsMaxCount.ValueAsInt;
+        }
+
+        if (!hasPurchased)
+        {
+            GameStats.Instance.FightWithoutAdsCount++;
+
+            if (GameStats.Instance.FightWithoutAdsCount == fightsWithoutAdsMaxCount)
+            {
+                AdsManager.Instance.ShowAd();
+                GameStats.Instance.FightWithoutAdsCount = 0;
+            }
         }
 
         GameStats.Modes gameMode = GameStats.Instance.Mode;

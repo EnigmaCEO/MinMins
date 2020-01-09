@@ -54,6 +54,7 @@ namespace Enigma.CoreSystems
             public const string USER_DATA = "user_data";
             public const string COINS = "coins";
             public const string ENJIN = "enjin";
+            public const string PURCHASED = "purchased";
 
             public const string ENJIN_ID = "enjin_id";
             public const string ENJIN_CODE = "enjin_code";

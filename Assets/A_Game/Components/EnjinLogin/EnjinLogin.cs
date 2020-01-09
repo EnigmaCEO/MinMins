@@ -227,6 +227,8 @@ public class EnjinLogin : MonoBehaviour
     {
         print("Complete login:");
 
+        GameStats.Instance.HasPurchased = (response_hash[NetworkManager.TransactionKeys.PURCHASED].AsInt == 1);
+
         GameNetwork gameNetwork = GameNetwork.Instance;
 
         GameStats.Instance.Rating = response_hash[NetworkManager.TransactionKeys.USER_DATA][GameNetwork.TransactionKeys.RATING].AsInt;

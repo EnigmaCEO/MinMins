@@ -561,8 +561,9 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
             print("onPurchaseSuccesfulTransaction -> response: "  + response.ToString() + " status: " + status);
 
             if (status == "SUCCESS")
-            {               
+            {
                 //handleLogin(response_hash);
+                GameStats.Instance.HasPurchased = true;
             }
             else
             {

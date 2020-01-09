@@ -3,9 +3,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Advertisements;
 
 public class AdsManager : MonoBehaviour
 {
+    [SerializeField] private bool _testMode = false;
+    [SerializeField] private string _placementId = "video";
+
     static public AdsManager Instance;
 
  #if (UNITY_ANDROID || UNITY_IOS)
@@ -37,10 +41,9 @@ public class AdsManager : MonoBehaviour
 
     public void ShowAd()
     {
-
-
+        Debug.LogWarning("AdsManager::ShowAd");
+        Advertisement.Show(_placementId);
     }
-
 
 #if (UNITY_ANDROID || UNITY_IOS)
     private void OnDestroy()
@@ -51,9 +54,16 @@ public class AdsManager : MonoBehaviour
     private void initialize()
     {
         // Configure the AdColony SDK
-        Debug.Log("**** Configure ADC SDK **** " + Ads.appId);
+        //Debug.Log("**** Configure ADC SDK **** " + Ads.AppId);
 
-        
+        string gameId = Ads.AndroidGameId;
+
+        if (Application.platform == RuntimePlatform.IPhonePlayer)
+        {
+            gameId = Ads.IosGameId;
+        }
+
+        Advertisement.Initialize(gameId, _testMode);
     }
 
     private void onAdRewardGranted(string zoneId, bool success, string name, int amount)
@@ -69,9 +79,12 @@ public class AdsManager : MonoBehaviour
 
 #if UNITY_ANDROID
         // App ID
-        static public string appId = "app42a4a7795d6642b4ae";  //"app168a5d9b97bb47739a";
+        //static public string AppId = "app42a4a7795d6642b4ae";  //"app168a5d9b97bb47739a";
+
+        static public string AndroidGameId = "3186450";
+        static public string IosGameId = "3186451";
                                                                // Video zones
-        static public string[] zoneId = { "vze64e837cdaeb448494" }; //{ "vz28f417ceecca4ae4b2", "vzf2257354d2b64e08a8" };
+        static public string[] ZoneId = { "vze64e837cdaeb448494" }; //{ "vz28f417ceecca4ae4b2", "vzf2257354d2b64e08a8" };
                                                                     //If not android defaults to setting the zone strings for iOS
 
 #else

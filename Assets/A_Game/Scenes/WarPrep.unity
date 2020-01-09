@@ -867,6 +867,16 @@ PrefabInstance:
       propertyPath: m_Text
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 9079037355302261113, guid: 604ed008d4557bc4b80065f116dedfaf,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1406641987969866336, guid: 604ed008d4557bc4b80065f116dedfaf,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3184708734205531650, guid: 604ed008d4557bc4b80065f116dedfaf,
         type: 3}
       propertyPath: m_SizeDelta.x
@@ -891,16 +901,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_PreserveAspect
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9079037355302261113, guid: 604ed008d4557bc4b80065f116dedfaf,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1406641987969866336, guid: 604ed008d4557bc4b80065f116dedfaf,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5405619075234102274, guid: 604ed008d4557bc4b80065f116dedfaf, type: 3}
@@ -1361,7 +1361,7 @@ PrefabInstance:
     - target: {fileID: 114358418755427752, guid: d1ba8daa3f95bdd4894e096bcadb5f57,
         type: 3}
       propertyPath: _adsManager
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114358418755427752, guid: d1ba8daa3f95bdd4894e096bcadb5f57,
         type: 3}

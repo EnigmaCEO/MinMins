@@ -15,4 +15,5 @@ public class GameConfig : SingletonMonobehaviour<GameConfig>
     [SerializeField] public Vector3 GoldProjectileBaseDirection = new Vector3(0, 1, 0);
 
     [SerializeField] public float RewardChestDestructionDelay = 1;
+    [SerializeField] public int FightsWithoutAdsMaxCount = 3;
 }
