@@ -25,4 +25,9 @@ public class GameStats : SingletonMonobehaviour<GameStats>
     public int Rating = 0;
 
     public List<string> UnitsDamagedInSingleDestroyerAction = new List<string>();
+
+    public Dictionary<string, TeamBoostItem> TeamBoostTokensOwnedByName = new Dictionary<string, TeamBoostItem>();
+    //public Dictionary<string, TeamBoostItem> TeamBoostOreItemsOwnedByName = new Dictionary<string, TeamBoostItem>();
+
+    public TeamBoostItem TeamBoostSelected;
 }

@@ -165,6 +165,6 @@ public class WarPrepManager : EnigmaScene
 
     private void onBackButtonDown()
     {
-        SceneManager.LoadScene(GameConstants.Scenes.UNIT_SELECT);
+        SceneManager.LoadScene(GameConstants.Scenes.TEAM_BOOST);
     }
 }

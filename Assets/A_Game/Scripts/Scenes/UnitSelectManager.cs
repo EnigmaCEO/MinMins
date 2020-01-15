@@ -146,7 +146,7 @@ public class UnitSelectManager : EnigmaScene
 
     private void onNextButtonDown()
     {
-        SceneManager.LoadScene(GameConstants.Scenes.WAR_PREP);
+        SceneManager.LoadScene(GameConstants.Scenes.TEAM_BOOST);
     }
 
     private void onInfoBackButtonDown()

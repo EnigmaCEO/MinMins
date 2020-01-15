@@ -109,7 +109,14 @@ public class LocalizationManager : MonoBehaviour
 
     static public string GetTermTranslation(string term)
     {
-        return I2.Loc.LocalizationManager.GetTermTranslation(term);
+        string result = I2.Loc.LocalizationManager.GetTermTranslation(term);
+
+        if (result == null)
+        {
+            result = term;
+        }
+
+        return result;
     }
 
     static private void load()

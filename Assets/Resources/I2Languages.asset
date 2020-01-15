@@ -1463,7 +1463,7 @@ MonoBehaviour:
       Description: 
       Languages:
       - Enjin Legend tokens required
-      - Tokens de Leyenda Enjin requeridos
+      - Fichas de Leyenda Enjin requeridos
       - 
       - 
       Flags: 00000000
@@ -1473,7 +1473,7 @@ MonoBehaviour:
       Description: 
       Languages:
       - Min-Mins Token required
-      - Token de Min-Mins requerido
+      - Ficha de Min-Mins requerido
       - 
       - 
       Flags: 00000000
@@ -1484,6 +1484,106 @@ MonoBehaviour:
       Languages:
       - Enjin MFT required
       - MFT Enjin requerido
+      - 
+      - 
+      Flags: 00000000
+      Languages_Touch: []
+    - Term: Damage
+      TermType: 0
+      Description: 
+      Languages:
+      - Damage
+      - "Da\xF1o"
+      - 
+      - 
+      Flags: 00000000
+      Languages_Touch: []
+    - Term: Health
+      TermType: 0
+      Description: 
+      Languages:
+      - Health
+      - Salud
+      - 
+      - 
+      Flags: 00000000
+      Languages_Touch: []
+    - Term: Power
+      TermType: 0
+      Description: 
+      Languages:
+      - Power
+      - Poder
+      - 
+      - 
+      Flags: 00000000
+      Languages_Touch: []
+    - Term: TEAM BOOST SELECTION
+      TermType: 0
+      Description: 
+      Languages:
+      - TEAM BOOST SELECTION
+      - "SELECCI\xD3N DE AUMENTO PARA EQUIPO"
+      - 
+      - 
+      Flags: 00000000
+      Languages_Touch: []
+    - Term: 'Category:'
+      TermType: 0
+      Description: 
+      Languages:
+      - 'Category:'
+      - "Categor\xEDa:"
+      - 
+      - 
+      Flags: 00000000
+      Languages_Touch: []
+    - Term: 'Bonus:'
+      TermType: 0
+      Description: 
+      Languages:
+      - 'Bonus:'
+      - 'Bono:'
+      - 
+      - 
+      Flags: 00000000
+      Languages_Touch: []
+    - Term: Enjin Sword Token
+      TermType: 0
+      Description: 
+      Languages:
+      - Enjin Sword Token
+      - Ficha Espada Enjin
+      - 
+      - 
+      Flags: 00000000
+      Languages_Touch: []
+    - Term: Enjin Shield Token
+      TermType: 0
+      Description: 
+      Languages:
+      - Enjin Shield Token
+      - Ficha Escudo Enjin
+      - 
+      - 
+      Flags: 00000000
+      Languages_Touch: []
+    - Term: Enjin Shadowsong Token
+      TermType: 0
+      Description: 
+      Languages:
+      - Enjin Shadowsong Token
+      - "Ficha Canci\xF3n Sombr\xEDa"
+      - 
+      - 
+      Flags: 00000000
+      Languages_Touch: []
+    - Term: Enjin Bull Token
+      TermType: 0
+      Description: 
+      Languages:
+      - Enjin Bull Token
+      - Ficha Toro
       - 
       - 
       Flags: 00000000
@@ -1509,7 +1609,7 @@ MonoBehaviour:
     Google_WebServiceURL: https://script.google.com/macros/s/AKfycbw05ISkGCPtIS0hMzFD5jshgfH09mIP6BAxRKhWsA/exec
     Google_SpreadsheetKey: 1iIWCtExuyR2XXyYkJv6y83PTVMPC4FxzSITGGroefcg
     Google_SpreadsheetName: I2Loc MinMins Localization
-    Google_LastUpdatedVersion: 1578504902943
+    Google_LastUpdatedVersion: 1579126456149
     Google_Password: shalwend
     GoogleUpdateFrequency: 3
     GoogleInEditorCheckFrequency: 2

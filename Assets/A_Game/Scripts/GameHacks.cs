@@ -20,6 +20,7 @@ public class GameHacks : SingletonMonobehaviour<GameHacks>
     public bool GuestCameraAsHost;
 
     public bool ForcePvpAi;
+    public ValueHack ForceTeamBoostReward = new ValueHack("true");
 
     public ValueHack BuyResult = new ValueHack("true");
 
@@ -42,4 +43,5 @@ public class GameHacks : SingletonMonobehaviour<GameHacks>
     public ValueHack Damage = new ValueHack("1000");
     public ValueHack FightsWithoutAdsMaxCount = new ValueHack("2");
     public ValueHack HasPurchased = new ValueHack("true");
+    public ValueHack UnlockArenas = new ValueHack("5");
 }

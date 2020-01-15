@@ -16,6 +16,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         public const string LOOT_BOXES = "Lootboxes";
         public const string STATS = "Stats";
         public const string UNITS_EXP = "Units";
+        public const string ORE = "Ore";
     }
 
     public class ItemKeys
@@ -56,6 +57,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     [SerializeField] private float _tierGold_GroupRarity = 0.2f;
 
     [SerializeField] private int _enjinUnitStartingLevel = 3;
+    [SerializeField] private int _oreMaxBonus = 10;
 
     private Hashtable _saveHashTable = new Hashtable();
 
@@ -97,6 +99,29 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         }
 
         return inventoryUnitIndexes;
+    }
+
+    public TeamBoostItem GetOreItem(string itemName)
+    {
+        return InventoryManager.Instance.GetItem<TeamBoostItem>(GroupNames.ORE, itemName);
+    }
+
+    public List<TeamBoostItem> GetOreItemsOwned()
+    {
+        List<TeamBoostItem> oreItems = new List<TeamBoostItem>();
+
+        InventoryManager inventoryManager = InventoryManager.Instance;
+
+        if (inventoryManager.CheckGroupExists(GroupNames.ORE, false))
+        {
+            foreach (string itemName in inventoryManager.GetGroupKeys(GroupNames.ORE))
+            {
+                TeamBoostItem item = GetOreItem(itemName);
+                oreItems.Add(item);
+            }
+        }
+
+        return oreItems;
     }
 
     public void SetSinglePlayerLevel(int level)
@@ -181,7 +206,9 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         InventoryManager.Instance.UpdateItem(GroupNames.LOOT_BOXES, tier.ToString(), newtierLootBoxesAmount);
 
         if (shouldSave)
+        {
             SaveLootBoxes();
+        }
     }
 
     public List<string> OpenLootBox(int boxTier)
@@ -274,7 +301,14 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
         InventoryManager inventoryManager = InventoryManager.Instance;
         foreach (string unitName in inventoryManager.GetGroupKeys(GroupNames.UNITS_EXP))
-            saveUnit(unitName, false);
+        {
+            string groupName = GroupNames.UNITS_EXP;
+            int unitExp = InventoryManager.Instance.GetItem<int>(groupName, unitName);
+            string hashKey = groupName + _parseSeparator + unitName;
+            //Debug.LogWarning("GameInventory::saveUnit -> hashKey: " + hashKey + " -> unitExp: " + unitExp);
+
+            saveHashKey(hashKey, unitExp, false);
+        }
 
         saveHashTableToFile();
     }
@@ -304,11 +338,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
             string hashKey = GroupNames.LOOT_BOXES + _parseSeparator + tier;
 
             print("SaveLootBoxes -> hashKey: " + hashKey + " -> tierAmount: " + tierAmount.ToString());
-
-            if (_saveHashTable.ContainsKey(hashKey))
-                _saveHashTable.Remove(hashKey);
-
-            _saveHashTable.Add(hashKey, tierAmount);
+            saveHashKey(hashKey, tierAmount, false);
         }
 
         saveHashTableToFile();
@@ -492,7 +522,16 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         inventoryManager.AddItem(GroupNames.STATS, ItemKeys.ENJIN_ATTEMPTS, 5);
 
         for (int tier = 1; tier <= _lootBoxTiersAmount; tier++)
+        {
             inventoryManager.AddItem(GroupNames.LOOT_BOXES, tier.ToString(), 0);
+        }
+
+        addDefaultOreItems(GameConstants.TeamBoostEnjinOreItems.DAMAGE, GameConstants.TeamBoostCategory.DAMAGE);
+        addDefaultOreItems(GameConstants.TeamBoostEnjinOreItems.DEFENSE, GameConstants.TeamBoostCategory.DEFENSE);
+        addDefaultOreItems(GameConstants.TeamBoostEnjinOreItems.HEALTH, GameConstants.TeamBoostCategory.HEALTH);
+        addDefaultOreItems(GameConstants.TeamBoostEnjinOreItems.POWER, GameConstants.TeamBoostCategory.POWER);
+
+        //SaveOre();
         //===========================================================================================
 
         //bool isThereAnyUnit = false;
@@ -501,12 +540,12 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
         foreach (DictionaryEntry entry in _saveHashTable)
         {
-            string[] terms = entry.Key.ToString().Split(_parseSeparator);
-            string groupName = terms[0];
+            string[] keyTerms = entry.Key.ToString().Split(_parseSeparator);
+            string groupName = keyTerms[0];
 
             if (groupName == GroupNames.UNITS_EXP)
             {
-                string unitName = terms[1];
+                string unitName = keyTerms[1];
                 int unitExp = int.Parse(entry.Value.ToString());
                 //print("LoadData -> groupName: " + groupName + " -> unitName: " + unitName + " -> unit exp: " + unitExp.ToString());
                 inventoryManager.AddItem(groupName, unitName, unitExp);
@@ -515,7 +554,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
             }
             else if (groupName == GroupNames.LOOT_BOXES)
             {
-                int tier = int.Parse(terms[1]);
+                int tier = int.Parse(keyTerms[1]);
                 int tierAmount = int.Parse((string)entry.Value);
                 //print("LoadData -> box tier: " + tier + " amount: " + tierAmount);
                 inventoryManager.UpdateItem(GroupNames.LOOT_BOXES, tier.ToString(), tierAmount, false);
@@ -524,16 +563,31 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
             }
             else if (groupName == GroupNames.STATS)
             {
-                string key = terms[1];
+                string key = keyTerms[1];
 
                 if ((key == GameInventory.ItemKeys.SINGLE_PLAYER_LEVEL) || (key == GameInventory.ItemKeys.ENJIN_ATTEMPTS))
-                {             
+                {
                     int value = int.Parse((string)entry.Value);
                     Debug.LogWarning("GameInventory::loadData -> key loaded: " + key + " and value: " + value.ToString());
                     inventoryManager.UpdateItem(GroupNames.STATS, key, value);
                 }
                 else
+                {
                     Debug.LogError("GameInventory::loadData -> Unknow stats key loaded: " + key);
+                }
+            }
+            else if (groupName == GroupNames.ORE)
+            {
+                string oreItemName = keyTerms[1];
+
+                string[] valueTerms = entry.Value.ToString().Split(_parseSeparator);
+                //string value = boostItem.Category + _parseSeparator + boostItem.Bonus + _parseSeparator + boostItem.Amount;
+
+                string category = valueTerms[0];
+                int bonus = int.Parse(valueTerms[1]);
+                int amount = int.Parse(valueTerms[2]);
+
+                UpdateTeamBoostOreItem(new TeamBoostItem(oreItemName, amount, bonus, category), false);
             }
         }
 
@@ -553,48 +607,82 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     //    saveHashTableToFile();
     //}
 
+    private void addDefaultOreItems(string baseOreItemName, string category)
+    {
+        InventoryManager inventoryManager = InventoryManager.Instance;
+        for (int i = 1; i <= _oreMaxBonus; i++)
+        {
+            string oreFullName = baseOreItemName + " " + i;
+            AddTeamBoostOreItem(new TeamBoostItem(oreFullName, 0, i, category), false);
+        }
+    }
+
     private void saveSinglePlayerLevelNumber()
     {
         int level = InventoryManager.Instance.GetItem<int>(GroupNames.STATS, ItemKeys.SINGLE_PLAYER_LEVEL);
         string hashKey = GroupNames.STATS + _parseSeparator + ItemKeys.SINGLE_PLAYER_LEVEL;
-
-        if (_saveHashTable.ContainsKey(hashKey))
-            _saveHashTable.Remove(hashKey);
-
         Debug.LogWarning("GameInventory::saveSinglePlayerLevelNumber: " + level);
-
-        _saveHashTable.Add(hashKey, level);
-        saveHashTableToFile();
+        saveHashKey(hashKey, level);
     }
 
-    public void saveEnjinAttempts(int number)
+    private void saveEnjinAttempts(int number)
     {
         Debug.Log("Attempts Remaining: " + number);
         string hashKey = GroupNames.STATS + _parseSeparator + ItemKeys.ENJIN_ATTEMPTS;
-
         InventoryManager.Instance.UpdateItem(GroupNames.STATS, ItemKeys.ENJIN_ATTEMPTS, number, true);
+        saveHashKey(hashKey, number);
+    }
 
-        if (_saveHashTable.ContainsKey(hashKey))
-            _saveHashTable.Remove(hashKey);
+    public void UpdateTeamBoostOreItem(TeamBoostItem teamBoostItem, bool saveToFile)
+    {
+        InventoryManager.Instance.UpdateItem(GroupNames.ORE, teamBoostItem.Name, teamBoostItem);
 
-        _saveHashTable.Add(hashKey, number);
+        if (saveToFile)
+        {
+            SaveOre();
+        }
+    }
+
+    public void AddTeamBoostOreItem(TeamBoostItem teamBoostItem, bool saveToFile)
+    {
+        InventoryManager.Instance.AddItem(GroupNames.ORE, teamBoostItem.Name, teamBoostItem);
+
+        if (saveToFile)
+        {
+            SaveOre();
+        }
+    }
+
+    public void SaveOre()
+    {
+        removeGroupFromSaveHashTable(GroupNames.ORE);
+
+        InventoryManager inventoryManager = InventoryManager.Instance;
+        foreach (string oreItemName in inventoryManager.GetGroupKeys(GroupNames.ORE))
+        {
+            TeamBoostItem boostItem = inventoryManager.GetItem<TeamBoostItem>(GroupNames.ORE, oreItemName);
+            string hashKey = GroupNames.ORE + _parseSeparator + boostItem.Name;
+            string value = boostItem.Category + _parseSeparator + boostItem.Bonus + _parseSeparator + boostItem.Amount;
+
+            saveHashKey(hashKey, value, false);
+        }
+
         saveHashTableToFile();
     }
 
-    private void saveUnit(string unitName, bool isStandAlone = true)
+    private void saveHashKey(string hashKey, object value, bool saveToFile = true)
     {
-        string groupName = GroupNames.UNITS_EXP;
-        int unitExp = InventoryManager.Instance.GetItem<int>(groupName, unitName);
-        string hashKey = groupName + _parseSeparator + unitName;
-        //Debug.LogWarning("GameInventory::saveUnit -> hashKey: " + hashKey + " -> unitExp: " + unitExp);
-
         if (_saveHashTable.ContainsKey(hashKey))
+        {
             _saveHashTable.Remove(hashKey);
+        }
 
-        _saveHashTable.Add(hashKey, unitExp);
+        _saveHashTable.Add(hashKey, value);
 
-        if (isStandAlone)
+        if (saveToFile)
+        {
             saveHashTableToFile();
+        }
     }
 
     private void saveHashTableToFile()

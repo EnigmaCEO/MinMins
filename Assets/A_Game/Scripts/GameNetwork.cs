@@ -36,6 +36,44 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         public const string ENJIN_BRYANA = "enjin_bryana";
         public const string ENJIN_TASSIO = "enjin_tassio";
         public const string ENJIN_SIMON = "enjin_simon";
+
+        public const string ENJIN_SWORD = "enjin_sword";
+        public const string ENJIN_SHIELD = "enjin_shield";
+        public const string ENJIN_SHADOWSONG = "enjin_shadowsong";
+        public const string ENJIN_BULL = "enjin_bull";
+
+        public const string ENJIN_DEFENSE_ORE_ITEM_1 = "enjin_defense_ore_1";
+        public const string ENJIN_DEFENSE_ORE_ITEM_2 = "enjin_defense_ore_2";
+        public const string ENJIN_DEFENSE_ORE_ITEM_3 = "enjin_defense_ore_3";
+        public const string ENJIN_DEFENSE_ORE_ITEM_4 = "enjin_defense_ore_4";
+        public const string ENJIN_DEFENSE_ORE_ITEM_5 = "enjin_defense_ore_5";
+        public const string ENJIN_DEFENSE_ORE_ITEM_6 = "enjin_defense_ore_6";
+        public const string ENJIN_DEFENSE_ORE_ITEM_7 = "enjin_defense_ore_7";
+        public const string ENJIN_DEFENSE_ORE_ITEM_8 = "enjin_defense_ore_8";
+        public const string ENJIN_DEFENSE_ORE_ITEM_9 = "enjin_defense_ore_9";
+        public const string ENJIN_DEFENSE_ORE_ITEM_10 = "enjin_defense_ore_10";
+
+        public const string ENJIN_HEALTH_ORE_ITEM_1 = "enjin_health_ore_1";
+        public const string ENJIN_HEALTH_ORE_ITEM_2 = "enjin_health_ore_2";
+        public const string ENJIN_HEALTH_ORE_ITEM_3 = "enjin_health_ore_3";
+        public const string ENJIN_HEALTH_ORE_ITEM_4 = "enjin_health_ore_4";
+        public const string ENJIN_HEALTH_ORE_ITEM_5 = "enjin_health_ore_5";
+        public const string ENJIN_HEALTH_ORE_ITEM_6 = "enjin_health_ore_6";
+        public const string ENJIN_HEALTH_ORE_ITEM_7 = "enjin_health_ore_7";
+        public const string ENJIN_HEALTH_ORE_ITEM_8 = "enjin_health_ore_8";
+        public const string ENJIN_HEALTH_ORE_ITEM_9 = "enjin_health_ore_9";
+        public const string ENJIN_HEALTH_ORE_ITEM_10 = "enjin_health_ore_10";
+
+        public const string ENJIN_POWER_ORE_ITEM_1 = "enjin_power_ore_1";
+        public const string ENJIN_POWER_ORE_ITEM_2 = "enjin_power_ore_2";
+        public const string ENJIN_POWER_ORE_ITEM_3 = "enjin_power_ore_3";
+        public const string ENJIN_POWER_ORE_ITEM_4 = "enjin_power_ore_4";
+        public const string ENJIN_POWER_ORE_ITEM_5 = "enjin_power_ore_5";
+        public const string ENJIN_POWER_ORE_ITEM_6 = "enjin_power_ore_6";
+        public const string ENJIN_POWER_ORE_ITEM_7 = "enjin_power_ore_7";
+        public const string ENJIN_POWER_ORE_ITEM_8 = "enjin_power_ore_8";
+        public const string ENJIN_POWER_ORE_ITEM_9 = "enjin_power_ore_9";
+        public const string ENJIN_POWER_ORE_ITEM_10 = "enjin_power_ore_10";
     }
 
     public class ServerResponseMessages
@@ -157,6 +195,8 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     public delegate void OnSendResultsDelegate(string message, int updatedRating);
     private OnSendResultsDelegate _onSendResultsCallback;
 
+    private const int _DEFAULT_TOKEN_AMOUNT = 1;
+
     [HideInInspector] public int HostPlayerId = -1;
     [HideInInspector] public int GuestPlayerId = -1;
 
@@ -172,12 +212,12 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     [SerializeField] private int _roomMaxPlayers = 2;
     [SerializeField] private int _roomMaxPlayersNotExpectating = 2;
 
+    [SerializeField] private int _defaultTokenBonus = 5;
+
     private MessagePopUp _messagePopUp;
 
     [Header("Only for display. Set at runtime:")]
     public bool IsEnjinLinked = false;
-    public bool HasEnjinWeapon = false;
-    public bool HasEnjinShield = false;
     public bool HasEnjinEnigmaToken = false;
     public bool HasEnjinMft = false;
     public bool HasEnjinMinMinsToken = false;
@@ -341,8 +381,6 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     public void ResetLoginValues()
     {
         IsEnjinLinked = false;
-        HasEnjinWeapon = false;
-        HasEnjinShield = false;
         HasEnjinEnigmaToken = false;
         HasEnjinMft = false;
 
@@ -351,6 +389,8 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         HasEnjinWitek = false;
         HasEnjinTassio = false;
         HasEnjinSimon = false;
+
+        GameStats.Instance.TeamBoostTokensOwnedByName.Clear();
     }
 
     public void OnRoomCustomPropertiesChanged(Hashtable updatedProperties)
@@ -477,10 +517,14 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     {
         GameHacks gameHacks = GameHacks.Instance;
         if (gameHacks.RandomizeUnitLevelWithMaxLevel.Enabled)
+        {
             unitLevel = UnityEngine.Random.Range(1, gameHacks.RandomizeUnitLevelWithMaxLevel.ValueAsInt);
+        }
 
         if (gameHacks.UnitLevel.Enabled)
+        {
             unitLevel = gameHacks.UnitLevel.ValueAsInt;
+        }
 
         MinMinUnit minMin = GameInventory.Instance.GetMinMinFromResources(unitName);
         SetAnyPlayerUnitProperty(UnitPlayerProperties.LEVEL, unitName, unitLevel.ToString(), teamName, networkPlayerId);
@@ -488,11 +532,41 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         int unitTier = GameInventory.Instance.GetUnitTier(unitName);
         int baseMaxHealth = unitTier * _unitHealthByTier;
 
-        string maxHealth = getIntStatByLevelAsString(baseMaxHealth, unitLevel);
+        int healthBonus = 0;
+        int damageBonus = 0;
+        int defenseBonus = 0;
+        int powerBonus = 0;
 
-        string strenghtAtLevel = getFloatStatByLevelAsString(minMin.Strength, unitLevel);
-        string defenseAtLevel = getFloatStatByLevelAsString(minMin.Defense, unitLevel);
-        string effectScaleAtLevel = getFloatStatByLevelAsString(minMin.EffectScale, unitLevel);
+        TeamBoostItem selectedBoostItem = GameStats.Instance.TeamBoostSelected;
+
+        if (selectedBoostItem != null)
+        {
+            string boostCategory = selectedBoostItem.Category;
+            int boostBonus = selectedBoostItem.Bonus;
+
+            if (boostCategory == GameConstants.TeamBoostCategory.DAMAGE)
+            {
+                damageBonus = boostBonus;
+            }
+            else if (boostCategory == GameConstants.TeamBoostCategory.DEFENSE)
+            {
+                defenseBonus = boostBonus;
+            }
+            else if (boostCategory == GameConstants.TeamBoostCategory.HEALTH)
+            {
+                healthBonus = boostBonus;
+            }
+            else if (boostCategory == GameConstants.TeamBoostCategory.POWER)
+            {
+                powerBonus = boostBonus;
+            }
+        }
+
+        string maxHealth = getIntStatByLevelAsString(baseMaxHealth, unitLevel, healthBonus);
+
+        string strenghtAtLevel = getFloatStatByLevelAsString(minMin.Strength, unitLevel, damageBonus);
+        string defenseAtLevel = getFloatStatByLevelAsString(minMin.Defense, unitLevel, defenseBonus);
+        string effectScaleAtLevel = getFloatStatByLevelAsString(minMin.EffectScale, unitLevel, powerBonus);
 
         SetAnyPlayerUnitProperty(UnitPlayerProperties.STRENGHT, unitName, strenghtAtLevel, teamName, networkPlayerId);
         SetAnyPlayerUnitProperty(UnitPlayerProperties.DEFENSE, unitName, defenseAtLevel, teamName, networkPlayerId);
@@ -533,14 +607,18 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         return levelNumber;
     }
 
-    private string getFloatStatByLevelAsString(float baseValue, int level)
+    private string getFloatStatByLevelAsString(float baseValue, int level, int bonus)
     {
-        return (baseValue * (1 + _statIncreaseByLevel * (float)level)).ToString();
+        string result = (baseValue * (1.0f + ((float)bonus / 100.0f)) * (1 + _statIncreaseByLevel * (float)level)).ToString();
+        Debug.LogWarning("GameNetwork::getFloatStatByLevelAsString -> baseValue: " + baseValue + " level: " + level + " bonus: " + bonus + " result: " + result);
+        return result;
     }
 
-    private string getIntStatByLevelAsString(int baseValue, int level)
+    private string getIntStatByLevelAsString(int baseValue, int level, int bonus)
     {
-        return (Mathf.RoundToInt((float)baseValue * (1 + _statIncreaseByLevel * (float)level))).ToString();
+        string result = (Mathf.RoundToInt((float)baseValue * (1.0f + ((float)bonus / 100.0f)) * (1 + _statIncreaseByLevel * (float)level))).ToString();
+        Debug.LogWarning("GameNetwork::getIntStatByLevelAsString -> baseValue: " + baseValue + " level: " + level + " bonus: " + bonus + " result: " + result);
+        return result;
     }
 
     private void performResultsSendingTransaction()
@@ -733,5 +811,25 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         //customProps.Add(RoomCustomProperties.MAX_PLAYERS, _roomMaxPlayers);
 
         return customProps;
+    }
+
+    public void CheckAllEnjinTeamBoostTokens(SimpleJSON.JSONNode response_hash)
+    {
+        GameStats.Instance.TeamBoostTokensOwnedByName.Clear();
+
+        checkSingleEnjinTeamBoostToken(response_hash, TransactionKeys.ENJIN_SWORD, GameConstants.TeamBoostEnjinTokens.SWORD, GameConstants.TeamBoostCategory.DAMAGE);
+        checkSingleEnjinTeamBoostToken(response_hash, TransactionKeys.ENJIN_SHIELD, GameConstants.TeamBoostEnjinTokens.SHIELD, GameConstants.TeamBoostCategory.DEFENSE);
+        checkSingleEnjinTeamBoostToken(response_hash, TransactionKeys.ENJIN_SHADOWSONG, GameConstants.TeamBoostEnjinTokens.SHADOW_SONG, GameConstants.TeamBoostCategory.HEALTH);
+        checkSingleEnjinTeamBoostToken(response_hash, TransactionKeys.ENJIN_BULL, GameConstants.TeamBoostEnjinTokens.BULL, GameConstants.TeamBoostCategory.POWER);
+    }
+
+    private void checkSingleEnjinTeamBoostToken(SimpleJSON.JSONNode response_hash, string transactionKey, string name, string category)
+    {
+        SimpleJSON.JSONNode boostNode = response_hash[NetworkManager.TransactionKeys.USER_DATA][transactionKey];
+
+        if (boostNode != null)
+        {
+            GameStats.Instance.TeamBoostTokensOwnedByName.Add(name, new TeamBoostItem(name, _DEFAULT_TOKEN_AMOUNT, _defaultTokenBonus, category)); 
+        }
     }
 }

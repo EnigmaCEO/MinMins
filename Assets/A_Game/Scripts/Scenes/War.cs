@@ -1602,7 +1602,6 @@ public class War : NetworkEntity
         if (_readyByTeam[GameNetwork.TeamNames.HOST] && _readyByTeam[GameNetwork.TeamNames.GUEST])
         {
             NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.READY_TO_FIGHT, true.ToString(), _localPlayerTeam);
-
         }
     }
 
@@ -2036,14 +2035,14 @@ public class War : NetworkEntity
                 GameNetwork.Instance.SendMatchResultsToServer(winner, onSendMatchResultsToServerCallback);
         }
         else
-            setAndDisplayMathResultsPopUp();
+            setAndDisplayMatchResultsPopUp();
     }
 
-    private void rewardWithRandomBox()
-    {
-        int rewardBoxTier = GameInventory.Instance.GetRandomTier();
-        rewardWithTierBox(rewardBoxTier);
-    }
+    //private void rewardWithRandomBox()
+    //{
+    //    int rewardBoxTier = GameInventory.Instance.GetRandomTier();
+    //    rewardWithTierBox(rewardBoxTier);
+    //}
 
     private void rewardWithTierBox(int rewardBoxTier)
     {
@@ -2081,12 +2080,53 @@ public class War : NetworkEntity
             _errorText.gameObject.SetActive(true);
         }
 
-        setAndDisplayMathResultsPopUp();
+        setAndDisplayMatchResultsPopUp();
     }
 
-    private void setAndDisplayMathResultsPopUp()
+    private void setAndDisplayMatchResultsPopUp()
     {
-        _matchResultsPopUp.SetValues(_matchLocalData);
+        TeamBoostItem boostReward = null;
+        bool gotBoostReward = false;
+
+        GameStats gameStats = GameStats.Instance;
+        if (gameStats.Mode == GameStats.Modes.Pvp)
+        {
+            int randomInt = UnityEngine.Random.Range(1, 101);
+            Debug.LogWarning("Ore reward random int: " + randomInt);
+            gotBoostReward = (randomInt <= 20); //20% chance
+        }
+
+        if (GameHacks.Instance.ForceTeamBoostReward.Enabled)
+        {
+            gotBoostReward = GameHacks.Instance.ForceTeamBoostReward.ValueAsBool;
+        }
+
+        if (gotBoostReward)
+        {
+            int arenaNumber = gameStats.SelectedLevelNumber;
+
+            int minBonus = arenaNumber;
+            int maxBonus = arenaNumber * 2;
+
+            int bonus = UnityEngine.Random.Range(minBonus, maxBonus);
+            string[] categories = { GameConstants.TeamBoostCategory.DAMAGE, GameConstants.TeamBoostCategory.DEFENSE,
+                                        GameConstants.TeamBoostCategory.HEALTH, GameConstants.TeamBoostCategory.POWER };
+
+            string[] baseNames = { GameConstants.TeamBoostEnjinOreItems.DAMAGE, GameConstants.TeamBoostEnjinOreItems.DEFENSE,
+                                        GameConstants.TeamBoostEnjinOreItems.HEALTH, GameConstants.TeamBoostEnjinOreItems.POWER };
+
+            int randomNumber = UnityEngine.Random.Range(0, 3);
+            string rewardCategory = categories[randomNumber];
+            string rewardBaseName = baseNames[randomNumber];
+
+            string oreItemName = rewardBaseName + " " + bonus;
+
+            TeamBoostItem boostItem = GameInventory.Instance.GetOreItem(oreItemName);
+            boostReward = new TeamBoostItem(oreItemName, boostItem.Amount + 1, bonus, rewardCategory);
+            GameInventory.Instance.UpdateTeamBoostOreItem(boostReward, true);
+        }
+
+        _matchResultsPopUp.SetValues(_matchLocalData, boostReward);
         _matchResultsPopUp.Open();
     }
 

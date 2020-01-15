@@ -262,6 +262,9 @@ public class EnjinLogin : MonoBehaviour
             gameNetwork.HasEnjinSimon = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.ENJIN_SIMON);
             gameNetwork.HasEnjinTassio = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.ENJIN_TASSIO);
             gameNetwork.HasEnjinWitek = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.ENJIN_WITEK);
+
+            gameNetwork.CheckAllEnjinTeamBoostTokens(response_hash);
+
         }
         else
             print("User is not using Crypto.");
@@ -272,9 +275,16 @@ public class EnjinLogin : MonoBehaviour
         GameObject.Find("/Main").GetComponent<Main>().Init();
     }
 
-    private bool checkTokenAvailable(SimpleJSON.JSONNode response_hash, string key)
+    private bool checkTokenAvailable(SimpleJSON.JSONNode response_hash, string transactionKey)
     {
-        string tokenAvailable = response_hash[NetworkManager.TransactionKeys.USER_DATA][key];
+        string tokenAvailable = "";
+        SimpleJSON.JSONNode tokenNode = response_hash[NetworkManager.TransactionKeys.USER_DATA][transactionKey];
+
+        if (tokenNode != null)
+        {
+            tokenAvailable = tokenNode.ToString();
+        }
+
         return (tokenAvailable == "1");
     }
 

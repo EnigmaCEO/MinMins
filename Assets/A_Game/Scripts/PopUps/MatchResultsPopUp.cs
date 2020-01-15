@@ -35,7 +35,7 @@ public class MatchResultsPopUp : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public void SetValues(War.MatchLocalData matchLocalData)
+    public void SetValues(War.MatchLocalData matchLocalData, TeamBoostItem boostItem)
     {
         string winnerNickname = NetworkManager.GetRoomCustomProperty(GameNetwork.RoomCustomProperties.WINNER_NICKNAME);
         string localPlayerNickname = NetworkManager.GetLocalPlayerNickname();
@@ -78,7 +78,8 @@ public class MatchResultsPopUp : MonoBehaviour
         unitGridItemTemplate.SetActive(false);
 
         Dictionary<int, int> boxTiersWithAmountRewards = matchLocalData.BoxTiersWithAmountsRewards;
-        GameObject rewardGridItemTemplate = _rewardsGridContent.GetChild(0).gameObject;
+        GameObject unitRewardGridItemTemplate = _rewardsGridContent.Find("UnitsRewardGridItem").gameObject;
+        GameObject boostRewardGridItemTemplate = _rewardsGridContent.Find("BoostRewardGridItem").gameObject;
 
         GameInventory gameInventory = GameInventory.Instance;
 
@@ -87,17 +88,24 @@ public class MatchResultsPopUp : MonoBehaviour
             int count = amountByTier.Value;
             for (int i = 0; i < count; i++)
             {
-                createRewardGridItem(rewardGridItemTemplate, amountByTier.Key, false);
+                createRewardGridItem(unitRewardGridItemTemplate, amountByTier.Key, false);
                 gameInventory.ChangeLootBoxAmount(amountByTier.Value, amountByTier.Key, true, false);
             }
+        }
+
+        if (boostItem != null)
+        {
+            GameObject boostReward = Instantiate<GameObject>(boostRewardGridItemTemplate, _rewardsGridContent);
+            boostReward.GetComponent<BoostRewardGridItem>().SetUp(boostItem.Category, boostItem.Bonus);
         }
 
         gameInventory.SaveLootBoxes();
 
         if (matchLocalData.EnjinCollected)
-            createRewardGridItem(rewardGridItemTemplate, GameInventory.Tiers.GOLD, true);
+            createRewardGridItem(unitRewardGridItemTemplate, GameInventory.Tiers.GOLD, true);
 
-        rewardGridItemTemplate.SetActive(false);
+        unitRewardGridItemTemplate.SetActive(false);
+        boostRewardGridItemTemplate.SetActive(false);
     }
 
     private void createRewardGridItem(GameObject rewardGridItemTemplate, int tier, bool isEnjin)

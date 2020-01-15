@@ -24,6 +24,9 @@ EditorBuildSettings:
     path: Assets/A_Game/Scenes/WarPrep.unity
     guid: 4c738e8375b4869498edd1032079fdf9
   - enabled: 1
+    path: Assets/A_Game/Scenes/TeamBoost.unity
+    guid: 50ef6e2b26474e44692d2a997aa93793
+  - enabled: 1
     path: Assets/A_Game/Scenes/Lobby.unity
     guid: 19414e202532df14f8e0c5b80c9b0978
   - enabled: 1

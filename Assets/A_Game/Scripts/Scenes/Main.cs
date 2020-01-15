@@ -119,7 +119,7 @@ public class Main : EnigmaScene
 
         if(loggedIn)
         {
-            _pvprating.text += LocalizationManager.GetTermTranslation("PvP Rating") + ": " + GameStats.Instance.Rating;
+            _pvprating.text = LocalizationManager.GetTermTranslation("PvP Rating") + ": " + GameStats.Instance.Rating;
         }
         
     }

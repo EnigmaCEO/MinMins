@@ -26,9 +26,19 @@ public class Levels : EnigmaScene
 
         int levelsLenght = 0;
         if (GameStats.Instance.Mode == GameStats.Modes.SinglePlayer)
+        {
             levelsLenght = GameInventory.Instance.GetSinglePlayerLevel();
+        }
         else if (GameStats.Instance.Mode == GameStats.Modes.Pvp)
+        {
             levelsLenght = GameNetwork.Instance.GetLocalPlayerPvpLevelNumber();
+        }
+
+        if (GameHacks.Instance.UnlockArenas.Enabled)
+        {
+            levelsLenght = GameHacks.Instance.UnlockArenas.ValueAsInt;
+        }
+
         Debug.LogWarning(">Levels::Start -> Levels lenght: " + levelsLenght);
 
         for (int i = 0; i < levelsLenght; i++)
