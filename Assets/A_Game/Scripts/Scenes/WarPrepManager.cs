@@ -14,6 +14,8 @@ public class WarPrepManager : EnigmaScene
     private int _slotsInPlay = 0;
     private int _slotsReady = 0;
 
+    LineRenderer _lineRenderer;
+
     void Start()
     {
         _nextButton.onClick.AddListener(() => { onNextButtonDown(); });
@@ -55,28 +57,39 @@ public class WarPrepManager : EnigmaScene
             _slotsInPlay++;
         }
 
-        LineRenderer lineRenderer = gameObject.AddComponent<LineRenderer>();
-        lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
-        lineRenderer.widthMultiplier = 0.1f;
-        lineRenderer.positionCount = 4;
-        lineRenderer.loop = true;
+        _lineRenderer = gameObject.AddComponent<LineRenderer>();
+
+        _lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+        _lineRenderer.widthMultiplier = 0.1f;
+        _lineRenderer.positionCount = 4;
+        _lineRenderer.loop = true;
+
         Gradient gradient = new Gradient();
         gradient.SetKeys(
             new GradientColorKey[] { new GradientColorKey(Color.cyan, 0.0f), new GradientColorKey(Color.cyan, 1.0f) },
             new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(1.0f, 1.0f) }
         );
-        lineRenderer.colorGradient = gradient;
+        _lineRenderer.colorGradient = gradient;
 
-        lineRenderer.SetPosition(0, new Vector3(GameConfig.Instance.BattleFieldMinPos.x, GameConfig.Instance.BattleFieldMinPos.y, 0.0f));
-        lineRenderer.SetPosition(1, new Vector3(GameConfig.Instance.BattleFieldMinPos.x, GameConfig.Instance.BattleFieldMaxPos.y, 0.0f));
-        lineRenderer.SetPosition(2, new Vector3(GameConfig.Instance.BattleFieldMaxPos.x, GameConfig.Instance.BattleFieldMaxPos.y, 0.0f));
-        lineRenderer.SetPosition(3, new Vector3(GameConfig.Instance.BattleFieldMaxPos.x, GameConfig.Instance.BattleFieldMinPos.y, 0.0f));
-        
+        updateBoundsLines();
     }
 
     void Update()
     {
-        
+        if (GameHacks.Instance.CreateWarPrepLineRendererOnUpdate)
+        {
+            updateBoundsLines();
+        }
+    }
+
+    private void updateBoundsLines()
+    {
+        GameConfig gameConfig = GameConfig.Instance;
+
+        _lineRenderer.SetPosition(0, new Vector3(gameConfig.BattleFieldMinPos.x - gameConfig.BoundsLineRendererOutwardOffset, gameConfig.BattleFieldMinPos.y - gameConfig.BoundsLineRendererOutwardOffset, 0.0f));
+        _lineRenderer.SetPosition(1, new Vector3(gameConfig.BattleFieldMinPos.x - gameConfig.BoundsLineRendererOutwardOffset, gameConfig.BattleFieldMaxPos.y + gameConfig.BoundsLineRendererOutwardOffset, 0.0f));
+        _lineRenderer.SetPosition(2, new Vector3(gameConfig.BattleFieldMaxPos.x + gameConfig.BoundsLineRendererOutwardOffset, gameConfig.BattleFieldMaxPos.y + gameConfig.BoundsLineRendererOutwardOffset, 0.0f));
+        _lineRenderer.SetPosition(3, new Vector3(gameConfig.BattleFieldMaxPos.x + gameConfig.BoundsLineRendererOutwardOffset, gameConfig.BattleFieldMinPos.y - gameConfig.BoundsLineRendererOutwardOffset, 0.0f));
     }
 
     public void UpdateInfo(string unitName)

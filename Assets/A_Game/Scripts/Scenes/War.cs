@@ -236,10 +236,17 @@ public class War : NetworkEntity
         );
         _lineRenderer1.colorGradient = gradient;
 
-        _lineRenderer1.SetPosition(0, new Vector3(GameConfig.Instance.BattleFieldMinPos.x, GameConfig.Instance.BattleFieldMinPos.y, 0.0f));
-        _lineRenderer1.SetPosition(1, new Vector3(GameConfig.Instance.BattleFieldMinPos.x, GameConfig.Instance.BattleFieldMaxPos.y, 0.0f));
-        _lineRenderer1.SetPosition(2, new Vector3(GameConfig.Instance.BattleFieldMaxPos.x, GameConfig.Instance.BattleFieldMaxPos.y, 0.0f));
-        _lineRenderer1.SetPosition(3, new Vector3(GameConfig.Instance.BattleFieldMaxPos.x, GameConfig.Instance.BattleFieldMinPos.y, 0.0f));
+        GameConfig gameConfig = GameConfig.Instance;
+
+        _lineRenderer1.SetPosition(0, new Vector3(gameConfig.BattleFieldMinPos.x - gameConfig.BoundsLineRendererOutwardOffset, gameConfig.BattleFieldMinPos.y - gameConfig.BoundsLineRendererOutwardOffset, 0.0f));
+        _lineRenderer1.SetPosition(1, new Vector3(gameConfig.BattleFieldMinPos.x - gameConfig.BoundsLineRendererOutwardOffset, gameConfig.BattleFieldMaxPos.y + gameConfig.BoundsLineRendererOutwardOffset, 0.0f));
+        _lineRenderer1.SetPosition(2, new Vector3(gameConfig.BattleFieldMaxPos.x + gameConfig.BoundsLineRendererOutwardOffset, gameConfig.BattleFieldMaxPos.y + gameConfig.BoundsLineRendererOutwardOffset, 0.0f));
+        _lineRenderer1.SetPosition(3, new Vector3(gameConfig.BattleFieldMaxPos.x + gameConfig.BoundsLineRendererOutwardOffset, gameConfig.BattleFieldMinPos.y - gameConfig.BoundsLineRendererOutwardOffset, 0.0f));
+
+        //_lineRenderer1.SetPosition(0, new Vector3(GameConfig.Instance.BattleFieldMinPos.x, GameConfig.Instance.BattleFieldMinPos.y, 0.0f));
+        //_lineRenderer1.SetPosition(1, new Vector3(GameConfig.Instance.BattleFieldMinPos.x, GameConfig.Instance.BattleFieldMaxPos.y, 0.0f));
+        //_lineRenderer1.SetPosition(2, new Vector3(GameConfig.Instance.BattleFieldMaxPos.x, GameConfig.Instance.BattleFieldMaxPos.y, 0.0f));
+        //_lineRenderer1.SetPosition(3, new Vector3(GameConfig.Instance.BattleFieldMaxPos.x, GameConfig.Instance.BattleFieldMinPos.y, 0.0f));
         //lineRenderer.SetPosition(4, new Vector3(GameConfig.Instance.BattleFieldMinPos.x, GameConfig.Instance.BattleFieldMinPos.y, 0.0f));
         _lineRenderer1.GetComponent<Renderer>().sortingOrder = 303;
 
@@ -255,10 +262,15 @@ public class War : NetworkEntity
         );
         _lineRenderer2.colorGradient = gradient;
 
-        _lineRenderer2.SetPosition(0, new Vector3(GameConfig.Instance.BattleFieldMinPos.x + 17, GameConfig.Instance.BattleFieldMinPos.y, 0.0f));
-        _lineRenderer2.SetPosition(1, new Vector3(GameConfig.Instance.BattleFieldMinPos.x + 17, GameConfig.Instance.BattleFieldMaxPos.y, 0.0f));
-        _lineRenderer2.SetPosition(2, new Vector3(GameConfig.Instance.BattleFieldMaxPos.x + 17, GameConfig.Instance.BattleFieldMaxPos.y, 0.0f));
-        _lineRenderer2.SetPosition(3, new Vector3(GameConfig.Instance.BattleFieldMaxPos.x + 17, GameConfig.Instance.BattleFieldMinPos.y, 0.0f));
+        _lineRenderer2.SetPosition(0, new Vector3(gameConfig.BattleFieldMinPos.x - gameConfig.BoundsLineRendererOutwardOffset + 17, gameConfig.BattleFieldMinPos.y - gameConfig.BoundsLineRendererOutwardOffset, 0.0f));
+        _lineRenderer2.SetPosition(1, new Vector3(gameConfig.BattleFieldMinPos.x - gameConfig.BoundsLineRendererOutwardOffset + 17, gameConfig.BattleFieldMaxPos.y + gameConfig.BoundsLineRendererOutwardOffset, 0.0f));
+        _lineRenderer2.SetPosition(2, new Vector3(gameConfig.BattleFieldMaxPos.x + gameConfig.BoundsLineRendererOutwardOffset + 17, gameConfig.BattleFieldMaxPos.y + gameConfig.BoundsLineRendererOutwardOffset, 0.0f));
+        _lineRenderer2.SetPosition(3, new Vector3(gameConfig.BattleFieldMaxPos.x + gameConfig.BoundsLineRendererOutwardOffset + 17, gameConfig.BattleFieldMinPos.y - gameConfig.BoundsLineRendererOutwardOffset, 0.0f));
+
+        //_lineRenderer2.SetPosition(0, new Vector3(GameConfig.Instance.BattleFieldMinPos.x + 17, GameConfig.Instance.BattleFieldMinPos.y, 0.0f));
+        //_lineRenderer2.SetPosition(1, new Vector3(GameConfig.Instance.BattleFieldMinPos.x + 17, GameConfig.Instance.BattleFieldMaxPos.y, 0.0f));
+        //_lineRenderer2.SetPosition(2, new Vector3(GameConfig.Instance.BattleFieldMaxPos.x + 17, GameConfig.Instance.BattleFieldMaxPos.y, 0.0f));
+        //_lineRenderer2.SetPosition(3, new Vector3(GameConfig.Instance.BattleFieldMaxPos.x + 17, GameConfig.Instance.BattleFieldMinPos.y, 0.0f));
 
         _lineRenderer1.enabled = false;
         _lineRenderer2.enabled = false;
@@ -872,8 +884,8 @@ public class War : NetworkEntity
                     maxPosX += _battleFieldRightSideBaseOffset + _rightSideOffsetAdjustment;
                 }
 
-                if ((tapWorldPosition.y > gameConfig.BattleFieldMinPos.y) && (tapWorldPosition.y < gameConfig.BattleFieldMaxPos.y)
-                && (tapWorldPosition.x < maxPosX) && (tapWorldPosition.x > minPosX))
+                if ((tapWorldPosition.y > (gameConfig.BattleFieldMinPos.y - gameConfig.BoundsActionOutwardOffset)) && (tapWorldPosition.y < (gameConfig.BattleFieldMaxPos.y + gameConfig.BoundsActionOutwardOffset))
+                && (tapWorldPosition.x < (maxPosX + gameConfig.BoundsActionOutwardOffset)) && (tapWorldPosition.x > (minPosX - gameConfig.BoundsActionOutwardOffset)))
                 {
                     sendPlayerTargetInput(tapWorldPosition, _localPlayerTeam);
                     enableTimeLeftDisplay(false);

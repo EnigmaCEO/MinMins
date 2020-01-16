@@ -37,7 +37,9 @@ public class PrepMinMinSprite : MonoBehaviour
             _y = Input.mousePosition.y;
         }
         else
+        {
             limitPosition();
+        }
     }
 
     void OnMouseDown()
@@ -102,14 +104,22 @@ public class PrepMinMinSprite : MonoBehaviour
         GameConfig gameConfig = GameConfig.Instance;
 
         if (transform.localPosition.y < gameConfig.BattleFieldMinPos.y)
-            transform.localPosition = new Vector2(transform.localPosition.x, gameConfig.BattleFieldMinPos.y + 0.5f);
+        {
+            transform.localPosition = new Vector2(transform.localPosition.x, gameConfig.BattleFieldMinPos.y);
+        }
         else if (transform.localPosition.y > gameConfig.BattleFieldMaxPos.y)
-            transform.localPosition = new Vector2(transform.localPosition.x, gameConfig.BattleFieldMaxPos.y - 0.5f);
+        {
+            transform.localPosition = new Vector2(transform.localPosition.x, gameConfig.BattleFieldMaxPos.y);
+        }
 
         if (transform.localPosition.x > gameConfig.BattleFieldMaxPos.x)
-            transform.localPosition = new Vector2(gameConfig.BattleFieldMaxPos.x - 0.5f, transform.localPosition.y);
+        {
+            transform.localPosition = new Vector2(gameConfig.BattleFieldMaxPos.x, transform.localPosition.y);
+        }
         else if (transform.localPosition.x < gameConfig.BattleFieldMinPos.x)
-            transform.localPosition = new Vector2(gameConfig.BattleFieldMinPos.x + 0.5f, transform.localPosition.y);
+        {
+            transform.localPosition = new Vector2(gameConfig.BattleFieldMinPos.x, transform.localPosition.y);
+        }
     }
 
     void OnCollisionEnter2D(Collision2D coll)

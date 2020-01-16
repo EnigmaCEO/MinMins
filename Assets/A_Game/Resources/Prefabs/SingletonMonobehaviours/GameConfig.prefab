@@ -43,12 +43,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7542362720020a34f9e4145fb52cb46b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PersistBetweenScenes: 0
-  BattleFieldMaxPos: {x: 6, y: 4.5}
-  BattleFieldMinPos: {x: -6, y: -2}
-  MaxUnitDefense: 50
+  PersistBetweenScenes: 1
+  BattleFieldMaxPos: {x: 6, y: 4.04}
+  BattleFieldMinPos: {x: -6, y: -1.19}
+  BoundsLineRendererOutwardOffset: 0.62
+  BoundsActionOutwardOffset: 0.7
   ProjectilesSpeed: 8
   BronzeProjectileBaseDirection: {x: 1, y: 0, z: 0}
   SilverProjectileBaseDirection: {x: 0.5, y: 0.5, z: 0}
   GoldProjectileBaseDirection: {x: 0, y: 1, z: 0}
   RewardChestDestructionDelay: 1
+  FightsWithoutAdsMaxCount: 3
