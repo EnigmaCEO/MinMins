@@ -832,7 +832,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
         if (boostNode != null)
         {
-            if (boostNode.ToString() == "1")
+            if (boostNode == "1")
             {
                 isAvailable = true;
             }
