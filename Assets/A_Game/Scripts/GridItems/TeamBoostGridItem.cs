@@ -22,6 +22,10 @@ public class TeamBoostGridItem : MonoBehaviour
         {
             spritePath = TeamBoostItem.GetOreImagePath(category, bonus);
         }
+        else
+        {
+            spritePath = "Images/EnjinTokens/" + name;
+        }
 
         if (spritePath != "")
         {

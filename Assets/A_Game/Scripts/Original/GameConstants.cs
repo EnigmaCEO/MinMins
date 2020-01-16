@@ -22,10 +22,10 @@ public class GameConstants
 
     public class TeamBoostEnjinTokens
     {
-        public const string SWORD = "Enjin Sword Token";
-        public const string SHIELD = "Enjin Shield Token";
-        public const string SHADOW_SONG = "Enjin Shadow Song Token";
-        public const string BULL = "Enjin Bull Token";
+        public const string SWORD = "Apochrome Sword";
+        public const string ARMOR = "Soulshift Armor";
+        public const string SHADOW_SONG = "Shadowsong";
+        public const string BULL = "Mark of the Bull";
     }
 
     public class TeamBoostEnjinOreItems

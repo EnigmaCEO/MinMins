@@ -1548,42 +1548,42 @@ MonoBehaviour:
       - 
       Flags: 00000000
       Languages_Touch: []
-    - Term: Enjin Sword Token
+    - Term: Apochrome Sword
       TermType: 0
       Description: 
       Languages:
-      - Enjin Sword Token
-      - Ficha Espada Enjin
+      - Apochrome Sword
+      - Espada Apochrome
       - 
       - 
       Flags: 00000000
       Languages_Touch: []
-    - Term: Enjin Shield Token
+    - Term: Soulshift Armor
       TermType: 0
       Description: 
       Languages:
-      - Enjin Shield Token
-      - Ficha Escudo Enjin
+      - Soulshift Armor
+      - Armadura Cambio de Alma
       - 
       - 
       Flags: 00000000
       Languages_Touch: []
-    - Term: Enjin Shadowsong Token
+    - Term: Shadowsong
       TermType: 0
       Description: 
       Languages:
-      - Enjin Shadowsong Token
-      - "Ficha Canci\xF3n Sombr\xEDa"
+      - Shadowsong
+      - "Canci\xF3n Sombr\xEDa"
       - 
       - 
       Flags: 00000000
       Languages_Touch: []
-    - Term: Enjin Bull Token
+    - Term: Mark of the Bull
       TermType: 0
       Description: 
       Languages:
-      - Enjin Bull Token
-      - Ficha Toro
+      - Mark of the Bull
+      - Marca del Toro
       - 
       - 
       Flags: 00000000
@@ -1609,7 +1609,7 @@ MonoBehaviour:
     Google_WebServiceURL: https://script.google.com/macros/s/AKfycbw05ISkGCPtIS0hMzFD5jshgfH09mIP6BAxRKhWsA/exec
     Google_SpreadsheetKey: 1iIWCtExuyR2XXyYkJv6y83PTVMPC4FxzSITGGroefcg
     Google_SpreadsheetName: I2Loc MinMins Localization
-    Google_LastUpdatedVersion: 1579126456149
+    Google_LastUpdatedVersion: 1579135455044
     Google_Password: shalwend
     GoogleUpdateFrequency: 3
     GoogleInEditorCheckFrequency: 2

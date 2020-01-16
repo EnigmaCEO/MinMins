@@ -38,10 +38,11 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         public const string ENJIN_SIMON = "enjin_simon";
 
         public const string ENJIN_SWORD = "enjin_sword";
-        public const string ENJIN_SHIELD = "enjin_shield";
+        public const string ENJIN_ARMOR = "enjin_armor";
         public const string ENJIN_SHADOWSONG = "enjin_shadowsong";
         public const string ENJIN_BULL = "enjin_bull";
 
+        /*
         public const string ENJIN_DEFENSE_ORE_ITEM_1 = "enjin_defense_ore_1";
         public const string ENJIN_DEFENSE_ORE_ITEM_2 = "enjin_defense_ore_2";
         public const string ENJIN_DEFENSE_ORE_ITEM_3 = "enjin_defense_ore_3";
@@ -74,6 +75,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         public const string ENJIN_POWER_ORE_ITEM_8 = "enjin_power_ore_8";
         public const string ENJIN_POWER_ORE_ITEM_9 = "enjin_power_ore_9";
         public const string ENJIN_POWER_ORE_ITEM_10 = "enjin_power_ore_10";
+        */
     }
 
     public class ServerResponseMessages
@@ -818,7 +820,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         GameStats.Instance.TeamBoostTokensOwnedByName.Clear();
 
         checkSingleEnjinTeamBoostToken(response_hash, TransactionKeys.ENJIN_SWORD, GameConstants.TeamBoostEnjinTokens.SWORD, GameConstants.TeamBoostCategory.DAMAGE);
-        checkSingleEnjinTeamBoostToken(response_hash, TransactionKeys.ENJIN_SHIELD, GameConstants.TeamBoostEnjinTokens.SHIELD, GameConstants.TeamBoostCategory.DEFENSE);
+        checkSingleEnjinTeamBoostToken(response_hash, TransactionKeys.ENJIN_ARMOR, GameConstants.TeamBoostEnjinTokens.ARMOR, GameConstants.TeamBoostCategory.DEFENSE);
         checkSingleEnjinTeamBoostToken(response_hash, TransactionKeys.ENJIN_SHADOWSONG, GameConstants.TeamBoostEnjinTokens.SHADOW_SONG, GameConstants.TeamBoostCategory.HEALTH);
         checkSingleEnjinTeamBoostToken(response_hash, TransactionKeys.ENJIN_BULL, GameConstants.TeamBoostEnjinTokens.BULL, GameConstants.TeamBoostCategory.POWER);
     }
@@ -826,10 +828,24 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     private void checkSingleEnjinTeamBoostToken(SimpleJSON.JSONNode response_hash, string transactionKey, string name, string category)
     {
         SimpleJSON.JSONNode boostNode = response_hash[NetworkManager.TransactionKeys.USER_DATA][transactionKey];
+        bool isAvailable = false;
 
         if (boostNode != null)
         {
-            GameStats.Instance.TeamBoostTokensOwnedByName.Add(name, new TeamBoostItem(name, _DEFAULT_TOKEN_AMOUNT, _defaultTokenBonus, category)); 
+            if (boostNode.ToString() == "1")
+            {
+                isAvailable = true;
+            }
+        }
+
+        if (GameHacks.Instance.AllEnjinTeamBoostTokens)
+        {
+            isAvailable = true;
+        }
+
+        if (isAvailable)
+        {
+            GameStats.Instance.TeamBoostTokensOwnedByName.Add(name, new TeamBoostItem(name, _DEFAULT_TOKEN_AMOUNT, _defaultTokenBonus, category));
         }
     }
 }

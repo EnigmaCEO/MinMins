@@ -20,6 +20,8 @@ public class GameHacks : SingletonMonobehaviour<GameHacks>
     public bool GuestCameraAsHost;
 
     public bool ForcePvpAi;
+    public bool AllEnjinTeamBoostTokens; 
+
     public ValueHack ForceTeamBoostReward = new ValueHack("true");
 
     public ValueHack BuyResult = new ValueHack("true");
