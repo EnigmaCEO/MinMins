@@ -282,7 +282,7 @@ public class EnjinLogin : MonoBehaviour
 
         if (tokenNode != null)
         {
-            tokenAvailable = tokenNode.ToString();
+            tokenAvailable = tokenNode;
         }
 
         return (tokenAvailable == "1");
