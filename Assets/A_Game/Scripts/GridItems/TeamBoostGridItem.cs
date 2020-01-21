@@ -9,9 +9,6 @@ public class TeamBoostGridItem : MonoBehaviour
     [SerializeField] private GameObject _tint;
     [SerializeField] private Text _bonusText;
 
-    //[SerializeField] private Text _nameText;
-    //[SerializeField] private Text _descriptionText;
-
     public void SetUp(string name, string category, int bonus, bool isOre)
     {
         this.name = name;

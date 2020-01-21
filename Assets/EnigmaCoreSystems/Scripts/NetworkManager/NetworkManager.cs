@@ -821,6 +821,28 @@ namespace Enigma.CoreSystems
             return PhotonNetwork.GetRoomList();
         }
 
+        static public RoomInfo GetLobbyRoomByName(string roomName)
+        {
+            RoomInfo[] roomList = GetRoomList();
+            RoomInfo resultRoom = null; 
+
+            foreach (RoomInfo room in roomList)
+            {
+                if (room.Name == roomName)
+                {
+                    resultRoom = room;
+                    break;
+                }
+            }
+
+            if (resultRoom == null)
+            {
+                Debug.LogWarning("NetworkManager::GetLobbyRoomByName -> Room with name: " + roomName + " was not found in Lobby.");
+            }
+
+            return resultRoom;
+        }
+
         //Helper for testing
         static public void ReadRoomList()
         {

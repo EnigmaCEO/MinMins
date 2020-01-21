@@ -7,7 +7,7 @@ public class GameConstants
         public const string WAR_PREP = "WarPrep";
         public const string WAR = "War";
         public const string STORE = "Store";
-        public const string LOBBY = "Lobby";
+        public const string LOBBY = "NewLobby";
         public const string UNIT_SELECT = "UnitSelect";
         public const string TEAM_BOOST = "TeamBoost"; 
     }
@@ -42,4 +42,12 @@ public class GameConstants
         public const string POLISHED = "Polished";
         public const string PERFECT = "Perfect";
     }
+
+    public class LobbyPopUpMessages
+    {
+        public const string PROVIDE_NAME_FOR_ROOM_SEARCH = "Please provide a name for private room search.";
+        public const string PRIVATE_ROOM_ALREADY_USED = "Name is already used. Please provide another.";
+        public const string NO_PRIVATE_WITH_NAME_FOUND = "No private rooms were found with given name.";
+    }
 }
+ 

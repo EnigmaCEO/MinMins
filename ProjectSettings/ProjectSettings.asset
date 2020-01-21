@@ -173,7 +173,7 @@ PlayerSettings:
     iOS: 
     iPhone: 1
   AndroidBundleVersionCode: 8
-  AndroidMinSdkVersion: 16
+  AndroidMinSdkVersion: 17
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1
   aotOptions: 

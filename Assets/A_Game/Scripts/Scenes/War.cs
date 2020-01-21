@@ -220,7 +220,7 @@ public class War : NetworkEntity
         }
 
         if (GameStats.Instance.Mode == GameStats.Modes.SinglePlayer)
-            GameNetwork.Instance.JoinOrCreateRoom();
+            GameNetwork.Instance.CreatePublicRoom();
         else
             setupWar();
         
@@ -687,7 +687,7 @@ public class War : NetworkEntity
                     else
                         handlMatchEnd(winner);
                 }
-                else // Is GUEST
+                else if(teamName == GameNetwork.TeamNames.GUEST)// Is GUEST
                     changeTurn(teamName);
             }
         }
@@ -1080,7 +1080,7 @@ public class War : NetworkEntity
 
         if (teamInTurn == GameNetwork.TeamNames.HOST)
             unitIndex = NetworkManager.GetRoomCustomPropertyAsInt(GameNetwork.RoomCustomProperties.HOST_UNIT_INDEX);
-        else
+        else if(teamInTurn == GameNetwork.TeamNames.GUEST)
             unitIndex = NetworkManager.GetRoomCustomPropertyAsInt(GameNetwork.RoomCustomProperties.GUEST_UNIT_INDEX);
 
         Dictionary<string, MinMinUnit> teamUnits = GetTeamUnitsDictionary(teamInTurn);
@@ -1852,7 +1852,7 @@ public class War : NetworkEntity
         Dictionary<string, MinMinUnit> teamUnits = null;
         if (teamName == GameNetwork.TeamNames.HOST)
             teamUnits = _hostUnits;
-        else //guest
+        else if(teamName == GameNetwork.TeamNames.GUEST)
             teamUnits = _guestUnits;
 
         return teamUnits;

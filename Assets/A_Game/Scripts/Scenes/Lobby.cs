@@ -114,7 +114,7 @@ public class Lobby : NetworkEntity
         if (NetworkManager.GetIsMasterClient())
         {
             Room room = NetworkManager.GetRoom();
-            print("Lobby::OnJoinedRoom ->  Created Joined first as master client in room.Name: " + room.Name + " and room.CustomProperties: " + room.CustomProperties.ToStringFull());
+            print("Lobby::OnJoinedRoom ->  Joined first as master client in room.Name: " + room.Name + " and room.CustomProperties: " + room.CustomProperties.ToStringFull());
             gameNetwork.HostPlayerId = NetworkManager.GetLocalPlayerId();
             NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.HOST_ID, GameNetwork.Instance.HostPlayerId);
             NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.TIME_ROOM_STARTED, NetworkManager.GetNetworkTime());
@@ -275,7 +275,7 @@ public class Lobby : NetworkEntity
     private void joinOrCreateRoom()
     {
         GameNetwork.SetLocalPlayerRating(GameStats.Instance.Rating, GameNetwork.TeamNames.HOST);
-        GameNetwork.Instance.JoinOrCreateRoom();
+        GameNetwork.Instance.CreatePublicRoom();
         _isJoiningRoom = true;
     }
 
