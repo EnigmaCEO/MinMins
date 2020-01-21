@@ -51,6 +51,11 @@ public class NewLobby : NetworkEntity
     {
         base.Update();
 
+        //if (Input.GetKeyDown(KeyCode.M))
+        //{
+        //    _messagePopUp.Open(GameConstants.LobbyPopUpMessages.PRIVATE_ROOM_ALREADY_USED);
+        //}
+
         //if (Input.GetKeyDown(KeyCode.Escape))
         //{
         //    NetworkManager.LeaveLobby();

@@ -1588,6 +1588,76 @@ MonoBehaviour:
       - 
       Flags: 00000000
       Languages_Touch: []
+    - Term: ROOMS
+      TermType: 0
+      Description: 
+      Languages:
+      - ROOMS
+      - SALAS
+      - 
+      - 
+      Flags: 00000000
+      Languages_Touch: []
+    - Term: Search
+      TermType: 0
+      Description: 
+      Languages:
+      - Search
+      - Buscar
+      - 
+      - 
+      Flags: 00000000
+      Languages_Touch: []
+    - Term: Create
+      TermType: 0
+      Description: 
+      Languages:
+      - Create
+      - Crear
+      - 
+      - 
+      Flags: 00000000
+      Languages_Touch: []
+    - Term: Please provide a name for private room search.
+      TermType: 0
+      Description: 
+      Languages:
+      - Please provide a name for private room search.
+      - Por favor proporcione nombre para buscar sala privada.
+      - 
+      - 
+      Flags: 00000000
+      Languages_Touch: []
+    - Term: Name is already used. Please provide another.
+      TermType: 0
+      Description: 
+      Languages:
+      - Name is already used. Please provide another.
+      - "El nombre est\xE1 ocupado. Por favor proporcione otro."
+      - 
+      - 
+      Flags: 00000000
+      Languages_Touch: []
+    - Term: No private rooms were found with given name.
+      TermType: 0
+      Description: 
+      Languages:
+      - No private rooms were found with given name.
+      - No se encontraron salas privadas con el nombre dado.
+      - 
+      - 
+      Flags: 00000000
+      Languages_Touch: []
+    - Term: Enter name for a Private Room
+      TermType: 0
+      Description: 
+      Languages:
+      - Enter name for a Private Room
+      - Introduzca nombre para Sala Privada
+      - 
+      - 
+      Flags: 00000000
+      Languages_Touch: []
     CaseInsensitiveTerms: 0
     OnMissingTranslation: 1
     mTerm_AppName: 
@@ -1609,7 +1679,7 @@ MonoBehaviour:
     Google_WebServiceURL: https://script.google.com/macros/s/AKfycbw05ISkGCPtIS0hMzFD5jshgfH09mIP6BAxRKhWsA/exec
     Google_SpreadsheetKey: 1iIWCtExuyR2XXyYkJv6y83PTVMPC4FxzSITGGroefcg
     Google_SpreadsheetName: I2Loc MinMins Localization
-    Google_LastUpdatedVersion: 1579135455044
+    Google_LastUpdatedVersion: 1579644028029
     Google_Password: shalwend
     GoogleUpdateFrequency: 3
     GoogleInEditorCheckFrequency: 2
