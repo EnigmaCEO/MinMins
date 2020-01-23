@@ -50,7 +50,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     [SerializeField] private int _tierGold_unitsAmount = 10;
 
     [SerializeField] private int _enjin_firstUnitNumber = 100;
-    [SerializeField] private int _enjin_lastUnitNumer = 114;
+    [SerializeField] private int _enjin_lastUnitNumer = 121;
 
     [SerializeField] private float _tierBronze_GroupRarity = 0.5f;
     [SerializeField] private float _tierSilver_GroupRarity = 0.3f;
