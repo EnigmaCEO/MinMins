@@ -1588,12 +1588,12 @@ MonoBehaviour:
       - 
       Flags: 00000000
       Languages_Touch: []
-    - Term: ROOMS
+    - Term: Arena 1-6
       TermType: 0
       Description: 
       Languages:
-      - ROOMS
-      - SALAS
+      - Arena 1-6
+      - Arena 1-6
       - 
       - 
       Flags: 00000000
@@ -1618,16 +1618,6 @@ MonoBehaviour:
       - 
       Flags: 00000000
       Languages_Touch: []
-    - Term: Please provide a name for private room search.
-      TermType: 0
-      Description: 
-      Languages:
-      - Please provide a name for private room search.
-      - Por favor proporcione nombre para buscar sala privada.
-      - 
-      - 
-      Flags: 00000000
-      Languages_Touch: []
     - Term: Name is already used. Please provide another.
       TermType: 0
       Description: 
@@ -1638,22 +1628,42 @@ MonoBehaviour:
       - 
       Flags: 00000000
       Languages_Touch: []
-    - Term: No private rooms were found with given name.
-      TermType: 0
-      Description: 
-      Languages:
-      - No private rooms were found with given name.
-      - No se encontraron salas privadas con el nombre dado.
-      - 
-      - 
-      Flags: 00000000
-      Languages_Touch: []
     - Term: Enter name for a Private Room
       TermType: 0
       Description: 
       Languages:
       - Enter name for a Private Room
       - Introduzca nombre para Sala Privada
+      - 
+      - 
+      Flags: 00000000
+      Languages_Touch: []
+    - Term: 'Ping:'
+      TermType: 0
+      Description: 
+      Languages:
+      - 'Ping:'
+      - 'Ping:'
+      - 
+      - 
+      Flags: 00000000
+      Languages_Touch: []
+    - Term: 'Rating:'
+      TermType: 0
+      Description: 
+      Languages:
+      - 'Rating:'
+      - "Valuaci\xF3n:"
+      - 
+      - 
+      Flags: 00000000
+      Languages_Touch: []
+    - Term: Open
+      TermType: 0
+      Description: 
+      Languages:
+      - Open
+      - Abierto
       - 
       - 
       Flags: 00000000
@@ -1679,7 +1689,7 @@ MonoBehaviour:
     Google_WebServiceURL: https://script.google.com/macros/s/AKfycbw05ISkGCPtIS0hMzFD5jshgfH09mIP6BAxRKhWsA/exec
     Google_SpreadsheetKey: 1iIWCtExuyR2XXyYkJv6y83PTVMPC4FxzSITGGroefcg
     Google_SpreadsheetName: I2Loc MinMins Localization
-    Google_LastUpdatedVersion: 1579644028029
+    Google_LastUpdatedVersion: 1579809777284
     Google_Password: shalwend
     GoogleUpdateFrequency: 3
     GoogleInEditorCheckFrequency: 2

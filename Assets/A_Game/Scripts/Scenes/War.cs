@@ -56,6 +56,9 @@ public class War : NetworkEntity
     [SerializeField] private Image _hostTeamHealthFill;
     [SerializeField] private Image _guestTeamHealthFill;
 
+    [SerializeField] private Text _localPlayerPingText;
+    [SerializeField] private Text _remotePlayerPingText;
+
     [SerializeField] private RectTransform UnitTurnHighlightTransform;
 
     [SerializeField] private Transform _battleField;
@@ -66,6 +69,7 @@ public class War : NetworkEntity
     [SerializeField] private GameObject _roundPopUp;
     [SerializeField] private Text _roundPopUpText;
 
+    [SerializeField] private float _pingUpdateDelay = 2; 
 
     private Transform _hostGrid;
     private Transform _guestGrid;
@@ -129,6 +133,8 @@ public class War : NetworkEntity
         GameNetwork.OnHostUnitIndexChangedCallback += onHostUnitIndexChanged;
         GameNetwork.OnGuestUnitIndexChangedCallback += onGuestUnitIndexChanged;
         GameNetwork.OnActionStartedCallback += onActionStarted;
+        GameNetwork.OnHostPingSetCallback += onHostPingSet;
+        GameNetwork.OnGuestPingSetCallback += onGuestPingSet;
 
         GameCamera.OnMovementCompletedCallback += onCameraMovementCompleted;
 
@@ -150,6 +156,9 @@ public class War : NetworkEntity
 
         _actionPopUp.Close();
         _roundPopUp.SetActive(false);
+
+        _localPlayerPingText.gameObject.SetActive(false);
+        _remotePlayerPingText.gameObject.SetActive(false);
 
         if (GetUsesAi())
         {
@@ -185,8 +194,9 @@ public class War : NetworkEntity
         {
             if (GameStats.Instance.Mode == GameStats.Modes.Pvp)
             {
-                _teamNameText2.text = NetworkManager.GetRandomOnlineName();
-            } else
+                _teamNameText2.text = NetworkManager.GetRoomCustomProperty(GameNetwork.RoomCustomProperties.GUEST_NAME); //NetworkManager.GetRandomOnlineName();
+            }
+            else
             {
                 _teamNameText2.text = LocalizationManager.GetTermTranslation("Arena") + " " + GameStats.Instance.SelectedLevelNumber;
             }         
@@ -295,6 +305,9 @@ public class War : NetworkEntity
         GameNetwork.OnGuestUnitIndexChangedCallback -= onGuestUnitIndexChanged;
         GameNetwork.OnActionStartedCallback -= onActionStarted;
 
+        GameNetwork.OnHostPingSetCallback -= onHostPingSet;
+        GameNetwork.OnGuestPingSetCallback -= onGuestPingSet;
+
         GameCamera.OnMovementCompletedCallback -= onCameraMovementCompleted;
     }
 
@@ -315,6 +328,11 @@ public class War : NetworkEntity
     public bool GetIsHost()
     {
         return (_localPlayerTeam == GameNetwork.TeamNames.HOST);
+    }
+
+    public bool GetIsGuest()
+    {
+        return (_localPlayerTeam == GameNetwork.TeamNames.GUEST);
     }
 
     public bool GetUsesAi()
@@ -483,17 +501,36 @@ public class War : NetworkEntity
                 if (hostReady && guestReady)
                 {
                     sendSetupLoadTeams();
-                    Invoke(nameof(StartBattle), 8.0f);
+                    Invoke(nameof(startBattle), 8.0f);
                 }
             }
         }
     }
 
-    void StartBattle()
+    private void startBattle()
     {
         NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.MATCH_START_TIME, NetworkManager.GetNetworkTime());
         NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.ROUND_COUNT, 1); //Starts combat cycle
+
         sendReadyPopUpDismiss();
+    }
+
+    private IEnumerator handlePingUpdate()
+    {
+        while (true)
+        {
+            Debug.LogWarning("handlePingUpdate -> GetIsHost(): " + GetIsHost() + " GetIsGuest(): " + GetIsGuest());
+            if (GetIsHost())
+            {
+                NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.HOST_PING, NetworkManager.GetLocalPlayerPing());
+            }
+            else if (GetIsGuest())
+            {
+                NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.GUEST_PING, NetworkManager.GetLocalPlayerPing());
+            }
+
+            yield return new WaitForSeconds(_pingUpdateDelay);
+        }
     }
 
     private void sendReadyPopUpDismiss()
@@ -507,6 +544,64 @@ public class War : NetworkEntity
     {
         Debug.LogWarning("receiveReadyPopUpDismiss");
         ReadyPopup.SetActive(false);
+
+        if (GameStats.Instance.Mode == GameStats.Modes.Pvp)
+        {
+            if (GetIsHost() || GetIsGuest())
+            {
+                StartCoroutine(handlePingUpdate());
+            }
+        }
+    }
+
+    private void onHostPingSet(int value)
+    {
+        Debug.LogWarning("War::onHostPingSet -> value: " + value + " GetIsHost(): " + GetIsHost() + " GetIsGuest(): " + GetIsGuest());
+        string text = LocalizationManager.GetTermTranslation(GameConstants.Terms.PING) + " " + value.ToString(); 
+
+        if (GetIsHost())
+        {
+            _localPlayerPingText.text = text;
+
+            if (!_localPlayerPingText.gameObject.activeSelf)
+            {
+                _localPlayerPingText.gameObject.SetActive(true);
+            }
+        }
+        else if (GetIsGuest())
+        {
+            _remotePlayerPingText.text = text;
+
+            if (!_remotePlayerPingText.gameObject.activeSelf)
+            {
+                _remotePlayerPingText.gameObject.SetActive(true);
+            }
+        }
+    }
+
+    private void onGuestPingSet(int value)
+    {
+        Debug.LogWarning("War::onGuestPingSet -> value: " + value + " GetIsHost(): " + GetIsHost() + " GetIsGuest(): " + GetIsGuest());
+        string text = LocalizationManager.GetTermTranslation(GameConstants.Terms.PING) + " " + value.ToString();
+
+        if (GetIsHost())
+        {
+            _remotePlayerPingText.text = text;
+
+            if (!_remotePlayerPingText.gameObject.activeSelf)
+            {
+                _remotePlayerPingText.gameObject.SetActive(true);
+            }
+        }
+        else if (GetIsGuest())
+        {
+            _localPlayerPingText.text = text;
+
+            if (!_localPlayerPingText.gameObject.activeSelf)
+            {
+                _localPlayerPingText.gameObject.SetActive(true);
+            }
+        }
     }
 
     private void onUnitHealthSet(string teamName, string unitName, int health)
@@ -1196,6 +1291,12 @@ public class War : NetworkEntity
         if ((GameStats.Instance.Mode == GameStats.Modes.SinglePlayer) && (GameStats.Instance.SelectedLevelNumber < GameInventory.Instance.GetSinglePlayerLevel()))
         {
             return; // no chest for replaying levels
+        }
+
+        //No chests in private matches
+        if (((string)NetworkManager.GetRoomCustomProperty(GameNetwork.RoomCustomProperties.IS_PRIVATE)) == "True")
+        {
+            return;
         }
 
         Transform rewardBoxesContainer = _battleField.Find(gridName + "/RewardBoxesContainer");
@@ -1951,7 +2052,17 @@ public class War : NetworkEntity
 
         GameHacks gameHacks = GameHacks.Instance;
         if (gameHacks.WarVictory)
+        {
             isVictory = true;
+        }
+
+        bool isPrivateRoom = (((string)NetworkManager.GetRoomCustomProperty(GameNetwork.RoomCustomProperties.IS_PRIVATE)) == "True");
+
+        if (isPrivateRoom)
+        {
+            setAndDisplayMatchResultsPopUp(true);
+            return;
+        }
 
         GameInventory gameInventory = GameInventory.Instance;
 
@@ -2027,14 +2138,6 @@ public class War : NetworkEntity
                     rewardWithTierBox(GameInventory.Tiers.BRONZE);
             }
 
-            //if (GameStats.Instance.Mode == GameStats.Modes.SinglePlayer)
-            //{
-            //    if(gameInventory.GetSinglePlayerLevel() == GameStats.Instance.SelectedLevelNumber)
-            //        gameInventory.SetSinglePlayerLevel(gameInventory.GetSinglePlayerLevel() + 1);
-            //    else
-            //        gameInventory.SetSinglePlayerLevel(gameInventory.GetSinglePlayerLevel());
-            //}
-
             if (GameStats.Instance.Mode == GameStats.Modes.SinglePlayer)
             {
                 gameInventory.SetSinglePlayerLevel(GameStats.Instance.SelectedLevelNumber + 1);
@@ -2043,11 +2146,15 @@ public class War : NetworkEntity
 
         if (GameStats.Instance.Mode == GameStats.Modes.Pvp)
         {
-            if(GetIsHost())
+            if (GetIsHost())
+            {
                 GameNetwork.Instance.SendMatchResultsToServer(winner, onSendMatchResultsToServerCallback);
+            }
         }
         else
-            setAndDisplayMatchResultsPopUp();
+        {
+            setAndDisplayMatchResultsPopUp(false);
+        }
     }
 
     //private void rewardWithRandomBox()
@@ -2092,16 +2199,18 @@ public class War : NetworkEntity
             _errorText.gameObject.SetActive(true);
         }
 
-        setAndDisplayMatchResultsPopUp();
+        setAndDisplayMatchResultsPopUp(false);
     }
 
-    private void setAndDisplayMatchResultsPopUp()
+    private void setAndDisplayMatchResultsPopUp(bool isPrivateMatch)
     {
+        _actionPopUp.Close();
+
         TeamBoostItem boostReward = null;
         bool gotBoostReward = false;
 
         GameStats gameStats = GameStats.Instance;
-        if (gameStats.Mode == GameStats.Modes.Pvp)
+        if (!isPrivateMatch && (gameStats.Mode == GameStats.Modes.Pvp))
         {
             int randomInt = UnityEngine.Random.Range(1, 101);
             Debug.LogWarning("Ore reward random int: " + randomInt);

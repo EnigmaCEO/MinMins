@@ -45,9 +45,12 @@ public class GameConstants
 
     public class LobbyPopUpMessages
     {
-        public const string PROVIDE_NAME_FOR_ROOM_SEARCH = "Please provide a name for private room search.";
         public const string PRIVATE_ROOM_ALREADY_USED = "Name is already used. Please provide another.";
-        public const string NO_PRIVATE_WITH_NAME_FOUND = "No private rooms were found with given name.";
+    }
+
+    public class Terms
+    {
+        public const string PING = "Ping:";
     }
 }
  

@@ -41,9 +41,13 @@ public class MatchResultsPopUp : MonoBehaviour
         string localPlayerNickname = NetworkManager.GetLocalPlayerNickname();
 
         if (localPlayerNickname == winnerNickname)
+        {
             _winnerText.text = "You win!";
+        }
         else
+        {
             _winnerText.text = "You lose!";
+        }
 
         LocalizationManager.LocalizeText(_winnerText);
 
@@ -102,7 +106,9 @@ public class MatchResultsPopUp : MonoBehaviour
         gameInventory.SaveLootBoxes();
 
         if (matchLocalData.EnjinCollected)
+        {
             createRewardGridItem(unitRewardGridItemTemplate, GameInventory.Tiers.GOLD, true);
+        }
 
         unitRewardGridItemTemplate.SetActive(false);
         boostRewardGridItemTemplate.SetActive(false);

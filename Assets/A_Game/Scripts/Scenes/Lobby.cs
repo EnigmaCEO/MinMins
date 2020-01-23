@@ -297,6 +297,6 @@ public class Lobby : NetworkEntity
         Debug.LogWarning("setRoomWithPvpAi");
         GameStats.Instance.UsesAiForPvp = true;
         GameNetwork.Instance.GuestPlayerId = NetworkManager.GetLocalPlayerId();
-        NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.HAS_PVP_AI, "true");
+        NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.HAS_PVP_AI, "True");
     }
 }

@@ -9,29 +9,58 @@ public class PvpRoomGridItem : MonoBehaviour
 
     [SerializeField] private Text _hostNameText;
     [SerializeField] private Text _hostRatingText;
+    [SerializeField] private Text _hostPingText;
 
     [SerializeField] private Text _guestNameText;
     [SerializeField] private Text _guestRatingText;
+    [SerializeField] private Text _guestPingText;
 
-    public void SetUp(string hostName, int hostRating, string guestName, int guestRating, string roomName)
+    private void Start()
+    {
+        _guestPingText.gameObject.SetActive(false);
+        _guestRatingText.gameObject.SetActive(false);
+    }
+
+    public void SetUp(string hostName, int hostRating, int hostPing, string guestName, int guestRating, int guestPing, string roomName)
     {
         this.name = roomName;
 
         _hostNameText.text = hostName;
-        _hostRatingText.text = hostRating.ToString();
+        _hostRatingText.text = LocalizationManager.GetTermTranslation("Rating:") + " " + hostRating.ToString();
+        UpdateHostPing(hostPing);
 
         if (guestName != "")
         {
             _guestNameText.text = guestName;
-            _guestRatingText.text = guestRating.ToString();
+            _guestRatingText.text = LocalizationManager.GetTermTranslation("Rating:") + " " + guestRating.ToString();
+            _guestRatingText.gameObject.SetActive(true);
+
+            UpdateGuestPing(guestPing);
         }
         else
         {
-            _guestNameText.text = "Open";
-            _guestRatingText.gameObject.SetActive(false);;
+            _guestNameText.text = LocalizationManager.GetTermTranslation("Open");
         }
 
         //Deselect();
+    }
+
+    public void UpdateHostPing(int ping)
+    {
+        _hostPingText.text = LocalizationManager.GetTermTranslation("Ping:") + " " + ping.ToString();
+    }
+
+    public void UpdateGuestPing(int ping)
+    {
+        if (ping != -1)
+        {
+            _guestPingText.text = LocalizationManager.GetTermTranslation("Ping:") + " " + ping.ToString();
+
+            if (!_guestRatingText.gameObject.activeSelf)
+            {
+                _guestPingText.gameObject.SetActive(true);
+            }
+        }
     }
 
     //public void Select()

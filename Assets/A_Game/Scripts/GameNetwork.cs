@@ -115,10 +115,13 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         public const string HOST_RATING = "Host_Rating";
         public const string HOST_ID = "Host_Id";
         public const string HOST_NAME = "Host_name";
+        public const string HOST_PING = "HostPing";
         public const string GUEST_NAME = "Guest_Name";
         public const string GUEST_RATING = "Guest_Rating";
+        public const string GUEST_PING = "Guest_Ping";
         public const string TIME_ROOM_STARTED = "Time_Room_Started";
         public const string IS_PRIVATE = "Is_Private";
+   
         //public const string MAX_PLAYERS = "mp";
 
         public const string HAS_PVP_AI = "Has_Pvp_Ai";
@@ -192,6 +195,10 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
     public delegate void OnPlayerRatingSetDelegate(int rating);
     static public OnPlayerRatingSetDelegate OnPlayerRatingSetCallback;
+
+    public delegate void OnPlayerPingSetDelegate(int ping);
+    static public OnPlayerPingSetDelegate OnHostPingSetCallback;
+    static public OnPlayerPingSetDelegate OnGuestPingSetCallback;
 
     public delegate void OnPlayerTeamUnitsSetDelegate(string team, string unitsString);
     static public OnPlayerTeamUnitsSetDelegate OnPlayerTeamUnitsSetCallback;
@@ -423,8 +430,8 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
             string[] keyParts = key.Split(NetworkManager.Separators.KEYS);
             string idPart = keyParts[0];
 
-            //print("OnRoomCustomPropertiesChanged -> key: " + key);
-            //print("OnRoomCustomPropertiesChanged -> updatedProperties: " + updatedProperties.ToStringFull());
+            Debug.LogWarning("OnRoomCustomPropertiesChanged -> key: " + key);
+            Debug.LogWarning("OnRoomCustomPropertiesChanged -> updatedProperties: " + updatedProperties.ToStringFull());
 
             string value = updatedProperties[keyObject].ToString();
 
@@ -472,6 +479,20 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
             {
                 if (OnPvpAiSetCallback != null)
                     OnPvpAiSetCallback(bool.Parse(value));
+            }
+            else if (idPart == RoomCustomProperties.HOST_PING)
+            {
+                if (OnHostPingSetCallback != null)
+                {
+                    OnHostPingSetCallback(int.Parse(value));
+                }
+            }
+            else if (idPart == RoomCustomProperties.GUEST_PING)
+            {
+                if (OnGuestPingSetCallback != null)
+                {
+                    OnGuestPingSetCallback(int.Parse(value));
+                }
             }
         }
     }
@@ -816,7 +837,12 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
     private string[] getCustomPropsForLobby()
     {
-        return new string[] { RoomCustomProperties.HOST_NAME, RoomCustomProperties.HOST_RATING, RoomCustomProperties.GUEST_NAME, RoomCustomProperties.GUEST_RATING,  RoomCustomProperties.IS_PRIVATE, RoomCustomProperties.HAS_PVP_AI };
+        return new string[] 
+        {
+            RoomCustomProperties.HOST_NAME, RoomCustomProperties.HOST_RATING, RoomCustomProperties.HOST_PING,
+            RoomCustomProperties.GUEST_NAME, RoomCustomProperties.GUEST_RATING, RoomCustomProperties.GUEST_PING,
+            RoomCustomProperties.IS_PRIVATE, RoomCustomProperties.HAS_PVP_AI
+        };
     }
 
     private Hashtable getCustomProps(bool isPrivate)
@@ -828,9 +854,11 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         Hashtable customProps = new Hashtable();
         customProps.Add(RoomCustomProperties.HOST_NAME, NetworkManager.GetPlayerName());
         customProps.Add(RoomCustomProperties.HOST_RATING, GameStats.Instance.Rating);
-        customProps.Add(RoomCustomProperties.HAS_PVP_AI, "false");
+        customProps.Add(RoomCustomProperties.HOST_PING, NetworkManager.GetLocalPlayerPing());
+        customProps.Add(RoomCustomProperties.HAS_PVP_AI, "False");
         customProps.Add(RoomCustomProperties.GUEST_NAME, "");
         customProps.Add(RoomCustomProperties.GUEST_RATING, -1);
+        customProps.Add(RoomCustomProperties.GUEST_PING, -1);
         customProps.Add(RoomCustomProperties.IS_PRIVATE, isPrivate.ToString());
 
         //customProps.Add(RoomCustomProperties.PLAYER_LIST, playerList.ToArray());

@@ -103,7 +103,7 @@ namespace Enigma.CoreSystems
             public const string READY = "Ready";
         }
 
-        public const string _PHOTON_CONNECTION_GAME_VERSION_SETTINGS = "v1.0";
+        public const string _PHOTON_CONNECTION_GAME_VERSION_SETTINGS = "v2.0";
 
         private const int _GUEST_NAME_MAX_RANDOM_INDEX = 1000;
         private const float _HEARTBEAT_SESSION_CHECK_DELAY = 5;
@@ -377,7 +377,6 @@ namespace Enigma.CoreSystems
 
         static public string GetRandomOnlineName()
         {
-
             return onlineName[Random.Range(0, onlineName.Length)];
         }
 
@@ -883,6 +882,11 @@ namespace Enigma.CoreSystems
             return GetLocalPlayer().ID;
         }
 
+        static public int GetLocalPlayerPing()
+        {
+            return PhotonNetwork.networkingPeer.RoundTripTime;
+        }
+
         //Get the local PhotonPlayer (local user)
         static public PhotonPlayer GetLocalPlayer()
         {
@@ -1102,7 +1106,7 @@ namespace Enigma.CoreSystems
         /// </summary>
         static public void SetRoomCustomProperty(object key, object value)
         {
-            //Debug.Log("NetworkManager::SetRoomCustomProperty -> key: " + key.ToString() + " value: " + value.ToString());
+            Debug.LogWarning("NetworkManager::SetRoomCustomProperty -> key: " + key.ToString() + " value: " + value.ToString());
             if (IsPhotonOffline())
             {
                 if (!Data.ContainsKey(DataGroups.INFO))

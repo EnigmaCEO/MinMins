@@ -23,9 +23,9 @@ public class GameHacks : SingletonMonobehaviour<GameHacks>
     public bool AllEnjinTeamBoostTokens;
     public bool CreateWarPrepLineRendererOnUpdate;
 
-    public ValueHack ForceTeamBoostReward = new ValueHack("true");
+    public ValueHack ForceTeamBoostReward = new ValueHack("True");
 
-    public ValueHack BuyResult = new ValueHack("true");
+    public ValueHack BuyResult = new ValueHack("True");
 
     public ValueHack TimeWaitForRoomPvpAiSet = new ValueHack("10");
 
@@ -45,6 +45,6 @@ public class GameHacks : SingletonMonobehaviour<GameHacks>
     public ValueHack RoundCount = new ValueHack("2");
     public ValueHack Damage = new ValueHack("1000");
     public ValueHack FightsWithoutAdsMaxCount = new ValueHack("2");
-    public ValueHack HasPurchased = new ValueHack("true");
+    public ValueHack HasPurchased = new ValueHack("True");
     public ValueHack UnlockArenas = new ValueHack("5");
 }
