@@ -73,6 +73,8 @@ public class TeamBoostSelection : EnigmaScene
             gridItem.SetUp(boostItem.Name, boostItem.Category, boostItem.Bonus, isOre);
 
             gridItem.GetComponent<Button>().onClick.AddListener(() => onTeamBoostItemClicked(boostItem, gridItem));
+
+            break; //To display only the first one of each type
         }
     }
 
