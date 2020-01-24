@@ -16,7 +16,8 @@ public class LocalizationManager : MonoBehaviour
         English = 0,
         Spanish,
         Chinese_Simplified,
-        Chinese_Traditional
+        Chinese_Traditional,
+        Korean
     }
 
     private void Awake()
@@ -25,8 +26,10 @@ public class LocalizationManager : MonoBehaviour
 
         load();
 
-        if(EnigmaHacks.Instance.Language.Enabled)
-            ChangeLanguage(EnigmaHacks.Instance.Language.GetValueAsEnum<Languages>());  
+        if (EnigmaHacks.Instance.Language.Enabled)
+        {
+            ChangeLanguage(EnigmaHacks.Instance.Language.GetValueAsEnum<Languages>());
+        }
 
         UnityEngine.SceneManagement.SceneManager.sceneLoaded += onSceneLoaded;
     }

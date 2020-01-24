@@ -25,7 +25,8 @@ MonoBehaviour:
       - Esperando Oponente...
       - "\u7B49\u5F85\u5C0D\u624B\u2026"
       - "\u7B49\u5F85\u5BF9\u624B\u2026"
-      Flags: 00000000
+      - "\uC0C1\uB300 \uD50C\uB808\uC774\uC5B4 \uAE30\uB2E4\uB9AC\uB294 \uC911\u2026"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: ARENA SELECTION
       TermType: 0
@@ -35,7 +36,8 @@ MonoBehaviour:
       - "SELECCI\xD3N DE ARENA"
       - "\u9078\u64C7\u7AF6\u6280\u5834"
       - "\u9009\u62E9\u7ADE\u6280\u573A"
-      Flags: 00000000
+      - "\uBC30\uD2C0 \uC7A5\uC18C"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: BATTLE ALERT!
       TermType: 0
@@ -45,7 +47,8 @@ MonoBehaviour:
       - ALERTA DE BATALLA!
       - "\u6230\u9B25\u8B66\u544A!"
       - "\u6218\u6597\u8B66\u544A!"
-      Flags: 00000000
+      - "\uBC30\uD2C0 \uC2DC\uC791!"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: You need at least 5 units to start a battle. Return to the Shop for assistance
         in rebuilding your Min Min army.
@@ -60,7 +63,13 @@ MonoBehaviour:
         \ \u8FD4\u56DE\u5546\u5E97\u4EE5\u5EFA\u9020\u4F60\u7684Min Min\u8ECD\u968A"
       - "\u4F60\u9700\u8981\u81F3\u5C115\u5355\u4F4D\u624D\u80FD\u5F00\u59CB\u6218\u6597.
         \u8FD4\u56DE\u5546\u5E97\u4EE5\u5EFA\u9020\u4F60\u7684Min Min\u519B\u961F"
-      Flags: 00000000
+      - "\uBC30\uD2C0\uC744 \uC2DC\uC791\uD558\uB824\uBA74 \uCD5C\uC18C 5 \uAC1C\uC758
+        \uCE90\uB9AD\uD130 \uC720\uB2DB\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\n \n
+        \uC0C1\uC810\uC5D0 \uB4E4\uB7EC Min Min \uAD70\uB300\uB97C \uC7AC\uAC74\uD558\uC138\uC694!\uBC30\uD2C0\uC744
+        \uC2DC\uC791\uD558\uB824\uBA74 \uCD5C\uC18C 5 \uAC1C\uC758 \uCE90\uB9AD\uD130
+        \uC720\uB2DB\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\n \n \uC0C1\uC810\uC5D0
+        \uB4E4\uB7EC Min Min \uAD70\uB300\uB97C \uC7AC\uAC74\uD558\uC138\uC694!"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: You need at least 5 units for battle. We offer 2 free Starter Boxes or
         40 off the Master Box!
@@ -75,7 +84,15 @@ MonoBehaviour:
         \u6211\u5011\u63D0\u4F9B\u5169\u500B\u514D\u8CBB\u7684\u521D\u5FC3\u8005\u7BB1\u6216\u662F\u964D\u50F940%\u7684\u5927\u5E2B\u7BB1"
       - "\u4F60\u9700\u8981\u81F3\u5C115\u5355\u4F4D\u624D\u80FD\u5F00\u59CB\u6218\u6597.
         \u6211\u4EEC\u63D0\u4F9B\u4E24\u4E2A\u514D\u8D39\u7684\u521D\u5FC3\u8005\u7BB1\u6216\u662F\u964D\u4EF740%\u7684\u5927\u5E08\u7BB1"
-      Flags: 00000000
+      - "\uBC30\uD2C0\uC744 \uC2DC\uC791\uD558\uB824\uBA74 \uCD5C\uC18C 5\uAC1C\uC758
+        \uCE90\uB9AD\uD130 \uC720\uB2DB\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\n \uB450\uAC1C\uC758
+        \uBB34\uB8CC \uC2A4\uD0C0\uD130 \uBC15\uC2A4 \uD639\uC740 \uB9C8\uC2A4\uD130
+        \uBC15\uC2A4 40% \uD560\uC778 \uD61C\uD0DD\uC744 \uB204\uB824\uBCF4\uC138\uC694!\uBC30\uD2C0\uC744
+        \uC2DC\uC791\uD558\uB824\uBA74 \uCD5C\uC18C 5\uAC1C\uC758 \uCE90\uB9AD\uD130
+        \uC720\uB2DB\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\n \uB450\uAC1C\uC758 \uBB34\uB8CC
+        \uC2A4\uD0C0\uD130 \uBC15\uC2A4 \uD639\uC740 \uB9C8\uC2A4\uD130 \uBC15\uC2A4
+        40% \uD560\uC778 \uD61C\uD0DD\uC744 \uB204\uB824\uBCF4\uC138\uC694!"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Free Boxes
       TermType: 0
@@ -85,7 +102,8 @@ MonoBehaviour:
       - Cajas Gratis
       - "\u514D\u8CBB\u7BB1"
       - "\u514D\u8D39\u7BB1"
-      Flags: 00000000
+      - "\uBB34\uB8CC \uBC15\uC2A4"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: New user
       TermType: 0
@@ -95,7 +113,8 @@ MonoBehaviour:
       - Nuevo usuario
       - "\u65B0\u7684\u4F7F\u7528\u8005"
       - "\u65B0\u7684\u4F7F\u7528\u8005"
-      Flags: 00000000
+      - "\uC2E0\uADDC \uC720\uC800"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: LINK WALLET
       TermType: 0
@@ -105,7 +124,8 @@ MonoBehaviour:
       - 'ENLAZAR BILLETERA '
       - "\u9023\u7D50\u9322\u5305"
       - "\u8FDE\u7ED3\u94B1\u5305"
-      Flags: 00000000
+      - "\uC5D4\uC9C4 \uC6D4\uB81B\uC5D0 \uC5F0\uACB0\uD558\uAE30"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: PvP
       TermType: 0
@@ -115,7 +135,8 @@ MonoBehaviour:
       - JcJ
       - "\u73A9\u5BB6\u5C0D\u6230"
       - "\u73A9\u5BB6\u5BF9\u6218"
-      Flags: 00000000
+      - "\uD50C\uB808\uC774\uC5B4 VS \uD50C\uB808\uC774\uC5B4"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Training
       TermType: 0
@@ -125,7 +146,8 @@ MonoBehaviour:
       - Entrenamiento
       - "\u8A13\u7DF4"
       - "\u8BAD\u7EC3"
-      Flags: 00000000
+      - "\uC5F0\uC2B5 \uAC8C\uC784"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Confirm
       TermType: 0
@@ -135,7 +157,8 @@ MonoBehaviour:
       - Confirmar
       - "\u78BA\u5B9A"
       - "\u786E\u5B9A"
-      Flags: 00000000
+      - "\uD655\uC778"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Enjin Address
       TermType: 0
@@ -145,7 +168,8 @@ MonoBehaviour:
       - "Direcci\xF3n Enjin"
       - "Enjin \u5730\u5740"
       - "Enjin \u5730\u5740"
-      Flags: 00000000
+      - "\uC5D4\uC9C4 \uC8FC\uC18C"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: TryAgain
       TermType: 5
@@ -155,7 +179,8 @@ MonoBehaviour:
       - Trata hoy de nuevo
       - "\u4ECA\u5929\u518D\u8A66\u4E00\u6B21"
       - "\u4ECA\u5929\u518D\u8BD5\u4E00\u6B21"
-      Flags: 00000000
+      - "\uC624\uB298 \uB2E4\uC2DC \uC2DC\uB3C4\uD574\uBCF4\uC138\uC694!"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: WatchVideo
       TermType: 0
@@ -165,7 +190,8 @@ MonoBehaviour:
       - "Ver v\xEDdeo"
       - "\u89C0\u770B\u5F71\u7247"
       - "\u89C2\u770B\u5F71\u7247"
-      Flags: 00000000
+      - "\uC601\uC0C1 \uBCF4\uAE30"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Score
       TermType: 0
@@ -175,7 +201,8 @@ MonoBehaviour:
       - Tu puntaje es
       - "\u4F60\u7684\u5206\u6578\u662F"
       - "\u4F60\u7684\u5206\u6570\u662F"
-      Flags: 00000000
+      - "\uB2F9\uC2E0\uC758 \uC810\uC218\uB294"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Timer
       TermType: 0
@@ -185,7 +212,8 @@ MonoBehaviour:
       - Reloj
       - "\u8A08\u6642\u5668"
       - "\u8BA1\u65F6\u5668"
-      Flags: 00000000
+      - 
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Start
       TermType: 0
@@ -195,7 +223,8 @@ MonoBehaviour:
       - Comenzar
       - "\u958B\u59CB"
       - "\u5F00\u59CB"
-      Flags: 00000000
+      - "\uC2DC\uC791"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: LOGIN
       TermType: 0
@@ -205,7 +234,8 @@ MonoBehaviour:
       - "INICIAR SESI\xD3N"
       - "\u767B\u5165"
       - "\u767B\u5165"
-      Flags: 00000000
+      - "\uB85C\uADF8\uC778"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Login
       TermType: 0
@@ -215,7 +245,8 @@ MonoBehaviour:
       - "Iniciar Sesi\xF3n"
       - "\u767B\u5165"
       - "\u767B\u5165"
-      Flags: 00000000
+      - "\uB85C\uADF8\uC778"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Logout
       TermType: 0
@@ -225,7 +256,8 @@ MonoBehaviour:
       - "Cerrar Sesi\xF3n"
       - "\u767B\u51FA"
       - "\u767B\u51FA"
-      Flags: 00000000
+      - "\uB85C\uADF8\uC544\uC6C3"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Register
       TermType: 0
@@ -235,7 +267,8 @@ MonoBehaviour:
       - Registrarse
       - "\u8A3B\u518A"
       - "\u6CE8\u518C"
-      Flags: 00000000
+      - "\uB4F1\uB85D\uD558\uAE30"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Guest
       TermType: 0
@@ -245,7 +278,8 @@ MonoBehaviour:
       - "Hu\xE9sped"
       - "\u904A\u5BA2"
       - "\u6E38\u5BA2"
-      Flags: 00000000
+      - "\uAC8C\uC2A4\uD2B8"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Remember me
       TermType: 0
@@ -255,7 +289,8 @@ MonoBehaviour:
       - Recordarme
       - "\u8A18\u4F4F\u6211"
       - "\u8BB0\u4F4F\u6211"
-      Flags: 00000000
+      - "\uB85C\uADF8\uC778 \uC815\uBCF4 \uAE30\uC5B5\uD558\uAE30"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Username
       TermType: 0
@@ -265,7 +300,8 @@ MonoBehaviour:
       - Usuario
       - "\u4F7F\u7528\u8005\u540D\u7A31"
       - "\u4F7F\u7528\u8005\u540D\u79F0"
-      Flags: 00000000
+      - "\uC0AC\uC6A9\uC790 \uB124\uC784"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: WrongPassword
       TermType: 0
@@ -275,7 +311,8 @@ MonoBehaviour:
       - "Contrase\xF1a equivocada"
       - "\u5BC6\u78BC\u932F\u8AA4"
       - "\u5BC6\u7801\u9519\u8BEF"
-      Flags: 00000000
+      - "\uC798\uBABB\uB41C \uD328\uC2A4\uC6CC\uB4DC\uC785\uB2C8\uB2E4"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Banned
       TermType: 0
@@ -285,7 +322,8 @@ MonoBehaviour:
       - Suspendido
       - "\u88AB\u7981\u6B62"
       - "\u88AB\u7981\u6B62"
-      Flags: 00000000
+      - "\uAC8C\uC784 \uD50C\uB808\uC774 \uBD88\uAC00"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Invalid Username
       TermType: 0
@@ -295,7 +333,8 @@ MonoBehaviour:
       - "Usuario inv\xE1lido"
       - "\u7121\u6548\u7684\u4F7F\u7528\u8005\u540D\u7A31"
       - "\u65E0\u6548\u7684\u4F7F\u7528\u8005\u540D\u79F0"
-      Flags: 00000000
+      - "\uC798\uBABB\uB41C \uC0AC\uC6A9\uC790 \uB124\uC784\uC785\uB2C8\uB2E4"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Invalid Password
       TermType: 0
@@ -305,7 +344,8 @@ MonoBehaviour:
       - "Contrase\xF1a inv\xE1lida"
       - "\u7121\u6548\u7684\u5BC6\u78BC"
       - "\u65E0\u6548\u7684\u5BC6\u7801"
-      Flags: 00000000
+      - "\uC798\uBABB\uB41C \uD328\uC2A4\uC6CC\uB4DC\uC785\uB2C8\uB2E4"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Name
       TermType: 0
@@ -315,7 +355,8 @@ MonoBehaviour:
       - Nombre de usuario
       - "\u540D\u5B57"
       - "\u540D\u5B57"
-      Flags: 00000000
+      - "\uC774\uB984"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: CurrentScore
       TermType: 0
@@ -325,7 +366,8 @@ MonoBehaviour:
       - Puntaje
       - "\u7576\u524D\u5206\u6578"
       - "\u5F53\u524D\u5206\u6570"
-      Flags: 00000000
+      - "\uD604\uC7AC \uC810\uC218"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: HighScore
       TermType: 0
@@ -335,7 +377,8 @@ MonoBehaviour:
       - Mejor Puntaje
       - "\u6700\u9AD8\u5206"
       - "\u6700\u9AD8\u5206"
-      Flags: 00000000
+      - "\uD558\uC774\uC2A4\uCF54\uC5B4"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Title
       TermType: 0
@@ -345,7 +388,8 @@ MonoBehaviour:
       - "T\xEDtulo"
       - "\u6A19\u984C"
       - "\u6807\u9898"
-      Flags: 00000000
+      - "\uD0C0\uC774\uD2C0"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Password
       TermType: 0
@@ -355,7 +399,8 @@ MonoBehaviour:
       - "Contrase\xF1a"
       - "\u5BC6\u78BC"
       - "\u5BC6\u7801"
-      Flags: 00000000
+      - "\uD328\uC2A4\uC6CC\uB4DC"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: ConfirmPassword
       TermType: 0
@@ -365,7 +410,8 @@ MonoBehaviour:
       - "Confirmar Contrase\xF1a"
       - "\u78BA\u8A8D\u5BC6\u78BC"
       - "\u786E\u8BA4\u5BC6\u7801"
-      Flags: 00000000
+      - "\uD328\uC2A4\uC6CC\uB4DC \uD655\uC778"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: PasswordConfirmFailed
       TermType: 0
@@ -375,7 +421,8 @@ MonoBehaviour:
       - "La confirmaci\xF3n de contrase\xF1a fall\xF3"
       - "\u5BC6\u78BC\u78BA\u8A8D\u5931\u6557"
       - "\u5BC6\u7801\u786E\u8BA4\u5931\u8D25"
-      Flags: 00000000
+      - "\uD328\uC2A4\uC6CC\uB4DC \uD655\uC778 \uC2E4\uD328"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Submit
       TermType: 0
@@ -385,7 +432,8 @@ MonoBehaviour:
       - Enviar
       - "\u63D0\u4EA4"
       - "\u63D0\u4EA4"
-      Flags: 00000000
+      - "\uC81C\uCD9C"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: E-mail
       TermType: 0
@@ -395,7 +443,8 @@ MonoBehaviour:
       - "Correo Electr\xF3nico"
       - "\u96FB\u5B50\u4FE1\u7BB1"
       - "\u7535\u5B50\u4FE1\u7BB1"
-      Flags: 00000000
+      - "\uC774\uBA54\uC77C"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Back
       TermType: 0
@@ -405,7 +454,8 @@ MonoBehaviour:
       - "Atr\xE1s"
       - "\u4E0A\u4E00\u9801"
       - "\u4E0A\u4E00\u9875"
-      Flags: 00000000
+      - "\uB4A4\uB85C \uAC00\uAE30"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Register Error
       TermType: 0
@@ -415,7 +465,8 @@ MonoBehaviour:
       - Error de Registro
       - "\u8A3B\u518A\u932F\u8AA4"
       - "\u6CE8\u518C\u9519\u8BEF"
-      Flags: 00000000
+      - "\uB4F1\uB85D \uC5D0\uB7EC"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Server Error
       TermType: 0
@@ -425,7 +476,8 @@ MonoBehaviour:
       - Error de Servidor
       - "\u4F3A\u670D\u5668\u932F\u8AA4"
       - "\u4F3A\u670D\u5668\u9519\u8BEF"
-      Flags: 00000000
+      - "\uC11C\uBC84 \uC5D0\uB7EC"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Connection Error
       TermType: 0
@@ -435,7 +487,8 @@ MonoBehaviour:
       - "Error de Conexi\xF3n"
       - "\u9023\u7D50\u932F\u8AA4"
       - "\u8FDE\u7ED3\u9519\u8BEF"
-      Flags: 00000000
+      - "\uC5F0\uACB0 \uC5D0\uB7EC"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: E-mail is not valid
       TermType: 0
@@ -445,7 +498,8 @@ MonoBehaviour:
       - "Correo electr\xF3nico inv\xE1lido"
       - "\u7121\u6548\u4FE1\u7BB1"
       - "\u65E0\u6548\u4FE1\u7BB1"
-      Flags: 00000000
+      - "\uC798\uBABB\uB41C \uC774\uBA54\uC77C\uC785\uB2C8\uB2E4"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Passwords don't match
       TermType: 0
@@ -455,7 +509,8 @@ MonoBehaviour:
       - "Las contrase\xF1as no concuerdan"
       - "\u5BC6\u78BC\u4E0D\u7B26"
       - "\u5BC6\u7801\u4E0D\u7B26"
-      Flags: 00000000
+      - "\uC77C\uCE58\uD558\uC9C0 \uC54A\uC740 \uD328\uC2A4\uC6CC\uB4DC\uC785\uB2C8\uB2E4"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Please fill the Enjin ETH address
       TermType: 0
@@ -465,7 +520,8 @@ MonoBehaviour:
       - "Por favor llenar direcci\xF3n Enjin ETH"
       - "\u8ACB\u586B\u5BEBEnjin ETH\u5730\u5740"
       - "\u8BF7\u586B\u5199Enjin ETH\u5730\u5740"
-      Flags: 00000000
+      - "\uC5D4\uC9C4 \uC8FC\uC18C\uB97C \uC785\uB825\uD558\uC138\uC694"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Network Error
       TermType: 0
@@ -475,7 +531,8 @@ MonoBehaviour:
       - Error de Red
       - "\u7DB2\u8DEF\u932F\u8AA4"
       - "\u7F51\u8DEF\u9519\u8BEF"
-      Flags: 00000000
+      - "\uB124\uD2B8\uC6CC\uD06C \uC5D0\uB7EC"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Error connecting to the server. Restart the app and retry.
       TermType: 0
@@ -485,7 +542,9 @@ MonoBehaviour:
       - Error conectando al servidor. Recomience el app y reintente.
       - "\u7121\u6CD5\u9023\u63A5\u81F3\u4F3A\u670D\u5668\uFF0C\u8ACB\u91CD\u958B\u61C9\u7528\u7A0B\u5F0F\u4E26\u91CD\u8A66"
       - "\u65E0\u6CD5\u8FDE\u63A5\u81F3\u4F3A\u670D\u5668\uFF0C\u8BF7\u91CD\u5F00\u5E94\u7528\u7A0B\u5F0F\u5E76\u91CD\u8BD5"
-      Flags: 00000000
+      - "\uC11C\uBC84 \uC5F0\uACB0\uC911 \uC5D0\uB7EC \uBC1C\uC0DD. \uC571\uC744 \uB2E4\uC2DC
+        \uC2E4\uD589\uD558\uC138\uC694"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: OK
       TermType: 0
@@ -495,7 +554,8 @@ MonoBehaviour:
       - OK
       - "\u53EF\u4EE5"
       - "\u53EF\u4EE5"
-      Flags: 00000000
+      - "\uD655\uC778"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: 'Damage Dealt:'
       TermType: 0
@@ -505,7 +565,8 @@ MonoBehaviour:
       - "Da\xF1o dado:"
       - "\u9020\u6210\u50B7\u5BB3:"
       - "\u9020\u6210\u4F24\u5BB3:"
-      Flags: 00000000
+      - "\uACF5\uACA9 \uD69F\uC218"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: 'Damage Received:'
       TermType: 0
@@ -515,7 +576,8 @@ MonoBehaviour:
       - "Da\xF1o recibido:"
       - "\u627F\u53D7\u50B7\u5BB3:"
       - "\u627F\u53D7\u4F24\u5BB3:"
-      Flags: 00000000
+      - "\uBC1B\uC740 \uACF5\uACA9"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: 'Units Killed:'
       TermType: 0
@@ -525,7 +587,8 @@ MonoBehaviour:
       - 'Unidades Matadas:'
       - "\u6025\u6BBA\u55AE\u4F4D:"
       - "\u6025\u6740\u5355\u4F4D:"
-      Flags: 00000000
+      - "\uC8FD\uC740 \uCE90\uB9AD\uD130"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: 'Match Duration:'
       TermType: 0
@@ -535,7 +598,8 @@ MonoBehaviour:
       - "Duraci\xF3n de la Partida:"
       - "\u5C0D\u6230\u6642\u9593:"
       - "\u5BF9\u6218\u65F6\u95F4:"
-      Flags: 00000000
+      - "\uBC30\uD2C0 \uC2DC\uAC04"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: 'Rewards:'
       TermType: 0
@@ -545,7 +609,8 @@ MonoBehaviour:
       - 'Recompensas:'
       - "\u734E\u52F5:"
       - "\u5956\u52B1:"
-      Flags: 00000000
+      - "\uB9AC\uC6CC\uB4DC"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: You win!
       TermType: 0
@@ -555,7 +620,8 @@ MonoBehaviour:
       - "\xA1Has ganado!"
       - "\u4F60\u7372\u52DD\u4E86!"
       - "\u4F60\u83B7\u80DC\u4E86!"
-      Flags: 00000000
+      - "\uC774\uACBC\uC2B5\uB2C8\uB2E4!"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: You lose!
       TermType: 0
@@ -565,7 +631,8 @@ MonoBehaviour:
       - "\xA1Has perdido!"
       - "\u4F60\u5931\u6557\u4E86!"
       - "\u4F60\u5931\u8D25\u4E86!"
-      Flags: 00000000
+      - "\uC84C\uC2B5\uB2C8\uB2E4"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: 'Time Left:'
       TermType: 0
@@ -575,7 +642,8 @@ MonoBehaviour:
       - 'Tiempo Restante:'
       - "\u5269\u9918\u6642\u9593:"
       - "\u5269\u4F59\u65F6\u95F4:"
-      Flags: 00000000
+      - "\uB0A8\uC740 \uC2DC\uAC04"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Loading...
       TermType: 0
@@ -585,7 +653,8 @@ MonoBehaviour:
       - Cargando...
       - "\u8F09\u5165\u4E2D\u2026"
       - "\u8F7D\u5165\u4E2D\u2026"
-      Flags: 00000000
+      - "\uB85C\uB529\uC911\u2026"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: WeeklyChallenge
       TermType: 0
@@ -595,7 +664,8 @@ MonoBehaviour:
       - "Desaf\xEDo Semanal"
       - "\u6BCF\u9031\u6311\u6230"
       - "\u6BCF\u5468\u6311\u6218"
-      Flags: 00000000
+      - "\uC8FC\uAC04 \uCC4C\uB9B0\uC9C0"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Day
       TermType: 0
@@ -605,7 +675,8 @@ MonoBehaviour:
       - "D\xEDa"
       - "\u65E5"
       - "\u65E5"
-      Flags: 00000000
+      - "\uB0A0"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Of7
       TermType: 0
@@ -615,7 +686,8 @@ MonoBehaviour:
       - de 7
       - "\u4E03\u65E5\u4E4B X or 7\u65E5\u4E4B X X for the current day"
       - "\u4E03\u65E5\u4E4B X or 7\u65E5\u4E4B X X for the current day"
-      Flags: 00000000
+      - "X\uBC88\uC9F8 (x/7)"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Shop
       TermType: 0
@@ -625,7 +697,8 @@ MonoBehaviour:
       - Tienda
       - "\u5546\u5E97"
       - "\u5546\u5E97"
-      Flags: 00000000
+      - "\uC0C1\uC810"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: SHOP
       TermType: 0
@@ -635,7 +708,8 @@ MonoBehaviour:
       - TIENDA
       - "\u5546\u5E97"
       - "\u5546\u5E97"
-      Flags: 00000000
+      - "\uC0C1\uC810"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Starter Box
       TermType: 0
@@ -645,7 +719,8 @@ MonoBehaviour:
       - Caja de Inicio
       - "\u521D\u5FC3\u8005\u7BB1"
       - "\u521D\u5FC3\u8005\u7BB1"
-      Flags: 00000000
+      - "\uC2A4\uD0C0\uD130 \uBC15\uC2A4"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Premium Box
       TermType: 0
@@ -655,7 +730,8 @@ MonoBehaviour:
       - Caja Premium
       - "\u4E2D\u7D1A\u7BB1"
       - "\u4E2D\u7EA7\u7BB1"
-      Flags: 00000000
+      - "\uD504\uB9AC\uBBF8\uC5C4 \uBC15\uC2A4"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Master Box
       TermType: 0
@@ -665,7 +741,8 @@ MonoBehaviour:
       - Caja Master
       - "\u5927\u5E2B\u7BB1"
       - "\u5927\u5E08\u7BB1"
-      Flags: 00000000
+      - "\uB9C8\uC2A4\uD130 \uBC15\uC2A4"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: CANCEL
       TermType: 0
@@ -675,7 +752,8 @@ MonoBehaviour:
       - CANCELAR
       - "\u53D6\u6D88"
       - "\u53D6\u6D88"
-      Flags: 00000000
+      - "\uCDE8\uC18C"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: PURCHASE
       TermType: 0
@@ -685,7 +763,8 @@ MonoBehaviour:
       - COMPRA
       - "\u8CFC\u8CB7"
       - "\u8D2D\u4E70"
-      Flags: 00000000
+      - "\uAD6C\uB9E4"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: NEW MIN MINS!
       TermType: 0
@@ -695,7 +774,8 @@ MonoBehaviour:
       - NUEVOS MIN MINS!
       - "\u65B0MIN MINS!"
       - "\u65B0MIN MINS!"
-      Flags: 00000000
+      - "\uC0C8\uB85C\uC6B4 Min Mins!"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: No guarantees.
       TermType: 0
@@ -705,7 +785,8 @@ MonoBehaviour:
       - "Sin garant\xEDas."
       - "\u6C92\u6709\u4FDD\u5E95"
       - "\u6CA1\u6709\u4FDD\u5E95"
-      Flags: 00000000
+      - "\uCE90\uB9AD\uD130 \uC720\uB2DB \uB2F9\uCCA8 \uBCF4\uC7A5\uC5C6\uC74C"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Guarantees a 2 Stars Unit.
       TermType: 0
@@ -715,7 +796,9 @@ MonoBehaviour:
       - Garantiza una Unidad de 2 Estrellas.
       - "\u4FDD\u5E95\u5169\u500B\u661F\u661F\u55AE\u4F4D"
       - "\u4FDD\u5E95\u4E24\u4E2A\u661F\u661F\u5355\u4F4D"
-      Flags: 00000000
+      - "\uBCC4\uC810 \uB450\uAC1C\uC9DC\uB9AC \uCE90\uB9AD\uD130 \uC720\uB2DB \uB2F9\uCCA8
+        \uBCF4\uC7A5!"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Guarantees a 3 Stars Unit.
       TermType: 0
@@ -725,7 +808,9 @@ MonoBehaviour:
       - Garantiza una Unidad de 3 Estrellas.
       - "\u4FDD\u5E95\u4E09\u500B\u661F\u661F\u55AE\u4F4D"
       - "\u4FDD\u5E95\u4E09\u4E2A\u661F\u661F\u5355\u4F4D"
-      Flags: 00000000
+      - "\uBCC4\uC810 \uC138\uAC1C\uC9DC\uB9AC \uCE90\uB9AD\uD130 \uC720\uB2DB \uB2F9\uCCA8
+        \uBCF4\uC7A5!"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Thanks for your Purchase!
       TermType: 0
@@ -735,7 +820,8 @@ MonoBehaviour:
       - "\xA1Gracias por su Compra!"
       - "\u611F\u8B1D\u60A8\u7684\u8CFC\u8CB7!"
       - "\u611F\u8C22\u60A8\u7684\u8D2D\u4E70!"
-      Flags: 00000000
+      - "\uAD6C\uB9E4\uD574\uC8FC\uC154\uC11C \uAC10\uC0AC\uD569\uB2C8\uB2E4"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: UNIT SELECTION
       TermType: 0
@@ -745,7 +831,8 @@ MonoBehaviour:
       - "SELECCI\xD3N DE UNIDADES"
       - "\u55AE\u4F4D\u9078\u64C7"
       - "\u5355\u4F4D\u9009\u62E9"
-      Flags: 00000000
+      - "\uCE90\uB9AD\uD130 \uC120\uC815\uD558\uAE30"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Level
       TermType: 0
@@ -755,7 +842,8 @@ MonoBehaviour:
       - Nivel
       - "\u7B49\u7D1A"
       - "\u7B49\u7EA7"
-      Flags: 00000000
+      - "\uB808\uBCA8"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Attack
       TermType: 0
@@ -765,7 +853,8 @@ MonoBehaviour:
       - Ataque
       - "\u653B\u64CA"
       - "\u653B\u51FB"
-      Flags: 00000000
+      - "\uACF5\uACA9"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Defense
       TermType: 0
@@ -775,7 +864,8 @@ MonoBehaviour:
       - Defensa
       - "\u9632\u79A6"
       - "\u9632\u5FA1"
-      Flags: 00000000
+      - "\uC218\uBE44"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: START
       TermType: 0
@@ -785,7 +875,8 @@ MonoBehaviour:
       - 
       - "\u958B\u59CB"
       - "\u5F00\u59CB"
-      Flags: 00000000
+      - "\uC2DC\uC791"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: ConfirmPurchase
       TermType: 0
@@ -795,7 +886,8 @@ MonoBehaviour:
       - "\xBFConfirma compra?"
       - "\u78BA\u8A8D\u8CFC\u8CB7?"
       - "\u786E\u8BA4\u8D2D\u4E70?"
-      Flags: 00000000
+      - "\uAD6C\uB9E4\uB97C \uD558\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Purchase Failed. Please try again later.
       TermType: 0
@@ -805,7 +897,8 @@ MonoBehaviour:
       - "La compra fall\xF3. Por favor reintente luego."
       - "\u8CFC\u8CB7\u5931\u6557\uFF0C\u8ACB\u7A0D\u5F8C\u91CD\u8A66"
       - "\u8D2D\u4E70\u5931\u8D25\uFF0C\u8BF7\u7A0D\u540E\u91CD\u8BD5"
-      Flags: 00000000
+      - "\uAD6C\uB9E4 \uC2E4\uD328. \uC7A0\uC2DC \uD6C4 \uB2E4\uC2DC \uC2DC\uB3C4\uD574\uC8FC\uC138\uC694."
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Please log in to access PvP.
       TermType: 0
@@ -815,7 +908,9 @@ MonoBehaviour:
       - "Por favor inicie sesi\xF3n para accesar JcJ."
       - "\u8ACB\u767B\u5165\u4EE5\u958B\u59CB\u73A9\u5BB6\u5C0D\u6230"
       - "\u8BF7\u767B\u5165\u4EE5\u5F00\u59CB\u73A9\u5BB6\u5BF9\u6218"
-      Flags: 00000000
+      - "\uD50C\uB808\uC774\uC5B4 VS \uD50C\uB808\uC774\uC5B4\uC5D0 \uC811\uC18D\uD558\uB824\uBA74
+        \uB85C\uADF8\uC778\uD574\uC8FC\uC138\uC694."
+      Flags: 0000000000
       Languages_Touch: []
     - Term: NotEnoughCurrency
       TermType: 0
@@ -825,7 +920,8 @@ MonoBehaviour:
       - No hay suficientes monedas.
       - "\u8CA8\u5E63\u4E0D\u8DB3"
       - "\u8D27\u5E01\u4E0D\u8DB3"
-      Flags: 00000000
+      - "\uD654\uD3D0 \uBD80\uC871"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: ThanksPurchase
       TermType: 0
@@ -835,7 +931,8 @@ MonoBehaviour:
       - Gracias por su compra.
       - "\u611F\u8B1D\u60A8\u7684\u8CFC\u8CB7!"
       - "\u611F\u8C22\u60A8\u7684\u8D2D\u4E70!"
-      Flags: 00000000
+      - "\uAD6C\uB9E4\uD574\uC8FC\uC154\uC11C \uAC10\uC0AC\uD569\uB2C8\uB2E4"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: PurchaseFailed
       TermType: 0
@@ -845,7 +942,8 @@ MonoBehaviour:
       - "La compra fall\xF3."
       - "\u8CFC\u8CB7\u5931\u6557"
       - "\u8D2D\u4E70\u5931\u8D25"
-      Flags: 00000000
+      - "\uAD6C\uB9E4 \uC2E4\uD328"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Leaderboards
       TermType: 0
@@ -855,7 +953,8 @@ MonoBehaviour:
       - "L\xEDderes"
       - "\u6392\u884C\u699C"
       - "\u6392\u884C\u699C"
-      Flags: 00000000
+      - "\uB9AC\uB354\uBCF4\uB4DC"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: GotLoginBonus
       TermType: 0
@@ -865,7 +964,8 @@ MonoBehaviour:
       - "\xA1Obtuvo Bono por Sesi\xF3n!"
       - "\u53D6\u5F97\u767B\u5165\u734E\u91D1"
       - "\u53D6\u5F97\u767B\u5165\u5956\u91D1"
-      Flags: 00000000
+      - "\uB85C\uADF8\uC778 \uBCF4\uB108\uC2A4 \uD68D\uB4DD!"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: AdFailed
       TermType: 0
@@ -875,7 +975,8 @@ MonoBehaviour:
       - "Fall\xF3 el Ad. Favor intente otra vez."
       - "\u5EE3\u544A\u5931\u6557"
       - "\u5E7F\u544A\u5931\u8D25"
-      Flags: 00000000
+      - "\uAD11\uACE0\uBCF4\uAE30 \uC2E4\uD328. \uB2E4\uC2DC \uC2DC\uB3C4\uD574\uC8FC\uC138\uC694."
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Currency
       TermType: 0
@@ -885,7 +986,8 @@ MonoBehaviour:
       - Moneda
       - "\u8CA8\u5E63"
       - "\u8D27\u5E01"
-      Flags: 00000000
+      - "\uD654\uD3D0"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Settings
       TermType: 0
@@ -895,7 +997,8 @@ MonoBehaviour:
       - Ajustes
       - "\u8A2D\u5B9A"
       - "\u8BBE\u5B9A"
-      Flags: 00000000
+      - "\uC124\uC815"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: AudioEffects
       TermType: 0
@@ -905,7 +1008,8 @@ MonoBehaviour:
       - Efectos de Sonido
       - "\u97F3\u6548"
       - "\u97F3\u6548"
-      Flags: 00000000
+      - "\uC624\uB514\uC624 \uD6A8\uACFC"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: SecondsToAnswer
       TermType: 0
@@ -915,7 +1019,8 @@ MonoBehaviour:
       - Segundos para contestar.
       - "\u56DE\u7B54\u79D2\u6578"
       - "\u56DE\u7B54\u79D2\u6570"
-      Flags: 00000000
+      - "\uCD08 \uB0A8\uC558\uC2B5\uB2C8\uB2E4"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Continue
       TermType: 0
@@ -925,7 +1030,8 @@ MonoBehaviour:
       - Continuar
       - "\u7E7C\u7E8C"
       - "\u7EE7\u7EED"
-      Flags: 00000000
+      - "\uACC4\uC18D"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Results
       TermType: 0
@@ -935,7 +1041,8 @@ MonoBehaviour:
       - Resultados
       - "\u7D50\u679C"
       - "\u7ED3\u679C"
-      Flags: 00000000
+      - "\uACB0\uACFC"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Time
       TermType: 0
@@ -945,7 +1052,8 @@ MonoBehaviour:
       - Tiempo
       - "\u6642\u9593"
       - "\u65F6\u95F4"
-      Flags: 00000000
+      - "\uC2DC\uAC04"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Points
       TermType: 0
@@ -955,7 +1063,8 @@ MonoBehaviour:
       - Puntos
       - "\u5206\u6578"
       - "\u5206\u6570"
-      Flags: 00000000
+      - "\uD3EC\uC778\uD2B8"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Totals
       TermType: 0
@@ -965,7 +1074,8 @@ MonoBehaviour:
       - Totales
       - "\u7E3D\u5171"
       - "\u603B\u5171"
-      Flags: 00000000
+      - "\uD569\uACC4"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: (Bonus)
       TermType: 0
@@ -975,7 +1085,8 @@ MonoBehaviour:
       - (Bono)
       - "(\u984D\u5916\u7D05\u5229)"
       - "(\u989D\u5916\u7EA2\u5229)"
-      Flags: 00000000
+      - "(\uBCF4\uB108\uC2A4)"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: avg
       TermType: 0
@@ -985,7 +1096,8 @@ MonoBehaviour:
       - prom
       - "\u5E73\u5747"
       - "\u5E73\u5747"
-      Flags: 00000000
+      - "\uD3C9\uADE0"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: 'Score:'
       TermType: 0
@@ -995,7 +1107,8 @@ MonoBehaviour:
       - 'Puntaje:'
       - "\u5206\u6578:"
       - "\u5206\u6570:"
-      Flags: 00000000
+      - "\uC2A4\uCF54\uC5B4:"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: BestOffer
       TermType: 0
@@ -1005,7 +1118,8 @@ MonoBehaviour:
       - Mejor Oferta!
       - "\u6700\u4F73\u65B9\u6848!"
       - "\u6700\u4F73\u65B9\u6848!"
-      Flags: 00000000
+      - "\uCD5C\uC0C1\uD488 \uC624\uD37C!"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Recommended
       TermType: 0
@@ -1015,7 +1129,8 @@ MonoBehaviour:
       - Recomendado!
       - "\u63A8\u85A6!"
       - "\u63A8\u8350!"
-      Flags: 00000000
+      - "\uCD94\uCC9C\uC0C1\uD488!"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: BasePriceOffer
       TermType: 0
@@ -1025,7 +1140,8 @@ MonoBehaviour:
       - Oferta Base!
       - "\u57FA\u672C\u4EA4\u6613"
       - "\u57FA\u672C\u4EA4\u6613"
-      Flags: 00000000
+      - "\uAE30\uBCF8 \uB51C!"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: SimplePack
       TermType: 0
@@ -1035,7 +1151,8 @@ MonoBehaviour:
       - Paquete Simple
       - "\u57FA\u672C\u5305"
       - "\u57FA\u672C\u5305"
-      Flags: 00000000
+      - "\uC2EC\uD50C \uD329"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: AdvancedPack
       TermType: 0
@@ -1045,7 +1162,8 @@ MonoBehaviour:
       - Paquete Avanzado
       - "\u9032\u968E\u5305"
       - "\u8FDB\u9636\u5305"
-      Flags: 00000000
+      - "\uC5B4\uB4DC\uBC34\uC2A4\uB4DC \uD329"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: MasterPack
       TermType: 0
@@ -1055,7 +1173,8 @@ MonoBehaviour:
       - Paquete Maestro
       - "\u5927\u5E2B\u5305"
       - "\u5927\u5E08\u5305"
-      Flags: 00000000
+      - "\uB9C8\uC2A4\uD130 \uD329"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: LegendaryPack
       TermType: 0
@@ -1065,7 +1184,8 @@ MonoBehaviour:
       - Paquete Legendario
       - "\u50B3\u5947\u5305"
       - "\u4F20\u5947\u5305"
-      Flags: 00000000
+      - "\uB808\uC804\uB4DC \uD329"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: LoginNowForFreeCoins
       TermType: 0
@@ -1075,7 +1195,8 @@ MonoBehaviour:
       - Ingresa ahora para monedas gratis
       - "\u73FE\u5728\u767B\u5165\u4EE5\u7372\u5F97\u514D\u8CBB\u91D1\u5E63"
       - "\u73B0\u5728\u767B\u5165\u4EE5\u83B7\u5F97\u514D\u8D39\u91D1\u5E01"
-      Flags: 00000000
+      - "\uBB34\uB8CC \uCF54\uC778\uC744 \uBC1B\uC73C\uB824\uBA74 \uC9C0\uAE08 \uB85C\uADF8\uC778\uD558\uC138\uC694"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: NewWeek
       TermType: 0
@@ -1085,7 +1206,8 @@ MonoBehaviour:
       - "\xA1Nueva semana!"
       - "\u65B0\u7684\u4E00\u9031!"
       - "\u65B0\u7684\u4E00\u5468!"
-      Flags: 00000000
+      - "\uC0C8\uB85C\uC6B4 \uD55C \uC8FC!"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: FreeCoins
       TermType: 0
@@ -1095,7 +1217,8 @@ MonoBehaviour:
       - "\xA1Obt\xE9n monedas gratis!"
       - "\u7372\u5F97\u514D\u8CBB\u91D1\u5E63"
       - "\u83B7\u5F97\u514D\u8D39\u91D1\u5E01"
-      Flags: 00000000
+      - "\uBB34\uB8CC \uCF54\uC778\uBC1B\uAE30!"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Bomber
       TermType: 0
@@ -1105,7 +1228,8 @@ MonoBehaviour:
       - Bombardero
       - "\u8F5F\u70B8\u6A5F"
       - "\u8F70\u70B8\u673A"
-      Flags: 00000000
+      - "\uD3ED\uACA9\uC218(\uBCF4\uBA38)"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Tank
       TermType: 0
@@ -1115,7 +1239,8 @@ MonoBehaviour:
       - Tanque
       - "\u5766\u514B"
       - "\u5766\u514B"
-      Flags: 00000000
+      - "\uD0F1\uD06C"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Scout
       TermType: 0
@@ -1125,7 +1250,8 @@ MonoBehaviour:
       - Explorador
       - "\u5075\u67E5\u5175"
       - "\u4FA6\u67E5\u5175"
-      Flags: 00000000
+      - "\uC815\uCC30\uBCD1(\uC2A4\uCE74\uC6B0\uD2B8)"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Healer
       TermType: 0
@@ -1135,7 +1261,8 @@ MonoBehaviour:
       - Sanador
       - "\u91AB\u8B77\u5175"
       - "\u533B\u62A4\u5175"
-      Flags: 00000000
+      - "\uD790\uB7EC"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Destroyer
       TermType: 0
@@ -1145,7 +1272,8 @@ MonoBehaviour:
       - Destructor
       - "\u7834\u58DE\u8005"
       - "\u7834\u574F\u8005"
-      Flags: 00000000
+      - "\uB514\uC2A4\uD2B8\uB85C\uC774\uC5B4(\uD30C\uAD34\uC790)"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: YOUR TURN
       TermType: 0
@@ -1155,7 +1283,8 @@ MonoBehaviour:
       - TU TURNO
       - "\u4F60\u7684\u56DE\u5408"
       - "\u4F60\u7684\u56DE\u5408"
-      Flags: 00000000
+      - "\uB2F9\uC2E0\uC758 \uC21C\uC11C\uC785\uB2C8\uB2E4"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Unit turn
       TermType: 0
@@ -1165,7 +1294,8 @@ MonoBehaviour:
       - Turno de Unidad
       - "\u55AE\u4F4D\u56DE\u5408"
       - "\u5355\u4F4D\u56DE\u5408"
-      Flags: 00000000
+      - "\uCE90\uB9AD\uD130 \uC720\uB2DB \uC21C\uC11C"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Index
       TermType: 0
@@ -1175,7 +1305,8 @@ MonoBehaviour:
       - "\xCDndice"
       - "\u76EE\u9304"
       - "\u76EE\u5F55"
-      Flags: 00000000
+      - "\uC778\uB371\uC2A4"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Unit type
       TermType: 0
@@ -1185,7 +1316,8 @@ MonoBehaviour:
       - Tipo de Unidad
       - "\u55AE\u4F4D\u985E\u578B"
       - "\u5355\u4F4D\u7C7B\u578B"
-      Flags: 00000000
+      - "\uC720\uB2DB \uD0C0\uC785"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Unit tier
       TermType: 0
@@ -1195,7 +1327,8 @@ MonoBehaviour:
       - Nivel de Unidad
       - "\u55AE\u4F4D\u6392\u540D"
       - "\u5355\u4F4D\u6392\u540D"
-      Flags: 00000000
+      - "\uC720\uB2DB \uACC4\uCE35"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Actions Left
       TermType: 0
@@ -1205,7 +1338,8 @@ MonoBehaviour:
       - Acciones Restantes
       - "\u5269\u9918\u52D5\u4F5C"
       - "\u5269\u4F59\u52A8\u4F5C"
-      Flags: 00000000
+      - "\uB0A8\uC740 \uACF5\uACA9 \uD69F\uC218"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: ATTACK
       TermType: 0
@@ -1215,7 +1349,8 @@ MonoBehaviour:
       - ATACAR
       - "\u653B\u64CA"
       - "\u653B\u51FB"
-      Flags: 00000000
+      - "\uACF5\uACA9"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: GUARD
       TermType: 0
@@ -1225,7 +1360,8 @@ MonoBehaviour:
       - PROTEGER
       - "\u9632\u5B88"
       - "\u9632\u5B88"
-      Flags: 00000000
+      - "\uBC29\uC5B4"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: HEAL
       TermType: 0
@@ -1235,7 +1371,8 @@ MonoBehaviour:
       - CURAR
       - "\u6CBB\u7642"
       - "\u6CBB\u7597"
-      Flags: 00000000
+      - "\uCE58\uB8CC"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: SCOUT
       TermType: 0
@@ -1245,7 +1382,8 @@ MonoBehaviour:
       - EXPLORAR
       - "\u63A2\u6E2C"
       - "\u63A2\u6D4B"
-      Flags: 00000000
+      - "\uC815\uCC30"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: ENEMY TURN
       TermType: 0
@@ -1255,7 +1393,8 @@ MonoBehaviour:
       - TURNO  ENEMIGO
       - "\u6575\u65B9\u56DE\u5408"
       - "\u654C\u65B9\u56DE\u5408"
-      Flags: 00000000
+      - "\uC801 \uACF5\uACA9 \uC21C\uC11C"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: ARENA
       TermType: 0
@@ -1265,7 +1404,8 @@ MonoBehaviour:
       - ARENA
       - "\u7AF6\u6280\u5834"
       - "\u7ADE\u6280\u573A"
-      Flags: 00000000
+      - "\uBC30\uD2C0 \uC7A5\uC18C"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: BATTLE RESULTS
       TermType: 0
@@ -1275,7 +1415,8 @@ MonoBehaviour:
       - RESULTADOS DE BATALLA
       - "\u6230\u9B25\u7D50\u679C"
       - "\u6218\u6597\u7ED3\u679C"
-      Flags: 00000000
+      - "\uBC30\uD2C0 \uACB0\uACFC"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Arena
       TermType: 0
@@ -1285,7 +1426,8 @@ MonoBehaviour:
       - Arena
       - "\u7AF6\u6280\u5834"
       - "\u7ADE\u6280\u573A"
-      Flags: 00000000
+      - "\uBC30\uD2C0 \uC7A5\uC18C"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Round
       TermType: 0
@@ -1295,7 +1437,8 @@ MonoBehaviour:
       - Asalto
       - "\u56DE\u5408"
       - "\u56DE\u5408"
-      Flags: 00000000
+      - "\uB77C\uC6B4\uB4DC"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: '- Killed Units -'
       TermType: 0
@@ -1305,7 +1448,8 @@ MonoBehaviour:
       - '- Unidades Muertas -'
       - "- \u64CA\u6BBA\u55AE\u4F4D -"
       - "- \u51FB\u6740\u5355\u4F4D -"
-      Flags: 00000000
+      - "\uC8FD\uC740 \uCE90\uB9AD\uD130"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Send Gift
       TermType: 0
@@ -1315,7 +1459,8 @@ MonoBehaviour:
       - Mandar Regalo
       - "\u8D08\u79AE"
       - "\u8D60\u793C"
-      Flags: 00000000
+      - "\uC120\uBB3C \uBCF4\uB0B4\uAE30"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: PvP Rating
       TermType: 0
@@ -1325,7 +1470,8 @@ MonoBehaviour:
       - "Valuaci\xF3n de JcJ"
       - "\u73A9\u5BB6\u5C0D\u6230\u8A55\u5206"
       - "\u73A9\u5BB6\u5BF9\u6218\u8BC4\u5206"
-      Flags: 00000000
+      - "\uD50C\uB808\uC774\uC5B4 VS \uD50C\uB808\uC774\uC5B4 \uD3C9\uAC00"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Your opponent has disconnected.
       TermType: 0
@@ -1335,7 +1481,8 @@ MonoBehaviour:
       - Tu oponente se ha desconectado.
       - "\u4F60\u7684\u5C0D\u624B\u5DF2\u96E2\u7DDA"
       - "\u4F60\u7684\u5BF9\u624B\u5DF2\u79BB\u7EBF"
-      Flags: 00000000
+      - "\uB2F9\uC2E0\uC758 \uC801\uC758 \uC5F0\uACB0\uC774 \uB04A\uACBC\uC2B5\uB2C8\uB2E4"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: You have disconnected.
       TermType: 0
@@ -1345,7 +1492,8 @@ MonoBehaviour:
       - Te has desconectado.
       - "\u4F60\u5DF2\u96E2\u7DDA"
       - "\u4F60\u5DF2\u79BB\u7EBF"
-      Flags: 00000000
+      - "\uC5F0\uACB0\uC774 \uB04A\uACBC\uC2B5\uB2C8\uB2E4"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: PVP ARENAS
       TermType: 0
@@ -1355,7 +1503,8 @@ MonoBehaviour:
       - ARENAS DE JCJ
       - "\u73A9\u5BB6\u5C0D\u6230\u7AF6\u6280\u5834"
       - "\u73A9\u5BB6\u5BF9\u6218\u7ADE\u6280\u573A"
-      Flags: 00000000
+      - "\uD50C\uB808\uC774\uC5B4 VS \uD50C\uB808\uC774\uC5B4 \uBC30\uD2C0 \uC7A5\uC18C"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Are you ready to battle other players? Log in with your Enigma Games account
         to access the PvP arenas.
@@ -1372,7 +1521,10 @@ MonoBehaviour:
         \u7528\u4F60\u7684Enigma Games\u5E33\u865F\u767B\u5165\u4EE5\u9032\u5165\u73A9\u5BB6\u5C0D\u6230\u7AF6\u6280\u5834"
       - "\u4F60\u51C6\u5907\u597D\u548C\u5176\u4ED6\u73A9\u5BB6\u6218\u6597\u4E86\u5417?
         \u7528\u4F60\u7684Enigma Games\u5E10\u53F7\u767B\u5165\u4EE5\u8FDB\u5165\u73A9\u5BB6\u5BF9\u6218\u7ADE\u6280\u573A"
-      Flags: 00000000
+      - "\uB2E4\uB978 \uD50C\uB808\uC774\uC5B4\uC640 \uACA8\uB8F0 \uC900\uBE44\uAC00
+        \uB410\uC2B5\uB2C8\uAE4C?\n \uC560\uB2C8\uADF8\uB9C8 \uAC8C\uC784 \uACC4\uC815\uC73C\uB85C
+        \uB85C\uADF8\uC778\uD558\uC138\uC694."
+      Flags: 0000000000
       Languages_Touch: []
     - Term: KIN CURRENCY
       TermType: 0
@@ -1382,7 +1534,8 @@ MonoBehaviour:
       - MONEDA KIN
       - "KIN \u8CA8\u5E63"
       - "KIN \u8D27\u5E01"
-      Flags: 00000000
+      - "\uD0A8(KIN) \uD654\uD3D0"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: 'Kin is used in Min-Mins to: * Allow players to show appreciation to others
         after battles * Resurrect units that die in battle * Global Gift Box rewards'
@@ -1396,7 +1549,13 @@ MonoBehaviour:
         Recompensas de Cajas de Regalo Globales"
       - "Kin\u5728Min-Mins\u4E2D\u7528\u65BC\uFF1A\n*\u5141\u8A31\u73A9\u5BB6\u5728\u6230\u9B25\u5F8C\u5411\u4ED6\u4EBA\u8868\u793A\u611F\u8B1D\n*\u5FA9\u6D3B\u5728\u6230\u9B25\u4E2D\u6B7B\u4EA1\u7684\u55AE\u4F4D\n*\u5168\u7403\u79AE\u54C1\u76D2\u734E\u52F5"
       - "Kin\u5728Min-Mins\u4E2D\u7528\u4E8E\uFF1A_x000D_\n*\u5141\u8BB8\u73A9\u5BB6\u5728\u6218\u6597\u540E\u5411\u4ED6\u4EBA\u8868\u793A\u611F\u8C22_x000D_\n*\u590D\u6D3B\u5728\u6218\u6597\u4E2D\u6B7B\u4EA1\u7684\u5355\u4F4D_x000D_\n*\u5168\u7403\u793C\u54C1\u76D2\u5956\u52B1"
-      Flags: 00000000
+      - "\uD0A8(KIN) \uD654\uD3D0\uB294 Min-Mins \uAC8C\uC784\uC5D0\uC11C \uB2E4\uC74C\uACFC
+        \uAC19\uC740 \uACBD\uC6B0\uC5D0 \uC0AC\uC6A9\uB429\uB2C8\uB2E4.\n - \uBC30\uD2C0
+        \uD6C4 \uC0C1\uB300\uBC29\uC5D0\uAC8C \uAC10\uC0AC\uB97C \uD45C\uD558\uACE0
+        \uC2F6\uC744\uB54C\n - \uBC30\uD2C0 \uC911 \uC8FD\uC740 \uCE90\uB9AD\uD130
+        \uC720\uB2DB\uC744 \uBD80\uD65C\uD558\uACE0 \uC2F6\uC744\uB54C\n - \uAE00\uB85C\uBC8C
+        \uC120\uBB3C \uBC15\uC2A4 \uB9AC\uC6CC\uC988"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: ENJIN LEGENDS
       TermType: 0
@@ -1406,7 +1565,8 @@ MonoBehaviour:
       - LEYENDAS ENJIN
       - "ENJIN \u50B3\u5947"
       - "ENJIN \u4F20\u5947"
-      Flags: 00000000
+      - "\uC5D4\uC9C4 \uB808\uC804\uB4DC"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: SUMMON
       TermType: 0
@@ -1416,7 +1576,8 @@ MonoBehaviour:
       - CONVOCAR
       - "\u53EC\u559A"
       - "\u53EC\u5524"
-      Flags: 00000000
+      - "\uCE90\uB9AD\uD130 \uC720\uB2DB \uBD88\uB7EC\uC624\uAE30"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Summons remaining
       TermType: 0
@@ -1426,7 +1587,8 @@ MonoBehaviour:
       - Convocaciones restantes
       - "\u5269\u9918\u53EC\u559A\u6B21\u6578"
       - "\u5269\u4F59\u53EC\u5524\u6B21\u6570"
-      Flags: 00000000
+      - "\uCE90\uB9AD\uD130 \uC720\uB2DB \uC18C\uD658 \uB0A8\uC740 \uD69F\uC218"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: VS
       TermType: 0
@@ -1436,7 +1598,8 @@ MonoBehaviour:
       - VS
       - "\u8207"
       - "\u4E0E"
-      Flags: 00000000
+      - VS
+      Flags: 0000000000
       Languages_Touch: []
     - Term: KIN
       TermType: 0
@@ -1446,7 +1609,8 @@ MonoBehaviour:
       - KIN
       - KIN
       - KIN
-      Flags: 00000000
+      - "\uD0A8(KIN)"
+      Flags: 0000000000
       Languages_Touch: []
     - Term: GLOBAL GIFT PROGRESS
       TermType: 0
@@ -1456,7 +1620,19 @@ MonoBehaviour:
       - PROGRESO DE REGALO GLOBAL
       - 
       - 
-      Flags: 00000000
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: ENJIN REWARDS
+      TermType: 0
+      Description: 
+      Languages:
+      - ENJIN REWARDS
+      - RECOMPENSAS ENJIN
+      - 
+      - 
+      - 
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Enjin Legend tokens required
       TermType: 0
@@ -1466,7 +1642,8 @@ MonoBehaviour:
       - Fichas de Leyenda Enjin requeridos
       - 
       - 
-      Flags: 00000000
+      - 
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Min-Mins Token required
       TermType: 0
@@ -1476,7 +1653,8 @@ MonoBehaviour:
       - Ficha de Min-Mins requerido
       - 
       - 
-      Flags: 00000000
+      - 
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Enjin MFT required
       TermType: 0
@@ -1486,7 +1664,8 @@ MonoBehaviour:
       - MFT Enjin requerido
       - 
       - 
-      Flags: 00000000
+      - 
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Damage
       TermType: 0
@@ -1496,7 +1675,8 @@ MonoBehaviour:
       - "Da\xF1o"
       - 
       - 
-      Flags: 00000000
+      - 
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Health
       TermType: 0
@@ -1506,7 +1686,8 @@ MonoBehaviour:
       - Salud
       - 
       - 
-      Flags: 00000000
+      - 
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Power
       TermType: 0
@@ -1516,7 +1697,8 @@ MonoBehaviour:
       - Poder
       - 
       - 
-      Flags: 00000000
+      - 
+      Flags: 0000000000
       Languages_Touch: []
     - Term: TEAM BOOST SELECTION
       TermType: 0
@@ -1526,7 +1708,8 @@ MonoBehaviour:
       - "SELECCI\xD3N DE AUMENTO PARA EQUIPO"
       - 
       - 
-      Flags: 00000000
+      - 
+      Flags: 0000000000
       Languages_Touch: []
     - Term: 'Category:'
       TermType: 0
@@ -1536,7 +1719,8 @@ MonoBehaviour:
       - "Categor\xEDa:"
       - 
       - 
-      Flags: 00000000
+      - 
+      Flags: 0000000000
       Languages_Touch: []
     - Term: 'Bonus:'
       TermType: 0
@@ -1546,7 +1730,8 @@ MonoBehaviour:
       - 'Bono:'
       - 
       - 
-      Flags: 00000000
+      - 
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Apochrome Sword
       TermType: 0
@@ -1556,7 +1741,8 @@ MonoBehaviour:
       - Espada Apochrome
       - 
       - 
-      Flags: 00000000
+      - 
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Soulshift Armor
       TermType: 0
@@ -1566,7 +1752,8 @@ MonoBehaviour:
       - Armadura Cambio de Alma
       - 
       - 
-      Flags: 00000000
+      - 
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Shadowsong
       TermType: 0
@@ -1576,7 +1763,8 @@ MonoBehaviour:
       - "Canci\xF3n Sombr\xEDa"
       - 
       - 
-      Flags: 00000000
+      - 
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Mark of the Bull
       TermType: 0
@@ -1586,7 +1774,8 @@ MonoBehaviour:
       - Marca del Toro
       - 
       - 
-      Flags: 00000000
+      - 
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Arena 1-6
       TermType: 0
@@ -1596,7 +1785,8 @@ MonoBehaviour:
       - Arena 1-6
       - 
       - 
-      Flags: 00000000
+      - 
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Search
       TermType: 0
@@ -1606,7 +1796,8 @@ MonoBehaviour:
       - Buscar
       - 
       - 
-      Flags: 00000000
+      - 
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Create
       TermType: 0
@@ -1616,7 +1807,8 @@ MonoBehaviour:
       - Crear
       - 
       - 
-      Flags: 00000000
+      - 
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Name is already used. Please provide another.
       TermType: 0
@@ -1626,7 +1818,8 @@ MonoBehaviour:
       - "El nombre est\xE1 ocupado. Por favor proporcione otro."
       - 
       - 
-      Flags: 00000000
+      - 
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Enter name for a Private Room
       TermType: 0
@@ -1636,7 +1829,8 @@ MonoBehaviour:
       - Introduzca nombre para Sala Privada
       - 
       - 
-      Flags: 00000000
+      - 
+      Flags: 0000000000
       Languages_Touch: []
     - Term: 'Ping:'
       TermType: 0
@@ -1646,7 +1840,8 @@ MonoBehaviour:
       - 'Ping:'
       - 
       - 
-      Flags: 00000000
+      - 
+      Flags: 0000000000
       Languages_Touch: []
     - Term: 'Rating:'
       TermType: 0
@@ -1656,7 +1851,8 @@ MonoBehaviour:
       - "Valuaci\xF3n:"
       - 
       - 
-      Flags: 00000000
+      - 
+      Flags: 0000000000
       Languages_Touch: []
     - Term: Open
       TermType: 0
@@ -1666,7 +1862,8 @@ MonoBehaviour:
       - Abierto
       - 
       - 
-      Flags: 00000000
+      - 
+      Flags: 0000000000
       Languages_Touch: []
     CaseInsensitiveTerms: 0
     OnMissingTranslation: 1
@@ -1684,12 +1881,15 @@ MonoBehaviour:
     - Name: Chinese_Simplified
       Code: 
       Flags: 0
+    - Name: Korean
+      Code: ko
+      Flags: 0
     IgnoreDeviceLanguage: 0
     _AllowUnloadingLanguages: 0
     Google_WebServiceURL: https://script.google.com/macros/s/AKfycbw05ISkGCPtIS0hMzFD5jshgfH09mIP6BAxRKhWsA/exec
     Google_SpreadsheetKey: 1iIWCtExuyR2XXyYkJv6y83PTVMPC4FxzSITGGroefcg
     Google_SpreadsheetName: I2Loc MinMins Localization
-    Google_LastUpdatedVersion: 1579809777284
+    Google_LastUpdatedVersion: 1579824744200
     Google_Password: shalwend
     GoogleUpdateFrequency: 3
     GoogleInEditorCheckFrequency: 2
