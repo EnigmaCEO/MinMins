@@ -18,6 +18,7 @@ public class GameConstants
         public const string DEFENSE = "Defense";
         public const string HEALTH = "Health";
         public const string POWER = "Power";
+        public const string SIZE = "Size";
     }
 
     public class TeamBoostEnjinTokens
@@ -34,6 +35,7 @@ public class GameConstants
         public const string DEFENSE = "Enjin Defense Ore Item";
         public const string HEALTH = "Enjin Health Ore Item";
         public const string POWER = "Enjin Power Ore Item";
+        public const string SIZE = "Enjin Size Ore Item";
     }
 
     public class OreTier

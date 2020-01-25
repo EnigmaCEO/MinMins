@@ -24,6 +24,9 @@ public class GameHacks : SingletonMonobehaviour<GameHacks>
     public bool CreateWarPrepLineRendererOnUpdate;
 
     public ValueHack ForceTeamBoostReward = new ValueHack("True");
+    public ValueHack TeamBoostRewardCategory = new ValueHack("Size");
+    public ValueHack SizeBonus = new ValueHack("10");
+    public ValueHack SetBonuses = new ValueHack("100");
 
     public ValueHack BuyResult = new ValueHack("True");
 

@@ -65,7 +65,7 @@ public class MinMinUnit : NetworkEntity
 
         object[] data = base.GetInstantiationData();
         if (data != null)
-            setUpUnitForWar((string)data[0], (string)data[1], (int)data[2], (float)data[3], (float)data[4]);
+            setUpUnitForWar((string)data[0], (string)data[1], (int)data[2], (float)data[3], (float)data[4], (int)data[5]);
 
         Tier = GameInventory.Instance.GetUnitTier(gameObject.name);
     }
@@ -96,7 +96,7 @@ public class MinMinUnit : NetworkEntity
         return _spriteTransform.position;
     }
 
-    private void setUpUnitForWar(string unitName, string teamName, int teamIndex, float posX, float posY)
+    private void setUpUnitForWar(string unitName, string teamName, int teamIndex, float posX, float posY, int sizeBonus)
     {
         //Debug.LogWarning("MinMinUnit::setUpUnitForWar -> unitName: " + unitName + " teamName: " + teamName + " teamIndex: " + teamIndex);
 
@@ -106,11 +106,23 @@ public class MinMinUnit : NetworkEntity
 
         bool isHost = (teamName == GameNetwork.TeamNames.HOST);
 
+        Vector3 localScale;
+
         if (!isHost)
         {
-            Vector3 localScale = _spriteTransform.localScale;
+            localScale = _spriteTransform.localScale;
             _spriteTransform.localScale = new Vector3(-localScale.x, localScale.y, localScale.z);
         }
+
+        if (GameHacks.Instance.SizeBonus.Enabled)
+        {
+            sizeBonus = GameHacks.Instance.SizeBonus.ValueAsInt;
+        }
+
+        float scaleFactor = (100.0f - (float)sizeBonus) / 100.0f;
+
+        localScale = _spriteTransform.localScale;
+        _spriteTransform.localScale = new Vector3(localScale.x * scaleFactor, localScale.y * scaleFactor, localScale.z * scaleFactor);
 
         _spriteTransform.localPosition = new Vector3(posX, posY, _spriteTransform.localPosition.z);
     }

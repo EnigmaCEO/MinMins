@@ -45,9 +45,6 @@ public class NewLobby : NetworkEntity
 
         _messagePopUp.OnDismissButtonDownCallback = onMessagePopUpDismiss;
 
-        StartCoroutine(handleRoomListUpdate());
-        StartCoroutine(handlePingUpdates());
-
         //displayTestGrid();
     }
 
@@ -104,7 +101,7 @@ public class NewLobby : NetworkEntity
 
     private void onBackButtonDown()
     {
-        NetworkManager.LeaveLobby();
+        NetworkManager.Disconnect();
         NetworkManager.LoadScene(GameConstants.Scenes.UNIT_SELECT);
     }
 
@@ -181,6 +178,9 @@ public class NewLobby : NetworkEntity
     {
         Debug.LogWarning("Lobby::OnJoinedLobby");
         NetworkManager.GetRoomList();  //Request room list. Wait for OnReceivedRoomListUpdate
+
+        StartCoroutine(handleRoomListUpdate());
+        StartCoroutine(handlePingUpdates());
     }
 
     //Will no longer be received after entering a room

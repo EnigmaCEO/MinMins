@@ -91,6 +91,12 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         public const string SPECTATING = "Spectating";
         public const string TEAM_UNITS = "Unit_Names";
         public const string READY_TO_FIGHT = "Ready_To_Fight";
+
+        public const string POWER_BONUS = "Effect_Bonus";
+        public const string DAMAGE_BONUS = "Damage_Bonus";
+        public const string DEFENSE_BONUS = "Defense_Bonus";
+        public const string HEALTH_BONUS = "Health_Bonus";
+        public const string SIZE_BONUS = "Size_Bonus";
     }
 
     public class RoomCustomProperties
@@ -171,6 +177,9 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
     public delegate void OnReadyToFightDelegate(string teamName, bool ready);
     static public OnReadyToFightDelegate OnReadyToFightCallback;
+
+    //public delegate void OnSizeBonusChangedDelegate(string teamName, int bonus);
+    //static public OnSizeBonusChangedDelegate OnSizeBonusChangedCallback;
 
     public delegate void OnRoundStartedDelegate(int roundNumber);
     static public OnRoundStartedDelegate OnRoundStartedCallback;
@@ -521,18 +530,31 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
             if (idPart == PlayerCustomProperties.RATING)
             {
                 if (OnPlayerRatingSetCallback != null)
+                {
                     OnPlayerRatingSetCallback(int.Parse(value));
+                }
             }
             else if (idPart == PlayerCustomProperties.TEAM_UNITS)
             {
                 if (OnPlayerTeamUnitsSetCallback != null)
+                {
                     OnPlayerTeamUnitsSetCallback(teamName, value);
+                }
             }
             else if (idPart == PlayerCustomProperties.READY_TO_FIGHT)
             {
                 if (OnReadyToFightCallback != null)
+                {
                     OnReadyToFightCallback(teamName, bool.Parse(value));
+                }
             }
+            //else if (idPart == PlayerCustomProperties.SIZE_BONUS)
+            //{
+            //    if (OnSizeBonusChangedCallback != null)
+            //    {
+            //        OnSizeBonusChangedCallback(teamName, int.Parse(value));
+            //    }
+            //}
         }
     }
 
@@ -575,35 +597,10 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         int unitTier = GameInventory.Instance.GetUnitTier(unitName);
         int baseMaxHealth = unitTier * _unitHealthByTier;
 
-        int healthBonus = 0;
-        int damageBonus = 0;
-        int defenseBonus = 0;
-        int powerBonus = 0;
-
-        TeamBoostItem selectedBoostItem = GameStats.Instance.TeamBoostSelected;
-
-        if (selectedBoostItem != null)
-        {
-            string boostCategory = selectedBoostItem.Category;
-            int boostBonus = selectedBoostItem.Bonus;
-
-            if (boostCategory == GameConstants.TeamBoostCategory.DAMAGE)
-            {
-                damageBonus = boostBonus;
-            }
-            else if (boostCategory == GameConstants.TeamBoostCategory.DEFENSE)
-            {
-                defenseBonus = boostBonus;
-            }
-            else if (boostCategory == GameConstants.TeamBoostCategory.HEALTH)
-            {
-                healthBonus = boostBonus;
-            }
-            else if (boostCategory == GameConstants.TeamBoostCategory.POWER)
-            {
-                powerBonus = boostBonus;
-            }
-        }
+        int healthBonus = NetworkManager.GetAnyPlayerCustomPropertyAsInt(GameNetwork.PlayerCustomProperties.HEALTH_BONUS, teamName, networkPlayerId);
+        int damageBonus = NetworkManager.GetAnyPlayerCustomPropertyAsInt(GameNetwork.PlayerCustomProperties.DAMAGE_BONUS, teamName, networkPlayerId);
+        int defenseBonus = NetworkManager.GetAnyPlayerCustomPropertyAsInt(GameNetwork.PlayerCustomProperties.DEFENSE_BONUS, teamName, networkPlayerId);
+        int powerBonus = NetworkManager.GetAnyPlayerCustomPropertyAsInt(GameNetwork.PlayerCustomProperties.POWER_BONUS, teamName, networkPlayerId);
 
         string maxHealth = getIntStatByLevelAsString(baseMaxHealth, unitLevel, healthBonus);
 
@@ -614,7 +611,6 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         SetAnyPlayerUnitProperty(UnitPlayerProperties.STRENGHT, unitName, strenghtAtLevel, teamName, networkPlayerId);
         SetAnyPlayerUnitProperty(UnitPlayerProperties.DEFENSE, unitName, defenseAtLevel, teamName, networkPlayerId);
         SetAnyPlayerUnitProperty(UnitPlayerProperties.EFFECT_SCALE, unitName, effectScaleAtLevel, teamName, networkPlayerId);
-
 
         SetUnitRoomProperty(UnitRoomProperties.MAX_HEALTH, teamName, unitName, maxHealth);
         

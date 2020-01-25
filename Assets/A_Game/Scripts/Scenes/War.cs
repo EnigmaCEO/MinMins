@@ -125,6 +125,7 @@ public class War : NetworkEntity
         NetworkManager.OnDisconnectedFromNetworkCallback += onDisconnectedFromNetwork;
 
         GameNetwork.OnPlayerTeamUnitsSetCallback += onPlayerTeamUnitsSet;
+        //GameNetwork.OnSizeBonusChangedCallback += onSizeBonusChanged;
         GameNetwork.OnReadyToFightCallback += onReadyToFight;
         GameNetwork.OnUnitHealthSetCallback += onUnitHealthSet;
         GameNetwork.OnTeamHealthSetCallback += onTeamHealthSet;
@@ -296,6 +297,7 @@ public class War : NetworkEntity
         NetworkManager.OnDisconnectedFromNetworkCallback -= onDisconnectedFromNetwork;
 
         GameNetwork.OnPlayerTeamUnitsSetCallback -= onPlayerTeamUnitsSet;
+        //GameNetwork.OnSizeBonusChangedCallback -= onSizeBonusChanged;
         GameNetwork.OnReadyToFightCallback -= onReadyToFight;
         GameNetwork.OnUnitHealthSetCallback -= onUnitHealthSet;
         GameNetwork.OnTeamHealthSetCallback -= onTeamHealthSet;
@@ -465,6 +467,11 @@ public class War : NetworkEntity
                 instantiateRewardChests(GridNames.TEAM_1);
         }
         
+    }
+
+    private void onSizeBonusChanged(string teamName, int bonus)
+    {
+
     }
 
     private void onReadyToFight(string teamName, bool ready)
@@ -1207,6 +1214,7 @@ public class War : NetworkEntity
             moveCloudsToOppositeSide();
         }
 
+        setLocalTeamBonuses();
         setLocalTeamUnits();
 
         _setupWasCalled = true;
@@ -1225,6 +1233,55 @@ public class War : NetworkEntity
         }
 
         print("War::determinLocalPlayerTeam -> _localPlayerTeam: " + _localPlayerTeam);
+    }
+
+    private void setLocalTeamBonuses()
+    {
+        TeamBoostItem selectedBoostItem = GameStats.Instance.TeamBoostSelected;
+
+        if (selectedBoostItem != null)
+        {
+            string boostCategory = selectedBoostItem.Category;
+            int boostBonus = selectedBoostItem.Bonus;
+
+            int healthBonus = 0;
+            int damageBonus = 0;
+            int defenseBonus = 0;
+            int powerBonus = 0;
+            int sizeBonus = 0;
+
+            if (GameHacks.Instance.SetBonuses.Enabled)
+            {
+                boostBonus = GameHacks.Instance.SetBonuses.ValueAsInt;
+            }
+
+            if (boostCategory == GameConstants.TeamBoostCategory.DAMAGE)
+            {
+                damageBonus = boostBonus;
+            }
+            else if (boostCategory == GameConstants.TeamBoostCategory.DEFENSE)
+            {
+                defenseBonus = boostBonus;
+            }
+            else if (boostCategory == GameConstants.TeamBoostCategory.HEALTH)
+            {
+                healthBonus = boostBonus;
+            }
+            else if (boostCategory == GameConstants.TeamBoostCategory.POWER)
+            {
+                powerBonus = boostBonus;
+            }
+            else if (boostCategory == GameConstants.TeamBoostCategory.SIZE)
+            {
+                sizeBonus = boostBonus;
+            }
+
+            NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.DAMAGE_BONUS, damageBonus.ToString(), LocalPlayerTeam);
+            NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.DEFENSE_BONUS, defenseBonus.ToString(), LocalPlayerTeam);
+            NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.HEALTH_BONUS, healthBonus.ToString(), LocalPlayerTeam);
+            NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.POWER_BONUS, powerBonus.ToString(), LocalPlayerTeam);
+            NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.SIZE_BONUS, sizeBonus.ToString(), LocalPlayerTeam);
+        }
     }
 
     private void setLocalTeamUnits()
@@ -1462,16 +1519,24 @@ public class War : NetworkEntity
                 break;
         }
 
+        string guestTeam = GameNetwork.TeamNames.GUEST;
+
         for (int i = 0; i < 5; i++)
         {
-            GameNetwork.SetLocalPlayerUnitProperty(GameNetwork.UnitPlayerProperties.EXPERIENCE, unitsString.Split("|"[0])[i], exp.ToString(), GameNetwork.TeamNames.GUEST);
+            GameNetwork.SetLocalPlayerUnitProperty(GameNetwork.UnitPlayerProperties.EXPERIENCE, unitsString.Split("|"[0])[i], exp.ToString(), guestTeam);
 
             Vector2 pos = getRandomBattlefieldPosition();
             string posString = pos.x.ToString() + NetworkManager.Separators.VALUES + pos.y.ToString();
-            GameNetwork.SetLocalPlayerUnitProperty(GameNetwork.UnitPlayerProperties.POSITION, unitsString.Split("|"[0])[i], posString, GameNetwork.TeamNames.GUEST);
+            GameNetwork.SetLocalPlayerUnitProperty(GameNetwork.UnitPlayerProperties.POSITION, unitsString.Split("|"[0])[i], posString, guestTeam);
         }
 
-        NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.TEAM_UNITS, unitsString, GameNetwork.TeamNames.GUEST);
+        NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.DAMAGE_BONUS, "0", guestTeam);
+        NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.DEFENSE_BONUS, "0", guestTeam);
+        NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.HEALTH_BONUS, "0", guestTeam);
+        NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.POWER_BONUS, "0", guestTeam);
+        NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.SIZE_BONUS, "0", guestTeam);
+
+        NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.TEAM_UNITS, unitsString, guestTeam);
     }
 
     private void setUpPvpAiTeamUnits()
@@ -1506,7 +1571,15 @@ public class War : NetworkEntity
         unitsString = setGuestAiUnits(hostSilverUnits, guestSilverUnits, unitsString);
         unitsString = setGuestAiUnits(hostGoldUnits, guestGoldUnits, unitsString);
 
-        NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.TEAM_UNITS, unitsString, GameNetwork.TeamNames.GUEST);
+        string guestTeam = GameNetwork.TeamNames.GUEST;
+
+        NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.DAMAGE_BONUS, "0", guestTeam);
+        NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.DEFENSE_BONUS, "0", guestTeam);
+        NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.HEALTH_BONUS, "0", guestTeam);
+        NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.POWER_BONUS, "0", guestTeam);
+        NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.SIZE_BONUS, "0", guestTeam);
+
+        NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.TEAM_UNITS, unitsString, guestTeam);
     }
 
     private string setGuestAiUnits(List<string> hostUnitNames, List<string> guestUnitNames, string unitsString)
@@ -1574,6 +1647,7 @@ public class War : NetworkEntity
         int networkPlayerId = GameNetwork.GetTeamNetworkPlayerId(teamName);
         string unitNetworkViewsIdsString = "";
 
+        int sizeBonus = NetworkManager.GetAnyPlayerCustomPropertyAsInt(GameNetwork.PlayerCustomProperties.SIZE_BONUS, teamName, networkPlayerId);
 
         for (int i = 0; i < teamLength; i++)
         {
@@ -1591,7 +1665,7 @@ public class War : NetworkEntity
             if (requiresHorizontalInversion)
                 posX = battlefieldCenterX - (posX - battlefieldCenterX); 
 
-            object[] instantiationData = { unitName, teamName, i, posX, posY };
+            object[] instantiationData = { unitName, teamName, i, posX, posY, sizeBonus };
 
             GameObject unitGameObject = NetworkManager.InstantiateObject("Prefabs/MinMinUnits/" + unitName, Vector3.zero, Quaternion.identity, 0, instantiationData);
             int unitNetworkViewId = unitGameObject.GetComponent<NetworkEntity>().GetNetworkViewId();
@@ -2206,6 +2280,8 @@ public class War : NetworkEntity
     {
         _actionPopUp.Close();
 
+        GameHacks gameHacks = GameHacks.Instance;
+
         TeamBoostItem boostReward = null;
         bool gotBoostReward = false;
 
@@ -2231,12 +2307,27 @@ public class War : NetworkEntity
 
             int bonus = UnityEngine.Random.Range(minBonus, maxBonus);
             string[] categories = { GameConstants.TeamBoostCategory.DAMAGE, GameConstants.TeamBoostCategory.DEFENSE,
-                                        GameConstants.TeamBoostCategory.HEALTH, GameConstants.TeamBoostCategory.POWER };
+                                    GameConstants.TeamBoostCategory.HEALTH, GameConstants.TeamBoostCategory.POWER,
+                                    GameConstants.TeamBoostCategory.SIZE };
 
             string[] baseNames = { GameConstants.TeamBoostEnjinOreItems.DAMAGE, GameConstants.TeamBoostEnjinOreItems.DEFENSE,
-                                        GameConstants.TeamBoostEnjinOreItems.HEALTH, GameConstants.TeamBoostEnjinOreItems.POWER };
+                                   GameConstants.TeamBoostEnjinOreItems.HEALTH, GameConstants.TeamBoostEnjinOreItems.POWER,
+                                   GameConstants.TeamBoostEnjinOreItems.SIZE };
 
-            int randomNumber = UnityEngine.Random.Range(0, 3);
+            int randomNumber = UnityEngine.Random.Range(0, 5);  //Picks from index 0 to 4
+
+            if (gameHacks.TeamBoostRewardCategory.Enabled)
+            {
+                for (int i = 0; i < categories.Length; i++)
+                {
+                    if (categories[i] == gameHacks.TeamBoostRewardCategory.Value)
+                    {
+                        randomNumber = i;
+                        break;
+                    }
+                }
+            }
+
             string rewardCategory = categories[randomNumber];
             string rewardBaseName = baseNames[randomNumber];
 

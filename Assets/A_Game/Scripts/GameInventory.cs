@@ -530,6 +530,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         addDefaultOreItems(GameConstants.TeamBoostEnjinOreItems.DEFENSE, GameConstants.TeamBoostCategory.DEFENSE);
         addDefaultOreItems(GameConstants.TeamBoostEnjinOreItems.HEALTH, GameConstants.TeamBoostCategory.HEALTH);
         addDefaultOreItems(GameConstants.TeamBoostEnjinOreItems.POWER, GameConstants.TeamBoostCategory.POWER);
+        addDefaultOreItems(GameConstants.TeamBoostEnjinOreItems.SIZE, GameConstants.TeamBoostCategory.SIZE);
 
         //SaveOre();
         //===========================================================================================

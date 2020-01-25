@@ -15,6 +15,7 @@ public class TeamBoostSelection : EnigmaScene
     [SerializeField] private BoostInfoPopUp _boostInfoPopUp;
 
     private TeamBoostGridItem _selectedGridItem;
+    private TeamBoostItem _selectedTeamBoost; 
 
     void Start()
     {
@@ -155,7 +156,7 @@ public class TeamBoostSelection : EnigmaScene
     }
 
     private void onNextButtonDown()
-    {
+    { 
         SceneManager.LoadScene(GameConstants.Scenes.WAR_PREP);
     }
 
