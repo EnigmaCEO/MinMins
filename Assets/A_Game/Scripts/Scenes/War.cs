@@ -1806,7 +1806,7 @@ public class War : NetworkEntity
 
     public void OnMatchResultsDismissButtonDown()
     {
-        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
 
         //GameNetwork.ClearLocalTeamUnits(_localPlayerTeam);
         NetworkManager.Disconnect();
