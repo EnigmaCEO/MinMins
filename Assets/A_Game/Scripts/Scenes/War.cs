@@ -646,8 +646,12 @@ public class War : NetworkEntity
         unit.gameObject.SetActive(false);
 
         //if ((GetUsesAi() && (teamName == GameNetwork.TeamNames.HOST)) || (teamName == _localPlayerTeam))
-        if(teamName == _localPlayerTeam)
+        if (teamName == _localPlayerTeam)
+        {
             GameInventory.Instance.HandleUnitDeath(unitName);
+        }
+
+        SoundManager.Play(GameConstants.SoundNames.DEATH, SoundManager.AudioTypes.Sfx);
 
         if (GetIsHost())
         {
@@ -973,6 +977,8 @@ public class War : NetworkEntity
         {
             if (!_actionPopUp.gameObject.GetActive() && Input.GetMouseButtonDown(0))
             {
+                SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+
                 Vector3 tapWorldPosition = _gameCamera.MyCamera.ScreenToWorldPoint(Input.mousePosition);
                 GameConfig gameConfig = GameConfig.Instance;
 
@@ -1794,11 +1800,14 @@ public class War : NetworkEntity
 
     public void onActionPopUpDismissButtonDown()
     {
+        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
         sendActionPopUpClose();
     }
 
     public void OnMatchResultsDismissButtonDown()
     {
+        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+
         //GameNetwork.ClearLocalTeamUnits(_localPlayerTeam);
         NetworkManager.Disconnect();
         //SceneManager.LoadScene(GameConstants.Scenes.LEVELS);

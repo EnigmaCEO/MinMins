@@ -11,6 +11,8 @@ public class HealerArea : ActionArea
 
         if (_warRef.GetIsHost())
             _warRef.AddHealerArea(this);
+
+        SoundManager.Play(GameConstants.SoundNames.HEAL, SoundManager.AudioTypes.Sfx);
     }
 
     override protected void OnTriggerEnter2D(Collider2D coll)

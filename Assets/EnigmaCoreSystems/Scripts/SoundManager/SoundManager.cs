@@ -146,7 +146,14 @@ public class SoundManager : Manageable<SoundManager>
             return null;
 
         if (type == SoundManager.AudioTypes.Music)
+        {
             _lastSongPlayed = clipName;
+
+            if (EnigmaHacks.Instance.MuteMusic)
+            {
+                return null;
+            }
+        }
 
         float vol = 1;
         if (type == SoundManager.AudioTypes.Sfx)

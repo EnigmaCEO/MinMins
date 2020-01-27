@@ -101,12 +101,16 @@ public class NewLobby : NetworkEntity
 
     private void onBackButtonDown()
     {
+        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
+
         NetworkManager.Disconnect();
         NetworkManager.LoadScene(GameConstants.Scenes.UNIT_SELECT);
     }
 
     private void onCreateButtonDown()
     {
+        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+
         Debug.Log("onCreateButtonDown");
         if (_privateRoomNameInput.text == "")
         {
@@ -142,6 +146,8 @@ public class NewLobby : NetworkEntity
 
     private void onMessagePopUpDismiss(string message)
     {
+        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
+
         if (message == GameConstants.LobbyPopUpMessages.PRIVATE_ROOM_ALREADY_USED)
         {
             _privateRoomNameInput.text = "";

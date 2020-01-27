@@ -23,6 +23,8 @@ public class DestroyerArea : ActionArea
             foreach (ParticleSystem particles in _effect.GetComponentsInChildren<ParticleSystem>())
                 particles.startSize = this.transform.localScale.x * ScaleFactorToParticleSizeFactor;
         }
+
+        SoundManager.Play(GameConstants.SoundNames.DESTROY, SoundManager.AudioTypes.Sfx);
     }
 
     override protected void OnTriggerEnter2D(Collider2D coll)

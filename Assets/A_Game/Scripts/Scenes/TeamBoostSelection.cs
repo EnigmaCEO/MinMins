@@ -108,6 +108,7 @@ public class TeamBoostSelection : EnigmaScene
             {
                 if (_selectedGridItem == clickedGridItem)
                 {
+                    SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
                     gridItem.Deselect();
                     _boostInfoPopUp.Close();
 
@@ -116,6 +117,7 @@ public class TeamBoostSelection : EnigmaScene
                 }
                 else
                 {
+                    SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
                     gridItem.Select();
                     _boostInfoPopUp.Open(selectedItem.Name, selectedItem.Category, selectedItem.Bonus);
 
@@ -156,12 +158,14 @@ public class TeamBoostSelection : EnigmaScene
     }
 
     private void onNextButtonDown()
-    { 
+    {
+        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
         SceneManager.LoadScene(GameConstants.Scenes.WAR_PREP);
     }
 
     private void onBackButtonDown()
     {
+        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
         SceneManager.LoadScene(GameConstants.Scenes.UNIT_SELECT);
     }
 }

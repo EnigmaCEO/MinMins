@@ -44,6 +44,8 @@ public class PrepMinMinSprite : MonoBehaviour
 
     void OnMouseDown()
     {
+        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+
         //print("OnMouseDown: " + gameObject.name);
         _screenPoint = Camera.main.WorldToScreenPoint(gameObject.transform.position);
 
@@ -67,6 +69,7 @@ public class PrepMinMinSprite : MonoBehaviour
 
     void OnMouseUp()
     {
+        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
         dropOnBattlefield();
     }
 

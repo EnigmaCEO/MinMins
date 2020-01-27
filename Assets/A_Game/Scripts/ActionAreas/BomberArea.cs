@@ -8,6 +8,7 @@ public class BomberArea : ActionArea
     private GameObject _colliderEffect;
     private GameObject _chargeEffect;
 
+
     override protected void OnTriggerEnter2D(Collider2D coll)
     {
         base.OnTriggerEnter2D(coll);
@@ -42,7 +43,9 @@ public class BomberArea : ActionArea
     {
         base.enableCollider(enabled);
 
-        if(_colliderEffect != null)
+        SoundManager.Play(GameConstants.SoundNames.BOMB, SoundManager.AudioTypes.Sfx);
+
+        if (_colliderEffect != null)
             _colliderEffect.SetActive(true);
 
         if (_chargeEffect != null)

@@ -127,6 +127,7 @@ public class Main : EnigmaScene
     public void OnSinglePlayerButtonDown()
     {
         print("OnSinglePlayerButtonDown");
+        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
         GameStats.Instance.Mode = GameStats.Modes.SinglePlayer;
         goToLevels();
     }
@@ -134,6 +135,7 @@ public class Main : EnigmaScene
     public void OnPvpButtonDown()
     {
         print("OnPvpButtonDown");
+        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
 
         if (NetworkManager.LoggedIn)
         {
@@ -147,11 +149,13 @@ public class Main : EnigmaScene
     public void OnStoreButtonDown()
     {
         print("OnStoreButtonDown");
+        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
         SceneManager.LoadScene(GameConstants.Scenes.STORE);
     }
 
     public void ShowLoginForm()
     {
+        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
         _loginModal.SetActive(true);
         _loginModal.GetComponent<EnjinLogin>().resetForm();
     }
@@ -172,6 +176,7 @@ public class Main : EnigmaScene
     {
         //Enjin.CleanUpPlatform();
         StopCoroutine("handleEnjinLinkingCheck");
+        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
         _enjinWindow.gameObject.SetActive(false);
     }
 
@@ -275,11 +280,14 @@ public class Main : EnigmaScene
 
     public void closeQRDialog()
     {
+        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
         _enjinWindow.SetActive(false);
     }
 
     public void Logout()
     {
+        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
+
         NetworkManager.Logout();
         GameNetwork.Instance.ResetLoginValues();
 
@@ -296,6 +304,7 @@ public class Main : EnigmaScene
 
     public void closeKinDialog()
     {
+        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
         decimal balance = _kinWrapper.GetBalance();
         if (balance == 0)
         {

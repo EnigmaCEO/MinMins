@@ -11,6 +11,8 @@ public class TankArea : ActionArea
 
         if (_warRef.GetIsHost())
             _warRef.AddTankArea(this);
+
+        SoundManager.Play(GameConstants.SoundNames.GUARD, SoundManager.AudioTypes.Sfx);
     }
 
     override protected void OnTriggerEnter2D(Collider2D coll)

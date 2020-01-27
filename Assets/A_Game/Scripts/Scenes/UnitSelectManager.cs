@@ -146,22 +146,26 @@ public class UnitSelectManager : EnigmaScene
 
     private void onNextButtonDown()
     {
+        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
         SceneManager.LoadScene(GameConstants.Scenes.TEAM_BOOST);
     }
 
     private void onInfoBackButtonDown()
     {
+        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
         disableUnitInfo();
         enableTeamGrid();
     }
 
     private void onSceneBackButtonDown()
     {
+        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
         SceneManager.LoadScene(GameConstants.Scenes.LEVELS);
     }
 
     private void onUnitFightButtonDown(string unitName)
     {
+        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
         _selectedUnitName = unitName;
 
         int slotsLength = _teamGridContent.childCount;
@@ -187,6 +191,7 @@ public class UnitSelectManager : EnigmaScene
 
     private void onUnitInfoButtonDown(string unitName)
     {
+        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
         _selectedUnitName = unitName;
         loadUnitInfo();
 
@@ -199,6 +204,7 @@ public class UnitSelectManager : EnigmaScene
 
     private void onTeamSlotButtonDown(int slotIndex, Image slotImage)
     {
+        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
         GameObject unitGameObject = _unitsGridContent.Find(_selectedUnitName).gameObject;
         unitGameObject.SetActive(false);
 

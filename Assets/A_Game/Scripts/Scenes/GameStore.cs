@@ -112,6 +112,8 @@ public class GameStore : EnigmaScene
 
     public void OnPackBuyButtonDown(int packIndex)
     {
+        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+
         _selectedPackIndex = packIndex;
 
         _lootBoxBuyConfirmPopUp.SetPackName(_confirmPopUpPackNames[packIndex]);
@@ -124,24 +126,32 @@ public class GameStore : EnigmaScene
 
     public void OnLootBoxOpenPopUpDismissButtonDown()
     {
+        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
         _openLootBoxPopUp.Close();
         handleFreeLootBoxGifts();
     }
 
     public void OnBuyResultPopUpDismissButtonDown()
     {
+        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
         _buyResultPopUp.Close();
     }
 
     public void onExtraLootBoxPopUpDismissButtonDown()
     {
+        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
         grantBox(GameInventory.Tiers.BRONZE, 2);
         _extraLootBoxPopUp.SetActive(false);
     }
 
     public void onEnjinPopUpDismissButtonDown()
     {
-        if (GameInventory.Instance.GetEnjinAttempts() < 1) return;
+        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
+
+        if (GameInventory.Instance.GetEnjinAttempts() < 1)
+        {
+            return;
+        }
 
         GameInventory.Instance.AddMissingEnjinUnits();
         
@@ -150,6 +160,7 @@ public class GameStore : EnigmaScene
 
     public void onMinMinPopUpDismissButtonDown()
     {
+        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
         GameInventory.Instance.AddMinMinEnjinUnits();
 
         _minminPopUp.SetActive(false);
@@ -157,6 +168,8 @@ public class GameStore : EnigmaScene
 
     public void openEnjinPopUp()
     {
+        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+
         int count = setupEnjinLegendsDisplay(_enjinmftPopUp);
         if(count == 0 || !GameNetwork.Instance.HasEnjinMft) _enjinmftPopUp.transform.Find("DismissButton").gameObject.SetActive(false);
 
@@ -172,6 +185,8 @@ public class GameStore : EnigmaScene
 
     public void openMinMinPopUp()
     {
+        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+
         int count = setupEnjinLegendsMinMinsDisplay(_minminPopUp);
         Debug.Log("count: " + count);
         if (count == 0 || !GameNetwork.Instance.HasEnjinMinMinsToken) _minminPopUp.transform.Find("DismissButton").gameObject.SetActive(false);
@@ -186,11 +201,13 @@ public class GameStore : EnigmaScene
 
     public void closePopup(GameObject obj)
     {
+        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
         obj.SetActive(false);
     }
 
     public void OnBackButtonDown()
     {
+        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
         SceneManager.LoadScene(EnigmaConstants.Scenes.MAIN);
     }
 
@@ -301,7 +318,9 @@ public class GameStore : EnigmaScene
 
     private void onLootBoxBuyConfirmButtonDown()
     {
-        if(GameHacks.Instance.BuyAndroid)
+        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+
+        if (GameHacks.Instance.BuyAndroid)
             handleCurrencyBuyResult(IAPManager.Instance.IAP_IDS[_selectedPackIndex], true);  // Buy hack to work on android
         else
             IAPManager.BuyConsumable(_selectedPackIndex);
@@ -311,6 +330,7 @@ public class GameStore : EnigmaScene
 
     public void onLootBoxBuyCancelButtonDown()
     {
+        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
         _lootBoxBuyConfirmPopUp.Close();
     }
 
@@ -322,6 +342,8 @@ public class GameStore : EnigmaScene
 
     private void onLootBoxOpenButtonDown(int lootBoxTier)
     {
+        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+
         Dictionary<string, int> unitsWithTier = new Dictionary<string, int>();
         GameInventory gameInventory = GameInventory.Instance;
 

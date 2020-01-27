@@ -43,10 +43,12 @@ public class MatchResultsPopUp : MonoBehaviour
         if (localPlayerNickname == winnerNickname)
         {
             _winnerText.text = "You win!";
+            SoundManager.Play(GameConstants.SoundNames.WIN, SoundManager.AudioTypes.Sfx);
         }
         else
         {
             _winnerText.text = "You lose!";
+            SoundManager.Play(GameConstants.SoundNames.LOSE, SoundManager.AudioTypes.Sfx);
         }
 
         LocalizationManager.LocalizeText(_winnerText);

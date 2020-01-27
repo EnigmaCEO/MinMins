@@ -15,6 +15,8 @@ public class ScoutArea : ActionArea
 
         if (OwnerTeamName != _warRef.LocalPlayerTeam)
             GetComponent<SpriteMask>().enabled = false;  //Not needed.
+
+        SoundManager.Play(GameConstants.SoundNames.SCOUT, SoundManager.AudioTypes.Sfx);
     }
 
     override protected void Update()

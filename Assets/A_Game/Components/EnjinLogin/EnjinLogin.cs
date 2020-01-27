@@ -42,18 +42,40 @@ public class EnjinLogin : MonoBehaviour
         this.gameObject.SetActive(false);
     }
 
+    public void rememberMeToggleChanged()
+    {
+        if (_rememberMeToggle.isOn)
+        {
+            SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+        }
+        else
+        {
+            SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
+        }
+    }
+
+    public void closeButtonDown()
+    {
+        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
+        closeDialog();
+    }
+
     public void closeDialog()
     {
         gameObject.SetActive(false);
     }
 
-    public void switchToRegister() {
+    public void switchToRegister()
+    {
+        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
         loginGroup.SetActive(false);
         registerGroup.SetActive(true);
     }
 
     public void switchToLogin()
     {
+        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+
         loginGroup.SetActive(true);
         registerGroup.SetActive(false);
 
@@ -78,8 +100,20 @@ public class EnjinLogin : MonoBehaviour
         //===================================================
     }
 
-    public void switchETHField() {
-        ETHField.gameObject.SetActive(!ETHField.gameObject.activeSelf);
+    public void switchETHField()
+    {
+        bool ethFieldIsActive = ETHField.gameObject.activeSelf;
+
+        if (ethFieldIsActive)
+        {
+            SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
+        }
+        else
+        {
+            SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+        }
+
+        ETHField.gameObject.SetActive(!ethFieldIsActive);
     }
 
     public void validateRegisterData() {
@@ -121,7 +155,9 @@ public class EnjinLogin : MonoBehaviour
         setAlert(loginButton.interactable ? "" : alertText.text);
     }
 
-    public void registerSubmit() {
+    public void registerSubmit()
+    {
+        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
         showLoadingScreen();
 
         Hashtable extras = new Hashtable();
@@ -146,7 +182,14 @@ public class EnjinLogin : MonoBehaviour
         );
     }
 
-    public void loginSubmit() {
+    public void LoginSubtmiButtonDown()
+    {
+        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+        loginSubmit();
+    }
+
+    public void loginSubmit()
+    {
         this.gameObject.SetActive(true);
         showLoadingScreen();
 

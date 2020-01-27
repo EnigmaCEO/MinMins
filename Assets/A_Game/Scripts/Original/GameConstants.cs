@@ -54,5 +54,22 @@ public class GameConstants
     {
         public const string PING = "Ping:";
     }
+
+    public class SoundNames
+    {
+        public const string GUARD = "guard";
+        public const string HEAL = "heal";
+        public const string BOMB = "sorc";
+        public const string DESTROY = "storm";
+        public const string SCOUT = "stealth";
+
+        public const string DEATH = "death";
+
+        public const string LOSE = "lose";
+        public const string WIN = "win";
+
+        public const string UI_ADVANCE = "ui";
+        public const string UI_BACK = "ui2";
+    }
 }
  
