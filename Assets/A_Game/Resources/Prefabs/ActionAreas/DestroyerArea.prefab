@@ -59,6 +59,7 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -97,7 +98,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.1
+  m_Radius: 0.16
 --- !u!114 &2205267840881009782
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,7 +115,7 @@ MonoBehaviour:
   CollisionTime: -1
   CollisionDelay: 0
   ActionTime: 2
-  ScaleFactorToParticleSizeFactor: 0.25
+  ScaleFactorToParticleSizeFactor: 0.16
   OwnerUnitName: 
   OwnerTeamName: 
   OwnerNetworkPlayerId: 0

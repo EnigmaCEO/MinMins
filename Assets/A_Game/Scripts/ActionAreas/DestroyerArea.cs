@@ -21,7 +21,9 @@ public class DestroyerArea : ActionArea
         if (effectName == MinMinUnit.EffectNames.LightningProjectile)
         {
             foreach (ParticleSystem particles in _effect.GetComponentsInChildren<ParticleSystem>())
+            {
                 particles.startSize = this.transform.localScale.x * ScaleFactorToParticleSizeFactor;
+            }
         }
 
         SoundManager.Play(GameConstants.SoundNames.DESTROY, SoundManager.AudioTypes.Sfx);

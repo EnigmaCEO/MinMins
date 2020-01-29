@@ -1245,16 +1245,16 @@ public class War : NetworkEntity
     {
         TeamBoostItem selectedBoostItem = GameStats.Instance.TeamBoostSelected;
 
+        int healthBonus = 0;
+        int damageBonus = 0;
+        int defenseBonus = 0;
+        int powerBonus = 0;
+        int sizeBonus = 0;
+
         if (selectedBoostItem != null)
         {
             string boostCategory = selectedBoostItem.Category;
             int boostBonus = selectedBoostItem.Bonus;
-
-            int healthBonus = 0;
-            int damageBonus = 0;
-            int defenseBonus = 0;
-            int powerBonus = 0;
-            int sizeBonus = 0;
 
             if (GameHacks.Instance.SetBonuses.Enabled)
             {
@@ -1281,13 +1281,13 @@ public class War : NetworkEntity
             {
                 sizeBonus = boostBonus;
             }
-
-            NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.DAMAGE_BONUS, damageBonus.ToString(), LocalPlayerTeam);
-            NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.DEFENSE_BONUS, defenseBonus.ToString(), LocalPlayerTeam);
-            NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.HEALTH_BONUS, healthBonus.ToString(), LocalPlayerTeam);
-            NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.POWER_BONUS, powerBonus.ToString(), LocalPlayerTeam);
-            NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.SIZE_BONUS, sizeBonus.ToString(), LocalPlayerTeam);
         }
+
+        NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.DAMAGE_BONUS, damageBonus.ToString(), LocalPlayerTeam);
+        NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.DEFENSE_BONUS, defenseBonus.ToString(), LocalPlayerTeam);
+        NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.HEALTH_BONUS, healthBonus.ToString(), LocalPlayerTeam);
+        NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.POWER_BONUS, powerBonus.ToString(), LocalPlayerTeam);
+        NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.SIZE_BONUS, sizeBonus.ToString(), LocalPlayerTeam);
     }
 
     private void setLocalTeamUnits()
