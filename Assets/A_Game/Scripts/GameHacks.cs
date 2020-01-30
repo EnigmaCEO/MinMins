@@ -23,6 +23,8 @@ public class GameHacks : SingletonMonobehaviour<GameHacks>
     public bool AllEnjinTeamBoostTokens;
     public bool CreateWarPrepLineRendererOnUpdate;
 
+    public bool EnjinItemCollectedFailure;
+
     public ValueHack ForceTeamBoostReward = new ValueHack("True");
     public ValueHack TeamBoostRewardCategory = new ValueHack("Size");
     public ValueHack SizeBonus = new ValueHack("10");

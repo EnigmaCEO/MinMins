@@ -1275,23 +1275,28 @@ namespace Enigma.CoreSystems
             return _localPlayerCharacter;
         }
 
-        public void SendEnjinCollectedTransaction()
+        public void SendEnjinCollectedTransaction(Callback onEnjinItemCollectedTransactionExternal)
         {
             var val = new System.Collections.Hashtable();
             val.Add("game", GameNetwork.TRANSACTION_GAME_NAME);
-            NetworkManager.Transaction(Transactions.ENJIN_ITEM_COLLECTED_TRANSACTION, val, onEnjinItemCollectedTransaction);
+            val.Add("level", GameStats.Instance.SelectedLevelNumber.ToString());
+            NetworkManager.Transaction(Transactions.ENJIN_ITEM_COLLECTED_TRANSACTION, val, onEnjinItemCollectedTransactionExternal,  onEnjinItemCollectedTransactionLocal);
         }
 
-        private void onEnjinItemCollectedTransaction(JSONNode response)
+        private void onEnjinItemCollectedTransactionLocal(JSONNode response)
         {
             JSONNode response_hash = response[0];
-            Debug.Log("onEnjinItemCollectedTransaction response: " + response_hash.ToString());
+            Debug.LogWarning("onEnjinItemCollectedTransactionLocal response: " + response_hash.ToString());
             string status = response_hash["status"].ToString().Trim('"');
 
             if (status == "SUCCESS")
+            {
                 Debug.Log("Enjin Item Collected Transaction successful.");
+            }
             else
+            {
                 Debug.LogError("Enjin Item Collected Transaction failed.");
+            }
         }
 
         //PUN event callbacks

@@ -6,6 +6,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using CodeStage.AntiCheat.Storage;
+using SimpleJSON;
 
 public class War : NetworkEntity
 {
@@ -2181,6 +2182,8 @@ public class War : NetworkEntity
 
         gameInventory.SaveUnits();
 
+        bool enjinItemCollectedTransactionSent = false;
+
         if (isVictory)
         {
             if (_matchLocalData.RewardChestWasHit || gameHacks.ChestHit)
@@ -2206,19 +2209,22 @@ public class War : NetworkEntity
                         ObscuredPrefs.SetInt("EnjinWins", ObscuredPrefs.GetInt("EnjinWins", 0)+1);
                     }
 
-                    if (UnityEngine.Random.Range(1, 101) <= chance)
+                    if ((UnityEngine.Random.Range(1, 101) <= chance) || gameHacks.ForceEnjinRewardOnChest)
                     {
-                        NetworkManager.Instance.SendEnjinCollectedTransaction();
-                        _matchLocalData.EnjinCollected = true;
+                        NetworkManager.Instance.SendEnjinCollectedTransaction(onEnjinItemCollectedTransactionExternal);
+                        enjinItemCollectedTransactionSent = true;
+                        //_matchLocalData.EnjinCollected = true;
                     }
                         
                 }
 
-                if (gameHacks.ForceEnjinRewardOnChest)
-                    _matchLocalData.EnjinCollected = true;
-   
-                if (!_matchLocalData.EnjinCollected)
+                //if (gameHacks.ForceEnjinRewardOnChest)
+                //    _matchLocalData.EnjinCollected = true;
+
+                if (!enjinItemCollectedTransactionSent)
+                {
                     rewardWithTierBox(GameInventory.Tiers.BRONZE);
+                }
             }
 
             if (GameStats.Instance.Mode == GameStats.Modes.SinglePlayer)
@@ -2234,10 +2240,29 @@ public class War : NetworkEntity
                 GameNetwork.Instance.SendMatchResultsToServer(winner, onSendMatchResultsToServerCallback);
             }
         }
-        else
+        else if(!enjinItemCollectedTransactionSent) //Training
         {
             setAndDisplayMatchResultsPopUp(false);
         }
+    }
+
+    private void onEnjinItemCollectedTransactionExternal(JSONNode response)
+    {
+        JSONNode response_hash = response[0];
+        Debug.LogWarning("onEnjinItemCollectedTransactionExternal response: " + response_hash.ToString());
+        string status = response_hash["status"].ToString().Trim('"');
+
+        if ((status == "SUCCESS") && !GameHacks.Instance.EnjinItemCollectedFailure)
+        {
+            _matchLocalData.EnjinCollected = true;
+        }
+        else
+        {
+            rewardWithTierBox(GameInventory.Tiers.BRONZE);
+        }
+
+        bool isPrivateRoom = (((string)NetworkManager.GetRoomCustomProperty(GameNetwork.RoomCustomProperties.IS_PRIVATE)) == "True");
+        setAndDisplayMatchResultsPopUp(isPrivateRoom);
     }
 
     //private void rewardWithRandomBox()
