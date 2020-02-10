@@ -1275,11 +1275,11 @@ namespace Enigma.CoreSystems
             return _localPlayerCharacter;
         }
 
-        public void SendEnjinCollectedTransaction(Callback onEnjinItemCollectedTransactionExternal)
+        public void SendEnjinCollectedTransaction(string gameName, int level, Callback onEnjinItemCollectedTransactionExternal)
         {
             var val = new System.Collections.Hashtable();
-            val.Add("game", GameNetwork.TRANSACTION_GAME_NAME);
-            val.Add("level", GameStats.Instance.SelectedLevelNumber.ToString());
+            val.Add("game", gameName);
+            val.Add("level", level);
             NetworkManager.Transaction(Transactions.ENJIN_ITEM_COLLECTED_TRANSACTION, val, onEnjinItemCollectedTransactionExternal,  onEnjinItemCollectedTransactionLocal);
         }
 

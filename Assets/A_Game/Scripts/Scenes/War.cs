@@ -2211,7 +2211,7 @@ public class War : NetworkEntity
 
                     if ((UnityEngine.Random.Range(1, 101) <= chance) || gameHacks.ForceEnjinRewardOnChest)
                     {
-                        NetworkManager.Instance.SendEnjinCollectedTransaction(onEnjinItemCollectedTransactionExternal);
+                        NetworkManager.Instance.SendEnjinCollectedTransaction(GameNetwork.TRANSACTION_GAME_NAME, GameStats.Instance.SelectedLevelNumber,onEnjinItemCollectedTransactionExternal);
                         enjinItemCollectedTransactionSent = true;
                         //_matchLocalData.EnjinCollected = true;
                     }
