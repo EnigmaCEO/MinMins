@@ -1,5 +1,4 @@
 /*! \cond PRIVATE */
-using System.Net;
 using DarkTonic.MasterAudio;
 using UnityEngine;
 using System.Collections.Generic;
@@ -12,7 +11,7 @@ public class TransformFollower : MonoBehaviour {
     private GameObject _goToFollow;
     private Transform _trans;
     private GameObject _go;
-#if !PHY3D_MISSING
+#if PHY3D_ENABLED
     private SphereCollider _collider;
 #endif
     private string _soundType;
@@ -20,25 +19,23 @@ public class TransformFollower : MonoBehaviour {
     private bool _willFollowSource;
     private bool _isInsideTrigger;
     private bool _hasPlayedSound;
-    private bool _groupLoadFailed;
-    private MasterAudioGroup _groupToPlay;
     private float _playVolume;
     private bool _positionAtClosestColliderPoint = false;
     private MasterAudio.AmbientSoundExitMode _exitMode;
     private float _exitFadeTime;
     private MasterAudio.AmbientSoundReEnterMode _reEnterMode;
     private float _reEnterFadeTime;
-#if !PHY3D_MISSING
+#if PHY3D_ENABLED
     private readonly List<Collider> _actorColliders = new List<Collider>();
 #endif
-#if !PHY2D_MISSING
+#if PHY2D_ENABLED
     private readonly List<Collider2D> _actorColliders2D = new List<Collider2D>();
 #endif
     private Vector3 _lastListenerPos = new Vector3(float.MinValue, float.MinValue, float.MinValue);
-#if !PHY3D_MISSING
+#if PHY3D_ENABLED
     private readonly Dictionary<Collider, Vector3> _lastPositionByCollider = new Dictionary<Collider, Vector3>();
 #endif
-#if !PHY2D_MISSING
+#if PHY2D_ENABLED
     private readonly Dictionary<Collider2D, Vector3> _lastPositionByCollider2D = new Dictionary<Collider2D, Vector3>();
 #endif
     private PlaySoundResult playingVariation;
@@ -46,20 +43,15 @@ public class TransformFollower : MonoBehaviour {
 
     // ReSharper disable once UnusedMember.Local
     void Awake() {
-#if !PHY3D_MISSING
+#if PHY3D_ENABLED
         var trig = Trigger;
         if (trig == null || _actorColliders.Count == 0) { } // get rid of warning
 #endif
         if (_lastListenerPos == Vector3.zero || playingVariation != null || _positionAtClosestColliderPoint) { } // get rid of warning
 
-#if !PHY2D_MISSING
+#if PHY2D_ENABLED
         if (_actorColliders2D.Count == 0) { } // get rid of warning
 #endif
-    }
-
-    // ReSharper disable once UnusedMember.Local
-    void Start() {
-        _groupToPlay = MasterAudio.GrabGroup(_soundType, false);
     }
 
     void OnDisable() {
@@ -75,7 +67,7 @@ public class TransformFollower : MonoBehaviour {
 
         RuntimeFollowingTransform = transToFollow;
         _goToFollow = transToFollow.gameObject;
-#if !PHY3D_MISSING
+#if PHY3D_ENABLED
         Trigger.radius = trigRadius;
 #endif
         _soundType = soundType;
@@ -86,26 +78,26 @@ public class TransformFollower : MonoBehaviour {
         _exitFadeTime = exitFadeTime;
         _reEnterMode = reEnterMode;
         _reEnterFadeTime = reEnterFadeTime;
-#if !PHY3D_MISSING
+#if PHY3D_ENABLED
         _lastPositionByCollider.Clear();
 #endif
-#if !PHY2D_MISSING
+#if PHY2D_ENABLED
         _lastPositionByCollider2D.Clear();
 #endif
 
         if (useTopCollider) {
-#if !PHY3D_MISSING
+#if PHY3D_ENABLED
             Collider col3D = transToFollow.GetComponent<Collider>();
 #else 
             Component col3D = null;
 #endif
             if (col3D != null) {
-#if !PHY3D_MISSING
+#if PHY3D_ENABLED
                 _actorColliders.Add(col3D);
                 _lastPositionByCollider.Add(col3D, transToFollow.position);
 #endif
             } else {
-#if !PHY2D_MISSING
+#if PHY2D_ENABLED
                 Collider2D col2D = transToFollow.GetComponent<Collider2D>();
                 if (col2D != null) {
                     _actorColliders2D.Add(col2D);
@@ -117,11 +109,11 @@ public class TransformFollower : MonoBehaviour {
 
         if (useChildColliders && transToFollow != null) {
             for (var i = 0; i < transToFollow.childCount; i++) {
-#if !PHY3D_MISSING || !PHY2D_MISSING
+#if PHY3D_ENABLED || PHY2D_ENABLED
                 var child = transToFollow.GetChild(i);
 #endif
 
-#if !PHY3D_MISSING
+#if PHY3D_ENABLED
                 Collider col3D = child.GetComponent<Collider>();
                 if (col3D != null) {
                     _actorColliders.Add(col3D);
@@ -130,7 +122,7 @@ public class TransformFollower : MonoBehaviour {
                 }
 #endif
 
-#if !PHY2D_MISSING
+#if PHY2D_ENABLED
                 Collider2D col2D = child.GetComponent<Collider2D>();
                 if (col2D != null) {
                     _actorColliders2D.Add(col2D);
@@ -146,10 +138,10 @@ public class TransformFollower : MonoBehaviour {
         var col3DCount = 0;
         var col2DCount = 0;
 
-#if !PHY3D_MISSING
+#if PHY3D_ENABLED
         col3DCount = _actorColliders.Count;
 #endif
-#if !PHY2D_MISSING
+#if PHY2D_ENABLED
         col2DCount = _actorColliders2D.Count;
 #endif
 
@@ -233,7 +225,7 @@ public class TransformFollower : MonoBehaviour {
     // ReSharper disable once UnusedMember.Local
     public void ManualUpdate() {
         if (RuntimeFollowingTransform == null || !DTMonoHelper.IsActive(_goToFollow)) {
-            // If we StopFollowing() here, it will stop all of the Sound Group instead of just this voice. Removed
+            StopFollowing();
             return;
         }
 
@@ -241,23 +233,11 @@ public class TransformFollower : MonoBehaviour {
             Trans.position = RuntimeFollowingTransform.position;
         }
 
-        if (!_isInsideTrigger || _hasPlayedSound || _groupLoadFailed) {
+        if (!_isInsideTrigger || _hasPlayedSound) {
             return;
         }
 
-        switch (_groupToPlay.GroupLoadStatus) {
-            case MasterAudio.InternetFileLoadStatus.Loaded:
-                PlaySound();
-                break;
-            case MasterAudio.InternetFileLoadStatus.Failed:
-                if (MasterAudio.LogSoundsEnabled) {
-                    MasterAudio.LogWarning("TransformFollower: '" + name + "' not attempting to play Sound Group '" + _soundType + "' because the Sound Group failed to load.");
-                }
-                _groupLoadFailed = true;
-                break;
-            case MasterAudio.InternetFileLoadStatus.Loading:
-                break;
-        }
+        PlaySound();
     }
 
 #if UNITY_5_6_OR_NEWER
@@ -272,20 +252,24 @@ public class TransformFollower : MonoBehaviour {
 		var closestPoint = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
 		var hasPointMoved = false;
 
-#if !PHY3D_MISSING
+		if (hasListenerMoved) {
+			// remove warning
+		}
+
+#if PHY3D_ENABLED
         var col3dColliders = _actorColliders.Count;
 #else
         var col3dColliders = 0;
 #endif
 
-#if !PHY2D_MISSING
+#if PHY2D_ENABLED
         var col2dColliders = _actorColliders2D.Count;
 #else
         var col2dColliders = 0;
 #endif
 
         if (col3dColliders > 0) {
-#if !PHY3D_MISSING
+#if PHY3D_ENABLED
     		var minDist = float.MaxValue;
 			if (col3dColliders == 1) {
 				var colZero = _actorColliders[0];
@@ -328,7 +312,7 @@ public class TransformFollower : MonoBehaviour {
 			}
 #endif
         } else if (col2dColliders > 0) {
-#if !PHY2D_MISSING
+#if PHY2D_ENABLED
     		var minDist = float.MaxValue;
 			if (_actorColliders2D.Count == 1) {
 				var colZero = _actorColliders2D[0];
@@ -386,7 +370,7 @@ public class TransformFollower : MonoBehaviour {
 	}
 #endif
 
-#if !PHY3D_MISSING
+#if PHY3D_ENABLED
     // ReSharper disable once UnusedMember.Local
     private void OnTriggerEnter(Collider other) {
         if (RuntimeFollowingTransform == null) {
@@ -399,27 +383,11 @@ public class TransformFollower : MonoBehaviour {
 
         _isInsideTrigger = true;
 
-        if (_groupToPlay != null) {
-            switch (_groupToPlay.GroupLoadStatus) {
-                case MasterAudio.InternetFileLoadStatus.Loaded:
-                    break;
-                case MasterAudio.InternetFileLoadStatus.Failed:
-                    if (MasterAudio.LogSoundsEnabled) {
-                        MasterAudio.LogWarning("TransformFollower: '" + name + "' not attempting to play Sound Group '" + _soundType + "' because the Sound Group failed to load.");
-                    }
-                    _groupLoadFailed = true;
-                    return;
-                case MasterAudio.InternetFileLoadStatus.Loading:
-                    return;
-            }
-        }
-
         PlaySound();
     }
 
     // ReSharper disable once UnusedMember.Local
     private void OnTriggerExit(Collider other) {
-
         if (RuntimeFollowingTransform == null) {
             return;
         }
@@ -443,11 +411,9 @@ public class TransformFollower : MonoBehaviour {
 
         switch (_exitMode) {
             case MasterAudio.AmbientSoundExitMode.StopSound:
-
                 MasterAudio.StopSoundGroupOfTransform(RuntimeFollowingTransform, _soundType);
                 break;
             case MasterAudio.AmbientSoundExitMode.FadeSound:
-
                 MasterAudio.FadeOutSoundGroupOfTransform(RuntimeFollowingTransform, _soundType, _exitFadeTime);
                 break;
         }
@@ -455,10 +421,10 @@ public class TransformFollower : MonoBehaviour {
         fadingVariation = playingVariation;
         playingVariation = null;
 
-        StopFollowing();
+        //StopFollowing();
     }
 
-#if !PHY3D_MISSING
+#if PHY3D_ENABLED
     public SphereCollider Trigger {
         get {
             if (_collider != null) {

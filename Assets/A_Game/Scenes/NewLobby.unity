@@ -215,6 +215,36 @@ PrefabInstance:
       propertyPath: m_Name
       value: btn_back
       objectReference: {fileID: 0}
+    - target: {fileID: 4421720647608088351, guid: 16fef246875e82543bc9f5ffebe36010,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4421720647608088351, guid: 16fef246875e82543bc9f5ffebe36010,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4421720647608088351, guid: 16fef246875e82543bc9f5ffebe36010,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4421720647608088351, guid: 16fef246875e82543bc9f5ffebe36010,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1597328467}
+    - target: {fileID: 4421720647608088351, guid: 16fef246875e82543bc9f5ffebe36010,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnBackButtonDown
+      objectReference: {fileID: 0}
+    - target: {fileID: 4421720647608088351, guid: 16fef246875e82543bc9f5ffebe36010,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 4421720647608088346, guid: 16fef246875e82543bc9f5ffebe36010,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -319,36 +349,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4421720647608088351, guid: 16fef246875e82543bc9f5ffebe36010,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4421720647608088351, guid: 16fef246875e82543bc9f5ffebe36010,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4421720647608088351, guid: 16fef246875e82543bc9f5ffebe36010,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4421720647608088351, guid: 16fef246875e82543bc9f5ffebe36010,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1597328467}
-    - target: {fileID: 4421720647608088351, guid: 16fef246875e82543bc9f5ffebe36010,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnBackButtonDown
-      objectReference: {fileID: 0}
-    - target: {fileID: 4421720647608088351, guid: 16fef246875e82543bc9f5ffebe36010,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 16fef246875e82543bc9f5ffebe36010, type: 3}
@@ -869,7 +869,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1053fee8251da7448a40f4e48b9ebcbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxRatingDifferenceToFight: 50
   _roomSetWithPvpDelay: 30
   _pingUpdatesDelay: 2
   _roomListUpdateDelay: 2
@@ -1259,13 +1258,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.5764706, g: 0.7843138, b: 0.9333334, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 3e387716162ea4f59b731b065e40749b, type: 3}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 7ec1ba243795a414a87820657090f888, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -1536,6 +1535,58 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4238393490528916604, guid: 8c0483e4ddf1b554999a03f8471241bf,
+        type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: 9a4d5b491588d6d4599e39dab3b1d379,
+        type: 3}
+    - target: {fileID: 4238393490528916604, guid: 8c0483e4ddf1b554999a03f8471241bf,
+        type: 3}
+      propertyPath: m_FontData.m_FontStyle
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4238393488620412788, guid: 8c0483e4ddf1b554999a03f8471241bf,
+        type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: 9a4d5b491588d6d4599e39dab3b1d379,
+        type: 3}
+    - target: {fileID: 4238393489499247841, guid: 8c0483e4ddf1b554999a03f8471241bf,
+        type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: 9a4d5b491588d6d4599e39dab3b1d379,
+        type: 3}
+    - target: {fileID: 4238393489264577125, guid: 8c0483e4ddf1b554999a03f8471241bf,
+        type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: 9a4d5b491588d6d4599e39dab3b1d379,
+        type: 3}
+    - target: {fileID: 4238393489264577125, guid: 8c0483e4ddf1b554999a03f8471241bf,
+        type: 3}
+      propertyPath: m_FontData.m_FontStyle
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4238393490002235588, guid: 8c0483e4ddf1b554999a03f8471241bf,
+        type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: 9a4d5b491588d6d4599e39dab3b1d379,
+        type: 3}
+    - target: {fileID: 4238393490230081680, guid: 8c0483e4ddf1b554999a03f8471241bf,
+        type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: 9a4d5b491588d6d4599e39dab3b1d379,
+        type: 3}
+    - target: {fileID: 4238393489364595553, guid: 8c0483e4ddf1b554999a03f8471241bf,
+        type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: 9a4d5b491588d6d4599e39dab3b1d379,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8c0483e4ddf1b554999a03f8471241bf, type: 3}
 --- !u!114 &4511551236434004409
@@ -1557,8 +1608,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 34
+    m_Font: {fileID: 12800000, guid: 9a4d5b491588d6d4599e39dab3b1d379, type: 3}
+    m_FontSize: 40
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
@@ -2037,11 +2088,11 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 69
-    m_FontStyle: 1
+    m_Font: {fileID: 12800000, guid: 9a4d5b491588d6d4599e39dab3b1d379, type: 3}
+    m_FontSize: 50
+    m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 5
     m_MaxSize: 75
     m_Alignment: 4
     m_AlignByGeometry: 0
@@ -2069,8 +2120,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 34
+    m_Font: {fileID: 12800000, guid: 9a4d5b491588d6d4599e39dab3b1d379, type: 3}
+    m_FontSize: 40
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
@@ -2221,7 +2272,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 9a4d5b491588d6d4599e39dab3b1d379, type: 3}
-    m_FontSize: 58
+    m_FontSize: 50
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 4
@@ -2232,7 +2283,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Arena 1-6
+  m_Text: PVP ARENAS
 --- !u!1 &8825835531972260830
 GameObject:
   m_ObjectHideFlags: 0

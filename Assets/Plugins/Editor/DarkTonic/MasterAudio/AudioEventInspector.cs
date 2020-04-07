@@ -173,7 +173,7 @@ public class AudioEventInspector : Editor {
             unusedEventTypes.Add("Invisible");
         }
 
-#if !PHY2D_MISSING
+#if PHY2D_ENABLED
         if (!_sounds.useCollision2dSound) {
             unusedEventTypes.Add("2D Collision Enter");
         }
@@ -191,7 +191,7 @@ public class AudioEventInspector : Editor {
         }
 #endif
 
-#if !PHY3D_MISSING
+#if PHY3D_ENABLED
         if (!_sounds.useCollisionSound) {
             unusedEventTypes.Add("Collision Enter");
         }
@@ -1137,7 +1137,11 @@ public class AudioEventInspector : Editor {
         }
 
         GUILayout.Space(4f);
-        DTGUIHelper.AddHelpIconNoStyle("http://www.dtdevtools.com/docs/masteraudio/EventSounds.htm#EventSettings");
+        var topMargin = 3;
+#if UNITY_2019_3_OR_NEWER
+        topMargin = 0;
+#endif
+        DTGUIHelper.AddHelpIconNoStyle("http://www.dtdevtools.com/docs/masteraudio/EventSounds.htm#EventSettings", topMargin);
 
         GUILayout.EndHorizontal();
 

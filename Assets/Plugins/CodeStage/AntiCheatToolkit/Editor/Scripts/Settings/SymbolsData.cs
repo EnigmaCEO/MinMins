@@ -17,6 +17,7 @@ namespace CodeStage.AntiCheat.EditorCode
 		public bool preventInternetPermission;
 		public bool obscuredAutoMigration;
 		public bool detectionBacklogs;
-		public bool exposeThirdPartyIntegrationSymbol;
+		public bool exposeThirdPartyIntegration;
+		public bool usExportCompatible;
 	}
 }

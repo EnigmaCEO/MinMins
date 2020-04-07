@@ -13,11 +13,9 @@ public class Main : EnigmaScene
     [SerializeField] private int _checkEnjinLinkingDelay = 2;
     [SerializeField] GameObject _loginButton;
     [SerializeField] GameObject _logoutButton;
-    [SerializeField] GameObject _kinPopUp;
     [SerializeField] GameObject _enjinIcon;
     [SerializeField] Text _pvprating;
-    KinManager _kinWrapper;
-
+    
     void Start()
     {
         if (!NetworkManager.LoggedIn)
@@ -35,7 +33,7 @@ public class Main : EnigmaScene
         _enjinWindow.SetActive(false);
 
         _pvprating.text = "";
-
+/*
         _kinWrapper = GameObject.Find("/KinManager").GetComponent<KinManager>();
         
         _kinWrapper.RegisterCallback((obj, val) =>
@@ -79,7 +77,7 @@ public class Main : EnigmaScene
         }
         else
             _kinPopUp.SetActive(false);
-
+*/
         Init();
     }
 
@@ -99,23 +97,11 @@ public class Main : EnigmaScene
             _loginModal.GetComponent<EnjinLogin>().loginSubmit();
         }
 
-        
+
 
         //_kinPopUp.SetActive(true);
 
-        if(GameNetwork.Instance.IsEnjinLinked)
-        {
-            _enjinIcon.SetActive(true);
-            Text text = _enjinIcon.GetComponentInChildren<Text>();
-            text.text = "";
-            if (GameNetwork.Instance.HasEnjinEnigmaToken) text.text += "\nEnjin MFT";
-            if (GameNetwork.Instance.HasEnjinMinMinsToken) text.text += "\nMin-Mins Token";
-            if (GameNetwork.Instance.HasEnjinMaxim) text.text += "\nMaxim Legend";
-            if (GameNetwork.Instance.HasEnjinWitek) text.text += "\nWitek Legend";
-            if (GameNetwork.Instance.HasEnjinBryana) text.text += "\nBryana Legend";
-            if (GameNetwork.Instance.HasEnjinTassio) text.text += "\nTassio Legend";
-            if (GameNetwork.Instance.HasEnjinSimon) text.text += "\nSimon Legend";
-        }
+        DisplayEnjinItems();
 
         if(loggedIn)
         {
@@ -205,9 +191,13 @@ public class Main : EnigmaScene
             {
                 GameNetwork.Instance.IsEnjinLinked = true;
                 //enjinSupport.gameObject.SetActive(true);
-
+                _enjinIcon.SetActive(true);
+            
                 updateEnjinItems(response_hash);
-                if(_enjinWindow)
+
+                DisplayEnjinItems();
+
+                if (_enjinWindow)
                     _enjinWindow.gameObject.SetActive(false);
             }
             else if ((_enjinWindow  != null) && _enjinWindow.GetActive())
@@ -301,15 +291,21 @@ public class Main : EnigmaScene
         StopCoroutine("handleEnjinLinkingCheck");
         _enjinWindow.gameObject.SetActive(false);
     }
-
-    public void closeKinDialog()
-    {
-        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
-        decimal balance = _kinWrapper.GetBalance();
-        if (balance == 0)
+    
+    public void DisplayEnjinItems() {
+        if (GameNetwork.Instance.IsEnjinLinked)
         {
-            _kinWrapper.FundKin();
+            _enjinIcon.SetActive(true);
+            Text text = _enjinIcon.GetComponentInChildren<Text>();
+            text.text = ""; 
+            if (GameNetwork.Instance.HasEnjinMft) text.text += "\nEnjin MFT";
+            if (GameNetwork.Instance.HasEnjinEnigmaToken) text.text += "\nEnigma Token";
+            if (GameNetwork.Instance.HasEnjinMinMinsToken) text.text += "\nMin-Mins Token";
+            if (GameNetwork.Instance.HasEnjinMaxim) text.text += "\nMaxim Legend";
+            if (GameNetwork.Instance.HasEnjinWitek) text.text += "\nWitek Legend";
+            if (GameNetwork.Instance.HasEnjinBryana) text.text += "\nBryana Legend";
+            if (GameNetwork.Instance.HasEnjinTassio) text.text += "\nTassio Legend";
+            if (GameNetwork.Instance.HasEnjinSimon) text.text += "\nSimon Legend";
         }
-        _kinPopUp.SetActive(false);
     }
 }

@@ -27,7 +27,6 @@ namespace DarkTonic.MasterAudio {
         public bool useDialogFadeOut = false;
         public float dialogFadeOutTime = .5f;
 
-        public bool resourceClipsAllLoadAsync = true;
         public string comments;
         public bool logSound = false;
 
@@ -68,6 +67,10 @@ namespace DarkTonic.MasterAudio {
         public List<string> endLinkedGroups = new List<string>();
         public MasterAudio.LinkedGroupSelectionType linkedStartGroupSelectionType = MasterAudio.LinkedGroupSelectionType.All;
         public MasterAudio.LinkedGroupSelectionType linkedStopGroupSelectionType = MasterAudio.LinkedGroupSelectionType.All;
+
+#if ADDRESSABLES_ENABLED
+        public int addressableUnusedSecondsLifespan = 0;
+#endif
 
         public List<DynamicGroupVariation> groupVariations = new List<DynamicGroupVariation>();
         // filled and used by Inspector only

@@ -494,7 +494,7 @@ namespace CodeStage.AntiCheat.EditorCode
 				GUILayout.Label("Compatibility Symbols", GUITools.LargeBoldLabel);
 				GUITools.Separator();
 
-				DrawSymbol(ref symbolsData.exposeThirdPartyIntegrationSymbol,
+				DrawSymbol(ref symbolsData.exposeThirdPartyIntegration,
 					ACTkEditorConstants.Conditionals.ThirdPartyIntegration,
 					"Enable to let other third-party code in project know you have ACTk added.");
 				DrawSymbol(ref symbolsData.excludeObfuscation, 
@@ -509,6 +509,9 @@ namespace CodeStage.AntiCheat.EditorCode
 				DrawSymbol(ref symbolsData.obscuredAutoMigration,
 					ACTkEditorConstants.Conditionals.ObscuredAutoMigration,
 					"Enables automatic migration of ObscuredFloat and ObscuredDouble instances from the ACTk 1.5.2.0-1.5.8.0 to the 1.5.9.0+ format. Reduces these types performance a bit.");
+				DrawSymbol(ref symbolsData.usExportCompatible,
+					ACTkEditorConstants.Conditionals.UsExportCompatible,
+					"Enables US Encryption Export Regulations compatibility mode so ACTk do not force you to declare you're using encryption when publishing your application to the Apple App Store.");
 
 				GUILayout.Space(3);
 			}

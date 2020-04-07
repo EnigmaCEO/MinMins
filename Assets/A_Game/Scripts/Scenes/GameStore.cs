@@ -194,7 +194,7 @@ public class GameStore : EnigmaScene
         _minminPopUp.SetActive(true);
 
         if (GameNetwork.Instance.HasEnjinMinMinsToken)
-            _minminPopUp.transform.Find("WindowMessage").GetComponent<Text>().text = LocalizationManager.GetTermTranslation("Enjin Legend tokens required");
+            _minminPopUp.transform.Find("WindowMessage").GetComponent<Text>().text = LocalizationManager.GetTermTranslation("Legend Unit tokens required");
         else
             _enjinmftPopUp.transform.Find("WindowMessage").GetComponent<Text>().text = LocalizationManager.GetTermTranslation("Min-Mins Token required");
     }
@@ -262,6 +262,56 @@ public class GameStore : EnigmaScene
                 count--;
             }
             if (unitName == "104" && (!GameNetwork.Instance.HasEnjinSimon || gameInventory.HasUnit(unitName)))
+            {
+                enjinTransform.gameObject.SetActive(false);
+                count--;
+            }
+            if (unitName == "105" && (!GameNetwork.Instance.HasKnightTank || gameInventory.HasUnit(unitName)))
+            {
+                enjinTransform.gameObject.SetActive(false);
+                count--;
+            }
+            if (unitName == "106" && (!GameNetwork.Instance.HasKnightHealer || gameInventory.HasUnit(unitName)))
+            {
+                enjinTransform.gameObject.SetActive(false);
+                count--;
+            }
+            if (unitName == "107" && (!GameNetwork.Instance.HasKnightScout || gameInventory.HasUnit(unitName)))
+            {
+                enjinTransform.gameObject.SetActive(false);
+                count--;
+            }
+            if (unitName == "108" && (!GameNetwork.Instance.HasKnightDestroyer || gameInventory.HasUnit(unitName)))
+            {
+                enjinTransform.gameObject.SetActive(false);
+                count--;
+            }
+            if (unitName == "109" && (!GameNetwork.Instance.HasKnightBomber || gameInventory.HasUnit(unitName)))
+            {
+                enjinTransform.gameObject.SetActive(false);
+                count--;
+            }
+            if (unitName == "110" && (!GameNetwork.Instance.HasDemonBomber || gameInventory.HasUnit(unitName)))
+            {
+                enjinTransform.gameObject.SetActive(false);
+                count--;
+            }
+            if (unitName == "111" && (!GameNetwork.Instance.HasDemonScout || gameInventory.HasUnit(unitName)))
+            {
+                enjinTransform.gameObject.SetActive(false);
+                count--;
+            }
+            if (unitName == "112" && (!GameNetwork.Instance.HasDemonDestroyer || gameInventory.HasUnit(unitName)))
+            {
+                enjinTransform.gameObject.SetActive(false);
+                count--;
+            }
+            if (unitName == "113" && (!GameNetwork.Instance.HasDemonTank || gameInventory.HasUnit(unitName)))
+            {
+                enjinTransform.gameObject.SetActive(false);
+                count--;
+            }
+            if (unitName == "114" && (!GameNetwork.Instance.HasDemonHealer || gameInventory.HasUnit(unitName)))
             {
                 enjinTransform.gameObject.SetActive(false);
                 count--;

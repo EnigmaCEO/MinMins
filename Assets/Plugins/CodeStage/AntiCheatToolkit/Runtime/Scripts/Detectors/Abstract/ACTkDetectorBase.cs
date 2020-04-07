@@ -34,7 +34,7 @@ namespace CodeStage.AntiCheat.Detectors
 		/// Otherwise, it will just stop internal processes.
 		/// </summary>
 		/// On dispose Detector follows 2 rules:
-		/// - if Game Object's name is "Anti-Cheat Toolkit": it will be automatically 
+		/// - if Game Object's name is "Anti-Cheat Toolkit": it will be automatically
 		/// destroyed if no other %Detectors left attached regardless of any other components or children;<br/>
 		/// - if Game Object's name is NOT "Anti-Cheat Toolkit": it will be automatically destroyed only
 		/// if it has neither other components nor children attached;
@@ -61,7 +61,15 @@ namespace CodeStage.AntiCheat.Detectors
 		protected bool isRunning;
 
 		/// <summary>
-		/// Allows to check if detection is currently running.
+		/// Allows to check if detector is started (stays true even when it's paused).
+		/// </summary>
+		public bool IsStarted
+		{
+			get { return started; }
+		}
+
+		/// <summary>
+		/// Allows to check if detection is currently running and not paused.
 		/// </summary>
 		public bool IsRunning
 		{

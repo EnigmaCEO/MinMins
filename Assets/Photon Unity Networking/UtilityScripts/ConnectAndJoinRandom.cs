@@ -30,6 +30,7 @@ public class ConnectAndJoinRandom : Photon.MonoBehaviour
 
             ConnectInUpdate = false;
             PhotonNetwork.ConnectUsingSettings(Version + "." + SceneManagerHelper.ActiveSceneBuildIndex);
+            //PhotonNetwork.ConnectToRegion(CloudRegionCode.eu, "1", "cluster3");       // connecting to a specific cluster may be necessary, when regions get sharded and you support friends
         }
     }
 

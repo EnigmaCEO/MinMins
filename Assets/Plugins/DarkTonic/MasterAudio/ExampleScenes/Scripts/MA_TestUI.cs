@@ -13,7 +13,7 @@ public class MA_TestUI : MonoBehaviour {
 			"Go ahead and click on the 'Enemy Spawner' script and turn on the checkbox for 'Spawner Enabled' for enemies! There's one Custom Event 'PlayerOffscreen' that gets triggered from EventSounds on the Player " + 
 			"when you move offscreen. The EventSounds script on PlayerSpawner receives that event and plays an arrow sound when it happens. " +
 			"We've also implemented a sample class 'MA_SampleICustomEventReceiver' that implements the ICustomEventReciever class if you wish to see how to do that. It's attached to the main camera prefab. " +
-			"A linked group of Blast is set up in the Scream Group, take a look! Sample music provided by Alchemy Studios. This music 'The Epic Trailer' (longer version) is available on the Asset Store!" + 
+			"A linked group of Blast is set up in the Scream Group, take a look! Sample music provided by Alchemy Studios. " + 
 			"\n\nHappy gaming - DarkTonic, Inc.");
 	}
 }

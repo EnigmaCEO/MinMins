@@ -26,6 +26,7 @@ namespace CodeStage.AntiCheat.EditorCode
 			public const string ObscuredAutoMigration = "ACTK_OBSCURED_AUTO_MIGRATION";
 			public const string DetectionBacklogs = "ACTK_DETECTION_BACKLOGS";
 			public const string ThirdPartyIntegration = "ACTK_IS_HERE";
+			public const string UsExportCompatible = "ACTK_US_EXPORT_COMPATIBLE";
 		}
 
 #if UNITY_2018_3_OR_NEWER

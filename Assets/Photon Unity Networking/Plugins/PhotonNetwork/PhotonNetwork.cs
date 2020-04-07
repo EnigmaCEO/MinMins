@@ -28,7 +28,7 @@ using System.IO;
 public static class PhotonNetwork
 {
     /// <summary>Version number of PUN. Also used in GameVersion to separate client version from each other.</summary>
-    public const string versionPUN = "1.99";
+    public const string versionPUN = "1.101";
 
     /// <summary>Version string for your this build. Can be used to separate incompatible clients. Sent during connect.</summary>
     /// <remarks>This is only sent when you connect so that is also the place you set it usually (e.g. in ConnectUsingSettings).</remarks>
@@ -62,6 +62,16 @@ public static class PhotonNetwork
 
     /// <summary>Currently used Cloud Region (if any). As long as the client is not on a Master Server or Game Server, the region is not yet defined.</summary>
     public static CloudRegionCode CloudRegion { get { return (networkingPeer != null && connected && Server!=ServerConnection.NameServer) ? networkingPeer.CloudRegion : CloudRegionCode.none; } }
+
+    /// <summary>The cluster name provided by the Name Server.</summary>
+    /// <remarks>
+    /// The value is provided by the OpResponse for OpAuthenticate/OpAuthenticateOnce. See ConnectToRegion.
+    /// 
+    /// Null until set.
+    ///
+    /// Note that the Name Server may assign another cluster, if the requested one is not configured or available.
+    /// </remarks>
+    public static string CurrentCluster { get { return (networkingPeer != null ) ? networkingPeer.CurrentCluster : null; } }
 
     /// <summary>
     /// False until you connected to Photon initially. True in offline mode, while connected to any server and even while switching servers.
@@ -1423,9 +1433,18 @@ public static class PhotonNetwork
 
 
     /// <summary>
-    /// Connects to the Photon Cloud region of choice.
+    /// Connects to the Photon Cloud region and cluster of choice.
     /// </summary>
-    public static bool ConnectToRegion(CloudRegionCode region, string gameVersion)
+    /// <remarks>
+    /// Connecting to a specific cluster may be necessary, when regions get sharded and you support friends.
+    /// 
+    /// In all other cases, you should not define a cluster as this allows the Name Server to distribute
+    /// clients as needed. A random, load balanced cluster will be selected if available.
+    ///
+    /// The Name Server has the final say to assign a cluster as available.
+    /// Once connected, check the value of CurrentCluster.
+    /// </remarks>
+    public static bool ConnectToRegion(CloudRegionCode region, string gameVersion, string cluster = null)
     {
         if (networkingPeer.PeerState != PeerStateValue.Disconnected)
         {
@@ -1446,11 +1465,10 @@ public static class PhotonNetwork
 
         networkingPeer.IsInitialConnect = true;
         networkingPeer.SetApp(PhotonServerSettings.AppID, gameVersion);
-
         if (region != CloudRegionCode.none)
         {
             Debug.Log("ConnectToRegion: " + region);
-            return networkingPeer.ConnectToRegionMaster(region);
+            return networkingPeer.ConnectToRegionMaster(region, cluster);
         }
 
         return false;

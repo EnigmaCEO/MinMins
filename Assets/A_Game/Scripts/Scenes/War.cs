@@ -1524,6 +1524,86 @@ public class War : NetworkEntity
                 unitsString = "100|101|102|103|104";
                 exp = 310;
                 break;
+            case 31:
+                unitsString = "100|105|106|107|104";
+                exp = 310;
+                break;
+            case 32:
+                unitsString = "108|105|106|107|109";
+                exp = 310;
+                break;
+            case 33:
+                unitsString = "108|110|111|112|109";
+                exp = 310;
+                break;
+            case 34:
+                unitsString = "113|110|111|112|114";
+                exp = 310;
+                break;
+            case 35:
+                unitsString = "113|115|106|107|114";
+                exp = 310;
+                break;
+            case 36:
+                unitsString = "111|105|108|107|114";
+                exp = 310;
+                break;
+            case 37:
+                unitsString = "113|112|110|109|104";
+                exp = 310;
+                break;
+            case 38:
+                unitsString = "100|112|114|107|105";
+                exp = 310;
+                break;
+            case 39:
+                unitsString = "100|111|110|109|104";
+                exp = 310;
+                break;
+            case 40:
+                unitsString = "114|105|113|107|112";
+                exp = 310;
+                break;
+            case 41:
+                unitsString = "114|115|116|117|118";
+                exp = 310;
+                break;
+            case 42:
+                unitsString = "117|119|120|121|114";
+                exp = 310;
+                break;
+            case 43:
+                unitsString = "109|110|120|121|112";
+                exp = 310;
+                break;
+            case 44:
+                unitsString = "117|115|113|120|119";
+                exp = 310;
+                break;
+            case 45:
+                unitsString = "116|115|119|117|120";
+                exp = 310;
+                break;
+            case 46:
+                unitsString = "104|105|112|119|121";
+                exp = 310;
+                break;
+            case 47:
+                unitsString = "111|118|110|117|105";
+                exp = 310;
+                break;
+            case 48:
+                unitsString = "114|105|113|107|112";
+                exp = 310;
+                break;
+            case 49:
+                unitsString = "115|116|117|118|119";
+                exp = 310;
+                break;
+            case 50:
+                unitsString = "121|120|1119|118|117";
+                exp = 310;
+                break;
         }
 
         string guestTeam = GameNetwork.TeamNames.GUEST;

@@ -89,6 +89,11 @@ public class ThirdPersonController : MonoBehaviour
     private float lastGroundedTime = 0.0f;
     public bool isControllable = true;
 
+    public void Start()
+    {
+        Application.targetFrameRate = 60;   // a cheap workaround, as the velocity.sqrMagnitude is framerate dependent.
+    }
+
     void Awake()
     {
         moveDirection = transform.TransformDirection(Vector3.forward);

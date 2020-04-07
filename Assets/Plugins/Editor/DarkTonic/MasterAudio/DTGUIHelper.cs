@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using DarkTonic.MasterAudio;
 using UnityEditor;
 using UnityEngine;
+#if ADDRESSABLES_ENABLED
+using UnityEngine.AddressableAssets;
+#endif
 using Object = UnityEngine.Object;
 
 // ReSharper disable once CheckNamespace
@@ -27,6 +30,7 @@ public static class DTGUIHelper {
     private static readonly Color DarkSkin_ActiveHeaderColor = new Color(.3f, .8f, 1f);
     private static readonly Color DarkSkin_HelpIconColor = new Color(.2f, 1f, .2f);
     private static readonly Color DarkSkin_DeleteButtonColor = new Color(1f, .2f, .2f);
+    private static readonly Color DarkSkin_DividerColor = Color.gray;
 
     // COLORS FOR LIGHT SCHEME
     private static readonly Color LightSkin_OuterGroupBoxColor = Color.white;
@@ -40,6 +44,7 @@ public static class DTGUIHelper {
     private static readonly Color LightSkin_ActiveHeaderColor = new Color(.3f, .8f, 1f);
     private static readonly Color LightSkin_HelpIconColor = Color.green;
     private static readonly Color LightSkin_DeleteButtonColor = new Color(1f, .2f, .2f);
+    private static readonly Color LightSkin_DividerColor = new Color(.4f, .4f, .4f);
     // ReSharper restore InconsistentNaming
 
     private static List<string> _layers;
@@ -134,6 +139,12 @@ public static class DTGUIHelper {
         }
     }
 
+    public static Color DividerColor {
+        get {
+            return IsDarkSkin ? DarkSkin_DividerColor : LightSkin_DividerColor;
+        }
+    }
+
     public static Color DeleteButtonColor {
         get {
             return IsDarkSkin ? DarkSkin_DeleteButtonColor : LightSkin_DeleteButtonColor;
@@ -213,25 +224,92 @@ public static class DTGUIHelper {
 
     }
 
-    public static void ShowCollapsibleSection(ref bool state, string text, bool showArrow = true) {
-        // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
-        if (!state)
-        {
-            GUI.backgroundColor = DTGUIHelper.InactiveHeaderColor;
+    public static void DrawUILine(Color color, int thickness = 2, int padding = 2) {
+        Rect r = EditorGUILayout.GetControlRect(GUILayout.Height(padding + thickness));
+        r.height = thickness;
+        r.y += padding / 2;
+        r.x -= 2;
+        r.width += 6;
+        EditorGUI.DrawRect(r, color);
+    }
+
+#if ADDRESSABLES_ENABLED
+    public static bool IsAddressableTypeValid(AssetReference assetRef, string goName) {
+        if (!AudioAddressableOptimizer.IsAddressableValid(assetRef)) {
+            return true;
         }
-        else
-        {
-            GUI.backgroundColor = DTGUIHelper.ActiveHeaderColor;
+        var path = AssetDatabase.GUIDToAssetPath(assetRef.RuntimeKey.ToString());
+        var type = AssetDatabase.GetMainAssetTypeAtPath(path);
+        if (type != typeof(AudioClip)) {
+            var message = "Your addressable for '" + goName + "' is not an Audio Clip. Removing.";
+            Debug.Log(message);
+            return false;
         }
+
+        return true;
+    }
+
+    public static AudioClip EditModeLoadAddressable(AssetReference assetRef) {
+        if (!AudioAddressableOptimizer.IsAddressableValid(assetRef)) { // seems a good way to check if you chose something other than "none".
+            return null;
+        }
+
+        var path = AssetDatabase.GUIDToAssetPath(assetRef.RuntimeKey.ToString());
+        var type = AssetDatabase.GetMainAssetTypeAtPath(path);
+        if (type != typeof(AudioClip)) {
+            Debug.Log("Your addressable is not an Audio Clip. Can't play.");
+            return null;
+        }
+        var clip = AssetDatabase.LoadAssetAtPath<AudioClip>(path);
+        return clip;
+    }
+
+    public static void PreviewAddressable(AssetReference assetRef, AudioSource previewer, float volume) {
+        if (previewer == null) {
+            return;
+        }
+        var clip = EditModeLoadAddressable(assetRef);
+
+        if (clip == null) {
+            return;
+        }
+
+        previewer.PlayOneShot(clip, volume);
+    }
+#endif
+
+        public static void ShowCollapsibleSection(ref bool state, string text, bool showArrow = true) {
+        var oldBG = GUI.backgroundColor;
+#if UNITY_2019_3_OR_NEWER
+#else
+        if (!state) {
+            GUI.backgroundColor = InactiveHeaderColor;
+        } else {
+            GUI.backgroundColor = ActiveHeaderColor;
+        }
+#endif
 
         var style = new GUIStyle();
         style.fontSize = 11;
         style.fontStyle = FontStyle.Bold;
         style.margin = new RectOffset(0, 0, 0, 0);
+
+#if UNITY_2019_3_OR_NEWER
+        style.padding = new RectOffset(0, 0, 3, 0);
+#else
         style.padding = new RectOffset(0, 0, 0, 0);
+#endif
         style.fixedHeight = 18;
 
         GUILayout.BeginHorizontal(style);
+
+#if UNITY_2019_3_OR_NEWER
+        if (!state) {
+            GUI.backgroundColor = InactiveHeaderColor;
+        } else {
+            GUI.backgroundColor = ActiveHeaderColor;
+        }
+#endif
 
         if (showArrow)
         {
@@ -248,13 +326,20 @@ public static class DTGUIHelper {
         var headerStyle = new GUIStyle(EditorStyles.popup);
         headerStyle.fontSize = 11;
         headerStyle.fontStyle = FontStyle.Bold;
+
+#if UNITY_2019_3_OR_NEWER
+        headerStyle.margin = new RectOffset(0, 0, 0, 0);
+#else
         headerStyle.margin = new RectOffset(0, 0, 2, 0);
+#endif
         headerStyle.padding = new RectOffset(6, 0, 1, 2);
         headerStyle.fixedHeight = 18;
 
         if (!GUILayout.Toggle(true, text, headerStyle, GUILayout.MinWidth(20f))) {
             state = !state;
         }
+
+        GUI.backgroundColor = oldBG;
     }
 
     public static void ShowCollapsibleSectionInline(ref bool state, string text)
@@ -262,17 +347,17 @@ public static class DTGUIHelper {
         // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
         if (!state)
         {
-            GUI.backgroundColor = DTGUIHelper.InactiveHeaderColor;
+            GUI.backgroundColor = InactiveHeaderColor;
         }
         else
         {
-            GUI.backgroundColor = DTGUIHelper.ActiveHeaderColor;
+            GUI.backgroundColor = ActiveHeaderColor;
         }
 
         var style = new GUIStyle();
         style.fontSize = 11;
         style.fontStyle = FontStyle.Bold;
-        style.margin = new RectOffset(0, 0, 0, 0);
+        style.margin = new RectOffset(3, 2, 0, 0);
         style.padding = new RectOffset(0, 0, 0, 0);
         style.fixedHeight = 18;
 
@@ -290,9 +375,9 @@ public static class DTGUIHelper {
         var headerStyle = new GUIStyle(EditorStyles.popup);
         headerStyle.fontSize = 11;
         headerStyle.fontStyle = FontStyle.Bold;
-        headerStyle.margin = new RectOffset(0, 0, 2, 0);
-        headerStyle.padding = new RectOffset(6, 0, 1, 2);
-        headerStyle.fixedHeight = 18;
+        headerStyle.margin = new RectOffset(0, 0, 0, 0);
+        headerStyle.padding = new RectOffset(6, 0, 0, 0);
+        headerStyle.fixedHeight = 20;
 
         if (!GUILayout.Toggle(true, text, headerStyle, GUILayout.MinWidth(20f)))
         {
@@ -337,6 +422,7 @@ public static class DTGUIHelper {
     public static void StartGroupHeader(int level = 0, bool showBoth = true) {
         switch (level) {
             case 0:
+            case 2:
                 GUI.backgroundColor = GroupBoxColor;
                 break;
             case 1:
@@ -347,16 +433,51 @@ public static class DTGUIHelper {
         EditorGUILayout.BeginVertical(CornerGUIStyle);
 
         if (!showBoth) {
+            GUI.backgroundColor = Color.white;
             return;
         }
 
         switch (level) {
             case 0:
+            case 2:
                 GUI.backgroundColor = SecondaryHeaderColor;
                 break;
         }
 
-        EditorGUILayout.BeginVertical(EditorStyles.objectFieldThumb);
+#if UNITY_2019_3_OR_NEWER
+        GUIStyle style = EditorStyles.objectFieldThumb;
+
+        switch (level) {
+            case 0:
+            case 1:
+                break;
+            case 2:
+                style = EditorStyles.objectField;
+                break;
+        }
+
+        GUIStyle textureStyle = new GUIStyle(style) {
+            padding = new RectOffset(0, 3, 3, 4),
+            margin = new RectOffset(0, 0, 0, 0)
+        };
+        EditorGUILayout.BeginVertical(textureStyle);
+
+#else
+        EditorGUILayout.BeginVertical(EditorStyles.objectFieldThumb); 
+#endif
+
+        GUI.backgroundColor = Color.white;
+    }
+
+    public static void WhiteLabel(string labelText, int? minWidth = null) {
+        var oldBG = GUI.backgroundColor;
+        GUI.backgroundColor = Color.white;
+        if (minWidth.HasValue) {
+            GUILayout.Label(labelText, GUILayout.MinWidth(minWidth.Value));
+        } else {
+            GUILayout.Label(labelText);
+        }
+        GUI.backgroundColor = oldBG;
     }
 
     public static void EndGroupHeader() {
@@ -372,37 +493,52 @@ public static class DTGUIHelper {
 
     public static void AddMiddleHelpIcon(string helpUrl)
     {
-        var oldColor = GUI.color;
-        var oldBG = GUI.backgroundColor;
-        GUI.color = HelpIconColor;
-        GUI.backgroundColor = Color.white;
-        var buttonStyle = EditorStyles.miniButtonRight;
-        buttonStyle = EditorStyles.miniButton;
-        buttonStyle.padding = new RectOffset(0, 0, 0, 0);
-        buttonStyle.margin = new RectOffset(0, 0, 3, 0);
+		Texture2D backgroundTexture = Texture2D.blackTexture;
+		GUIStyle textureStyle = new GUIStyle(EditorStyles.miniButtonMid) {
+			padding = new RectOffset(0, 0, 0, 0),
+			margin = new RectOffset(0, 0, 3, 0),
+			normal = new GUIStyleState {
+				background = backgroundTexture,
+			}
+			
+		};
 
-        if (GUILayout.Button(new GUIContent("?", "Online Help"), buttonStyle, GUILayout.Width(16), GUILayout.Height(15)))
+		if (GUILayout.Button(new GUIContent(MasterAudioInspectorResources.HelpTexture, "Online Help"), textureStyle, GUILayout.Width(16), GUILayout.Height(15)))
         {
             Application.OpenURL(helpUrl);
         }
         GUILayout.Space(3);
-        GUI.color = oldColor;
-        GUI.backgroundColor = oldBG;
     }
 
-    public static void AddHelpIconNoStyle(string helpUrl) {
-        var oldColor = GUI.color;
-        var oldBG = GUI.backgroundColor;
-        GUI.color = HelpIconColor;
-        GUI.backgroundColor = Color.white;
-        var buttonStyle = EditorStyles.miniButton;
-        if (GUILayout.Button(new GUIContent("?", "Online Help"), buttonStyle, GUILayout.Width(16), GUILayout.Height(15)))
+    public static GUIStyle NoBorderButtonStyle() {
+        Texture2D backgroundTexture = Texture2D.blackTexture;
+        GUIStyle textureStyle = new GUIStyle(EditorStyles.miniButtonMid) {
+            padding = new RectOffset(0, 0, 0, 0),
+            margin = new RectOffset(0, 0, 0, 0),
+            normal = new GUIStyleState {
+                background = backgroundTexture,
+            }
+
+        };
+        return textureStyle;
+    }
+
+    public static void AddHelpIconNoStyle(string helpUrl, int topMargin = 3) {
+		Texture2D backgroundTexture = Texture2D.blackTexture;
+		GUIStyle textureStyle = new GUIStyle(EditorStyles.miniButtonMid) {
+			padding = new RectOffset(0, 0, 0, 0),
+			margin = new RectOffset(0, 0, topMargin, 0),
+			normal = new GUIStyleState {
+				background = backgroundTexture,
+			}
+			
+		};
+
+        if (GUILayout.Button(new GUIContent(MasterAudioInspectorResources.HelpTexture, "Online Help"), textureStyle, GUILayout.Width(16), GUILayout.Height(15)))
         {
             Application.OpenURL(helpUrl);
         }
         GUILayout.Space(3);
-        GUI.color = oldColor;
-        GUI.backgroundColor = oldBG;
     }
 
     public static void AddAPIIcon(string apiUrl) {
@@ -758,34 +894,6 @@ public static class DTGUIHelper {
         return newPitch;
     }
 
-    public static MasterAudio.AudioLocation GetRestrictedAudioLocation(string label, MasterAudio.AudioLocation currentLoc) {
-        var options = new List<GUIContent>();
-
-        var iEnum = Enum.GetNames(typeof(MasterAudio.AudioLocation)).GetEnumerator();
-
-        var selIndex = 0;
-        var i = 0;
-        while (iEnum.MoveNext()) {
-            // ReSharper disable once PossibleNullReferenceException
-            if (iEnum.Current.ToString() == currentLoc.ToString()) {
-                selIndex = i;
-            }
-
-            i++;
-
-            if (iEnum.Current.ToString() == MasterAudio.AudioLocation.FileOnInternet.ToString()) {
-                continue;
-            }
-
-            options.Add(new GUIContent(iEnum.Current.ToString(), iEnum.Current.ToString()));
-        }
-
-        var newIndex = EditorGUILayout.Popup(new GUIContent(label, label), selIndex, options.ToArray());
-        var selEnum = (MasterAudio.AudioLocation)Enum.Parse(typeof(MasterAudio.AudioLocation), options[newIndex].text);
-
-        return selEnum;
-    }
-
     public static float DisplayVolumeField(float vol, VolumeFieldType fieldType, MasterAudio.MixerWidthMode widthMode, float volumeMin = 0f, bool showFieldName = false, string fieldName = "Volume") {
         var wideMode = widthMode == MasterAudio.MixerWidthMode.Wide;
         var narrowMode = widthMode == MasterAudio.MixerWidthMode.Narrow;
@@ -908,6 +1016,7 @@ public static class DTGUIHelper {
 #endif
 
         GUILayout.BeginVertical();
+        GUI.backgroundColor = Color.white;
         GUILayout.Space(2f);
     }
 
@@ -1088,11 +1197,9 @@ public static class DTGUIHelper {
                 var randPitch = SoundGroupVariationInspector.GetRandomPreviewPitch(rndVar);
                 var varVol = SoundGroupVariationInspector.GetRandomPreviewVolume(rndVar);
 
-                if (rndVar.audLocation != MasterAudio.AudioLocation.FileOnInternet) {
-                    if (previewer != null) {
-                        MasterAudioInspector.StopPreviewer();
-                        previewer.pitch = randPitch;
-                    }
+                if (previewer != null) {
+                    MasterAudioInspector.StopPreviewer();
+                    previewer.pitch = randPitch;
                 }
 
                 var calcVolume = aGroup.groupMasterVolume * varVol;
@@ -1109,11 +1216,12 @@ public static class DTGUIHelper {
                             previewer.PlayOneShot(rndVar.VarAudio.clip, calcVolume);
                         }
                         break;
-                    case MasterAudio.AudioLocation.FileOnInternet:
-                        if (!string.IsNullOrEmpty(rndVar.internetFileUrl)) {
-                            Application.OpenURL(rndVar.internetFileUrl);
-                        }
+#if ADDRESSABLES_ENABLED
+                    case MasterAudio.AudioLocation.Addressable:
+                        PreviewAddressable(rndVar.audioClipAddressable, previewer, calcVolume);
                         break;
+#endif
+
                 }
 
                 return;
@@ -1127,11 +1235,9 @@ public static class DTGUIHelper {
                 var randPitch = SoundGroupVariationInspector.GetRandomPreviewPitch(rndVar);
                 var varVol = SoundGroupVariationInspector.GetRandomPreviewVolume(rndVar);
 
-                if (rndVar.audLocation != MasterAudio.AudioLocation.FileOnInternet) {
-                    if (previewer != null) {
-                        MasterAudioInspector.StopPreviewer();
-                        previewer.pitch = randPitch;
-                    }
+                if (previewer != null) {
+                    MasterAudioInspector.StopPreviewer();
+                    previewer.pitch = randPitch;
                 }
 
                 var calcVolume = dynGroup.groupMasterVolume * varVol;
@@ -1148,11 +1254,11 @@ public static class DTGUIHelper {
                             previewer.PlayOneShot(rndVar.VarAudio.clip, calcVolume);
                         }
                         break;
-                    case MasterAudio.AudioLocation.FileOnInternet:
-                        if (!string.IsNullOrEmpty(rndVar.internetFileUrl)) {
-                            Application.OpenURL(rndVar.internetFileUrl);
-                        }
+#if ADDRESSABLES_ENABLED 
+                    case MasterAudio.AudioLocation.Addressable:
+                        PreviewAddressable(rndVar.audioClipAddressable, previewer, calcVolume);
                         break;
+#endif
                 }
             }
         }
@@ -1387,7 +1493,6 @@ public static class DTGUIHelper {
         var content = new GUIContent(label, FoldOutTooltip);
 
         expanded = EditorGUILayout.Foldout(expanded, content);
-
         return expanded;
     }
 
@@ -1446,7 +1551,7 @@ public static class DTGUIHelper {
         return shortPath;
     }
 
-#if UNITY_2018_3_OR_NEWER
+#if UNITY_2018_2_OR_NEWER
     public static bool IsPrefabInProjectView(Object gObject) {
         return false;
         //return GetPrefabType(gObject) != PrefabAssetType.Regular && !Application.isPlaying; // this requires you to create a prefab of your Master Audio game object before being able to see the Inspector. Kind of a hassle.
@@ -1457,22 +1562,9 @@ public static class DTGUIHelper {
     }
 #endif
 
-#if UNITY_2018_3_OR_NEWER
-    private static PrefabAssetType GetPrefabType(Object gObject) {
-        return PrefabUtility.GetPrefabAssetType(gObject);
-    }
-#else
-    private static PrefabType GetPrefabType(Object gObject) {
-        return PrefabUtility.GetPrefabType(gObject);
-    }
-#endif
-
-    public static GameObject DuplicateGameObject(GameObject gameObj, string baseName, int? optionalCountSuffix) {
 #if UNITY_2018_2_OR_NEWER
+    public static GameObject DuplicateGameObject(GameObject gameObj, string baseName, int? optionalCountSuffix) {
         var prefabRoot = PrefabUtility.GetCorrespondingObjectFromSource(gameObj);
-#else
-        var prefabRoot = PrefabUtility.GetPrefabParent(gameObj);
-#endif
 
         GameObject dupe;
 
@@ -1496,6 +1588,17 @@ public static class DTGUIHelper {
 
         return dupe;
     }
+#endif
+
+#if UNITY_2018_2_OR_NEWER
+    private static PrefabAssetType GetPrefabType(Object gObject) {
+        return PrefabUtility.GetPrefabAssetType(gObject);
+    }
+#else
+    private static PrefabType GetPrefabType(Object gObject) {
+        return PrefabUtility.GetPrefabType(gObject);
+    }
+#endif
 
     private static float GetPositiveUsablePitch(AudioSource source) {
         return source.pitch > 0 ? source.pitch : 1;

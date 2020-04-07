@@ -45,7 +45,7 @@ namespace CodeStage.AntiCheat.ObscuredTypes
 
 		[SerializeField]
 		private bool fakeValueActive;
-		
+
 		// for serialization purposes
 		private ObscuredString(){}
 
@@ -119,7 +119,7 @@ namespace CodeStage.AntiCheat.ObscuredTypes
 		/// </summary>
 		/// Literally does same job as SetEncrypted() but makes new instance instead of filling existing one,
 		/// making it easier to initialize new variables from saved encrypted values.
-		/// 
+		///
 		/// <param name="encrypted">Raw encrypted value you got from GetEncrypted().</param>
 		/// <param name="key">Encryption key you've got from GetEncrypted().</param>
 		/// <returns>New obscured variable initialized from specified encrypted value.</returns>
@@ -279,11 +279,21 @@ namespace CodeStage.AntiCheat.ObscuredTypes
 		}
 
 		/// <summary>
-		/// Alternative to the type cast, use if you wish to get decrypted value 
+		/// Alternative to the type cast, use if you wish to get decrypted value
 		/// but can't or don't want to use cast to the regular type.
 		/// </summary>
 		/// <returns>Decrypted value.</returns>
-		public char[] GetDecrypted()
+		public string GetDecrypted()
+		{
+			return InternalDecryptToString();
+		}
+
+		/// <summary>
+		/// GC-friendly alternative to the type cast, use if you wish to get decrypted value
+		/// but can't or don't want to use cast to the regular type.
+		/// </summary>
+		/// <returns>Decrypted value as a raw chars array in case you don't wish to allocate new string.</returns>
+		public char[] GetDecryptedToChars()
 		{
 			return InternalDecrypt();
 		}
@@ -359,13 +369,13 @@ namespace CodeStage.AntiCheat.ObscuredTypes
 		}
 
 		#region operators, overrides, interface implementations
-		
+
 		//! @cond
 		public int Length
 		{
 			get { return hiddenChars.Length; }
 		}
-		
+
 		/// <summary>
 		/// Proxy to the String API.
 		/// Please consider avoiding using this in a hot path since it invokes decryption on every access call.
@@ -378,7 +388,7 @@ namespace CodeStage.AntiCheat.ObscuredTypes
 				{
 					throw new IndexOutOfRangeException();
 				}
-				
+
 				return InternalDecrypt()[index];
 			}
 		}
@@ -396,7 +406,7 @@ namespace CodeStage.AntiCheat.ObscuredTypes
 		/// <summary>
 		/// Determines whether two specified ObscuredStrings have the same value.
 		/// </summary>
-		/// 
+		///
 		/// <returns>
 		/// true if the value of <paramref name="a"/> is the same as the value of <paramref name="b"/>; otherwise, false.
 		/// </returns>
@@ -424,7 +434,7 @@ namespace CodeStage.AntiCheat.ObscuredTypes
 		/// <summary>
 		/// Determines whether two specified ObscuredStrings have different values.
 		/// </summary>
-		/// 
+		///
 		/// <returns>
 		/// true if the value of <paramref name="a"/> is different from the value of <paramref name="b"/>; otherwise, false.
 		/// </returns>
@@ -433,7 +443,7 @@ namespace CodeStage.AntiCheat.ObscuredTypes
 		{
 			return !(a == b);
 		}
-		
+
 		/// <summary>
 		/// Proxy to the String API.
 		/// Please consider avoiding using this in a hot path since it invokes decryption on every access call.
@@ -442,7 +452,7 @@ namespace CodeStage.AntiCheat.ObscuredTypes
 		{
 			return Substring(startIndex, Length - startIndex);
 		}
-		
+
 		/// <summary>
 		/// Proxy to the String API.
 		/// Please consider avoiding using this in a hot path since it invokes decryption on every access call.
@@ -460,7 +470,7 @@ namespace CodeStage.AntiCheat.ObscuredTypes
 		{
 			return InternalDecryptToString().StartsWith(value, comparisonType);
 		}
-		
+
 		/// <summary>
 		/// Proxy to the String API.
 		/// Please consider avoiding using this in a hot path since it invokes decryption on every access call.

@@ -470,9 +470,10 @@ namespace DarkTonic.MasterAudio {
 
         #endregion
 
-#region Collision and Trigger Events
+        #region Collision and Trigger Events
 
-#if !PHY2D_MISSING
+
+#if PHY2D_ENABLED
         // ReSharper disable once UnusedMember.Local
         private void OnTriggerEnter2D(Collider2D other) {
             _triggerEnter2dTime = Time.realtimeSinceStartup;
@@ -576,7 +577,7 @@ namespace DarkTonic.MasterAudio {
         }
 #endif
 
-#if !PHY3D_MISSING
+#if PHY3D_ENABLED
         // ReSharper disable once UnusedMember.Local
         private void OnCollisionEnter(Collision collision) {
             if (!useCollisionSound) {

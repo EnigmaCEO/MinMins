@@ -27,7 +27,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
     [SerializeField] List<int> _experienceNeededPerUnitLevel = new List<int>() { 0, 10, 30, 70, 150, 310 };  //Rule: Doubles each level
 
-    [SerializeField] private int _maxArenaLevel = 30;
+    [SerializeField] private int _maxArenaLevel = 50;
 
     [SerializeField] private int _unitsNecessaryToBattle = 5;
 

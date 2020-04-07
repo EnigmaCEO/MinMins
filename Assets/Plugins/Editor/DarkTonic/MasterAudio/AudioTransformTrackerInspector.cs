@@ -38,7 +38,7 @@ public class AudioTransformTrackerInspector : Editor {
                 MasterAudio.PauseAllSoundsOfTransform(tracker.Trans);
             }
             GUILayout.Space(4);
-            if (GUILayout.Button("Unpause All Sounds", EditorStyles.toolbarButton, GUILayout.Width(115))) {
+            if (GUILayout.Button("Unpause All Sounds", EditorStyles.toolbarButton, GUILayout.Width(120))) {
                 MasterAudio.UnpauseAllSoundsOfTransform(tracker.Trans);
             }
             EditorGUILayout.EndHorizontal();

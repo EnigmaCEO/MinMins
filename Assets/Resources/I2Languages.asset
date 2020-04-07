@@ -15,7 +15,7 @@ MonoBehaviour:
   mSource:
     UserAgreesToHaveItOnTheScene: 0
     UserAgreesToHaveItInsideThePluginsFolder: 0
-    GoogleLiveSyncIsUptoDate: 1
+    GoogleLiveSyncIsUptoDate: 0
     mTerms:
     - Term: Waiting for Opponent...
       TermType: 0
@@ -1705,7 +1705,7 @@ MonoBehaviour:
       Description: 
       Languages:
       - TEAM BOOST SELECTION
-      - "SELECCI\xD3N DE AUMENTO PARA EQUIPO"
+      - "Selecci\xF3n De Impulso De Equipo"
       - 
       - 
       - 
@@ -1876,10 +1876,10 @@ MonoBehaviour:
       Code: es
       Flags: 0
     - Name: Chinese_Traditional
-      Code: 
+      Code: zh-TW
       Flags: 0
     - Name: Chinese_Simplified
-      Code: 
+      Code: zh-CN
       Flags: 0
     - Name: Korean
       Code: ko

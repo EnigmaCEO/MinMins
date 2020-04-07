@@ -2,6 +2,28 @@ MASTER AUDIO PLUGIN - By DarkTonic, Inc. (c) 2012-2019
 
 - Code by Brian Hunsaker
 
+-V 4.2.9    - Bug fix for Ambient Sound in 4.2.6 broke other things. Now fixed in a better way that doesn't cause other issues.
+			- Fixed bug: Dragging more than 1 Variation only created 1 Variation.
+			- Fixed compile error when either Physics2D or Physics3D aren't installed. Now there's a Welcome Window where you must check those boxes to enable 2d and 3d features.
+			- Ambient Sound now disables the creation of its tracker triggers by 1 frame so it won't cause audio glitches such as when the script is on a Game Object being instantiated and instantly disabled for pooling purposes.
+			- Removed option for "Load Resources Async" under Resource File / Audio Clip settings because now it is always async.
+			- Added Performance Settings section in Advanced Settings. Has an option to "Perform Code Warming" which defaults to on. It shows the Warm Sound Group there if enabled. Now defaults to the first Sound Group with an Audio Clip Variation.
+			- Added support for Addressables for Sound Groups and Playlists. 3rd Audio Origin of "Addressable" now exists if you enable Addressables support on the new Welcome Window and have Addressables package installed.
+			- Note: Dragging a non-Addressable into a Master Audio Addressable field may make the Audio Clip an Addressable if it isn't already.
+			- Removed "File On Internet" option. It could never unload anyway. 
+			- Renamed Resource File / Audio Clip Settings to Audio Clip Settings. Now we will have Addressable settings there too if you have the feature enabled.
+			- Added "Unused Addressable Life (seconds)" field to each Sound Group. This lets you specify to keep the Addressables in your Variations around for an extra X seconds after it's no longer used. This will avoid having to load it again in that time frame since we cache the loaded Addressables on our side.
+			- Re-ordered the sections of Advanced Settings. There are a lot now so I put them in alphabetical order.
+			- Fixed the deletion of game object (Sound Groups and Variations) in Unity 2018.2+ when they're part of a prefab. It was logging an error to the Console and not deleting.
+			- Put back the "Clone" icon and made it work in Unity 2018.2+.
+
+-V 4.2.8	- Fixed more Inspector problems in Unity 2019.3 (beta).
+
+-V 4.2.7    - Fixed bug: Song Alias field was not used for IsSongPlaying or QueuePlaylistClip methods.
+		    - Fixed many Inspector problems in Unity 2019.3 (beta).
+		    - Now disabling all Sound Group Variation Game Objects not playing audio for increased performance!
+			- Removed the ability to Clone a variation from the Inspector, because Unity doesn't allow you to reparent it so it would be in the wrong location. You will need to clone Variations from the Hierarchy now.
+
 -V 4.2.6    - Added a toggle for "Remove Probability-Unplayed Variations" on the Master Audio Manager screen. Defaults to "on". If you turn it off, Variations that aren't played due to failing the Probability To Play check will not be removed from the pool, so they may be played again later through another probability check. 
 			- Fixed bug where a despawned or destroyed Game Object with Ambient Sound script would stop all playing instances of the Sound Group instead of just the single voice.
 
@@ -385,7 +407,7 @@ MASTER AUDIO PLUGIN - By DarkTonic, Inc. (c) 2012-2019
 		   - Added option "Follow Audio Listener" on Advanced Settings. Defaults to on. This aids previewing, and will move the Master Audio game object to Audio Listener's location every frame, including at edit time. This will enable previewing of sounds from the Master Audio game object at all times. Before it was based on distance from the Audio Listener.
 		   - Sound Group's Inspector now has mute and solo button like its Mixer row.
 		   - Playlist Controller's Inspector now has mute button like its section in the Master Audio game object.
-		   - Now showing indicator of playing / not playing and “time” on Group & Variation Inspectors so you can see which Variations are playing.
+		   - Now showing indicator of playing / not playing and ï¿½timeï¿½ on Group & Variation Inspectors so you can see which Variations are playing.
 
 -V 3.5.8.4 - Fixed bug: ButtonClicker script spams Console when no Master Audio game object in Scene.
 		   - Fixed bug: Hitting stop in the Jukebox with Song Ended Custom Event set up on Playlist Controller logs "Duplicate Custom Event fired".

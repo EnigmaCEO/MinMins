@@ -42,6 +42,18 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         public const string ENJIN_SHADOWSONG = "enjin_shadowsong";
         public const string ENJIN_BULL = "enjin_bull";
 
+        public const string KNIGHT_HEALER = "knight_healer";
+        public const string KNIGHT_BOMBER = "knight_bomber";
+        public const string KNIGHT_SCOUT = "knight_scout";
+        public const string KNIGHT_DESTROYER = "knight_destroyer";
+        public const string KNIGHT_TANK = "knight_tank";
+
+        public const string DEMON_HEALER = "demon_healer";
+        public const string DEMON_BOMBER = "demon_bomber";
+        public const string DEMON_SCOUT = "demon_scout";
+        public const string DEMON_DESTROYER = "demon_destroyer";
+        public const string DEMON_TANK = "demon_tank";
+
         /*
         public const string ENJIN_DEFENSE_ORE_ITEM_1 = "enjin_defense_ore_1";
         public const string ENJIN_DEFENSE_ORE_ITEM_2 = "enjin_defense_ore_2";
@@ -251,6 +263,21 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     public bool HasEnjinWitek = false;
     public bool HasEnjinTassio = false;
     public bool HasEnjinSimon = false;
+
+    public bool HasKnightHealer = false;
+    public bool HasKnightBomber = false;
+    public bool HasKnightDestroyer = false;
+    public bool HasKnightScout = false;
+    public bool HasKnightTank = false;
+
+    public bool HasDemonHealer = false;
+    public bool HasDemonBomber = false;
+    public bool HasDemonDestroyer = false;
+    public bool HasDemonScout = false;
+    public bool HasDemonTank = false;
+
+    public int[] rewardedLevels = new int[100];
+
     [Header("=================================")]
 
     private Hashtable _matchResultshashTable = new Hashtable();

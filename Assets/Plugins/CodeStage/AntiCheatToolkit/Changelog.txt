@@ -1,5 +1,28 @@
 ﻿Please, always remove previous Anti-Cheat Toolkit version before updating!
 
+2.1.2
+- fix compilation warnings and errors with TimeCheatingDetector disabled (thx Gary)
+
+2.1.1
+- fix ObscuredString.GetDecrypted returning value (thx Jose)
+
+2.1.0
+- add ignoreSetCorrectTime option to TimeCheatingDetector
+- add IsStarted property to all detectors
+- fix possible wrong TimeCheatingDetector check result (thx esteban16108)
+
+2.0.6
+- add ACTK_US_EXPORT_COMPATIBLE symbol (see Readme for details)
+- fix possible data loss after removing all obscured prefs (thx n0lex)
+
+2.0.5
+- fix incorrect CodeHashGenerator result Success calculation (thx murat303)
+- ignore more standard prefs at the Prefs Editor (thx n0lex)
+
+2.0.4
+- remove few extra debug logs from Android native plugin
+- add code obfuscation and overall code protection notes to the readme
+
 2.0.3
 - add few API proxies to the ObscuredString for better compatibility
 - fix ObscuredString.GetHashCode returned incorrect values (thx quanbp)

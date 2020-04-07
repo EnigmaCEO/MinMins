@@ -29,7 +29,7 @@ namespace CodeStage.AntiCheat.Genuine.CodeHash
 		/// </summary>
 		public bool Success
 		{
-			get { return ErrorMessage != null; }
+			get { return ErrorMessage == null; }
 		}
 
 		internal static HashGeneratorResult FromError(string errorMessage)

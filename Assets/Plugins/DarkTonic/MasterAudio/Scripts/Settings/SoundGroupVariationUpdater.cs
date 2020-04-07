@@ -336,25 +336,25 @@ namespace DarkTonic.MasterAudio {
                 GrpVariation.LowPassFilter = newFilter;
             }
 
-#if !PHY2D_MISSING
+#if PHY2D_ENABLED
             var oldQueriesStart = Physics2D.queriesStartInColliders;
             if (is2DRaycast) {
                 Physics2D.queriesStartInColliders = _maThisFrame.occlusionIncludeStartRaycast2DCollider;
             }
 #endif
 
-#if !PHY2D_MISSING || !PHY3D_MISSING
+#if PHY2D_ENABLED || PHY3D_ENABLED
             var oldRaycastsHitTriggers = true;
 #endif
 
             // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
             if (is2DRaycast) {
-#if !PHY2D_MISSING
+#if PHY2D_ENABLED
                 oldRaycastsHitTriggers = Physics2D.queriesHitTriggers;
                 Physics2D.queriesHitTriggers = _maThisFrame.occlusionRaycastsHitTriggers;
 #endif
             } else {
-#if !PHY3D_MISSING
+#if PHY3D_ENABLED
                 oldRaycastsHitTriggers = Physics.queriesHitTriggers;
                 Physics.queriesHitTriggers = _maThisFrame.occlusionRaycastsHitTriggers;
 #endif
@@ -367,7 +367,7 @@ namespace DarkTonic.MasterAudio {
             if (_maThisFrame.occlusionUseLayerMask) {
                 switch (_maThisFrame.occlusionRaycastMode) {
                     case MasterAudio.RaycastMode.Physics3D:
-#if !PHY3D_MISSING
+#if PHY3D_ENABLED
                         RaycastHit hitObject;
                         if (Physics.Raycast(raycastOrigin, direction, out hitObject, distanceToListener, _maThisFrame.occlusionLayerMask.value)) {
                             isHit = true;
@@ -377,7 +377,7 @@ namespace DarkTonic.MasterAudio {
 #endif
                         break;
                     case MasterAudio.RaycastMode.Physics2D:
-#if !PHY2D_MISSING
+#if PHY2D_ENABLED
                         var castHit2D = Physics2D.Raycast(raycastOrigin, direction, distanceToListener, _maThisFrame.occlusionLayerMask.value);
                         if (castHit2D.transform != null) {
                             isHit = true;
@@ -390,7 +390,7 @@ namespace DarkTonic.MasterAudio {
             } else {
                 switch (_maThisFrame.occlusionRaycastMode) {
                     case MasterAudio.RaycastMode.Physics3D:
-#if !PHY3D_MISSING
+#if PHY3D_ENABLED
                         RaycastHit hitObject;
                         if (Physics.Raycast(raycastOrigin, direction, out hitObject, distanceToListener)) {
                             isHit = true;
@@ -400,7 +400,7 @@ namespace DarkTonic.MasterAudio {
 #endif
                         break;
                     case MasterAudio.RaycastMode.Physics2D:
-#if !PHY2D_MISSING
+#if PHY2D_ENABLED
                         var castHit2D = Physics2D.Raycast(raycastOrigin, direction, distanceToListener);
                         if (castHit2D.transform != null) {
                             isHit = true;
@@ -413,12 +413,12 @@ namespace DarkTonic.MasterAudio {
             }
 
             if (is2DRaycast) {
-#if !PHY2D_MISSING
+#if PHY2D_ENABLED
                 Physics2D.queriesStartInColliders = oldQueriesStart;
                 Physics2D.queriesHitTriggers = oldRaycastsHitTriggers;
 #endif
             } else {
-#if !PHY3D_MISSING
+#if PHY3D_ENABLED
                 Physics.queriesHitTriggers = oldRaycastsHitTriggers;
 #endif
             }
@@ -479,7 +479,16 @@ namespace DarkTonic.MasterAudio {
 
             VarAudio.PlayScheduled(startTime);
 
-            AudioUtil.ClipPlayed(VarAudio.clip, GrpVariation.GameObj);
+            switch (GrpVariation.audLocation) {
+#if ADDRESSABLES_ENABLED
+                case MasterAudio.AudioLocation.Addressable:
+                    AudioAddressableOptimizer.AddAddressablePlayingClip(GrpVariation.audioClipAddressable, VarAudio);
+                    break;
+#endif
+                default:
+                    AudioUtil.ClipPlayed(VarAudio.clip, GrpVariation.GameObj);
+                    break;
+            }
 
             if (GrpVariation.useRandomStartTime) {
                 VarAudio.time = ClipStartPosition;

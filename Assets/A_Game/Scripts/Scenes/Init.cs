@@ -5,12 +5,8 @@ using System;
 
 public class Init : EnigmaScene
 {
-    [SerializeField] string url = "https://min-mins.herokuapp.com"; //"https://mykin-server.com";
-    [SerializeField] string serverAddress = "GCHFGWHCU7GUF2E773D54XHFFE4662PP7BVPJZCDXC2ZNEJUVXXYEDVA"; //"GAFWSBEOGCCYVEC5YZUILDEDGHO27PODVTQJ45DSFBODKRXQ42MVLIZZ";
-
     [SerializeField] private string _nextSceneName = "Main";
-    [SerializeField] private KinWrapper _kinWrapper;
-
+  
 	private float _startTime;
 
     //private const int SCHEDULED_NOTIFICATION_TIME = 1440; // 1440 minutes, thus 24 hours

@@ -16,12 +16,12 @@ public class MA_EnemyOne : MonoBehaviour {
         _speed = Random.Range(-3, -8) * AudioUtil.FrameTime;
         _horizSpeed = Random.Range(-3, 3) * AudioUtil.FrameTime;
 
-#if PHY3D_MISSING
+#if !PHY3D_ENABLED
         Debug.LogError("MA_EnemyOne and this example Scene will not work properly without Physics3D package installed.");
 #endif
     }
 
-#if !PHY3D_MISSING
+#if PHY3D_ENABLED
     // ReSharper disable once UnusedMember.Local
     // ReSharper disable once UnusedParameter.Local
     void OnCollisionEnter(Collision collision) {

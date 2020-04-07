@@ -2,6 +2,10 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+#if ADDRESSABLES_ENABLED
+using UnityEngine.AddressableAssets;
+#endif
+
 
 // ReSharper disable once CheckNamespace
 namespace DarkTonic.MasterAudio {
@@ -14,6 +18,9 @@ namespace DarkTonic.MasterAudio {
         public AudioClip clip;
         public string songName = string.Empty;
         public string resourceFileName = string.Empty;
+#if ADDRESSABLES_ENABLED
+        public AssetReference audioClipAddressable;
+#endif
         public float volume = 1f;
         public float pitch = 1f;
         public bool isExpanded = true;

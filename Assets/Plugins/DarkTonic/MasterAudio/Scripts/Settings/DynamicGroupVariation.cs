@@ -1,5 +1,8 @@
 /*! \cond PRIVATE */
 using UnityEngine;
+#if ADDRESSABLES_ENABLED
+using UnityEngine.AddressableAssets;
+#endif
 
 // ReSharper disable once CheckNamespace
 namespace DarkTonic.MasterAudio {
@@ -26,7 +29,9 @@ namespace DarkTonic.MasterAudio {
         public int weight = 1;
         public MasterAudio.AudioLocation audLocation = MasterAudio.AudioLocation.Clip;
         public string resourceFileName;
-        public string internetFileUrl;
+#if ADDRESSABLES_ENABLED
+        public AssetReference audioClipAddressable;
+#endif
         public bool isExpanded = true;
         public bool isChecked = true;
 

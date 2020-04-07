@@ -9,13 +9,13 @@ public class ListenerFollower : MonoBehaviour {
     private GameObject _goToFollow;
     private Transform _trans;
     private GameObject _go;
-#if !PHY3D_MISSING
+#if PHY3D_ENABLED
     private SphereCollider _collider;
 #endif
 
     // ReSharper disable once UnusedMember.Local
     void Awake() {
-#if !PHY3D_MISSING
+#if PHY3D_ENABLED
         var trig = Trigger;
         if (trig == null) { } // get rid of warning
 #endif
@@ -24,7 +24,7 @@ public class ListenerFollower : MonoBehaviour {
     public void StartFollowing(Transform transToFollow, float trigRadius) {
         _transToFollow = transToFollow;
         _goToFollow = transToFollow.gameObject;
-#if !PHY3D_MISSING
+#if PHY3D_ENABLED
         Trigger.radius = trigRadius;
 #endif
     }
@@ -65,7 +65,7 @@ public class ListenerFollower : MonoBehaviour {
         }
     }
 
-#if !PHY3D_MISSING
+#if PHY3D_ENABLED
     public SphereCollider Trigger {
         get {
             if (_collider != null) {

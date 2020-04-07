@@ -1,6 +1,9 @@
 using UnityEngine;
 using System.Collections.Generic;
-
+using System.Collections;
+#if ADDRESSABLES_ENABLED
+using UnityEngine.AddressableAssets;
+#endif
 // ReSharper disable once CheckNamespace
 namespace DarkTonic.MasterAudio {
     /// <summary>
@@ -31,8 +34,9 @@ namespace DarkTonic.MasterAudio {
 
         public MasterAudio.AudioLocation audLocation = MasterAudio.AudioLocation.Clip;
         public string resourceFileName;
-        public string internetFileUrl;
-        public MasterAudio.InternetFileLoadStatus internetFileLoadStatus = MasterAudio.InternetFileLoadStatus.Loading;
+#if ADDRESSABLES_ENABLED
+        public AssetReference audioClipAddressable;
+#endif
         public float original_pitch;
         public float original_volume;
         public bool isExpanded = true;
@@ -81,7 +85,10 @@ namespace DarkTonic.MasterAudio {
         private SoundGroupVariationUpdater _varUpdater;
         private int _previousSoundFinishedFrame = -1;
         private string _soundGroupName;
+        private MasterAudio.VariationLoadStatus _loadStatus = MasterAudio.VariationLoadStatus.None;
+        private bool _isStopRequested = false;
         private bool _isPaused;
+        private bool _isWarmingPlay = false;
 
 		/*! \endcond */
 
@@ -115,7 +122,9 @@ namespace DarkTonic.MasterAudio {
         private bool _attachToSource;
         private string _resFileName = string.Empty;
         private bool _hasStartedEndLinkedGroups;
-
+        private Coroutine _loadResourceFileCoroutine;
+        private Coroutine _loadAddressableCoroutine;
+        private bool _isUnloadAddressableCoroutineRunning = false;
 
         public class PlaySoundParams {
             public string SoundType;
@@ -181,7 +190,7 @@ namespace DarkTonic.MasterAudio {
             var c = VarAudio.clip; // pre-warm the clip access
             var g = GameObj; // pre-warm the game object clip access
 
-            if (c != null || g != null) { } // to disable the warning for not using it.
+            if (c != null || g != null || _isWarmingPlay) { } // to disable the warning for not using it.
 
             if (VarAudio.playOnAwake) {
                 Debug.LogWarning("The 'Play on Awake' checkbox in the Variation named: '" + name +
@@ -200,12 +209,18 @@ namespace DarkTonic.MasterAudio {
 
             GameObj.layer = MasterAudio.Instance.gameObject.layer;
 
+            var shouldDisableVariation = true;
+
             switch (audLocation) {
-                case MasterAudio.AudioLocation.FileOnInternet:
-                    if (internetFileLoadStatus == MasterAudio.InternetFileLoadStatus.Loading) {
-                        LoadInternetFile();
+#if ADDRESSABLES_ENABLED
+                case MasterAudio.AudioLocation.Addressable:
+                    if (_loadAddressableCoroutine != null) {
+                        shouldDisableVariation = false;
                     }
                     break;
+#endif
+                default:
+                    break; // no warning
             }
 
             SetMixerGroup();
@@ -216,6 +231,10 @@ namespace DarkTonic.MasterAudio {
             SetOcclusion();
 
             SpatializerHelper.TurnOnSpatializerIfEnabled(VarAudio);
+
+            if (shouldDisableVariation) {
+                DTMonoHelper.SetActive(GameObj, false); // should begin disabled
+            }
         }
 
         /*! \cond PRIVATE */
@@ -239,10 +258,6 @@ namespace DarkTonic.MasterAudio {
             if (aBus != null && MasterAudio.Instance.mixerSpatialBlendType != MasterAudio.AllMixerSpatialBlendType.ForceAllTo2D && aBus.forceTo2D) {
                 VarAudio.spatialBlend = 0;
             }
-        }
-
-        public void LoadInternetFile() {
-            StartCoroutine(AudioResourceOptimizer.PopulateSourceWithInternetFile(internetFileUrl, this, InternetFileLoaded, InternetFileFailedToLoad));
         }
 
         private void SetOcclusion() {
@@ -330,22 +345,9 @@ namespace DarkTonic.MasterAudio {
             float? targetPitch, Transform sourceTrans, bool attach, float delayTime,
             double? timeToSchedulePlay, bool isChaining, bool isSingleSubscribedPlay) {
 
-            if (!MasterAudio.IsWarming && audLocation == MasterAudio.AudioLocation.FileOnInternet) {
-                switch (internetFileLoadStatus) {
-                    case MasterAudio.InternetFileLoadStatus.Loading:
-                        if (ParentGroup.LoggingEnabledForGroup) {
-                            MasterAudio.LogWarning("Cannot play Variation '" + name +
-                                                   "' because its Internet file has not been downloaded yet.");
-                        }
-                        return;
-                    case MasterAudio.InternetFileLoadStatus.Failed:
-                        if (ParentGroup.LoggingEnabledForGroup) {
-                            MasterAudio.LogWarning("Cannot play Variation '" + name +
-                                                   "' because its Internet file failed downloading.");
-                        }
-                        return;
-                }
-            }
+            LoadStatus = MasterAudio.VariationLoadStatus.None;
+            _isStopRequested = false;
+            _isWarmingPlay = MasterAudio.IsWarming;
 
             MaybeCleanupFinishedDelegate();
             _hasStartedEndLinkedGroups = false;
@@ -355,12 +357,8 @@ namespace DarkTonic.MasterAudio {
 
             SetPriority(); // reset it back to normal priority in case you're playing 2D this time.
 
-            if (ShouldLoadAsync) {
-                StopAllCoroutines(); // The only Coroutine right now requires pro version and Unity 4.5.3
-            }
-
             // compute pitch
-            if (pitch.HasValue) {
+            if (pitch.HasValue) { 
                 VarAudio.pitch = pitch.Value;
             } else if (useRandomPitch) {
                 var randPitch = Random.Range(randomPitchMin, randomPitchMax);
@@ -391,25 +389,30 @@ namespace DarkTonic.MasterAudio {
                 _maxLoops = Random.Range(minCustomLoops, maxCustomLoops + 1);
             }
 
+            LoadStatus = MasterAudio.VariationLoadStatus.Loading;
+
             switch (audLocation) {
                 case MasterAudio.AudioLocation.Clip:
                     FinishSetupToPlay();
                     return;
                 case MasterAudio.AudioLocation.ResourceFile:
-                    if (ShouldLoadAsync) {
-                        StartCoroutine(AudioResourceOptimizer.PopulateSourcesWithResourceClipAsync(ResFileName, this,
-                            FinishSetupToPlay, ResourceFailedToLoad));
-                    } else {
-                        if (!AudioResourceOptimizer.PopulateSourcesWithResourceClip(ResFileName, this)) {
-                            return; // audio file not found!
-                        }
-
-                        FinishSetupToPlay();
+                    if (_loadResourceFileCoroutine != null) {
+                        StopCoroutine(_loadResourceFileCoroutine);
                     }
+
+                    _loadResourceFileCoroutine = StartCoroutine(AudioResourceOptimizer.PopulateSourcesWithResourceClipAsync(ResFileName, this,
+                        FinishSetupToPlay, ResourceFailedToLoad));
                     return;
-                case MasterAudio.AudioLocation.FileOnInternet:
-                    FinishSetupToPlay();
+#if ADDRESSABLES_ENABLED
+                case MasterAudio.AudioLocation.Addressable:
+                    if (_loadAddressableCoroutine != null) {
+                        StopCoroutine(_loadAddressableCoroutine);
+                    }
+
+                    _loadAddressableCoroutine = StartCoroutine(AudioAddressableOptimizer.PopulateSourceWithAddressableClipAsync(audioClipAddressable, 
+                        this, ParentGroup.AddressableUnusedSecondsLifespan, FinishSetupToPlay, ResourceFailedToLoad));
                     return;
+#endif
             }
         }
 
@@ -442,32 +445,23 @@ namespace DarkTonic.MasterAudio {
         }
         /*! \endcond */
 
-        private void InternetFileFailedToLoad() {
-            internetFileLoadStatus = MasterAudio.InternetFileLoadStatus.Failed;
-        }
-
         private void MaybeCleanupFinishedDelegate() {
             if (ParentGroup.willCleanUpDelegatesAfterStop) {
                 ClearSubscribers();
             }
         }
 
-        private void InternetFileLoaded() {
-            if (ParentGroup.LoggingEnabledForGroup) {
-                MasterAudio.LogWarning("Internet file: '" + internetFileUrl + "' loaded successfully.");
-            }
-
-            internetFileLoadStatus = MasterAudio.InternetFileLoadStatus.Loaded;
-        }
-
         private void ResourceFailedToLoad() {
+            LoadStatus = MasterAudio.VariationLoadStatus.LoadFailed;
             Stop(); // to stop other behavior and disable the Updater script.
         }
 
         private void FinishSetupToPlay() {
+            LoadStatus = MasterAudio.VariationLoadStatus.Loaded;
+
             if (!VarAudio.isPlaying && VarAudio.time > 0f) {
                 // paused. Do nothing except Play
-            } else if (useFades && (fadeInTime > 0f || fadeOutTime > 0f)) {
+            } else if (useFades && (fadeInTime > 0f || fadeOutTime > 0f)) { 
                 fadeMaxVolume = _maxVol;
 
                 if (fadeInTime > 0f) {
@@ -610,6 +604,11 @@ namespace DarkTonic.MasterAudio {
                             return;
                         }
                         break;
+#if ADDRESSABLES_ENABLED
+                    case MasterAudio.AudioLocation.Addressable:
+                        Stop();
+                        break;
+#endif
                 }
             }
 
@@ -693,11 +692,25 @@ namespace DarkTonic.MasterAudio {
         }
 
         private void MaybeUnloadClip() {
-            if (audLocation == MasterAudio.AudioLocation.ResourceFile) {
-                AudioResourceOptimizer.UnloadClipIfUnused(_resFileName);
+            VarAudio.Stop();
+            VarAudio.time = 0f;
+
+            switch (audLocation) { 
+                case MasterAudio.AudioLocation.ResourceFile:
+                    AudioResourceOptimizer.UnloadClipIfUnused(_resFileName);
+                    break;
+                case MasterAudio.AudioLocation.Clip:
+                    AudioUtil.UnloadNonPreloadedAudioData(VarAudio.clip, GameObj);
+                    break;
+#if ADDRESSABLES_ENABLED
+                case MasterAudio.AudioLocation.Addressable:
+                    VarAudio.clip = null; // must clear out clip so it can be released below.
+                    AudioAddressableOptimizer.RemoveAddressablePlayingClip(audioClipAddressable, VarAudio, _isWarmingPlay);
+                    break;
+#endif
             }
 
-            AudioUtil.UnloadNonPreloadedAudioData(VarAudio.clip, GameObj);
+            LoadStatus = MasterAudio.VariationLoadStatus.None;
         }
 
         private void PlayEndLinkedGroup(string sType, double? timeToPlayClip = null) {
@@ -716,6 +729,10 @@ namespace DarkTonic.MasterAudio {
         /// <param name="stopEndDetection">Do not ever pass this in.</param>
         /// <param name="skipLinked">Do not ever pass this in.</param>
         public void Stop(bool stopEndDetection = false, bool skipLinked = false) {
+            if (IsPlaying && !_isStopRequested) {
+                _isStopRequested = true;
+            }
+            
             _isPaused = false;
             var waitStopped = false;
 
@@ -737,9 +754,6 @@ namespace DarkTonic.MasterAudio {
             ParentGroup.RemoveActiveAudioSourceId(InstanceId);
             MasterAudio.StopTrackingOcclusionForSource(GameObj);
 
-            VarAudio.Stop();
-
-            VarAudio.time = 0f;
             if (VariationUpdater != null) {
                 VariationUpdater.StopFollowing();
                 VariationUpdater.StopFading();
@@ -767,8 +781,39 @@ namespace DarkTonic.MasterAudio {
 
             Trans.localPosition = Vector3.zero;
 
-            MaybeUnloadClip();
+            switch (_loadStatus) {
+                case MasterAudio.VariationLoadStatus.None:
+                case MasterAudio.VariationLoadStatus.Loaded:
+                case MasterAudio.VariationLoadStatus.LoadFailed:
+                    StopEndCleanup();
+                    break;
+                case MasterAudio.VariationLoadStatus.Loading:
+                    if (!_isUnloadAddressableCoroutineRunning) {
+                        StartCoroutine(WaitForLoadToUnloadClipAndDeactivate());
+                    }
+                    break;
+            }
         }
+
+        /*! \cond PRIVATE */
+        private void StopEndCleanup() {
+            MaybeUnloadClip();
+            if (!_isWarmingPlay) {
+                DTMonoHelper.SetActive(GameObj, false);
+            }
+        }
+
+        private IEnumerator WaitForLoadToUnloadClipAndDeactivate() {
+            _isUnloadAddressableCoroutineRunning = true;
+
+            while (_loadStatus == MasterAudio.VariationLoadStatus.Loading) {
+                yield return MasterAudio.EndOfFrameDelay;
+            }
+
+            _isUnloadAddressableCoroutineRunning = false;
+            StopEndCleanup();
+        }
+        /*! \endcond */
 
         /// <summary>
         /// This method allows you to fade the sound from this Variation to a specified volume over X seconds.
@@ -848,7 +893,6 @@ namespace DarkTonic.MasterAudio {
 
             return false;
         }
-
         /*! \endcond */
 
         /// <summary>
@@ -1071,6 +1115,10 @@ namespace DarkTonic.MasterAudio {
                     return true; // paused aren't available
                 }
 
+                if (_loadStatus == MasterAudio.VariationLoadStatus.Loading) {
+                    return false;
+                }
+
                 return AudioUtil.GetAudioPlayedPercentage(VarAudio) >= ParentGroup.retriggerPercentage;
             }
         }
@@ -1081,14 +1129,36 @@ namespace DarkTonic.MasterAudio {
         /// </summary>
         public float LastTimePlayed { get; set; }
 
+        public bool ClipIsLoaded {
+            get {
+                return _loadStatus == MasterAudio.VariationLoadStatus.Loaded;
+            }
+        }
+
         /// <summary>
         /// This returns whether the clip is playing or not.
         /// </summary>
-        public bool IsPlaying {
+        public bool IsPlaying { 
             get { return _playSndParam.IsPlaying; }
         }
 
         /*! \cond PRIVATE */
+        /// <summary>
+        /// Don't set this ever, it's used by DT code only.
+        /// </summary>
+        public MasterAudio.VariationLoadStatus LoadStatus {
+            get {
+                return _loadStatus;
+            }
+            set {
+                if (_loadStatus == value) {
+                    return; // no change
+                }
+
+                _loadStatus = value;
+            }
+        }
+
         public int InstanceId {
             get {
                 if (_instanceId < 0) {
@@ -1096,6 +1166,12 @@ namespace DarkTonic.MasterAudio {
                 }
 
                 return _instanceId;
+            }
+        }
+
+        public bool IsStopRequested {
+            get {
+                return _isStopRequested;
             }
         }
 
@@ -1184,16 +1260,6 @@ namespace DarkTonic.MasterAudio {
             }
         }
 
-        private bool ShouldLoadAsync {
-            get {
-                if (MasterAudio.Instance.resourceClipsAllLoadAsync) {
-                    return true;
-                }
-
-                return ParentGroup.resourceClipsAllLoadAsync;
-            }
-        }
-
         public bool UsesOcclusion {
             get {
                 if (!VariationUpdater.MAThisFrame.useOcclusion) {
@@ -1202,13 +1268,13 @@ namespace DarkTonic.MasterAudio {
 
                 switch (VariationUpdater.MAThisFrame.occlusionRaycastMode) {
                     case MasterAudio.RaycastMode.Physics2D:
-#if PHY2D_MISSING
+#if !PHY2D_ENABLED
                         return false;
 #else
                         break;
 #endif
                     case MasterAudio.RaycastMode.Physics3D:
-#if PHY3D_MISSING
+#if !PHY3D_ENABLED
                         return false;
 #else
                         break;

@@ -25,8 +25,10 @@ namespace CodeStage.AntiCheat.Examples
 	{
 		internal bool injectionDetected;
 		internal bool speedHackDetected;
+#if ACTK_TIME_CHEATING_DETECTOR_ENABLED
 		internal bool wrongTimeDetected;
 		internal bool timeCheatingDetected;
+#endif
 		internal bool obscuredTypeCheatDetected;
 		internal bool wallHackCheatDetected;
 
@@ -43,11 +45,13 @@ namespace CodeStage.AntiCheat.Examples
 			Debug.Log("Speed hack Detected!");
 		}
 
+#if ACTK_TIME_CHEATING_DETECTOR_ENABLED
 		public void OnTimeCheatingDetected()
 		{
 			timeCheatingDetected = true;
 			Debug.Log("Time cheating Detected!");
 		}
+#endif
 
 		public void OnInjectionDetected()
 		{
@@ -116,10 +120,10 @@ namespace CodeStage.AntiCheat.Examples
 			// However, you still can start and control detectors from code.
 			// You have 3 options for using detectors from code in general now:
 			//
-			// - configure detector in inspector, disable Auto Start, 
+			// - configure detector in inspector, disable Auto Start,
 			//   fill Detection Event and start it via StartDetection();
 			//
-			// - configure detector in inspector, disable Auto Start, 
+			// - configure detector in inspector, disable Auto Start,
 			//   do not fill Detection Event and start it via StartDetection(), passing detection callback;
 			//
 			// - do not add detector to your scene at all and create it completely from code using StartDetection();
@@ -153,7 +157,7 @@ namespace CodeStage.AntiCheat.Examples
 			// In this case we subscribe to the speed hack detection event,
 			// set detector update interval to 1 second, allowing 5 false positives and
 			// allowing Cool Down after 60 seconds (read more about Cool Down in the readme.pdf).
-			// Thus OnSpeedHackDetected normally will execute after 5 seconds since 
+			// Thus OnSpeedHackDetected normally will execute after 5 seconds since
 			// speed hack was applied to the application.
 			// Please, note, if we have detector added to scene, all settings
 			// we made there in inspector will be overridden by settings we pass

@@ -68,7 +68,7 @@ public class FootstepsSoundsInspector : Editor {
 
         DTGUIHelper.VerticalSpace(3);
 
-#if PHY3D_MISSING
+#if !PHY3D_ENABLED
         switch (_sounds.footstepEvent) {
             case FootstepSounds.FootstepTriggerMode.OnCollision:
             case FootstepSounds.FootstepTriggerMode.OnTriggerEnter:
@@ -76,7 +76,7 @@ public class FootstepsSoundsInspector : Editor {
                 return;
         }
 #endif
-#if PHY2D_MISSING
+#if !PHY2D_ENABLED
         switch (_sounds.footstepEvent) {
             case FootstepSounds.FootstepTriggerMode.OnCollision2D:
             case FootstepSounds.FootstepTriggerMode.OnTriggerEnter2D:
@@ -87,14 +87,13 @@ public class FootstepsSoundsInspector : Editor {
 
         EditorGUILayout.BeginHorizontal();
         GUI.contentColor = DTGUIHelper.BrightButtonColor;
-        GUILayout.Space(10);
         if (GUILayout.Button("Add Footstep Sound", EditorStyles.toolbarButton, GUILayout.Width(125))) {
             AddFootstepSound();
         }
 
         if (_sounds.footstepGroups.Count > 0) {
             GUILayout.Space(10);
-            if (GUILayout.Button(new GUIContent("Delete Footstep Sound", "Delete the bottom Footstep Sound"), EditorStyles.toolbarButton, GUILayout.Width(125))) {
+            if (GUILayout.Button(new GUIContent("Delete Footstep Sound", "Delete the bottom Footstep Sound"), EditorStyles.toolbarButton, GUILayout.Width(140))) {
                 DeleteFootstepSound();
             }
             var buttonText = "Collapse All";
@@ -205,7 +204,6 @@ public class FootstepsSoundsInspector : Editor {
                     step.matchingLayers[i] = newLayer;
                 }
                 EditorGUILayout.BeginHorizontal();
-                GUILayout.Space(10);
 
                 GUI.contentColor = DTGUIHelper.BrightButtonColor;
                 if (GUILayout.Button(new GUIContent("Add", "Click to add a layer match at the end"), EditorStyles.toolbarButton, GUILayout.Width(60))) {

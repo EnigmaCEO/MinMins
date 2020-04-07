@@ -56,7 +56,7 @@ namespace CodeStage.AntiCheat.Detectors
 	/// Just add it to any GameObject as usual or through the "GameObject > Create Other > Code Stage > Anti-Cheat Toolkit"
 	/// menu to get started.<br/>
 	/// You can use detector completely from inspector without writing any code except the actual reaction on cheating.
-	/// 
+	///
 	/// <b>Avoid using detectors from code at the Awake phase</b>.
 	[AddComponentMenu(MenuPath + ComponentName)]
 	[DisallowMultipleComponent]
@@ -64,7 +64,7 @@ namespace CodeStage.AntiCheat.Detectors
 	public class TimeCheatingDetector : ACTkDetectorBase<TimeCheatingDetector>
 	{
 		/// <summary>
-		/// Delegate with result of online time receive attempt. 
+		/// Delegate with result of online time receive attempt.
 		/// </summary>
 		/// <param name="result">OnlineTimeResult instance with details about operation result.</param>
 		public delegate void OnlineTimeCallback(OnlineTimeResult result);
@@ -72,9 +72,9 @@ namespace CodeStage.AntiCheat.Detectors
 		/// <summary>
 		/// Delegate with cheat check result.
 		/// </summary>
-		/// <param name="checkResult">Result of the cheat check.</param>
-		/// <param name="errorKind">Kind of occured error, if any.</param>
-		public delegate void TimeCheatingDetectorEventHandler(CheckResult checkResult, ErrorKind errorKind);
+		/// <param name="result">Result of the cheat check.</param>
+		/// <param name="error">Kind of occured error, if any.</param>
+		public delegate void TimeCheatingDetectorEventHandler(CheckResult result, ErrorKind error);
 
 		/// <summary>
 		/// Result of the online time receive attempt.
@@ -219,6 +219,10 @@ namespace CodeStage.AntiCheat.Detectors
 		private const string FinalLogPrefix = ACTkConstants.LogPrefix + ComponentName + ": ";
 		private const int DefaultTimeoutSeconds = 10;
 
+		protected override string GetComponentName()
+		{
+			return ComponentName;
+		}
 #if ACTK_DETECTOR_ENABLED
 		private static readonly WaitForEndOfFrame CachedEndOfFrame = new WaitForEndOfFrame();
 		private static bool gettingOnlineTime;
@@ -258,7 +262,8 @@ namespace CodeStage.AntiCheat.Detectors
 		/// <summary>
 		/// Method to use for url request. Use Head method if possible and fall back to get if server does not reply or block head requests.
 		/// </summary>
-		[Tooltip("Method to use for url request. Use Head method if possible and fall back to get if server does not reply or block head requests.")]
+		[Tooltip("Method to use for url request. Use Head method if possible and fall back to get if server does not " +
+				 "reply or block head requests.")]
 		public RequestMethod requestMethod = RequestMethod.Head;
 
 		/// <summary>
@@ -267,7 +272,7 @@ namespace CodeStage.AntiCheat.Detectors
 		[Tooltip("Online time request timeout in seconds.")]
 		public int timeoutSeconds = 10;
 
-		/// <summary> 
+		/// <summary>
 		/// Time (in minutes) between detector checks. Set to 0 to disable automatic time checks and use
 		/// ForceCheck(), ForceCheckEnumerator() or ForceCheckTask() to manually run a check.
 		/// </summary>
@@ -275,7 +280,7 @@ namespace CodeStage.AntiCheat.Detectors
 		[Tooltip("Time (in minutes) between detector checks.")]
 		[Range(0f, 60)]
 		public float interval = 5;
-	
+
 		/// <summary>
 		/// Maximum allowed difference between subsequent measurements, in minutes.
 		/// </summary>
@@ -287,10 +292,18 @@ namespace CodeStage.AntiCheat.Detectors
 		/// <summary>
 		/// Maximum allowed difference between local and online time, in minutes.
 		/// </summary>
-		/// If online and local time difference exceed this threshold, detector will raise an event with 
+		/// If online and local time difference exceed this threshold, detector will raise an event with
 		[Tooltip("Maximum allowed difference between local and online time, in minutes.")]
 		[Range(1, 180)]
 		public int wrongTimeThreshold = 65;
+
+		/// <summary>
+		/// Ignore case when time changes to be in sync with online correct time.
+		/// </summary>
+		/// Wrong time threshold is taken into account.
+		[Tooltip("Ignore case when time changes to be in sync with online correct time. " +
+				 "Wrong time threshold is taken into account.")]
+		public bool ignoreSetCorrectTime = true;
 
 		/// <summary>
 		/// Last detector error kind. Will be ErrorKind.NoError if there were no errors.
@@ -402,11 +415,11 @@ namespace CodeStage.AntiCheat.Detectors
 		/// </summary>
 		/// If you pass cheatCheckedCallback than make sure you have no filled Detection Event on detector instance in scene to avoid duplicate event calls.<br/>
 		/// Creates a new detector instance if it doesn't exists in scene.
-		/// <param name="interval">Time in minutes between checks. Overrides #interval property.</param>
+		/// <param name="intervalMinutes">Time in minutes between checks. Overrides #interval property.</param>
 		/// <param name="cheatCheckedEventHandler">Method to call after each cheat check. Pass null if you wish to use event, set in detector inspector.</param>
-		public static TimeCheatingDetector StartDetection(float interval, TimeCheatingDetectorEventHandler cheatCheckedEventHandler = null)
+		public static TimeCheatingDetector StartDetection(float intervalMinutes, TimeCheatingDetectorEventHandler cheatCheckedEventHandler = null)
 		{
-			return GetOrCreateInstance.StartDetectionInternal(interval, cheatCheckedEventHandler);
+			return GetOrCreateInstance.StartDetectionInternal(intervalMinutes, cheatCheckedEventHandler);
 		}
 
 		/// <summary>-
@@ -421,7 +434,7 @@ namespace CodeStage.AntiCheat.Detectors
 		/// Stops and completely disposes detector component.
 		/// </summary>
 		/// On dispose Detector follows 2 rules:
-		/// - if Game Object's name is "Anti-Cheat Toolkit Detectors": it will be automatically 
+		/// - if Game Object's name is "Anti-Cheat Toolkit Detectors": it will be automatically
 		/// destroyed if no other Detectors left attached regardless of any other components or children;<br/>
 		/// - if Game Object's name is NOT "Anti-Cheat Toolkit Detectors": it will be automatically destroyed only
 		/// if it has neither other components nor children attached;
@@ -602,7 +615,7 @@ namespace CodeStage.AntiCheat.Detectors
 			{
 				try
 				{
-					if (sdkLevel == 0)	
+					if (sdkLevel == 0)
 					{
 						sdkLevel = GetAndroidSDKLevel();
 					}
@@ -956,11 +969,6 @@ namespace CodeStage.AntiCheat.Detectors
 			CheatChecked = null;
 		}
 
-		protected override string GetComponentName()
-		{
-			return ComponentName;
-		}
-
 		private IEnumerator CheckForCheat()
 		{
 			if (!isRunning || IsCheckingForCheat) yield break;
@@ -991,13 +999,15 @@ namespace CodeStage.AntiCheat.Detectors
 				LastError = ErrorKind.Unknown;
 			}
 
-			if (LastError != ErrorKind.NoError)
+			if (LastError != ErrorKind.NoError && LastError != ErrorKind.AlreadyCheckingForCheat)
 			{
 				LastResult = CheckResult.Error;
 				ReportCheckResult();
 				IsCheckingForCheat = false;
 				yield break;
 			}
+
+			LastError = ErrorKind.NoError;
 
 			var offlineSecondsUtc = GetLocalSecondsUtc();
 			var offlineOnlineDifference = (int)Math.Abs(lastOnlineSecondsUtc - offlineSecondsUtc);
@@ -1009,18 +1019,11 @@ namespace CodeStage.AntiCheat.Detectors
 				LastResult = CheckResult.WrongTimeDetected;
 			}
 
-			/*Debug.Log("onlineSecondsUtc  " + lastOnlineSecondsUtc);
-			Debug.Log("offlineSecondsUtc " + offlineSecondsUtc);
-			Debug.Log("offlineOnlineDiff " + offlineOnlineDifference);*/
-
 			var lastOfflineOnlineDifference = PlayerPrefs.GetInt(onlineOfflineDifferencePrefsKey, 0);
 			if (lastOfflineOnlineDifference != 0)
 			{
 				lastOfflineOnlineDifference ^= int.MaxValue;
 				var differenceOfDifferences = Math.Abs(offlineOnlineDifference - lastOfflineOnlineDifference);
-
-				//Debug.Log("lastOfflineOnlineDiff " + lastOfflineOnlineDifference);
-				//Debug.Log("differenceOfDifferences " + differenceOfDifferences);
 
 				if (realCheatThreshold < 10)
 				{
@@ -1029,22 +1032,21 @@ namespace CodeStage.AntiCheat.Detectors
 
 				if (differenceOfDifferences > realCheatThreshold * 60)
 				{
-
+					if (LastResult == CheckResult.WrongTimeDetected || !ignoreSetCorrectTime)
+					{
 #if ACTK_DETECTION_BACKLOGS
-					Debug.LogWarning(FinalLogPrefix + "Detection backlog:\n" +
-					                 "wrongTimeThreshold: " + wrongTimeThreshold + "\n" +
-					                 "realCheatThreshold: " + realCheatThreshold + "\n" +
-									 "offlineSecondsUtc: " + offlineSecondsUtc + "\n" +
-									 "lastOnlineSecondsUtc: " + lastOnlineSecondsUtc + "\n" +
-									 "offlineOnlineDifference: " + offlineOnlineDifference + "\n" +
-									 "lastOfflineOnlineDifference: " + lastOfflineOnlineDifference + "\n" +
-									 "differenceOfDifferences: " + differenceOfDifferences);
+						Debug.LogWarning(FinalLogPrefix + "Detection backlog:\n" +
+										 "wrongTimeThreshold: " + wrongTimeThreshold + "\n" +
+										 "realCheatThreshold: " + realCheatThreshold + "\n" +
+										 "offlineSecondsUtc: " + offlineSecondsUtc + "\n" +
+										 "lastOnlineSecondsUtc: " + lastOnlineSecondsUtc + "\n" +
+										 "offlineOnlineDifference: " + offlineOnlineDifference + "\n" +
+										 "lastOfflineOnlineDifference: " + lastOfflineOnlineDifference + "\n" +
+										 "differenceOfDifferences: " + differenceOfDifferences);
 #endif
-
-					LastResult = CheckResult.CheatDetected;
+						LastResult = CheckResult.CheatDetected;
+					}
 				}
-
-				//Debug.Log("LastResult " + LastResult);
 			}
 
 			PlayerPrefs.SetInt(onlineOfflineDifferencePrefsKey, offlineOnlineDifference ^ int.MaxValue);
@@ -1103,8 +1105,8 @@ namespace CodeStage.AntiCheat.Detectors
 		}
 
 		/* just an utility method for those who wish
-		   to get online time for own further processing 
-		   without starting detector 
+		   to get online time for own further processing
+		   without starting detector
 		*/
 
 #if ACTK_ACTUAL_ANDROID_DEVICE
@@ -1176,13 +1178,13 @@ namespace CodeStage.AntiCheat.Detectors
 		[Obsolete("Please use StartDetection(int, ...) instead.", true)]
 		public static void StartDetection(Action detectionCallback, int interval)
 		{
-			
+
 		}
 
 		[Obsolete("Please use StartDetection(int, ...) instead.", true)]
 		public static void StartDetection(Action detectionCallback, Action<ErrorKind> errorCallback, int interval)
 		{
-			
+
 		}
 
 		[Obsolete("Please use other overloads of this method instead", true)]

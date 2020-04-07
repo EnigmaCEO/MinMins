@@ -11,12 +11,12 @@ public class MA_Laser : MonoBehaviour {
         useGUILayout = false;
         _trans = transform;
 
-#if PHY3D_MISSING
+#if !PHY3D_ENABLED
         Debug.LogError("MA_Laser and this example Scene will not work properly without Physics3D package installed.");
 #endif
     }
 
-#if !PHY3D_MISSING
+#if PHY3D_ENABLED
     // ReSharper disable once UnusedMember.Local
     void OnCollisionEnter(Collision collision) {
         if (!collision.gameObject.name.StartsWith("Enemy(")) {

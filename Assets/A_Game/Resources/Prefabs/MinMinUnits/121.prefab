@@ -376,12 +376,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc8395a664cd4044f88156feb10d672d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Strength: 3
+  Strength: 5
   Defense: 5
   MaxHealth: 5
   EffectScale: 1
   Effect: 6
-  Type: 4
+  Type: 5
   Attacks: 0a000000
   EffectName: 3
   Tier: 0

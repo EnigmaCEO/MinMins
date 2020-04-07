@@ -212,7 +212,7 @@ using ExitGames.Client.Photon;
             {
                 op[ParameterCode.RoomName] = opParams.RoomName;
             }
-            if (opParams.Lobby != null && !string.IsNullOrEmpty(opParams.Lobby.Name))
+            if (opParams.Lobby != null && !opParams.Lobby.IsDefault)
             {
                 op[ParameterCode.LobbyName] = opParams.Lobby.Name;
                 op[ParameterCode.LobbyType] = (byte)opParams.Lobby.Type;
@@ -265,7 +265,7 @@ using ExitGames.Client.Photon;
             if (opParams.CreateIfNotExists)
             {
                 op[ParameterCode.JoinMode] = (byte)JoinMode.CreateIfNotExists;
-                if (opParams.Lobby != null)
+                if (opParams.Lobby != null && !opParams.Lobby.IsDefault)
                 {
                     op[ParameterCode.LobbyName] = opParams.Lobby.Name;
                     op[ParameterCode.LobbyType] = (byte)opParams.Lobby.Type;
@@ -333,7 +333,7 @@ using ExitGames.Client.Photon;
                 opParameters[ParameterCode.MatchMakingType] = (byte)opJoinRandomRoomParams.MatchingType;
             }
 
-            if (opJoinRandomRoomParams.TypedLobby != null && !string.IsNullOrEmpty(opJoinRandomRoomParams.TypedLobby.Name))
+            if (opJoinRandomRoomParams.TypedLobby != null && !opJoinRandomRoomParams.TypedLobby.IsDefault)
             {
                 opParameters[ParameterCode.LobbyName] = opJoinRandomRoomParams.TypedLobby.Name;
                 opParameters[ParameterCode.LobbyType] = (byte)opJoinRandomRoomParams.TypedLobby.Type;
@@ -401,6 +401,15 @@ using ExitGames.Client.Photon;
                 if (this.DebugOut >= DebugLevel.INFO)
                 {
                     this.Listener.DebugReturn(DebugLevel.INFO, "OpGetGameList not sent. LobbyType must be SqlLobby.");
+                }
+                return false;
+            }
+
+            if (lobby.IsDefault)
+            {
+                if (this.DebugOut >= DebugLevel.INFO)
+                {
+                    this.Listener.DebugReturn(DebugLevel.INFO, "OpGetGameList not sent. LobbyName must be not null and not empty.");
                 }
                 return false;
             }
@@ -1020,7 +1029,13 @@ using ExitGames.Client.Photon;
         [Obsolete("No longer used, cause random matchmaking is no longer a process.")]
         public const int AlreadyMatched = 0x7FFF - 4;
 
-        /// <summary>(32762) Not in use currently.</summary>
+        /// <summary>(32762) All servers are busy. This is a temporary issue and the game logic should try again after a brief wait time.</summary>
+        /// <remarks>
+        /// This error may happen for all operations that create rooms. The operation response will contain this error code.
+        /// 
+        /// This error is very unlikely to happen as we monitor load on all servers and add them on demand.
+        /// However, it's good to be prepared for a shortage of machines or surge in CCUs.
+        /// </remarks>
         public const int ServerFull = 0x7FFF - 5;
 
         /// <summary>(32761) Not in use currently.</summary>
@@ -1454,6 +1469,9 @@ using ExitGames.Client.Photon;
 
         /// <summary>(200) Informs user about version of plugin load to game</summary>
         public const byte PluginVersion = 200;
+
+        /// <summary>(196) Cluster info provided in OpAuthenticate/OpAuthenticateOnce responses.</summary>
+        public const byte Cluster = 196;
 
         /// <summary>(195) Protocol which will be used by client to connect master/game servers. Used for nameserver.</summary>
         public const byte ExpectedProtocol = 195;

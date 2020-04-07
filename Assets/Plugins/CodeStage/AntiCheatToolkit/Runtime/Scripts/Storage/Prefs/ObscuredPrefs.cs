@@ -198,14 +198,21 @@ namespace CodeStage.AntiCheat.Storage
 		public static void DeleteCryptoKey()
 		{
 			PlayerPrefs.DeleteKey(PrefsKey);
+			
+			generatedCryptoKey = null;
+			deviceIdHash = 0;
 		}
 
 		/// <summary>
 		/// Removes all keys and values from the preferences, including anything saved with regular PlayerPrefs. <strong>Use with caution!</strong>
 		/// </summary>
+		/// <strong>\htmlonly<font color="FF4040">WARNING:</font>\endhtmlonly Please use ObscuredPrefs.DeleteAll() to remove all prefs instead of PlayerPrefs.DeleteAll() to properly clear internals and avoid any data loss when saving new obscured prefs after DeleteAll() call.</strong>
 		public static void DeleteAll()
 		{
 			PlayerPrefs.DeleteAll();
+			
+			generatedCryptoKey = null;
+			deviceIdHash = 0;
 		}
 
 		/// <summary>

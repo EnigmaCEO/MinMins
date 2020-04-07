@@ -564,18 +564,7 @@ namespace CodeStage.AntiCheat.EditorCode
 #else // LINUX
 			keys.AddRange(ReadKeysLinux());
 #endif
-			keys.Remove(ObscuredPrefs.PrefsKey);
-			keys.Remove("OwsfBQ8qISsHHho6ACAJAiAAKRI2GjIDFh4EIQ0o"); // TimeCheatingDetector.onlineOfflineDifferencePrefsKey
-			keys.Remove("UnityGraphicsQuality");
-			keys.Remove("UnitySelectMonitor");
-			keys.Remove("Screenmanager Resolution Width");
-			keys.Remove("Screenmanager Resolution Height");
-			keys.Remove("Screenmanager Is Fullscreen mode");
-			keys.Remove("unity.cloud_userid");
-			keys.Remove("unity.player_session_background_time");
-			keys.Remove("unity.player_session_elapsed_time");
-			keys.Remove("unity.player_sessionid");
-			keys.Remove("unity.player_session_count");
+			keys.RemoveAll(IgnoredPrefsKeys);
 
 			if (allRecords == null) allRecords = new List<PrefsRecord>();
 			if (filteredRecords == null) filteredRecords = new List<PrefsRecord>();
@@ -644,6 +633,24 @@ namespace CodeStage.AntiCheat.EditorCode
 			}
 
 			ApplyFiltering();
+		}
+
+		private bool IgnoredPrefsKeys(string key)
+		{
+			return key == ObscuredPrefs.PrefsKey ||
+			       key == "OwsfBQ8qISsHHho6ACAJAiAAKRI2GjIDFh4EIQ0o" ||
+			       key == "UnityGraphicsQuality" ||
+			       key == "UnitySelectMonitor" ||
+			       key == "Screenmanager Resolution Width" ||
+			       key == "Screenmanager Resolution Height" ||
+			       key == "Screenmanager Is Fullscreen mode" ||
+			       key == "unity.cloud_userid" ||
+			       key == "unity.player_session_background_time" ||
+			       key == "unity.player_session_elapsed_time" ||
+			       key == "unity.player_sessionid" ||
+			       key == "unity.player_session_count" ||
+			       key == "UnityUdpSdkImported" ||
+			       key.StartsWith("PackageUpdaterLastChecked");
 		}
 
 #if UNITY_EDITOR_WIN

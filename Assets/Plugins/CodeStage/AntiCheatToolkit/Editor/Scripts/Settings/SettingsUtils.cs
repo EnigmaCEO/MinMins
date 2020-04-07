@@ -51,7 +51,8 @@ namespace CodeStage.AntiCheat.EditorCode
 				result.preventReadPhoneState |= GetSymbol(symbols, ACTkEditorConstants.Conditionals.PreventReadPhoneState);
 				result.preventInternetPermission |= GetSymbol(symbols, ACTkEditorConstants.Conditionals.PreventInternetPermission);
 				result.obscuredAutoMigration |= GetSymbol(symbols, ACTkEditorConstants.Conditionals.ObscuredAutoMigration);
-				result.exposeThirdPartyIntegrationSymbol |= GetSymbol(symbols, ACTkEditorConstants.Conditionals.ThirdPartyIntegration);
+				result.exposeThirdPartyIntegration |= GetSymbol(symbols, ACTkEditorConstants.Conditionals.ThirdPartyIntegration);
+				result.usExportCompatible |= GetSymbol(symbols, ACTkEditorConstants.Conditionals.UsExportCompatible);
 			}
 
 			return result;

@@ -19,6 +19,12 @@ public class TeamBoostSelection : EnigmaScene
 
     void Start()
     {
+        SoundManager.FadeCurrentSong(1f, () => {
+            int level = Random.Range(1, 6);
+            SoundManager.Stop();
+            SoundManager.Play("level" + level, SoundManager.AudioTypes.Music, "", true);
+        });
+
         _nextButton.onClick.AddListener(() => { onNextButtonDown(); });
         _backButton.onClick.AddListener(() => { onBackButtonDown(); });
 

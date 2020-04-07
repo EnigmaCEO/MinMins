@@ -390,7 +390,17 @@ internal class NetworkingPeer : LoadBalancingPeer, IPhotonPeerListener
 
     /// <summary>The cloud region this client connects to. Set by ConnectToRegionMaster().</summary>
     public CloudRegionCode CloudRegion { get; protected internal set; }
+    /// <summary>
+    /// Internally used value that stores the cluster to connect to, if one was set via ConnectToRegion(region, version, cluster=null)
+    /// </summary>
+    private string cloudCluster;
 
+    /// <summary>The cluster name provided by the Name Server.</summary>
+    /// <remarks>
+    /// The value is provided by the OpResponse for OpAuthenticate/OpAuthenticateOnce.
+    /// Default: null. This value only ever updates from the Name Server authenticate response.
+    /// </remarks>
+    public string CurrentCluster;
 
 
     public Dictionary<int, PhotonPlayer> mActors = new Dictionary<int, PhotonPlayer>();
@@ -663,6 +673,7 @@ internal class NetworkingPeer : LoadBalancingPeer, IPhotonPeerListener
 
         this.IsUsingNameServer = true;
         this.CloudRegion = CloudRegionCode.none;
+        this.cloudCluster = null;
 
         if (this.State == ClientState.ConnectedToNameServer)
         {
@@ -688,7 +699,7 @@ internal class NetworkingPeer : LoadBalancingPeer, IPhotonPeerListener
     /// Connects you to a specific region's Master Server, using the Name Server to find the IP.
     /// </summary>
     /// <returns>If the operation could be sent. If false, no operation was sent.</returns>
-    public bool ConnectToRegionMaster(CloudRegionCode region)
+    public bool ConnectToRegionMaster(CloudRegionCode region, string specificCluster = null)
     {
         if (PhotonHandler.AppQuits)
         {
@@ -698,6 +709,7 @@ internal class NetworkingPeer : LoadBalancingPeer, IPhotonPeerListener
 
         this.IsUsingNameServer = true;
         this.CloudRegion = region;
+        this.cloudCluster = specificCluster;
 
         if (this.State == ClientState.ConnectedToNameServer)
         {
@@ -769,20 +781,26 @@ internal class NetworkingPeer : LoadBalancingPeer, IPhotonPeerListener
 
         Type socketTcp = null;
         #if !UNITY_EDITOR && UNITY_XBOXONE
-        socketTcp = Type.GetType("ExitGames.Client.Photon.SocketWebTcpNativeDynamic, Assembly-CSharp", false);
+        socketTcp = Type.GetType("ExitGames.Client.Photon.SocketNative, Assembly-CSharp", false);
         if (socketTcp == null)
         {
-            socketTcp = Type.GetType("ExitGames.Client.Photon.SocketWebTcpNativeDynamic, Assembly-CSharp-firstpass", false);
+            socketTcp = Type.GetType("ExitGames.Client.Photon.SocketNative, Assembly-CSharp-firstpass", false);
         }
         #else
         // to support WebGL export in Unity, we find and assign the SocketWebTcp class (if it's in the project).
         // alternatively class SocketWebTcp might be in the Photon3Unity3D.dll
-        socketTcp = Type.GetType("ExitGames.Client.Photon.SocketWebTcp, Assembly-CSharp", false);
-        if (socketTcp == null)
+        bool noWebSocketSet = this.SocketImplementationConfig == null || !this.SocketImplementationConfig.ContainsKey(ConnectionProtocol.WebSocket) || this.SocketImplementationConfig[ConnectionProtocol.WebSocket] == null;
+        bool noWebSocketSecureSet = this.SocketImplementationConfig == null || !this.SocketImplementationConfig.ContainsKey(ConnectionProtocol.WebSocketSecure) || this.SocketImplementationConfig[ConnectionProtocol.WebSocketSecure] == null;
+        if (noWebSocketSet || noWebSocketSecureSet)
         {
-            socketTcp = Type.GetType("ExitGames.Client.Photon.SocketWebTcp, Assembly-CSharp-firstpass", false);
+            socketTcp = Type.GetType("ExitGames.Client.Photon.SocketWebTcp, Assembly-CSharp", false);
+            if (socketTcp == null)
+            {
+                socketTcp = Type.GetType("ExitGames.Client.Photon.SocketWebTcp, Assembly-CSharp-firstpass", false);
+            }
         }
         #endif
+
         if (socketTcp != null)
         {
             this.SocketImplementationConfig[ConnectionProtocol.WebSocket] = socketTcp;
@@ -892,13 +910,21 @@ internal class NetworkingPeer : LoadBalancingPeer, IPhotonPeerListener
         {
             auth.UserId = Guid.NewGuid().ToString();
         }
+
+        if (string.IsNullOrEmpty(this.cloudCluster))
+        {
+            this.cloudCluster = "*";
+        }
+
+        string regionCluster = this.CloudRegion + "/" + this.cloudCluster;
+
         if (this.AuthMode == AuthModeOption.Auth)
         {
-            return this.OpAuthenticate(this.AppId, this.AppVersion, auth, this.CloudRegion.ToString(), this.requestLobbyStatistics);
+            return this.OpAuthenticate(this.AppId, this.AppVersion, auth, regionCluster , this.requestLobbyStatistics);
         }
         else
         {
-            return this.OpAuthenticateOnce(this.AppId, this.AppVersion, auth, this.CloudRegion.ToString(), this.EncryptionMode, PhotonNetwork.PhotonServerSettings.Protocol);
+            return this.OpAuthenticateOnce(this.AppId, this.AppVersion, auth, regionCluster, this.EncryptionMode, PhotonNetwork.PhotonServerSettings.Protocol);
         }
     }
 
@@ -1758,6 +1784,11 @@ internal class NetworkingPeer : LoadBalancingPeer, IPhotonPeerListener
                         {
                             this.MasterServerAddress = this.MasterServerAddress.Replace("5058", "27000").Replace("5055", "27001").Replace("5056", "27002");
                         }
+                        string receivedCluster = operationResponse[ParameterCode.Cluster] as string;
+                        if (!string.IsNullOrEmpty(receivedCluster))
+                        {
+                            this.CurrentCluster = receivedCluster;
+                        }
                         this.DisconnectToReconnect();
                     }
                     else if (this.Server == ServerConnection.MasterServer)
@@ -2123,23 +2154,23 @@ internal class NetworkingPeer : LoadBalancingPeer, IPhotonPeerListener
                     }
                 }
 
-
-                if (this.TransportProtocol != ConnectionProtocol.WebSocketSecure)
+                if (!PhotonNetwork.offlineMode)
                 {
-                    if (this.Server == ServerConnection.NameServer || this.AuthMode == AuthModeOption.Auth)
+                    if (this.TransportProtocol != ConnectionProtocol.WebSocketSecure)
                     {
-                        if (!PhotonNetwork.offlineMode)
+                        if (this.Server == ServerConnection.NameServer || this.AuthMode == AuthModeOption.Auth)
+                        {
                             this.EstablishEncryption();
+                        }
                     }
-                }
-                else
-                {
-                    if (DebugOut == DebugLevel.INFO)
+                    else
                     {
-                        Debug.Log("Skipping EstablishEncryption. Protocol is secure.");
+                        if (DebugOut == DebugLevel.INFO)
+                        {
+                            Debug.Log("Skipping EstablishEncryption. Protocol is secure.");
+                        }
+                        goto case StatusCode.EncryptionEstablished;
                     }
-
-                    goto case StatusCode.EncryptionEstablished;
                 }
                 break;
 
@@ -2860,30 +2891,41 @@ internal class NetworkingPeer : LoadBalancingPeer, IPhotonPeerListener
 
     // PHOTONVIEW/RPC related
 
+    private readonly Type typePunRPC = typeof(PunRPC);
+    private readonly Type typePhotonMessageInfo = typeof(PhotonMessageInfo);
+    private readonly object keyByteZero = (byte)0;
+    private readonly object keyByteOne = (byte)1;
+    private readonly object keyByteTwo = (byte)2;
+    private readonly object keyByteThree = (byte)3;
+    private readonly object keyByteFour = (byte)4;
+    private readonly object keyByteFive = (byte)5;
+    private readonly object[] emptyObjectArray = new object[0];
+    private readonly Type[] emptyTypeArray = new Type[0];
+
     /// <summary>
     /// Executes a received RPC event
     /// </summary>
     protected internal void ExecuteRpc(Hashtable rpcData, int senderID = 0)
     {
-        if (rpcData == null || !rpcData.ContainsKey((byte)0))
+        if (rpcData == null || !rpcData.ContainsKey(keyByteZero))
         {
             Debug.LogError("Malformed RPC; this should never occur. Content: " + SupportClassPun.DictionaryToString(rpcData));
             return;
         }
 
         // ts: updated with "flat" event data
-        int netViewID = (int)rpcData[(byte)0]; // LIMITS PHOTONVIEWS&PLAYERS
+        int netViewID = (int)rpcData[keyByteZero]; // LIMITS PHOTONVIEWS&PLAYERS
         int otherSidePrefix = 0;    // by default, the prefix is 0 (and this is not being sent)
-        if (rpcData.ContainsKey((byte)1))
+        if (rpcData.ContainsKey(this.keyByteOne))
         {
-            otherSidePrefix = (short)rpcData[(byte)1];
+            otherSidePrefix = (short)rpcData[this.keyByteOne];
         }
 
 
         string inMethodName;
-        if (rpcData.ContainsKey((byte)5))
+        if (rpcData.ContainsKey(keyByteFive))
         {
-            int rpcIndex = (byte)rpcData[(byte)5];  // LIMITS RPC COUNT
+            int rpcIndex = (byte)rpcData[keyByteFive];  // LIMITS RPC COUNT
             if (rpcIndex > PhotonNetwork.PhotonServerSettings.RpcList.Count - 1)
             {
                 Debug.LogError("Could not find RPC with index: " + rpcIndex + ". Going to ignore! Check PhotonServerSettings.RpcList");
@@ -2896,19 +2938,15 @@ internal class NetworkingPeer : LoadBalancingPeer, IPhotonPeerListener
         }
         else
         {
-            inMethodName = (string)rpcData[(byte)3];
+            inMethodName = (string)rpcData[keyByteThree];
         }
 
-        object[] inMethodParameters = null;
-        if (rpcData.ContainsKey((byte)4))
+        object[] inMethodParameters = emptyObjectArray;
+        if (rpcData.ContainsKey(keyByteFour))
         {
-            inMethodParameters = (object[])rpcData[(byte)4];
+            inMethodParameters = (object[])rpcData[keyByteFour];
         }
 
-        if (inMethodParameters == null)
-        {
-            inMethodParameters = new object[0];
-        }
 
         PhotonView photonNetview = this.GetPhotonView(netViewID);
         if (photonNetview == null)
@@ -2951,7 +2989,7 @@ internal class NetworkingPeer : LoadBalancingPeer, IPhotonPeerListener
             return; // Ignore group
         }
 
-        Type[] argTypes = new Type[0];
+        Type[] argTypes = emptyTypeArray;
         if (inMethodParameters.Length > 0)
         {
             argTypes = new Type[inMethodParameters.Length];
@@ -2996,7 +3034,7 @@ internal class NetworkingPeer : LoadBalancingPeer, IPhotonPeerListener
 
             if (!methodsOfTypeInCache)
             {
-                List<MethodInfo> entries = SupportClassPun.GetMethods(type, typeof(PunRPC));
+                List<MethodInfo> entries = SupportClassPun.GetMethods(type, this.typePunRPC);
 
                 this.monoRPCMethodsCache[type] = entries;
                 cachedRPCMethods = entries;
@@ -3022,31 +3060,30 @@ internal class NetworkingPeer : LoadBalancingPeer, IPhotonPeerListener
                         if (this.CheckTypeMatch(pArray, argTypes))
                         {
                             receivers++;
-                            object result = mInfo.Invoke((object)monob, inMethodParameters);
-                            if (PhotonNetwork.StartRpcsAsCoroutine && mInfo.ReturnType == typeof(IEnumerator))
+                            IEnumerator result = mInfo.Invoke((object)monob, inMethodParameters) as IEnumerator;
+                            if (PhotonNetwork.StartRpcsAsCoroutine && result != null)
                             {
-                                monob.StartCoroutine((IEnumerator)result);
+                                monob.StartCoroutine(result as IEnumerator);    //used in "minimal" tester
                             }
                         }
                     }
-                    else if ((pArray.Length - 1) == argTypes.Length)
+                    else if (pArray.Length == argTypes.Length + 1)
                     {
                         // Check for PhotonNetworkMessage being the last
                         if (this.CheckTypeMatch(pArray, argTypes))
                         {
-                            if (pArray[pArray.Length - 1].ParameterType == typeof(PhotonMessageInfo))
+                            if (pArray[pArray.Length - 1].ParameterType == typePhotonMessageInfo)
                             {
+                                int sendTime = (int)rpcData[keyByteTwo];
+                                PhotonMessageInfo info = new PhotonMessageInfo(this.GetPlayerWithId(senderID), sendTime, photonNetview);
+
+                                object[] parametersWithInfo = new object[inMethodParameters.Length + 1];
+                                inMethodParameters.CopyTo(parametersWithInfo, 0);
+                                parametersWithInfo[parametersWithInfo.Length - 1] = info;
+
                                 receivers++;
-
-                                int sendTime = (int)rpcData[(byte)2];
-                                object[] deParamsWithInfo = new object[inMethodParameters.Length + 1];
-                                inMethodParameters.CopyTo(deParamsWithInfo, 0);
-
-
-                                deParamsWithInfo[deParamsWithInfo.Length - 1] = new PhotonMessageInfo(this.GetPlayerWithId(senderID), sendTime, photonNetview);
-
-                                object result = mInfo.Invoke((object)monob, deParamsWithInfo);
-                                if (PhotonNetwork.StartRpcsAsCoroutine && mInfo.ReturnType == typeof(IEnumerator))
+                                IEnumerator result = mInfo.Invoke((object)monob, parametersWithInfo) as IEnumerator;
+                                if (PhotonNetwork.StartRpcsAsCoroutine && result != null)
                                 {
                                     monob.StartCoroutine((IEnumerator)result);
                                 }
@@ -3056,8 +3093,8 @@ internal class NetworkingPeer : LoadBalancingPeer, IPhotonPeerListener
                     else if (pArray.Length == 1 && pArray[0].ParameterType.IsArray)
                     {
                         receivers++;
-                        object result = mInfo.Invoke((object)monob, new object[] { inMethodParameters });
-                        if (PhotonNetwork.StartRpcsAsCoroutine && mInfo.ReturnType == typeof(IEnumerator))
+                        IEnumerator result = mInfo.Invoke((object)monob, new object[] { inMethodParameters }) as IEnumerator;
+                        if (PhotonNetwork.StartRpcsAsCoroutine && result != null)
                         {
                             monob.StartCoroutine((IEnumerator)result);
                         }
@@ -3786,6 +3823,8 @@ internal class NetworkingPeer : LoadBalancingPeer, IPhotonPeerListener
     ///
     /// This is sent as event (code: 200) which will contain a sender (origin of this RPC).
 
+    private readonly Hashtable reusedRpcEvent = new Hashtable();
+
     internal void RPC(PhotonView view, string methodName, PhotonTargets target, PhotonPlayer player, bool encrypt, params object[] parameters)
     {
         if (this.blockSendingGroups.Contains(view.group))
@@ -3805,29 +3844,31 @@ internal class NetworkingPeer : LoadBalancingPeer, IPhotonPeerListener
 
 
         //ts: changed RPCs to a one-level hashtable as described in internal.txt
-        Hashtable rpcEvent = new Hashtable();
-        rpcEvent[(byte)0] = (int)view.viewID; // LIMITS NETWORKVIEWS&PLAYERS
+        reusedRpcEvent.Clear();
+        Hashtable rpcEvent = reusedRpcEvent;
+
+        rpcEvent[this.keyByteZero] = (int)view.viewID; // LIMITS NETWORKVIEWS&PLAYERS
         if (view.prefix > 0)
         {
-            rpcEvent[(byte)1] = (short)view.prefix;
+            rpcEvent[this.keyByteOne] = (short)view.prefix;
         }
-        rpcEvent[(byte)2] = PhotonNetwork.ServerTimestamp;
+        rpcEvent[this.keyByteTwo] = PhotonNetwork.ServerTimestamp;
 
 
         // send name or shortcut (if available)
         int shortcut = 0;
         if (rpcShortcuts.TryGetValue(methodName, out shortcut))
         {
-            rpcEvent[(byte)5] = (byte)shortcut; // LIMITS RPC COUNT
+            rpcEvent[this.keyByteFive] = (byte)shortcut; // LIMITS RPC COUNT
         }
         else
         {
-            rpcEvent[(byte)3] = methodName;
+            rpcEvent[this.keyByteThree] = methodName;
         }
 
         if (parameters != null && parameters.Length > 0)
         {
-            rpcEvent[(byte)4] = (object[])parameters;
+            rpcEvent[this.keyByteFour] = (object[])parameters;
         }
 
 

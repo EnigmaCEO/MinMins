@@ -53,8 +53,6 @@ namespace CodeStage.AntiCheat.Storage
 				return generatedCryptoKey;
 			}
 			
-			//return generatedCryptoKey.Concat(dynamicSuffix.ToCharArray()).ToArray();
-
 			var suffixChars = dynamicSuffix.ToCharArray();
 			var result = new char[generatedCryptoKey.Length + suffixChars.Length];
 			Buffer.BlockCopy(generatedCryptoKey, 0, result, 0, generatedCryptoKey.Length);

@@ -21,6 +21,7 @@ namespace CodeStage.AntiCheat.EditorCode.Editors
 		private SerializedProperty interval;
 		private SerializedProperty realCheatThreshold;
 		private SerializedProperty wrongTimeThreshold;
+		private SerializedProperty ignoreSetCorrectTime;
 
 		protected override void FindUniqueDetectorProperties()
 		{
@@ -30,25 +31,31 @@ namespace CodeStage.AntiCheat.EditorCode.Editors
 			interval = serializedObject.FindProperty("interval");
 			realCheatThreshold = serializedObject.FindProperty("realCheatThreshold");
 			wrongTimeThreshold = serializedObject.FindProperty("wrongTimeThreshold");
+			ignoreSetCorrectTime = serializedObject.FindProperty("ignoreSetCorrectTime");
 		}
 
 		protected override bool DrawUniqueDetectorProperties()
 		{
 			DrawHeader("Specific settings");
 
+			EditorGUIUtility.labelWidth += 10;
+			EditorGUILayout.PropertyField(ignoreSetCorrectTime);
+			EditorGUIUtility.labelWidth -= 10;
+
 			EditorGUI.BeginChangeCheck();
 			EditorGUILayout.PropertyField(requestUrl, new GUIContent("URL", requestUrl.tooltip));
 			if (EditorGUI.EndChangeCheck())
 			{
-				((TimeCheatingDetector)self).RequestUrl = requestUrl.stringValue;
+				self.RequestUrl = requestUrl.stringValue;
 			}
-			
+
 #if UNITY_WEBGL
 			GUILayout.Label("<b>To avoid CORS limitations while running in WebGL, URL will be changed to the current domain, if it does points to any other domain</b>", GUITools.RichMiniLabel);
 			EditorGUILayout.Space();
 #endif
 
 			EditorGUILayout.PropertyField(requestMethod, new GUIContent("Method", requestMethod.tooltip));
+
 			EditorGUILayout.PropertyField(timeoutSeconds);
 			EditorGUILayout.PropertyField(interval);
 			EditorGUILayout.PropertyField(realCheatThreshold);

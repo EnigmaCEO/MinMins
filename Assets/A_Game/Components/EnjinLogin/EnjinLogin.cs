@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using System.Collections;
 using Enigma.CoreSystems;
 using CodeStage.AntiCheat.Storage;
+using SimpleJSON;
 
 public class EnjinLogin : MonoBehaviour
 {
@@ -198,8 +199,7 @@ public class EnjinLogin : MonoBehaviour
         string country = NetworkManager.Country;  
         extras.Add("ip", ipAddress);
         extras.Add("country", country);
-        extras.Add("kin_address", KinManager.Instance.GetUserPublicAddress());
-
+        
         _lastUsername = loginUsername.text;
         _lastPassword = loginPassword.text;
 
@@ -299,6 +299,7 @@ public class EnjinLogin : MonoBehaviour
 
             gameNetwork.HasEnjinMft = checkTokenAvailable(response_hash, NetworkManager.TransactionKeys.ENJIN_MFT);
             gameNetwork.HasEnjinMinMinsToken = checkTokenAvailable(response_hash, NetworkManager.TransactionKeys.MINMINS_TOKEN);
+            gameNetwork.HasEnjinEnigmaToken = checkTokenAvailable(response_hash, NetworkManager.TransactionKeys.ENIGMA_TOKEN);
 
             gameNetwork.HasEnjinBryana = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.ENJIN_BRYANA);
             gameNetwork.HasEnjinMaxim = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.ENJIN_MAXIM);
@@ -306,8 +307,27 @@ public class EnjinLogin : MonoBehaviour
             gameNetwork.HasEnjinTassio = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.ENJIN_TASSIO);
             gameNetwork.HasEnjinWitek = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.ENJIN_WITEK);
 
+            gameNetwork.HasKnightBomber = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.KNIGHT_BOMBER);
+            gameNetwork.HasKnightDestroyer = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.KNIGHT_DESTROYER);
+            gameNetwork.HasKnightHealer = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.KNIGHT_HEALER);
+            gameNetwork.HasKnightScout = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.KNIGHT_SCOUT);
+            gameNetwork.HasKnightTank = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.KNIGHT_TANK);
+
+            gameNetwork.HasDemonBomber = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.DEMON_BOMBER);
+            gameNetwork.HasDemonDestroyer = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.DEMON_DESTROYER);
+            gameNetwork.HasDemonHealer = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.DEMON_HEALER);
+            gameNetwork.HasDemonScout = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.DEMON_SCOUT);
+            gameNetwork.HasDemonTank = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.DEMON_TANK);
+
             gameNetwork.CheckAllEnjinTeamBoostTokens(response_hash);
 
+            JSONArray rewards = response_hash[NetworkManager.TransactionKeys.REWARDS] as JSONArray;
+            
+            foreach (JSONNode item in rewards) {
+                Debug.Log(item["level"].ToString());
+                int level = int.Parse(item["level"].ToString().Trim('"'));
+                gameNetwork.rewardedLevels[level - 1] = 1;
+            }
         }
         else
             print("User is not using Crypto.");

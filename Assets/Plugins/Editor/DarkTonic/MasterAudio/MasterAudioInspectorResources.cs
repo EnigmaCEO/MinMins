@@ -23,13 +23,13 @@ public static class MasterAudioInspectorResources {
     public static Texture StopTexture = EditorGUIUtility.LoadRequired(string.Format("{0}/stopIcon.png", MasterAudioFolderPath)) as Texture;
 	public static Texture CopyTexture = EditorGUIUtility.LoadRequired(string.Format("{0}/copyIcon.png", MasterAudioFolderPath)) as Texture;
     public static Texture FindTexture = EditorGUIUtility.LoadRequired(string.Format("{0}/find.png", MasterAudioFolderPath)) as Texture;
-    public static Texture LoadingTexture = EditorGUIUtility.LoadRequired(string.Format("{0}/hourglass.png", MasterAudioFolderPath)) as Texture;
     public static Texture ReadyTexture = EditorGUIUtility.LoadRequired(string.Format("{0}/ready.png", MasterAudioFolderPath)) as Texture;
-    public static Texture ErrorTexture = EditorGUIUtility.LoadRequired(string.Format("{0}/error.png", MasterAudioFolderPath)) as Texture;
     public static Texture UpArrowTexture = EditorGUIUtility.LoadRequired(string.Format("{0}/arrow_up.png", MasterAudioFolderPath)) as Texture;
     public static Texture DownArrowTexture = EditorGUIUtility.LoadRequired(string.Format("{0}/arrow_down.png", MasterAudioFolderPath)) as Texture;
     public static Texture CancelTexture = EditorGUIUtility.LoadRequired(string.Format("{0}/cancel.png", MasterAudioFolderPath)) as Texture;
     public static Texture SaveTexture = EditorGUIUtility.LoadRequired(string.Format("{0}/save.png", MasterAudioFolderPath)) as Texture;
+	public static Texture HelpTexture = EditorGUIUtility.LoadRequired(string.Format("{0}/helpIcon.png", MasterAudioFolderPath)) as Texture;
+
 
     public static Texture[] LedTextures = {
 		EditorGUIUtility.LoadRequired(string.Format("{0}/LED5.png", MasterAudioFolderPath)) as Texture,

@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class LevelGridItem : MonoBehaviour
 {
     public Button FightButton;
+    public GameObject enjinReward;
 
     [SerializeField] private Text _label;
     //[SerializeField] private Text _labelShadow;
@@ -27,5 +28,10 @@ public class LevelGridItem : MonoBehaviour
     public void OnFightButtonDown()
     {
         
+    }
+
+    public void EnableEnjinReward()
+    {
+        enjinReward.SetActive(true);
     }
 }

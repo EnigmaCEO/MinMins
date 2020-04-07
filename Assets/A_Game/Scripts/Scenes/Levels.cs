@@ -50,6 +50,14 @@ public class Levels : EnigmaScene
             LevelGridItem levelGridItem = levelGameObject.GetComponent<LevelGridItem>();
             levelGridItem.SetLabel(levelNumber.ToString());
             levelGridItem.FightButton.onClick.AddListener(() => { onLevelFightButtonDown(levelNumber); });
+            if (GameNetwork.Instance.rewardedLevels[i] == 1)
+            {
+                Debug.Log("Rewarded Enjin " + i);
+                levelGridItem.enjinReward.SetActive(true);
+            }
+            else {
+                levelGridItem.enjinReward.SetActive(false);
+            }
         }
 
         levelGridItemTemplate.SetActive(false);

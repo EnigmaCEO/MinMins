@@ -56,7 +56,11 @@ namespace CodeStage.AntiCheat.Utils
 
 		internal static long GenerateLongKey()
 		{
+#if ACTK_US_EXPORT_COMPATIBLE
 			return ThreadSafeRandom.NextLong(1000000000000000000, long.MaxValue);
+#else
+			return GenerateIntKey();
+#endif
 		}
 
 		internal static ulong GenerateULongKey()

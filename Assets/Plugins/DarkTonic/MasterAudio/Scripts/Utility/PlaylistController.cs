@@ -1,9 +1,11 @@
 using UnityEngine;
 using System;
 // ReSharper disable once RedundantUsingDirective
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Audio;
+#if ADDRESSABLES_ENABLED 
+using UnityEngine.AddressableAssets;
+#endif
 
 // ReSharper disable once CheckNamespace
 namespace DarkTonic.MasterAudio {
@@ -97,19 +99,26 @@ namespace DarkTonic.MasterAudio {
         private int _lastFrameSongPosition = -1;
 
         private readonly Dictionary<AudioSource, double> _scheduledSongOffsetByAudioSource = new Dictionary<AudioSource, double>(2);
-
+#if ADDRESSABLES_ENABLED 
+        private readonly Dictionary<AudioSource, AssetReference> _loadedAddressablesByAudioSource = new Dictionary<AudioSource, AssetReference>(2);
+#endif
         public int _frames;
 
         private static List<PlaylistController> _instances;
+        private Coroutine _resourceCoroutine;
+#if ADDRESSABLES_ENABLED 
+        private Coroutine _addressableCoroutine;
+#endif
 
         private int _songsPlayedFromPlaylist;
         private AudioSource _audio1;
         private AudioSource _audio2;
+        private string _activeSongAlias;
 
         private Transform _trans;
         private bool _willPersist;
         private double? _songPauseTime;
-        private int framesOfSongPlayed = 0;
+        private int framesOfSongPlayed = 0;        
 
         public enum AudioPlayType {
             PlayNow,
@@ -301,6 +310,30 @@ namespace DarkTonic.MasterAudio {
             }
         }
         /*! \endcond */
+
+        private MusicSetting FindSongByAliasOrName(string clipName) {
+            var setting = _currentPlaylist.MusicSettings.Find(delegate (MusicSetting obj) {
+                return obj.alias == clipName;
+            });
+
+            if (setting == null) {
+                setting = _currentPlaylist.MusicSettings.Find(delegate (MusicSetting obj) {
+                    if (obj.audLocation == MasterAudio.AudioLocation.Clip) {
+                        return obj.clip != null && obj.clip.name == clipName;
+                    } else if (obj.audLocation == MasterAudio.AudioLocation.ResourceFile) {
+                        return obj.resourceFileName == clipName;
+                    } else {
+#if ADDRESSABLES_ENABLED
+                    return false; // must use alias
+#else
+                        return false;
+#endif
+                    }
+                });
+            }
+
+            return setting;
+        }
 
         private void SetAudiosIfEmpty() {
             var audios = GetComponents<AudioSource>();
@@ -575,9 +608,9 @@ namespace DarkTonic.MasterAudio {
             AudioDucking();
         }
 
-        #endregion
+#endregion
 
-        #region public methods
+#region public methods
 
         /// <summary>
         /// This method returns a reference to the PlaylistController whose name you specify. This is necessary when you have more than one.
@@ -606,7 +639,7 @@ namespace DarkTonic.MasterAudio {
         /// This method will tell you if the song you specify by name is playing or not. If it's the current song and paused, this will still return true.
         /// </summary>
         /// <returns><c>true</c> if this instance is song playing the specified songName; otherwise, <c>false</c>.</returns>
-        /// <param name="songName">Song name. Here you pass the name of the clip to check.</param>
+        /// <param name="songName">Song name or alias. Here you pass the name of the clip or its alias to check.</param>
         public bool IsSongPlaying(string songName) {
             if (!HasPlaylist) {
                 return false;
@@ -616,7 +649,11 @@ namespace DarkTonic.MasterAudio {
                 return false;
             }
 
-            return ActiveAudioSource.clip.name == songName;
+            if (ActiveAudioSource.clip.name == songName) {
+                return true;
+            }
+
+            return _activeSongAlias == songName;
         }
 
         /// <summary>
@@ -1025,7 +1062,7 @@ namespace DarkTonic.MasterAudio {
         /// <summary>
         /// This method will play the song in the current Playlist whose name you specify as soon as the currently playing song is done. The current song, if looping, will have loop turned off by this call. This requires auto-advance to work.
         /// </summary>
-        /// <param name="clipName">The name of the song to play.</param>
+        /// <param name="clipName">The name or alias of the song to play.</param>
         /// <param name="scheduleNow">Whether the song should immediately be scheduled to play (when Gapless song transitions is enabled)</param>
         public void QueuePlaylistClip(string clipName, bool scheduleNow = true) {
             if (!ControllerIsReady) {
@@ -1043,14 +1080,7 @@ namespace DarkTonic.MasterAudio {
                 return;
             }
 
-            var setting = _currentPlaylist.MusicSettings.Find(delegate (MusicSetting obj) {
-                if (obj.audLocation == MasterAudio.AudioLocation.Clip) {
-                    return obj.clip != null && obj.clip.name == clipName;
-                } else {
-                    // resource file!
-                    return obj.resourceFileName == clipName;
-                }
-            });
+            var setting = FindSongByAliasOrName(clipName);
 
             if (setting == null) {
                 Debug.LogWarning("Could not find clip '" + clipName + "' in current Playlist in '" + ControllerName +
@@ -1085,21 +1115,7 @@ namespace DarkTonic.MasterAudio {
             }
 
             // search by alias first!
-            var setting = _currentPlaylist.MusicSettings.Find(delegate (MusicSetting obj) {
-                return obj.alias == clipName;
-            });
-
-            // ReSharper disable once ConvertIfStatementToNullCoalescingExpression
-            if (setting == null) {
-                setting = _currentPlaylist.MusicSettings.Find(delegate (MusicSetting obj) {
-                    if (obj.audLocation == MasterAudio.AudioLocation.Clip) {
-                        return obj.clip != null && obj.clip.name == clipName;
-                    }
-
-                    // resource file!
-                    return obj.resourceFileName == clipName || obj.songName == clipName;
-                });
-            }
+            var setting = FindSongByAliasOrName(clipName);
 
             if (setting == null) {
                 Debug.LogWarning("Could not find clip '" + clipName + "' in current Playlist in '" + ControllerName +
@@ -1263,9 +1279,9 @@ namespace DarkTonic.MasterAudio {
             FinishPlaylistInit();
         }
 
-        #endregion
+#endregion
 
-        #region Helper methods
+#region Helper methods
 
         private void CheckIfPlaylistStarted() {
             if (_songsPlayedFromPlaylist > 0) {
@@ -1349,15 +1365,26 @@ namespace DarkTonic.MasterAudio {
                 var aSong = _currentPlaylist.MusicSettings[i];
                 aSong.songIndex = i;
 
-                if (aSong.audLocation != MasterAudio.AudioLocation.ResourceFile) {
-                    if (aSong.clip == null) {
-                        continue;
-                    }
-                } else {
-                    // resource file!
-                    if (string.IsNullOrEmpty(aSong.resourceFileName)) {
-                        continue;
-                    }
+                switch (aSong.audLocation) {
+                    case MasterAudio.AudioLocation.Clip:
+                        if (aSong.clip == null) {
+                            continue;
+                        }
+                        break;
+                    case MasterAudio.AudioLocation.ResourceFile:
+                        if (string.IsNullOrEmpty(aSong.resourceFileName)) {
+                            continue;
+                        }
+                        break;
+#if ADDRESSABLES_ENABLED
+                    case MasterAudio.AudioLocation.Addressable:
+                        if (!AudioAddressableOptimizer.IsAddressableValid(aSong.audioClipAddressable)) {
+                            continue;
+                        }
+                        break;
+#endif
+                    default:
+                        break;
                 }
 
                 _clipsRemaining.Add(i);
@@ -1399,6 +1426,13 @@ namespace DarkTonic.MasterAudio {
                         case MasterAudio.AudioLocation.ResourceFile:
                             newSongName = setting.resourceFileName;
                             break;
+#if ADDRESSABLES_ENABLED
+                        case MasterAudio.AudioLocation.Addressable:
+                            if (AudioAddressableOptimizer.IsAddressableValid(setting.audioClipAddressable)) {
+                                newSongName = string.IsNullOrEmpty(setting.alias) ? "~Empty Alias Song~" : setting.alias;
+                            }
+                            break;
+#endif
                     }
 
                     if (string.IsNullOrEmpty(newSongName)) {
@@ -1431,25 +1465,30 @@ namespace DarkTonic.MasterAudio {
                         clipToPlay = setting.clip;
                         break;
                     case MasterAudio.AudioLocation.ResourceFile:
-                        if (ShouldLoadAsync) {
-                            StartCoroutine(AudioResourceOptimizer.PopulateResourceSongToPlaylistControllerAsync(
-                                    setting.resourceFileName, CurrentPlaylist.playlistName, this, playType));
-                        } else {
-                            clipToPlay = AudioResourceOptimizer.PopulateResourceSongToPlaylistController(
-                                ControllerName, setting.resourceFileName, CurrentPlaylist.playlistName);
-                            if (clipToPlay == null) {
-                                return;
-                            }
+                        if (_resourceCoroutine != null) {
+                            StopCoroutine(_resourceCoroutine);
                         }
 
+                        _resourceCoroutine = StartCoroutine(AudioResourceOptimizer.PopulateResourceSongToPlaylistControllerAsync(setting, 
+                            setting.resourceFileName, CurrentPlaylist.playlistName, this, playType));
                         break;
+#if ADDRESSABLES_ENABLED
+                    case MasterAudio.AudioLocation.Addressable:
+                        if (_addressableCoroutine != null) {
+                            StopCoroutine(_addressableCoroutine);
+                        }
+
+                        _addressableCoroutine = StartCoroutine(AudioAddressableOptimizer.PopulateAddressableSongToPlaylistControllerAsync(setting, 
+                            setting.audioClipAddressable, this, playType));
+                        break;
+#endif
                 }
             } else {
-                FinishLoadingNewSong(null, AudioPlayType.AlreadyScheduled);
+                FinishLoadingNewSong(setting, null, AudioPlayType.AlreadyScheduled);
             }
 
             if (clipToPlay != null) {
-                FinishLoadingNewSong(clipToPlay, playType);
+                FinishLoadingNewSong(setting, clipToPlay, playType);
             }
         }
 
@@ -1463,7 +1502,7 @@ namespace DarkTonic.MasterAudio {
         }
 
         // ReSharper disable once FunctionComplexityOverflow
-        public void FinishLoadingNewSong(AudioClip clipToPlay, AudioPlayType playType) {
+        public void FinishLoadingNewSong(MusicSetting songSetting, AudioClip clipToPlay, AudioPlayType playType) {
             _nextSongRequested = false;
 
             var isScheduledPlay = playType == AudioPlayType.Schedule;
@@ -1479,6 +1518,17 @@ namespace DarkTonic.MasterAudio {
 
                 _audioClip.clip = clipToPlay;
                 _audioClip.pitch = _newSongSetting.pitch;
+
+#if ADDRESSABLES_ENABLED
+                switch (songSetting.audLocation) {
+                    case MasterAudio.AudioLocation.Addressable:
+                        _loadedAddressablesByAudioSource[_audioClip] = songSetting.audioClipAddressable;
+                        AudioAddressableOptimizer.AddAddressablePlayingClip(songSetting.audioClipAddressable, _audioClip);
+                        break;
+                }
+#endif
+ 
+                _activeSongAlias = songSetting.alias;
             }
 
             // set last known time for current song.
@@ -1734,6 +1784,7 @@ namespace DarkTonic.MasterAudio {
 
             if (source == _activeAudio) {
                 framesOfSongPlayed = 0;
+                _activeSongAlias = null;
             }
 
             var isValidClip = source.clip != null;
@@ -1744,6 +1795,14 @@ namespace DarkTonic.MasterAudio {
 
             AudioResourceOptimizer.UnloadPlaylistSongIfUnused(ControllerName, source.clip);
             source.clip = null;
+
+#if ADDRESSABLES_ENABLED
+            if (_loadedAddressablesByAudioSource.ContainsKey(source)) {
+                var addressable = _loadedAddressablesByAudioSource[source];
+                _loadedAddressablesByAudioSource.Remove(source);
+                AudioAddressableOptimizer.RemoveAddressablePlayingClip(addressable, source); 
+            }
+#endif
             RemoveScheduledClip();
 
             // only trigger the song ended event if we have actually ceased a valid audio clip
@@ -1821,21 +1880,9 @@ namespace DarkTonic.MasterAudio {
             return setting.isLoop;
         }
 
-        #endregion
+#endregion
 
-        #region Properties
-
-        /*! \cond PRIVATE */
-        private bool ShouldLoadAsync {
-            get {
-                if (MasterAudio.Instance.resourceClipsAllLoadAsync) {
-                    return true;
-                }
-
-                return CurrentPlaylist.resourceClipsAllLoadAsync;
-            }
-        }
-        /*! \endcond */
+#region Properties
 
         /// <summary>
         /// This property returns true if the Playlist Controller has already run its Awake method. You should not call any PlaylistController method until it has done so.
@@ -2136,6 +2183,6 @@ namespace DarkTonic.MasterAudio {
             get { return _clipsRemaining.Count; }
         }
 
-        #endregion
+#endregion
     }
 }

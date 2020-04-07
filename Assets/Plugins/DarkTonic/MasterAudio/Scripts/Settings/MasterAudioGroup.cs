@@ -40,7 +40,6 @@ namespace DarkTonic.MasterAudio {
         public float inactivePeriodSeconds = 5f;
         public List<SoundGroupVariation> groupVariations = new List<SoundGroupVariation>();
         public MasterAudio.AudioLocation bulkVariationMode = MasterAudio.AudioLocation.Clip;
-        public bool resourceClipsAllLoadAsync = true;
         public string comments;
         public bool logSound = false;
 
@@ -77,6 +76,10 @@ namespace DarkTonic.MasterAudio {
         public string soundPlayedCustomEvent = string.Empty;
 
         public bool willCleanUpDelegatesAfterStop = true;
+
+#if ADDRESSABLES_ENABLED
+        public int addressableUnusedSecondsLifespan = 0;
+#endif
         /*! \endcond */
 
         /// <summary>
@@ -120,30 +123,6 @@ namespace DarkTonic.MasterAudio {
             FrameBased,
             TimeBased
         }
-
-        public MasterAudio.InternetFileLoadStatus GroupLoadStatus {
-            get {
-                var groupStatus = MasterAudio.InternetFileLoadStatus.Loaded;
-
-                for (var i = 0; i < Trans.childCount; i++) {
-                    var aVar = Trans.GetChild(i).GetComponent<SoundGroupVariation>();
-                    if (aVar.audLocation != MasterAudio.AudioLocation.FileOnInternet) {
-                        continue;
-                    }
-
-                    if (aVar.internetFileLoadStatus == MasterAudio.InternetFileLoadStatus.Failed) {
-                        groupStatus = MasterAudio.InternetFileLoadStatus.Failed;
-                        break;
-                    }
-
-                    if (aVar.internetFileLoadStatus == MasterAudio.InternetFileLoadStatus.Loading) {
-                        groupStatus = MasterAudio.InternetFileLoadStatus.Loading;
-                    }
-                }
-
-                return groupStatus;
-            }
-        }
         // ReSharper restore InconsistentNaming
 
         // ReSharper disable once UnusedMember.Local
@@ -156,22 +135,6 @@ namespace DarkTonic.MasterAudio {
 
             if (Trans.parent != null) {
                 gameObject.layer = Trans.parent.gameObject.layer;
-            }
-        }
-
-        // ReSharper disable once UnusedMember.Local
-        void OnDisable() {
-            for (var i = 0; i < Trans.childCount; i++) {
-                var aVar = Trans.GetChild(i).GetComponent<SoundGroupVariation>();
-                if (aVar == null) {
-                    continue;
-                }
-
-                if (aVar.audLocation != MasterAudio.AudioLocation.FileOnInternet) {
-                    continue;
-                }
-
-                AudioResourceOptimizer.RemoveLoadedInternetClip(aVar.internetFileUrl);
             }
         }
 
@@ -233,6 +196,17 @@ namespace DarkTonic.MasterAudio {
         public int ActiveVoices {
             get { return ActiveAudioSourceIds.Count; }
         }
+
+#if ADDRESSABLES_ENABLED
+        /// <summary>
+        /// This property will return the number of seconds the unused Addressable (if this Variation uses Addressables) will wait before being released from memory.
+        /// </summary>
+        public int AddressableUnusedSecondsLifespan {
+            get {
+                return addressableUnusedSecondsLifespan;
+            }
+        }
+#endif
 
         /// <summary>
         /// This property will return the total number of voices available in this Sound Group.

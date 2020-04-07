@@ -1521,6 +1521,38 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5400000, guid: bb733c4e80dbde84eaf61d8aace88c3d, type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5400000, guid: bb733c4e80dbde84eaf61d8aace88c3d, type: 3}
+      propertyPath: m_Constraints
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: bb733c4e80dbde84eaf61d8aace88c3d, type: 3}
+      propertyPath: viewIdField
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: bb733c4e80dbde84eaf61d8aace88c3d, type: 3}
+      propertyPath: instantiationId
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: bb733c4e80dbde84eaf61d8aace88c3d, type: 3}
+      propertyPath: onSerializeRigidBodyOption
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: bb733c4e80dbde84eaf61d8aace88c3d, type: 3}
+      propertyPath: observed
+      value: 
+      objectReference: {fileID: 1245954011}
+    - target: {fileID: 11400000, guid: bb733c4e80dbde84eaf61d8aace88c3d, type: 3}
+      propertyPath: onSerializeTransformOption
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: bb733c4e80dbde84eaf61d8aace88c3d, type: 3}
+      propertyPath: ownershipTransfer
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: bb733c4e80dbde84eaf61d8aace88c3d, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.5
@@ -1548,38 +1580,6 @@ PrefabInstance:
     - target: {fileID: 400000, guid: bb733c4e80dbde84eaf61d8aace88c3d, type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400000, guid: bb733c4e80dbde84eaf61d8aace88c3d, type: 3}
-      propertyPath: viewIdField
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400000, guid: bb733c4e80dbde84eaf61d8aace88c3d, type: 3}
-      propertyPath: instantiationId
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400000, guid: bb733c4e80dbde84eaf61d8aace88c3d, type: 3}
-      propertyPath: onSerializeRigidBodyOption
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400000, guid: bb733c4e80dbde84eaf61d8aace88c3d, type: 3}
-      propertyPath: observed
-      value: 
-      objectReference: {fileID: 1245954011}
-    - target: {fileID: 11400000, guid: bb733c4e80dbde84eaf61d8aace88c3d, type: 3}
-      propertyPath: onSerializeTransformOption
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400000, guid: bb733c4e80dbde84eaf61d8aace88c3d, type: 3}
-      propertyPath: ownershipTransfer
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5400000, guid: bb733c4e80dbde84eaf61d8aace88c3d, type: 3}
-      propertyPath: m_IsKinematic
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5400000, guid: bb733c4e80dbde84eaf61d8aace88c3d, type: 3}
-      propertyPath: m_Constraints
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bb733c4e80dbde84eaf61d8aace88c3d, type: 3}

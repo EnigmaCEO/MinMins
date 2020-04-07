@@ -40,7 +40,7 @@ namespace DarkTonic.MasterAudio {
 
         // ReSharper disable once UnusedMember.Local
         void OnEnable() {
-            StartTrackers();
+            MasterAudio.SetupAmbientNextFrame(this);
         }
 
         // ReSharper disable once UnusedMember.Local
@@ -57,6 +57,11 @@ namespace DarkTonic.MasterAudio {
                 return;
             }
 
+            MasterAudio.RemoveDelayedAmbient(this); // make sure it doesn't start playing or have trackers if it hasn't yet (< 1 frame since enabling).
+            StopTrackers();
+        }
+
+        private void StopTrackers() {
             var grp = MasterAudio.GrabGroup(AmbientSoundGroup, false); // script execution order thing with DGSC. Need to check so warnings don't get logged.
             if (grp != null) {
                 switch (exitMode) {
@@ -72,8 +77,8 @@ namespace DarkTonic.MasterAudio {
             RuntimeFollower = null;
         }
 
-		/*! \cond PRIVATE */
-		public void CalculateRadius() {
+        /*! \cond PRIVATE */
+        public void CalculateRadius() {
             var aud = GetNamedOrFirstAudioSource();
 
             if (aud == null) {
@@ -196,12 +201,12 @@ namespace DarkTonic.MasterAudio {
             Gizmos.DrawWireSphere(transform.position, colliderMaxDistance);
         }
 
-        private void StartTrackers() {
+        public void StartTrackers() {
             if (!IsValidSoundGroup) {
                 return;
             }
 
-#if PHY3D_MISSING
+#if !PHY3D_ENABLED
             MasterAudio.LogWarningIfNeverLogged("Ambient Sounds script will not function because you do not have Physics package installed.", MasterAudio.PHYSICS_DISABLED);
 #else
             var shouldIgnoreCollisions = Physics.GetIgnoreLayerCollision(AmbientUtil.IgnoreRaycastLayerNumber, AmbientUtil.IgnoreRaycastLayerNumber);

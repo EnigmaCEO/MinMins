@@ -55,11 +55,13 @@ namespace Enigma.CoreSystems
             public const string COINS = "coins";
             public const string ENJIN = "enjin";
             public const string PURCHASED = "purchased";
+            public const string REWARDS = "rewards";
 
             public const string ENJIN_ID = "enjin_id";
             public const string ENJIN_CODE = "enjin_code";
             public const string ENJIN_MFT = "enjin_mft";
             public const string MINMINS_TOKEN = "minmins_token";
+            public const string ENIGMA_TOKEN = "enigma_token";
         }
 
         public class PlayerPropertyOptions
@@ -410,8 +412,8 @@ namespace Enigma.CoreSystems
                 else
                 {
                     //string value = Md5Sum(Application.identifier + Application.version + (string)pair.Value);
-                    formData.AddField((string)pair.Key, (string)pair.Value);
-                    sec += (string)pair.Value;
+                    formData.AddField(pair.Key.ToString(), pair.Value.ToString());
+                    sec += pair.Value.ToString();
                 }
             }
 

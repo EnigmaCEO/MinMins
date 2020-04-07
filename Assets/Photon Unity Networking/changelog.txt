@@ -1,23 +1,53 @@
 PUN Classic Change Log
 
 
+v1.101 (12. November 2019)
+    Fixed: Editor UpdateRpcList() to avoid duplicates in the additional method names found previously. It was only checking the previously stored list.
+    Fixed: The selection of assemblies when looking up PUN RPC methods. This code was updated in PUN 2 before, to comply with .Net 3.5 and 4.x alike.
+    Changes: Xbox will use the socket class SocketNative which replaced SocketWebTcpNativeDynamic.
+    Changes: The SocketWebTcp class is found and used, if the config is null for either ConnectionProtocol.WebSocket and ConnectionProtocol.WebSocketSecure. Before, any websocket class was overwritten.
+    Updated: Photon registration code for the PUN Wizard window.
+    Fixed: The Worker Demo issue where the "walking" state didn't trigger correctly on builds. This is more a work(er)around: As the important value is framerate-dependent, we can get away with setting a target framerate of 60fps.
+    Updated: Photon3Unity3d.dll library to 4.1.2.19, rev5271.
+
+v1.101b1 (20. September 2019)
+    Changed: RPC related methods to waste less memory.
+    Updated: Photon3Unity3d.dll library to 4.1.2.18b1, rev5228.
+        Changed: The de/serailization Protocol 1.6 now also supports reusing an EventData instance to dispatch all events. This reduces memory garbage. See: PhotonPeer.ReuseEventInstance.
+        Added: Different implementations of Hashtable, conditionally using either ListDictionary, HybridDictionary (was commented out) or System Hashtable.
+        Changed: Replaced SocketUdpNativeStatic and SocketUdpNativeDynamic with SocketNative, which covers UDP and WS/WSS (message based protocols).
+        Note: SocketNative should be added to projects which need static linking. Alternatively, the dll could be compiled for static links, too.
+        Changes: Sockets now will try alternative IP addresses for a host, if one doesn't connect.
+
+v1.100 (4. September 2019)
+    Added: Support for "Sharding" (using more than one cluster per region in an Enterprise Cloud). More about this in the online docs.
+    Added: Optional parameter to ConnectToRegion to define a cluster. While a region must be set, requesting a specific cluster is optional.
+    Changed: NetworkingPeer.CallAuthenticate to request a random available cluster, if the game logic didn't requests a specific one.
+    Note: This means unlike before, when Region Sharding is used, the clients will actually end up on any of the configured clusters.
+    Note: ConnectToBestRegion and settings that use "Best Region" connection will both use any configured clusters now. In the Public Cloud, this never happens, so it's not of concern in that case.
+    Added: PhotonNetwork.CurrentCluster, which provides the actual cluster as defined/reported by the Name Server authenticate response.
+    Added: Relevant changes to the lower level APIs and parameter codes, which get wrapped by PhotonNetwork.
+    Added: Commented-out code in ConnectAndJoinRandom to show how to connect to a specific cluster.
+    Fixed: Offline mode calling Op Authenticate when WSS was selected as protocol.
+    Internal: Updated the account registration client/service used by the Photon Wizard.
+    Changed: TypedLobby refactored to reflect the proper definition of the default lobby: a lobby that has a null or empty name, the provided type is ignored in this case and will be considered default type.
+
 v1.99 (20. August 2019)
     Fixed: PlayerRoomIndexing is now working properly when Room Max Player property is 0. MaterialPerOwner is also secured against no indexing and doesn't fire an exception.
     Updated: Rpc List handling based on PUN2, making it compatible with Unity 2018 and 2019
     Fixed: Editor help icon is no agnostic to the 'Photon Unity Networking' location within the 'Assets' folder
-    Updated: Photon3Unity3d.dll library to 4.1.2.17, rev5187. 
+    Updated: Photon3Unity3d.dll library to 4.1.2.17, rev5187.
         Removed: Obsolete StatusCode values: DisconnectByServer is now DisconnectByServerTimeout. Other values are simply removed.
         Updated: Used StatusCode.DisconnectByServer to DisconnectByServerTimeout. A follow up to renaming and removing the code. Some implementations of IPhotonSocket can be in existing projects and may still use the old naming. Simply rename.
         Changed: PeerBase.timeInt is now a property which calculates the current time: SupportClass.GetTickCount() - this.timeBase.
         Fixed: The change for timeInt fixes a problem with TCP connections which go entirely silent and would no longer update the PhotonPeer.ConnectionTime.
-        
+
 v1.98 (25. June 2019)
     Added: Options for OpFindFriends to filter which rooms should be returned by the server. The default is the same as before but now the friend list may exclude rooms which are not yet on the game server, invisible, closed (or any combination).
     Fixed: SerializationProtocol selection for WebGL.
     Updated: To new library version 4.1.2.16. This fixes an issue with a ThreadAbortException thrown on Android (with specific Unity build settings) and improves connection stability in cases where the ping goes up temporarily.
     Photon Chat:
         Added: ChatClient.TryGetPrivateChannelByUser.
-
 
 v1.97 (17. May 2019)
     Removed: Usage of Newtonsoft.Json. The PUN editor scripts use Unity's built-in json conversion for new account registration.

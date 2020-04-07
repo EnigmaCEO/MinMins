@@ -12,7 +12,7 @@ namespace CodeStage.AntiCheat.Common
 {
 	public static class ACTkConstants
 	{
-		public const string Version = "2.0.3";
+		public const string Version = "2.1.2";
 		
 		internal const string LogPrefix = "[ACTk] ";
 		internal const string DocsRootUrl = "http://codestage.net/uas_files/actk/api/";

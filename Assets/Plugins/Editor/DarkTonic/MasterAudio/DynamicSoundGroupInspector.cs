@@ -136,6 +136,14 @@ public class DynamicSoundGroupInspector : Editor {
             _group.targetDespawnedBehavior = newTargetGone;
         }
 
+#if ADDRESSABLES_ENABLED
+        var newDelay = EditorGUILayout.IntSlider(new GUIContent("Unused Addressable Life (sec)", "To avoid reloading frequently used Addressables, you can keep them loaded when not in use for up to X seconds. Playing the Addressable again will reset the stopwatch back to zero when its finished playing."), _group.addressableUnusedSecondsLifespan, 0, 1800);
+        if (newDelay != _group.addressableUnusedSecondsLifespan) {
+            AudioUndoHelper.RecordObjectPropertyForUndo(ref isDirty, _group, "Change Unused Addressable Life (sec)");
+            _group.addressableUnusedSecondsLifespan = newDelay;
+        }
+#endif
+
         if (_group.targetDespawnedBehavior == MasterAudioGroup.TargetDespawnedBehavior.FadeOut) {
             EditorGUI.indentLevel = 1;
             var newFade = EditorGUILayout.Slider("Fade Out Time", _group.despawnFadeTime, .1f, 20f);
@@ -146,26 +154,6 @@ public class DynamicSoundGroupInspector : Editor {
         }
 
         EditorGUI.indentLevel = 0;
-
-        var groupHasResource = false;
-        foreach (var t in _group.groupVariations) {
-            if (t.audLocation != MasterAudio.AudioLocation.ResourceFile) {
-                continue;
-            }
-
-            groupHasResource = true;
-            break;
-        }
-
-        if (groupHasResource) {
-            if ((maInScene && !ma.resourceClipsAllLoadAsync) || !maInScene) {
-                var newAsync = EditorGUILayout.Toggle(new GUIContent("Load Resources Async", "Checking this means Resource files in this Sound Group will be loaded asynchronously."), _group.resourceClipsAllLoadAsync);
-                if (newAsync != _group.resourceClipsAllLoadAsync) {
-                    AudioUndoHelper.RecordObjectPropertyForUndo(ref isDirty, _group, "toggle Load Resources Async");
-                    _group.resourceClipsAllLoadAsync = newAsync;
-                }
-            }
-        }
 
         if (!maInScene || ma.prioritizeOnDistance) {
             var hiPri = EditorGUILayout.Toggle("Always Highest Priority", _group.alwaysHighestPriority);
@@ -874,13 +862,15 @@ public class DynamicSoundGroupInspector : Editor {
             GUI.contentColor = Color.white;
             EditorGUILayout.EndHorizontal();
 
-            var newBulkMode = DTGUIHelper.GetRestrictedAudioLocation("Variation Create Mode", _group.bulkVariationMode);
+            var newBulkMode = (MasterAudio.AudioLocation) EditorGUILayout.EnumPopup("Variation Create Mode", _group.bulkVariationMode);
             if (newBulkMode != _group.bulkVariationMode) {
                 AudioUndoHelper.RecordObjectPropertyForUndo(ref isDirty, _group, "change Bulk Variation Mode");
                 _group.bulkVariationMode = newBulkMode;
             }
-            if (_group.bulkVariationMode == MasterAudio.AudioLocation.ResourceFile) {
-                DTGUIHelper.ShowColorWarning("Resource mode: make sure to drag from Resource folders only.");
+            switch (_group.bulkVariationMode) {
+                case MasterAudio.AudioLocation.ResourceFile:
+                    DTGUIHelper.ShowColorWarning("Resource mode: make sure to drag from Resource folders only.");
+                    break;
             }
 
             DTGUIHelper.EndGroupHeader();
@@ -966,8 +956,13 @@ public class DynamicSoundGroupInspector : Editor {
                 EditorGUI.indentLevel = 0;
 
                 var headerStyle = new GUIStyle();
-                headerStyle.margin = new RectOffset(0, 0, 2, 0);
-                headerStyle.padding = new RectOffset(6, 0, 1, 2);
+#if UNITY_2019_3_OR_NEWER
+                headerStyle.margin = new RectOffset(0, 0, 0, 0);
+                headerStyle.padding = new RectOffset(0, 0, 0, 0);
+#else
+                headerStyle.margin = new RectOffset(0, 0, 1, 0);
+                headerStyle.padding = new RectOffset(0, 0, 1, 1);
+#endif
                 headerStyle.fixedHeight = 18;
 
                 EditorGUILayout.BeginHorizontal(headerStyle, GUILayout.MaxWidth(50));
@@ -987,9 +982,11 @@ public class DynamicSoundGroupInspector : Editor {
                 }
 
                 if (!Application.isPlaying) {
+#if UNITY_2018_2_OR_NEWER
                     if (GUILayout.Button(new GUIContent(MasterAudioInspectorResources.CopyTexture, "Click to clone Variation"), EditorStyles.toolbarButton, GUILayout.Height(16), GUILayout.Width(40))) {
                         CloneVariation(i);
                     }
+#endif
                 }
 
                 var varIsDirty = false;
@@ -1016,11 +1013,9 @@ public class DynamicSoundGroupInspector : Editor {
                         var randPitch = SoundGroupVariationInspector.GetRandomPreviewPitch(variation);
                         var varVol = SoundGroupVariationInspector.GetRandomPreviewVolume(variation);
 
-                        if (variation.audLocation != MasterAudio.AudioLocation.FileOnInternet) {
-                            if (previewer != null) {
-                                MasterAudioInspector.StopPreviewer();
-                                previewer.pitch = randPitch;
-                            }
+                        if (previewer != null) {
+                            MasterAudioInspector.StopPreviewer();
+                            previewer.pitch = randPitch;
                         }
 
                         var calcVolume = varVol * variation.ParentGroup.groupMasterVolume;
@@ -1044,18 +1039,16 @@ public class DynamicSoundGroupInspector : Editor {
                                     previewer.PlayOneShot(variation.VarAudio.clip, calcVolume);
                                 }
                                 break;
-                            case MasterAudio.AudioLocation.FileOnInternet:
-                                if (!string.IsNullOrEmpty(variation.internetFileUrl)) {
-                                    Application.OpenURL(variation.internetFileUrl);
-                                }
+#if ADDRESSABLES_ENABLED
+                            case MasterAudio.AudioLocation.Addressable:
+                                DTGUIHelper.PreviewAddressable(variation.audioClipAddressable, previewer, calcVolume);
                                 break;
+#endif
                         }
 
                         break;
                     case DTGUIHelper.DTFunctionButtons.Stop:
-                        if (variation.audLocation != MasterAudio.AudioLocation.FileOnInternet) {
-                            MasterAudioInspector.StopPreviewer();
-                        }
+                        MasterAudioInspector.StopPreviewer();
                         isDirty = true;
                         break;
                 }
@@ -1086,6 +1079,13 @@ public class DynamicSoundGroupInspector : Editor {
                     variation.audLocation = newLocation;
                 }
 
+                if (oldLocation != variation.audLocation && oldLocation == MasterAudio.AudioLocation.Clip) {
+                    if (variation.VarAudio.clip != null) {
+                        Debug.Log("Audio clip removed to prevent unnecessary memory usage.");
+                    }
+                    variation.VarAudio.clip = null;
+                }
+
                 switch (variation.audLocation) {
                     case MasterAudio.AudioLocation.Clip:
                         var newClip = (AudioClip)EditorGUILayout.ObjectField("Audio Clip", variation.VarAudio.clip, typeof(AudioClip), false);
@@ -1094,35 +1094,20 @@ public class DynamicSoundGroupInspector : Editor {
                             variation.VarAudio.clip = newClip;
                         }
                         break;
-                    case MasterAudio.AudioLocation.FileOnInternet:
-                        if (oldLocation != variation.audLocation) {
-                            if (variation.VarAudio.clip != null) {
-                                Debug.Log("Audio clip removed to prevent unnecessary memory usage on File On Internet Variation.");
-                            }
-                            variation.VarAudio.clip = null;
-                        }
+#if ADDRESSABLES_ENABLED
+                    case MasterAudio.AudioLocation.Addressable:
+                        var varSerialized = new SerializedObject(variation);
+                        varSerialized.Update();
+                        EditorGUILayout.PropertyField(varSerialized.FindProperty(nameof(DynamicGroupVariation.audioClipAddressable)), true);
+                        varSerialized.ApplyModifiedProperties();
 
-                        if (!Application.isPlaying) {
-                            var newUrl = EditorGUILayout.TextField("Internet File URL", variation.internetFileUrl);
-                            if (newUrl != variation.internetFileUrl) {
-                                AudioUndoHelper.RecordObjectPropertyForUndo(ref varIsDirty, variation, "change Internet File URL");
-                                variation.internetFileUrl = newUrl;
-                            }
-                        }
-
-                        if (string.IsNullOrEmpty(variation.internetFileUrl)) {
-                            DTGUIHelper.ShowLargeBarAlert("You have not specified a URL for the File On Internet. This Variation will not be available to play without one.");
-                        }
-                        break;
-                    case MasterAudio.AudioLocation.ResourceFile:
-                        if (oldLocation != variation.audLocation) {
-                            if (variation.VarAudio.clip != null) {
-                                Debug.Log("Audio clip removed to prevent unnecessary memory usage on Resource file Variation.");
-                            }
-                            variation.VarAudio.clip = null;
+                        if (!DTGUIHelper.IsAddressableTypeValid(variation.audioClipAddressable, variation.name)) {
+                            variation.audioClipAddressable = null;
                             varIsDirty = true;
                         }
-
+                        break;
+#endif
+                    case MasterAudio.AudioLocation.ResourceFile:
                         EditorGUILayout.BeginVertical();
                         var anEvent = Event.current;
 
@@ -1542,12 +1527,41 @@ public class DynamicSoundGroupInspector : Editor {
             var deadVar = _group.groupVariations[deadChildIndex.Value];
 
             if (deadVar != null) {
+#if UNITY_2018_2_OR_NEWER
+                var wasDestroyed = false;
+
+                if (PrefabUtility.IsPartOfPrefabInstance(_group)) {
+                    var prefabPath = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(_group);
+                    GameObject prefabRoot = PrefabUtility.LoadPrefabContents(prefabPath);
+
+                    var groupParent = prefabRoot.transform.Find(_group.name);
+                    if (groupParent != null) {
+                        var deadTrans = groupParent.Find(deadVar.name);
+
+                        if (groupParent != null) {
+                            // Destroy child objects or components on rootGO
+                            DestroyImmediate(deadTrans.gameObject); // can't undo
+                            wasDestroyed = true;
+                        } 
+                    } 
+
+                    PrefabUtility.SaveAsPrefabAsset(prefabRoot, prefabPath);
+                    PrefabUtility.UnloadPrefabContents(prefabRoot);
+                } 
+                
+                if (!wasDestroyed) {
+                    AudioUndoHelper.DestroyForUndo(deadVar.gameObject);
+                }
+#else
                 // delete variation from Hierarchy
                 AudioUndoHelper.DestroyForUndo(deadVar.gameObject);
-            }
+#endif
 
-            // delete group.
-            _group.groupVariations.RemoveAt(deadChildIndex.Value);
+                // delete variation from list.
+                if (_group.groupVariations.Count >= deadChildIndex.Value) {
+                    _group.groupVariations.RemoveAt(deadChildIndex.Value);
+                }
+            }
         }
 
 
@@ -1619,8 +1633,11 @@ public class DynamicSoundGroupInspector : Editor {
                     }
                     ac = setting.VarAudio.clip;
                     break;
-                case MasterAudio.AudioLocation.FileOnInternet:
-                    continue;
+#if ADDRESSABLES_ENABLED
+                case MasterAudio.AudioLocation.Addressable:
+                    ac = DTGUIHelper.EditModeLoadAddressable(setting.audioClipAddressable);
+                    break;
+#endif
                 case MasterAudio.AudioLocation.ResourceFile:
                     if (string.IsNullOrEmpty(setting.resourceFileName)) {
                         continue;
@@ -1681,15 +1698,7 @@ public class DynamicSoundGroupInspector : Editor {
     }
 
     public void CreateVariation(DynamicSoundGroup group, AudioClip clip) {
-        var resourceFileName = string.Empty;
         var useLocalization = false;
-
-        if (group.bulkVariationMode == MasterAudio.AudioLocation.ResourceFile) {
-            resourceFileName = DTGUIHelper.GetResourcePath(clip, ref useLocalization);
-            if (string.IsNullOrEmpty(resourceFileName)) {
-                resourceFileName = clip.name;
-            }
-        }
 
         var clipName = clip.name;
 
@@ -1703,13 +1712,26 @@ public class DynamicSoundGroupInspector : Editor {
         newVar.transform.name = clipName;
         newVar.transform.parent = group.transform;
         var variation = newVar.GetComponent<DynamicGroupVariation>();
+        variation.audLocation = group.bulkVariationMode;
 
-        if (group.bulkVariationMode == MasterAudio.AudioLocation.ResourceFile) {
-            variation.audLocation = MasterAudio.AudioLocation.ResourceFile;
-            variation.resourceFileName = resourceFileName;
-            variation.useLocalization = useLocalization;
-        } else {
-            variation.VarAudio.clip = clip;
+        switch (group.bulkVariationMode) {
+            case MasterAudio.AudioLocation.Clip:
+                variation.VarAudio.clip = clip;
+                break;
+            case MasterAudio.AudioLocation.ResourceFile:
+                var resourceFileName = DTGUIHelper.GetResourcePath(clip, ref useLocalization);
+                if (string.IsNullOrEmpty(resourceFileName)) {
+                    resourceFileName = clip.name;
+                }
+
+                variation.resourceFileName = resourceFileName;
+                variation.useLocalization = useLocalization;
+                break;
+#if ADDRESSABLES_ENABLED
+            case MasterAudio.AudioLocation.Addressable:
+                variation.audioClipAddressable = AddressableEditorHelper.CreateAssetReferenceFromObject(clip);
+                break;
+#endif
         }
 
         DynamicSoundGroupCreatorInspector.CopyFromAudioSourceTemplate(_dgsc, variation.VarAudio, false);
@@ -1751,18 +1773,6 @@ public class DynamicSoundGroupInspector : Editor {
         foreach (var t in vars) {
             t.isExpanded = expand;
         }
-    }
-
-    private void CloneVariation(int index) {
-        var gameObj = _group.groupVariations[index].gameObject;
-
-        var dupe = DTGUIHelper.DuplicateGameObject(gameObj, _group.name, _group.groupVariations.Count + 1);
-
-        if (dupe == null) {
-            return;
-        }
-
-        dupe.transform.parent = _group.transform;
     }
 
     private int GetNumChecked() {
@@ -2213,6 +2223,39 @@ public class DynamicSoundGroupInspector : Editor {
 
         Debug.LogWarning(changed + " Use Custom Fade(s) changed.");
     }
+
+#if UNITY_2018_2_OR_NEWER
+    private void CloneVariation(int index) {
+        var gameObj = _group.groupVariations[index].gameObject;
+
+        if (PrefabUtility.IsPartOfPrefabInstance(_group)) {
+            var prefabPath = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(_group);
+            GameObject prefabRoot = PrefabUtility.LoadPrefabContents(prefabPath);
+
+            var groupParent = prefabRoot.transform.Find(_group.name);
+            if (groupParent != null) {
+                var varTrans = groupParent.Find(gameObj.name);
+
+                if (varTrans != null) {
+                    // Destroy child objects or components on rootGO
+                    var newVar = DTGUIHelper.DuplicateGameObject(varTrans.gameObject, groupParent.name, _group.groupVariations.Count + 1);
+                    newVar.transform.parent = groupParent;
+                }
+            }
+
+            PrefabUtility.SaveAsPrefabAsset(prefabRoot, prefabPath);
+            PrefabUtility.UnloadPrefabContents(prefabRoot);
+        } else {
+            var dupe = DTGUIHelper.DuplicateGameObject(gameObj, _group.name, _group.groupVariations.Count + 1);
+
+            if (dupe == null) {
+                return;
+            }
+
+            dupe.transform.parent = _group.transform;
+        }
+}
+#endif
 
     private void CopyFadeInTime(float fadeInTime) {
         var changed = 0;
