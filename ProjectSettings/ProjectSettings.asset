@@ -120,7 +120,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleVersion: 1.0.0
+  bundleVersion: 1.0.3
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -164,7 +164,7 @@ PlayerSettings:
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
-    Android: com.enigmagames.minmins2
+    Android: com.enigmagames.minmins
     Standalone: unity.DefaultCompany.MinMins
     iOS: com.Company.ProductName
     iPhone: com.enigmagames.minmins
@@ -172,7 +172,7 @@ PlayerSettings:
   buildNumber:
     iOS: 
     iPhone: 1
-  AndroidBundleVersionCode: 8
+  AndroidBundleVersionCode: 17
   AndroidMinSdkVersion: 17
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1
@@ -262,7 +262,7 @@ PlayerSettings:
   clonedFromGUID: 00000000000000000000000000000000
   templatePackageId: 
   templateDefaultScene: 
-  AndroidTargetArchitectures: 1
+  AndroidTargetArchitectures: 3
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
   AndroidKeystoreName: D:/user.keystore
@@ -273,7 +273,7 @@ PlayerSettings:
   AndroidEnableTango: 0
   androidEnableBanner: 1
   androidUseLowAccuracyLocation: 0
-  androidUseCustomKeystore: 0
+  androidUseCustomKeystore: 1
   m_AndroidBanners:
   - width: 320
     height: 180
