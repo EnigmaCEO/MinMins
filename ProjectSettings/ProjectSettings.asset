@@ -172,8 +172,8 @@ PlayerSettings:
   buildNumber:
     iOS: 
     iPhone: 1
-  AndroidBundleVersionCode: 17
-  AndroidMinSdkVersion: 17
+  AndroidBundleVersionCode: 18
+  AndroidMinSdkVersion: 16
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1
   aotOptions: 

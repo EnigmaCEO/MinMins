@@ -408,7 +408,18 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
                 (unitName == "101" && GameNetwork.Instance.HasEnjinWitek && !HasUnit(unitName)) ||
                 (unitName == "102" && GameNetwork.Instance.HasEnjinBryana && !HasUnit(unitName)) ||
                 (unitName == "103" && GameNetwork.Instance.HasEnjinTassio && !HasUnit(unitName)) ||
-                (unitName == "104" && GameNetwork.Instance.HasEnjinSimon && !HasUnit(unitName)))
+                (unitName == "104" && GameNetwork.Instance.HasEnjinSimon && !HasUnit(unitName)) ||
+                (unitName == "105" && GameNetwork.Instance.HasKnightHealer && !HasUnit(unitName)) ||
+                (unitName == "106" && GameNetwork.Instance.HasKnightBomber && !HasUnit(unitName)) ||
+                (unitName == "107" && GameNetwork.Instance.HasKnightDestroyer && !HasUnit(unitName)) ||
+                (unitName == "108" && GameNetwork.Instance.HasKnightScout && !HasUnit(unitName)) ||
+                (unitName == "109" && GameNetwork.Instance.HasKnightTank && !HasUnit(unitName)) ||
+                (unitName == "110" && GameNetwork.Instance.HasDemonHealer && !HasUnit(unitName)) ||
+                (unitName == "111" && GameNetwork.Instance.HasDemonBomber && !HasUnit(unitName)) ||
+                (unitName == "112" && GameNetwork.Instance.HasDemonDestroyer && !HasUnit(unitName)) ||
+                (unitName == "113" && GameNetwork.Instance.HasDemonScout && !HasUnit(unitName)) ||
+                (unitName == "114" && GameNetwork.Instance.HasDemonTank && !HasUnit(unitName))
+                )
                 AddUnit(unitName, 0);
         }
 

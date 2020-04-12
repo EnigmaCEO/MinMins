@@ -306,6 +306,16 @@ public class Main : EnigmaScene
             if (GameNetwork.Instance.HasEnjinBryana) text.text += "\nBryana Legend";
             if (GameNetwork.Instance.HasEnjinTassio) text.text += "\nTassio Legend";
             if (GameNetwork.Instance.HasEnjinSimon) text.text += "\nSimon Legend";
+            if (GameNetwork.Instance.HasKnightHealer) text.text += "\nDeadly Knight: Healer";
+            if (GameNetwork.Instance.HasKnightBomber) text.text += "\nDeadly Knight: Bomber";
+            if (GameNetwork.Instance.HasKnightDestroyer) text.text += "\nDeadly Knight: Destroyer";
+            if (GameNetwork.Instance.HasKnightScout) text.text += "\nDeadly Knight: Scout";
+            if (GameNetwork.Instance.HasKnightTank) text.text += "\nDeadly Knight: Tank";
+            if (GameNetwork.Instance.HasDemonHealer) text.text += "\nDemon King: Healer";
+            if (GameNetwork.Instance.HasDemonBomber) text.text += "\nDemon King: Bomber";
+            if (GameNetwork.Instance.HasDemonDestroyer) text.text += "\nDemon King: Destroyer";
+            if (GameNetwork.Instance.HasDemonScout) text.text += "\nDemon King: Scout";
+            if (GameNetwork.Instance.HasDemonTank) text.text += "\nDemon King: Tank";
         }
     }
 }

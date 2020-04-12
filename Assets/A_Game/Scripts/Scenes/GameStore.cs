@@ -233,7 +233,7 @@ public class GameStore : EnigmaScene
 
     private int setupEnjinLegendsMinMinsDisplay(GameObject popUp)
     {
-        int count = 5;
+        int count = 15;
         Transform enjinContent = popUp.transform.Find("EnjinGrid/Viewport/Content");
         GameInventory gameInventory = GameInventory.Instance;
 
