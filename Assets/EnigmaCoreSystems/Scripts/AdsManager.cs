@@ -76,14 +76,13 @@ public class AdsManager : MonoBehaviour
     public class Ads
     {
         public string appVersion = "1.0";
+        static public string AndroidGameId = "3186450";
+        static public string IosGameId = "3186451";
 
 #if UNITY_ANDROID
         // App ID
         //static public string AppId = "app42a4a7795d6642b4ae";  //"app168a5d9b97bb47739a";
 
-        static public string AndroidGameId = "3186450";
-        static public string IosGameId = "3186451";
-                                                               // Video zones
         static public string[] ZoneId = { "vze64e837cdaeb448494" }; //{ "vz28f417ceecca4ae4b2", "vzf2257354d2b64e08a8" };
                                                                     //If not android defaults to setting the zone strings for iOS
 
