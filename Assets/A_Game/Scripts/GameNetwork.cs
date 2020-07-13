@@ -642,7 +642,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         SetUnitRoomProperty(UnitRoomProperties.MAX_HEALTH, teamName, unitName, maxHealth);
         
         if(GameHacks.Instance.FractionOfStartingHealth.Enabled)
-            SetUnitHealth(teamName, unitName, (int.Parse(maxHealth))/GameHacks.Instance.FractionOfStartingHealth.ValueAsInt); //TODO: Remove text hack
+            SetUnitHealth(teamName, unitName, (int.Parse(maxHealth))/GameHacks.Instance.FractionOfStartingHealth.ValueAsInt); 
         else
             SetUnitHealth(teamName, unitName, int.Parse(maxHealth));
 
@@ -909,7 +909,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
         if (boostNode != null)
         {
-            if (boostNode == "1")
+            if (boostNode.AsInt == 1)
             {
                 isAvailable = true;
             }

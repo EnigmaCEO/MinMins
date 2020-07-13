@@ -355,6 +355,8 @@ public class EnjinLogin : MonoBehaviour
     {
         if (response != null)
         {
+            Debug.Log("onLogin: " + response.ToString());
+
             SimpleJSON.JSONNode response_hash = response[0];
             string status = response_hash[NetworkManager.TransactionKeys.STATUS].ToString().Trim('"');
 

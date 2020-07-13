@@ -1252,15 +1252,20 @@ public class War : NetworkEntity
         int powerBonus = 0;
         int sizeBonus = 0;
 
-        if (selectedBoostItem != null)
+        if (GameHacks.Instance.SetTeamBoostBonuses.Enabled)
+        {
+            int boostBonus = GameHacks.Instance.SetTeamBoostBonuses.ValueAsInt;
+
+            healthBonus = boostBonus;
+            damageBonus = boostBonus;
+            defenseBonus = boostBonus;
+            powerBonus = boostBonus;
+            sizeBonus = boostBonus;
+        }
+        else if (selectedBoostItem != null)
         {
             string boostCategory = selectedBoostItem.Category;
             int boostBonus = selectedBoostItem.Bonus;
-
-            if (GameHacks.Instance.SetBonuses.Enabled)
-            {
-                boostBonus = GameHacks.Instance.SetBonuses.ValueAsInt;
-            }
 
             if (boostCategory == GameConstants.TeamBoostCategory.DAMAGE)
             {

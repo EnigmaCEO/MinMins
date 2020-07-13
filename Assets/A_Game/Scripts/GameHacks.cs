@@ -28,7 +28,7 @@ public class GameHacks : SingletonMonobehaviour<GameHacks>
     public ValueHack ForceTeamBoostReward = new ValueHack("True");
     public ValueHack TeamBoostRewardCategory = new ValueHack("Size");
     public ValueHack SizeBonus = new ValueHack("10");
-    public ValueHack SetBonuses = new ValueHack("100");
+    public ValueHack SetTeamBoostBonuses = new ValueHack("5");
 
     public ValueHack BuyResult = new ValueHack("True");
 
