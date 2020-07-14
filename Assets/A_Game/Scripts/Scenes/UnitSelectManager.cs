@@ -147,7 +147,15 @@ public class UnitSelectManager : EnigmaScene
     private void onNextButtonDown()
     {
         SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
-        SceneManager.LoadScene(GameConstants.Scenes.TEAM_BOOST);
+
+        if ((GameStats.Instance.TeamBoostTokensOwnedByName.Count > 0) || (GameInventory.Instance.GetOreItemsOwned().Count > 0))
+        {
+            SceneManager.LoadScene(GameConstants.Scenes.TEAM_BOOST);
+        }
+        else
+        {
+            SceneManager.LoadScene(GameConstants.Scenes.WAR_PREP);
+        }
     }
 
     private void onInfoBackButtonDown()
