@@ -1357,9 +1357,17 @@ public class War : NetworkEntity
 
     private void instantiateRewardChests(string gridName)
     {
+        Debug.Log("GetSinglePlayerLevel: " + GameInventory.Instance.GetSinglePlayerLevel());
         if ((GameStats.Instance.Mode == GameStats.Modes.SinglePlayer) && (GameStats.Instance.SelectedLevelNumber < GameInventory.Instance.GetSinglePlayerLevel()))
         {
-            return; // no chest for replaying levels
+            if (GameNetwork.Instance.rewardedLevels[GameStats.Instance.SelectedLevelNumber - 1] == 0)  //By pass check if they didn't got enjin drop, and give it to player
+            {
+                ObscuredPrefs.SetInt("EnjinWins", 99);  //Will ensure a 100% chance of getting the drop at the end of battle
+            }
+            else
+            {
+                return; // no chest for replaying levels, unless it is guaranteed enjin drop
+            }
         }
 
         //No chests in private matches
@@ -2277,26 +2285,33 @@ public class War : NetworkEntity
                 if (NetworkManager.LoggedIn && gameNetwork.IsEnjinLinked)
                 {
                     int chance = 5;
-                    int enjinWins = 10;
+                    int enjinWinsRequired = 10;
 
                     if (gameNetwork.HasEnjinMinMinsToken)
                     {
                         chance = 25;
-                        enjinWins = 5;
+                        enjinWinsRequired = 5;
                     }
-                        
-                    if(ObscuredPrefs.GetInt("EnjinWins", 0) == enjinWins)
+
+                    Debug.Log("EnjinWins: " + ObscuredPrefs.GetInt("EnjinWins", 0));
+
+                    if(ObscuredPrefs.GetInt("EnjinWins", 0) >= enjinWinsRequired)
                     {
                         chance = 100;
                         ObscuredPrefs.SetInt("EnjinWins", 0);
-                    } else
+                    } 
+                    else
                     {
-                        ObscuredPrefs.SetInt("EnjinWins", ObscuredPrefs.GetInt("EnjinWins", 0)+1);
+                        ObscuredPrefs.SetInt("EnjinWins", ObscuredPrefs.GetInt("EnjinWins", 0) + 1);
                     }
 
-                    if ((UnityEngine.Random.Range(1, 101) <= chance) || gameHacks.ForceEnjinRewardOnChest)
+                    int random = UnityEngine.Random.Range(1, 101);
+                    //random = 25;
+                    Debug.Log("Chance: " + chance + " random: " + random);
+
+                    if ((random <= chance) || gameHacks.ForceEnjinRewardOnChest)
                     {
-                        NetworkManager.Instance.SendEnjinCollectedTransaction(GameNetwork.TRANSACTION_GAME_NAME, GameStats.Instance.SelectedLevelNumber,onEnjinItemCollectedTransactionExternal);
+                        NetworkManager.Instance.SendEnjinCollectedTransaction(GameNetwork.TRANSACTION_GAME_NAME, GameStats.Instance.SelectedLevelNumber, onEnjinItemCollectedTransactionExternal);
                         enjinItemCollectedTransactionSent = true;
                         //_matchLocalData.EnjinCollected = true;
                     }
@@ -2340,6 +2355,7 @@ public class War : NetworkEntity
         if ((status == "SUCCESS") && !GameHacks.Instance.EnjinItemCollectedFailure)
         {
             _matchLocalData.EnjinCollected = true;
+            GameNetwork.Instance.rewardedLevels[GameStats.Instance.SelectedLevelNumber - 1] = 1;
         }
         else
         {
