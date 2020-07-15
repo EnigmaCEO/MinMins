@@ -61,7 +61,7 @@ MonoBehaviour:
   _tierSilver_unitsAmount: 30
   _tierGold_unitsAmount: 10
   _enjin_firstUnitNumber: 100
-  _enjin_lastUnitNumer: 121
+  _enjin_lastUnitNumer: 126
   _tierBronze_GroupRarity: 0.7
   _tierSilver_GroupRarity: 0.2
   _tierGold_GroupRarity: 0.1

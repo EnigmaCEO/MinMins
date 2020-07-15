@@ -398,33 +398,56 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
         SaveUnits();
     }
+    private bool checkAddUnit(string unitName, string checkName, bool flag)
+    {
+        return ((unitName == checkName) && flag && !HasUnit(unitName));
+    }
 
     public void AddMinMinEnjinUnits()
     {
         for (int i = _enjin_firstUnitNumber; i <= _enjin_lastUnitNumer; i++)
         {
+            GameNetwork gameNetwork = GameNetwork.Instance;
+
             string unitName = i.ToString();
-            if ((unitName == "100" && GameNetwork.Instance.HasEnjinMaxim && !HasUnit(unitName)) ||
-                (unitName == "101" && GameNetwork.Instance.HasEnjinWitek && !HasUnit(unitName)) ||
-                (unitName == "102" && GameNetwork.Instance.HasEnjinBryana && !HasUnit(unitName)) ||
-                (unitName == "103" && GameNetwork.Instance.HasEnjinTassio && !HasUnit(unitName)) ||
-                (unitName == "104" && GameNetwork.Instance.HasEnjinSimon && !HasUnit(unitName)) ||
-                (unitName == "105" && GameNetwork.Instance.HasKnightHealer && !HasUnit(unitName)) ||
-                (unitName == "106" && GameNetwork.Instance.HasKnightBomber && !HasUnit(unitName)) ||
-                (unitName == "107" && GameNetwork.Instance.HasKnightDestroyer && !HasUnit(unitName)) ||
-                (unitName == "108" && GameNetwork.Instance.HasKnightScout && !HasUnit(unitName)) ||
-                (unitName == "109" && GameNetwork.Instance.HasKnightTank && !HasUnit(unitName)) ||
-                (unitName == "110" && GameNetwork.Instance.HasDemonHealer && !HasUnit(unitName)) ||
-                (unitName == "111" && GameNetwork.Instance.HasDemonBomber && !HasUnit(unitName)) ||
-                (unitName == "112" && GameNetwork.Instance.HasDemonDestroyer && !HasUnit(unitName)) ||
-                (unitName == "113" && GameNetwork.Instance.HasDemonScout && !HasUnit(unitName)) ||
-                (unitName == "114" && GameNetwork.Instance.HasDemonTank && !HasUnit(unitName))
+            if (
+                    checkAddUnit(unitName, "100", gameNetwork.HasEnjinMaxim) ||
+                    checkAddUnit(unitName, "101", gameNetwork.HasEnjinWitek) ||
+                    checkAddUnit(unitName, "102", gameNetwork.HasEnjinBryana) ||
+                    checkAddUnit(unitName, "103", gameNetwork.HasEnjinTassio) ||
+                    checkAddUnit(unitName, "104", gameNetwork.HasEnjinSimon) ||
+                    checkAddUnit(unitName, "105",gameNetwork.HasKnightHealer) ||
+                    checkAddUnit(unitName, "106", gameNetwork.HasKnightBomber) ||
+                    checkAddUnit(unitName, "107", gameNetwork.HasKnightDestroyer) ||
+                    checkAddUnit(unitName, "108", gameNetwork.HasKnightScout) ||
+                    checkAddUnit(unitName, "109", gameNetwork.HasKnightTank) ||
+                    checkAddUnit(unitName, "110", gameNetwork.HasDemonHealer) ||
+                    checkAddUnit(unitName, "111", gameNetwork.HasDemonBomber) ||
+                    checkAddUnit(unitName, "112", gameNetwork.HasDemonDestroyer) ||
+                    checkAddUnit(unitName, "113", gameNetwork.HasDemonScout) ||
+                    checkAddUnit(unitName, "114", gameNetwork.HasDemonTank) ||
+                    checkAddUnit(unitName, "122", gameNetwork.HasEnjinAlex) ||
+                    checkAddUnit(unitName, "123", gameNetwork.HasEnjinEvan) ||
+                    checkAddUnit(unitName, "124", gameNetwork.HasEnjinEsther) ||
+                    checkAddUnit(unitName, "125", gameNetwork.HasEnjinBrad) ||
+                    checkAddUnit(unitName, "126", gameNetwork.HasEnjinLizz)
                 )
+            {
                 AddUnit(unitName, 0);
+            }
         }
+
+        /*
+         *         public const string ENJIN_ESTHER = "enjin_esther"; //fairy 124
+        public const string ENJIN_ALEX = "enjin_alex";  //black 122
+        public const string ENJIN_LIZZ = "enjin_lizz";  //fire 126
+        public const string ENJIN_EVAN = "enjin_evan";  //wizard 123
+        public const string ENJIN_BRAD = "enjin_brad";  //book 125
+         * */
 
         SaveUnits();
     }
+
 
     public bool HasAllEnjinUnits()
     {

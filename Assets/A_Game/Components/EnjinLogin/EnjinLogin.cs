@@ -307,6 +307,12 @@ public class EnjinLogin : MonoBehaviour
             gameNetwork.HasEnjinTassio = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.ENJIN_TASSIO);
             gameNetwork.HasEnjinWitek = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.ENJIN_WITEK);
 
+            gameNetwork.HasEnjinEsther = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.ENJIN_ESTHER);
+            gameNetwork.HasEnjinAlex = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.ENJIN_ALEX);
+            gameNetwork.HasEnjinLizz = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.ENJIN_LIZZ);
+            gameNetwork.HasEnjinEvan = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.ENJIN_EVAN);
+            gameNetwork.HasEnjinBrad = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.ENJIN_BRAD);
+
             gameNetwork.HasKnightBomber = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.KNIGHT_BOMBER);
             gameNetwork.HasKnightDestroyer = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.KNIGHT_DESTROYER);
             gameNetwork.HasKnightHealer = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.KNIGHT_HEALER);

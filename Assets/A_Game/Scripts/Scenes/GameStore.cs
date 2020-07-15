@@ -189,7 +189,8 @@ public class GameStore : EnigmaScene
 
         int count = setupEnjinLegendsMinMinsDisplay(_minminPopUp);
         Debug.Log("count: " + count);
-        if (count == 0 || !GameNetwork.Instance.HasEnjinMinMinsToken) _minminPopUp.transform.Find("DismissButton").gameObject.SetActive(false);
+        if (count == 0 || !GameNetwork.Instance.HasEnjinMinMinsToken) 
+            _minminPopUp.transform.Find("DismissButton").gameObject.SetActive(false);
 
         _minminPopUp.SetActive(true);
 
@@ -231,87 +232,47 @@ public class GameStore : EnigmaScene
         return count;
     }
 
+    private bool checkDeactivateLegend(string unitName, string checkName, bool flag)
+    {
+        return ((unitName == checkName) && (!flag || GameInventory.Instance.HasUnit(unitName))) ;
+    }
+
     private int setupEnjinLegendsMinMinsDisplay(GameObject popUp)
     {
-        int count = 15;
+        int count = 20;
         Transform enjinContent = popUp.transform.Find("EnjinGrid/Viewport/Content");
         GameInventory gameInventory = GameInventory.Instance;
+        GameNetwork gameNetwork = GameNetwork.Instance;
 
         foreach (Transform enjinTransform in enjinContent)
         {
             string unitName = enjinTransform.name;
-            
-            if(unitName == "100" && (!GameNetwork.Instance.HasEnjinMaxim || gameInventory.HasUnit(unitName)))
-            {
-                enjinTransform.gameObject.SetActive(false);
-                count--;
-            }
-            if (unitName == "101" && (!GameNetwork.Instance.HasEnjinWitek || gameInventory.HasUnit(unitName)))
-            {
-                enjinTransform.gameObject.SetActive(false);
-                count--;
-            }
-            if (unitName == "102" && (!GameNetwork.Instance.HasEnjinBryana || gameInventory.HasUnit(unitName)))
-            {
-                enjinTransform.gameObject.SetActive(false);
-                count--;
-            }
-            if (unitName == "103" && (!GameNetwork.Instance.HasEnjinTassio || gameInventory.HasUnit(unitName)))
-            {
-                enjinTransform.gameObject.SetActive(false);
-                count--;
-            }
-            if (unitName == "104" && (!GameNetwork.Instance.HasEnjinSimon || gameInventory.HasUnit(unitName)))
-            {
-                enjinTransform.gameObject.SetActive(false);
-                count--;
-            }
-            if (unitName == "105" && (!GameNetwork.Instance.HasKnightTank || gameInventory.HasUnit(unitName)))
-            {
-                enjinTransform.gameObject.SetActive(false);
-                count--;
-            }
-            if (unitName == "106" && (!GameNetwork.Instance.HasKnightHealer || gameInventory.HasUnit(unitName)))
-            {
-                enjinTransform.gameObject.SetActive(false);
-                count--;
-            }
-            if (unitName == "107" && (!GameNetwork.Instance.HasKnightScout || gameInventory.HasUnit(unitName)))
-            {
-                enjinTransform.gameObject.SetActive(false);
-                count--;
-            }
-            if (unitName == "108" && (!GameNetwork.Instance.HasKnightDestroyer || gameInventory.HasUnit(unitName)))
-            {
-                enjinTransform.gameObject.SetActive(false);
-                count--;
-            }
-            if (unitName == "109" && (!GameNetwork.Instance.HasKnightBomber || gameInventory.HasUnit(unitName)))
-            {
-                enjinTransform.gameObject.SetActive(false);
-                count--;
-            }
-            if (unitName == "110" && (!GameNetwork.Instance.HasDemonBomber || gameInventory.HasUnit(unitName)))
-            {
-                enjinTransform.gameObject.SetActive(false);
-                count--;
-            }
-            if (unitName == "111" && (!GameNetwork.Instance.HasDemonScout || gameInventory.HasUnit(unitName)))
-            {
-                enjinTransform.gameObject.SetActive(false);
-                count--;
-            }
-            if (unitName == "112" && (!GameNetwork.Instance.HasDemonDestroyer || gameInventory.HasUnit(unitName)))
-            {
-                enjinTransform.gameObject.SetActive(false);
-                count--;
-            }
-            if (unitName == "113" && (!GameNetwork.Instance.HasDemonTank || gameInventory.HasUnit(unitName)))
-            {
-                enjinTransform.gameObject.SetActive(false);
-                count--;
-            }
-            if (unitName == "114" && (!GameNetwork.Instance.HasDemonHealer || gameInventory.HasUnit(unitName)))
+
+            if (
+                    checkDeactivateLegend(unitName, "100", gameNetwork.HasEnjinMaxim) ||
+                    checkDeactivateLegend(unitName, "101", gameNetwork.HasEnjinWitek) ||
+                    checkDeactivateLegend(unitName, "102", gameNetwork.HasEnjinBryana) ||
+                    checkDeactivateLegend(unitName, "103", gameNetwork.HasEnjinTassio) ||
+                    checkDeactivateLegend(unitName, "104", gameNetwork.HasEnjinSimon) ||
+
+                    checkDeactivateLegend(unitName, "122", gameNetwork.HasEnjinAlex) ||
+                    checkDeactivateLegend(unitName, "123", gameNetwork.HasEnjinEvan) ||
+                    checkDeactivateLegend(unitName, "124", gameNetwork.HasEnjinEsther) ||
+                    checkDeactivateLegend(unitName, "125", gameNetwork.HasEnjinBrad) ||
+                    checkDeactivateLegend(unitName, "126", gameNetwork.HasEnjinLizz) ||
+
+                    checkDeactivateLegend(unitName, "105", gameNetwork.HasKnightTank) ||
+                    checkDeactivateLegend(unitName, "106", gameNetwork.HasKnightHealer) ||
+                    checkDeactivateLegend(unitName, "107", gameNetwork.HasKnightScout) ||
+                    checkDeactivateLegend(unitName, "108", gameNetwork.HasKnightDestroyer) ||
+                    checkDeactivateLegend(unitName, "109", gameNetwork.HasKnightBomber) ||
+
+                    checkDeactivateLegend(unitName, "110", gameNetwork.HasDemonBomber) ||
+                    checkDeactivateLegend(unitName, "111", gameNetwork.HasDemonScout) ||
+                    checkDeactivateLegend(unitName, "112", gameNetwork.HasDemonDestroyer) ||
+                    checkDeactivateLegend(unitName, "113", gameNetwork.HasDemonTank) ||
+                    checkDeactivateLegend(unitName, "114", gameNetwork.HasDemonHealer)
+                )
             {
                 enjinTransform.gameObject.SetActive(false);
                 count--;

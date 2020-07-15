@@ -64,7 +64,10 @@ public class UnitSelectManager : EnigmaScene
             
             for(int x = 1; x < 4; x++)
             {
-                if (unitTier < x) unitTransform.Find("StarsGrid/Viewport/Content/star" + x).gameObject.SetActive(false);
+                if (unitTier < x)
+                {
+                    unitTransform.Find("StarsGrid/Viewport/Content/star" + x).gameObject.SetActive(false);
+                }
             }
 
             unitTransform.Find("level/txt_level").GetComponent<Text>().text = GameInventory.Instance.GetLocalUnitLevel(unitName).ToString();

@@ -37,6 +37,12 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         public const string ENJIN_TASSIO = "enjin_tassio";
         public const string ENJIN_SIMON = "enjin_simon";
 
+        public const string ENJIN_ESTHER = "enjin_esther"; //fairy 124
+        public const string ENJIN_ALEX = "enjin_alex";  //black 122
+        public const string ENJIN_LIZZ = "enjin_lizz";  //fire 126
+        public const string ENJIN_EVAN = "enjin_evan";  //wizard 123
+        public const string ENJIN_BRAD = "enjin_brad";  //book 125
+
         public const string ENJIN_SWORD = "enjin_sword";
         public const string ENJIN_ARMOR = "enjin_armor";
         public const string ENJIN_SHADOWSONG = "enjin_shadowsong";
@@ -263,6 +269,12 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     public bool HasEnjinWitek = false;
     public bool HasEnjinTassio = false;
     public bool HasEnjinSimon = false;
+
+    public bool HasEnjinEsther = false;
+    public bool HasEnjinAlex = false;
+    public bool HasEnjinLizz = false;
+    public bool HasEnjinEvan = false;
+    public bool HasEnjinBrad = false;
 
     public bool HasKnightHealer = false;
     public bool HasKnightBomber = false;

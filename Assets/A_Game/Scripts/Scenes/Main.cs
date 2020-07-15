@@ -291,31 +291,52 @@ public class Main : EnigmaScene
         StopCoroutine("handleEnjinLinkingCheck");
         _enjinWindow.gameObject.SetActive(false);
     }
+
+    private void addToEnjinItemDisplay(Text text, bool flag, string label)
+    {
+        if (flag)
+        {
+            text.text += "\n" + label;
+        }
+    }
     
-    public void DisplayEnjinItems() {
-        if (GameNetwork.Instance.IsEnjinLinked)
+    public void DisplayEnjinItems() 
+    {
+        GameNetwork gameNetwork = GameNetwork.Instance;
+
+        if (gameNetwork.IsEnjinLinked)
         {
             _enjinIcon.SetActive(true);
             Text text = _enjinIcon.GetComponentInChildren<Text>();
             text.text = ""; 
-            if (GameNetwork.Instance.HasEnjinMft) text.text += "\nEnjin MFT";
-            if (GameNetwork.Instance.HasEnjinEnigmaToken) text.text += "\nEnigma Token";
-            if (GameNetwork.Instance.HasEnjinMinMinsToken) text.text += "\nMin-Mins Token";
-            if (GameNetwork.Instance.HasEnjinMaxim) text.text += "\nMaxim Legend";
-            if (GameNetwork.Instance.HasEnjinWitek) text.text += "\nWitek Legend";
-            if (GameNetwork.Instance.HasEnjinBryana) text.text += "\nBryana Legend";
-            if (GameNetwork.Instance.HasEnjinTassio) text.text += "\nTassio Legend";
-            if (GameNetwork.Instance.HasEnjinSimon) text.text += "\nSimon Legend";
-            if (GameNetwork.Instance.HasKnightHealer) text.text += "\nDeadly Knight: Healer";
-            if (GameNetwork.Instance.HasKnightBomber) text.text += "\nDeadly Knight: Bomber";
-            if (GameNetwork.Instance.HasKnightDestroyer) text.text += "\nDeadly Knight: Destroyer";
-            if (GameNetwork.Instance.HasKnightScout) text.text += "\nDeadly Knight: Scout";
-            if (GameNetwork.Instance.HasKnightTank) text.text += "\nDeadly Knight: Tank";
-            if (GameNetwork.Instance.HasDemonHealer) text.text += "\nDemon King: Healer";
-            if (GameNetwork.Instance.HasDemonBomber) text.text += "\nDemon King: Bomber";
-            if (GameNetwork.Instance.HasDemonDestroyer) text.text += "\nDemon King: Destroyer";
-            if (GameNetwork.Instance.HasDemonScout) text.text += "\nDemon King: Scout";
-            if (GameNetwork.Instance.HasDemonTank) text.text += "\nDemon King: Tank";
+
+            addToEnjinItemDisplay(text, gameNetwork.HasEnjinMft, "Enjin MFT");
+            addToEnjinItemDisplay(text, gameNetwork.HasEnjinEnigmaToken, "Enigma Token");
+            addToEnjinItemDisplay(text, gameNetwork.HasEnjinMinMinsToken, "Min-Mins Token");
+
+            addToEnjinItemDisplay(text, gameNetwork.HasEnjinMaxim, "Maxim Legend");
+            addToEnjinItemDisplay(text, gameNetwork.HasEnjinWitek, "Witek Legend");
+            addToEnjinItemDisplay(text, gameNetwork.HasEnjinBryana, "Bryana Legend");
+            addToEnjinItemDisplay(text, gameNetwork.HasEnjinTassio, "Tassio Legend");
+            addToEnjinItemDisplay(text, gameNetwork.HasEnjinSimon, "Simon Legend");
+
+            addToEnjinItemDisplay(text, gameNetwork.HasEnjinEsther, "Esther Legend");
+            addToEnjinItemDisplay(text, gameNetwork.HasEnjinAlex, "Alex Legend");
+            addToEnjinItemDisplay(text, gameNetwork.HasEnjinEvan, "Evan Legend");
+            addToEnjinItemDisplay(text, gameNetwork.HasEnjinLizz, "Lizz Legend");
+            addToEnjinItemDisplay(text, gameNetwork.HasEnjinBrad, "Brad Legend");
+
+            addToEnjinItemDisplay(text, gameNetwork.HasKnightHealer, "Deadly Knight: Healer");
+            addToEnjinItemDisplay(text, gameNetwork.HasKnightBomber, "Deadly Knight: Bomber");
+            addToEnjinItemDisplay(text, gameNetwork.HasKnightDestroyer, "Deadly Knight: Destroyer");
+            addToEnjinItemDisplay(text, gameNetwork.HasKnightScout, "Deadly Knight: Scout");
+            addToEnjinItemDisplay(text, gameNetwork.HasKnightTank, "Deadly Knight: Tank");
+
+            addToEnjinItemDisplay(text, gameNetwork.HasDemonHealer, "Demon King: Healer");
+            addToEnjinItemDisplay(text, gameNetwork.HasDemonBomber, "Demon King: Bomber");
+            addToEnjinItemDisplay(text, gameNetwork.HasDemonDestroyer, "Demon King: Destroyer");
+            addToEnjinItemDisplay(text, gameNetwork.HasDemonScout, "Demon King: Scout");
+            addToEnjinItemDisplay(text, gameNetwork.HasDemonTank, "Demon King: Tank");
         }
     }
 }

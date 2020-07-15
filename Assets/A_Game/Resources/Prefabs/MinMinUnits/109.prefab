@@ -383,7 +383,7 @@ MonoBehaviour:
   Effect: 6
   Type: 2
   Attacks: 0a000000
-  EffectName: 3
+  EffectName: 1
   Tier: 0
 --- !u!114 &7206178075776051539
 MonoBehaviour:
