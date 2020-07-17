@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Permissions;
 using UnityEngine;
 
 public class GameHacks : SingletonMonobehaviour<GameHacks>
@@ -24,6 +25,8 @@ public class GameHacks : SingletonMonobehaviour<GameHacks>
     public bool CreateWarPrepLineRendererOnUpdate;
 
     public bool EnjinItemCollectedFailure;
+    public bool CompletedQuestFailure;
+    public bool CompleteQuestOffline;
 
     public ValueHack ForceTeamBoostReward = new ValueHack("True");
     public ValueHack TeamBoostRewardCategory = new ValueHack("Size");

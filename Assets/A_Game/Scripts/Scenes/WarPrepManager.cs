@@ -165,7 +165,7 @@ public class WarPrepManager : EnigmaScene
         }
 
         GameStats.Modes gameMode = GameStats.Instance.Mode;
-        if (gameMode == GameStats.Modes.SinglePlayer)
+        if ((gameMode == GameStats.Modes.SinglePlayer) || (gameMode == GameStats.Modes.Quest))
         {
             NetworkManager.Connect(true);
             SceneManager.LoadScene(GameConstants.Scenes.WAR, true);

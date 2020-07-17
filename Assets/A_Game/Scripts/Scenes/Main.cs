@@ -3,11 +3,14 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 using CodeStage.AntiCheat.Storage;
+using GameEnums;
+using UnityEngine.UDP;
 
 public class Main : EnigmaScene
 {
     [SerializeField] GameObject _loginModal;
-    [SerializeField] LoginForPvpPopUp _loginForPvpPopUp;
+    [SerializeField] LoginForGameModePopUp _loginForPvpPopUp;
+    [SerializeField] LoginForGameModePopUp _loginForQuestPopUp;
 
     [SerializeField] GameObject _enjinWindow;
     [SerializeField] private int _checkEnjinLinkingDelay = 2;
@@ -15,7 +18,9 @@ public class Main : EnigmaScene
     [SerializeField] GameObject _logoutButton;
     [SerializeField] GameObject _enjinIcon;
     [SerializeField] Text _pvprating;
-    
+
+    [SerializeField] GameObject _questButton;
+
     void Start()
     {
         if (!NetworkManager.LoggedIn)
@@ -32,59 +37,59 @@ public class Main : EnigmaScene
         _enjinIcon.SetActive(false);
         _enjinWindow.SetActive(false);
 
+        _questButton.SetActive(false);
+
         _pvprating.text = "";
-/*
-        _kinWrapper = GameObject.Find("/KinManager").GetComponent<KinManager>();
-        
-        _kinWrapper.RegisterCallback((obj, val) =>
-        {
-            //_pvprating.text += "\n" + obj.ToString();
+        /*
+                _kinWrapper = GameObject.Find("/KinManager").GetComponent<KinManager>();
 
-            if (obj.ToString() == "Account funded")
-            {
-                Text text = GameObject.Find("/Canvas/kin_icon/Text").GetComponent<Text>();
-                text.text = "50";
-                ObscuredPrefs.SetFloat("KinBalanceUser", 50f);
-            }
+                _kinWrapper.RegisterCallback((obj, val) =>
+                {
+                    //_pvprating.text += "\n" + obj.ToString();
 
-
-        });
-        
-
-        
-
-        string kin = _kinWrapper.GetUserPublicAddress();
-
-        if (kin != null && kin != "")
-        {
-            Debug.Log(kin);
+                    if (obj.ToString() == "Account funded")
+                    {
+                        Text text = GameObject.Find("/Canvas/kin_icon/Text").GetComponent<Text>();
+                        text.text = "50";
+                        ObscuredPrefs.SetFloat("KinBalanceUser", 50f);
+                    }
 
 
-            decimal balance = _kinWrapper.GetBalance();
-            if (balance == 0)
-            {
-                //_pvprating.text += kin + "\n" + balance;
-                _kinPopUp.SetActive(true);
-                //ObscurePrefs.SetString("Kin", "2");
-                //_kinWrapper.FundKin();
-            } else
-            {
+                });
 
-                Text text = GameObject.Find("/Canvas/kin_icon/Text").GetComponent<Text>();
-                text.text = balance.ToString();
-                
-            }
-        }
-        else
-            _kinPopUp.SetActive(false);
-*/
+
+
+
+                string kin = _kinWrapper.GetUserPublicAddress();
+
+                if (kin != null && kin != "")
+                {
+                    Debug.Log(kin);
+
+
+                    decimal balance = _kinWrapper.GetBalance();
+                    if (balance == 0)
+                    {
+                        //_pvprating.text += kin + "\n" + balance;
+                        _kinPopUp.SetActive(true);
+                        //ObscurePrefs.SetString("Kin", "2");
+                        //_kinWrapper.FundKin();
+                    } else
+                    {
+
+                        Text text = GameObject.Find("/Canvas/kin_icon/Text").GetComponent<Text>();
+                        text.text = balance.ToString();
+
+                    }
+                }
+                else
+                    _kinPopUp.SetActive(false);
+        */
         Init();
     }
 
     public void Init()
     {
-        
-
         bool loggedIn = NetworkManager.LoggedIn;
 
         _loginButton.gameObject.SetActive(!loggedIn);
@@ -97,17 +102,17 @@ public class Main : EnigmaScene
             _loginModal.GetComponent<EnjinLogin>().loginSubmit();
         }
 
-
+        _questButton.SetActive(GameStats.Instance.ActiveQuest != Quests.None);
 
         //_kinPopUp.SetActive(true);
 
         DisplayEnjinItems();
 
-        if(loggedIn)
+        if (loggedIn)
         {
             _pvprating.text = LocalizationManager.GetTermTranslation("PvP Rating") + ": " + GameStats.Instance.Rating;
         }
-        
+
     }
 
     public void OnSinglePlayerButtonDown()
@@ -129,7 +134,9 @@ public class Main : EnigmaScene
             goToLevels();
         }
         else
+        {
             _loginForPvpPopUp.Open();
+        }
     }
 
     public void OnStoreButtonDown()
@@ -137,6 +144,23 @@ public class Main : EnigmaScene
         print("OnStoreButtonDown");
         SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
         SceneManager.LoadScene(GameConstants.Scenes.STORE);
+    }
+
+    public void OnQuestButtonDown()
+    {
+        print("OnQuestButtonDown");
+
+        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+
+        if (NetworkManager.LoggedIn)
+        {
+            GameStats.Instance.Mode = GameStats.Modes.Quest;
+            goToLevels();
+        }
+        else
+        {
+            _loginForQuestPopUp.Open();
+        }
     }
 
     public void ShowLoginForm()

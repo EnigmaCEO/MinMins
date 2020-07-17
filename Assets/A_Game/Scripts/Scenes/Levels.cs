@@ -9,6 +9,7 @@ public class Levels : EnigmaScene
     [SerializeField] private Transform _levelsGridContent;
     [SerializeField] GameObject _notEnoughUnitsPopUp;
 
+
     void Start()
     {
         SoundManager.FadeCurrentSong(1f, () => {
@@ -18,28 +19,54 @@ public class Levels : EnigmaScene
         });
         
         _notEnoughUnitsPopUp.SetActive(false);
- 
-        if(GameHacks.Instance.Rating.Enabled)
-            GameStats.Instance.Rating = GameHacks.Instance.Rating.ValueAsInt; 
+
+        GameStats gameStats = GameStats.Instance;
+        GameInventory gameInventory = GameInventory.Instance;
+        GameHacks gameHacks = GameHacks.Instance;
+
+        if (gameHacks.Rating.Enabled)
+        {
+            gameStats.Rating = GameHacks.Instance.Rating.ValueAsInt;
+        }
 
         GameObject levelGridItemTemplate = _levelsGridContent.GetChild(0).gameObject;
+        GameStats.Modes mode = gameStats.Mode;
 
         int levelsLenght = 0;
-        if (GameStats.Instance.Mode == GameStats.Modes.SinglePlayer)
+        if (mode == GameStats.Modes.SinglePlayer)
         {
-            levelsLenght = GameInventory.Instance.GetSinglePlayerLevel();
+            levelsLenght = gameInventory.GetHigherSinglePlayerLevelCompleted() + 1;
+            int arenaMaxLevel = gameInventory.GetSinglePlayerMaxLevel();
+
+            if (levelsLenght > arenaMaxLevel)
+            {
+                levelsLenght = arenaMaxLevel;
+            }
         }
-        else if (GameStats.Instance.Mode == GameStats.Modes.Pvp)
+        else if (mode == GameStats.Modes.Pvp)
         {
             levelsLenght = GameNetwork.Instance.GetLocalPlayerPvpLevelNumber();
         }
+        else if (mode == GameStats.Modes.Quest)
+        {
+            levelsLenght = GameInventory.Instance.GetHighestQuestLevelCompleted() + 1;
+            int questMaxLevel = gameInventory.GetActiveQuestMaxLevel();
 
-        if (GameHacks.Instance.UnlockArenas.Enabled)
+            if (levelsLenght > questMaxLevel)
+            {
+                levelsLenght = questMaxLevel;
+            }
+        }
+
+        if (gameHacks.UnlockArenas.Enabled)
         {
             levelsLenght = GameHacks.Instance.UnlockArenas.ValueAsInt;
         }
 
         Debug.LogWarning(">Levels::Start -> Levels lenght: " + levelsLenght);
+        GameEnums.Quests activeQuest = GameStats.Instance.ActiveQuest;
+        
+        int activeQuestLastLevel = GameInventory.Instance.GetActiveQuestMaxLevel();
 
         for (int i = 0; i < levelsLenght; i++)
         {
@@ -50,13 +77,35 @@ public class Levels : EnigmaScene
             LevelGridItem levelGridItem = levelGameObject.GetComponent<LevelGridItem>();
             levelGridItem.SetLabel(levelNumber.ToString());
             levelGridItem.FightButton.onClick.AddListener(() => { onLevelFightButtonDown(levelNumber); });
-            if (GameNetwork.Instance.rewardedLevels[i] == 1)
+
+            if ((i + 1) == activeQuestLastLevel) // if level number equals max level
             {
-                Debug.Log("Rewarded Enjin " + i);
-                levelGridItem.enjinReward.SetActive(true);
+                if (mode == GameStats.Modes.Quest)
+                {
+                    Sprite questIcon = (Sprite)Resources.Load<Sprite>("Images/QuestIcons/" + activeQuest.ToString());
+
+                    if (questIcon != null)
+                    {
+                        levelGridItem.SetImageSprite(questIcon);
+                    }
+                }
             }
-            else {
+
+            if (mode == GameStats.Modes.Quest)
+            {
                 levelGridItem.enjinReward.SetActive(false);
+            }
+            else
+            {
+                if (GameNetwork.Instance.rewardedTrainingLevels[i] == 1)
+                {
+                    Debug.Log("Rewarded Training Enjin " + i);
+                    levelGridItem.enjinReward.SetActive(true);
+                }
+                else
+                {
+                    levelGridItem.enjinReward.SetActive(false);
+                }
             }
         }
 

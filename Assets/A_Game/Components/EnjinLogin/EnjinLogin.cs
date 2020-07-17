@@ -5,6 +5,7 @@ using System.Collections;
 using Enigma.CoreSystems;
 using CodeStage.AntiCheat.Storage;
 using SimpleJSON;
+using GameEnums;
 
 public class EnjinLogin : MonoBehaviour
 {
@@ -270,7 +271,10 @@ public class EnjinLogin : MonoBehaviour
     {
         print("Complete login:");
 
-        GameStats.Instance.HasPurchased = (response_hash[NetworkManager.TransactionKeys.PURCHASED].AsInt == 1);
+        GameStats gameStats = GameStats.Instance;
+
+        gameStats.HasPurchased = (response_hash[NetworkManager.TransactionKeys.PURCHASED].AsInt == 1);
+        gameStats.ActiveQuest = Quests.Torso; // (Quests)response_hash[NetworkManager.TransactionKeys.USER_DATA][GameNetwork.TransactionKeys.QUEST].AsInt;
 
         GameNetwork gameNetwork = GameNetwork.Instance;
 
@@ -327,12 +331,13 @@ public class EnjinLogin : MonoBehaviour
 
             gameNetwork.CheckAllEnjinTeamBoostTokens(response_hash);
 
-            JSONArray rewards = response_hash[NetworkManager.TransactionKeys.REWARDS] as JSONArray;
+            JSONArray trainingRewards = response_hash[NetworkManager.TransactionKeys.REWARDS] as JSONArray;
             
-            foreach (JSONNode item in rewards) {
-                Debug.Log(item["level"].ToString());
+            foreach (JSONNode item in trainingRewards) 
+            {
+                Debug.Log("training rewards: " + item["level"].ToString());
                 int level = int.Parse(item["level"].ToString().Trim('"'));
-                gameNetwork.rewardedLevels[level - 1] = 1;
+                gameNetwork.rewardedTrainingLevels[level - 1] = 1;
             }
         }
         else

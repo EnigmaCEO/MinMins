@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LoginForPvpPopUp : MonoBehaviour
+public class LoginForGameModePopUp : MonoBehaviour
 {
     private void Start()
     {

@@ -56,6 +56,7 @@ namespace Enigma.CoreSystems
             public const string ENJIN = "enjin";
             public const string PURCHASED = "purchased";
             public const string REWARDS = "rewards";
+            public const string QUEST_REWARDS = "quest_rewards";
 
             public const string ENJIN_ID = "enjin_id";
             public const string ENJIN_CODE = "enjin_code";

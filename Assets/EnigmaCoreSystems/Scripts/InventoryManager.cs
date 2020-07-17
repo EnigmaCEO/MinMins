@@ -10,10 +10,14 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>
     public void AddItem(string groupName, string key, object value, bool shouldCheckGroupExists = true)
     {
         if (shouldCheckGroupExists && !CheckGroupExists(groupName, false))
+        {
             _items[groupName] = new Dictionary<string, object>();
+        }
 
         if (HasItem(groupName, key, true, false))
+        {
             Debug.LogError("Group " + groupName + " already has item: " + key);
+        }
         else
         {
             //print("Added item: " + key + " to group: " + groupName);

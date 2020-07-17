@@ -1,22 +1,28 @@
 ﻿
-public class GameEnums
+namespace GameEnums
 {
-    public enum Games
+    public enum Quests
     {
-        Greek,
-        Norse,
-        Egypt,
-        Celtic,
-        Irish,
-        Jewish,
-        Test
+        None = 0,
+        Torso
     }
 
-    public enum Layouts
-    {
-        Default,
-        Basic
-    }
+//    public enum Games
+//    {
+//        Greek,
+//        Norse,
+//        Egypt,
+//        Celtic,
+//        Irish,
+//        Jewish,
+//        Test
+//    }
+
+//    public enum Layouts
+//    {
+//        Default,
+//        Basic
+//    }
 
     public enum Powers
     {

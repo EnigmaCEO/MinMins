@@ -10,14 +10,28 @@ public class LevelGridItem : MonoBehaviour
     public GameObject enjinReward;
 
     [SerializeField] private Text _label;
+    [SerializeField] private GameObject _rawImage;
+    [SerializeField] private Image _questIcon;
     //[SerializeField] private Text _labelShadow;
 
-    private void Start()
+    private void Awake()
     {
-        int level = GameInventory.Instance.GetSinglePlayerLevel();
-        Debug.Log("Status: " + level);
+        _questIcon.gameObject.SetActive(false);
     }
 
+    //private void Start()
+    //{
+    //    int level = GameInventory.Instance.GetHigherSinglePlayerLevelCompleted();
+    //    Debug.Log("Status: " + level);
+    //}
+
+    public void SetImageSprite(Sprite sprite)
+    {
+        _rawImage.SetActive(false);
+
+        _questIcon.sprite = sprite;
+        _questIcon.gameObject.SetActive(true);
+    }
 
     public void SetLabel(string text)
     {

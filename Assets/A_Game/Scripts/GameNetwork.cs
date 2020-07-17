@@ -13,12 +13,15 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     {
         public const int CHANGE_RATING = 18;
         public const int RANK_CHANGED_TRANSACTION_ID = 19;
+        public const int COMPLETED_QUEST_ID = 20;
     }
 
     public class TransactionKeys
     {
         public const string RATING = "rating";
         public const string USERNAME = "username";
+
+        public const string QUEST = "quest";
 
         public const string WINNER_NICKNAME = "winner_nickname";
         public const string LOSER_NICKNAME = "loser_nickname";
@@ -288,7 +291,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     public bool HasDemonScout = false;
     public bool HasDemonTank = false;
 
-    public int[] rewardedLevels = new int[100];
+    public int[] rewardedTrainingLevels = new int[100];
 
     [Header("=================================")]
 
@@ -466,6 +469,24 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         HasEnjinWitek = false;
         HasEnjinTassio = false;
         HasEnjinSimon = false;
+
+        HasEnjinEsther = false;
+        HasEnjinAlex = false;
+        HasEnjinLizz = false;
+        HasEnjinEvan = false;
+        HasEnjinBrad = false;
+
+        HasKnightHealer = false;
+        HasKnightBomber = false;
+        HasKnightDestroyer = false;
+        HasKnightScout = false;
+        HasKnightTank = false;
+
+        HasDemonHealer = false;
+        HasDemonBomber = false;
+        HasDemonDestroyer = false;
+        HasDemonScout = false;
+        HasDemonTank = false;
 
         GameStats.Instance.TeamBoostTokensOwnedByName.Clear();
     }

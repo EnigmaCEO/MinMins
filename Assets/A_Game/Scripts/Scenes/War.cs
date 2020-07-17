@@ -7,6 +7,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using CodeStage.AntiCheat.Storage;
 using SimpleJSON;
+using System.Runtime.ConstrainedExecution;
+using GameEnums;
 
 public class War : NetworkEntity
 {
@@ -231,10 +233,14 @@ public class War : NetworkEntity
             _tankAreasByTargetByTeam.Add(GameNetwork.TeamNames.GUEST, new Dictionary<string, List<TankArea>>());
         }
 
-        if (GameStats.Instance.Mode == GameStats.Modes.SinglePlayer)
+        if ((GameStats.Instance.Mode == GameStats.Modes.SinglePlayer) || (GameStats.Instance.Mode == GameStats.Modes.Quest))
+        {
             GameNetwork.Instance.CreatePublicRoom();
+        }
         else
+        {
             setupWar();
+        }
         
         _lineRenderer1 = _battleField.Find(GridNames.TEAM_1).gameObject.AddComponent<LineRenderer>();
         _lineRenderer1.material = new Material(Shader.Find("Sprites/Default"));
@@ -340,7 +346,7 @@ public class War : NetworkEntity
 
     public bool GetUsesAi()
     {
-        return ((GameStats.Instance.Mode == GameStats.Modes.SinglePlayer) || GameStats.Instance.UsesAiForPvp);
+        return ((GameStats.Instance.Mode == GameStats.Modes.SinglePlayer) || (GameStats.Instance.Mode == GameStats.Modes.Quest) || GameStats.Instance.UsesAiForPvp);
     }
 
     public bool GetIsAiTurn()
@@ -392,7 +398,7 @@ public class War : NetworkEntity
     {
         print("War::OnJoinedRoom -> Is Master Client: " + NetworkManager.GetIsMasterClient());
 
-        if (GameStats.Instance.Mode == GameStats.Modes.SinglePlayer)
+        if ((GameStats.Instance.Mode == GameStats.Modes.SinglePlayer) || (GameStats.Instance.Mode == GameStats.Modes.Quest))
         {
             GameNetwork.Instance.HostPlayerId = NetworkManager.GetLocalPlayerId();
             GameNetwork.Instance.GuestPlayerId = NetworkManager.GetLocalPlayerId();
@@ -450,14 +456,18 @@ public class War : NetworkEntity
             if (isTeamSetHost)
             {
                 if (gameStats.Mode == GameStats.Modes.SinglePlayer)
+                {
                     setUpSinglePlayerAiTeamUnits();
+                }
+                else if (gameStats.Mode == GameStats.Modes.Quest)
+                {
+                    setupQuestAiTeamUnits();
+                }
                 else //Pvp
                 {
                     if (gameStats.UsesAiForPvp)
                         setUpPvpAiTeamUnits();
                 }
-
-
             }
             else // Team set is Host
                 instantiateRewardChests(GridNames.TEAM_2);
@@ -1357,10 +1367,14 @@ public class War : NetworkEntity
 
     private void instantiateRewardChests(string gridName)
     {
-        Debug.Log("GetSinglePlayerLevel: " + GameInventory.Instance.GetSinglePlayerLevel());
-        if ((GameStats.Instance.Mode == GameStats.Modes.SinglePlayer) && (GameStats.Instance.SelectedLevelNumber < GameInventory.Instance.GetSinglePlayerLevel()))
+        GameInventory gameInventory = GameInventory.Instance;
+        GameStats gameStats = GameStats.Instance;
+
+        Debug.Log("GetSinglePlayerLevel: " + gameInventory.GetHigherSinglePlayerLevelCompleted());
+
+        if ((gameStats.Mode == GameStats.Modes.SinglePlayer) && (gameStats.SelectedLevelNumber <= gameInventory.GetHigherSinglePlayerLevelCompleted()))
         {
-            if (GameNetwork.Instance.rewardedLevels[GameStats.Instance.SelectedLevelNumber - 1] == 0)  //By pass check if they didn't got enjin drop, and give it to player
+            if (GameNetwork.Instance.rewardedTrainingLevels[GameStats.Instance.SelectedLevelNumber - 1] == 0)  //By pass check if they didn't got enjin drop, and give it to player
             {
                 ObscuredPrefs.SetInt("EnjinWins", 99);  //Will ensure a 100% chance of getting the drop at the end of battle
             }
@@ -1368,6 +1382,11 @@ public class War : NetworkEntity
             {
                 return; // no chest for replaying levels, unless it is guaranteed enjin drop
             }
+        }
+
+        if ((gameStats.Mode == GameStats.Modes.Quest) && (gameStats.SelectedLevelNumber <= gameInventory.GetHighestQuestLevelCompleted()))
+        {
+                return; // no chests for replaying quest levels
         }
 
         //No chests in private matches
@@ -1406,6 +1425,41 @@ public class War : NetworkEntity
     {
         //Debug.LogWarning("onRewardBoxHit");
         _matchLocalData.RewardChestWasHit = true;
+    }
+
+    private void setupQuestAiTeamUnits()
+    {
+        print("War::setupQuestAiTeamUnits");
+        int level = GameStats.Instance.SelectedLevelNumber;
+        string unitsString = "";
+        int exp = 0;
+        Quests activeQuest = GameStats.Instance.ActiveQuest;
+
+        if (activeQuest == Quests.Torso)
+        {
+            switch (level)
+            {
+                case 1:
+                    unitsString = "27|31|4|10|5"; //27, bomber, 31 Destroyer, 4 Tank, 10 healer, 5 Scout
+                    exp = 0;
+                    break;
+                case 2:
+                    unitsString = "60|57|62|51|67"; //60 bomber, 57 scout, 62 healer, 51 destroyer, 67 Tank
+                    exp = 0;
+                    break;
+                case 3:
+                    unitsString = "72|75|80|78|77"; // 72 Tank, 75 Healer, 80 Destroyer, 78 scout, 77 Bomber
+                    exp = 0;
+                    break;
+                case 4:
+                    unitsString = "125|116|104|109|102"; //125 Healer, 116 Tank, 104 Destroyer, 109 bomber, 102 Scout 
+                    exp = 10;
+                    break;
+            }
+        }
+
+        finalizeUnitsExpAndPos(unitsString, exp);
+        finelizeAiSetup(unitsString);
     }
 
     private void setUpSinglePlayerAiTeamUnits()
@@ -1619,6 +1673,20 @@ public class War : NetworkEntity
                 break;
         }
 
+        finalizeUnitsExpAndPos(unitsString, exp);
+        finelizeAiSetup(unitsString);
+
+        //NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.DAMAGE_BONUS, "0", guestTeam);
+        //NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.DEFENSE_BONUS, "0", guestTeam);
+        //NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.HEALTH_BONUS, "0", guestTeam);
+        //NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.POWER_BONUS, "0", guestTeam);
+        //NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.SIZE_BONUS, "0", guestTeam);
+
+        //NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.TEAM_UNITS, unitsString, guestTeam);
+    }
+
+    private void finalizeUnitsExpAndPos(string unitsString, int exp)
+    {
         string guestTeam = GameNetwork.TeamNames.GUEST;
 
         for (int i = 0; i < 5; i++)
@@ -1629,14 +1697,6 @@ public class War : NetworkEntity
             string posString = pos.x.ToString() + NetworkManager.Separators.VALUES + pos.y.ToString();
             GameNetwork.SetLocalPlayerUnitProperty(GameNetwork.UnitPlayerProperties.POSITION, unitsString.Split("|"[0])[i], posString, guestTeam);
         }
-
-        NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.DAMAGE_BONUS, "0", guestTeam);
-        NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.DEFENSE_BONUS, "0", guestTeam);
-        NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.HEALTH_BONUS, "0", guestTeam);
-        NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.POWER_BONUS, "0", guestTeam);
-        NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.SIZE_BONUS, "0", guestTeam);
-
-        NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.TEAM_UNITS, unitsString, guestTeam);
     }
 
     private void setUpPvpAiTeamUnits()
@@ -1648,7 +1708,7 @@ public class War : NetworkEntity
         List<string> hostSilverUnits = new List<string>();
         List<string> hostGoldUnits = new List<string>();
 
-        string[] hostUnits = GameNetwork.GetTeamUnitNames(GameNetwork.TeamNames.HOST);  
+        string[] hostUnits = GameNetwork.GetTeamUnitNames(GameNetwork.TeamNames.HOST);
 
         foreach (string unitName in hostUnits)
         {
@@ -1671,6 +1731,11 @@ public class War : NetworkEntity
         unitsString = setGuestAiUnits(hostSilverUnits, guestSilverUnits, unitsString);
         unitsString = setGuestAiUnits(hostGoldUnits, guestGoldUnits, unitsString);
 
+        finelizeAiSetup(unitsString);
+    }
+
+    private void finelizeAiSetup(string unitsString)
+    {
         string guestTeam = GameNetwork.TeamNames.GUEST;
 
         NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.DAMAGE_BONUS, "0", guestTeam);
@@ -1905,7 +1970,16 @@ public class War : NetworkEntity
         //GameNetwork.ClearLocalTeamUnits(_localPlayerTeam);
         NetworkManager.Disconnect();
         //SceneManager.LoadScene(GameConstants.Scenes.LEVELS);
-        NetworkManager.LoadScene(GameConstants.Scenes.LEVELS);
+        GameStats gameStats = GameStats.Instance;
+
+        if ((gameStats.Mode == GameStats.Modes.Quest) && (gameStats.ActiveQuest == Quests.None))
+        {
+            NetworkManager.LoadScene(EnigmaConstants.Scenes.MAIN);
+        }
+        else
+        {
+            NetworkManager.LoadScene(GameConstants.Scenes.LEVELS);
+        }
     }
 
     public void SetUnitForHealing(string targetName, HealerArea healerArea)
@@ -2261,7 +2335,7 @@ public class War : NetworkEntity
                     else
                         expEarned = 0;
                 }
-                else
+                else  //pvp and quest
                 {
                     if (isVictory)
                         expEarned = 10;
@@ -2327,9 +2401,27 @@ public class War : NetworkEntity
                 }
             }
 
+            int levelCompleted = GameStats.Instance.SelectedLevelNumber;
+
             if (GameStats.Instance.Mode == GameStats.Modes.SinglePlayer)
             {
-                gameInventory.SetSinglePlayerLevel(GameStats.Instance.SelectedLevelNumber + 1);
+                gameInventory.SetHigherSinglePlayerLevelCompleted(levelCompleted);
+            }
+            else if (GameStats.Instance.Mode == GameStats.Modes.Quest)
+            {
+                gameInventory.SetQuestLevelProgress(levelCompleted);
+
+                if (levelCompleted == gameInventory.GetActiveQuestMaxLevel())
+                {
+                    if (gameHacks.CompleteQuestOffline)
+                    {
+                        GameStats.Instance.ActiveQuest = Quests.None;
+                    }
+                    else
+                    {
+                        NetworkManager.Transaction(GameNetwork.Transactions.COMPLETED_QUEST_ID, onCompletedQuestResponse);
+                    }
+                }
             }
         }
 
@@ -2346,6 +2438,23 @@ public class War : NetworkEntity
         }
     }
 
+    private void onCompletedQuestResponse(JSONNode response)
+    {
+        JSONNode response_hash = response[0];
+        Debug.LogWarning("onCompletedQuestResponse -> response: " + response_hash.ToString());
+        string status = response_hash["status"].ToString().Trim('"');
+
+        if ((status == "SUCCESS") && !GameHacks.Instance.CompletedQuestFailure)
+        {
+            GameStats.Instance.ActiveQuest = Quests.None;
+        }
+        else
+        {
+            _errorText.text = LocalizationManager.GetTermTranslation(status);
+            _errorText.gameObject.SetActive(true);
+        }
+    }
+
     private void onEnjinItemCollectedTransactionExternal(JSONNode response)
     {
         JSONNode response_hash = response[0];
@@ -2355,7 +2464,7 @@ public class War : NetworkEntity
         if ((status == "SUCCESS") && !GameHacks.Instance.EnjinItemCollectedFailure)
         {
             _matchLocalData.EnjinCollected = true;
-            GameNetwork.Instance.rewardedLevels[GameStats.Instance.SelectedLevelNumber - 1] = 1;
+            GameNetwork.Instance.rewardedTrainingLevels[GameStats.Instance.SelectedLevelNumber - 1] = 1;
         }
         else
         {
@@ -2400,7 +2509,9 @@ public class War : NetworkEntity
             int updatedLevel = GameNetwork.Instance.GetPvpLevelNumberByRating(updatedRating);
 
             if (updatedLevel > oldArenaLevel)
+            {
                 rewardWithTierBox(GameInventory.Tiers.GOLD);
+            }
         }
         else
         {
@@ -2421,7 +2532,7 @@ public class War : NetworkEntity
         bool gotBoostReward = false;
 
         GameStats gameStats = GameStats.Instance;
-        if (!isPrivateMatch && (gameStats.Mode == GameStats.Modes.Pvp))
+        if (!isPrivateMatch && ((gameStats.Mode == GameStats.Modes.Pvp) || (gameStats.Mode == GameStats.Modes.Quest)))
         {
             int randomInt = UnityEngine.Random.Range(1, 101);
             Debug.LogWarning("Ore reward random int: " + randomInt);
