@@ -274,7 +274,7 @@ public class EnjinLogin : MonoBehaviour
         GameStats gameStats = GameStats.Instance;
 
         gameStats.HasPurchased = (response_hash[NetworkManager.TransactionKeys.PURCHASED].AsInt == 1);
-        gameStats.ActiveQuest = Quests.Torso; // (Quests)response_hash[NetworkManager.TransactionKeys.USER_DATA][GameNetwork.TransactionKeys.QUEST].AsInt;
+        gameStats.ActiveQuest = (Quests)response_hash[NetworkManager.TransactionKeys.USER_DATA][GameNetwork.TransactionKeys.QUEST].AsInt;
 
         GameNetwork gameNetwork = GameNetwork.Instance;
 
