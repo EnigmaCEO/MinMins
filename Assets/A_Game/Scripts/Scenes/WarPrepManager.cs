@@ -38,14 +38,22 @@ public class WarPrepManager : EnigmaScene
             minMinObj.name = unitName;
             Transform minMinTransform = minMinObj.transform;
             PrepMinMinSprite prepMinMinSprite = minMinTransform.Find("Sprite").gameObject.AddComponent<PrepMinMinSprite>();
-            prepMinMinSprite.SetManager(this);
-            prepMinMinSprite.UnitName = unitName;
+            //prepMinMinSprite.SetManager(this);
+            //prepMinMinSprite.UnitName = unitName;
 
-            
-            minMinObj.GetComponentInChildren<PolygonCollider2D>().isTrigger = true;
+            //minMinObj.GetComponentInChildren<PolygonCollider2D>().isTrigger = true;
 
-            minMinTransform.parent = warPrepGrid.Find("Viewport/Content/slot" + (i + 1));
+            Transform slot = warPrepGrid.Find("Viewport/Content/slot" + (i + 1));
+            minMinTransform.parent = slot;
+            //minMinTransform.parent = warPrepGrid.Find("Viewport/Content/slot" + (i + 1));
             minMinTransform.localPosition = new Vector2(0, 0);
+
+            WarPrepDragger dragger = slot.GetComponentInChildren<WarPrepDragger>();
+            dragger.SetTarget(prepMinMinSprite.transform);
+            dragger.UnitName = unitName;
+            dragger.SetManager(this);
+
+            prepMinMinSprite.SetDragger(dragger);
 
             int unitTier = GameInventory.Instance.GetUnitTier(unitName);
             minMinTransform.parent.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/unit_frame_t" + unitTier);
@@ -131,10 +139,11 @@ public class WarPrepManager : EnigmaScene
         for (int i = 0; i < _slotsInPlay; i++)
         {
             Transform slotTransform = _slotsTeam1.Find("slot" + (i + 1));
-            Transform unitSpriteTransform = slotTransform.Find("Sprite");
-            PrepMinMinSprite prepMinMinSprite = unitSpriteTransform.GetComponent<PrepMinMinSprite>();
+            Transform draggerTransform = slotTransform.Find("WarPrepDragger");
+            Transform spriteTransform = draggerTransform.Find("Sprite");
+            //PrepMinMinSprite prepMinMinSprite = unitSpriteTransform.GetComponent<PrepMinMinSprite>();
 
-            Vector3 pos = unitSpriteTransform.localPosition;
+            Vector3 pos = draggerTransform.localPosition + spriteTransform.localPosition;
             gameStats.PreparationPositions.Add(pos);
         }
 
