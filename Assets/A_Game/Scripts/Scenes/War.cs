@@ -1441,19 +1441,19 @@ public class War : NetworkEntity
             {
                 case 1:
                     unitsString = "27|31|4|10|5"; //27, bomber, 31 Destroyer, 4 Tank, 10 healer, 5 Scout
-                    exp = 0;
+                    exp = 150;
                     break;
                 case 2:
                     unitsString = "60|57|62|51|67"; //60 bomber, 57 scout, 62 healer, 51 destroyer, 67 Tank
-                    exp = 0;
+                    exp = 150;
                     break;
                 case 3:
                     unitsString = "72|75|80|78|77"; // 72 Tank, 75 Healer, 80 Destroyer, 78 scout, 77 Bomber
-                    exp = 0;
+                    exp = 150;
                     break;
                 case 4:
                     unitsString = "125|116|104|109|102"; //125 Healer, 116 Tank, 104 Destroyer, 109 bomber, 102 Scout 
-                    exp = 10;
+                    exp = 150;
                     break;
             }
         }
