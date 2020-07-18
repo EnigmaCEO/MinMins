@@ -276,6 +276,11 @@ public class EnjinLogin : MonoBehaviour
         gameStats.HasPurchased = (response_hash[NetworkManager.TransactionKeys.PURCHASED].AsInt == 1);
         gameStats.ActiveQuest = (Quests)response_hash[NetworkManager.TransactionKeys.USER_DATA][GameNetwork.TransactionKeys.QUEST].AsInt;
 
+        if (GameHacks.Instance.ForceQuest.Enabled)
+        {
+            gameStats.ActiveQuest = GameHacks.Instance.ForceQuest.GetValueAsEnum<Quests>();
+        }
+
         GameNetwork gameNetwork = GameNetwork.Instance;
 
         GameStats.Instance.Rating = response_hash[NetworkManager.TransactionKeys.USER_DATA][GameNetwork.TransactionKeys.RATING].AsInt;

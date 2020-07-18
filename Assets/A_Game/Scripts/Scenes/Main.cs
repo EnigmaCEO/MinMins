@@ -102,7 +102,20 @@ public class Main : EnigmaScene
             _loginModal.GetComponent<EnjinLogin>().loginSubmit();
         }
 
-        _questButton.SetActive(GameStats.Instance.ActiveQuest != Quests.None);
+        Quests activeQuest = GameStats.Instance.ActiveQuest;
+        _questButton.SetActive(activeQuest != Quests.None);
+
+        if (_questButton.activeInHierarchy)
+        {
+            _questButton.transform.Find("Text").GetComponent<Text>().text = activeQuest + " Quest";
+
+            Sprite questIcon = (Sprite)Resources.Load<Sprite>("Images/QuestIcons/" + activeQuest.ToString());
+
+            if (questIcon != null)
+            {
+                _questButton.transform.Find("icon").GetComponent<Image>().sprite = questIcon;
+            }
+        }
 
         //_kinPopUp.SetActive(true);
 

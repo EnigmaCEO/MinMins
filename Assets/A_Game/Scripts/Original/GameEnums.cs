@@ -4,7 +4,7 @@ namespace GameEnums
     public enum Quests
     {
         None = 0,
-        Torso
+        Swissborg
     }
 
 //    public enum Games

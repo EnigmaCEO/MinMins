@@ -1435,7 +1435,7 @@ public class War : NetworkEntity
         int exp = 0;
         Quests activeQuest = GameStats.Instance.ActiveQuest;
 
-        if (activeQuest == Quests.Torso)
+        if (activeQuest == Quests.Swissborg)
         {
             switch (level)
             {

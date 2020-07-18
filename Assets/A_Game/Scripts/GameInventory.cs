@@ -150,7 +150,14 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
     public int GetHigherSinglePlayerLevelCompleted()
     {
-        return InventoryManager.Instance.GetItem<int>(GroupNames.STATS, ItemKeys.SINGLE_PLAYER_LEVEL);
+        int value = InventoryManager.Instance.GetItem<int>(GroupNames.STATS, ItemKeys.SINGLE_PLAYER_LEVEL); 
+
+        if (GameHacks.Instance.SinglePlayerLevel.Enabled)
+        {
+            value = GameHacks.Instance.SinglePlayerLevel.ValueAsInt;
+        }
+
+        return value;
     }
 
     public void SetQuestLevelProgress(int newLevel)
@@ -180,7 +187,14 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         }
         else
         {
-            return InventoryManager.Instance.GetItem<int>(GroupNames.QUESTS_PROGRESS, activeQuest.ToString());
+            int value = InventoryManager.Instance.GetItem<int>(GroupNames.QUESTS_PROGRESS, activeQuest.ToString());
+
+            if (GameHacks.Instance.AnyQuestProgress.Enabled)
+            {
+                value = GameHacks.Instance.AnyQuestProgress.ValueAsInt;
+            }
+
+            return value;
         }
     }
 
@@ -357,7 +371,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
     private void initializeMaxLevelsByQuest()
     {
-        _maxLevelByQuest.Add(Quests.Torso, 4);
+        _maxLevelByQuest.Add(Quests.Swissborg, 4);
     }
 
     public int GetActiveQuestMaxLevel()
