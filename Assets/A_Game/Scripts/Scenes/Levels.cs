@@ -9,6 +9,7 @@ public class Levels : EnigmaScene
     [SerializeField] private Transform _levelsGridContent;
     [SerializeField] GameObject _notEnoughUnitsPopUp;
 
+    [SerializeField] private Text _title;
 
     void Start()
     {
@@ -42,6 +43,8 @@ public class Levels : EnigmaScene
             {
                 levelsLenght = arenaMaxLevel;
             }
+
+            _title.text = "LEVEL SELECTION";
         }
         else if (mode == GameStats.Modes.Pvp)
         {
@@ -51,6 +54,8 @@ public class Levels : EnigmaScene
         {
             levelsLenght = GameInventory.Instance.GetHighestQuestLevelCompleted() + 1;
             int questMaxLevel = gameInventory.GetActiveQuestMaxLevel();
+
+            _title.text = GameStats.Instance.ActiveQuest.ToString() + " Quest";
 
             if (levelsLenght > questMaxLevel)
             {

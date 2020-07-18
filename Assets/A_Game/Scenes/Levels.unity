@@ -3250,6 +3250,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _levelsGridContent: {fileID: 224681510666118443}
   _notEnoughUnitsPopUp: {fileID: 1231107842307849610}
+  _title: {fileID: 1460101496}
 --- !u!4 &1870440657
 Transform:
   m_ObjectHideFlags: 0
