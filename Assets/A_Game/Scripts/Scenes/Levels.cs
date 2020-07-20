@@ -55,7 +55,7 @@ public class Levels : EnigmaScene
             levelsLenght = GameInventory.Instance.GetHighestQuestLevelCompleted() + 1;
             int questMaxLevel = gameInventory.GetActiveQuestMaxLevel();
 
-            _title.text = GameStats.Instance.ActiveQuest.ToString() + " Quest";
+            _title.text = (GameStats.Instance.ActiveQuest.ToString() + " Quest").ToUpper();
 
             if (levelsLenght > questMaxLevel)
             {
@@ -96,7 +96,7 @@ public class Levels : EnigmaScene
                 }
             }
 
-            if (mode == GameStats.Modes.Quest)
+            if ((mode == GameStats.Modes.Quest) || (mode == GameStats.Modes.Pvp))
             {
                 levelGridItem.enjinReward.SetActive(false);
             }

@@ -38,10 +38,6 @@ public class WarPrepManager : EnigmaScene
             minMinObj.name = unitName;
             Transform minMinTransform = minMinObj.transform;
             PrepMinMinSprite prepMinMinSprite = minMinTransform.Find("Sprite").gameObject.AddComponent<PrepMinMinSprite>();
-            //prepMinMinSprite.SetManager(this);
-            //prepMinMinSprite.UnitName = unitName;
-
-            //minMinObj.GetComponentInChildren<PolygonCollider2D>().isTrigger = true;
 
             Transform slot = warPrepGrid.Find("Viewport/Content/slot" + (i + 1));
             minMinTransform.parent = slot;

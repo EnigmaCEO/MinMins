@@ -67,6 +67,8 @@ public class WarPrepDragger : MonoBehaviour
         _manager.UpdateInfo(_unitName);
 
         _selected = true;
+        _target.GetComponent<PrepMinMinSprite>().EnablePolygonCollider();
+
 
         //Debug.Log(name + " selected");
         if (transform.parent.parent.name.Contains("slot"))
@@ -109,8 +111,8 @@ public class WarPrepDragger : MonoBehaviour
         _manager.CloseInfoPopUp();
         _selected = false;
 
-        _target.GetComponent<PrepMinMinSprite>().EnablePolygonCollider();
-        GetComponent<BoxCollider2D>().enabled = false;
+        //_target.GetComponent<PrepMinMinSprite>().EnablePolygonCollider();
+        //GetComponent<BoxCollider2D>().enabled = false;
 
         limitPosition();
 
@@ -119,8 +121,6 @@ public class WarPrepDragger : MonoBehaviour
             GameObject confirm = (GameObject)Instantiate(Resources.Load<GameObject>("Prefabs/UI/confirm_ok"));
             confirm.transform.parent = _slot;
             confirm.transform.localPosition = new Vector2(0, 0);
-
-            //_target.GetComponentInChildren<PolygonCollider2D>().isTrigger = false;
 
             _manager.AddToSlotsReady();
         }
