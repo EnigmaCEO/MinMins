@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Enigma.CoreSystems;
 
+
 public class UnitSelectManager : EnigmaScene
 {
     [SerializeField] private float _uiMoveDistance = 5;
@@ -27,6 +28,9 @@ public class UnitSelectManager : EnigmaScene
     [SerializeField] private Button _infoBackButton;
     [SerializeField] private Button _sceneBackButton;
 
+    [SerializeField] private Toggle _savedTeamToggle1;
+    [SerializeField] private Toggle _savedTeamToggle2;
+
     //[SerializeField] private Transform _patternBG;
     
     private Transform _teamGridContent;
@@ -36,6 +40,7 @@ public class UnitSelectManager : EnigmaScene
 
     private Vector2[] _waypoints;
     private GameObject _attack;
+
 
 
     void Start()
@@ -61,8 +66,8 @@ public class UnitSelectManager : EnigmaScene
 
             int unitTier = GameInventory.Instance.GetUnitTier(unitName);
             unitTransform.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/unit_frame_t" + unitTier);
-            
-            for(int x = 1; x < 4; x++)
+
+            for (int x = 1; x < 4; x++)
             {
                 if (unitTier < x)
                 {
@@ -91,8 +96,10 @@ public class UnitSelectManager : EnigmaScene
             iTween.Pause(btn_aid.gameObject);
             btn_aid.gameObject.SetActive(false);
 
-            if(i != 5) //Lock last one
+            if (i != 5) //Lock last one
+            {
                 slot.Find("obj_item_locked").GetComponent<Image>().enabled = false;
+            }
         }
 
         _nextButton.onClick.AddListener(() => onNextButtonDown());
@@ -104,14 +111,50 @@ public class UnitSelectManager : EnigmaScene
         disableUnitInfo(true);
 
         createDefaultSelectedUnits(slotsLength);
+
+        if (GameHacks.Instance.ClearSavedTeamDataOnScenesEnter)
+        {
+            PlayerPrefs.DeleteKey(getSavedTeamSlotKey());
+            PlayerPrefs.DeleteKey(getTeamUnitsKey());
+        }
+
+        GameStats gameStats = GameStats.Instance;
+        gameStats.SelectedSaveSlot = PlayerPrefs.GetInt(getSavedTeamSlotKey(), 1);
+        if (gameStats.SelectedSaveSlot == 1)
+        {
+            _savedTeamToggle1.isOn = true;
+            _savedTeamToggle2.isOn = false;
+        }
+        else
+        {
+            _savedTeamToggle1.isOn = false;
+            _savedTeamToggle2.isOn = true;
+        }
+
+        loadUnitSelection();
+
+        _savedTeamToggle1.onValueChanged.AddListener(delegate { onSavedTeamToggleChanged(_savedTeamToggle1, 1); });
+        _savedTeamToggle2.onValueChanged.AddListener(delegate { onSavedTeamToggleChanged(_savedTeamToggle2, 2); });
+    }
+
+    private void onSavedTeamToggleChanged(Toggle toggle, int saveSlotSelected)
+    {
+        if (toggle.isOn)
+        {
+            PlayerPrefs.SetInt(getSavedTeamSlotKey(), saveSlotSelected);
+            SceneManager.LoadScene(GameConstants.Scenes.UNIT_SELECT);  //Reload
+        }
     }
 
     private void createDefaultSelectedUnits(int amount)
     {
         GameStats gameStats = GameStats.Instance;
         gameStats.TeamUnits.Clear();
+
         for (int i = 0; i < amount; i++)
+        {
             gameStats.TeamUnits.Add("-1");
+        }
     }
 
     private void enableUnitInfo()
@@ -150,6 +193,7 @@ public class UnitSelectManager : EnigmaScene
     private void onNextButtonDown()
     {
         SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+        saveUnitSelection();
 
         if ((GameStats.Instance.TeamBoostTokensOwnedByName.Count > 0) || (GameInventory.Instance.GetOreItemsOwned().Count > 0))
         {
@@ -217,6 +261,14 @@ public class UnitSelectManager : EnigmaScene
     {
         SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
         GameObject unitGameObject = _unitsGridContent.Find(_selectedUnitName).gameObject;
+
+        selectUnit(slotIndex, slotImage, unitGameObject);
+
+        checkTeamReady();
+    }
+
+    private void selectUnit(int slotIndex, Image slotImage, GameObject unitGameObject)
+    {
         unitGameObject.SetActive(false);
 
         int slotsLength = _teamGridContent.childCount;
@@ -237,8 +289,8 @@ public class UnitSelectManager : EnigmaScene
         slotImage.transform.parent.Find("level/txt_level").GetComponent<Text>().text = GameInventory.Instance.GetLocalUnitLevel(unitName).ToString();
 
         GameStats.Instance.TeamUnits[slotIndex] = unitName;
+
         disableUnitInfo();
-        checkTeamReady();
     }
 
     private void checkTeamReady()
@@ -250,11 +302,15 @@ public class UnitSelectManager : EnigmaScene
         {
             Transform slot = _teamGridContent.GetChild(i);
             if (!slot.Find("Sprite").GetComponent<Image>().enabled && !slot.Find("obj_item_locked").GetComponent<Image>().enabled)
+            {
                 teamReady = false;
+            }
         }
 
         if (teamReady)
+        {
             _nextButton.gameObject.SetActive(true);
+        }
     }
 
     private void loadUnitInfo()
@@ -268,11 +324,15 @@ public class UnitSelectManager : EnigmaScene
 
         int powerContentLenght = _powerGridContent.childCount;
         for (int i = 0; i < powerContentLenght; i++)
+        {
             _powerGridContent.GetChild(i).GetComponent<Image>().enabled = (i < minMin.Strength);
+        }
 
         int armorContentLenght = _armorGridContent.childCount;
         for (int i = 0; i < powerContentLenght; i++)
+        {
             _armorGridContent.GetChild(i).GetComponent<Image>().enabled = (i < minMin.Defense);
+        }
 
         _infoPopUp.transform.Find("UnitName").GetComponent<Text>().text = "Min-Min #" + _selectedUnitName;
         _infoPopUp.transform.Find("UnitType").GetComponent<Text>().text = LocalizationManager.GetTermTranslation(minMin.Type.ToString());
@@ -284,8 +344,73 @@ public class UnitSelectManager : EnigmaScene
             _infoPopUp.transform.Find("PowerStarsGrid/Viewport/Content/star" + x).gameObject.SetActive(true);
             _infoPopUp.transform.Find("ArmorStarsGrid/Viewport/Content/star" + x).gameObject.SetActive(true);
 
-            if (minMin.Strength < x) _infoPopUp.transform.Find("PowerStarsGrid/Viewport/Content/star" + x).gameObject.SetActive(false);
-            if (minMin.Defense < x) _infoPopUp.transform.Find("ArmorStarsGrid/Viewport/Content/star" + x).gameObject.SetActive(false);
+            if (minMin.Strength < x)
+            {
+                _infoPopUp.transform.Find("PowerStarsGrid/Viewport/Content/star" + x).gameObject.SetActive(false);
+            }
+
+            if (minMin.Defense < x)
+            {
+                _infoPopUp.transform.Find("ArmorStarsGrid/Viewport/Content/star" + x).gameObject.SetActive(false);
+            }
         }
+    }
+
+    private void saveUnitSelection()
+    {
+        GameStats gameStats = GameStats.Instance;
+        List<string> teamUnits = gameStats.TeamUnits;
+
+        string unitsString = "";
+        foreach (string unitName in teamUnits)
+        {
+            if (unitsString != "")
+            {
+                unitsString += "|";
+            }
+
+            unitsString += unitName;
+        }
+
+        PlayerPrefs.SetString(getTeamUnitsKey(), unitsString);
+        PlayerPrefs.Save();
+    }
+
+    private void loadUnitSelection()
+    {
+        string unitsString = PlayerPrefs.GetString(getTeamUnitsKey(), "");
+
+        if (unitsString == "")
+        {
+            return;
+        }
+
+        string[] unitNames = unitsString.Split('|');
+        int unitsCount = unitNames.Length;
+
+        for(int i = 0; i < unitsCount; i++)
+        {
+            Transform unitTransform = _unitsGridContent.Find(unitNames[i]);
+
+            if (unitTransform != null)
+            {
+                Transform slot = _teamGridContent.GetChild(i);
+                Image slotImage = slot.Find("Sprite").GetComponent<Image>();
+
+                selectUnit(i, slotImage, unitTransform.gameObject);
+            }
+        }
+
+        checkTeamReady();
+    }
+
+    private string getSavedTeamSlotKey()
+    {
+        return (GameStats.Instance.SelectedSaveSlot + "_" + GameStats.Instance.Mode.ToString() + "_teamUnits");
+    }
+
+    private string getTeamUnitsKey()
+    {
+        return (GameStats.Instance.Mode.ToString() + "_selectedSaveSlot");
     }
 }

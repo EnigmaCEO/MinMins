@@ -9,15 +9,24 @@ public class TeamBoostGridItem : MonoBehaviour
     [SerializeField] private GameObject _tint;
     [SerializeField] private Text _bonusText;
 
-    public void SetUp(string name, string category, int bonus, bool isOre)
+    public TeamBoostItem BoostItem
     {
-        this.name = name;
-        _bonusText.text = bonus.ToString();
+        get;
+        private set;
+    }
+
+    public void SetUp(TeamBoostItem boostItem, bool isOre)
+    {
+        BoostItem = boostItem;
+
+        this.name = BoostItem.Name;
+
+        _bonusText.text = BoostItem.Bonus.ToString();
         string spritePath = "";
 
         if (isOre)
         {
-            spritePath = TeamBoostItem.GetOreImagePath(category, bonus);
+            spritePath = TeamBoostItem.GetOreImagePath(BoostItem.Category, BoostItem.Bonus);
         }
         else
         {

@@ -8,7 +8,12 @@ public class PrepMinMinSprite : MonoBehaviour
     private PolygonCollider2D _polygonCollider;
 
     private Transform _draggerTransform;
-    private Vector3 _originalOffset;
+
+    public Vector3 OriginalLocalPosition
+    {
+        get;
+        private set;
+    }
 
     private void Awake()
     {
@@ -21,7 +26,7 @@ public class PrepMinMinSprite : MonoBehaviour
     {
         _warPrepDragger = dragger;
         _draggerTransform = _warPrepDragger.transform;
-        _originalOffset = transform.localPosition;
+        OriginalLocalPosition = transform.localPosition;
     }
 
     public void EnablePolygonCollider()
@@ -38,7 +43,7 @@ public class PrepMinMinSprite : MonoBehaviour
 
     void OnCollisionExit2D(Collision2D coll)
     {
-        transform.localPosition = _originalOffset;
+        transform.localPosition = OriginalLocalPosition;
     }
 
     void OnCollisionStay2D(Collision2D coll)

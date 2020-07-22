@@ -14,7 +14,8 @@ public class WarPrepManager : EnigmaScene
     private int _slotsInPlay = 0;
     private int _slotsReady = 0;
 
-    LineRenderer _lineRenderer;
+    private LineRenderer _lineRenderer;
+    private Transform _warPrepGrid;
 
     void Start()
     {
@@ -23,7 +24,7 @@ public class WarPrepManager : EnigmaScene
 
         _backButton.onClick.AddListener(() => { onBackButtonDown(); });
 
-        Transform warPrepGrid = GameObject.Find("/Canvas/WarPrepGrid").transform;
+        _warPrepGrid = GameObject.Find("/Canvas/WarPrepGrid").transform;
         
         List<string> unitNames = GameStats.Instance.TeamUnits;
         int unitsCount = unitNames.Count;
@@ -39,13 +40,13 @@ public class WarPrepManager : EnigmaScene
             Transform minMinTransform = minMinObj.transform;
             PrepMinMinSprite prepMinMinSprite = minMinTransform.Find("Sprite").gameObject.AddComponent<PrepMinMinSprite>();
 
-            Transform slot = warPrepGrid.Find("Viewport/Content/slot" + (i + 1));
+            Transform slot = _warPrepGrid.Find("Viewport/Content/slot" + (i + 1));
             minMinTransform.parent = slot;
             //minMinTransform.parent = warPrepGrid.Find("Viewport/Content/slot" + (i + 1));
             minMinTransform.localPosition = new Vector2(0, 0);
 
             WarPrepDragger dragger = slot.GetComponentInChildren<WarPrepDragger>();
-            dragger.SetTarget(prepMinMinSprite.transform);
+            dragger.SetTarget(prepMinMinSprite);
             dragger.UnitName = unitName;
             dragger.SetManager(this);
 
@@ -59,6 +60,11 @@ public class WarPrepManager : EnigmaScene
             _infoPopUp.SetActive(false);
 
             _slotsInPlay++;
+        }
+
+        if (GameHacks.Instance.ClearSavedTeamDataOnScenesEnter)
+        {
+            PlayerPrefs.DeleteKey(getWarPrepKey());
         }
 
         _lineRenderer = gameObject.AddComponent<LineRenderer>();
@@ -76,6 +82,8 @@ public class WarPrepManager : EnigmaScene
         _lineRenderer.colorGradient = gradient;
 
         updateBoundsLines();
+
+        loadWarPrep();
     }
 
     void Update()
@@ -84,6 +92,60 @@ public class WarPrepManager : EnigmaScene
         {
             updateBoundsLines();
         }
+    }
+
+    private void saveWarPrep()
+    {
+        List<Vector3> prepPositions = GameStats.Instance.PreparationPositions;
+        string warPrepString = "";
+
+        foreach (Vector3 pos in prepPositions)
+        {
+            if (warPrepString != "")
+            {
+                warPrepString += "|";
+            }
+
+            warPrepString += pos.x + "," + pos.y + "," + pos.z;
+        }
+
+        PlayerPrefs.SetString(getWarPrepKey(), warPrepString);
+        PlayerPrefs.Save();
+    }
+
+    private void loadWarPrep()
+    {
+        string warPrepString = PlayerPrefs.GetString(getWarPrepKey(), "");
+
+        if (warPrepString == "")
+        {
+            return;
+        }
+
+        string[] warPrepTerms = warPrepString.Split('|');
+        int termsCount = warPrepTerms.Length;
+
+        for (int i = 0; i < termsCount; i++)
+        {
+            string term = warPrepTerms[i];
+            string[] coords = term.Split(',');
+            Vector3 spritePos = new Vector3(float.Parse(coords[0]), float.Parse(coords[1]), float.Parse(coords[2]));
+
+            Transform slot = _warPrepGrid.Find("Viewport/Content/slot" + (i + 1));
+            MinMinUnit unit = slot.GetComponentInChildren<MinMinUnit>();
+            Transform draggerTransform = unit.transform.Find("WarPrepDragger");
+            WarPrepDragger warPrepDragger = draggerTransform.GetComponent<WarPrepDragger>();
+            warPrepDragger.MoveToTeamSlot();
+            warPrepDragger.DropOnBattlefield();
+            draggerTransform.localPosition = spritePos - warPrepDragger.Target.OriginalLocalPosition;
+
+            //Vector3 pos = draggerTransform.localPosition + spriteTransform.localPosition;
+        }
+    }
+
+    private string getWarPrepKey()
+    {
+        return (GameStats.Instance.SelectedSaveSlot + "_" + GameStats.Instance.Mode.ToString() + "_warPrep");
     }
 
     private void updateBoundsLines()
@@ -128,22 +190,13 @@ public class WarPrepManager : EnigmaScene
     private void onNextButtonDown()
     {
         SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+
         GameNetwork gameNetwork = GameNetwork.Instance;
         GameStats gameStats = GameStats.Instance;
-
-        gameStats.PreparationPositions.Clear();
-        for (int i = 0; i < _slotsInPlay; i++)
-        {
-            Transform slotTransform = _slotsTeam1.Find("slot" + (i + 1));
-            Transform draggerTransform = slotTransform.Find("WarPrepDragger");
-            Transform spriteTransform = draggerTransform.Find("Sprite");
-            //PrepMinMinSprite prepMinMinSprite = unitSpriteTransform.GetComponent<PrepMinMinSprite>();
-
-            Vector3 pos = draggerTransform.localPosition + spriteTransform.localPosition;
-            gameStats.PreparationPositions.Add(pos);
-        }
-
         GameHacks gameHacks = GameHacks.Instance;
+
+        savePositionsToGameStats();
+        saveWarPrep();
 
         bool hasPurchased = GameStats.Instance.HasPurchased;
         int fightsWithoutAdsMaxCount = GameConfig.Instance.FightsWithoutAdsMaxCount;
@@ -160,9 +213,9 @@ public class WarPrepManager : EnigmaScene
 
         if (!hasPurchased)
         {
-            GameStats.Instance.FightWithoutAdsCount++;
+            gameStats.FightWithoutAdsCount++;
 
-            if (GameStats.Instance.FightWithoutAdsCount == fightsWithoutAdsMaxCount)
+            if (gameStats.FightWithoutAdsCount == fightsWithoutAdsMaxCount)
             {
                 AdsManager.Instance.ShowAd();
                 GameStats.Instance.FightWithoutAdsCount = 0;
@@ -179,6 +232,22 @@ public class WarPrepManager : EnigmaScene
         {
             NetworkManager.Connect(false);
             SceneManager.LoadScene(GameConstants.Scenes.LOBBY);
+        }
+    }
+
+    private void savePositionsToGameStats()
+    {
+        GameStats gameStats = GameStats.Instance;
+        gameStats.PreparationPositions.Clear();
+
+        for (int i = 0; i < _slotsInPlay; i++)
+        {
+            Transform slotTransform = _slotsTeam1.Find("slot" + (i + 1));
+            Transform draggerTransform = slotTransform.Find("WarPrepDragger");
+            Transform spriteTransform = draggerTransform.Find("Sprite");
+
+            Vector3 pos = draggerTransform.localPosition + spriteTransform.localPosition;
+            gameStats.PreparationPositions.Add(pos);
         }
     }
 

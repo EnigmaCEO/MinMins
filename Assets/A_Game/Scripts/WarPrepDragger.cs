@@ -20,7 +20,11 @@ public class WarPrepDragger : MonoBehaviour
 
     private string _unitName;
 
-    private Transform _target;
+    public PrepMinMinSprite Target
+    {
+        get;
+        private set;
+    }
 
     // Use this for initialization
     void Awake()
@@ -42,21 +46,26 @@ public class WarPrepDragger : MonoBehaviour
         }
     }
 
-    public void SetTarget(Transform target)
+    public void SetTarget(PrepMinMinSprite target)
     {
-        _target = target;
+        Target = target;
         _slot = transform.parent;
 
-        Transform targetParent = _target.parent;
-        target.SetParent(this.transform);
+        Transform targetParent = Target.transform.parent;
+        target.transform.SetParent(this.transform);
         this.transform.SetParent(targetParent);
 
         _unitName = this.transform.parent.GetComponentInChildren<MinMinUnit>().name;
     }
 
+    public void MoveToTeamSlot()
+    {
+        transform.SetParent(_team.transform.Find(transform.parent.parent.name));
+    }
+
     void OnMouseDown()
     {
-        Debug.LogWarning("WarPrepDragger::OnMouseDown -> target: " + _target.name);
+        Debug.LogWarning("WarPrepDragger::OnMouseDown -> target: " + Target.name);
         SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
 
         //print("OnMouseDown: " + gameObject.name);
@@ -67,19 +76,18 @@ public class WarPrepDragger : MonoBehaviour
         _manager.UpdateInfo(_unitName);
 
         _selected = true;
-        _target.GetComponent<PrepMinMinSprite>().EnablePolygonCollider();
-
+        Target.EnablePolygonCollider();
 
         //Debug.Log(name + " selected");
-        if (transform.parent.parent.name.Contains("slot"))
+        if (transform.parent.parent.name.Contains("slot")) //Check if it is in team slot already
         {
-            transform.parent = _team.transform.Find(transform.parent.parent.name);
+            MoveToTeamSlot();
         }
     }
 
     void OnMouseDrag()
     {
-        Debug.LogWarning("WarPrepDragger::OnMouseDrag -> target: " + _target.name);
+        Debug.LogWarning("WarPrepDragger::OnMouseDrag -> target: " + Target.name);
         if (_selected)
         {
             transform.position = Camera.main.ScreenToWorldPoint(new Vector3(_x, _y, _screenPoint.z)) + _offset;
@@ -88,9 +96,9 @@ public class WarPrepDragger : MonoBehaviour
 
     void OnMouseUp()
     {
-        Debug.LogWarning("WarPrepDragger::OnMouseUp -> target: " + _target.name);
+        Debug.LogWarning("WarPrepDragger::OnMouseUp -> target: " + Target.name);
         SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
-        dropOnBattlefield();
+        DropOnBattlefield();
     }
 
     public void SetManager(WarPrepManager manager)
@@ -102,17 +110,14 @@ public class WarPrepDragger : MonoBehaviour
     {
         if (_selected)
         {
-            dropOnBattlefield();
+            DropOnBattlefield();
         }
     }
 
-    private void dropOnBattlefield()
+    public void DropOnBattlefield()
     {
         _manager.CloseInfoPopUp();
         _selected = false;
-
-        //_target.GetComponent<PrepMinMinSprite>().EnablePolygonCollider();
-        //GetComponent<BoxCollider2D>().enabled = false;
 
         limitPosition();
 

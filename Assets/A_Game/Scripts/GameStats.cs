@@ -34,4 +34,6 @@ public class GameStats : SingletonMonobehaviour<GameStats>
     //public Dictionary<string, TeamBoostItem> TeamBoostOreItemsOwnedByName = new Dictionary<string, TeamBoostItem>();
 
     public TeamBoostItem TeamBoostSelected;
+
+    public int SelectedSaveSlot = 1; // 1 or 2
 }

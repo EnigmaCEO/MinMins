@@ -32,6 +32,61 @@ public class TeamBoostSelection : EnigmaScene
         refreshTeamUnitsGrid();
 
         GameStats.Instance.TeamBoostSelected = null;
+
+        if (GameHacks.Instance.ClearSavedTeamDataOnScenesEnter)
+        {
+            PlayerPrefs.DeleteKey(getTeamBoostKey());
+        }
+
+        loadTeamBoostSelection();
+    }
+
+    private void loadTeamBoostSelection()
+    {
+        string teamBoostString = PlayerPrefs.GetString(getTeamBoostKey(), "");
+
+        if (teamBoostString == "")
+        {
+            return;
+        }
+
+        string[] teamBoostTerms = teamBoostString.Split('|');
+
+        string boostName = teamBoostTerms[0];
+        string category = teamBoostTerms[1];
+        string bonus = teamBoostTerms[2];
+
+        foreach (Transform child in _teamBoostGridContent)
+        {
+            if (!child.gameObject.activeSelf)
+            {
+                continue;
+            }
+
+            TeamBoostGridItem gridItem = child.GetComponent<TeamBoostGridItem>();
+            TeamBoostItem boostItem = gridItem.BoostItem;
+
+            if ((boostItem.Name == boostName) && (boostItem.Category == category) && (boostItem.Bonus.ToString() == bonus))
+            {
+                selectTeamBoost(gridItem);
+                break;
+            }
+        }
+    }
+
+    private void saveTeamBoostSelection()
+    {
+        if (_selectedGridItem != null)
+        {
+            string teamBoostString = _selectedGridItem.name + "|" + _selectedGridItem.BoostItem.Category + "|" + _selectedGridItem.BoostItem.Bonus;
+            PlayerPrefs.SetString(getTeamBoostKey(), teamBoostString);
+            PlayerPrefs.Save();
+        }
+    }
+
+    private string getTeamBoostKey()
+    {
+        return (GameStats.Instance.SelectedSaveSlot + "_" + GameStats.Instance.Mode.ToString() + "_teamBoost");
     }
 
     public void refreshTeamBoostItemsGrid()
@@ -50,9 +105,6 @@ public class TeamBoostSelection : EnigmaScene
         //gameStats.TeamBoostOreItemsOwnedByName.Clear();
         //gameStats.TeamBoostOreItemsOwnedByName.Add(GameConstants.TeamBoostEnjinOreItems.DAMAGE + "1", new TeamBoostItem(GameConstants.TeamBoostEnjinOreItems.DAMAGE + "1", 3, 8, GameConstants.TeamBoostCategory.DEFENSE));
         //gameStats.TeamBoostOreItemsOwnedByName.Add(GameConstants.TeamBoostEnjinOreItems.POWER + "1", new TeamBoostItem(GameConstants.TeamBoostEnjinOreItems.DAMAGE + "2", 2, 4, GameConstants.TeamBoostCategory.POWER));
-
-        //addTeamBoostDictionaryToGrid(teamBoostItemTemplate, gameStats.TeamBoostTokensOwnedByName);
-        //addTeamBoostDictionaryToGrid(teamBoostItemTemplate, gameStats.TeamBoostOreItemsOwnedByName);
 
         foreach (string teamBoostName in gameStats.TeamBoostTokensOwnedByName.Keys)
         {
@@ -77,34 +129,15 @@ public class TeamBoostSelection : EnigmaScene
             Transform itemTransform = itemObject.transform;
 
             TeamBoostGridItem gridItem = itemObject.GetComponent<TeamBoostGridItem>();
-            gridItem.SetUp(boostItem.Name, boostItem.Category, boostItem.Bonus, isOre);
+            gridItem.SetUp(boostItem, isOre);
 
-            gridItem.GetComponent<Button>().onClick.AddListener(() => onTeamBoostItemClicked(boostItem, gridItem));
+            gridItem.GetComponent<Button>().onClick.AddListener(() => onTeamBoostItemClicked(gridItem));
 
             break; //To display only the first one of each type
         }
     }
 
-    //private void addTeamBoostDictionaryToGrid(GameObject teamBoostItemTemplate, Dictionary<string, TeamBoostItem> teamBoostItemsByName)
-    //{
-    //    foreach (string teamBoostName in teamBoostItemsByName.Keys)
-    //    {
-    //        TeamBoostItem itemToken = teamBoostItemsByName[teamBoostName];
-
-    //        for (int i = 0; i < itemToken.Amount; i++)
-    //        {
-    //            GameObject itemObject = Instantiate<GameObject>(teamBoostItemTemplate, _teamBoostGridContent);
-    //            Transform itemTransform = itemObject.transform;
-
-    //            TeamBoostGridItem gridItem = itemObject.GetComponent<TeamBoostGridItem>();
-    //            gridItem.SetUp(teamBoostName, itemToken.Category, itemToken.Bonus);
-
-    //            gridItem.GetComponent<Button>().onClick.AddListener(() => onTeamBoostItemClicked(itemToken, gridItem));
-    //        }
-    //    }
-    //}
-
-    private void onTeamBoostItemClicked(TeamBoostItem selectedItem, TeamBoostGridItem clickedGridItem)
+    private void onTeamBoostItemClicked(TeamBoostGridItem clickedGridItem)
     {
         foreach (Transform child in _teamBoostGridContent)
         {
@@ -124,11 +157,7 @@ public class TeamBoostSelection : EnigmaScene
                 else
                 {
                     SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
-                    gridItem.Select();
-                    _boostInfoPopUp.Open(selectedItem.Name, selectedItem.Category, selectedItem.Bonus);
-
-                    GameStats.Instance.TeamBoostSelected = selectedItem;
-                    _selectedGridItem = clickedGridItem;
+                    selectTeamBoost(clickedGridItem);
                 }
             }
             else
@@ -138,6 +167,17 @@ public class TeamBoostSelection : EnigmaScene
         }
 
 
+    }
+
+    private void selectTeamBoost(TeamBoostGridItem gridItem)
+    {
+        gridItem.Select();
+        TeamBoostItem boostItem = gridItem.BoostItem;
+
+        _boostInfoPopUp.Open(boostItem.Name, boostItem.Category, boostItem.Bonus);
+
+        GameStats.Instance.TeamBoostSelected = gridItem.BoostItem;
+        _selectedGridItem = gridItem;
     }
 
     private void refreshTeamUnitsGrid()
@@ -166,6 +206,7 @@ public class TeamBoostSelection : EnigmaScene
     private void onNextButtonDown()
     {
         SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+        saveTeamBoostSelection();
         SceneManager.LoadScene(GameConstants.Scenes.WAR_PREP);
     }
 
