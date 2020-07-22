@@ -15,7 +15,7 @@ MonoBehaviour:
   mSource:
     UserAgreesToHaveItOnTheScene: 0
     UserAgreesToHaveItInsideThePluginsFolder: 0
-    GoogleLiveSyncIsUptoDate: 0
+    GoogleLiveSyncIsUptoDate: 1
     mTerms:
     - Term: Waiting for Opponent...
       TermType: 0
@@ -1705,7 +1705,7 @@ MonoBehaviour:
       Description: 
       Languages:
       - TEAM BOOST SELECTION
-      - "Selecci\xF3n De Impulso De Equipo"
+      - "SELECCI\xD3N DE AUMENTO PARA EQUIPO"
       - 
       - 
       - 
@@ -1865,6 +1865,77 @@ MonoBehaviour:
       - 
       Flags: 0000000000
       Languages_Touch: []
+    - Term: LEGEND UNITS
+      TermType: 0
+      Description: 
+      Languages:
+      - LEGEND UNITS
+      - 'UNIDADES LEYENDAS '
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Quest
+      TermType: 0
+      Description: 
+      Languages:
+      - Quest
+      - "B\xFAsqueda"
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: LEVEL SELECTION
+      TermType: 0
+      Description: 
+      Languages:
+      - LEVEL SELECTION
+      - ESCOGER NIVEL
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: QUEST LEVELS
+      TermType: 0
+      Description: 
+      Languages:
+      - QUEST LEVELS
+      - "NIVELES DE B\xDASQUEDA"
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Are you ready for Quest Levels? Log in with your Enigma Games account
+        to access them.
+      TermType: 0
+      Description: 
+      Languages:
+      - 'Are you ready for Quest Levels?
+
+
+        Log in with your Enigma Games account to access them.'
+      - "\xBFEst\xE1s listo para Niveles de B\xFAsqueda?\n\nAccede a tu cuenta de
+        Juegos Enigma para accesarlos."
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Teams
+      TermType: 0
+      Description: 
+      Languages:
+      - Teams
+      - Equipos
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
     CaseInsensitiveTerms: 0
     OnMissingTranslation: 1
     mTerm_AppName: 
@@ -1876,10 +1947,10 @@ MonoBehaviour:
       Code: es
       Flags: 0
     - Name: Chinese_Traditional
-      Code: zh-TW
+      Code: 
       Flags: 0
     - Name: Chinese_Simplified
-      Code: zh-CN
+      Code: 
       Flags: 0
     - Name: Korean
       Code: ko
@@ -1889,7 +1960,7 @@ MonoBehaviour:
     Google_WebServiceURL: https://script.google.com/macros/s/AKfycbw05ISkGCPtIS0hMzFD5jshgfH09mIP6BAxRKhWsA/exec
     Google_SpreadsheetKey: 1iIWCtExuyR2XXyYkJv6y83PTVMPC4FxzSITGGroefcg
     Google_SpreadsheetName: I2Loc MinMins Localization
-    Google_LastUpdatedVersion: 1579824744200
+    Google_LastUpdatedVersion: 1595443022744
     Google_Password: shalwend
     GoogleUpdateFrequency: 3
     GoogleInEditorCheckFrequency: 2

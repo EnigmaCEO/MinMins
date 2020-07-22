@@ -44,7 +44,7 @@ public class Levels : EnigmaScene
                 levelsLenght = arenaMaxLevel;
             }
 
-            _title.text = "LEVEL SELECTION";
+            _title.text = LocalizationManager.GetTermTranslation("LEVEL SELECTION");
         }
         else if (mode == GameStats.Modes.Pvp)
         {
@@ -55,7 +55,7 @@ public class Levels : EnigmaScene
             levelsLenght = GameInventory.Instance.GetHighestQuestLevelCompleted() + 1;
             int questMaxLevel = gameInventory.GetActiveQuestMaxLevel();
 
-            _title.text = (GameStats.Instance.ActiveQuest.ToString() + " Quest").ToUpper();
+            _title.text = GameStats.Instance.ActiveQuest.ToString(); //(GameStats.Instance.ActiveQuest.ToString() + " Quest").ToUpper();
 
             if (levelsLenght > questMaxLevel)
             {

@@ -107,7 +107,7 @@ public class Main : EnigmaScene
 
         if (_questButton.activeInHierarchy)
         {
-            _questButton.transform.Find("Text").GetComponent<Text>().text = activeQuest + " Quest";
+            _questButton.transform.Find("QuestName").GetComponent<Text>().text = activeQuest.ToString();
 
             Sprite questIcon = (Sprite)Resources.Load<Sprite>("Images/QuestIcons/" + activeQuest.ToString());
 
