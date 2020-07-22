@@ -28,6 +28,8 @@ public class GameHacks : SingletonMonobehaviour<GameHacks>
     public bool CompletedQuestFailure;
     public bool CompleteQuestOffline;
 
+    public bool ClearSavedTeamDataOnScenesEnter;
+
     public ValueHack ForceQuest = new ValueHack("Torso");
 
     public ValueHack SinglePlayerLevel = new ValueHack("50");
