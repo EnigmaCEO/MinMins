@@ -406,11 +406,11 @@ public class UnitSelectManager : EnigmaScene
 
     private string getSavedTeamSlotKey()
     {
-        return (GameStats.Instance.SelectedSaveSlot + "_" + GameStats.Instance.Mode.ToString() + "_teamUnits");
+        return (GameStats.Instance.Mode.ToString() + "_selectedSaveSlot"); 
     }
 
     private string getTeamUnitsKey()
     {
-        return (GameStats.Instance.Mode.ToString() + "_selectedSaveSlot");
+        return (GameStats.Instance.SelectedSaveSlot + "_" + GameStats.Instance.Mode.ToString() + "_teamUnits");
     }
 }
