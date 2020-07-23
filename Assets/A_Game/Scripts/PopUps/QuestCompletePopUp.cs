@@ -29,7 +29,7 @@ public class QuestCompletePopUp : MonoBehaviour
 
         _message.text = LocalizationManager.GetTermTranslation(_messagesTermPerQuest[activeQuest]);
 
-        Sprite questSprite = (Sprite)Resources.Load<Sprite>("Images/QuestIcons/" + activeQuest.ToString());
+        Sprite questSprite = (Sprite)Resources.Load<Sprite>("Images/Quests/" + activeQuest.ToString() + " Reward");
         _questIcon.sprite = questSprite;
 
         gameObject.SetActive(true);

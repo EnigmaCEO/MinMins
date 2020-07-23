@@ -97,7 +97,7 @@ public class Levels : EnigmaScene
             {
                 if ((i + 1) == activeQuestLastLevel) // if level number equals max level
                 { 
-                    Sprite questIcon = (Sprite)Resources.Load<Sprite>("Images/QuestIcons/" + activeQuest.ToString());
+                    Sprite questIcon = (Sprite)Resources.Load<Sprite>("Images/Quests/" + activeQuest.ToString() + " Icon");
 
                     if (questIcon != null)
                     {
