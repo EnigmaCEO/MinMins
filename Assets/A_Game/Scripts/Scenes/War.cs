@@ -72,7 +72,9 @@ public class War : NetworkEntity
     [SerializeField] private GameObject _roundPopUp;
     [SerializeField] private Text _roundPopUpText;
 
-    [SerializeField] private float _pingUpdateDelay = 2; 
+    [SerializeField] private float _pingUpdateDelay = 2;
+
+    [SerializeField] private QuestCompletePopUp _questCompletePopUp;
 
     private Transform _hostGrid;
     private Transform _guestGrid;
@@ -118,6 +120,8 @@ public class War : NetworkEntity
 
     LineRenderer _lineRenderer1;
     LineRenderer _lineRenderer2;
+
+    private bool _isVictory = false;
 
     override protected void Awake()
     {
@@ -2299,12 +2303,12 @@ public class War : NetworkEntity
     [PunRPC]
     private void receiveMatchResults(string winner)
     {
-        bool isVictory = (winner == _localPlayerTeam);
+        _isVictory = (winner == _localPlayerTeam);
 
         GameHacks gameHacks = GameHacks.Instance;
         if (gameHacks.WarVictory)
         {
-            isVictory = true;
+            _isVictory = true;
         }
 
         bool isPrivateRoom = (((string)NetworkManager.GetRoomCustomProperty(GameNetwork.RoomCustomProperties.IS_PRIVATE)) == "True");
@@ -2322,7 +2326,9 @@ public class War : NetworkEntity
             WarTeamGridItem teamGridItem = slot.GetComponent<WarTeamGridItem>();
             string unitName = teamGridItem.UnitName;
             if (unitName == "")
+            {
                 continue;
+            }
 
             int expEarned = 0;
             int minMinHealth = GameNetwork.GetUnitRoomPropertyAsInt(GameNetwork.UnitRoomProperties.HEALTH, _localPlayerTeam, unitName);
@@ -2330,17 +2336,25 @@ public class War : NetworkEntity
             {
                 if (GameStats.Instance.Mode == GameStats.Modes.SinglePlayer)
                 {
-                    if (isVictory)
+                    if (_isVictory)
+                    {
                         expEarned = GameStats.Instance.SelectedLevelNumber * 2;
+                    }
                     else
+                    {
                         expEarned = 0;
+                    }
                 }
                 else  //pvp and quest
                 {
-                    if (isVictory)
+                    if (_isVictory)
+                    {
                         expEarned = 10;
+                    }
                     else
+                    {
                         expEarned = 5;
+                    }
                 }
 
                 gameInventory.AddExpToUnit(unitName, expEarned);
@@ -2351,7 +2365,7 @@ public class War : NetworkEntity
 
         bool enjinItemCollectedTransactionSent = false;
 
-        if (isVictory)
+        if (_isVictory)
         {
             if (_matchLocalData.RewardChestWasHit || gameHacks.ChestHit)
             {
@@ -2415,6 +2429,7 @@ public class War : NetworkEntity
                 {
                     if (gameHacks.CompleteQuestOffline)
                     {
+                        _questCompletePopUp.Open();
                         GameStats.Instance.ActiveQuest = Quests.None;
                     }
                     else
@@ -2432,7 +2447,7 @@ public class War : NetworkEntity
                 GameNetwork.Instance.SendMatchResultsToServer(winner, onSendMatchResultsToServerCallback);
             }
         }
-        else if(!enjinItemCollectedTransactionSent) //Training
+        else if(!enjinItemCollectedTransactionSent) //Training or Quest
         {
             setAndDisplayMatchResultsPopUp(false);
         }
@@ -2447,6 +2462,7 @@ public class War : NetworkEntity
         if ((status == "SUCCESS") && !GameHacks.Instance.CompletedQuestFailure)
         {
             GameStats.Instance.ActiveQuest = Quests.None;
+            _questCompletePopUp.Open();
         }
         else
         {
@@ -2527,11 +2543,12 @@ public class War : NetworkEntity
         _actionPopUp.Close();
 
         GameHacks gameHacks = GameHacks.Instance;
+        GameStats gameStats = GameStats.Instance;
+        GameInventory gameInventory = GameInventory.Instance;
 
         TeamBoostItem boostReward = null;
         bool gotBoostReward = false;
 
-        GameStats gameStats = GameStats.Instance;
         if (!isPrivateMatch && ((gameStats.Mode == GameStats.Modes.Pvp) || (gameStats.Mode == GameStats.Modes.Quest)))
         {
             int randomInt = UnityEngine.Random.Range(1, 101);

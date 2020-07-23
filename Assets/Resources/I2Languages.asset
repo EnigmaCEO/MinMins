@@ -1876,12 +1876,12 @@ MonoBehaviour:
       - 
       Flags: 0000000000
       Languages_Touch: []
-    - Term: Quest
+    - Term: QUESTS
       TermType: 0
       Description: 
       Languages:
-      - Quest
-      - "B\xFAsqueda"
+      - QUESTS
+      - "B\xDASQUEDAS"
       - 
       - 
       - 
@@ -1936,6 +1936,21 @@ MonoBehaviour:
       - 
       Flags: 0000000000
       Languages_Touch: []
+    - Term: Swissborg Reward
+      TermType: 0
+      Description: 
+      Languages:
+      - "Congratulations. You have been rewarded with the Cyborg Torso. The item will
+        be sent to your Enjin Wallet soon.\n\r\nGood luck finding the other pieces
+        and completing the Cyborg's Quest!\r"
+      - "Felicidades. Has sido recompensado con el Torso Cyborg. El \xEDtem te ser\xE1
+        enviado a tu Billetera Enjin pronto.\n\n\xA1Buena suerte encontrando las otras
+        piezas y completando la B\xFAsqueda del Cyborg!"
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
     CaseInsensitiveTerms: 0
     OnMissingTranslation: 1
     mTerm_AppName: 
@@ -1960,7 +1975,7 @@ MonoBehaviour:
     Google_WebServiceURL: https://script.google.com/macros/s/AKfycbw05ISkGCPtIS0hMzFD5jshgfH09mIP6BAxRKhWsA/exec
     Google_SpreadsheetKey: 1iIWCtExuyR2XXyYkJv6y83PTVMPC4FxzSITGGroefcg
     Google_SpreadsheetName: I2Loc MinMins Localization
-    Google_LastUpdatedVersion: 1595443022744
+    Google_LastUpdatedVersion: 1595459106584
     Google_Password: shalwend
     GoogleUpdateFrequency: 3
     GoogleInEditorCheckFrequency: 2
