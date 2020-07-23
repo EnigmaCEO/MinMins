@@ -6,47 +6,26 @@ using UnityEngine;
 
 public class GameHacks : SingletonMonobehaviour<GameHacks>
 {
-    public bool DecisionTimeFreeze;
-    public bool RandomizeUnitTypes;
-    public bool AssignEffectByType;
-
-    public bool BuyAndroid;
-
-    public bool HideClouds;
-
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+    public bool EnableAllEnjinTokens;
     public bool ForceEnjinRewardOnChest;
+    public bool HideClouds;
+    public bool BuyAndroid;
+    public bool DecisionTimeFreeze;
     public bool WarVictory;
     public bool ChestHit;
-
-    public bool GuestCameraAsHost;
-
     public bool ForcePvpAi;
     public bool AllEnjinTeamBoostTokens;
-    public bool CreateWarPrepLineRendererOnUpdate;
-
-    public bool EnjinItemCollectedFailure;
-    public bool CompletedQuestFailure;
-    public bool CompleteQuestOffline;
-
-    public bool ClearSavedTeamDataOnScenesEnter;
-
-    public ValueHack ForceQuest = new ValueHack("Torso");
 
     public ValueHack SinglePlayerLevel = new ValueHack("50");
     public ValueHack AnyQuestProgress = new ValueHack("3");
-
     public ValueHack ForceTeamBoostReward = new ValueHack("True");
     public ValueHack TeamBoostRewardCategory = new ValueHack("Size");
+    public ValueHack ForceQuest = new ValueHack("Torso");
     public ValueHack SizeBonus = new ValueHack("10");
     public ValueHack SetTeamBoostBonuses = new ValueHack("5");
-
     public ValueHack BuyResult = new ValueHack("True");
-
     public ValueHack TimeWaitForRoomPvpAiSet = new ValueHack("10");
-
-    public ValueHack TriggerPlayerDisconnectPopUp = new ValueHack("D");
-    public ValueHack TriggerOpponentDisconnectPopUp = new ValueHack("O");
-
     public ValueHack UnitTier = new ValueHack("1");
     public ValueHack ActionTimeHack = new ValueHack("60");
     public ValueHack SetHostUnitType = new ValueHack("Bomber");
@@ -62,4 +41,21 @@ public class GameHacks : SingletonMonobehaviour<GameHacks>
     public ValueHack FightsWithoutAdsMaxCount = new ValueHack("2");
     public ValueHack HasPurchased = new ValueHack("True");
     public ValueHack UnlockArenas = new ValueHack("5");
+#endif
+
+    public bool RandomizeUnitTypes;
+    public bool AssignEffectByType;
+
+    public bool GuestCameraAsHost;
+
+    public bool CreateWarPrepLineRendererOnUpdate;
+
+    public bool EnjinItemCollectedFailure;
+    public bool CompletedQuestFailure;
+    public bool CompleteQuestOffline;
+
+    public bool ClearSavedTeamDataOnScenesEnter;
+
+    public ValueHack TriggerPlayerDisconnectPopUp = new ValueHack("D");
+    public ValueHack TriggerOpponentDisconnectPopUp = new ValueHack("O");
 }

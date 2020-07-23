@@ -640,6 +640,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
     public void BuildUnitLevels(string unitName, int unitLevel, int networkPlayerId, string teamName)
     {
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
         GameHacks gameHacks = GameHacks.Instance;
         if (gameHacks.RandomizeUnitLevelWithMaxLevel.Enabled)
         {
@@ -650,6 +651,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         {
             unitLevel = gameHacks.UnitLevel.ValueAsInt;
         }
+#endif
 
         MinMinUnit minMin = GameInventory.Instance.GetMinMinFromResources(unitName);
         SetAnyPlayerUnitProperty(UnitPlayerProperties.LEVEL, unitName, unitLevel.ToString(), teamName, networkPlayerId);
@@ -673,11 +675,17 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         SetAnyPlayerUnitProperty(UnitPlayerProperties.EFFECT_SCALE, unitName, effectScaleAtLevel, teamName, networkPlayerId);
 
         SetUnitRoomProperty(UnitRoomProperties.MAX_HEALTH, teamName, unitName, maxHealth);
-        
-        if(GameHacks.Instance.FractionOfStartingHealth.Enabled)
-            SetUnitHealth(teamName, unitName, (int.Parse(maxHealth))/GameHacks.Instance.FractionOfStartingHealth.ValueAsInt); 
+
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+        if (gameHacks.FractionOfStartingHealth.Enabled)
+        {
+            SetUnitHealth(teamName, unitName, (int.Parse(maxHealth)) / gameHacks.FractionOfStartingHealth.ValueAsInt);
+        }
         else
+#endif
+        {
             SetUnitHealth(teamName, unitName, int.Parse(maxHealth));
+        }
 
         //Debug.LogWarning("BuildUnitLevels -> unitName: " + unitName + " tier: " + unitTier + " baseStrenght: " + minMin.Strength + " baseDefense: " + minMin.Defense + " baseEffectScale: " + minMin.EffectScale);
         //Debug.LogWarning("BuildUnitLevels -> unitLevel: " + unitLevel + " maxHealth: " + maxHealth + " strenghtAtLevel: " + strenghtAtLevel + " defenseAtLevel: " + defenseAtLevel + " effectScaleAtLevel: " + effectScaleAtLevel);
@@ -878,7 +886,14 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         string roomName = "1v1 - " + NetworkManager.GetPlayerName();
 
         bool isOpen = true;
-        if ((GameStats.Instance.Mode == GameStats.Modes.Pvp) && GameHacks.Instance.ForcePvpAi)
+
+        bool forcePvpAi = false;
+
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+        forcePvpAi = GameHacks.Instance.ForcePvpAi;
+#endif
+
+        if ((GameStats.Instance.Mode == GameStats.Modes.Pvp) && forcePvpAi)
         {
             isOpen = false;
         }
@@ -948,10 +963,12 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
             }
         }
 
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
         if (GameHacks.Instance.AllEnjinTeamBoostTokens)
         {
             isAvailable = true;
         }
+#endif
 
         if (isAvailable)
         {

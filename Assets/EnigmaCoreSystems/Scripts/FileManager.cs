@@ -22,8 +22,12 @@ public class FileManager : MonoBehaviour
         Instance = this;
         _filePath = Application.persistentDataPath + "/" + _fileName;
 
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
         if (EnigmaHacks.Instance.ResetFileManagerAtStart)
+        {
             FileManager.Instance.ClearData();
+        }
+#endif
     }
 
     public Hashtable LoadData()

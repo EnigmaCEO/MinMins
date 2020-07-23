@@ -4,17 +4,19 @@ using UnityEngine;
 
 public class EnigmaHacks : SingletonMonobehaviour<EnigmaHacks>
 {
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
     public bool EnjinIdNotNull;
     public bool EnjinCodeNotNull;
     public bool EnjinLinked;
-
-    public bool ResetFileManagerAtStart;
     public bool ByPassIAPReceiptCheck;
-    public bool FailHeartBeat;
+    public bool ResetFileManagerAtStart;
 
+    public ValueHack HeartBeatDelay = new ValueHack("3");
+#endif
+
+    public bool FailHeartBeat;
     public bool MuteMusic;
 
     public ValueHack Language = new ValueHack("Spanish");
-    public ValueHack HeartBeatDelay = new ValueHack("3");
     //public ValueHack FreezeLoadingScreenDelay = new ValueHack("5");
 }

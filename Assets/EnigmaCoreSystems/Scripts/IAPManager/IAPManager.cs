@@ -451,7 +451,13 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
     {
         bool validPurchase = true; // Presume valid for platforms with no R.V.
 
-        if (!EnigmaHacks.Instance.ByPassIAPReceiptCheck)
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+        if (EnigmaHacks.Instance.ByPassIAPReceiptCheck)
+        { 
+            //bypass
+        }
+        else
+#endif
         {
             string purchaseToken = "";
             string transactionId = "";

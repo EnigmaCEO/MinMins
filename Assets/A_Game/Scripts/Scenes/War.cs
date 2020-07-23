@@ -159,8 +159,12 @@ public class War : NetworkEntity
             SoundManager.Play("war", SoundManager.AudioTypes.Music, "", true);
         });
 
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
         if (GameHacks.Instance.HideClouds)
+        {
             _cloudsContainer.gameObject.SetActive(false);
+        }
+#endif
 
         _actionPopUp.Close();
         _roundPopUp.SetActive(false);
@@ -873,8 +877,12 @@ public class War : NetworkEntity
         MinMinUnit unit = getUnitInTurn();
         int unitTier = GameInventory.Instance.GetUnitTier(unit.name);
 
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
         if (GameHacks.Instance.UnitTier.Enabled)
+        {
             unitTier = GameHacks.Instance.UnitTier.ValueAsInt;
+        }
+#endif
 
         _unitTierTurnText.text = LocalizationManager.GetTermTranslation("Unit tier") + ": " + unitTier.ToString();
         _unitTypeTurnText.text = LocalizationManager.GetTermTranslation("Unit type") + ": " + LocalizationManager.GetTermTranslation(unit.Type.ToString());
@@ -1050,9 +1058,13 @@ public class War : NetworkEntity
 
     private bool reduceDecisionTimeCount()
     {
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
         if (GameHacks.Instance.DecisionTimeFreeze)
+        {
             return false;
-        
+        }
+#endif
+
         bool isOver = false;
 
         double networkTime = NetworkManager.GetNetworkTime();
@@ -1181,8 +1193,12 @@ public class War : NetworkEntity
     //Only Master Client uses this
     private IEnumerator HandleActionTime(float actionTime)
     {
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
         if (GameHacks.Instance.ActionTimeHack.Enabled)
+        {
             actionTime = GameHacks.Instance.ActionTimeHack.ValueAsFloat;
+        }
+#endif
 
         yield return new WaitForSeconds(actionTime);
 
@@ -1266,6 +1282,7 @@ public class War : NetworkEntity
         int powerBonus = 0;
         int sizeBonus = 0;
 
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
         if (GameHacks.Instance.SetTeamBoostBonuses.Enabled)
         {
             int boostBonus = GameHacks.Instance.SetTeamBoostBonuses.ValueAsInt;
@@ -1276,30 +1293,34 @@ public class War : NetworkEntity
             powerBonus = boostBonus;
             sizeBonus = boostBonus;
         }
-        else if (selectedBoostItem != null)
+        else
+#endif
         {
-            string boostCategory = selectedBoostItem.Category;
-            int boostBonus = selectedBoostItem.Bonus;
+            if (selectedBoostItem != null)
+            {
+                string boostCategory = selectedBoostItem.Category;
+                int boostBonus = selectedBoostItem.Bonus;
 
-            if (boostCategory == GameConstants.TeamBoostCategory.DAMAGE)
-            {
-                damageBonus = boostBonus;
-            }
-            else if (boostCategory == GameConstants.TeamBoostCategory.DEFENSE)
-            {
-                defenseBonus = boostBonus;
-            }
-            else if (boostCategory == GameConstants.TeamBoostCategory.HEALTH)
-            {
-                healthBonus = boostBonus;
-            }
-            else if (boostCategory == GameConstants.TeamBoostCategory.POWER)
-            {
-                powerBonus = boostBonus;
-            }
-            else if (boostCategory == GameConstants.TeamBoostCategory.SIZE)
-            {
-                sizeBonus = boostBonus;
+                if (boostCategory == GameConstants.TeamBoostCategory.DAMAGE)
+                {
+                    damageBonus = boostBonus;
+                }
+                else if (boostCategory == GameConstants.TeamBoostCategory.DEFENSE)
+                {
+                    defenseBonus = boostBonus;
+                }
+                else if (boostCategory == GameConstants.TeamBoostCategory.HEALTH)
+                {
+                    healthBonus = boostBonus;
+                }
+                else if (boostCategory == GameConstants.TeamBoostCategory.POWER)
+                {
+                    powerBonus = boostBonus;
+                }
+                else if (boostCategory == GameConstants.TeamBoostCategory.SIZE)
+                {
+                    sizeBonus = boostBonus;
+                }
             }
         }
 
@@ -1844,6 +1865,7 @@ public class War : NetworkEntity
 
             unitNetworkViewsIdsString += unitNetworkViewId.ToString();
 
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
             MinMinUnit unit = unitGameObject.GetComponent<MinMinUnit>();
 
             GameHacks gameHacks = GameHacks.Instance;
@@ -1852,17 +1874,26 @@ public class War : NetworkEntity
             if (GameHacks.Instance.RandomizeUnitTypes)
                 unitHackType = (MinMinUnit.Types)UnityEngine.Random.Range(1, 6);
 
-            if (gameHacks.SetHostUnitType.Enabled &&  (teamName == GameNetwork.TeamNames.HOST))
+            if (gameHacks.SetHostUnitType.Enabled && (teamName == GameNetwork.TeamNames.HOST))
+            {
                 unitHackType = gameHacks.SetHostUnitType.GetValueAsEnum<MinMinUnit.Types>();
-            
-            if(gameHacks.SetGuestUnitType.Enabled && (teamName == GameNetwork.TeamNames.GUEST))
+            }
+
+            if (gameHacks.SetGuestUnitType.Enabled && (teamName == GameNetwork.TeamNames.GUEST))
+            {
                 unitHackType = gameHacks.SetGuestUnitType.GetValueAsEnum<MinMinUnit.Types>();
+            }
 
-            if(gameHacks.SetAllUnitsType.Enabled)
+            if (gameHacks.SetAllUnitsType.Enabled)
+            {
                 unitHackType = gameHacks.SetAllUnitsType.GetValueAsEnum<MinMinUnit.Types>();
+            }
 
-            if(unitHackType != MinMinUnit.Types.None)
+            if (unitHackType != MinMinUnit.Types.None)
+            {
                 unit.SendDebugSettingsForWar(unitHackType);
+            }
+#endif
         }
 
         sendUnitsNetworkIds(teamName, unitNetworkViewsIdsString);
@@ -2306,10 +2337,13 @@ public class War : NetworkEntity
         _isVictory = (winner == _localPlayerTeam);
 
         GameHacks gameHacks = GameHacks.Instance;
+
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
         if (gameHacks.WarVictory)
         {
             _isVictory = true;
         }
+#endif
 
         bool isPrivateRoom = (((string)NetworkManager.GetRoomCustomProperty(GameNetwork.RoomCustomProperties.IS_PRIVATE)) == "True");
 
@@ -2367,7 +2401,13 @@ public class War : NetworkEntity
 
         if (_isVictory)
         {
-            if (_matchLocalData.RewardChestWasHit || gameHacks.ChestHit)
+            bool chestHitHack = false;
+
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+            chestHitHack = gameHacks.ChestHit;
+#endif
+
+            if (_matchLocalData.RewardChestWasHit || chestHitHack)
             {
                 GameNetwork gameNetwork = GameNetwork.Instance;
                 if (NetworkManager.LoggedIn && gameNetwork.IsEnjinLinked)
@@ -2397,7 +2437,13 @@ public class War : NetworkEntity
                     //random = 25;
                     Debug.Log("Chance: " + chance + " random: " + random);
 
-                    if ((random <= chance) || gameHacks.ForceEnjinRewardOnChest)
+                    bool forceEnjinRewardsOnChest = false;
+
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+                    forceEnjinRewardsOnChest = gameHacks.ForceEnjinRewardOnChest;
+#endif
+
+                    if ((random <= chance) || forceEnjinRewardsOnChest)
                     {
                         NetworkManager.Instance.SendEnjinCollectedTransaction(GameNetwork.TRANSACTION_GAME_NAME, GameStats.Instance.SelectedLevelNumber, onEnjinItemCollectedTransactionExternal);
                         enjinItemCollectedTransactionSent = true;
@@ -2556,10 +2602,12 @@ public class War : NetworkEntity
             gotBoostReward = (randomInt <= 20); //20% chance
         }
 
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
         if (GameHacks.Instance.ForceTeamBoostReward.Enabled)
         {
             gotBoostReward = GameHacks.Instance.ForceTeamBoostReward.ValueAsBool;
         }
+#endif
 
         if (gotBoostReward)
         {
@@ -2579,6 +2627,7 @@ public class War : NetworkEntity
 
             int randomNumber = UnityEngine.Random.Range(0, 5);  //Picks from index 0 to 4
 
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
             if (gameHacks.TeamBoostRewardCategory.Enabled)
             {
                 for (int i = 0; i < categories.Length; i++)
@@ -2590,6 +2639,7 @@ public class War : NetworkEntity
                     }
                 }
             }
+#endif
 
             string rewardCategory = categories[randomNumber];
             string rewardBaseName = baseNames[randomNumber];
@@ -2631,8 +2681,12 @@ public class War : NetworkEntity
 
         int maxRounds = _maxRoundsCount;
 
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
         if (GameHacks.Instance.RoundCount.Enabled)
+        {
             maxRounds = GameHacks.Instance.RoundCount.ValueAsInt;
+        }
+#endif
 
         if (roundCount >= maxRounds)
         {

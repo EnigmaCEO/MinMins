@@ -150,12 +150,14 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
     public int GetHigherSinglePlayerLevelCompleted()
     {
-        int value = InventoryManager.Instance.GetItem<int>(GroupNames.STATS, ItemKeys.SINGLE_PLAYER_LEVEL); 
+        int value = InventoryManager.Instance.GetItem<int>(GroupNames.STATS, ItemKeys.SINGLE_PLAYER_LEVEL);
 
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
         if (GameHacks.Instance.SinglePlayerLevel.Enabled)
         {
             value = GameHacks.Instance.SinglePlayerLevel.ValueAsInt;
         }
+#endif
 
         return value;
     }
@@ -189,10 +191,12 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         {
             int value = InventoryManager.Instance.GetItem<int>(GroupNames.QUESTS_PROGRESS, activeQuest.ToString());
 
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
             if (GameHacks.Instance.AnyQuestProgress.Enabled)
             {
                 value = GameHacks.Instance.AnyQuestProgress.ValueAsInt;
             }
+#endif
 
             return value;
         }
@@ -487,16 +491,16 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
                     checkAddUnit(unitName, "102", gameNetwork.HasEnjinBryana) ||
                     checkAddUnit(unitName, "103", gameNetwork.HasEnjinTassio) ||
                     checkAddUnit(unitName, "104", gameNetwork.HasEnjinSimon) ||
-                    checkAddUnit(unitName, "105",gameNetwork.HasKnightHealer) ||
-                    checkAddUnit(unitName, "106", gameNetwork.HasKnightBomber) ||
-                    checkAddUnit(unitName, "107", gameNetwork.HasKnightDestroyer) ||
-                    checkAddUnit(unitName, "108", gameNetwork.HasKnightScout) ||
-                    checkAddUnit(unitName, "109", gameNetwork.HasKnightTank) ||
-                    checkAddUnit(unitName, "110", gameNetwork.HasDemonHealer) ||
-                    checkAddUnit(unitName, "111", gameNetwork.HasDemonBomber) ||
+                    checkAddUnit(unitName, "105",gameNetwork.HasKnightTank) ||
+                    checkAddUnit(unitName, "106", gameNetwork.HasKnightHealer) ||
+                    checkAddUnit(unitName, "107", gameNetwork.HasKnightScout) ||
+                    checkAddUnit(unitName, "108", gameNetwork.HasKnightDestroyer) ||
+                    checkAddUnit(unitName, "109", gameNetwork.HasKnightBomber) ||
+                    checkAddUnit(unitName, "110", gameNetwork.HasDemonBomber) ||
+                    checkAddUnit(unitName, "111", gameNetwork.HasDemonScout) ||
                     checkAddUnit(unitName, "112", gameNetwork.HasDemonDestroyer) ||
-                    checkAddUnit(unitName, "113", gameNetwork.HasDemonScout) ||
-                    checkAddUnit(unitName, "114", gameNetwork.HasDemonTank) ||
+                    checkAddUnit(unitName, "113", gameNetwork.HasDemonTank) ||
+                    checkAddUnit(unitName, "114", gameNetwork.HasDemonHealer) ||
                     checkAddUnit(unitName, "122", gameNetwork.HasEnjinAlex) ||
                     checkAddUnit(unitName, "123", gameNetwork.HasEnjinEvan) ||
                     checkAddUnit(unitName, "124", gameNetwork.HasEnjinEsther) ||

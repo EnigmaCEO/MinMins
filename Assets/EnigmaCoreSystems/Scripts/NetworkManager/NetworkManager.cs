@@ -635,10 +635,12 @@ namespace Enigma.CoreSystems
 
                     float heartBeatDelay = _HEARTBEAT_DELAY;
 
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
                     if (EnigmaHacks.Instance.HeartBeatDelay.Enabled)
                     {
                         heartBeatDelay = EnigmaHacks.Instance.HeartBeatDelay.ValueAsFloat;
                     }
+#endif
 
                     yield return new WaitForSeconds(heartBeatDelay);
                 }

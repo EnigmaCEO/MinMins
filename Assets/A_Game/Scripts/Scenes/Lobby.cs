@@ -121,10 +121,16 @@ public class Lobby : NetworkEntity
 
             _waitingPopUp.SetActive(true);
 
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
             if (GameHacks.Instance.ForcePvpAi)
+            {
                 setRoomWithPvpAi();
-            else 
+            }
+            else
+#endif
+            {
                 StartCoroutine(handleWaitForPvpAiSet());
+            }
         }
         else
         {
@@ -133,10 +139,12 @@ public class Lobby : NetworkEntity
 
             double timeToWaitAi = double.Parse(_roomSetWithPvpDelay.ToString());
 
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
             if (GameHacks.Instance.TimeWaitForRoomPvpAiSet.Enabled)
             {
                 timeToWaitAi = GameHacks.Instance.TimeWaitForRoomPvpAiSet.ValueAsFloat;
             }
+#endif
 
             double timeDiff = currentTime - timeRoomStarted;
 
@@ -202,9 +210,15 @@ public class Lobby : NetworkEntity
     private void handleRoomCreationAndJoin()
     {
         print("Lobby::handleRoomCreationAndJoin");
-        RoomInfo[] rooms = NetworkManager.GetRoomList(); 
+        RoomInfo[] rooms = NetworkManager.GetRoomList();
 
-        if ((rooms.Length == 0) || GameHacks.Instance.ForcePvpAi)
+        bool forcePvpAi = false;
+
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+        forcePvpAi = GameHacks.Instance.ForcePvpAi;
+#endif
+
+        if ((rooms.Length == 0) || forcePvpAi)
             joinOrCreateRoom();
         else
         {
@@ -283,8 +297,12 @@ public class Lobby : NetworkEntity
     {
         float timeToWait = _roomSetWithPvpDelay;
 
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
         if (GameHacks.Instance.TimeWaitForRoomPvpAiSet.Enabled)
+        {
             timeToWait = GameHacks.Instance.TimeWaitForRoomPvpAiSet.ValueAsFloat;
+        }
+#endif
 
         Debug.LogWarning("handleWaitForPvpAiSet -> timeToWait: " + timeToWait);
 

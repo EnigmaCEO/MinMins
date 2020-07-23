@@ -122,8 +122,12 @@ public class ActionArea : NetworkEntity
 
         float scaleFactor = float.Parse(getOwnerUnitProperty(GameNetwork.UnitPlayerProperties.EFFECT_SCALE));
 
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
         if (GameHacks.Instance.PowerScale.Enabled)
+        {
             scaleFactor = GameHacks.Instance.PowerScale.ValueAsFloat;
+        }
+#endif
 
         Vector3 scale = transform.localScale;
         transform.localScale = new Vector3(scaleFactor * scale.x, scaleFactor * scale.y, scaleFactor * scale.z);
@@ -218,8 +222,12 @@ public class ActionArea : NetworkEntity
             damage = Mathf.FloorToInt(damage * 1.3f);
         }
 
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
         if (GameHacks.Instance.Damage.Enabled)
+        {
             damage = GameHacks.Instance.Damage.ValueAsInt;
+        }
+#endif
 
         //if (damage == 0)
         //    damage = 1;

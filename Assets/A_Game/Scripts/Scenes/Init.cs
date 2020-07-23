@@ -6,6 +6,7 @@ using System;
 public class Init : EnigmaScene
 {
     [SerializeField] private string _nextSceneName = "Main";
+    [SerializeField] private GameObject _inGameDebugConsole;
   
 	private float _startTime;
 

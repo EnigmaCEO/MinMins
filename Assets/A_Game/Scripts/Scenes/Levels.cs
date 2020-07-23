@@ -23,12 +23,15 @@ public class Levels : EnigmaScene
 
         GameStats gameStats = GameStats.Instance;
         GameInventory gameInventory = GameInventory.Instance;
+
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
         GameHacks gameHacks = GameHacks.Instance;
 
         if (gameHacks.Rating.Enabled)
         {
-            gameStats.Rating = GameHacks.Instance.Rating.ValueAsInt;
+            gameStats.Rating = gameHacks.Rating.ValueAsInt;
         }
+#endif
 
         GameObject levelGridItemTemplate = _levelsGridContent.GetChild(0).gameObject;
         GameStats.Modes mode = gameStats.Mode;
@@ -63,15 +66,22 @@ public class Levels : EnigmaScene
             }
         }
 
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
         if (gameHacks.UnlockArenas.Enabled)
         {
             levelsLenght = GameHacks.Instance.UnlockArenas.ValueAsInt;
         }
+#endif
 
         Debug.LogWarning(">Levels::Start -> Levels lenght: " + levelsLenght);
         GameEnums.Quests activeQuest = GameStats.Instance.ActiveQuest;
-        
-        int activeQuestLastLevel = GameInventory.Instance.GetActiveQuestMaxLevel();
+
+        int activeQuestLastLevel = 0;
+
+        if (mode == GameStats.Modes.Quest)
+        {
+            activeQuestLastLevel = GameInventory.Instance.GetActiveQuestMaxLevel();
+        }
 
         for (int i = 0; i < levelsLenght; i++)
         {
@@ -83,10 +93,10 @@ public class Levels : EnigmaScene
             levelGridItem.SetLabel(levelNumber.ToString());
             levelGridItem.FightButton.onClick.AddListener(() => { onLevelFightButtonDown(levelNumber); });
 
-            if ((i + 1) == activeQuestLastLevel) // if level number equals max level
+            if (mode == GameStats.Modes.Quest)
             {
-                if (mode == GameStats.Modes.Quest)
-                {
+                if ((i + 1) == activeQuestLastLevel) // if level number equals max level
+                { 
                     Sprite questIcon = (Sprite)Resources.Load<Sprite>("Images/QuestIcons/" + activeQuest.ToString());
 
                     if (questIcon != null)

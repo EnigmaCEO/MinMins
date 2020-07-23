@@ -114,10 +114,12 @@ public class MinMinUnit : NetworkEntity
             _spriteTransform.localScale = new Vector3(-localScale.x, localScale.y, localScale.z);
         }
 
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
         if (GameHacks.Instance.SizeBonus.Enabled)
         {
             sizeBonus = GameHacks.Instance.SizeBonus.ValueAsInt;
         }
+#endif
 
         float scaleFactor = (100.0f - (float)sizeBonus) / 100.0f;
 

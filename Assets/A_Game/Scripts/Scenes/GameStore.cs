@@ -85,8 +85,12 @@ public class GameStore : EnigmaScene
 
     private void handleCurrencyBuyResult(string id, bool result)
     {
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
         if (GameHacks.Instance.BuyResult.Enabled)
+        {
             result = GameHacks.Instance.BuyResult.ValueAsBool;
+        }
+#endif
 
         if (result)
         {
@@ -171,16 +175,23 @@ public class GameStore : EnigmaScene
         SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
 
         int count = setupEnjinLegendsDisplay(_enjinmftPopUp);
-        if(count == 0 || !GameNetwork.Instance.HasEnjinMft) _enjinmftPopUp.transform.Find("DismissButton").gameObject.SetActive(false);
+        if (count == 0 || !GameNetwork.Instance.HasEnjinMft)
+        {
+            _enjinmftPopUp.transform.Find("DismissButton").gameObject.SetActive(false);
+        }
 
         int attempts = GameInventory.Instance.GetEnjinAttempts();
         
         _enjinmftPopUp.SetActive(true);
 
-        if(GameNetwork.Instance.HasEnjinMft)
+        if (GameNetwork.Instance.HasEnjinMft)
+        {
             _enjinmftPopUp.transform.Find("WindowMessage").GetComponent<Text>().text = attempts + " " + LocalizationManager.GetTermTranslation("Summons remaining");
+        }
         else
+        {
             _enjinmftPopUp.transform.Find("WindowMessage").GetComponent<Text>().text = LocalizationManager.GetTermTranslation("Enjin MFT required");
+        }
     }
 
     public void openMinMinPopUp()
@@ -331,10 +342,16 @@ public class GameStore : EnigmaScene
     {
         SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
 
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
         if (GameHacks.Instance.BuyAndroid)
+        {
             handleCurrencyBuyResult(IAPManager.Instance.IAP_IDS[_selectedPackIndex], true);  // Buy hack to work on android
+        }
         else
+#endif
+        {
             IAPManager.BuyConsumable(_selectedPackIndex);
+        }
 
         _lootBoxBuyConfirmPopUp.Close();
     }

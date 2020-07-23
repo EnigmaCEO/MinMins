@@ -429,10 +429,19 @@ public class NewLobby : NetworkEntity
 
             bool roomIsPrivate = (((string)room.CustomProperties[GameNetwork.RoomCustomProperties.IS_PRIVATE]) == "True");
 
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
             if (GameHacks.Instance.ForcePvpAi)
+            {
                 setRoomWithPvpAi();
-            else if(!roomIsPrivate)
-                StartCoroutine(handleWaitForPvpAiSet());
+            }
+            else
+#endif
+            {
+                if (!roomIsPrivate)
+                {
+                    StartCoroutine(handleWaitForPvpAiSet());
+                }
+            }
         }
         else
         {
@@ -441,10 +450,12 @@ public class NewLobby : NetworkEntity
 
             double timeToWaitAi = double.Parse(_roomSetWithPvpDelay.ToString());
 
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
             if (GameHacks.Instance.TimeWaitForRoomPvpAiSet.Enabled)
             {
                 timeToWaitAi = GameHacks.Instance.TimeWaitForRoomPvpAiSet.ValueAsFloat;
             }
+#endif
 
             double timeDiff = currentTime - timeRoomStarted;
 
@@ -525,8 +536,12 @@ public class NewLobby : NetworkEntity
     {
         float timeToWait = _roomSetWithPvpDelay;
 
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
         if (GameHacks.Instance.TimeWaitForRoomPvpAiSet.Enabled)
+        {
             timeToWait = GameHacks.Instance.TimeWaitForRoomPvpAiSet.ValueAsFloat;
+        }
+#endif
 
         Debug.LogWarning("handleWaitForPvpAiSet -> timeToWait: " + timeToWait);
 

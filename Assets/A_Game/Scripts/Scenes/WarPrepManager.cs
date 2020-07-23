@@ -193,7 +193,6 @@ public class WarPrepManager : EnigmaScene
 
         GameNetwork gameNetwork = GameNetwork.Instance;
         GameStats gameStats = GameStats.Instance;
-        GameHacks gameHacks = GameHacks.Instance;
 
         savePositionsToGameStats();
         saveWarPrep();
@@ -201,6 +200,8 @@ public class WarPrepManager : EnigmaScene
         bool hasPurchased = GameStats.Instance.HasPurchased;
         int fightsWithoutAdsMaxCount = GameConfig.Instance.FightsWithoutAdsMaxCount;
 
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+        GameHacks gameHacks = GameHacks.Instance;
         if (gameHacks.HasPurchased.Enabled)
         {
             hasPurchased = gameHacks.HasPurchased.ValueAsBool;
@@ -210,6 +211,7 @@ public class WarPrepManager : EnigmaScene
         {
             fightsWithoutAdsMaxCount = gameHacks.FightsWithoutAdsMaxCount.ValueAsInt;
         }
+#endif
 
         if (!hasPurchased)
         {

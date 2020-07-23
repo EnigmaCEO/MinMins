@@ -276,10 +276,12 @@ public class EnjinLogin : MonoBehaviour
         gameStats.HasPurchased = (response_hash[NetworkManager.TransactionKeys.PURCHASED].AsInt == 1);
         gameStats.ActiveQuest = (Quests)response_hash[NetworkManager.TransactionKeys.USER_DATA][GameNetwork.TransactionKeys.QUEST].AsInt;
 
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
         if (GameHacks.Instance.ForceQuest.Enabled)
         {
             gameStats.ActiveQuest = GameHacks.Instance.ForceQuest.GetValueAsEnum<Quests>();
         }
+#endif
 
         GameNetwork gameNetwork = GameNetwork.Instance;
 
@@ -288,15 +290,28 @@ public class EnjinLogin : MonoBehaviour
         NetworkManager.SetLocalPlayerNickName(userName);
 
         string enjinId = response_hash[NetworkManager.TransactionKeys.USER_DATA][NetworkManager.TransactionKeys.ENJIN_ID].ToString().Trim('"');
-        EnigmaHacks enigmaHacks = EnigmaHacks.Instance;
 
         Debug.Log("Enjin ID: " + enjinId);
-        if ((enjinId != "null") || enigmaHacks.EnjinIdNotNull)
+        bool enjinIdNotNullHack = false;
+
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+        EnigmaHacks enigmaHacks = EnigmaHacks.Instance;
+        enjinIdNotNullHack = enigmaHacks.EnjinIdNotNull;
+#endif
+
+        if ((enjinId != "null") || enjinIdNotNullHack)
         {
 
             string enjinCode = response_hash[NetworkManager.TransactionKeys.USER_DATA][NetworkManager.TransactionKeys.ENJIN_CODE].ToString().Trim('"');
             Debug.Log("Link Code: " + enjinCode);
-            if ((enjinCode != "null") || enigmaHacks.EnjinCodeNotNull)
+
+            bool enjinCodeNotNull = false;
+
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+            enjinCodeNotNull = enigmaHacks.EnjinCodeNotNull;
+#endif
+
+            if ((enjinCode != "null") || enjinCodeNotNull)
             {
                 GameObject.Find("/Main").GetComponent<Main>().StartEnjinQR(enjinCode);
             }
@@ -348,8 +363,12 @@ public class EnjinLogin : MonoBehaviour
         else
             print("User is not using Crypto.");
 
-        if(enigmaHacks.EnjinLinked)
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+        if (enigmaHacks.EnjinLinked)
+        {
             GameNetwork.Instance.IsEnjinLinked = true;
+        }
+#endif
 
         GameObject.Find("/Main").GetComponent<Main>().Init();
     }
@@ -363,6 +382,13 @@ public class EnjinLogin : MonoBehaviour
         {
             tokenAvailable = tokenNode;
         }
+
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+        if (GameHacks.Instance.EnableAllEnjinTokens)
+        {
+            tokenAvailable = "1";
+        }
+#endif
 
         return (tokenAvailable == "1");
     }
