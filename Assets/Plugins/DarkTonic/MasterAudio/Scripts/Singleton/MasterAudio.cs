@@ -4472,7 +4472,7 @@ namespace DarkTonic.MasterAudio {
         public static MasterAudioGroup GrabGroup(string sType, bool logIfMissing = true) {
             if (!Instance.AudioSourcesBySoundType.ContainsKey(sType)) {
                 if (logIfMissing) {
-                    Debug.LogError("Could not grab Sound Group '" + sType + "' because it does not exist in this scene.");
+                    Debug.Log("Could not grab Sound Group '" + sType + "' because it does not exist in this scene.");
                 }
                 return null;
             }
