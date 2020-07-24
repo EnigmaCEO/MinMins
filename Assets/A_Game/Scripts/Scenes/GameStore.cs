@@ -225,8 +225,8 @@ public class GameStore : EnigmaScene
 
     private int setupEnjinLegendsDisplay(GameObject popUp)
     {
-        int count = 5;
         Transform enjinContent = popUp.transform.Find("EnjinGrid/Viewport/Content");
+        int count = enjinContent.childCount;
         GameInventory gameInventory = GameInventory.Instance;
 
         foreach (Transform enjinTransform in enjinContent)
@@ -250,8 +250,9 @@ public class GameStore : EnigmaScene
 
     private int setupEnjinLegendsMinMinsDisplay(GameObject popUp)
     {
-        int count = 20;
         Transform enjinContent = popUp.transform.Find("EnjinGrid/Viewport/Content");
+        int count = enjinContent.childCount;
+
         GameInventory gameInventory = GameInventory.Instance;
         GameNetwork gameNetwork = GameNetwork.Instance;
 
