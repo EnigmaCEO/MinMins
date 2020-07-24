@@ -1656,6 +1656,17 @@ MonoBehaviour:
       - 
       Flags: 0000000000
       Languages_Touch: []
+    - Term: Legend Unit tokens required
+      TermType: 0
+      Description: 
+      Languages:
+      - Legend Unit tokens required
+      - Ficha de Unidad Leyenda requerido
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
     - Term: Enjin MFT required
       TermType: 0
       Description: 
@@ -1940,9 +1951,13 @@ MonoBehaviour:
       TermType: 0
       Description: 
       Languages:
-      - "Congratulations. You have been rewarded with the Cyborg Torso. The item will
-        be sent to your Enjin Wallet soon.\n\r\nGood luck finding the other pieces
-        and completing the Cyborg's Quest!\r"
+      - 'Congratulations. You have been rewarded with the Cyborg Torso. The item will
+        be sent to your Enjin Wallet soon.
+
+
+        Good luck finding the other pieces and completing the Cyborg''s Quest!
+
+'
       - "Felicidades. Has sido recompensado con el Torso Cyborg. El \xEDtem te ser\xE1
         enviado a tu Billetera Enjin pronto.\n\n\xA1Buena suerte encontrando las otras
         piezas y completando la B\xFAsqueda del Cyborg!"
@@ -1975,7 +1990,7 @@ MonoBehaviour:
     Google_WebServiceURL: https://script.google.com/macros/s/AKfycbw05ISkGCPtIS0hMzFD5jshgfH09mIP6BAxRKhWsA/exec
     Google_SpreadsheetKey: 1iIWCtExuyR2XXyYkJv6y83PTVMPC4FxzSITGGroefcg
     Google_SpreadsheetName: I2Loc MinMins Localization
-    Google_LastUpdatedVersion: 1595459106584
+    Google_LastUpdatedVersion: 1595549788155
     Google_Password: shalwend
     GoogleUpdateFrequency: 3
     GoogleInEditorCheckFrequency: 2
