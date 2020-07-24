@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Enigma.CoreSystems;
+using UnityEngine.Video;
 
 public class WarPrepManager : EnigmaScene
 {
@@ -10,6 +11,7 @@ public class WarPrepManager : EnigmaScene
     [SerializeField] private Button _nextButton;
     [SerializeField] private Button _backButton;
     [SerializeField] private GameObject _infoPopUp;
+    [SerializeField] private Text _proceedHelpText;
 
     private int _slotsInPlay = 0;
     private int _slotsReady = 0;
@@ -19,6 +21,9 @@ public class WarPrepManager : EnigmaScene
 
     void Start()
     {
+        //displayDragUnitsHelp();
+        _proceedHelpText.gameObject.SetActive(false);
+
         _nextButton.onClick.AddListener(() => { onNextButtonDown(); });
         _nextButton.gameObject.SetActive(false);
 
@@ -92,6 +97,16 @@ public class WarPrepManager : EnigmaScene
         {
             updateBoundsLines();
         }
+    }
+
+    //private void displayDragUnitsHelp()
+    //{
+    //    _proceedHelpText.text = LocalizationManager.GetTermTranslation("Drag units to position.");
+    //}
+
+    private void displayProceedHelp()
+    {
+        _proceedHelpText.gameObject.SetActive(true);
     }
 
     private void saveWarPrep()
@@ -181,9 +196,10 @@ public class WarPrepManager : EnigmaScene
 
         if (_slotsReady == _slotsInPlay)
         {
+            displayProceedHelp();
             _nextButton.gameObject.SetActive(true);
             GameObject.Find("/Team1").GetComponent<TweenPosition>().enabled = true;
-            gameObject.GetComponent<LineRenderer>().enabled = false;
+            //gameObject.GetComponent<LineRenderer>().enabled = false;
         }
     }
 

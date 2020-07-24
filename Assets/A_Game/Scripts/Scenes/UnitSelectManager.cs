@@ -32,7 +32,9 @@ public class UnitSelectManager : EnigmaScene
     [SerializeField] private Toggle _savedTeamToggle2;
 
     //[SerializeField] private Transform _patternBG;
-    
+
+    [SerializeField] private Text _helpText;
+
     private Transform _teamGridContent;
     private string _selectedUnitName;
 
@@ -40,7 +42,6 @@ public class UnitSelectManager : EnigmaScene
 
     private Vector2[] _waypoints;
     private GameObject _attack;
-
 
 
     void Start()
@@ -146,6 +147,21 @@ public class UnitSelectManager : EnigmaScene
         }
     }
 
+    private void displaySelectUnitHelp()
+    {
+        _helpText.text = LocalizationManager.GetTermTranslation("Select a unit.");    
+    }
+
+    private void displayAssignUnitHelp()
+    {
+        _helpText.text = LocalizationManager.GetTermTranslation("Assign the selected unit to a team position.");
+    }
+
+    private void displayProceedHelp()
+    {
+        _helpText.text = LocalizationManager.GetTermTranslation("Press right arrow button to proceed.");
+    }
+
     private void createDefaultSelectedUnits(int amount)
     {
         GameStats gameStats = GameStats.Instance;
@@ -222,6 +238,8 @@ public class UnitSelectManager : EnigmaScene
     {
         SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
         _selectedUnitName = unitName;
+
+        displayAssignUnitHelp();
 
         int slotsLength = _teamGridContent.childCount;
         for (int i = 0; i < slotsLength; i++)
@@ -309,7 +327,12 @@ public class UnitSelectManager : EnigmaScene
 
         if (teamReady)
         {
+            displayProceedHelp();
             _nextButton.gameObject.SetActive(true);
+        }
+        else
+        {
+            displaySelectUnitHelp();
         }
     }
 
@@ -382,6 +405,7 @@ public class UnitSelectManager : EnigmaScene
 
         if (unitsString == "")
         {
+            displaySelectUnitHelp();
             return;
         }
 

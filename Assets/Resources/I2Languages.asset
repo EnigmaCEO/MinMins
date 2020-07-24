@@ -1966,6 +1966,61 @@ MonoBehaviour:
       - 
       Flags: 0000000000
       Languages_Touch: []
+    - Term: Drag units to position.
+      TermType: 0
+      Description: 
+      Languages:
+      - ' Drag units to position.'
+      - "Arrastra las unidades a posici\xF3n."
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Select a unit.
+      TermType: 0
+      Description: 
+      Languages:
+      - Select a unit.
+      - Selecciona una unidad.
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Assign the selected unit to a team position.
+      TermType: 0
+      Description: 
+      Languages:
+      - Assign the selected unit to a team position.
+      - "Asigna unidad seleccionada a una posici\xF3n de equipo."
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Press right arrow button to proceed.
+      TermType: 0
+      Description: 
+      Languages:
+      - Press right arrow button to proceed.
+      - "Presiona bot\xF3n de flecha derecha para proceder."
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Tap boost to select/deselect.
+      TermType: 0
+      Description: 
+      Languages:
+      - Tap boost to select/deselect.
+      - Presiona aumento para seleccionar/deseleccionar.
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
     CaseInsensitiveTerms: 0
     OnMissingTranslation: 1
     mTerm_AppName: 
@@ -1990,7 +2045,7 @@ MonoBehaviour:
     Google_WebServiceURL: https://script.google.com/macros/s/AKfycbw05ISkGCPtIS0hMzFD5jshgfH09mIP6BAxRKhWsA/exec
     Google_SpreadsheetKey: 1iIWCtExuyR2XXyYkJv6y83PTVMPC4FxzSITGGroefcg
     Google_SpreadsheetName: I2Loc MinMins Localization
-    Google_LastUpdatedVersion: 1595549788155
+    Google_LastUpdatedVersion: 1595614728128
     Google_Password: shalwend
     GoogleUpdateFrequency: 3
     GoogleInEditorCheckFrequency: 2

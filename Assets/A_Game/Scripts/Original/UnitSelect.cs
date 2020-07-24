@@ -39,8 +39,6 @@ public class UnitSelect : MonoBehaviour {
 		ScreenMouseRay();
 	}
 
-
-	
 	public void ScreenMouseRay()	
 	{
 		
