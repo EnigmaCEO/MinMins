@@ -1693,7 +1693,7 @@ public class War : NetworkEntity
                 exp = 310;
                 break;
             case 50:
-                unitsString = "121|120|1119|118|117";
+                unitsString = "121|120|119|118|117";
                 exp = 310;
                 break;
         }
@@ -2447,9 +2447,7 @@ public class War : NetworkEntity
                     {
                         NetworkManager.Instance.SendEnjinCollectedTransaction(GameNetwork.TRANSACTION_GAME_NAME, GameStats.Instance.SelectedLevelNumber, onEnjinItemCollectedTransactionExternal);
                         enjinItemCollectedTransactionSent = true;
-                        //_matchLocalData.EnjinCollected = true;
-                    }
-                        
+                    }                 
                 }
 
                 //if (gameHacks.ForceEnjinRewardOnChest)
@@ -2461,29 +2459,29 @@ public class War : NetworkEntity
                 }
             }
 
-            int levelCompleted = GameStats.Instance.SelectedLevelNumber;
+            //int levelCompleted = GameStats.Instance.SelectedLevelNumber;
 
-            if (GameStats.Instance.Mode == GameStats.Modes.SinglePlayer)
-            {
-                gameInventory.SetHigherSinglePlayerLevelCompleted(levelCompleted);
-            }
-            else if (GameStats.Instance.Mode == GameStats.Modes.Quest)
-            {
-                gameInventory.SetQuestLevelProgress(levelCompleted);
+            //if (GameStats.Instance.Mode == GameStats.Modes.SinglePlayer)
+            //{
+            //    gameInventory.SetHigherSinglePlayerLevelCompleted(levelCompleted);
+            //}
+            //else if (GameStats.Instance.Mode == GameStats.Modes.Quest)
+            //{
+            //    gameInventory.SetQuestLevelProgress(levelCompleted);
 
-                if (levelCompleted == gameInventory.GetActiveQuestMaxLevel())
-                {
-                    if (gameHacks.CompleteQuestOffline)
-                    {
-                        _questCompletePopUp.Open();
-                        GameStats.Instance.ActiveQuest = Quests.None;
-                    }
-                    else
-                    {
-                        NetworkManager.Transaction(GameNetwork.Transactions.COMPLETED_QUEST_ID, onCompletedQuestResponse);
-                    }
-                }
-            }
+            //    if (levelCompleted == gameInventory.GetActiveQuestMaxLevel())
+            //    {
+            //        if (gameHacks.CompleteQuestOffline)
+            //        {
+            //            _questCompletePopUp.Open(_matchResultsPopUp);
+            //            GameStats.Instance.ActiveQuest = Quests.None;
+            //        }
+            //        else
+            //        {
+            //            NetworkManager.Transaction(GameNetwork.Transactions.COMPLETED_QUEST_ID, onCompletedQuestResponse);
+            //        }
+            //    }
+            //}
         }
 
         if (GameStats.Instance.Mode == GameStats.Modes.Pvp)
@@ -2507,14 +2505,17 @@ public class War : NetworkEntity
 
         if ((status == "SUCCESS") && !GameHacks.Instance.CompletedQuestFailure)
         {
-            //GameStats.Instance.ActiveQuest = Quests.None;
-            _questCompletePopUp.Open();
+            _questCompletePopUp.Open(_matchResultsPopUp);
         }
         else
-        {
+        { 
             _errorText.text = LocalizationManager.GetTermTranslation(status);
             _errorText.gameObject.SetActive(true);
+
+            _matchResultsPopUp.Open();
         }
+
+
     }
 
     private void onEnjinItemCollectedTransactionExternal(JSONNode response)
@@ -2592,6 +2593,14 @@ public class War : NetworkEntity
         GameStats gameStats = GameStats.Instance;
         GameInventory gameInventory = GameInventory.Instance;
 
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+        if (gameHacks.TreatBattleResultsAsPrivateMatch)
+        {
+            isPrivateMatch = true;
+        }
+#endif
+
+
         TeamBoostItem boostReward = null;
         bool gotBoostReward = false;
 
@@ -2652,7 +2661,40 @@ public class War : NetworkEntity
         }
 
         _matchResultsPopUp.SetValues(_matchLocalData, boostReward);
-        _matchResultsPopUp.Open();
+        bool questCompletedTransactionSent = false;
+
+        if (_isVictory)
+        {
+            int levelCompleted = GameStats.Instance.SelectedLevelNumber;
+
+            if (GameStats.Instance.Mode == GameStats.Modes.SinglePlayer)
+            {
+                gameInventory.SetHigherSinglePlayerLevelCompleted(levelCompleted);
+            }
+            else if (GameStats.Instance.Mode == GameStats.Modes.Quest)
+            {
+                gameInventory.SetQuestLevelProgress(levelCompleted);
+
+                if (levelCompleted == gameInventory.GetActiveQuestMaxLevel())
+                {
+                    if (gameHacks.CompleteQuestOffline)
+                    {
+                        _questCompletePopUp.Open(_matchResultsPopUp);
+                        GameStats.Instance.ActiveQuest = Quests.None;
+                    }
+                    else
+                    {
+                        NetworkManager.Transaction(GameNetwork.Transactions.COMPLETED_QUEST_ID, onCompletedQuestResponse);
+                        questCompletedTransactionSent = true;
+                    }
+                }
+            }
+        }
+
+        if(!questCompletedTransactionSent)
+        {
+            _matchResultsPopUp.Open();
+        }
     }
 
     //Only master client uses this

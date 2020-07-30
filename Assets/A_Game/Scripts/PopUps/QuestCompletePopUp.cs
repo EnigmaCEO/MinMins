@@ -10,6 +10,7 @@ public class QuestCompletePopUp : MonoBehaviour
     [SerializeField] private Image _questIcon;
 
     private Dictionary<Quests, string> _messagesTermPerQuest = new Dictionary<Quests, string>();
+    private MatchResultsPopUp _resultsPopUp;
 
     private void Start()
     {
@@ -20,11 +21,13 @@ public class QuestCompletePopUp : MonoBehaviour
 
     public void OnOkButtonDown()
     {
+        _resultsPopUp.Open();
         Close();
     }
 
-    public void Open()
+    public void Open(MatchResultsPopUp resultsPopUp)
     {
+        _resultsPopUp = resultsPopUp;
         Quests activeQuest = GameStats.Instance.ActiveQuest;
 
         if (!_messagesTermPerQuest.ContainsKey(activeQuest))

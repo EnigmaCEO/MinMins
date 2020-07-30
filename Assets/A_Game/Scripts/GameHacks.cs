@@ -16,6 +16,7 @@ public class GameHacks : SingletonMonobehaviour<GameHacks>
     public bool ChestHit;
     public bool ForcePvpAi;
     public bool AllEnjinTeamBoostTokens;
+    public bool TreatBattleResultsAsPrivateMatch;
 
     public ValueHack SinglePlayerLevel = new ValueHack("50");
     public ValueHack AnyQuestProgress = new ValueHack("3");
