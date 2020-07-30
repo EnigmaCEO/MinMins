@@ -96,12 +96,17 @@ public class Levels : EnigmaScene
             if (mode == GameStats.Modes.Quest)
             {
                 if ((i + 1) == activeQuestLastLevel) // if level number equals max level
-                { 
-                    Sprite questIcon = (Sprite)Resources.Load<Sprite>("Images/Quests/" + activeQuest.ToString() + " Icon");
+                {
+                    string iconPath = "Images/Quests/" + activeQuest.ToString() + " Icon";
+                    Sprite questIcon = (Sprite)Resources.Load<Sprite>(iconPath);
 
                     if (questIcon != null)
                     {
                         levelGridItem.SetImageSprite(questIcon);
+                    }
+                    else
+                    {
+                        Debug.Log("Quest Icon image was not found at path: " + iconPath + " . Please check active quest is correct and image is in the right path.");
                     }
                 }
             }

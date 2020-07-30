@@ -35,8 +35,18 @@ public class QuestCompletePopUp : MonoBehaviour
         {
             _message.text = LocalizationManager.GetTermTranslation(_messagesTermPerQuest[activeQuest]);
 
-            Sprite questSprite = (Sprite)Resources.Load<Sprite>("Images/Quests/" + activeQuest.ToString() + " Reward");
-            _questIcon.sprite = questSprite;
+            string rewardImagePath = "Images/Quests/" + activeQuest.ToString() + " Reward";
+
+            Sprite questSprite = (Sprite)Resources.Load<Sprite>(rewardImagePath);
+
+            if (questSprite != null)
+            {
+                _questIcon.sprite = questSprite;
+            }
+            else
+            {
+                Debug.Log("Quest reward image was not found at path: " + rewardImagePath + " . Please check active quest is correct and image is in the right path.");
+            }
 
             gameObject.SetActive(true);
         }

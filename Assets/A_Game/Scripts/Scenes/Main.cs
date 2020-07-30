@@ -109,11 +109,16 @@ public class Main : EnigmaScene
         {
             _questButton.transform.Find("QuestName").GetComponent<Text>().text = activeQuest.ToString();
 
-            Sprite questIcon = (Sprite)Resources.Load<Sprite>("Images/Quests/" + activeQuest.ToString() + " Icon");
+            string iconPath = "Images/Quests/" + activeQuest.ToString() + " Icon";
+            Sprite questIcon = (Sprite)Resources.Load<Sprite>(iconPath);
 
             if (questIcon != null)
             {
                 _questButton.transform.Find("icon").GetComponent<Image>().sprite = questIcon;
+            }
+            else
+            {
+                Debug.Log("Quest Icon image was not found at path: " + iconPath + " . Please check active quest is correct and image is in the right path.");
             }
         }
 
