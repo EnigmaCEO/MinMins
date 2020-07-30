@@ -27,12 +27,19 @@ public class QuestCompletePopUp : MonoBehaviour
     {
         Quests activeQuest = GameStats.Instance.ActiveQuest;
 
-        _message.text = LocalizationManager.GetTermTranslation(_messagesTermPerQuest[activeQuest]);
+        if (!_messagesTermPerQuest.ContainsKey(activeQuest))
+        {
+            Debug.LogError("There is not message set for Active Quest: " + activeQuest.ToString());
+        }
+        else
+        {
+            _message.text = LocalizationManager.GetTermTranslation(_messagesTermPerQuest[activeQuest]);
 
-        Sprite questSprite = (Sprite)Resources.Load<Sprite>("Images/Quests/" + activeQuest.ToString() + " Reward");
-        _questIcon.sprite = questSprite;
+            Sprite questSprite = (Sprite)Resources.Load<Sprite>("Images/Quests/" + activeQuest.ToString() + " Reward");
+            _questIcon.sprite = questSprite;
 
-        gameObject.SetActive(true);
+            gameObject.SetActive(true);
+        }
     }
 
     public void Close()

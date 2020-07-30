@@ -2507,7 +2507,7 @@ public class War : NetworkEntity
 
         if ((status == "SUCCESS") && !GameHacks.Instance.CompletedQuestFailure)
         {
-            GameStats.Instance.ActiveQuest = Quests.None;
+            //GameStats.Instance.ActiveQuest = Quests.None;
             _questCompletePopUp.Open();
         }
         else
