@@ -538,7 +538,8 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
                 hashtable.Add("transaction_id", args.purchasedProduct.transactionID);
                 hashtable.Add("product_id", args.purchasedProduct.definition.id);
                 NetworkManager.Transaction(NetworkManager.Transactions.PURCHASE_SUCCESSFUL, hashtable, onPurchaseSuccesfulTransaction);
-            } else
+            } 
+            else
             {
                 Hashtable hashtable = new Hashtable();
                 hashtable.Add("receipt", args.purchasedProduct.receipt);

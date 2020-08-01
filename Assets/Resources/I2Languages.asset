@@ -2021,6 +2021,67 @@ MonoBehaviour:
       - 
       Flags: 0000000000
       Languages_Touch: []
+    - Term: Demon King Box Description Term
+      TermType: 0
+      Description: 
+      Languages:
+      - '* 2 items total with purchase
+
+        * 1 guaranteed rare item
+
+        * 1 random playable demon king token
+
+        * Items are immediately sent to your Enjin wallet after trade approval'
+      - "* 2 \xEDtems totales con la compra\n* 1 \xEDtem raro garantizado\n* 1 ficha
+        rey demonio jugable aleatoria\n* Los \xEDtems son inmediatamente enviados
+        a tu Billetera Enjin luego de aprobarse el canje"
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Legend Box Description Term
+      TermType: 0
+      Description: 
+      Languages:
+      - '* 4 items total with purchase
+
+        * 2 guaranteed rare items
+
+        * 2 random items (80% chance of a common item, 20% chance of a rare item)
+
+        * Items are immediately sent to your Enjin wallet after trade approval'
+      - "* 4 \xEDtems totales con la compra\n* 2 \xEDtems raros garantizados\n* 2
+        \xEDtems aleatorios (80% chance de un \xEDtem com\xFAn, 20% chance de un \xEDtem
+        raro)\n* Los \xEDtems son inmediatamente enviados a tu Billetera Enjin luego
+        de aprobarse el canje"
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Demon King Box
+      TermType: 0
+      Description: 
+      Languages:
+      - Demon King Box
+      - Caja Rey Demonio
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Legend Box
+      TermType: 0
+      Description: 
+      Languages:
+      - Legend Box
+      - Caja Leyenda
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
     CaseInsensitiveTerms: 0
     OnMissingTranslation: 1
     mTerm_AppName: 
@@ -2045,7 +2106,7 @@ MonoBehaviour:
     Google_WebServiceURL: https://script.google.com/macros/s/AKfycbw05ISkGCPtIS0hMzFD5jshgfH09mIP6BAxRKhWsA/exec
     Google_SpreadsheetKey: 1iIWCtExuyR2XXyYkJv6y83PTVMPC4FxzSITGGroefcg
     Google_SpreadsheetName: I2Loc MinMins Localization
-    Google_LastUpdatedVersion: 1595614728128
+    Google_LastUpdatedVersion: 1596244745474
     Google_Password: shalwend
     GoogleUpdateFrequency: 3
     GoogleInEditorCheckFrequency: 2

@@ -9,11 +9,11 @@ public class GameStore : EnigmaScene
 {
     [SerializeField] private int _maxBoxTierNumber = 3;
 
-    [SerializeField] private List<string> _confirmPopUpPackNames = new List<string>() { "STARTER BOX", "PREMIUM BOX", "MASTER BOX" };
-    [SerializeField] private List<string> _confirmPopUpPackDescriptions = new List<string>() { "No guarantees.", "Guarantees a Silver Unit.", "Guarantees a Gold Unit." };
+    [SerializeField] private List<string> _confirmPopUpPackNames = new List<string>() { "STARTER BOX", "PREMIUM BOX", "MASTER BOX", "DEMON KING BOX", "LEGEND BOX" };
+    [SerializeField] private List<string> _confirmPopUpPackDescriptions = new List<string>() { "No guarantees.", "Guarantees a Silver Unit.", "Guarantees a Gold Unit.", "Demon King description.", "Legend Box description." };
 
     [SerializeField] private List<Image> _confirmPopUpPackImages;
-    [SerializeField] private List<string> _confirmPopUpPackPrices = new List<string>() { "0.99", "1.99", "4.99" };
+    [SerializeField] private List<string> _confirmPopUpPackPrices = new List<string>() { "0.99", "1.99", "4.99", "10.00", "10.00" };
 
     [SerializeField] private List<int> _packTiers = new List<int> { 1, 2, 3, 3 };
 
@@ -62,7 +62,8 @@ public class GameStore : EnigmaScene
         {
             NetworkManager.Transaction(NetworkManager.Transactions.GIFT_PROGRESS, new Hashtable(), onGiftProgress);
             
-        } else
+        } 
+        else
         {
             GameObject.Find("gift_panel").gameObject.SetActive(false);
         }
@@ -96,22 +97,28 @@ public class GameStore : EnigmaScene
         {
             IAPManager iapManager = IAPManager.Instance;
             int idsCount = iapManager.IAP_IDS.Length;
-            int boxTierIndex = -1;
+            int itemIndex = -1;
             for (int i = 0; i < idsCount; i++)
             {
                 if (iapManager.IAP_IDS[i] == id)
                 {
-                    boxTierIndex = i;
+                    itemIndex = i;
                     break;
                 }
             }
 
-            int boxTier = _packTiers[boxTierIndex];
-            grantBox(boxTier, 1);
+            if (itemIndex < 4)
+            {
+                int boxTier = _packTiers[itemIndex];
+                grantBox(boxTier, 1);
+            }
+            
             _buyResultPopUp.Open("Thanks for your Purchase!");
         }
         else
+        {
             _buyResultPopUp.Open("Purchase Failed. Please try again later.");
+        }
     }
 
     public void OnPackBuyButtonDown(int packIndex)
@@ -200,15 +207,21 @@ public class GameStore : EnigmaScene
 
         int count = setupEnjinLegendsMinMinsDisplay(_minminPopUp);
         Debug.Log("count: " + count);
-        if (count == 0 || !GameNetwork.Instance.HasEnjinMinMinsToken) 
+        if (count == 0 || !GameNetwork.Instance.HasEnjinMinMinsToken)
+        {
             _minminPopUp.transform.Find("DismissButton").gameObject.SetActive(false);
+        }
 
         _minminPopUp.SetActive(true);
 
         if (GameNetwork.Instance.HasEnjinMinMinsToken)
+        {
             _minminPopUp.transform.Find("WindowMessage").GetComponent<Text>().text = LocalizationManager.GetTermTranslation("Legend Unit tokens required");
+        }
         else
+        {
             _enjinmftPopUp.transform.Find("WindowMessage").GetComponent<Text>().text = LocalizationManager.GetTermTranslation("Min-Mins Token required");
+        }
     }
 
     public void closePopup(GameObject obj)

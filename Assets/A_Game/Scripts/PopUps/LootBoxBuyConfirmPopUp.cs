@@ -35,7 +35,7 @@ public class LootBoxBuyConfirmPopUp : MonoBehaviour
 
     public void SetPrice(string price)
     {
-        _packPriceText.text = price + " USD";
+        _packPriceText.text = "$" + price + " USD";
     }
 
     public void SetPackSprite(Sprite sprite)
