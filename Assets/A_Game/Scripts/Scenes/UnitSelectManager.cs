@@ -27,6 +27,7 @@ public class UnitSelectManager : EnigmaScene
     [SerializeField] private Button _nextButton;
     [SerializeField] private Button _infoBackButton;
     [SerializeField] private Button _sceneBackButton;
+    [SerializeField] private Button _clearTeamButton;
 
     [SerializeField] private Toggle _savedTeamToggle1;
     [SerializeField] private Toggle _savedTeamToggle2;
@@ -108,6 +109,9 @@ public class UnitSelectManager : EnigmaScene
 
         _infoBackButton.onClick.AddListener(() => onInfoBackButtonDown());
         _sceneBackButton.onClick.AddListener(() => onSceneBackButtonDown());
+
+        _clearTeamButton.onClick.AddListener(() => onClearTeamButtonDown());
+        _clearTeamButton.gameObject.SetActive(false);
 
         disableUnitInfo(true);
 
@@ -234,6 +238,13 @@ public class UnitSelectManager : EnigmaScene
         SceneManager.LoadScene(GameConstants.Scenes.LEVELS);
     }
 
+    private void onClearTeamButtonDown()
+    {
+        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
+        PlayerPrefs.DeleteKey(getTeamUnitsKey());
+        SceneManager.LoadScene(GameConstants.Scenes.UNIT_SELECT);  //Reload
+    }
+
     private void onUnitFightButtonDown(string unitName)
     {
         SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
@@ -309,6 +320,7 @@ public class UnitSelectManager : EnigmaScene
         GameStats.Instance.TeamUnits[slotIndex] = unitName;
 
         disableUnitInfo();
+        activateClearButtonIfInactive();
     }
 
     private void checkTeamReady()
@@ -335,6 +347,28 @@ public class UnitSelectManager : EnigmaScene
             displaySelectUnitHelp();
         }
     }
+
+    private void activateClearButtonIfInactive()
+    {
+        if (!_clearTeamButton.gameObject.activeSelf)
+        {
+            _clearTeamButton.gameObject.SetActive(true);
+        }
+    }
+
+    //private void handleClearTeamButtonVisible()
+    //{
+    //    bool isThereUnit = false;
+    //    foreach (string unitName in GameStats.Instance.TeamUnits)
+    //    {
+    //        if (unitName != "-1")
+    //        {
+    //            isThereUnit = true;
+    //        }
+    //    }
+
+    //    _clearTeamButton.gameObject.SetActive(isThereUnit);
+    //}
 
     private void loadUnitInfo()
     {
@@ -408,6 +442,8 @@ public class UnitSelectManager : EnigmaScene
             displaySelectUnitHelp();
             return;
         }
+
+        activateClearButtonIfInactive();
 
         string[] unitNames = unitsString.Split('|');
         int unitsCount = unitNames.Length;
