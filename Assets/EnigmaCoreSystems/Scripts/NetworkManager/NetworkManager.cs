@@ -27,7 +27,7 @@ namespace Enigma.CoreSystems
             public const int ENJIN_LINKED = 15;
             public const int ENJIN_ITEM_COLLECTED_TRANSACTION = 17;
             public const int GIFT_PROGRESS = 21;
-            public const int PURCHASE_SUCCESSFUL = 22;
+            public const int PURCHASE = 22;
         }
 
         public class TransactionKeys

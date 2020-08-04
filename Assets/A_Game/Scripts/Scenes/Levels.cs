@@ -67,9 +67,9 @@ public class Levels : EnigmaScene
         }
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
-        if (gameHacks.UnlockArenas.Enabled)
+        if (gameHacks.UnlockSinglePlayerLevels.Enabled && (mode == (GameStats.Modes.SinglePlayer)))
         {
-            levelsLenght = GameHacks.Instance.UnlockArenas.ValueAsInt;
+            levelsLenght = GameHacks.Instance.UnlockSinglePlayerLevels.ValueAsInt;
         }
 #endif
 

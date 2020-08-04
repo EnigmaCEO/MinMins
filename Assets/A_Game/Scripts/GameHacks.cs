@@ -41,7 +41,7 @@ public class GameHacks : SingletonMonobehaviour<GameHacks>
     public ValueHack Damage = new ValueHack("1000");
     public ValueHack FightsWithoutAdsMaxCount = new ValueHack("2");
     public ValueHack HasPurchased = new ValueHack("True");
-    public ValueHack UnlockArenas = new ValueHack("5");
+    public ValueHack UnlockSinglePlayerLevels = new ValueHack("5");
 #endif
 
     public bool RandomizeUnitTypes;

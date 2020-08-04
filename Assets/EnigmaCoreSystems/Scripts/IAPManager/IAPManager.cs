@@ -489,25 +489,28 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
                         // This is Google's Order ID.
                         // Note that it is null when testing in the sandbox
                         // because Google's sandbox does not provide Order IDs.
-                        Debug.Log(google.transactionID);
-                        Debug.Log(google.purchaseState);
-                        Debug.Log(google.purchaseToken);
+                        Debug.Log("Google transaction Id: " + google.transactionID);
+                        Debug.Log("Google purchase state: " + google.purchaseState);
+                        Debug.Log("Google purchase token: " + google.purchaseToken);
                     }
 
                     AppleInAppPurchaseReceipt apple = productReceipt as AppleInAppPurchaseReceipt;
                     if (null != apple)
                     {
-                        Debug.Log(apple.originalTransactionIdentifier);
-                        Debug.Log(apple.subscriptionExpirationDate);
-                        Debug.Log(apple.cancellationDate);
-                        Debug.Log(apple.quantity);
+                        Debug.Log("Apple transaction Id: " + apple.originalTransactionIdentifier);
+                        Debug.Log("Apple subscription expiration date: " + apple.subscriptionExpirationDate);
+                        Debug.Log("Apple cancellation date: " + apple.cancellationDate);
+                        Debug.Log("Apple quantity: " + apple.quantity);
                     }
 
                     purchaseToken = google.purchaseToken;
                     transactionId = productReceipt.transactionID;
                     productId = productReceipt.productID;
 
-                    if(!args.purchasedProduct.definition.id.Contains(Application.identifier)) validPurchase = false;
+                    if (!args.purchasedProduct.definition.id.Contains(Application.identifier))
+                    {
+                        validPurchase = false;
+                    }
                 }
             }
             catch (IAPSecurityException)
@@ -537,7 +540,7 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
                 hashtable.Add("receipt", args.purchasedProduct.receipt);
                 hashtable.Add("transaction_id", args.purchasedProduct.transactionID);
                 hashtable.Add("product_id", args.purchasedProduct.definition.id);
-                NetworkManager.Transaction(NetworkManager.Transactions.PURCHASE_SUCCESSFUL, hashtable, onPurchaseSuccesfulTransaction);
+                NetworkManager.Transaction(NetworkManager.Transactions.PURCHASE, hashtable, onPurchaseTransaction);
             } 
             else
             {
@@ -546,7 +549,7 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
                 hashtable.Add("transaction_id", args.purchasedProduct.transactionID);
                 hashtable.Add("product_id", args.purchasedProduct.definition.id);
                 hashtable.Add("results", "fail");
-                NetworkManager.Transaction(NetworkManager.Transactions.PURCHASE_SUCCESSFUL, hashtable, onPurchaseSuccesfulTransaction);
+                NetworkManager.Transaction(NetworkManager.Transactions.PURCHASE, hashtable, onPurchaseTransaction);
             }
         }
 
@@ -557,15 +560,14 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
         return PurchaseProcessingResult.Complete;
     }
 
-    private void onPurchaseSuccesfulTransaction(JSONNode response)
+    private void onPurchaseTransaction(JSONNode response)
     {
         if (response != null)
         {
-
             JSONNode response_hash = response[0];
             string status = response_hash["status"].ToString().Trim('"');
 
-            print("onPurchaseSuccesfulTransaction -> response: "  + response.ToString() + " status: " + status);
+            print("onPurchaseTransaction -> response: " + response.ToString() + " status: " + status);
 
             if (status == "SUCCESS")
             {
@@ -574,26 +576,12 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
             }
             else
             {
-                //string term = "";
-
-                //if (status == "ERR_REGISTER")
-                //    term = "RegisterError";
-                //else if (status == "ERR_INVALID_PASSWORD")
-                //    term = "InvalidPassword";
-                //else if (status == "ERR_INVALID_USERNAME")
-                //    term = "InvalidUsername";
-                //else
-                //    term = "ServerError";
-
-                //enableLoginRegisterUI();
-                //GameLogicRef.DisplayErrorText(term);
+                
             }
         }
         else
         {
-            //enableLoginRegisterUI();
-            //GameLogicRef.DisplayErrorText("ConnectionError");
-            Debug.LogError("onPurchaseSuccesfulTransaction: CONNECTION ERROR"); 
+            Debug.LogError("onPurchaseTransaction: CONNECTION ERROR"); 
         }
     }
 
