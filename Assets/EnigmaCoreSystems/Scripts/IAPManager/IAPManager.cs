@@ -520,11 +520,29 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
             }
 #endif
 
+
             // Unlock the appropriate content here.
 #if (UNITY_ANDROID || UNITY_IOS)
+
+            Hashtable hashtable = new Hashtable();
+
+            if ((args != null) && (args.purchasedProduct != null))
+            {
+                Debug.Log("Receipt: " + args.purchasedProduct.receipt);
+
+                hashtable.Add("receipt", args.purchasedProduct.receipt);
+                hashtable.Add("transaction_id", args.purchasedProduct.transactionID);
+                hashtable.Add("product_id", (args.purchasedProduct.definition != null) ? args.purchasedProduct.definition.id : "");
+            }
+            else
+            {
+                hashtable.Add("receipt", "");
+                hashtable.Add("transaction_id", "");
+                hashtable.Add("product_id", "");
+            }
+
             if (validPurchase)
             {
-
                 /*GameOfWhales.InAppPurchased(
                                                     args.purchasedProduct.definition.id,
                                                     (float)args.purchasedProduct.metadata.localizedPrice,
@@ -534,20 +552,10 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
                                                     );
 */
 
-                Debug.Log("Receipt: " + args.purchasedProduct.receipt);
-
-                Hashtable hashtable = new Hashtable();
-                hashtable.Add("receipt", args.purchasedProduct.receipt);
-                hashtable.Add("transaction_id", args.purchasedProduct.transactionID);
-                hashtable.Add("product_id", args.purchasedProduct.definition.id);
                 NetworkManager.Transaction(NetworkManager.Transactions.PURCHASE, hashtable, onPurchaseTransaction);
             } 
             else
             {
-                Hashtable hashtable = new Hashtable();
-                hashtable.Add("receipt", args.purchasedProduct.receipt);
-                hashtable.Add("transaction_id", args.purchasedProduct.transactionID);
-                hashtable.Add("product_id", args.purchasedProduct.definition.id);
                 hashtable.Add("results", "fail");
                 NetworkManager.Transaction(NetworkManager.Transactions.PURCHASE, hashtable, onPurchaseTransaction);
             }
