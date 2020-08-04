@@ -118,21 +118,21 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
     // Update is called once per frame
     protected override void Update()
     {
-#if (UNITY_ANDROID || UNITY_IOS)
-        if (iapVendorCallbackDone && iapEnigmaCallbackDone)
-        {
-            iapVendorCallbackDone = false;
-            iapEnigmaCallbackDone = false;
-            sendToServer = true;
-        }
+//#if (UNITY_ANDROID || UNITY_IOS)
+//        if (iapVendorCallbackDone && iapEnigmaCallbackDone)
+//        {
+//            iapVendorCallbackDone = false;
+//            iapEnigmaCallbackDone = false;
+//            sendToServer = true;
+//        }
 
-        if (sendToServer)
-        {
-            Debug.Log("Sending to server...");
-            //IAPPurchaseComplete ();
-            sendToServer = false;
-        }
-#endif
+//        if (sendToServer)
+//        {
+//            Debug.Log("Sending to server...");
+//            //IAPPurchaseComplete ();
+//            sendToServer = false;
+//        }
+//#endif
     }
 
     void OnDestroy()
@@ -459,9 +459,9 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
         else
 #endif
         {
-            string purchaseToken = "";
+            //string purchaseToken = "";
             string transactionId = "";
-            string productId = "";
+            //string productId = "";
 
             // Unity IAP's validation logic is only included on these platforms.
 #if (UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX)
@@ -503,9 +503,9 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
                         Debug.Log("Apple quantity: " + apple.quantity);
                     }
 
-                    purchaseToken = google.purchaseToken;
+                    //purchaseToken = google.purchaseToken;
                     transactionId = productReceipt.transactionID;
-                    productId = productReceipt.productID;
+                    //productId = productReceipt.productID;
 
                     if (!args.purchasedProduct.definition.id.Contains(Application.identifier))
                     {

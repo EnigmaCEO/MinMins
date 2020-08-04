@@ -12,11 +12,23 @@ public class LootGridItem : MonoBehaviour
     {
         int starsContentLenght = _tierStarsContent.childCount;
         for (int i = 0; i < starsContentLenght; i++)
+        {
             _tierStarsContent.GetChild(i).GetComponent<Image>().enabled = (i < tier);
+        }
     }
 
     public void SetUnitName(string unitName)
     {
-        _unitImage.sprite = (Sprite)Resources.Load<Sprite>("Images/Units/" + unitName);
+        string fullpath = "Images/Units/" + unitName;
+        Sprite loadedSprite = (Sprite)Resources.Load<Sprite>(fullpath);
+
+        if (loadedSprite != null)
+        {
+            _unitImage.sprite = loadedSprite;
+        }
+        else
+        {
+            Debug.LogError("Sprite was not found at path: " + fullpath);
+        }
     }
 }
