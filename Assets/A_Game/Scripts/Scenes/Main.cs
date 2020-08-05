@@ -97,28 +97,34 @@ public class Main : EnigmaScene
 
         _loginModal.GetComponent<EnjinLogin>().Initialize();
 
-        if (!NetworkManager.LoggedIn && _loginModal.GetComponent<EnjinLogin>().loginUsername.text != "" && _loginModal.GetComponent<EnjinLogin>().loginPassword.text != "")
+        if (!EnigmaHacks.Instance.PreventAutoLogin)
         {
-            _loginModal.GetComponent<EnjinLogin>().loginSubmit();
+            if (!NetworkManager.LoggedIn && _loginModal.GetComponent<EnjinLogin>().loginUsername.text != "" && _loginModal.GetComponent<EnjinLogin>().loginPassword.text != "")
+            {
+                _loginModal.GetComponent<EnjinLogin>().loginSubmit();
+            }
         }
 
-        Quests activeQuest = GameStats.Instance.ActiveQuest;
-        _questButton.SetActive(activeQuest != Quests.None);
-
-        if (_questButton.activeInHierarchy)
+        if (loggedIn)
         {
-            _questButton.transform.Find("QuestName").GetComponent<Text>().text = activeQuest.ToString();
+            Quests activeQuest = GameStats.Instance.ActiveQuest;
+            _questButton.SetActive(activeQuest != Quests.None);
 
-            string iconPath = "Images/Quests/" + activeQuest.ToString() + " Icon";
-            Sprite questIcon = (Sprite)Resources.Load<Sprite>(iconPath);
+            if (_questButton.activeInHierarchy)
+            {
+                _questButton.transform.Find("QuestName").GetComponent<Text>().text = activeQuest.ToString();
 
-            if (questIcon != null)
-            {
-                _questButton.transform.Find("icon").GetComponent<Image>().sprite = questIcon;
-            } 
-            else
-            {
-                Debug.Log("Quest Icon image was not found at path: " + iconPath + " . Please check active quest is correct and image is in the right path.");
+                string iconPath = "Images/Quests/" + activeQuest.ToString() + " Icon";
+                Sprite questIcon = (Sprite)Resources.Load<Sprite>(iconPath);
+
+                if (questIcon != null)
+                {
+                    _questButton.transform.Find("icon").GetComponent<Image>().sprite = questIcon;
+                }
+                else
+                {
+                    Debug.Log("Quest Icon image was not found at path: " + iconPath + " . Please check active quest is correct and image is in the right path.");
+                }
             }
         }
 
@@ -327,6 +333,8 @@ public class Main : EnigmaScene
 
     public void Logout()
     {
+        _questButton.gameObject.SetActive(false);
+
         SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
 
         NetworkManager.Logout();

@@ -16,6 +16,7 @@ public class EnigmaHacks : SingletonMonobehaviour<EnigmaHacks>
 
     public bool FailHeartBeat;
     public bool MuteMusic;
+    public bool PreventAutoLogin;
 
     public ValueHack Language = new ValueHack("Spanish");
     //public ValueHack FreezeLoadingScreenDelay = new ValueHack("5");
