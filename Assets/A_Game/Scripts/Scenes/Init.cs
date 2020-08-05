@@ -62,6 +62,9 @@ public class Init : EnigmaScene
         //handleNotifications();
         SoundManager.Play("intro", SoundManager.AudioTypes.Sfx);
 
+        InventoryManager inventoryManager = InventoryManager.Instance;  //To have it ready.
+        GameInventory gameInventory = GameInventory.Instance; //To have it ready.
+
        /* _kinWrapper.Initialize((obj, val) => {
             Debug.Log(obj.ToString());
        

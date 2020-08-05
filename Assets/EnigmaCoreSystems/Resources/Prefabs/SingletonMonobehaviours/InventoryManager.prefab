@@ -43,4 +43,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea3f021155211164097560cfb362aaec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PersistBetweenScenes: 0
+  PersistBetweenScenes: 1

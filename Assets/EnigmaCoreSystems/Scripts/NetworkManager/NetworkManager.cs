@@ -476,7 +476,7 @@ namespace Enigma.CoreSystems
                 externalCallback(response);
 
 #if UNITY_ANDROID
-                EtceteraAndroid.showAlert(LocalizationManager.GetTermTranslation("Network Error"), LocalizationManager.GetTermTranslation("Error connecting to the server. Restart the app and retry."), LocalizationManager.GetTermTranslation("OK"));
+                //EtceteraAndroid.showAlert(LocalizationManager.GetTermTranslation("Network Error"), LocalizationManager.GetTermTranslation("Error connecting to the server. Restart the app and retry."), LocalizationManager.GetTermTranslation("OK"));
 #endif
 
 #if UNITY_IPHONE

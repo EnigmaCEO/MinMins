@@ -43,7 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0af6d16bc59799145a73fa60c5a6013b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PersistBetweenScenes: 0
+  PersistBetweenScenes: 1
   _experienceNeededPerUnitLevel: 000000000a0000001e000000460000009600000036010000
   _maxArenaLevel: 50
   _unitsNecessaryToBattle: 5

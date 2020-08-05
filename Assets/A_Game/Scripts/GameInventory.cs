@@ -1,4 +1,5 @@
 ﻿using GameEnums;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -82,7 +83,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
     public int GetRandomTier()
     {
-        return Random.Range(Tiers.BRONZE, Tiers.GOLD + 1);
+        return UnityEngine.Random.Range(Tiers.BRONZE, Tiers.GOLD + 1);
     }
 
     public bool HasEnoughUnitsForBattle()
@@ -629,7 +630,14 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         //Set default values ========================================================================
         inventoryManager.AddItem(GroupNames.STATS, ItemKeys.SINGLE_PLAYER_LEVEL, 0);       
         inventoryManager.AddItem(GroupNames.STATS, ItemKeys.ENJIN_ATTEMPTS, 5);
-        inventoryManager.AddItem(GroupNames.QUESTS_PROGRESS, GameStats.Instance.ActiveQuest.ToString(), 0);
+
+        foreach (Quests quest in Enum.GetValues(typeof(Quests)))
+        {
+            if (quest != Quests.None)
+            {
+                inventoryManager.AddItem(GroupNames.QUESTS_PROGRESS, quest.ToString(), 0);
+            }
+        }
 
         for (int tier = 1; tier <= _lootBoxTiersAmount; tier++)
         {
