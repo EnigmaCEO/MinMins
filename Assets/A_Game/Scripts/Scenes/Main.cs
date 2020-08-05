@@ -222,29 +222,38 @@ public class Main : EnigmaScene
 
     private void onLinkedTransaction(SimpleJSON.JSONNode response)
     {
-        SimpleJSON.JSONNode response_hash = response[0];
-        Debug.Log(response_hash);
-        string status = response_hash["status"].ToString().Trim('"');
-
-        if (status == "SUCCESS")
+        if (NetworkManager.CheckInvalidServerResponse(response, nameof(onLinkedTransaction)))
         {
-            string enjinCode = response_hash["user_data"]["enjin_code"].ToString().Trim('"');
-            if (enjinCode == "null")
-            {
-                GameNetwork.Instance.IsEnjinLinked = true;
-                //enjinSupport.gameObject.SetActive(true);
-                _enjinIcon.SetActive(true);
-            
-                updateEnjinItems(response_hash);
-
-                DisplayEnjinItems();
-
-                if (_enjinWindow)
-                    _enjinWindow.gameObject.SetActive(false);
-            }
-            else if ((_enjinWindow  != null) && _enjinWindow.GetActive())
-                StartCoroutine(handleEnjinLinkingCheck(_checkEnjinLinkingDelay));
+            return;
         }
+
+        SimpleJSON.JSONNode response_hash = response[0];
+
+        string enjinCode = response_hash["user_data"]["enjin_code"].ToString().Trim('"');
+        if (enjinCode == "null")
+        {
+            GameNetwork.Instance.IsEnjinLinked = true;
+            //enjinSupport.gameObject.SetActive(true);
+
+            if (_enjinIcon != null)
+            {
+                _enjinIcon.SetActive(true);
+            }
+
+            updateEnjinItems(response_hash);
+
+            DisplayEnjinItems();
+
+            if (_enjinWindow != null)
+            {
+                _enjinWindow.gameObject.SetActive(false);
+            }
+        }
+        else if ((_enjinWindow != null) && _enjinWindow.GetActive())
+        {
+            StartCoroutine(handleEnjinLinkingCheck(_checkEnjinLinkingDelay));
+        }
+
         //else
         //{
         //    _errorText.text = UIManager.GetLocalizedText("Unable to check Enjin Linking at the moment. Retrying...");

@@ -378,6 +378,40 @@ namespace Enigma.CoreSystems
             Instance.StartCoroutine(httpRequest(id, hashtable, externalCallback, localCallback, texture));
         }
 
+        static public bool CheckInvalidServerResponse(JSONNode response, string transactionName)
+        {
+            bool isInvalid = false;
+
+            if (response == null)
+            {
+                Debug.LogError("Transaction response " + transactionName + " transaction got null.");
+                isInvalid = true;
+            }
+            else
+            {
+                Debug.Log("Transaction response " + transactionName + " was: " + response.ToString());
+
+                JSONNode response_hash = response[0];
+                if (response_hash[TransactionKeys.STATUS] == null)
+                {
+                    Debug.LogError("Transaction response " + transactionName + " didn't get status.");
+                    isInvalid = true;
+                }
+                else if (response_hash[TransactionKeys.STATUS].ToString().Trim('"') != "SUCCESS")
+                {
+                    Debug.LogError("Transaction response " + transactionName + " was NOT successful.");
+                    isInvalid = true;
+                }
+            }
+
+            if (!isInvalid)
+            {
+                Debug.Log("Transaction response " + transactionName + " was successful.");
+            }
+
+            return isInvalid;
+        }
+
         static public string GetRandomOnlineName()
         {
             return onlineName[Random.Range(0, onlineName.Length)];
