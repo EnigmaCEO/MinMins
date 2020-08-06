@@ -1,4 +1,5 @@
 ﻿using Enigma.CoreSystems;
+using GameEnums;
 using SimpleJSON;
 using System.Collections;
 using System.Collections.Generic;
@@ -307,6 +308,68 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         NetworkManager.OnDisconnectedFromNetworkCallback += onDisconnectedFromNetwork;
 
         UnityEngine.SceneManagement.SceneManager.sceneLoaded += onSceneLoaded;
+    }
+    public void UpdateEnjinGoodies(JSONNode response_hash)
+    {
+        GameStats gameStats = GameStats.Instance;
+        gameStats.ActiveQuest = (Quests)response_hash[NetworkManager.TransactionKeys.USER_DATA][GameNetwork.TransactionKeys.QUEST].AsInt;
+
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+        if (GameHacks.Instance.SetLoginQuest.Enabled)
+        {
+            gameStats.ActiveQuest = GameHacks.Instance.SetLoginQuest.GetValueAsEnum<Quests>();
+        }
+#endif
+
+        HasEnjinMft = checkTokenAvailable(response_hash, NetworkManager.TransactionKeys.ENJIN_MFT);
+        HasEnjinMinMinsToken = checkTokenAvailable(response_hash, NetworkManager.TransactionKeys.MINMINS_TOKEN);
+        HasEnjinEnigmaToken = checkTokenAvailable(response_hash, NetworkManager.TransactionKeys.ENIGMA_TOKEN);
+
+        HasEnjinBryana = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.ENJIN_BRYANA);
+        HasEnjinMaxim = checkTokenAvailable(response_hash, TransactionKeys.ENJIN_MAXIM);
+        HasEnjinSimon = checkTokenAvailable(response_hash, TransactionKeys.ENJIN_SIMON);
+        HasEnjinTassio = checkTokenAvailable(response_hash, TransactionKeys.ENJIN_TASSIO);
+        HasEnjinWitek = checkTokenAvailable(response_hash, TransactionKeys.ENJIN_WITEK);
+
+        HasEnjinEsther = checkTokenAvailable(response_hash, TransactionKeys.ENJIN_ESTHER);
+        HasEnjinAlex = checkTokenAvailable(response_hash, TransactionKeys.ENJIN_ALEX);
+        HasEnjinLizz = checkTokenAvailable(response_hash, TransactionKeys.ENJIN_LIZZ);
+        HasEnjinEvan = checkTokenAvailable(response_hash, TransactionKeys.ENJIN_EVAN);
+        HasEnjinBrad = checkTokenAvailable(response_hash, TransactionKeys.ENJIN_BRAD);
+
+        HasKnightBomber = checkTokenAvailable(response_hash, TransactionKeys.KNIGHT_BOMBER);
+        HasKnightDestroyer = checkTokenAvailable(response_hash, TransactionKeys.KNIGHT_DESTROYER);
+        HasKnightHealer = checkTokenAvailable(response_hash, TransactionKeys.KNIGHT_HEALER);
+        HasKnightScout = checkTokenAvailable(response_hash, TransactionKeys.KNIGHT_SCOUT);
+        HasKnightTank = checkTokenAvailable(response_hash, TransactionKeys.KNIGHT_TANK);
+
+        HasDemonBomber = checkTokenAvailable(response_hash, TransactionKeys.DEMON_BOMBER);
+        HasDemonDestroyer = checkTokenAvailable(response_hash, TransactionKeys.DEMON_DESTROYER);
+        HasDemonHealer = checkTokenAvailable(response_hash, TransactionKeys.DEMON_HEALER);
+        HasDemonScout = checkTokenAvailable(response_hash, TransactionKeys.DEMON_SCOUT);
+        HasDemonTank = checkTokenAvailable(response_hash, TransactionKeys.DEMON_TANK);
+
+        CheckAllEnjinTeamBoostTokens(response_hash);
+    }
+
+    private bool checkTokenAvailable(SimpleJSON.JSONNode response_hash, string transactionKey)
+    {
+        string tokenAvailable = "";
+        SimpleJSON.JSONNode tokenNode = response_hash[NetworkManager.TransactionKeys.USER_DATA][transactionKey];
+
+        if (tokenNode != null)
+        {
+            tokenAvailable = tokenNode;
+        }
+
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+        if (GameHacks.Instance.EnableAllEnjinTokens)
+        {
+            tokenAvailable = "1";
+        }
+#endif
+
+        return (tokenAvailable == "1");
     }
 
     private void onPlayerDisconnected(int disconnectedPlayerId)

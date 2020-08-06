@@ -105,32 +105,9 @@ public class Main : EnigmaScene
             }
         }
 
-        if (loggedIn)
-        {
-            Quests activeQuest = GameStats.Instance.ActiveQuest;
-            _questButton.SetActive(activeQuest != Quests.None);
-
-            if (_questButton.activeInHierarchy)
-            {
-                _questButton.transform.Find("QuestName").GetComponent<Text>().text = activeQuest.ToString();
-
-                string iconPath = "Images/Quests/" + activeQuest.ToString() + " Icon";
-                Sprite questIcon = (Sprite)Resources.Load<Sprite>(iconPath);
-
-                if (questIcon != null)
-                {
-                    _questButton.transform.Find("icon").GetComponent<Image>().sprite = questIcon;
-                }
-                else
-                {
-                    Debug.Log("Quest Icon image was not found at path: " + iconPath + " . Please check active quest is correct and image is in the right path.");
-                }
-            }
-        }
-
         //_kinPopUp.SetActive(true);
 
-        DisplayEnjinItems();
+        UpdateEnjinDisplay();
 
         if (loggedIn)
         {
@@ -199,7 +176,8 @@ public class Main : EnigmaScene
         SceneManager.LoadScene(GameConstants.Scenes.LEVELS);
     }
 
-    public void StartEnjinQR(string enjinCode) {
+    public void StartEnjinQR(string enjinCode) 
+    {
         _enjinWindow.SetActive(true);
         _enjinWindow.GetComponent<EnjinQRManager>().ShowImage(enjinCode);
         Debug.Log("Checking server for Link1");
@@ -246,9 +224,9 @@ public class Main : EnigmaScene
                 _enjinIcon.SetActive(true);
             }
 
-            updateEnjinItems(response_hash);
-
-            DisplayEnjinItems();
+            //updateEnjinItems(response_hash);
+            GameNetwork.Instance.UpdateEnjinGoodies(response_hash);
+            UpdateEnjinDisplay();
 
             if (_enjinWindow != null)
             {
@@ -268,62 +246,63 @@ public class Main : EnigmaScene
         //}
     }
 
-    private void updateEnjinItems(SimpleJSON.JSONNode response_hash)
-    {
+ 
+    //private void updateEnjinItems(SimpleJSON.JSONNode response_hash)
+    //{
 
-        SimpleJSON.JSONNode userData = response_hash["user_data"];
+    //    SimpleJSON.JSONNode userData = response_hash["user_data"];
 
-        //GameStats.Instance.HasEnjinWeapon = (userData["enjin_hammer"].AsInt == 1);
-        //GameStats.Instance.HasEnjinShield = (userData["enjin_shield"].AsInt == 1);
-        //GameStats.Instance.HasEnjinEnigmaToken = (userData["enigma_token"].AsInt == 1);
-
-
-        //Enjin gear Hack =============================
-        //PlayerStats.HasEnjinWeapon = true;  
-        //PlayerStats.HasEnjinShield = true;
-        //PlayerStats.HasEnjinShalwendToken = true;
-        //PlayerStats.HasEnjinEnigmaToken = true;
-        //=============================================
-
-        /*if (PlayerStats.HasEnjinEnigmaToken)
-        {
-            enigmaMFT.gameObject.SetActive(true);
-        }
+    //    //GameStats.Instance.HasEnjinWeapon = (userData["enjin_hammer"].AsInt == 1);
+    //    //GameStats.Instance.HasEnjinShield = (userData["enjin_shield"].AsInt == 1);
+    //    //GameStats.Instance.HasEnjinEnigmaToken = (userData["enigma_token"].AsInt == 1);
 
 
-        if (PlayerStats.HasEnjinShalwendToken)
-        {
-            for (int i = 0; i < data.m_BoughtWeapon.Length; i++)
-                data.m_BoughtWeapon[i] = 1;
+    //    //Enjin gear Hack =============================
+    //    //PlayerStats.HasEnjinWeapon = true;  
+    //    //PlayerStats.HasEnjinShield = true;
+    //    //PlayerStats.HasEnjinShalwendToken = true;
+    //    //PlayerStats.HasEnjinEnigmaToken = true;
+    //    //=============================================
 
-            for (int i = 0; i < data.m_BoughtShield.Length; i++)
-                data.m_BoughtShield[i] = 1;
+    //    /*if (PlayerStats.HasEnjinEnigmaToken)
+    //    {
+    //        enigmaMFT.gameObject.SetActive(true);
+    //    }
 
-            shalwendMFT.gameObject.SetActive(true);
-        }
 
-        if (PlayerStats.HasEnjinWeapon)
-        {
-            if (data.m_Weapon == 3)
-                data.m_Weapon = 4;
+    //    if (PlayerStats.HasEnjinShalwendToken)
+    //    {
+    //        for (int i = 0; i < data.m_BoughtWeapon.Length; i++)
+    //            data.m_BoughtWeapon[i] = 1;
 
-            data.m_BoughtWeapon[3] = 1;
+    //        for (int i = 0; i < data.m_BoughtShield.Length; i++)
+    //            data.m_BoughtShield[i] = 1;
 
-            enjinHammer.gameObject.SetActive(true);
-        }
+    //        shalwendMFT.gameObject.SetActive(true);
+    //    }
 
-        if (PlayerStats.HasEnjinShield)
-        {
-            if (data.m_Shield == 3)
-                data.m_Shield = 4;
+    //    if (PlayerStats.HasEnjinWeapon)
+    //    {
+    //        if (data.m_Weapon == 3)
+    //            data.m_Weapon = 4;
 
-            data.m_BoughtShield[3] = 1;
+    //        data.m_BoughtWeapon[3] = 1;
 
-            enjinShield.gameObject.SetActive(true);
-        }
+    //        enjinHammer.gameObject.SetActive(true);
+    //    }
 
-        data.SaveData();*/
-    }
+    //    if (PlayerStats.HasEnjinShield)
+    //    {
+    //        if (data.m_Shield == 3)
+    //            data.m_Shield = 4;
+
+    //        data.m_BoughtShield[3] = 1;
+
+    //        enjinShield.gameObject.SetActive(true);
+    //    }
+
+    //    data.SaveData();*/
+    //}
 
     public void closeQRDialog()
     {
@@ -359,9 +338,32 @@ public class Main : EnigmaScene
         }
     }
     
-    public void DisplayEnjinItems() 
+    public void UpdateEnjinDisplay() 
     {
         GameNetwork gameNetwork = GameNetwork.Instance;
+
+        if (NetworkManager.LoggedIn)
+        {
+            Quests activeQuest = GameStats.Instance.ActiveQuest;
+            _questButton.SetActive(activeQuest != Quests.None);
+
+            if (_questButton.activeInHierarchy)
+            {
+                _questButton.transform.Find("QuestName").GetComponent<Text>().text = activeQuest.ToString();
+
+                string iconPath = "Images/Quests/" + activeQuest.ToString() + " Icon";
+                Sprite questIcon = (Sprite)Resources.Load<Sprite>(iconPath);
+
+                if (questIcon != null)
+                {
+                    _questButton.transform.Find("icon").GetComponent<Image>().sprite = questIcon;
+                }
+                else
+                {
+                    Debug.Log("Quest Icon image was not found at path: " + iconPath + " . Please check active quest is correct and image is in the right path.");
+                }
+            }
+        }
 
         if (gameNetwork.IsEnjinLinked)
         {

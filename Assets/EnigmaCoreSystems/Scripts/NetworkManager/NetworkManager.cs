@@ -1210,15 +1210,30 @@ namespace Enigma.CoreSystems
             {
                 Debug.Log("GetRoomCustomProperty -> PhotonNetwork.room.CustomProperties.ToStringFull(): " + PhotonNetwork.room.CustomProperties.ToStringFull());
 
-                if (PhotonNetwork.room.CustomProperties.ContainsKey(key))
+                if (PhotonNetwork.room != null)
                 {
-                    return PhotonNetwork.room.CustomProperties[key].ToString();
+                    if (PhotonNetwork.room.CustomProperties != null)
+                    {
+                        if (PhotonNetwork.room.CustomProperties.ContainsKey(key))
+                        {
+                            return PhotonNetwork.room.CustomProperties[key].ToString();
+                        }
+                        else
+                        {
+                            Debug.LogError("GetRoomCustomProperty -> There is no online room property with key: " + key);
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogError("GetRoomCustomProperty -> Room custom properties not found not found.");
+                    }
                 }
                 else
                 {
-                    Debug.Log("GetRoomCustomProperty -> There is no online room property with key: " + key);
-                    return "";
+                    Debug.LogError("GetRoomCustomProperty -> Room not found.");
                 }
+                    
+                return "";
             }
         }
 

@@ -276,33 +276,45 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     {
         Dictionary<string, double> specialRarities = new Dictionary<string, double>();
         foreach (UnitRarity rarity in _unitSpecialRarities)
+        {
             specialRarities.Add(rarity.UnitName, (double)rarity.Rarity);
+        }
 
         List<string> unitPicks = null;
         LootBoxManager lootBoxManager = LootBoxManager.Instance;
         if (boxTier == Tiers.BRONZE)
+        {
             unitPicks = lootBoxManager.PickRandomizedNames(_lootBoxSize, true, null, specialRarities);
+        }
         else
         {
             int specialRarityAmountToPick = _lootBoxSize - _guaranteedUnitTierAmount;
             unitPicks = lootBoxManager.PickRandomizedNames(specialRarityAmountToPick, true, null, specialRarities);
             List<string> guaranteedTierUnits = null;
             if (boxTier == Tiers.SILVER)
+            {
                 guaranteedTierUnits = _tierSilver_units;
+            }
             else //tier 3 (GOLD)
+            {
                 guaranteedTierUnits = _tierGold_units;
+            }
 
             foreach (string pick in unitPicks)
             {
                 if (guaranteedTierUnits.Contains(pick))
+                {
                     guaranteedTierUnits.Remove(pick);  // Remove so guaranted unit pick cannot be already in the default rarity pick
+                }
             }
 
             List<string> guaranteedPicks = new List<string>();
             guaranteedPicks = lootBoxManager.PickRandomizedNames(_guaranteedUnitTierAmount, true, guaranteedTierUnits, null, true);
 
             foreach (string guaranteedUnitName in guaranteedPicks)
+            {
                 unitPicks.Add(guaranteedUnitName);
+            }
         }
         //List<int> lootBoxIndexes = LootBoxManager.Instance.PickRandomizedIndexes(lootBoxSize, false, _defaultRarityIndexes, specialRarities); //test
 
@@ -317,7 +329,9 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
                 print("Added " + _expToAddOnDuplicateUnit + " exp to unit " + unitName);
             }
             else
+            {
                 AddUnit(unitName, 0);
+            }
         }
 
         SaveUnits();
@@ -591,9 +605,13 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         {
             float rarity = tierBronze_rarity;
             if (i > _lastTierSilver_unitNumber)
+            {
                 rarity = tierGold_rarity;
+            }
             else if (i > _lastTierBronze_unitNumber)
+            {
                 rarity = tierSilver_rarity;
+            }
 
             _unitSpecialRarities.Add(new UnitRarity(i.ToString(), rarity));
         }
@@ -675,6 +693,12 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
             {
                 int tier = int.Parse(keyTerms[1]);
                 int tierAmount = int.Parse((string)entry.Value);
+
+                if (tier == 1)
+                {
+                    tierAmount = 100;
+                }
+
                 //print("LoadData -> box tier: " + tier + " amount: " + tierAmount);
                 inventoryManager.UpdateItem(GroupNames.LOOT_BOXES, tier.ToString(), tierAmount, false);
 

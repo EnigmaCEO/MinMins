@@ -5,12 +5,11 @@ using UnityEngine;
 public class EnigmaHacks : SingletonMonobehaviour<EnigmaHacks>
 {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
-    public bool EnjinIdNotNull;
-    public bool EnjinCodeNotNull;
-    public bool EnjinLinked;
     public bool ByPassIAPReceiptCheck;
     public bool ResetFileManagerAtStart;
 
+    public ValueHack EnjinIdIsNull = new ValueHack("false");  
+    public ValueHack EnjinCodeIsNull = new ValueHack("false"); //If they have Id and code is null, then they are linked
     public ValueHack HeartBeatDelay = new ValueHack("3");
 #endif
 

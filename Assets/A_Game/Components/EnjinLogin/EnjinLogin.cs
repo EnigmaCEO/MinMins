@@ -274,14 +274,6 @@ public class EnjinLogin : MonoBehaviour
         GameStats gameStats = GameStats.Instance;
 
         gameStats.HasPurchased = (response_hash[NetworkManager.TransactionKeys.PURCHASED].AsInt == 1);
-        gameStats.ActiveQuest = (Quests)response_hash[NetworkManager.TransactionKeys.USER_DATA][GameNetwork.TransactionKeys.QUEST].AsInt;
-
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
-        if (GameHacks.Instance.ForceQuest.Enabled)
-        {
-            gameStats.ActiveQuest = GameHacks.Instance.ForceQuest.GetValueAsEnum<Quests>();
-        }
-#endif
 
         GameNetwork gameNetwork = GameNetwork.Instance;
 
@@ -292,26 +284,30 @@ public class EnjinLogin : MonoBehaviour
         string enjinId = response_hash[NetworkManager.TransactionKeys.USER_DATA][NetworkManager.TransactionKeys.ENJIN_ID].ToString().Trim('"');
 
         Debug.Log("Enjin ID: " + enjinId);
-        bool enjinIdNotNullHack = false;
+        bool enjinIdNull = (enjinId == "null");
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
         EnigmaHacks enigmaHacks = EnigmaHacks.Instance;
-        enjinIdNotNullHack = enigmaHacks.EnjinIdNotNull;
+        if (enigmaHacks.EnjinIdIsNull.Enabled)
+        {
+            enjinIdNull = enigmaHacks.EnjinIdIsNull.ValueAsBool;
+        }
 #endif
 
-        if ((enjinId != "null") || enjinIdNotNullHack)
+        if (!enjinIdNull)
         {
-
             string enjinCode = response_hash[NetworkManager.TransactionKeys.USER_DATA][NetworkManager.TransactionKeys.ENJIN_CODE].ToString().Trim('"');
             Debug.Log("Link Code: " + enjinCode);
 
-            bool enjinCodeNotNull = false;
+            bool enjinCodeNull = (enjinCode == "null");
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
-            enjinCodeNotNull = enigmaHacks.EnjinCodeNotNull;
+            if (enigmaHacks.EnjinCodeIsNull.Enabled)
+            {
+                enjinCodeNull = enigmaHacks.EnjinIdIsNull.ValueAsBool;
+            }
 #endif
-
-            if ((enjinCode != "null") || enjinCodeNotNull)
+            if (!enjinCodeNull)
             {
                 GameObject.Find("/Main").GetComponent<Main>().StartEnjinQR(enjinCode);
             }
@@ -321,39 +317,11 @@ public class EnjinLogin : MonoBehaviour
                 gameNetwork.IsEnjinLinked = true;
             }
 
-            gameNetwork.HasEnjinMft = checkTokenAvailable(response_hash, NetworkManager.TransactionKeys.ENJIN_MFT);
-            gameNetwork.HasEnjinMinMinsToken = checkTokenAvailable(response_hash, NetworkManager.TransactionKeys.MINMINS_TOKEN);
-            gameNetwork.HasEnjinEnigmaToken = checkTokenAvailable(response_hash, NetworkManager.TransactionKeys.ENIGMA_TOKEN);
-
-            gameNetwork.HasEnjinBryana = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.ENJIN_BRYANA);
-            gameNetwork.HasEnjinMaxim = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.ENJIN_MAXIM);
-            gameNetwork.HasEnjinSimon = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.ENJIN_SIMON);
-            gameNetwork.HasEnjinTassio = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.ENJIN_TASSIO);
-            gameNetwork.HasEnjinWitek = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.ENJIN_WITEK);
-
-            gameNetwork.HasEnjinEsther = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.ENJIN_ESTHER);
-            gameNetwork.HasEnjinAlex = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.ENJIN_ALEX);
-            gameNetwork.HasEnjinLizz = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.ENJIN_LIZZ);
-            gameNetwork.HasEnjinEvan = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.ENJIN_EVAN);
-            gameNetwork.HasEnjinBrad = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.ENJIN_BRAD);
-
-            gameNetwork.HasKnightBomber = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.KNIGHT_BOMBER);
-            gameNetwork.HasKnightDestroyer = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.KNIGHT_DESTROYER);
-            gameNetwork.HasKnightHealer = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.KNIGHT_HEALER);
-            gameNetwork.HasKnightScout = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.KNIGHT_SCOUT);
-            gameNetwork.HasKnightTank = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.KNIGHT_TANK);
-
-            gameNetwork.HasDemonBomber = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.DEMON_BOMBER);
-            gameNetwork.HasDemonDestroyer = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.DEMON_DESTROYER);
-            gameNetwork.HasDemonHealer = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.DEMON_HEALER);
-            gameNetwork.HasDemonScout = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.DEMON_SCOUT);
-            gameNetwork.HasDemonTank = checkTokenAvailable(response_hash, GameNetwork.TransactionKeys.DEMON_TANK);
-
-            gameNetwork.CheckAllEnjinTeamBoostTokens(response_hash);
+            GameNetwork.Instance.UpdateEnjinGoodies(response_hash);
 
             JSONArray trainingRewards = response_hash[NetworkManager.TransactionKeys.REWARDS] as JSONArray;
-            
-            foreach (JSONNode item in trainingRewards) 
+
+            foreach (JSONNode item in trainingRewards)
             {
                 Debug.Log("training rewards: " + item["level"].ToString());
                 int level = int.Parse(item["level"].ToString().Trim('"'));
@@ -363,34 +331,14 @@ public class EnjinLogin : MonoBehaviour
         else
             print("User is not using Crypto.");
 
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
-        if (enigmaHacks.EnjinLinked)
-        {
-            GameNetwork.Instance.IsEnjinLinked = true;
-        }
-#endif
+//#if DEVELOPMENT_BUILD || UNITY_EDITOR
+//        if (enigmaHacks.EnjinLinked)
+//        {
+//            GameNetwork.Instance.IsEnjinLinked = true;
+//        }
+//#endif
 
         GameObject.Find("/Main").GetComponent<Main>().Init();
-    }
-
-    private bool checkTokenAvailable(SimpleJSON.JSONNode response_hash, string transactionKey)
-    {
-        string tokenAvailable = "";
-        SimpleJSON.JSONNode tokenNode = response_hash[NetworkManager.TransactionKeys.USER_DATA][transactionKey];
-
-        if (tokenNode != null)
-        {
-            tokenAvailable = tokenNode;
-        }
-
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
-        if (GameHacks.Instance.EnableAllEnjinTokens)
-        {
-            tokenAvailable = "1";
-        }
-#endif
-
-        return (tokenAvailable == "1");
     }
 
     private void onLogin(SimpleJSON.JSONNode response)

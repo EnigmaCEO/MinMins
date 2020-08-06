@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class LootBoxManager : SingletonMonobehaviour<LootBoxManager>
@@ -9,8 +10,11 @@ public class LootBoxManager : SingletonMonobehaviour<LootBoxManager>
     public List<string> PickRandomizedNames(int amountToPick, bool cannotRepeat, List<string> namesWithDefaultRarity, Dictionary<string, double> namesWithSpecialRarity = null, bool forbidDefaultRarityDuplicateOption = true)
     {
         List<string> randomizedNames = new List<string>();
+
         if (amountToPick <= 0)
+        {
             return randomizedNames;
+        }
 
         bool defaultListIsValid = (namesWithDefaultRarity != null) && (namesWithDefaultRarity.Count > 0);
         bool specialListValid = (namesWithSpecialRarity != null) && (namesWithSpecialRarity.Count > 0);
@@ -19,9 +23,11 @@ public class LootBoxManager : SingletonMonobehaviour<LootBoxManager>
         {
             List<string> duplicateCheckList = new List<string>();
             foreach (string itemName in namesWithDefaultRarity)
-            { 
+            {
                 if (!duplicateCheckList.Contains(itemName))
+                {
                     duplicateCheckList.Add(itemName);
+                }
                 else
                 {
                     Debug.LogError("Default rarity list has a duplicate: " + itemName);
@@ -73,7 +79,9 @@ public class LootBoxManager : SingletonMonobehaviour<LootBoxManager>
         {
             double specialRarityTotal = 0.000f;
             foreach (float specialRarity in namesWithSpecialRarity.Values)
+            {
                 specialRarityTotal += specialRarity;
+            }
 
             specialRarityTotal = System.Math.Round(specialRarityTotal, _decimalsForRaritySumChecks);
 
@@ -106,10 +114,14 @@ public class LootBoxManager : SingletonMonobehaviour<LootBoxManager>
 
         //Create copies so originals are not modified.
         if (defaultListIsValid)
+        {
             defaultList = new List<string>(namesWithDefaultRarity);
+        }
 
-        if(specialListValid)
+        if (specialListValid)
+        {
             specialList = new Dictionary<string, double>(namesWithSpecialRarity);
+        }
 
         for (int i = 0; i < amountToPick; i++)
         {
@@ -119,15 +131,23 @@ public class LootBoxManager : SingletonMonobehaviour<LootBoxManager>
             {
                 double specialRarityCheckSum = 0;
                 double randomValue = (double)Random.Range(0.0f, 1.0f);
+                int specialListCount = specialList.Count;
+                int count = 0;
 
-                foreach (KeyValuePair<string, double> entry in specialList)
+                foreach(string unitName in specialList.Keys)
                 {
-                    specialRarityCheckSum += entry.Value;
-                    if (randomValue <= specialRarityCheckSum)
+                    count++;
+
+                    double rarity = specialList[unitName];
+                    specialRarityCheckSum += rarity;
+                    if ((randomValue <= specialRarityCheckSum) || (count == specialListCount))
                     {
-                        randomizedNames.Add(entry.Key);
+                        randomizedNames.Add(unitName);
+
                         if (cannotRepeat)
-                            specialList.Remove(entry.Key);
+                        {
+                            specialList.Remove(unitName);
+                        }
 
                         nameWasSelected = true;
                         break;
@@ -139,8 +159,10 @@ public class LootBoxManager : SingletonMonobehaviour<LootBoxManager>
             {
                 string nameToAdd = defaultList[Random.Range(0, defaultList.Count)];
 
-                if(cannotRepeat)
+                if (cannotRepeat)
+                {
                     defaultList.Remove(nameToAdd);
+                }
 
                 randomizedNames.Add(nameToAdd);
             }
