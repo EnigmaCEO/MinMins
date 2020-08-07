@@ -28,6 +28,7 @@ public class UnitSelectManager : EnigmaScene
     [SerializeField] private Button _infoBackButton;
     [SerializeField] private Button _sceneBackButton;
     [SerializeField] private Button _clearTeamButton;
+    [SerializeField] private Button _expTeamButton;
 
     [SerializeField] private Toggle _savedTeamToggle1;
     [SerializeField] private Toggle _savedTeamToggle2;
@@ -44,7 +45,9 @@ public class UnitSelectManager : EnigmaScene
     private Vector2[] _waypoints;
     private GameObject _attack;
 
+    [SerializeField] GameObject _expPopUp;
 
+   
     void Start()
     {
         SoundManager.FadeCurrentSong(1f, () => {
@@ -53,6 +56,9 @@ public class UnitSelectManager : EnigmaScene
             SoundManager.Play("arena" + arena, SoundManager.AudioTypes.Music, "", true);
         });
 
+        AdsManager.OnAdRewardGranted += handleAdReward;
+        CloseExpPopup();
+        
         List<string> inventoryUnitNames = GameInventory.Instance.GetInventoryUnitNames();  //TODO: Check if this needs to return stats
         int unitsLength = inventoryUnitNames.Count;
         GameObject unitGridItemTemplate = _unitsGridContent.GetChild(0).gameObject;
@@ -113,6 +119,8 @@ public class UnitSelectManager : EnigmaScene
         _clearTeamButton.onClick.AddListener(() => onClearTeamButtonDown());
         _clearTeamButton.gameObject.SetActive(false);
 
+        _expTeamButton.onClick.AddListener(() => OpenExpPopup());
+
         disableUnitInfo(true);
 
         createDefaultSelectedUnits(slotsLength);
@@ -140,6 +148,11 @@ public class UnitSelectManager : EnigmaScene
 
         _savedTeamToggle1.onValueChanged.AddListener(delegate { onSavedTeamToggleChanged(_savedTeamToggle1, 1); });
         _savedTeamToggle2.onValueChanged.AddListener(delegate { onSavedTeamToggleChanged(_savedTeamToggle2, 2); });
+    }
+
+    private void OnDestroy()
+    {
+        AdsManager.OnAdRewardGranted -= handleAdReward;
     }
 
     private void onSavedTeamToggleChanged(Toggle toggle, int saveSlotSelected)
@@ -478,5 +491,42 @@ public class UnitSelectManager : EnigmaScene
     private string getTeamUnitsKey()
     {
         return (GameStats.Instance.SelectedSaveSlot + "_" + GameStats.Instance.Mode.ToString() + "_teamUnits");
+    }
+
+    public void OpenExpPopup() {
+        _expPopUp.SetActive(true);
+    }
+
+    public void CloseExpPopup()
+    {
+        _expPopUp.SetActive(false);
+    }
+
+    public void ShowAd() {
+        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+        AdsManager.Instance.ShowRewardAd();
+    }
+
+    public void handleAdReward(string zoneId, bool success, string name, int amount)
+    {
+        Debug.Log("exp gained");
+
+        GameInventory gameInventory = GameInventory.Instance;
+        GameStats gameStats = GameStats.Instance;
+        List<string> teamUnits = gameStats.TeamUnits;
+
+        foreach (string unitName in teamUnits)
+        {
+            if (unitName != "-1")
+            {
+                Debug.Log("exp to unit: " + unitName);
+                gameInventory.AddExpToUnit(unitName, 10);
+            }
+        }
+
+        gameInventory.SaveUnits();
+        
+        saveUnitSelection();
+        SceneManager.LoadScene(GameConstants.Scenes.UNIT_SELECT);
     }
 }
