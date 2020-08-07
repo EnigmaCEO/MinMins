@@ -1,4 +1,7 @@
-﻿using GameEnums;
+﻿using CodeStage.AntiCheat.Storage;
+using Enigma.CoreSystems;
+using GameEnums;
+using I2.Loc.SimpleJSON;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -77,8 +80,13 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         initializeMaxLevelsByQuest();
         createUnitTierLists();
         createRarity();
-        loadData();
+        loadDataFromFile();
         initializeInventory();
+    }
+
+    public bool IsThereFileSaved()
+    {
+        return (_saveHashTable.Count > 0);
     }
 
     public int GetRandomTier()
@@ -109,6 +117,21 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     public TeamBoostItem GetOreItem(string itemName)
     {
         return InventoryManager.Instance.GetItem<TeamBoostItem>(GroupNames.ORE, itemName);
+    }
+
+    public bool IsThereAnyOreSingleItem()
+    {
+        List<TeamBoostItem> teamBoostItems = GetOreItemsOwned();
+
+        foreach (TeamBoostItem teamBoost in teamBoostItems)
+        {
+            if (teamBoost.Amount > 0)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public List<TeamBoostItem> GetOreItemsOwned()
@@ -636,11 +659,21 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         InventoryManager.Instance.AddItem(GroupNames.UNITS_EXP, unitName, 0);
     }
 
-    private void loadData()
+    private void loadDataFromFile()
     {
-        Debug.LogWarning("GameInventory::loadData");
         _saveHashTable.Clear();
         _saveHashTable = FileManager.Instance.LoadData();
+        loadDataFromHashTable(_saveHashTable);
+    }
+
+    private void loadDataFromString(string dataString)
+    {
+        loadDataFromHashTable(FileManager.Instance.GetHashtableFromDataString(dataString));
+    }
+
+    private void loadDataFromHashTable(Hashtable hashtable)
+    {
+        Debug.LogWarning("GameInventory::loadDataFromHashTable");
 
         InventoryManager inventoryManager = InventoryManager.Instance;
         inventoryManager.ClearAllGroups();
@@ -675,7 +708,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         //bool isThereAnyLootBox = false;
 
 
-        foreach (DictionaryEntry entry in _saveHashTable)
+        foreach (DictionaryEntry entry in hashtable)
         {
             string[] keyTerms = entry.Key.ToString().Split(_parseSeparator);
             string groupName = keyTerms[0];
@@ -693,11 +726,6 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
             {
                 int tier = int.Parse(keyTerms[1]);
                 int tierAmount = int.Parse((string)entry.Value);
-
-                if (tier == 1)
-                {
-                    tierAmount = 100;
-                }
 
                 //print("LoadData -> box tier: " + tier + " amount: " + tierAmount);
                 inventoryManager.UpdateItem(GroupNames.LOOT_BOXES, tier.ToString(), tierAmount, false);
@@ -847,7 +875,78 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     private void saveHashTableToFile()
     {
         Debug.LogWarning("saveHashTableToFile -> _saveHashTable: " + _saveHashTable.ToStringFull());
-        FileManager.Instance.SaveData(_saveHashTable);
+        FileManager fileManager = FileManager.Instance;
+
+        string dataString = fileManager.ConvertHashToDataStringAndSetSecurity(_saveHashTable);
+
+        //Backup saves for logged and not logged users =========================
+        //NetworkManager.Transaction(GameNetwork.Transactions.SAVE_FILE_TO_SERVER, GameNetwork.TransactionKeys.DATA, dataString, onSaveFileToServer);
+        ObscuredPrefs.SetString(GameNetwork.TransactionKeys.DATA, dataString);
+        //======================================================================
+
+        FileManager.Instance.SaveDataRaw(dataString);
+    }
+
+    private void onSaveFileToServer(SimpleJSON.JSONNode data)
+    {
+        NetworkManager.CheckInvalidServerResponse(data, nameof(onSaveFileToServer));
+    }
+
+    public void LoadBackupSave()
+    {
+        //if (NetworkManager.LoggedIn)
+        //{
+        //    NetworkManager.Transaction(GameNetwork.Transactions.LOAD_FILE_FROM_SERVER, onLoadFileFromServer);
+        //}
+        //else
+        {
+            FileManager fileManager = FileManager.Instance;
+
+            string dataString = ObscuredPrefs.GetString(GameNetwork.TransactionKeys.DATA, "");
+            if (fileManager.CheckDataStringIsSecure(dataString))
+            {
+                Debug.LogWarning("LoadBackupSave::Security Breach.");
+                dataString = "";
+                ObscuredPrefs.SetString(GameNetwork.TransactionKeys.DATA, dataString);
+            }
+
+            if (dataString != "")
+            {
+                fileManager.SaveDataRaw(dataString);
+                loadDataFromString(dataString);  //To avoid loading from a file that was saved in the same frame. 
+            }
+        }
+    }
+
+    private void onLoadFileFromServer(SimpleJSON.JSONNode response)
+    {
+        if (NetworkManager.CheckInvalidServerResponse(response, nameof(onLoadFileFromServer)))
+        {
+            return;
+        }
+
+        SimpleJSON.JSONNode response_hash = response[0];
+
+        string dataString = response_hash[GameNetwork.TransactionKeys.DATA];
+
+        if (!string.IsNullOrEmpty(dataString))
+        {
+            if (FileManager.Instance.CheckDataStringIsSecure(dataString))
+            {
+                Debug.LogWarning("onLoadFileFromServer::Security Breach.");
+            }
+            else
+            {
+                FileManager.Instance.SaveDataRaw(dataString);
+                loadDataFromString(dataString);  //To avoid loading from a file that was saved in the same frame. 
+            }
+        }
+    }
+
+    public bool IsTherePrefsBackupSave()
+    {
+        string key = GameNetwork.TransactionKeys.DATA;
+        return (ObscuredPrefs.HasKey(key) && (ObscuredPrefs.GetString(key, "") != ""));
     }
 
     [System.Serializable]

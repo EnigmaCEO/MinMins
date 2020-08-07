@@ -215,7 +215,7 @@ public class UnitSelectManager : EnigmaScene
         SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
         saveUnitSelection();
 
-        if ((GameStats.Instance.TeamBoostTokensOwnedByName.Count > 0) || (GameInventory.Instance.GetOreItemsOwned().Count > 0))
+        if ((GameStats.Instance.TeamBoostTokensOwnedByName.Count > 0) || GameInventory.Instance.IsThereAnyOreSingleItem())
         {
             SceneManager.LoadScene(GameConstants.Scenes.TEAM_BOOST);
         }
@@ -443,10 +443,10 @@ public class UnitSelectManager : EnigmaScene
             return;
         }
 
-        activateClearButtonIfInactive();
-
         string[] unitNames = unitsString.Split('|');
         int unitsCount = unitNames.Length;
+
+        bool unitWasFound = false;
 
         for(int i = 0; i < unitsCount; i++)
         {
@@ -458,7 +458,13 @@ public class UnitSelectManager : EnigmaScene
                 Image slotImage = slot.Find("Sprite").GetComponent<Image>();
 
                 selectUnit(i, slotImage, unitTransform.gameObject);
+                unitWasFound = true;
             }
+        }
+
+        if (unitWasFound)
+        {
+            activateClearButtonIfInactive();
         }
 
         checkTeamReady();

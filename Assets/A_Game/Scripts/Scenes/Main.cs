@@ -5,17 +5,20 @@ using UnityEngine.UI;
 using CodeStage.AntiCheat.Storage;
 using GameEnums;
 using UnityEngine.UDP;
+using System;
 
 public class Main : EnigmaScene
 {
     [SerializeField] GameObject _loginModal;
     [SerializeField] LoginForGameModePopUp _loginForPvpPopUp;
-    [SerializeField] LoginForGameModePopUp _loginForQuestPopUp;
+    //[SerializeField] LoginForGameModePopUp _loginForQuestPopUp;
+    [SerializeField] GameObject _restorePopUp;
 
     [SerializeField] GameObject _enjinWindow;
     [SerializeField] private int _checkEnjinLinkingDelay = 2;
     [SerializeField] GameObject _loginButton;
     [SerializeField] GameObject _logoutButton;
+    [SerializeField] Button _restoreButton;
     [SerializeField] GameObject _enjinIcon;
     [SerializeField] Text _pvprating;
 
@@ -33,11 +36,16 @@ public class Main : EnigmaScene
         SoundManager.Play("main", SoundManager.AudioTypes.Music, "", true);
 
         NetworkManager.Disconnect();
+
+        _restorePopUp.SetActive(false);
         _loginModal.SetActive(false);
         _enjinIcon.SetActive(false);
         _enjinWindow.SetActive(false);
 
         _questButton.SetActive(false);
+
+        _restoreButton.onClick.AddListener(delegate { OnRestoreButtonDown(); });
+        _restoreButton.gameObject.SetActive(false);
 
         _pvprating.text = "";
         /*
@@ -86,6 +94,9 @@ public class Main : EnigmaScene
                     _kinPopUp.SetActive(false);
         */
         Init();
+
+        updateRestoreButton();   
+        handleRestorePopUp();
     }
 
     public void Init()
@@ -107,6 +118,11 @@ public class Main : EnigmaScene
 
         //_kinPopUp.SetActive(true);
 
+        //=========== Only needed here if using logged backup because server could have a backup when prefs do not (new phone) =====
+        //updateRestoreButton();   
+        //handleRestorePopUp();
+        //===========================================================================================================================
+
         UpdateEnjinDisplay();
 
         if (loggedIn)
@@ -114,6 +130,53 @@ public class Main : EnigmaScene
             _pvprating.text = LocalizationManager.GetTermTranslation("PvP Rating") + ": " + GameStats.Instance.Rating;
         }
 
+    }
+
+    private void handleRestorePopUp()
+    {
+        if (_restoreButton.gameObject.GetActive())
+        {
+            _restorePopUp.SetActive(true);
+        }
+    }
+
+    private void updateRestoreButton()
+    {
+        _restoreButton.gameObject.SetActive(false);
+        GameInventory gameInventory = GameInventory.Instance;
+        //bool loggedIn = NetworkManager.LoggedIn;
+
+        if (/*(loggedIn && GameStats.Instance.IsThereServerBackup) ||*/ gameInventory.IsTherePrefsBackupSave())
+        {
+            if(FileManager.Instance.CheckFileNullOrEmpty())
+            {
+                _restoreButton.gameObject.SetActive(true);
+            }
+            else
+            {
+                Debug.Log("updateRestoreButton ->  There is file saved.");
+            }
+        }
+        else
+        {
+            Debug.Log("updateRestoreButton ->  No server or pref backup to restore.");
+        }
+    }
+
+    public void OnRestoreButtonDown()
+    {
+        GameInventory.Instance.LoadBackupSave();
+        _restoreButton.gameObject.SetActive(false);
+
+        if (_restorePopUp.GetActive())
+        {
+            _restorePopUp.SetActive(false);
+        }
+    }
+
+    public void OnRestorePopUpDismissButtonDown()
+    {
+        _restorePopUp.SetActive(false);
     }
 
     public void OnSinglePlayerButtonDown()
@@ -153,15 +216,15 @@ public class Main : EnigmaScene
 
         SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
 
-        if (NetworkManager.LoggedIn)
-        {
+        //if (NetworkManager.LoggedIn)
+        //{
             GameStats.Instance.Mode = GameStats.Modes.Quest;
             goToLevels();
-        }
-        else
-        {
-            _loginForQuestPopUp.Open();
-        }
+        //}
+        //else
+        //{
+        //    _loginForQuestPopUp.Open();
+        //}
     }
 
     public void ShowLoginForm()
@@ -314,9 +377,10 @@ public class Main : EnigmaScene
     {
         _questButton.gameObject.SetActive(false);
 
+        NetworkManager.Logout();
+
         SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
 
-        NetworkManager.Logout();
         GameNetwork.Instance.ResetLoginValues();
 
         _loginButton.gameObject.SetActive(true);

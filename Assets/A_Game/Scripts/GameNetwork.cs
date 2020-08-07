@@ -15,10 +15,16 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         public const int CHANGE_RATING = 18;
         public const int RANK_CHANGED_TRANSACTION_ID = 19;
         public const int COMPLETED_QUEST_ID = 20;
+
+        public const int SAVE_FILE_TO_SERVER = 25;
+        public const int LOAD_FILE_FROM_SERVER = 26;
     }
 
     public class TransactionKeys
     {
+        public const string DATA = "data";
+        public const string BACKUP = "backup";
+
         public const string RATING = "rating";
         public const string USERNAME = "username";
 

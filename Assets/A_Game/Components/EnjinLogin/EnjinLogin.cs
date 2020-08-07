@@ -274,6 +274,7 @@ public class EnjinLogin : MonoBehaviour
         GameStats gameStats = GameStats.Instance;
 
         gameStats.HasPurchased = (response_hash[NetworkManager.TransactionKeys.PURCHASED].AsInt == 1);
+        gameStats.IsThereServerBackup = (response_hash[GameNetwork.TransactionKeys.BACKUP].AsInt == 1);
 
         GameNetwork gameNetwork = GameNetwork.Instance;
 

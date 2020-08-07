@@ -1,4 +1,5 @@
 ﻿using GameEnums;
+using I2.Loc.SimpleJSON;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -36,4 +37,5 @@ public class GameStats : SingletonMonobehaviour<GameStats>
     public TeamBoostItem TeamBoostSelected;
 
     public int SelectedSaveSlot = 1; // 1 or 2
+    public bool IsThereServerBackup;
 }

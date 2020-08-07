@@ -2082,6 +2082,56 @@ MonoBehaviour:
       - 
       Flags: 0000000000
       Languages_Touch: []
+    - Term: Restore
+      TermType: 0
+      Description: 
+      Languages:
+      - Restore
+      - Restaurar
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: FILE WARNING!
+      TermType: 0
+      Description: 
+      Languages:
+      - FILE WARNING!
+      - ALERTA DE ARCHIVO!
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: We detected that your file is empty and does not match your backup. Do
+        you wish to restore? If you don't, next time your file is updated, your backup
+        will be overwritten.
+      TermType: 0
+      Description: 
+      Languages:
+      - We detected that your file is empty and does not match your backup.  Do you
+        wish to restore?  If you don't, next time your file is updated, your backup
+        will be overwritten.
+      - "Detectamos que tu archivo est\xE1 vac\xEDo y no concuerda con tu respaldo.
+        \xBFDeseas restaurar? Si no lo haces, la siguiente vez que tu archivo sea
+        actualizado, tu respaldo ser\xE1 sobreescrito."
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Dismiss
+      TermType: 0
+      Description: 
+      Languages:
+      - Dismiss
+      - Retirar
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
     CaseInsensitiveTerms: 0
     OnMissingTranslation: 1
     mTerm_AppName: 
@@ -2106,7 +2156,7 @@ MonoBehaviour:
     Google_WebServiceURL: https://script.google.com/macros/s/AKfycbw05ISkGCPtIS0hMzFD5jshgfH09mIP6BAxRKhWsA/exec
     Google_SpreadsheetKey: 1iIWCtExuyR2XXyYkJv6y83PTVMPC4FxzSITGGroefcg
     Google_SpreadsheetName: I2Loc MinMins Localization
-    Google_LastUpdatedVersion: 1596244745474
+    Google_LastUpdatedVersion: 1596775913389
     Google_Password: shalwend
     GoogleUpdateFrequency: 3
     GoogleInEditorCheckFrequency: 2
