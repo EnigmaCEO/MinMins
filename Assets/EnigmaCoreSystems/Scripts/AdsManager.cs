@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Advertisements;
 
-public class AdsManager : MonoBehaviour
+public class AdsManager : MonoBehaviour, IUnityAdsListener
 {
     [SerializeField] private bool _testMode = false;
     [SerializeField] private string _placementId = "video";
@@ -20,7 +20,7 @@ public class AdsManager : MonoBehaviour
 #endif
 
     public delegate void OnAdRewardGrantedCallback(string zoneId, bool success, string name, int amount);
-    public OnAdRewardGrantedCallback OnAdRewardGranted;
+    static public OnAdRewardGrantedCallback OnAdRewardGranted;
 
     public delegate void OnAdFailedCallback();
     public OnAdFailedCallback OnAdFailed;
@@ -45,6 +45,40 @@ public class AdsManager : MonoBehaviour
         Advertisement.Show(_placementId);
     }
 
+    public void ShowRewardAd()
+    {
+        string RewardedPlacementId = "rewardedVideo";
+
+        if (!Advertisement.IsReady(RewardedPlacementId))
+        {
+            Debug.Log(string.Format("Ads not ready for placement '{0}'", RewardedPlacementId));
+            return;
+        }
+
+        Debug.LogWarning("AdsManager::ShowAd");
+        Advertisement.Show(RewardedPlacementId);
+        Advertisement.Show();
+    }
+
+    private void HandleShowResult(ShowResult result)
+    {
+        switch (result)
+        {
+            case ShowResult.Finished:
+                Debug.Log("The ad was successfully shown.");
+                //
+                // YOUR CODE TO REWARD THE GAMER
+                // Give coins etc.
+                break;
+            case ShowResult.Skipped:
+                Debug.Log("The ad was skipped before reaching the end.");
+                break;
+            case ShowResult.Failed:
+                Debug.LogError("The ad failed to be shown.");
+                break;
+        }
+    }
+
 #if (UNITY_ANDROID || UNITY_IOS)
     private void OnDestroy()
     {
@@ -63,6 +97,7 @@ public class AdsManager : MonoBehaviour
             gameId = Ads.IosGameId;
         }
 
+        Advertisement.AddListener(this);
         Advertisement.Initialize(gameId, _testMode);
     }
 
@@ -92,5 +127,39 @@ public class AdsManager : MonoBehaviour
         // Video zones
         static public string[] zoneId = { "vzf8e4e97704c4445c87504e" };
 #endif
+    }
+
+    public void OnUnityAdsDidFinish(string placementId, ShowResult showResult)
+    {
+        // Define conditional logic for each ad completion status:
+        if (showResult == ShowResult.Finished)
+        {
+            // Reward the user for watching the ad to completion.
+            if (OnAdRewardGranted != null)
+                OnAdRewardGranted("rewardedVideo", true, "", 0);
+        }
+        else if (showResult == ShowResult.Skipped)
+        {
+            // Do not reward the user for skipping the ad.
+        }
+        else if (showResult == ShowResult.Failed)
+        {
+           
+        }
+    }
+
+    public void OnUnityAdsReady(string placementId)
+    {
+        
+    }
+
+    public void OnUnityAdsDidError(string message)
+    {
+        // Log the error.
+    }
+
+    public void OnUnityAdsDidStart(string placementId)
+    {
+        // Optional actions to take when the end-users triggers an ad.
     }
 }
