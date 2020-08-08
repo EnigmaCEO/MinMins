@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class FileManager : MonoBehaviour
 {
-    [SerializeField] private string _secKey = "dataSec";
+    [SerializeField] public string _secKey = "dataSec";
     [SerializeField] private string _egi = "EGI_DAILY_QUIZ";
     [SerializeField] private string _fileName = "data.txt";
     [SerializeField] private char _entrySeparator = '/';
@@ -68,7 +68,7 @@ public class FileManager : MonoBehaviour
         }
 
         //Set default values to 0 if security code wasn't matched
-        if (CheckDataStringIsSecure(dataString))
+        if (CheckDataStringAgainstPrefSec(dataString))
         {
             Debug.LogWarning("LoadData::Security Breach.");
             return data;
@@ -93,16 +93,31 @@ public class FileManager : MonoBehaviour
         return data;
     }
 
-    public bool CheckDataStringIsSecure(string dataString)
+    public bool CheckSecExists()
     {
-        string fileSec = Enigma.CoreSystems.NetworkManager.md5(dataString + _egi);
-        bool invalidDataString = (fileSec != PlayerPrefs.GetString(_secKey, ""));
+        return PlayerPrefs.HasKey(_secKey);
+    }
+
+    public bool CheckDataStringAgainstGivenSec(string dataString, string sec)
+    {
+        string fileSec = GetDataStringSec(dataString);
+        bool invalidDataString = (fileSec != sec);
         return invalidDataString;
+    }
+
+    public string GetDataStringSec(string dataString)
+    {
+        return Enigma.CoreSystems.NetworkManager.md5(dataString + _egi);
+    }
+
+    public bool CheckDataStringAgainstPrefSec(string dataString)
+    {
+        return CheckDataStringAgainstGivenSec(dataString, PlayerPrefs.GetString(_secKey, ""));
     }
 
     public void SaveDataWithSecurity(Hashtable hashtable)
     {
-        string dataString = ConvertHashToDataStringAndSetSecurity(hashtable);
+        string dataString = ConvertHashToDataStringAndSetSec(hashtable);
         SaveDataRaw(dataString);
     }
 
@@ -111,7 +126,7 @@ public class FileManager : MonoBehaviour
         System.IO.File.WriteAllText(_filePath, dataString);
     }
 
-    public string ConvertHashToDataStringAndSetSecurity(Hashtable hashtable)
+    public string ConvertHashToDataStringAndSetSec(Hashtable hashtable)
     {
         string dataToWrite = "";
 

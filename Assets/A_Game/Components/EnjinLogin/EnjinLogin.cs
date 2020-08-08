@@ -269,12 +269,12 @@ public class EnjinLogin : MonoBehaviour
 
     private void completeLogin(SimpleJSON.JSONNode response_hash)
     {
-        print("Complete login:");
+        print("Complete login -> response_hash: " + response_hash.ToString());
 
         GameStats gameStats = GameStats.Instance;
 
         gameStats.HasPurchased = (response_hash[NetworkManager.TransactionKeys.PURCHASED].AsInt == 1);
-        gameStats.IsThereServerBackup = (response_hash[GameNetwork.TransactionKeys.BACKUP].AsInt == 1);
+        gameStats.IsThereServerBackup = (response_hash[NetworkManager.TransactionKeys.USER_DATA][GameNetwork.TransactionKeys.BACKUP].AsInt == 1);
 
         GameNetwork gameNetwork = GameNetwork.Instance;
 

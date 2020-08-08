@@ -22,6 +22,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
     public class TransactionKeys
     {
+        public const string SEC_CODE = "code";
         public const string DATA = "data";
         public const string BACKUP = "backup";
 

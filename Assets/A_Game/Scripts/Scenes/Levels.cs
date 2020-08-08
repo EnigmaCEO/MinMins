@@ -143,13 +143,23 @@ public class Levels : EnigmaScene
             SceneManager.LoadScene(GameConstants.Scenes.UNIT_SELECT);
         }
         else
+        {
             _notEnoughUnitsPopUp.SetActive(true);
+        }
     }
 
     public void OnNotEnoughUnitsPopUpDismissButtonDown()
     {
         SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
-        SceneManager.LoadScene(GameConstants.Scenes.STORE);
+
+        if (GameConfig.Instance.SendToShopAutomaticallyOnUnitsNeeded)
+        {
+            SceneManager.LoadScene(GameConstants.Scenes.STORE);
+        }
+        else
+        {
+            _notEnoughUnitsPopUp.gameObject.SetActive(false);
+        }
     }
 
     public void OnBackButtonDown()

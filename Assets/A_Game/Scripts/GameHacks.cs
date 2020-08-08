@@ -56,6 +56,7 @@ public class GameHacks : SingletonMonobehaviour<GameHacks>
     public bool CompleteQuestOffline;
 
     public bool ClearSavedTeamDataOnScenesEnter;
+    public bool NegatePrefsBackup;
 
     public ValueHack TriggerPlayerDisconnectPopUp = new ValueHack("D");
     public ValueHack TriggerOpponentDisconnectPopUp = new ValueHack("O");

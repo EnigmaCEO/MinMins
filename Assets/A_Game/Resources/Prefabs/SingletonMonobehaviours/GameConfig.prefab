@@ -54,3 +54,5 @@ MonoBehaviour:
   GoldProjectileBaseDirection: {x: 0, y: 1, z: 0}
   RewardChestDestructionDelay: 1
   FightsWithoutAdsMaxCount: 3
+  EnableServerBackup: 1
+  SendToShopAutomaticallyOnUnitsNeeded: 1

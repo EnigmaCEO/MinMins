@@ -408,7 +408,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
             saveHashKey(hashKey, unitExp, false);
         }
 
-        saveHashTableToFile();
+        saveHashTableToFileAndBackup();
     }
 
     private void initializeMaxLevelsByQuest()
@@ -454,7 +454,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
             saveHashKey(hashKey, tierAmount, false);
         }
 
-        saveHashTableToFile();
+        saveHashTableToFileAndBackup();
     }
 
     public List<string> GetRandomUnitsFromTier(int amount, int tier)
@@ -854,7 +854,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
             saveHashKey(hashKey, value, false);
         }
 
-        saveHashTableToFile();
+        saveHashTableToFileAndBackup();
     }
 
     private void saveHashKey(string hashKey, object value, bool saveToFile = true)
@@ -868,19 +868,29 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
         if (saveToFile)
         {
-            saveHashTableToFile();
+            saveHashTableToFileAndBackup();
         }
     }
 
-    private void saveHashTableToFile()
+    private void saveHashTableToFileAndBackup()
     {
         Debug.LogWarning("saveHashTableToFile -> _saveHashTable: " + _saveHashTable.ToStringFull());
         FileManager fileManager = FileManager.Instance;
 
-        string dataString = fileManager.ConvertHashToDataStringAndSetSecurity(_saveHashTable);
+        string dataString = fileManager.ConvertHashToDataStringAndSetSec(_saveHashTable);
 
         //Backup saves for logged and not logged users =========================
-        //NetworkManager.Transaction(GameNetwork.Transactions.SAVE_FILE_TO_SERVER, GameNetwork.TransactionKeys.DATA, dataString, onSaveFileToServer);
+        if (GameConfig.Instance.EnableServerBackup)
+        {
+            string fileSec = fileManager.GetDataStringSec(dataString);
+
+            Hashtable hashTable = new Hashtable();
+            hashTable.Add(GameNetwork.TransactionKeys.DATA, dataString);
+            hashTable.Add(GameNetwork.TransactionKeys.SEC_CODE, fileSec);
+
+            NetworkManager.Transaction(GameNetwork.Transactions.SAVE_FILE_TO_SERVER, hashTable, onSaveFileToServer);
+        }
+
         ObscuredPrefs.SetString(GameNetwork.TransactionKeys.DATA, dataString);
         //======================================================================
 
@@ -894,24 +904,25 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
     public void LoadBackupSave()
     {
-        //if (NetworkManager.LoggedIn)
-        //{
-        //    NetworkManager.Transaction(GameNetwork.Transactions.LOAD_FILE_FROM_SERVER, onLoadFileFromServer);
-        //}
-        //else
+        if (NetworkManager.LoggedIn && GameConfig.Instance.EnableServerBackup && GameStats.Instance.IsThereServerBackup)
+        {
+            NetworkManager.Transaction(GameNetwork.Transactions.LOAD_FILE_FROM_SERVER, onLoadFileFromServer);
+        }
+        else
         {
             FileManager fileManager = FileManager.Instance;
 
             string dataString = ObscuredPrefs.GetString(GameNetwork.TransactionKeys.DATA, "");
-            if (fileManager.CheckDataStringIsSecure(dataString))
-            {
-                Debug.LogWarning("LoadBackupSave::Security Breach.");
-                dataString = "";
-                ObscuredPrefs.SetString(GameNetwork.TransactionKeys.DATA, dataString);
-            }
 
             if (dataString != "")
             {
+                if (fileManager.CheckDataStringAgainstPrefSec(dataString))
+                {
+                    Debug.LogWarning("LoadBackupSave::Security Breach.");
+                    dataString = "";
+                    ObscuredPrefs.SetString(GameNetwork.TransactionKeys.DATA, dataString);
+                }
+
                 fileManager.SaveDataRaw(dataString);
                 loadDataFromString(dataString);  //To avoid loading from a file that was saved in the same frame. 
             }
@@ -928,10 +939,12 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         SimpleJSON.JSONNode response_hash = response[0];
 
         string dataString = response_hash[GameNetwork.TransactionKeys.DATA];
+        string sec = response_hash[GameNetwork.TransactionKeys.SEC_CODE];
 
         if (!string.IsNullOrEmpty(dataString))
         {
-            if (FileManager.Instance.CheckDataStringIsSecure(dataString))
+            FileManager fileManager = FileManager.Instance;
+            if (fileManager.CheckDataStringAgainstGivenSec(dataString, sec)) 
             {
                 Debug.LogWarning("onLoadFileFromServer::Security Breach.");
             }
@@ -940,13 +953,20 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
                 FileManager.Instance.SaveDataRaw(dataString);
                 loadDataFromString(dataString);  //To avoid loading from a file that was saved in the same frame. 
             }
-        }
+        } 
     }
 
     public bool IsTherePrefsBackupSave()
     {
         string key = GameNetwork.TransactionKeys.DATA;
-        return (ObscuredPrefs.HasKey(key) && (ObscuredPrefs.GetString(key, "") != ""));
+        bool isThereBackupSave = (ObscuredPrefs.HasKey(key) && (ObscuredPrefs.GetString(key, "") != ""));
+
+        if (GameHacks.Instance.NegatePrefsBackup)
+        {
+            isThereBackupSave = false;
+        }
+
+        return isThereBackupSave;
     }
 
     [System.Serializable]

@@ -95,8 +95,11 @@ public class Main : EnigmaScene
         */
         Init();
 
-        updateRestoreButton();   
-        handleRestorePopUp();
+        if (!GameConfig.Instance.EnableServerBackup)  //If we use server backup then we call this inside Init, that is called at start and at login
+        {
+            updateRestoreButton();
+            handleRestorePopUp();
+        }
     }
 
     public void Init()
@@ -119,8 +122,11 @@ public class Main : EnigmaScene
         //_kinPopUp.SetActive(true);
 
         //=========== Only needed here if using logged backup because server could have a backup when prefs do not (new phone) =====
-        //updateRestoreButton();   
-        //handleRestorePopUp();
+        if (GameConfig.Instance.EnableServerBackup)
+        {
+            updateRestoreButton();
+            handleRestorePopUp();
+        }
         //===========================================================================================================================
 
         UpdateEnjinDisplay();
@@ -144,9 +150,11 @@ public class Main : EnigmaScene
     {
         _restoreButton.gameObject.SetActive(false);
         GameInventory gameInventory = GameInventory.Instance;
-        //bool loggedIn = NetworkManager.LoggedIn;
 
-        if (/*(loggedIn && GameStats.Instance.IsThereServerBackup) ||*/ gameInventory.IsTherePrefsBackupSave())
+
+
+        if ((GameConfig.Instance.EnableServerBackup && NetworkManager.LoggedIn && GameStats.Instance.IsThereServerBackup) 
+            || GameInventory.Instance.IsTherePrefsBackupSave())
         {
             if(FileManager.Instance.CheckFileNullOrEmpty())
             {
@@ -154,12 +162,12 @@ public class Main : EnigmaScene
             }
             else
             {
-                Debug.Log("updateRestoreButton ->  There is file saved.");
+                Debug.Log("updateRestoreButton ->  There is a saved file.");
             }
         }
         else
         {
-            Debug.Log("updateRestoreButton ->  No server or pref backup to restore.");
+            Debug.Log("updateRestoreButton ->  Restore is not available.");
         }
     }
 

@@ -18,4 +18,7 @@ public class GameConfig : SingletonMonobehaviour<GameConfig>
 
     [SerializeField] public float RewardChestDestructionDelay = 1;
     [SerializeField] public int FightsWithoutAdsMaxCount = 3;
+
+    [SerializeField] public bool EnableServerBackup = false;
+    [SerializeField] public bool SendToShopAutomaticallyOnUnitsNeeded = false;
 }
