@@ -26,6 +26,7 @@ public class EnjinLogin : MonoBehaviour
     public Button registerButton;
 
     [SerializeField] private Toggle _rememberMeToggle;
+    [SerializeField] private Main _main;
 
     private string _lastUsername = "";
     private string _lastPassword = "";
@@ -249,18 +250,28 @@ public class EnjinLogin : MonoBehaviour
                 string term = "";
 
                 if (status == NetworkManager.StatusOptions.ERR_REGISTER)
+                {
                     term = "Register Error";
+                }
                 else if (status == NetworkManager.StatusOptions.ERR_INVALID_PASSWORD)
+                {
                     term = "Invalid Password";
+                }
                 else if (status == NetworkManager.StatusOptions.ERR_INVALID_USERNAME)
+                {
                     term = "Invalid Username";
+                }
                 else
+                {
                     term = "Server Error";
+                }
 
                 alertText.color = failColor;
                 setAlert(term);
             }
-        } else {
+        } 
+        else 
+        {
             EnableLoginWindow();
             alertText.color = failColor;
             setAlert("Connection Error");
@@ -269,20 +280,50 @@ public class EnjinLogin : MonoBehaviour
 
     private void completeLogin(SimpleJSON.JSONNode response_hash)
     {
-        print("Complete login -> response_hash: " + response_hash.ToString());
+        if (response_hash == null)
+        {
+            Debug.LogError("Complete login response_hash is null.");
+            return;
+        }
+        else
+        {
+            print("Complete login -> response_hash: " + response_hash.ToString());
+        }
 
         GameStats gameStats = GameStats.Instance;
-
-        gameStats.HasPurchased = (response_hash[NetworkManager.TransactionKeys.PURCHASED].AsInt == 1);
-        gameStats.IsThereServerBackup = (response_hash[NetworkManager.TransactionKeys.USER_DATA][GameNetwork.TransactionKeys.BACKUP].AsInt == 1);
-
         GameNetwork gameNetwork = GameNetwork.Instance;
 
-        GameStats.Instance.Rating = response_hash[NetworkManager.TransactionKeys.USER_DATA][GameNetwork.TransactionKeys.RATING].AsInt;
-        string userName = response_hash[NetworkManager.TransactionKeys.USER_DATA][GameNetwork.TransactionKeys.USERNAME];
-        NetworkManager.SetLocalPlayerNickName(userName);
+        JSONNode userDataNode = response_hash[NetworkManager.TransactionKeys.USER_DATA];
+        if (userDataNode != null)
+        {
+            JSONNode hasPurchasedNode = userDataNode[NetworkManager.TransactionKeys.PURCHASED];
+            gameStats.HasPurchased = ((hasPurchasedNode != null) && (hasPurchasedNode.AsInt == 1));
 
-        string enjinId = response_hash[NetworkManager.TransactionKeys.USER_DATA][NetworkManager.TransactionKeys.ENJIN_ID].ToString().Trim('"');
+            JSONNode isThereServerBackupNode = userDataNode[GameNetwork.TransactionKeys.BACKUP];
+            gameStats.IsThereServerBackup = ((isThereServerBackupNode != null) && (isThereServerBackupNode.AsInt == 1));
+
+            JSONNode ratingNode = userDataNode[GameNetwork.TransactionKeys.RATING];
+            if (ratingNode != null)
+            {
+                GameStats.Instance.Rating = ratingNode.AsInt;
+            }
+
+            JSONNode userNameNode = userDataNode[GameNetwork.TransactionKeys.USERNAME];
+            if (userNameNode != null)
+            {
+                NetworkManager.SetLocalPlayerNickName(userNameNode.ToString().Trim('"'));
+            }
+        }
+
+        string enjinId = "null";
+        if (userDataNode != null)
+        {
+            JSONNode enjinIdNode = userDataNode[NetworkManager.TransactionKeys.ENJIN_ID];
+            if (enjinIdNode != null)
+            {
+                enjinId = enjinIdNode.ToString().Trim('"');
+            }
+        }
 
         Debug.Log("Enjin ID: " + enjinId);
         bool enjinIdNull = (enjinId == "null");
@@ -297,7 +338,16 @@ public class EnjinLogin : MonoBehaviour
 
         if (!enjinIdNull)
         {
-            string enjinCode = response_hash[NetworkManager.TransactionKeys.USER_DATA][NetworkManager.TransactionKeys.ENJIN_CODE].ToString().Trim('"');
+            string enjinCode = "null";
+            if (userDataNode != null)
+            {
+                JSONNode enjinCodeNode = userDataNode[NetworkManager.TransactionKeys.ENJIN_CODE];
+                if (enjinCodeNode != null)
+                {
+                    enjinCode = enjinCodeNode.ToString().Trim('"');
+                }
+            }
+
             Debug.Log("Link Code: " + enjinCode);
 
             bool enjinCodeNull = (enjinCode == "null");
@@ -310,7 +360,7 @@ public class EnjinLogin : MonoBehaviour
 #endif
             if (!enjinCodeNull)
             {
-                GameObject.Find("/Main").GetComponent<Main>().StartEnjinQR(enjinCode);
+                _main.StartEnjinQR(enjinCode);
             }
             else
             {
@@ -318,28 +368,41 @@ public class EnjinLogin : MonoBehaviour
                 gameNetwork.IsEnjinLinked = true;
             }
 
-            GameNetwork.Instance.UpdateEnjinGoodies(response_hash);
+            gameNetwork.UpdateEnjinGoodies(response_hash);
 
-            JSONArray trainingRewards = response_hash[NetworkManager.TransactionKeys.REWARDS] as JSONArray;
-
-            foreach (JSONNode item in trainingRewards)
+            JSONNode trainingRewardsNode = response_hash[NetworkManager.TransactionKeys.REWARDS];
+            if (trainingRewardsNode != null)
             {
-                Debug.Log("training rewards: " + item["level"].ToString());
-                int level = int.Parse(item["level"].ToString().Trim('"'));
-                gameNetwork.rewardedTrainingLevels[level - 1] = 1;
+                JSONArray trainingRewards = trainingRewardsNode as JSONArray;
+
+                foreach (JSONNode item in trainingRewards)
+                {
+                    JSONNode itemNode = item["level"];
+                    
+                    if (itemNode != null)
+                    {
+                        string itemString = itemNode.ToString();
+                        Debug.Log("training rewards: " + itemString);
+                        int level = int.Parse(itemString.Trim('"'));
+                        gameNetwork.rewardedTrainingLevels[level - 1] = 1;
+                    }
+                }
             }
         }
         else
+        {
             print("User is not using Crypto.");
+        }
 
-//#if DEVELOPMENT_BUILD || UNITY_EDITOR
-//        if (enigmaHacks.EnjinLinked)
-//        {
-//            GameNetwork.Instance.IsEnjinLinked = true;
-//        }
-//#endif
+        //#if DEVELOPMENT_BUILD || UNITY_EDITOR
+        //        if (enigmaHacks.EnjinLinked)
+        //        {
+        //            GameNetwork.Instance.IsEnjinLinked = true;
+        //        }
+        //#endif
 
-        GameObject.Find("/Main").GetComponent<Main>().Init();
+        //GameObject.Find("/Main").GetComponent<Main>().Init();
+        _main.Init();
     }
 
     private void onLogin(SimpleJSON.JSONNode response)

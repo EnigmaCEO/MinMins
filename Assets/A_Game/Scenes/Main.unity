@@ -7851,6 +7851,7 @@ MonoBehaviour:
   loginButton: {fileID: 4452451896199919891}
   registerButton: {fileID: 6334252218645829320}
   _rememberMeToggle: {fileID: 7743339184857954633}
+  _main: {fileID: 1985241544}
 --- !u!114 &5333597812822384535
 MonoBehaviour:
   m_ObjectHideFlags: 0
