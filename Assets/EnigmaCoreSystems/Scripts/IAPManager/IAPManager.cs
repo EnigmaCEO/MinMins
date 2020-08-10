@@ -511,6 +511,14 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
                     {
                         validPurchase = false;
                     }
+
+                    if (transactionId.Contains("-"))
+                    {
+                        if (!transactionId.Contains("GPA"))
+                        {
+                            validPurchase = false;
+                        }
+                    }
                 }
             }
             catch (IAPSecurityException)
