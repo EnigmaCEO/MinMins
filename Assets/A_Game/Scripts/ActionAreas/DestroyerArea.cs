@@ -13,9 +13,9 @@ public class DestroyerArea : ActionArea
         transform.position += _velocity * Time.deltaTime;
     }
 
-    override protected void setUpActionArea(string areaName, Vector3 position, Vector3 direction, string unitName, MinMinUnit.EffectNames effectName, string teamName, int networkPlayerId)
+    override public void SetUpActionArea(string areaName, Vector3 position, Vector3 direction, string unitName, MinMinUnit.EffectNames effectName, string teamName, int networkPlayerId)
     {
-        base.setUpActionArea(areaName, position, direction, unitName, effectName, teamName, networkPlayerId);
+        base.SetUpActionArea(areaName, position, direction, unitName, effectName, teamName, networkPlayerId);
         _velocity = direction * GameConfig.Instance.ProjectilesSpeed;
 
         if (effectName == MinMinUnit.EffectNames.LightningProjectile)

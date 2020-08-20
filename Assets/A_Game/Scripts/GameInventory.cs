@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class GameInventory : SingletonMonobehaviour<GameInventory>
 {
@@ -22,13 +23,16 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         public const string STATS = "Stats";
         public const string UNITS_EXP = "Units";
         public const string ORE = "Ore";
-        public const string QUESTS_PROGRESS = "QuestsProgress";
+        public const string QUESTS_LEVEL_PROGRESS = "QuestsLevelsProgress"; 
+        public const string QUESTS_SCOUT_PROGRESS = "QuestsScoutProgress";
+        public const string QUESTS_ENEMIES_POSITIONS = "QuestsEnemiesPositions";
     }
 
     public class ItemKeys
     {
         public const string SINGLE_PLAYER_LEVEL = "SinglePlayerLevel";
         public const string ENJIN_ATTEMPTS = "EnjinAttempts";
+        public const string ACTIVE_QUEST = "ActiveQuest";
     }
 
     [SerializeField] List<int> _experienceNeededPerUnitLevel = new List<int>() { 0, 10, 30, 70, 150, 310 };  //Rule: Doubles each level
@@ -44,7 +48,6 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     [SerializeField] private int _lootBoxTiersAmount = 3;
     [SerializeField] private int _guaranteedUnitTierAmount = 1;
 
-    [SerializeField] private char _parseSeparator = '|';
     [SerializeField] private int _expToAddOnDuplicateUnit = 10;
 
     [SerializeField] private int _lastTierBronze_unitNumber = 40;
@@ -72,12 +75,16 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     private List<string> _tierGold_units = new List<string>();
 
     private List<UnitRarity> _unitSpecialRarities = new List<UnitRarity>();
-    private Dictionary<Quests, int> _maxLevelByQuest = new Dictionary<Quests, int>();
+    //private Dictionary<Quests, int> _maxLevelByQuest = new Dictionary<Quests, int>();
 
+    private const char _GROUP_WITH_KEY_SEPARATOR = '|';
+    private const char QUEST_WITH_LEVEL_SEPARATOR = ':';
+    private const char POSITIONS_SEPARATOR = ';';
+    private const char COORDS_SEPARATOR = ',';
 
     private void Awake()
     {
-        initializeMaxLevelsByQuest();
+        //initializeMaxLevelsByQuest();
         createUnitTierLists();
         createRarity();
         loadDataFromFile();
@@ -108,7 +115,9 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         if (inventoryManager.CheckGroupExists(GroupNames.UNITS_EXP, false))
         {
             foreach (string unitName in inventoryManager.GetGroupKeys(GroupNames.UNITS_EXP))
+            {
                 inventoryUnitIndexes.Add(unitName);
+            }
         }
 
         return inventoryUnitIndexes;
@@ -158,16 +167,11 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         int higherLevelCompleted = GetHigherSinglePlayerLevelCompleted();
         if (newLevel > higherLevelCompleted)
         {
-            //if (level > _maxArenaLevel)
-            //    level = _maxArenaLevel;
-
-            //InventoryManager.Instance.UpdateItem(GroupNames.STATS, ItemKeys.SINGLE_PLAYER_LEVEL, level, true);
-            //saveSinglePlayerLevelNumber();
-
             if (newLevel <= _maxArenaLevel)
             {
                 InventoryManager.Instance.UpdateItem(GroupNames.STATS, ItemKeys.SINGLE_PLAYER_LEVEL, newLevel, true);
-                saveSinglePlayerLevelNumber();
+                saveInventoryItemToFile<int>(GroupNames.STATS, ItemKeys.SINGLE_PLAYER_LEVEL);
+                //saveSinglePlayerLevelNumber();
             }
         }
     }
@@ -186,25 +190,157 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         return value;
     }
 
-    public void SetQuestLevelProgress(int newLevel)
+    public void SetActiveQuest(Quests activeQuest)
     {
-        Debug.LogWarning("GameInventory::SetQuestLevelProgress -> level: " + newLevel);
-
-        int higherLevelCompleted = GetHighestQuestLevelCompleted();
-        if (newLevel > higherLevelCompleted)
-        {
-            Quests activeQuest = GameStats.Instance.ActiveQuest;
-            if (newLevel <= _maxLevelByQuest[activeQuest])
-            {
-                InventoryManager.Instance.UpdateItem(GroupNames.QUESTS_PROGRESS, activeQuest.ToString(), newLevel, true);
-                saveQuestLevelProgress();
-            }
-        }
+        InventoryManager.Instance.UpdateItem(GroupNames.STATS, ItemKeys.ACTIVE_QUEST, activeQuest.ToString());
+        saveInventoryItemToFile<string>(GroupNames.STATS, ItemKeys.ACTIVE_QUEST);
     }
 
-    public int GetHighestQuestLevelCompleted()
+    public Quests GetActiveQuest()
     {
-        Quests activeQuest = GameStats.Instance.ActiveQuest;
+        return (Quests)Enum.Parse(typeof(Quests), GetActiveQuestString());
+    }
+
+    public string GetActiveQuestString()
+    {
+        return InventoryManager.Instance.GetItem<string>(GroupNames.STATS, ItemKeys.ACTIVE_QUEST);
+    }
+
+    public void SetQuestEnemiesPositions(List<Vector3> positions)
+    {
+        string enemiesPositionsString = "";
+
+        foreach (Vector3 pos in positions)
+        {
+            if (enemiesPositionsString != "")
+            {
+                enemiesPositionsString += POSITIONS_SEPARATOR;
+            }
+
+            enemiesPositionsString += pos.x.ToString() + COORDS_SEPARATOR + pos.y.ToString() + COORDS_SEPARATOR + pos.z.ToString();
+        }
+
+        string questString = GameInventory.Instance.GetActiveQuestString(); //GameStats.Instance.ActiveQuest.ToString();
+        InventoryManager.Instance.UpdateItem(GroupNames.QUESTS_ENEMIES_POSITIONS, questString, enemiesPositionsString);
+        saveInventoryItemToFile<string>(GroupNames.QUESTS_ENEMIES_POSITIONS, questString);
+    }
+
+    public List<Vector3> GetEnemiesPositions()
+    {
+        string activeQuestString = GameInventory.Instance.GetActiveQuestString(); //GameStats.Instance.ActiveQuest.ToString();
+        string enemiesPositionsString = InventoryManager.Instance.GetItem<string>(GroupNames.QUESTS_ENEMIES_POSITIONS, activeQuestString);
+
+        return getPositionsFromString(enemiesPositionsString);
+    }
+
+    public void ClearScoutProgress()
+    {
+        string activeQuestString = GameInventory.Instance.GetActiveQuestString();
+        InventoryManager.Instance.UpdateItem(GroupNames.QUESTS_SCOUT_PROGRESS, activeQuestString, "");
+        saveInventoryItemToFile<string>(GroupNames.QUESTS_SCOUT_PROGRESS, activeQuestString);
+    }
+
+    public void SetQuestNewScoutPosition(Vector3 newPos)
+    {
+        InventoryManager inventoryManager = InventoryManager.Instance;
+        string activeQuestString = GameInventory.Instance.GetActiveQuestString(); //GameStats.Instance.ActiveQuest.ToString();
+
+        string scoutProgressString = inventoryManager.GetItem<string>(GroupNames.QUESTS_SCOUT_PROGRESS, activeQuestString);
+
+        if (scoutProgressString != "")
+        {
+            scoutProgressString += POSITIONS_SEPARATOR;
+        }
+
+        scoutProgressString += newPos.x.ToString() + COORDS_SEPARATOR + newPos.y.ToString() + COORDS_SEPARATOR + newPos.z.ToString();
+
+        inventoryManager.UpdateItem(GroupNames.QUESTS_SCOUT_PROGRESS, activeQuestString, scoutProgressString);
+        saveInventoryItemToFile<string>(GroupNames.QUESTS_SCOUT_PROGRESS, activeQuestString);
+        //saveQuestScoutProgress();
+    }
+
+    public List<Vector3> GetQuestScoutProgress()
+    {
+        string activeQuestString = GameInventory.Instance.GetActiveQuestString(); //GameStats.Instance.ActiveQuest.ToString();
+        string scoutProgressString = InventoryManager.Instance.GetItem<string>(GroupNames.QUESTS_SCOUT_PROGRESS, activeQuestString);
+
+        return getPositionsFromString(scoutProgressString);
+    }
+
+    private List<Vector3> getPositionsFromString(string positionsString)
+    {
+        List<Vector3> positionsList = new List<Vector3>();
+
+        if (positionsString != "")
+        {
+            string[] positions = positionsString.Split(POSITIONS_SEPARATOR);
+
+            foreach (string positionString in positions)
+            {
+                string[] coords = positionString.Split(COORDS_SEPARATOR);
+
+                Vector3 position = new Vector3(float.Parse(coords[0]), float.Parse(coords[1]), float.Parse(coords[2]));
+                positionsList.Add(position);
+            }
+        }
+
+        return positionsList;
+    }
+
+    public void SetQuestLevelCompleted(int newLevel)
+    {
+        Debug.LogWarning("GameInventory::SetQuestLevelCompleted -> level: " + newLevel);
+
+        Quests activeQuest = GameInventory.Instance.GetActiveQuest(); //GameStats.Instance.ActiveQuest;
+        string questLevelKey = activeQuest.ToString() + QUEST_WITH_LEVEL_SEPARATOR + newLevel;
+
+        InventoryManager.Instance.UpdateItem(GroupNames.QUESTS_LEVEL_PROGRESS, questLevelKey, true, true);
+        saveInventoryItemToFile<bool>(GroupNames.QUESTS_LEVEL_PROGRESS, questLevelKey);
+        //saveQuestLevelProgress();
+    }
+
+    public bool GetQuestLevelCompleted(int level)
+    {
+        bool levelCompleted = InventoryManager.Instance.GetItem<bool>(GroupNames.QUESTS_LEVEL_PROGRESS,
+                                                                      GameInventory.Instance.GetActiveQuestString() + QUEST_WITH_LEVEL_SEPARATOR + level);
+
+        return levelCompleted;
+    }
+
+    public bool GetAllQuestLevelsCompleted()
+    {
+        int maxQuestLevels = GameConfig.Instance.MaxQuestLevel;
+
+        for (int i = 1; i <= maxQuestLevels; i++)
+        {
+            if (!GetQuestLevelCompleted(i))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    //public void SetQuestLevelProgress(int newLevel)
+    //{
+    //    Debug.LogWarning("GameInventory::SetQuestLevelProgress -> level: " + newLevel);
+
+    //    int higherLevelCompleted = GetHighestQuestLevelCompleted();
+    //    if (newLevel > higherLevelCompleted)
+    //    {
+    //        Quests activeQuest = GameStats.Instance.ActiveQuest;
+    //        if (newLevel <= _maxLevelByQuest[activeQuest])
+    //        {
+    //            InventoryManager.Instance.UpdateItem(GroupNames.QUESTS_PROGRESS, activeQuest.ToString(), newLevel, true);
+    //            saveQuestLevelProgress();
+    //        }
+    //    }
+    //}
+
+    public int GetHighestQuestLevelCompletedAmount()
+    {
+        Quests activeQuest = GameInventory.Instance.GetActiveQuest(); //GameStats.Instance.ActiveQuest;
 
         if (activeQuest == Quests.None)
         {
@@ -213,18 +349,71 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         }
         else
         {
-            int value = InventoryManager.Instance.GetItem<int>(GroupNames.QUESTS_PROGRESS, activeQuest.ToString());
+            int amount = 0;
+            InventoryManager inventoryManager = InventoryManager.Instance;
 
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
-            if (GameHacks.Instance.AnyQuestProgress.Enabled)
+            for (int i = 1; i <= GameConfig.Instance.MaxQuestLevel; i++)
             {
-                value = GameHacks.Instance.AnyQuestProgress.ValueAsInt;
+                if (GetQuestLevelCompleted(i))
+                {
+                    amount++;
+                }
             }
-#endif
 
-            return value;
+            return amount;
         }
     }
+
+    public bool GetQuestCompleted()
+    {
+        bool questCompleted = true;
+        Quests activeQuest = GameInventory.Instance.GetActiveQuest(); //GameStats.Instance.ActiveQuest;
+
+        if (activeQuest == Quests.None)
+        {
+            Debug.LogError("Attempting to get progress for an active quest of None.");
+            questCompleted = false;
+        }
+        else
+        {
+            for (int i = 1; i <= GameConfig.Instance.MaxQuestLevel; i++)
+            {
+                string questLevelString = activeQuest.ToString() + QUEST_WITH_LEVEL_SEPARATOR + i;
+                bool levelIsCompleted = InventoryManager.Instance.GetItem<bool>(GroupNames.QUESTS_LEVEL_PROGRESS, questLevelString);
+
+                if (!levelIsCompleted)
+                {
+                    questCompleted = false;
+                }
+            }
+        }
+
+        return questCompleted;
+    }
+
+//    public int GetHighestQuestLevelCompleted()
+//    {
+//        Quests activeQuest = GameStats.Instance.ActiveQuest;
+
+//        if (activeQuest == Quests.None)
+//        {
+//            Debug.LogError("Attempting to get progress for an active quest of None.");
+//            return -1;
+//        }
+//        else
+//        {
+//            int value = InventoryManager.Instance.GetItem<int>(GroupNames.QUESTS_PROGRESS, activeQuest.ToString());
+
+//#if DEVELOPMENT_BUILD || UNITY_EDITOR
+//            if (GameHacks.Instance.AnyQuestProgress.Enabled)
+//            {
+//                value = GameHacks.Instance.AnyQuestProgress.ValueAsInt;
+//            }
+//#endif
+
+//            return value;
+//        }
+//    }
 
     public int GetEnjinAttempts()
     {
@@ -233,15 +422,19 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
     public void AddExpToUnit(string unitName, int expToAdd)
     {
-        if (GameNetwork.Instance.HasEnjinMinMinsToken) 
+        if (GameNetwork.Instance.HasEnjinMinMinsToken)
+        {
             expToAdd *= 2; // Min Min Token perk
+        }
 
         int unitExp = InventoryManager.Instance.GetItem<int>(GroupNames.UNITS_EXP, unitName);
         unitExp += expToAdd;
 
         int maxExp = getMaxUnitExperience();
         if (unitExp > maxExp)
+        {
             unitExp = maxExp;
+        }
 
         InventoryManager.Instance.UpdateItem(GroupNames.UNITS_EXP, unitName, unitExp);
     }
@@ -283,9 +476,13 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         int newtierLootBoxesAmount = InventoryManager.Instance.GetItem<int>(GroupNames.LOOT_BOXES, tier.ToString());
 
         if (isAddition)
+        {
             newtierLootBoxesAmount += amount;
+        }
         else
+        {
             newtierLootBoxesAmount -= amount;
+        }
 
         InventoryManager.Instance.UpdateItem(GroupNames.LOOT_BOXES, tier.ToString(), newtierLootBoxesAmount);
 
@@ -368,7 +565,9 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         InventoryManager.Instance.AddItem(GroupNames.UNITS_EXP, unitName, exp);
 
         if (save)
+        {
             SaveUnits();
+        }
     }
 
     public bool HasUnit(string unitName)
@@ -386,9 +585,13 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     {
         int unitTier = Tiers.BRONZE;
         if (_tierSilver_units.Contains(unitName))
+        {
             unitTier = Tiers.SILVER;
+        }
         else if (_tierGold_units.Contains(unitName))
+        {
             unitTier = Tiers.GOLD;
+        }
 
         return unitTier;
     }
@@ -402,7 +605,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         {
             string groupName = GroupNames.UNITS_EXP;
             int unitExp = InventoryManager.Instance.GetItem<int>(groupName, unitName);
-            string hashKey = groupName + _parseSeparator + unitName;
+            string hashKey = groupName + _GROUP_WITH_KEY_SEPARATOR + unitName;
             //Debug.LogWarning("GameInventory::saveUnit -> hashKey: " + hashKey + " -> unitExp: " + unitExp);
 
             saveHashKey(hashKey, unitExp, false);
@@ -411,15 +614,15 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         saveHashTableToFileAndBackup();
     }
 
-    private void initializeMaxLevelsByQuest()
-    {
-        _maxLevelByQuest.Add(Quests.Swissborg, 4);
-    }
+    //private void initializeMaxLevelsByQuest()
+    //{
+    //    _maxLevelByQuest.Add(Quests.Swissborg, 4);
+    //}
 
-    public int GetActiveQuestMaxLevel()
-    {
-        return _maxLevelByQuest[GameStats.Instance.ActiveQuest];
-    }
+    //public int GetActiveQuestMaxLevel()
+    //{
+    //    return _maxLevelByQuest[GameStats.Instance.ActiveQuest];
+    //}
 
     public int GetSinglePlayerMaxLevel()
     {
@@ -432,14 +635,18 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
         foreach (DictionaryEntry entry in _saveHashTable)
         {
-            string[] terms = entry.Key.ToString().Split(_parseSeparator);
+            string[] terms = entry.Key.ToString().Split(_GROUP_WITH_KEY_SEPARATOR);
 
             if (groupName == terms[0])
+            {
                 keysToRemove.Add(entry.Key);
+            }
         }
 
-        foreach(object key in keysToRemove)
+        foreach (object key in keysToRemove)
+        {
             _saveHashTable.Remove(key);
+        }
     }
 
     public void SaveLootBoxes()
@@ -448,7 +655,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         foreach (string tier in inventoryManager.GetGroupKeys(GroupNames.LOOT_BOXES))
         {
             int tierAmount = InventoryManager.Instance.GetItem<int>(GroupNames.LOOT_BOXES, tier);
-            string hashKey = GroupNames.LOOT_BOXES + _parseSeparator + tier;
+            string hashKey = GroupNames.LOOT_BOXES + _GROUP_WITH_KEY_SEPARATOR + tier;
 
             print("SaveLootBoxes -> hashKey: " + hashKey + " -> tierAmount: " + tierAmount.ToString());
             saveHashKey(hashKey, tierAmount, false);
@@ -461,9 +668,13 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     {
         List<string> tierUnits = _tierBronze_units;
         if (tier == Tiers.SILVER)
+        {
             tierUnits = _tierSilver_units;
+        }
         else if (tier == Tiers.GOLD)
+        {
             tierUnits = _tierGold_units;
+        }
 
         List<string> unitNames = LootBoxManager.Instance.PickRandomizedNames(amount, true, tierUnits);
 
@@ -497,7 +708,10 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
     public void AddMissingEnjinUnits()
     {
-        if (GetEnjinAttempts() < 1) return;
+        if (GetEnjinAttempts() < 1)
+        {
+            return;
+        }
 
         saveEnjinAttempts(GetEnjinAttempts() - 1);
         int enjinUnitStartingExperience = _experienceNeededPerUnitLevel[_enjinUnitStartingLevel - 1];
@@ -506,7 +720,9 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         {
             string unitName = i.ToString();
             if (!HasUnit(unitName))
+            {
                 AddUnit(unitName, 0);
+            }
         }
 
         SaveUnits();
@@ -591,23 +807,31 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     {
         int firstTierBronze_number = 1;
         for (int unitNumber = firstTierBronze_number; unitNumber <= _lastTierBronze_unitNumber; unitNumber++)
+        {
             _tierBronze_units.Add(unitNumber.ToString());
+        }
 
         int firstTierSilver_number = _lastTierBronze_unitNumber + 1;
         for (int unitNumber = firstTierSilver_number; unitNumber <= _lastTierSilver_unitNumber; unitNumber++)
+        {
             _tierSilver_units.Add(unitNumber.ToString());
+        }
 
         int firstTierGold_number = _lastTierSilver_unitNumber + 1;
         for (int unitNumber = firstTierGold_number; unitNumber <= _lastTierGold_unitNumber; unitNumber++)
+        {
             _tierGold_units.Add(unitNumber.ToString());
+        }
 
         addEnjinUnitsToTierGoldList();
     }
 
     private void addEnjinUnitsToTierGoldList()
     {
-        for(int i = _enjin_firstUnitNumber; i <=  _enjin_lastUnitNumer; i++)
+        for (int i = _enjin_firstUnitNumber; i <= _enjin_lastUnitNumer; i++)
+        {
             _tierGold_units.Add(i.ToString());
+        }
     }
 
     private void createRarity()
@@ -675,18 +899,29 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     {
         Debug.LogWarning("GameInventory::loadDataFromHashTable");
 
+        GameConfig gameConfig = GameConfig.Instance;
+
         InventoryManager inventoryManager = InventoryManager.Instance;
         inventoryManager.ClearAllGroups();
 
         //Set default values ========================================================================
         inventoryManager.AddItem(GroupNames.STATS, ItemKeys.SINGLE_PLAYER_LEVEL, 0);       
         inventoryManager.AddItem(GroupNames.STATS, ItemKeys.ENJIN_ATTEMPTS, 5);
+        inventoryManager.AddItem(GroupNames.STATS, ItemKeys.ACTIVE_QUEST, Quests.None.ToString());
 
         foreach (Quests quest in Enum.GetValues(typeof(Quests)))
         {
             if (quest != Quests.None)
             {
-                inventoryManager.AddItem(GroupNames.QUESTS_PROGRESS, quest.ToString(), 0);
+                string questString = quest.ToString();
+                inventoryManager.AddItem(GroupNames.QUESTS_SCOUT_PROGRESS, questString, "");
+                inventoryManager.AddItem(GroupNames.QUESTS_ENEMIES_POSITIONS, questString, "");
+
+                int maxQuestLevel = GameConfig.Instance.MaxQuestLevel;
+                for (int i = 1; i <= maxQuestLevel; i++)
+                {
+                    inventoryManager.AddItem(GroupNames.QUESTS_LEVEL_PROGRESS, questString + QUEST_WITH_LEVEL_SEPARATOR + i, false);
+                }
             }
         }
 
@@ -704,62 +939,60 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         //SaveOre();
         //===========================================================================================
 
-        //bool isThereAnyUnit = false;
-        //bool isThereAnyLootBox = false;
-
 
         foreach (DictionaryEntry entry in hashtable)
         {
-            string[] keyTerms = entry.Key.ToString().Split(_parseSeparator);
+            string[] keyTerms = entry.Key.ToString().Split(_GROUP_WITH_KEY_SEPARATOR);
             string groupName = keyTerms[0];
+
+            if (keyTerms.Length < 2)
+            {
+                Debug.LogError("Key with one term: " + entry.Key);
+            }
+
+            string keyString = keyTerms[1];
+            string valueString = (string)entry.Value;
 
             if (groupName == GroupNames.UNITS_EXP)
             {
-                string unitName = keyTerms[1];
-                int unitExp = int.Parse(entry.Value.ToString());
-                //print("LoadData -> groupName: " + groupName + " -> unitName: " + unitName + " -> unit exp: " + unitExp.ToString());
-                inventoryManager.AddItem(groupName, unitName, unitExp);
-
-                //isThereAnyUnit = true;
+                inventoryManager.AddItem(groupName, keyString, int.Parse(valueString));
             }
             else if (groupName == GroupNames.LOOT_BOXES)
             {
-                int tier = int.Parse(keyTerms[1]);
-                int tierAmount = int.Parse((string)entry.Value);
-
-                //print("LoadData -> box tier: " + tier + " amount: " + tierAmount);
-                inventoryManager.UpdateItem(GroupNames.LOOT_BOXES, tier.ToString(), tierAmount, false);
-
-                //isThereAnyLootBox = true;
+                inventoryManager.UpdateItem(groupName, keyString, int.Parse(valueString));
             }
             else if (groupName == GroupNames.STATS)
             {
-                string key = keyTerms[1];
-
-                if ((key == GameInventory.ItemKeys.SINGLE_PLAYER_LEVEL) || (key == GameInventory.ItemKeys.ENJIN_ATTEMPTS))
+                if (keyString == GameInventory.ItemKeys.ACTIVE_QUEST)
                 {
-                    int value = int.Parse((string)entry.Value);
-                    Debug.LogWarning("GameInventory::loadData -> key loaded: " + key + " and value: " + value.ToString());
-                    inventoryManager.UpdateItem(GroupNames.STATS, key, value);
+                    inventoryManager.UpdateItem(groupName, keyString, valueString);
+                }
+                else if ((keyString == GameInventory.ItemKeys.SINGLE_PLAYER_LEVEL) || (keyString == GameInventory.ItemKeys.ENJIN_ATTEMPTS))
+                {
+                    inventoryManager.UpdateItem(groupName, keyString, int.Parse(valueString));
                 }
                 else
                 {
-                    Debug.LogError("GameInventory::loadData -> Unknow stats key loaded: " + key);
+                    Debug.LogError("GameInventory::loadData -> Unknow stats key loaded: " + keyString);
                 }
             }
-            else if (groupName == GroupNames.QUESTS_PROGRESS)
+            else if (groupName == GroupNames.QUESTS_ENEMIES_POSITIONS)
             {
-                string key = keyTerms[1];
-
-                int value = int.Parse((string)entry.Value);
-                Debug.LogWarning("GameInventory::loadData -> quest progress key loaded: " + key + " and value: " + value.ToString());
-                inventoryManager.UpdateItem(GroupNames.QUESTS_PROGRESS, key, value);
+                inventoryManager.UpdateItem(groupName, keyString, valueString);
+            }
+            else if (groupName == GroupNames.QUESTS_LEVEL_PROGRESS)
+            {
+                inventoryManager.UpdateItem(groupName, keyString, bool.Parse(valueString));
+            }
+            else if (groupName == GroupNames.QUESTS_SCOUT_PROGRESS)
+            {
+                inventoryManager.UpdateItem(groupName, keyString, valueString);
             }
             else if (groupName == GroupNames.ORE)
             {
                 string oreItemName = keyTerms[1];
 
-                string[] valueTerms = entry.Value.ToString().Split(_parseSeparator);
+                string[] valueTerms = entry.Value.ToString().Split(_GROUP_WITH_KEY_SEPARATOR);
                 //string value = boostItem.Category + _parseSeparator + boostItem.Bonus + _parseSeparator + boostItem.Amount;
 
                 string category = valueTerms[0];
@@ -775,6 +1008,24 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         //    inventoryManager.UpdateItem(GroupNames.LOOT_BOXES, Tiers.BRONZE.ToString(), _initialBronzeLootBoxes, false);
         //    saveLootBoxes();
         //}
+    }
+
+    public void ClearQuestLevelsCompleted(string questString)
+    {
+        InventoryManager inventoryManager = InventoryManager.Instance;
+        int maxQuestLevel = GameConfig.Instance.MaxQuestLevel;
+
+        for (int i = 1; i <= maxQuestLevel; i++)
+        {
+            string groupName = GroupNames.QUESTS_LEVEL_PROGRESS;
+            string key = questString + QUEST_WITH_LEVEL_SEPARATOR + i;
+            string hashKey = groupName + _GROUP_WITH_KEY_SEPARATOR + key;
+            bool value = false;
+            inventoryManager.UpdateItem(groupName, key, value);
+            saveHashKey(hashKey, value, false);
+        }
+
+        saveHashTableToFileAndBackup();
     }
 
     //private void saveRating()
@@ -796,26 +1047,18 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         }
     }
 
-    private void saveSinglePlayerLevelNumber()
+    private void saveInventoryItemToFile<ItemType>(string groupName, string key)
     {
-        int level = InventoryManager.Instance.GetItem<int>(GroupNames.STATS, ItemKeys.SINGLE_PLAYER_LEVEL);
-        string hashKey = GroupNames.STATS + _parseSeparator + ItemKeys.SINGLE_PLAYER_LEVEL;
-        Debug.LogWarning("GameInventory::saveSinglePlayerLevelNumber: " + level);
-        saveHashKey(hashKey, level);
-    }
-    private void saveQuestLevelProgress()
-    {
-        string activeQuestString = GameStats.Instance.ActiveQuest.ToString();
-        int level = InventoryManager.Instance.GetItem<int>(GroupNames.QUESTS_PROGRESS, activeQuestString);
-        string hashKey = GroupNames.QUESTS_PROGRESS + _parseSeparator + activeQuestString;
-        Debug.LogWarning("GameInventory::saveQuestLevelProgress: " + level);
-        saveHashKey(hashKey, level);
+        ItemType item = InventoryManager.Instance.GetItem<ItemType>(groupName, key);
+        string hashKey = groupName + _GROUP_WITH_KEY_SEPARATOR + key;
+        Debug.LogWarning("GameInventory::saveInventoryItemToFile -> groupName: " + groupName + " key: " + key + item.ToString());
+        saveHashKey(hashKey, item);
     }
 
     private void saveEnjinAttempts(int number)
     {
         Debug.Log("Attempts Remaining: " + number);
-        string hashKey = GroupNames.STATS + _parseSeparator + ItemKeys.ENJIN_ATTEMPTS;
+        string hashKey = GroupNames.STATS + _GROUP_WITH_KEY_SEPARATOR + ItemKeys.ENJIN_ATTEMPTS;
         InventoryManager.Instance.UpdateItem(GroupNames.STATS, ItemKeys.ENJIN_ATTEMPTS, number, true);
         saveHashKey(hashKey, number);
     }
@@ -848,8 +1091,8 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         foreach (string oreItemName in inventoryManager.GetGroupKeys(GroupNames.ORE))
         {
             TeamBoostItem boostItem = inventoryManager.GetItem<TeamBoostItem>(GroupNames.ORE, oreItemName);
-            string hashKey = GroupNames.ORE + _parseSeparator + boostItem.Name;
-            string value = boostItem.Category + _parseSeparator + boostItem.Bonus + _parseSeparator + boostItem.Amount;
+            string hashKey = GroupNames.ORE + _GROUP_WITH_KEY_SEPARATOR + boostItem.Name;
+            string value = boostItem.Category + _GROUP_WITH_KEY_SEPARATOR + boostItem.Bonus + _GROUP_WITH_KEY_SEPARATOR + boostItem.Amount;
 
             saveHashKey(hashKey, value, false);
         }
@@ -880,7 +1123,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         string dataString = fileManager.ConvertHashToDataStringAndSetSec(_saveHashTable);
 
         //Backup saves for logged and not logged users =========================
-        if (GameConfig.Instance.EnableServerBackup)
+        if (NetworkManager.LoggedIn && GameConfig.Instance.EnableServerBackup)
         {
             string fileSec = fileManager.GetDataStringSec(dataString);
 

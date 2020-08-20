@@ -36,20 +36,19 @@ public class ActionArea : NetworkEntity
     {
         base.Awake();
 
-        //_warRef = War.GetSceneInstance();
         _collider = GetComponent<Collider2D>();
         _collider.enabled = false;
 
-        /*if (_warRef.GetIsHost())
-        {
-            if (CollisionDelay == 0)
-                sendEnableCollider(true);
-        }*/
-
         object[] data = base.GetInstantiationData();
-        setUpActionArea((string)data[0], (Vector3)data[1], (Vector3)data[2], (string)data[3], (MinMinUnit.EffectNames)data[4], (string)data[5], (int)data[6]);
+        if (data != null)
+        {
+            SetUpActionArea((string)data[0], (Vector3)data[1], (Vector3)data[2], (string)data[3], (MinMinUnit.EffectNames)data[4], (string)data[5], (int)data[6]);
+        }
 
-        Strenght = float.Parse(getOwnerUnitProperty(GameNetwork.UnitPlayerProperties.STRENGHT));
+        if (OwnerUnitName != "")
+        {
+            Strenght = float.Parse(getOwnerUnitProperty(GameNetwork.UnitPlayerProperties.STRENGHT));
+        }
     }
 
     virtual public void SetWarRef(War warRef)
@@ -59,28 +58,27 @@ public class ActionArea : NetworkEntity
         if (_warRef.GetIsHost())
         {
             if (CollisionDelay == 0)
+            {
                 sendEnableCollider(true);
+            }
         }
     }
 
     override protected void Update()
     {
         base.Update();
-        if (!_warRef) return;
+
+        if (_warRef == null)
+        {
+            handleCollisionTime();
+            return;
+        }
 
         if (_warRef.GetIsHost())
         {
             if (_collider.enabled)
             {
-                if (CollisionTime > 0)
-                {
-                    CollisionTime -= Time.deltaTime;
-                    if (CollisionTime < 0)
-                    {
-                        CollisionTime = 0;
-                        sendEnableCollider(false);
-                    }
-                }
+                handleCollisionTime();
             }
             else  //collider disabled
             {
@@ -107,7 +105,28 @@ public class ActionArea : NetworkEntity
         }
     }
 
-    virtual protected void setUpActionArea(string areaName, Vector3 position, Vector3 direction, string unitName, MinMinUnit.EffectNames effectName, string teamName, int networkPlayerId)
+    private void handleCollisionTime()
+    {
+        if (CollisionTime > 0)
+        {
+            CollisionTime -= Time.deltaTime;
+            if (CollisionTime < 0)
+            {
+                CollisionTime = 0;
+
+                if (_warRef != null)
+                {
+                    sendEnableCollider(false);
+                }
+                else
+                {
+                    enableCollider(false);
+                }
+            }
+        }
+    }
+
+    virtual public void SetUpActionArea(string areaName, Vector3 position, Vector3 direction, string unitName, MinMinUnit.EffectNames effectName, string teamName, int networkPlayerId)
     {
         _effectName = effectName;
         this.name = areaName;
@@ -120,7 +139,12 @@ public class ActionArea : NetworkEntity
 
         setEffect(effectName);
 
-        float scaleFactor = float.Parse(getOwnerUnitProperty(GameNetwork.UnitPlayerProperties.EFFECT_SCALE));
+        float scaleFactor = 1;
+
+        if (OwnerUnitName != Quest.QUEST_PLAYER_UNIT_NAME)
+        {
+            scaleFactor = float.Parse(getOwnerUnitProperty(GameNetwork.UnitPlayerProperties.EFFECT_SCALE));
+        }
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
         if (GameHacks.Instance.PowerScale.Enabled)
@@ -183,13 +207,17 @@ public class ActionArea : NetworkEntity
     {
         FieldRewardBox fieldRewardBox = coll.GetComponent<FieldRewardBox>();
         if (fieldRewardBox != null)
+        {
             fieldRewardBox.Hit();
+        }
     }
 
     protected MinMinUnit getUnitFromCollider(Collider2D coll)
     {
         if (coll.transform.parent == null)
+        {
             return null;
+        }
 
         return coll.transform.parent.GetComponent<MinMinUnit>();
     }
@@ -218,7 +246,8 @@ public class ActionArea : NetworkEntity
         //int damage = Mathf.FloorToInt((float)ownerStrenght * (float)(1 - (finalDefense / 100.0f)));  //Defense is translated into damage reduction
         int damage = Mathf.RoundToInt((Strenght * 10.0f) * (1.0f - targetUnitDefense/10.0f) * (1 - targetUnitTankDefense/10.0f));
 
-        if (this is BomberArea) {
+        if (this is BomberArea) 
+        {
             damage = Mathf.FloorToInt(damage * 1.3f);
         }
 
@@ -241,12 +270,16 @@ public class ActionArea : NetworkEntity
         
         Debug.LogWarning("ActionArea::dealDamage -> damage: " + damage.ToString());
 
-        targetUnitHealth -= damage;  
+        targetUnitHealth -= damage;
         if (targetUnitHealth < 0)
+        {
             targetUnitHealth = 0;
+        }
 
-        if(_warRef.GetIsAiTurn())
+        if (_warRef.GetIsAiTurn())
+        {
             _warRef.HandleAiSuccessfulAttack(this);
+        }
 
         _warRef.SetUnitHealth(targetUnitTeam, targetUnitName, targetUnitHealth, true);
     }

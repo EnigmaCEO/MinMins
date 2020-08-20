@@ -22,7 +22,8 @@ public class NewLobby : NetworkEntity
     [SerializeField] private GameObject _roomsGridWindowBg;
 
     [SerializeField] private MessagePopUp _messagePopUp;
-    
+    [SerializeField] Text _pvprating;
+
     private bool _isJoiningRoom = false;
 
     override protected void Awake()
@@ -33,6 +34,8 @@ public class NewLobby : NetworkEntity
 
     void Start()
     {
+        _pvprating.text = LocalizationManager.GetTermTranslation("PvP Rating") + ": " + GameStats.Instance.Rating;
+
         _waitingPopUp.SetActive(false);
         GameStats.Instance.UsesAiForPvp = false;
 
@@ -96,7 +99,10 @@ public class NewLobby : NetworkEntity
         NetworkManager.OnPlayerDisconnectedCallback -= onPlayerDisconnected;
         NetworkManager.OnDisconnectedFromNetworkCallback -= onDisconnectedFromNetwork;
 
-        GameNetwork.Instance.OnPvpAiSetCallback -= onPvpAiSet;
+        if (GameNetwork.HasInstance())
+        {
+            GameNetwork.Instance.OnPvpAiSetCallback -= onPvpAiSet;
+        }
     }
 
     private void onBackButtonDown()

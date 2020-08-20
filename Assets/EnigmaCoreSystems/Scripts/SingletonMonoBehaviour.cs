@@ -5,6 +5,12 @@ public abstract class SingletonMonobehaviour<T> : MonoBehaviour where T : Single
     public bool PersistBetweenScenes = false;
     private static T _instance = null;
 
+    public static bool HasInstance()
+    {
+        return (_instance != null);
+    }
+
+
     public static T Instance
     {
         get

@@ -65,7 +65,9 @@ public class MinMinUnit : NetworkEntity
 
         object[] data = base.GetInstantiationData();
         if (data != null)
+        {
             setUpUnitForWar((string)data[0], (string)data[1], (int)data[2], (float)data[3], (float)data[4], (int)data[5]);
+        }
 
         Tier = GameInventory.Instance.GetUnitTier(gameObject.name);
     }
@@ -77,15 +79,25 @@ public class MinMinUnit : NetworkEntity
         if (GameHacks.Instance.AssignEffectByType)
         {
             if (unit.Type == Types.Bomber)
+            {
                 effect = EffectNames.FireExplosion;
+            }
             else if (unit.Type == Types.Destroyer)
+            {
                 effect = EffectNames.LightningProjectile;
+            }
             else if (unit.Type == Types.Healer)
+            {
                 effect = EffectNames.LifeArea;
+            }
             else if (unit.Type == Types.Scout)
+            {
                 effect = EffectNames.ScoutLight;
+            }
             else if (unit.Type == Types.Tank)
+            {
                 effect = EffectNames.ShieldEffect;
+            }
         }
 
         return effect;

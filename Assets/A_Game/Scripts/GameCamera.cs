@@ -51,16 +51,22 @@ public class GameCamera : MonoBehaviour
         if (sideToMoveTeam == _positionSideTeam)
         {
             if (OnMovementCompletedCallback != null)
+            {
                 OnMovementCompletedCallback(sideToMoveTeam);
+            }
         }
         else
         {
             Transform sideTransform = null;
 
             if (sideToMoveTeam == GameNetwork.TeamNames.HOST)
+            {
                 sideTransform = _team1_transform;
+            }
             else if (sideToMoveTeam == GameNetwork.TeamNames.GUEST)
+            {
                 sideTransform = _team2_transform;
+            }
 
             Vector3 currentPos = transform.position;
             Vector3 sideTransformPos = sideTransform.position;
@@ -81,6 +87,8 @@ public class GameCamera : MonoBehaviour
         _positionSideTeam = sideToMoveTeam;
 
         if (OnMovementCompletedCallback != null)
+        {
             OnMovementCompletedCallback(sideToMoveTeam);
+        }
     }
 }

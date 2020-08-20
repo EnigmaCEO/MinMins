@@ -6,11 +6,13 @@ using CodeStage.AntiCheat.Storage;
 using GameEnums;
 using UnityEngine.UDP;
 using System;
+using SimpleJSON;
+using System.Collections.Generic;
 
 public class Main : EnigmaScene
 {
     [SerializeField] GameObject _loginModal;
-    [SerializeField] LoginForGameModePopUp _loginForPvpPopUp;
+    [SerializeField] BasicPopUp _loginForPvpPopUp;
     //[SerializeField] LoginForGameModePopUp _loginForQuestPopUp;
     [SerializeField] GameObject _restorePopUp;
 
@@ -20,12 +22,23 @@ public class Main : EnigmaScene
     [SerializeField] GameObject _logoutButton;
     [SerializeField] Button _restoreButton;
     [SerializeField] GameObject _enjinIcon;
-    [SerializeField] Text _pvprating;
+    //[SerializeField] Text _pvprating;
 
     [SerializeField] GameObject _questButton;
+    [SerializeField] GameObject _questProgressPanel;
+
+    [SerializeField] private Image _questProgressFill;
+    [SerializeField] private Text _questProgressText;
+
+    private Dictionary<Quests, string> _rewardIconResNameByQuest = new Dictionary<Quests, string>();
+
+    private const int _POINTS_FOR_QUEST = 1000;
 
     void Start()
     {
+        populateIconPathbyQuest();
+        NetworkManager.Transaction(GameNetwork.Transactions.GET_QUEST_DATA, onGetQuestData);
+
         if (!NetworkManager.LoggedIn)
         {
             GameNetwork.Instance.ResetLoginValues();
@@ -42,12 +55,13 @@ public class Main : EnigmaScene
         _enjinIcon.SetActive(false);
         _enjinWindow.SetActive(false);
 
+        _questProgressPanel.SetActive(false);
         _questButton.SetActive(false);
 
         _restoreButton.onClick.AddListener(delegate { OnRestoreButtonDown(); });
         _restoreButton.gameObject.SetActive(false);
 
-        _pvprating.text = "";
+        //_pvprating.text = "";
         /*
                 _kinWrapper = GameObject.Find("/KinManager").GetComponent<KinManager>();
 
@@ -102,9 +116,156 @@ public class Main : EnigmaScene
         }
     }
 
+    private void onGetQuestData(JSONNode response)
+    {
+        GameHacks gameHacks = GameHacks.Instance;
+        Quests hackedQuest = Quests.None;
+        bool questIsHacked = false;
+
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+        if (gameHacks.SetServerQuest.Enabled)
+        {
+            hackedQuest = gameHacks.SetServerQuest.GetValueAsEnum<Quests>();
+            questIsHacked = true;
+        }
+#endif
+
+        if (questIsHacked || !NetworkManager.CheckInvalidServerResponse(response, nameof(onGetQuestData)))
+        {
+            GameStats gameStats = GameStats.Instance;
+            GameInventory gameInventory = GameInventory.Instance;
+
+            JSONNode questNode = null;
+
+            if (!questIsHacked)
+            {
+                questNode = NetworkManager.CheckValidNode(response, GameNetwork.TransactionKeys.QUEST);
+            }
+
+            if (questIsHacked || (questNode != null)) 
+            {
+                Quests serverActiveQuest = Quests.None;
+
+                if (questIsHacked)
+                {
+                    serverActiveQuest = hackedQuest;
+                }
+                else
+                {
+                    serverActiveQuest = (Quests)questNode.AsInt; 
+                }              
+
+                Quests savedActiveQuest = gameInventory.GetActiveQuest();
+                if (serverActiveQuest != savedActiveQuest)
+                {
+                    if (savedActiveQuest != Quests.None)
+                    {
+                        gameInventory.SetQuestEnemiesPositions(new List<Vector3>());
+                        gameInventory.ClearQuestLevelsCompleted(savedActiveQuest.ToString());
+                        gameInventory.ClearScoutProgress();
+                    }
+
+                    gameInventory.SetActiveQuest(serverActiveQuest);
+                }
+            }
+
+            Quests activeQuest = gameInventory.GetActiveQuest();
+            if (activeQuest != Quests.None)
+            {
+                JSONNode progressNode = null;
+
+                if (!questIsHacked)
+                {
+                    progressNode = NetworkManager.CheckValidNode(response, GameNetwork.TransactionKeys.PROGRESS);
+                }
+
+                if (questIsHacked || (progressNode != null))
+                {
+                    int points = 0;
+
+                    if (!questIsHacked)
+                    {
+                        points = progressNode.AsInt;
+                    }
+
+                    handleQuestPanelOrButtonVisibility(points);
+                }
+            }
+        }
+
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+        if (GameHacks.Instance.QuestsPoints.Enabled)
+        {
+            int points = GameHacks.Instance.QuestsPoints.ValueAsInt;
+            handleQuestPanelOrButtonVisibility(points);
+        }
+#endif
+    }
+
+    private void handleQuestPanelOrButtonVisibility(int points)
+    {
+        GameInventory gameInventory = GameInventory.Instance;
+
+        if (gameInventory.GetAllQuestLevelsCompleted())
+        {
+            return;
+        }
+
+        Quests activeQuest = gameInventory.GetActiveQuest();
+        string iconPath = "Images/Units/" + _rewardIconResNameByQuest[activeQuest];
+        Sprite questIcon = (Sprite)Resources.Load<Sprite>(iconPath);
+
+        if (questIcon == null)
+        {
+            Debug.LogError("Icon was not found at path: " + iconPath);
+        }
+
+        _questProgressFill.fillAmount = ((float)points) / _POINTS_FOR_QUEST;
+
+        if (points >= _POINTS_FOR_QUEST)
+        {
+            _questButton.transform.Find("QuestName").GetComponent<Text>().text = activeQuest.ToString();
+
+            if (questIcon != null)
+            {
+                _questButton.transform.Find("icon").GetComponent<Image>().sprite = questIcon;
+            }
+
+            _questButton.SetActive(true);
+            _questProgressPanel.SetActive(false);
+        }
+        else
+        {
+            if (questIcon != null)
+            {
+                _questProgressPanel.transform.Find("Prize").GetComponent<Image>().sprite = questIcon;
+            }
+
+            _questProgressPanel.SetActive(true);
+        }
+    }
+
+    private void populateIconPathbyQuest()
+    {
+        _rewardIconResNameByQuest.Add(Quests.One, "122");
+        _rewardIconResNameByQuest.Add(Quests.Two, "123");
+        _rewardIconResNameByQuest.Add(Quests.Three, "124");
+        _rewardIconResNameByQuest.Add(Quests.Four, "125");
+        _rewardIconResNameByQuest.Add(Quests.Five, "126");
+    }
+
     public void Init()
     {
         bool loggedIn = NetworkManager.LoggedIn;
+
+        //if (NetworkManager.LoggedIn)
+        //{
+        //    NetworkManager.Transaction(NetworkManager.Transactions.GIFT_PROGRESS, new Hashtable(), onGiftProgress);
+        //}
+        //else
+        //{
+        //    _questProgressPanel.SetActive(false);
+        //}
 
         _loginButton.gameObject.SetActive(!loggedIn);
         _logoutButton.gameObject.SetActive(loggedIn);
@@ -131,10 +292,10 @@ public class Main : EnigmaScene
 
         UpdateEnjinDisplay();
 
-        if (loggedIn)
-        {
-            _pvprating.text = LocalizationManager.GetTermTranslation("PvP Rating") + ": " + GameStats.Instance.Rating;
-        }
+        //if (loggedIn)
+        //{
+        //    _pvprating.text = LocalizationManager.GetTermTranslation("PvP Rating") + ": " + GameStats.Instance.Rating;
+        //}
 
     }
 
@@ -150,8 +311,6 @@ public class Main : EnigmaScene
     {
         _restoreButton.gameObject.SetActive(false);
         GameInventory gameInventory = GameInventory.Instance;
-
-
 
         if ((GameConfig.Instance.EnableServerBackup && NetworkManager.LoggedIn && GameStats.Instance.IsThereServerBackup) 
             || GameInventory.Instance.IsTherePrefsBackupSave())
@@ -227,7 +386,8 @@ public class Main : EnigmaScene
         //if (NetworkManager.LoggedIn)
         //{
             GameStats.Instance.Mode = GameStats.Modes.Quest;
-            goToLevels();
+            SceneManager.LoadScene(GameConstants.Scenes.QUEST);
+            //goToLevels();
         //}
         //else
         //{
@@ -274,6 +434,22 @@ public class Main : EnigmaScene
 
         yield break;
     }
+
+    //private void onGiftProgress(SimpleJSON.JSONNode response)
+    //{
+    //    if (NetworkManager.CheckInvalidServerResponse(response, nameof(onGiftProgress)))
+    //    {
+    //        return;
+    //    }
+
+    //    SimpleJSON.JSONNode response_hash = response[0];
+
+    //    string progress = response_hash["progress"].ToString().Trim('"');
+    //    _questProgressFill.fillAmount = float.Parse(progress) / 1000.0f;
+    //    _questProgressText.text = "$" + progress + " / $1000";
+
+    //    _questProgressPanel.SetActive(true);
+    //}
 
     private void onLinkedTransaction(SimpleJSON.JSONNode response)
     {
@@ -384,6 +560,7 @@ public class Main : EnigmaScene
     public void Logout()
     {
         _questButton.gameObject.SetActive(false);
+        _questProgressPanel.SetActive(false);
 
         NetworkManager.Logout();
 
@@ -397,7 +574,7 @@ public class Main : EnigmaScene
         Text text = _enjinIcon.GetComponentInChildren<Text>();
         text.text = "";
         _enjinIcon.SetActive(false);
-        _pvprating.text = "";
+        //_pvprating.text = "";
         StopCoroutine("handleEnjinLinkingCheck");
         _enjinWindow.gameObject.SetActive(false);
     }
@@ -414,28 +591,28 @@ public class Main : EnigmaScene
     {
         GameNetwork gameNetwork = GameNetwork.Instance;
 
-        if (NetworkManager.LoggedIn)
-        {
-            Quests activeQuest = GameStats.Instance.ActiveQuest;
-            _questButton.SetActive(activeQuest != Quests.None);
+        //if (NetworkManager.LoggedIn)
+        //{
+        //    Quests activeQuest = GameStats.Instance.ActiveQuest;
+        //    _questButton.SetActive(activeQuest != Quests.None);
 
-            if (_questButton.activeInHierarchy)
-            {
-                _questButton.transform.Find("QuestName").GetComponent<Text>().text = activeQuest.ToString();
+        //    if (_questButton.activeInHierarchy)
+        //    {
+        //        _questButton.transform.Find("QuestName").GetComponent<Text>().text = activeQuest.ToString();
 
-                string iconPath = "Images/Quests/" + activeQuest.ToString() + " Icon";
-                Sprite questIcon = (Sprite)Resources.Load<Sprite>(iconPath);
+        //        string iconPath = "Images/Quests/" + activeQuest.ToString() + " Icon";
+        //        Sprite questIcon = (Sprite)Resources.Load<Sprite>(iconPath);
 
-                if (questIcon != null)
-                {
-                    _questButton.transform.Find("icon").GetComponent<Image>().sprite = questIcon;
-                }
-                else
-                {
-                    Debug.Log("Quest Icon image was not found at path: " + iconPath + " . Please check active quest is correct and image is in the right path.");
-                }
-            }
-        }
+        //        if (questIcon != null)
+        //        {
+        //            _questButton.transform.Find("icon").GetComponent<Image>().sprite = questIcon;
+        //        }
+        //        else
+        //        {
+        //            Debug.Log("Quest Icon image was not found at path: " + iconPath + " . Please check active quest is correct and image is in the right path.");
+        //        }
+        //    }
+        //}
 
         if (gameNetwork.IsEnjinLinked)
         {

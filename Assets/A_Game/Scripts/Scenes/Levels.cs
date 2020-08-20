@@ -53,18 +53,18 @@ public class Levels : EnigmaScene
         {
             levelsLenght = GameNetwork.Instance.GetLocalPlayerPvpLevelNumber();
         }
-        else if (mode == GameStats.Modes.Quest)
-        {
-            levelsLenght = GameInventory.Instance.GetHighestQuestLevelCompleted() + 1;
-            int questMaxLevel = gameInventory.GetActiveQuestMaxLevel();
+        //else if (mode == GameStats.Modes.Quest)
+        //{
+        //    levelsLenght = GameInventory.Instance.GetHighestQuestLevelCompleted() + 1;
+        //    //int questMaxLevel = gameInventory.GetActiveQuestMaxLevel();
 
-            _title.text = GameStats.Instance.ActiveQuest.ToString(); //(GameStats.Instance.ActiveQuest.ToString() + " Quest").ToUpper();
+        //    _title.text = GameStats.Instance.ActiveQuest.ToString(); //(GameStats.Instance.ActiveQuest.ToString() + " Quest").ToUpper();
 
-            if (levelsLenght > questMaxLevel)
-            {
-                levelsLenght = questMaxLevel;
-            }
-        }
+        //    //if (levelsLenght > questMaxLevel)
+        //    //{
+        //    //    levelsLenght = questMaxLevel;
+        //    //}
+        //}
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
         if (gameHacks.UnlockSinglePlayerLevels.Enabled && (mode == (GameStats.Modes.SinglePlayer)))
@@ -74,13 +74,13 @@ public class Levels : EnigmaScene
 #endif
 
         Debug.LogWarning(">Levels::Start -> Levels lenght: " + levelsLenght);
-        GameEnums.Quests activeQuest = GameStats.Instance.ActiveQuest;
+        GameEnums.Quests activeQuest = gameInventory.GetActiveQuest(); //GameStats.Instance.ActiveQuest;
 
         int activeQuestLastLevel = 0;
 
         if (mode == GameStats.Modes.Quest)
         {
-            activeQuestLastLevel = GameInventory.Instance.GetActiveQuestMaxLevel();
+            //activeQuestLastLevel = GameInventory.Instance.GetActiveQuestMaxLevel();
         }
 
         for (int i = 0; i < levelsLenght; i++)
@@ -95,20 +95,20 @@ public class Levels : EnigmaScene
 
             if (mode == GameStats.Modes.Quest)
             {
-                if ((i + 1) == activeQuestLastLevel) // if level number equals max level
-                {
-                    string iconPath = "Images/Quests/" + activeQuest.ToString() + " Icon";
-                    Sprite questIcon = (Sprite)Resources.Load<Sprite>(iconPath);
+                //if ((i + 1) == activeQuestLastLevel) // if level number equals max level
+                //{
+                //    string iconPath = "Images/Quests/" + activeQuest.ToString() + " Icon";
+                //    Sprite questIcon = (Sprite)Resources.Load<Sprite>(iconPath);
 
-                    if (questIcon != null)
-                    {
-                        levelGridItem.SetImageSprite(questIcon);
-                    }
-                    else
-                    {
-                        Debug.Log("Quest Icon image was not found at path: " + iconPath + " . Please check active quest is correct and image is in the right path.");
-                    }
-                }
+                //    if (questIcon != null)
+                //    {
+                //        levelGridItem.SetImageSprite(questIcon);
+                //    }
+                //    else
+                //    {
+                //        Debug.Log("Quest Icon image was not found at path: " + iconPath + " . Please check active quest is correct and image is in the right path.");
+                //    }
+                //}
             }
 
             if ((mode == GameStats.Modes.Quest) || (mode == GameStats.Modes.Pvp))

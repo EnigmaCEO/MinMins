@@ -378,6 +378,17 @@ namespace Enigma.CoreSystems
             Instance.StartCoroutine(httpRequest(id, hashtable, externalCallback, localCallback, texture));
         }
 
+        static public JSONNode CheckValidNode(JSONNode parentNode, string key)
+        {
+            JSONNode node = parentNode[key];
+            if (node == null)
+            { 
+                Debug.LogError("onGetQuestData -> node with key " + key + " was null.");
+            }
+
+            return node;
+        }
+
         static public bool CheckInvalidServerResponse(JSONNode response, string transactionName)
         {
             bool isInvalid = false;
@@ -435,7 +446,9 @@ namespace Enigma.CoreSystems
             WWWForm formData = new WWWForm();
             formData.AddField(TransactionKeys.TID, id);
             if (_sessionID != null)
+            {
                 formData.AddField(TransactionKeys.SSID, _sessionID);
+            }
 
             foreach (DictionaryEntry pair in hashtable)
             {
@@ -443,7 +456,9 @@ namespace Enigma.CoreSystems
 
                 Debug.Log(pair.Key + " " + pair.Value);
                 if (pair.Key.ToString() == TransactionKeys.IMAGE)
+                {
                     formData.AddBinaryData(TransactionKeys.IMAGE_UPLOAD, pair.Value as byte[], "image.png", "image/png");
+                }
                 else
                 {
                     //string value = Md5Sum(Application.identifier + Application.version + (string)pair.Value);
@@ -471,7 +486,9 @@ namespace Enigma.CoreSystems
                 JSONNode response = JSON.Parse(www.error);
 
                 if (localCallback != null)
+                {
                     localCallback(response);
+                }
 
                 externalCallback(response);
 
@@ -491,12 +508,16 @@ namespace Enigma.CoreSystems
                     JSONNode response = JSON.Parse(www.downloadHandler.text);
 
                     if (localCallback != null)
+                    {
                         localCallback(response);
+                    }
 
                     externalCallback(response);
                 }
                 if (texture != null)
+                {
                     texture(((DownloadHandlerTexture)www.downloadHandler).texture);
+                }
             }
         }
 
@@ -504,7 +525,9 @@ namespace Enigma.CoreSystems
         {
             string parameters = "";
             foreach (DictionaryEntry hash_entry in my_hash)
+            {
                 parameters = parameters + "&" + hash_entry.Key + "=" + hash_entry.Value;
+            }
 
             return parameters;
         }
@@ -523,8 +546,9 @@ namespace Enigma.CoreSystems
             string hashString = "";
 
             for (int i = 0; i < hashBytes.Length; i++)
+            {
                 hashString += System.Convert.ToString(hashBytes[i], 16).PadLeft(2, '0');
-
+            }
 
             return hashString.PadLeft(32, '0');
         }
@@ -557,7 +581,9 @@ namespace Enigma.CoreSystems
             hashtable.Add(TransactionKeys.ENJIN, ethAddress);
 
             if (extras != null)
+            {
                 hashtable.Merge(extras);
+            }
 
             Transaction(Transactions.REGISTRATION, hashtable, callback, RegistrationResult);
         }
@@ -585,7 +611,9 @@ namespace Enigma.CoreSystems
             hashtable.Add(TransactionKeys.PW_HASH, pw);
 
             if (extras != null)
+            {
                 hashtable.Merge(extras);
+            }
 
             Transaction(Transactions.LOGIN, hashtable, callback, LoginResult);
         }
@@ -599,7 +627,9 @@ namespace Enigma.CoreSystems
         static private void LoginResult(JSONNode response)
         {
             if (response == null)
+            {
                 return;
+            }
 
             JSONNode response_hash = response[0];
             string status = response_hash[TransactionKeys.STATUS].ToString().Trim('"');
@@ -618,7 +648,9 @@ namespace Enigma.CoreSystems
         static public void SetData(string key, Hashtable val)
         {
             if (Data.ContainsKey(key))
+            {
                 Data.Remove(key);
+            }
 
             Data.Add(key, val);
         }
@@ -653,7 +685,9 @@ namespace Enigma.CoreSystems
                 image.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
 
                 if (callback != null)
+                {
                     callback();
+                }
             }
         }
 
@@ -662,7 +696,9 @@ namespace Enigma.CoreSystems
             while (true)
             {
                 if (GetSessionID() == null)
+                {
                     yield return new WaitForSeconds(_HEARTBEAT_SESSION_CHECK_DELAY);
+                }
                 else
                 {
                     Transaction(Transactions.HEART_BEAT, onHeartBeat);
@@ -727,7 +763,9 @@ namespace Enigma.CoreSystems
             if (GetConnected())
             {
                 if (GetInRoom())
+                {
                     LeaveRoom();
+                }
 
                 return;
             }
@@ -742,7 +780,9 @@ namespace Enigma.CoreSystems
         static public void Disconnect()
         {
             if (PhotonNetwork.connected)
+            {
                 PhotonNetwork.Disconnect();
+            }
         }
 
         static public void SendRPCtoAll(string methodName, params object[] parameters)
@@ -787,7 +827,9 @@ namespace Enigma.CoreSystems
             foreach (RoomInfo room in rooms)
             {
                 if (room.Name == roomName)
+                {
                     return true;
+                }
             }
 
             return false;
@@ -814,7 +856,9 @@ namespace Enigma.CoreSystems
             ExitGames.Client.Photon.Hashtable photonHTable = new ExitGames.Client.Photon.Hashtable();
 
             foreach (DictionaryEntry pair in customRoomProperties)
+            {
                 photonHTable.Add(pair.Key, pair.Value);
+            }
 
             _maxPlayersNotSpectating = maxPlayersNotExpectating;
 
@@ -888,7 +932,9 @@ namespace Enigma.CoreSystems
             RoomInfo[] roomList = GetRoomList();
 
             foreach (RoomInfo r in roomList)
+            {
                 Debug.Log(r);
+            }
         }
 
         //Get number of players in the room
@@ -1006,7 +1052,9 @@ namespace Enigma.CoreSystems
             int length = photonPlayerList.Length;
             int[] idList = new int[length];
             for (int i = 0; i < length; i++)
+            {
                 idList[i] = photonPlayerList[i].ID;
+            }
 
             return idList;
         }
@@ -1033,24 +1081,34 @@ namespace Enigma.CoreSystems
             if (IsPhotonOffline())
             {
                 if (!Data.ContainsKey(DataGroups.INFO))
+                {
                     Data.Add(DataGroups.INFO, new Hashtable());
+                }
 
                 if (!Data[DataGroups.INFO].ContainsKey(DataKeys.PLAYER))
+                {
                     Data[DataGroups.INFO].Add(DataKeys.PLAYER, new Hashtable());
+                }
 
                 Hashtable userData = Data[DataGroups.INFO][DataKeys.PLAYER] as Hashtable;
 
                 if (!userData.ContainsKey(virtualPlayerKey))
                 {
                     if (value != null)
+                    {
                         userData.Add(virtualPlayerKey, value);
+                    }
                 }
                 else
                 {
                     if (value == null)
+                    {
                         userData.Remove(virtualPlayerKey);
+                    }
                     else
+                    {
                         userData[virtualPlayerKey] = value;
+                    }
                 }
 
                 if (value != null)
@@ -1058,7 +1116,9 @@ namespace Enigma.CoreSystems
                     Hashtable updatedProperties = new Hashtable();
                     updatedProperties.Add(virtualPlayerKey, value);
                     if (OnPlayerCustomPropertiesChangedCallback != null)
+                    {
                         OnPlayerCustomPropertiesChangedCallback(GetLocalPlayer(), updatedProperties);
+                    }
                 }
             }
             else  //Online
@@ -1088,11 +1148,14 @@ namespace Enigma.CoreSystems
             if (IsPhotonOffline())
             {
                 if (!Data.ContainsKey(DataGroups.INFO))
+                {
                     return "";
+                }
 
                 if (!Data[DataGroups.INFO].ContainsKey(DataKeys.PLAYER))
+                {
                     return "";
-
+                }
 
                 Hashtable userData = Data[DataGroups.INFO][DataKeys.PLAYER] as Hashtable;
                 print("NetworkManager::GetAnyPlayerCustomProperty -> networkPlayerId: " + networkPlayerId + " userData.ToStringFull(): " + userData.ToStringFull());
@@ -1137,7 +1200,9 @@ namespace Enigma.CoreSystems
         static public void ReadPlayerList(PhotonPlayer[] playerList)
         {
             for (int i = 0; i < PhotonNetwork.playerList.Length; i++)
+            {
                 Debug.Log(string.Format("Player {0}: ", i + 1) + playerList[i].NickName);
+            }
         }
 
         ///<summary>
@@ -1149,24 +1214,34 @@ namespace Enigma.CoreSystems
             if (IsPhotonOffline())
             {
                 if (!Data.ContainsKey(DataGroups.INFO))
+                {
                     Data.Add(DataGroups.INFO, new Hashtable());
+                }
 
                 if (!Data[DataGroups.INFO].ContainsKey(DataKeys.ROOM))
+                {
                     Data[DataGroups.INFO].Add(DataKeys.ROOM, new Hashtable());
+                }
 
                 Hashtable roomData = Data[DataGroups.INFO][DataKeys.ROOM] as Hashtable;
 
                 if (!roomData.ContainsKey(key))
+                {
                     roomData.Add(key, value);
+                }
                 else
+                {
                     roomData[key] = value;
+                }
 
                 if (value != null)
                 {
                     Hashtable updatedProperties = new Hashtable();
                     updatedProperties.Add(key, value);
                     if (OnRoomCustomPropertiesChangedCallback != null)
+                    {
                         OnRoomCustomPropertiesChangedCallback(updatedProperties);
+                    }
                 }
             }
             else // Online
@@ -1188,10 +1263,14 @@ namespace Enigma.CoreSystems
             if (IsPhotonOffline())
             {
                 if (!Data.ContainsKey(DataGroups.INFO))
+                {
                     return "";
+                }
 
                 if (!Data[DataGroups.INFO].ContainsKey(DataKeys.ROOM))
+                {
                     return "";
+                }
 
                 Hashtable userData = Data[DataGroups.INFO][DataKeys.ROOM] as Hashtable;
                 Debug.Log("GetRoomCustomProperty -> userData.ToStringFull(): " + userData.ToStringFull());
@@ -1275,7 +1354,9 @@ namespace Enigma.CoreSystems
         static public PhotonView GetPhotonView(GameObject obj)
         {
             if (obj != null)
+            {
                 return PhotonView.Get(obj);
+            }
 
             return null;
         }
@@ -1368,14 +1449,18 @@ namespace Enigma.CoreSystems
         {
             Debug.Log("NetworkManager::OnConnectedToMaster");
             if (OnConnectedToMasterCallback != null)
+            {
                 OnConnectedToMasterCallback();
+            }
         }
 
         private void OnReceivedRoomListUpdate()
         {
             Debug.Log("NetworkManager::OnReceivedRoomListUpdate");
             if (OnReceivedRoomListUpdateCallback != null)
+            {
                 OnReceivedRoomListUpdateCallback();
+            }
         }
 
         void OnJoinedLobby()
@@ -1383,7 +1468,9 @@ namespace Enigma.CoreSystems
             Debug.Log("NetworkManager::Joined Lobby");
 
             if (OnJoinedLobbyCallback != null)
+            {
                 OnJoinedLobbyCallback();
+            }
         }
 
         void OnLeftLobby()
@@ -1391,7 +1478,9 @@ namespace Enigma.CoreSystems
             Debug.Log("NetworkManager::OnLeftLobby");
 
             if (OnLeftLobbyCallback != null)
+            {
                 OnLeftLobbyCallback();
+            }
         }
 
         void OnJoinedRoom()
@@ -1404,7 +1493,9 @@ namespace Enigma.CoreSystems
 
 
             if (OnJoinedRoomCallback != null)
+            {
                 OnJoinedRoomCallback();
+            }
         }
 
         void OnLeftRoom()
@@ -1414,7 +1505,9 @@ namespace Enigma.CoreSystems
             string sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
 
             if (OnLeftRoomCallback != null)
+            {
                 OnLeftRoomCallback();
+            }
         }
 
         void OnPhotonPlayerConnected(PhotonPlayer connectedPlayer)
@@ -1424,11 +1517,16 @@ namespace Enigma.CoreSystems
             if (GetIsMasterClient())
             {
                 //UpdateRoomList();
-                if (CheckReadyToLaunch != null) CheckReadyToLaunch();
+                if (CheckReadyToLaunch != null)
+                {
+                    CheckReadyToLaunch();
+                }
             }
 
             if (OnPlayerConnectedCallback != null)
+            {
                 OnPlayerConnectedCallback(connectedPlayer.ID);
+            }
         }
 
         void OnPhotonPlayerDisconnected(PhotonPlayer disconnectedPlayer)
@@ -1436,7 +1534,9 @@ namespace Enigma.CoreSystems
             Debug.Log("NetworkManager::Player: " + disconnectedPlayer.NickName + " disconnected");
 
             if (OnPlayerDisconnectedCallback != null)
+            {
                 OnPlayerDisconnectedCallback(disconnectedPlayer.ID);
+            }
         }
 
         void OnPhotonPlayerPropertiesChanged(object[] playerAndUpdatedProps)
@@ -1450,7 +1550,9 @@ namespace Enigma.CoreSystems
                 updatedProperties.Add(key, photonUpdatedProps[key]);
 
             if (OnPlayerCustomPropertiesChangedCallback != null)
+            {
                 OnPlayerCustomPropertiesChangedCallback(player, updatedProperties);
+            }
         }
 
         void OnPhotonCustomRoomPropertiesChanged(ExitGames.Client.Photon.Hashtable photonUpdatedProps)
@@ -1459,7 +1561,9 @@ namespace Enigma.CoreSystems
             Hashtable updatedProperties = convertPhotonHashTable(photonUpdatedProps);
 
             if (OnRoomCustomPropertiesChangedCallback != null)
+            {
                 OnRoomCustomPropertiesChangedCallback(updatedProperties);
+            }
         }
 
         void OnMasterClientSwitched(PhotonPlayer newMaster)
@@ -1467,7 +1571,9 @@ namespace Enigma.CoreSystems
             Debug.Log("NetworkManager::OnMasterClientSwitched -> New master name: " + newMaster.NickName);
 
             if (OnMasterClientSwitchedCallback != null)
+            {
                 OnMasterClientSwitchedCallback(newMaster);
+            }
         }
 
         void OnUpdatedFriendList()
@@ -1482,11 +1588,15 @@ namespace Enigma.CoreSystems
 
                 }
                 else
+                {
                     Debug.Log("PhotonNetwork.Friends is null");
+                }
             }
 
             if (OnUpdatedFriendListCallback != null)
+            {
                 OnUpdatedFriendListCallback();
+            }
         }
 
         void OnDisconnectedFromPhoton()
@@ -1497,7 +1607,9 @@ namespace Enigma.CoreSystems
             //Application.Quit();
 
             if (OnDisconnectedFromNetworkCallback != null)
+            {
                 OnDisconnectedFromNetworkCallback();
+            }
         }
 
         //Methods for Chat.cs
@@ -1512,7 +1624,9 @@ namespace Enigma.CoreSystems
         static public IEnumerator AutoJoinChatLobbyCoroutine()
         {
             while (PhotonNetwork.insideLobby == false)
+            {
                 yield return null;
+            }
 
             Hashtable val = new Hashtable();
             //val.Add("room", "1");
@@ -1534,7 +1648,9 @@ namespace Enigma.CoreSystems
                 Instance.StartCoroutine(GetRoomDataCoroutine());
 
                 if (UpdateGamerooms != null)
+                {
                     UpdateGamerooms();
+                }
             }
         }
 
@@ -1567,7 +1683,9 @@ namespace Enigma.CoreSystems
                     yield return new WaitForSeconds(2f);
                 }
                 else
+                {
                     yield return null;
+                }
             }
         }
 
@@ -1588,7 +1706,6 @@ namespace Enigma.CoreSystems
                 _updatedLobbyUserList.Clear();
                 //UPDATED_ROOM_LEVELLIST.Clear();
 
-
                 for (int i = 0; i < response_userlist.Count; i++)
                 {
                     _updatedLobbyUserList.Add(response_userlist[i][TransactionKeys.USER_LOGIN].ToString().Trim('"'));
@@ -1598,7 +1715,9 @@ namespace Enigma.CoreSystems
                 NetworkManager.CheckOtherPlayersJoinOrLeave();
 
                 if (UpdateGamerooms != null)
+                {
                     UpdateGamerooms();
+                }
             }
         }
 
@@ -1640,7 +1759,9 @@ namespace Enigma.CoreSystems
         static public IEnumerator LobbyPollCoroutine()
         {
             while (PhotonNetwork.insideLobby == true)
+            {
                 yield return new WaitForSeconds(5f);
+            }
         }
 
         //Coroutine for polling Lobby info (specifically room info)
@@ -1659,7 +1780,9 @@ namespace Enigma.CoreSystems
         {
             Hashtable hashTable = new Hashtable();
             foreach (object key in photonHashTable.Keys)
+            {
                 hashTable.Add(key, photonHashTable[key]);
+            }
 
             return hashTable;
         }

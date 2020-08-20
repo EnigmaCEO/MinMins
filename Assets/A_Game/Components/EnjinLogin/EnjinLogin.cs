@@ -292,6 +292,8 @@ public class EnjinLogin : MonoBehaviour
 
         GameStats gameStats = GameStats.Instance;
         GameNetwork gameNetwork = GameNetwork.Instance;
+        GameHacks gameHacks = GameHacks.Instance;
+        GameInventory gameInventory = GameInventory.Instance;
 
         JSONNode userDataNode = response_hash[NetworkManager.TransactionKeys.USER_DATA];
         if (userDataNode != null)

@@ -248,7 +248,15 @@ public class UnitSelectManager : EnigmaScene
     private void onSceneBackButtonDown()
     {
         SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
-        SceneManager.LoadScene(GameConstants.Scenes.LEVELS);
+
+        if (GameStats.Instance.Mode == GameStats.Modes.Quest)
+        {
+            SceneManager.LoadScene(GameConstants.Scenes.QUEST);
+        }
+        else
+        {
+            SceneManager.LoadScene(GameConstants.Scenes.LEVELS);
+        }
     }
 
     private void onClearTeamButtonDown()

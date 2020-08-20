@@ -10,6 +10,7 @@ public class GameConstants
         public const string LOBBY = "NewLobby";
         public const string UNIT_SELECT = "UnitSelect";
         public const string TEAM_BOOST = "TeamBoost";
+        public const string QUEST = "Quest";
     }
 
     public class TeamBoostCategory

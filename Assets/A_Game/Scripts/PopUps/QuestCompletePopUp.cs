@@ -1,4 +1,6 @@
 ﻿using GameEnums;
+using JetBrains.Annotations;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,9 +16,22 @@ public class QuestCompletePopUp : MonoBehaviour
 
     private void Start()
     {
-        _messagesTermPerQuest.Add(Quests.Swissborg, "Swissborg Reward");
+        fillQuestRewardMessages();
 
         Close();
+    }
+
+    private void fillQuestRewardMessages()
+    {
+        //_messagesTermPerQuest.Add(Quests.Swissborg, "Swissborg Reward");
+
+        foreach (Quests quest in Enum.GetValues(typeof(Quests)))
+        {
+            if (quest != Quests.None)
+            {
+                _messagesTermPerQuest.Add(quest, "You have completed Quest: " + quest.ToString());
+            }
+        }
     }
 
     public void OnOkButtonDown()
@@ -28,7 +43,7 @@ public class QuestCompletePopUp : MonoBehaviour
     public void Open(MatchResultsPopUp resultsPopUp)
     {
         _resultsPopUp = resultsPopUp;
-        Quests activeQuest = GameStats.Instance.ActiveQuest;
+        Quests activeQuest = GameInventory.Instance.GetActiveQuest(); //GameStats.Instance.ActiveQuest;
 
         if (!_messagesTermPerQuest.ContainsKey(activeQuest))
         {

@@ -7732,7 +7732,7 @@ PrefabInstance:
     - target: {fileID: 367369599006230641, guid: f6f396435d16602419ad607912061bf1,
         type: 3}
       propertyPath: m_Name
-      value: TeamGrid
+      value: UnitSelectTeamGrid
       objectReference: {fileID: 0}
     - target: {fileID: 367369599006230641, guid: f6f396435d16602419ad607912061bf1,
         type: 3}

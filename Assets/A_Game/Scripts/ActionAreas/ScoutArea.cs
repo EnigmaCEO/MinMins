@@ -14,7 +14,9 @@ public class ScoutArea : ActionArea
         base.SetWarRef(warRef);
 
         if (OwnerTeamName != _warRef.LocalPlayerTeam)
+        {
             GetComponent<SpriteMask>().enabled = false;  //Not needed.
+        }
 
         SoundManager.Play(GameConstants.SoundNames.SCOUT, SoundManager.AudioTypes.Sfx);
     }
@@ -38,9 +40,10 @@ public class ScoutArea : ActionArea
 
     override protected void OnTriggerEnter2D(Collider2D coll)
     {
+        Debug.Log("ScoutArea::OnTriggerEnter2D  -> coll.name: " + coll.name);
         base.OnTriggerEnter2D(coll);
 
-        if (base._warRef.GetIsHost())
+        if ((base._warRef != null) && base._warRef.GetIsHost())
         {
             HealerArea healerArea = coll.GetComponent<HealerArea>();
             if (healerArea != null)
@@ -51,7 +54,9 @@ public class ScoutArea : ActionArea
                     //Debug.LogWarning("HealerArea of owner: " + healerArea.OwnerUnitName + " and team: " + healerArea.OwnerTeamName + " and Healing: " + healerArea.Healing + " was removed by scoutArea of owner " + OwnerUnitName + " and team: " + OwnerTeamName + " and Power: " + Power);
                 }
                 //else
+                //{ 
                 //    Debug.LogWarning("HealerArea of owner: " + healerArea.OwnerUnitName + " and team: " + healerArea.OwnerTeamName + " and Healing: " + healerArea.Healing + " endured scoutArea of owner " + OwnerUnitName + " and team: " + OwnerTeamName + " and Power: " + Power);
+                //}
             }
             else
             {
@@ -64,7 +69,9 @@ public class ScoutArea : ActionArea
                         //Debug.LogWarning("TankArea of owner: " + tankArea.OwnerUnitName + " and team: " + tankArea.OwnerTeamName + " and Defense: " + tankArea.Defense + " was removed by scoutArea of owner " + OwnerUnitName + " and team: " + OwnerTeamName + " and Power: " + Power);
                     }
                     //else
+                    //{ 
                     //    Debug.LogWarning("TankArea of owner: " + tankArea.OwnerUnitName + " and team: " + tankArea.OwnerTeamName + " and Defense: " + tankArea.Defense + " endured scoutArea of owner " + OwnerUnitName + " and team: " + OwnerTeamName + " and Power: " + Power);
+                    //}
                 }
                 else
                 {
@@ -75,10 +82,12 @@ public class ScoutArea : ActionArea
                         {
                             string targetTeam = GameNetwork.GetOppositeTeamName(OwnerTeamName);
                             if (targetTeam == minMinUnit.TeamName)  //To filter this area colliding against owner team
+                            {
                                 _warRef.HandleAddExposedUnit(targetTeam, minMinUnit);
+                            }
                         }
                     }
-                }
+                } 
             }
         }
     }

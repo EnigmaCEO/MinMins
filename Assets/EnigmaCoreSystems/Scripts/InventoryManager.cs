@@ -30,7 +30,9 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>
         if (!shouldCheckGroupExists || CheckGroupExists(groupName, false))
         {
             if (!_items[groupName].ContainsKey(key))
+            {
                 Debug.LogError("InventoryManager::RemoveItem -> Inventory does not contains key: " + key + " at group: " + groupName);
+            }
             else
             {
                 _items[groupName].Remove(key);
@@ -41,19 +43,29 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>
 
     public void UpdateItem(string groupName, string key, object value, bool shouldCheckGroupExists = true)
     {
+        Debug.LogWarning("InventoryManager::UpdateItem -> groupName: " + groupName + " key loaded: " + key + " with value: " + value.ToString());
+
         if (shouldCheckGroupExists && !CheckGroupExists(groupName, false))
+        {
             _items[groupName] = new Dictionary<string, object>();
+        }
 
         if (!HasItem(groupName, key, true, false))
+        {
             Debug.LogError("Group " + groupName + " does not have item: " + key);
+        }
         else
+        {
             _items[groupName][key] = value;
+        }
     }
 
     public bool HasItem(string groupName, string key, bool displayGroupNotFoundError = true, bool shouldCheckGroupExists = true)
     {
         if (shouldCheckGroupExists && !CheckGroupExists(groupName, displayGroupNotFoundError))
+        {
             return false;
+        }
 
         return _items[groupName].ContainsKey(key);
     }
@@ -66,7 +78,9 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>
     public object GetItem(string groupName, string key)
     {
         if (!CheckGroupExists(groupName))
+        {
             return null;
+        }
 
         if (!_items[groupName].ContainsKey(key))
         {
@@ -80,7 +94,9 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>
     public int GetGroupSize(string groupName)
     {
         if (!CheckGroupExists(groupName))
+        {
             return -1;
+        }
 
         return _items[groupName].Count;
     }
@@ -88,7 +104,9 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>
     public void ClearGroup(string groupName)
     {
         if (CheckGroupExists(groupName))
+        {
             _items[groupName].Clear();
+        }
     }
 
     public void ClearAllGroups()
@@ -103,7 +121,9 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>
         if (!_items.ContainsKey(groupName))
         {
             if (displayError)
+            {
                 Debug.LogError("InventoryManager does not contains group name: " + groupName);
+            }
 
             groupExists = false;
         }
@@ -114,11 +134,15 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>
     public List<string> GetGroupKeys(string groupName)
     {
         if (!CheckGroupExists(groupName))
+        {
             return null;
+        }
 
         List<string> keys = new List<string>();
         foreach (string key in _items[groupName].Keys)
+        {
             keys.Add(key);
+        }
 
         return keys;
     }
@@ -126,11 +150,15 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>
     public List<object> GetGroupValues(string groupName)
     {
         if (!CheckGroupExists(groupName))
+        {
             return null;
+        }
 
         List<object> values = new List<object>();
         foreach (object value in _items[groupName].Values)
+        {
             values.Add(value);
+        }
 
         return values;
     }
@@ -140,15 +168,21 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>
         List<string> keys = new List<string>();
         Dictionary<string, object> groupToSort = _items[groupName];
         foreach (string key in groupToSort.Keys)
+        {
             keys.Add(key);
+        }
 
         keys.Sort();
         if (isReverse)
+        {
             keys.Reverse();
+        }
 
         Dictionary<string, object> sortedGroup = new Dictionary<string, object>();
         foreach (string key in keys)
+        {
             sortedGroup.Add(key, groupToSort[key]);
+        }
 
         return sortedGroup;
     }

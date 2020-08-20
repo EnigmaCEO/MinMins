@@ -38,7 +38,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/A_Game/Scenes/NewLobby.unity
     guid: a8fb8daf96db64f4fb77554805b2b184
-  - enabled: 0
-    path: Assets/A_Game/Scenes/Tests/KinTutorial.unity
-    guid: f9e5413a271e24c4d93aa8c8d50091e6
+  - enabled: 1
+    path: Assets/A_Game/Scenes/Quest.unity
+    guid: 5afdc7a4f91b3274aaff153b7c387d77
   m_configObjects: {}

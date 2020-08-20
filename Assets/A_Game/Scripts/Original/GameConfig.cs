@@ -21,4 +21,12 @@ public class GameConfig : SingletonMonobehaviour<GameConfig>
 
     [SerializeField] public bool EnableServerBackup = false;
     [SerializeField] public bool SendToShopAutomaticallyOnUnitsNeeded = false;
+
+    [SerializeField] public int MaxQuestLevel = 5;
+    [SerializeField] public int QuestUnitExp = 150;
+
+    public Vector2 GetRandomBattlefieldPosition()
+    {
+        return new Vector2(UnityEngine.Random.Range(BattleFieldMinPos.x + 0.5f, BattleFieldMaxPos.x - 0.5f), UnityEngine.Random.Range(BattleFieldMinPos.y + 0.5f, BattleFieldMaxPos.y - 0.5f));
+    }
 }

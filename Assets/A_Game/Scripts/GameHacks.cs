@@ -19,10 +19,10 @@ public class GameHacks : SingletonMonobehaviour<GameHacks>
     public bool TreatBattleResultsAsPrivateMatch;
 
     public ValueHack SinglePlayerLevel = new ValueHack("50");
-    public ValueHack AnyQuestProgress = new ValueHack("3");
+    //public ValueHack AnyQuestProgress = new ValueHack("3");
     public ValueHack ForceTeamBoostReward = new ValueHack("True");
     public ValueHack TeamBoostRewardCategory = new ValueHack("Size");
-    public ValueHack SetLoginQuest = new ValueHack("Torso");
+    public ValueHack SetServerQuest = new ValueHack("Torso");
     public ValueHack SizeBonus = new ValueHack("10");
     public ValueHack SetTeamBoostBonuses = new ValueHack("5");
     public ValueHack BuyResult = new ValueHack("True");
@@ -42,6 +42,7 @@ public class GameHacks : SingletonMonobehaviour<GameHacks>
     public ValueHack FightsWithoutAdsMaxCount = new ValueHack("2");
     public ValueHack HasPurchased = new ValueHack("True");
     public ValueHack UnlockSinglePlayerLevels = new ValueHack("5");
+    public ValueHack QuestsPoints = new ValueHack("1000");
 #endif
 
     public bool RandomizeUnitTypes;
@@ -52,7 +53,7 @@ public class GameHacks : SingletonMonobehaviour<GameHacks>
     public bool CreateWarPrepLineRendererOnUpdate;
 
     public bool EnjinItemCollectedFailure;
-    public bool CompletedQuestFailure;
+    public bool CompleteLevelQuestFail;
     public bool CompleteQuestOffline;
 
     public bool ClearSavedTeamDataOnScenesEnter;

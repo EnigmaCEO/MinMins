@@ -18,6 +18,8 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
         public const int SAVE_FILE_TO_SERVER = 25;
         public const int LOAD_FILE_FROM_SERVER = 26;
+
+        public const int GET_QUEST_DATA = 27;
     }
 
     public class TransactionKeys
@@ -30,6 +32,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         public const string USERNAME = "username";
 
         public const string QUEST = "quest";
+        public const string PROGRESS = "progress";
 
         public const string WINNER_NICKNAME = "winner_nickname";
         public const string LOSER_NICKNAME = "loser_nickname";
@@ -318,15 +321,18 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     }
     public void UpdateEnjinGoodies(JSONNode response_hash)
     {
-        GameStats gameStats = GameStats.Instance;
-        gameStats.ActiveQuest = (Quests)response_hash[NetworkManager.TransactionKeys.USER_DATA][GameNetwork.TransactionKeys.QUEST].AsInt;
+        //GameStats gameStats = GameStats.Instance;
+//        GameInventory gameInventory = GameInventory.Instance;
+//        //gameStats.ActiveQuest = (Quests)response_hash[NetworkManager.TransactionKeys.USER_DATA][GameNetwork.TransactionKeys.QUEST].AsInt;
+//        gameInventory.SetActiveQuest((Quests)response_hash[NetworkManager.TransactionKeys.USER_DATA][GameNetwork.TransactionKeys.QUEST].AsInt);
 
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
-        if (GameHacks.Instance.SetLoginQuest.Enabled)
-        {
-            gameStats.ActiveQuest = GameHacks.Instance.SetLoginQuest.GetValueAsEnum<Quests>();
-        }
-#endif
+//#if DEVELOPMENT_BUILD || UNITY_EDITOR
+//        if (GameHacks.Instance.SetLoginQuest.Enabled)
+//        {
+//            //gameStats.ActiveQuest = GameHacks.Instance.SetLoginQuest.GetValueAsEnum<Quests>();
+//            gameInventory.SetActiveQuest(GameHacks.Instance.SetLoginQuest.GetValueAsEnum<Quests>());
+//        }
+//#endif
 
         HasEnjinMft = checkTokenAvailable(response_hash, NetworkManager.TransactionKeys.ENJIN_MFT);
         HasEnjinMinMinsToken = checkTokenAvailable(response_hash, NetworkManager.TransactionKeys.MINMINS_TOKEN);

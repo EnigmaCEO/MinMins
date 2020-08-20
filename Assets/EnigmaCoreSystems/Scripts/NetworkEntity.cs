@@ -13,7 +13,9 @@ namespace Enigma.CoreSystems
         {
             _photonView = GetComponent<PhotonView>();
             if (!_photonView.ObservedComponents.Contains(this))
+            {
                 _photonView.ObservedComponents.Add(this);
+            }
         }
 
         protected virtual void Update()

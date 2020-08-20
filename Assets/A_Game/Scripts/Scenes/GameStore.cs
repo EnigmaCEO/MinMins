@@ -26,8 +26,8 @@ public class GameStore : EnigmaScene
     [SerializeField] private GameObject _minminPopUp;
 
     [SerializeField] private Transform _lootBoxGridContent;
-    [SerializeField] private Image giftProgress;
-    [SerializeField] private Text giftText;
+    //[SerializeField] private Image giftProgress;
+    //[SerializeField] private Text giftText;
 
     private int _selectedPackIndex;
 
@@ -58,15 +58,15 @@ public class GameStore : EnigmaScene
 
         refreshLootBoxesGrid();
 
-        if (NetworkManager.LoggedIn)
-        {
-            NetworkManager.Transaction(NetworkManager.Transactions.GIFT_PROGRESS, new Hashtable(), onGiftProgress);
+        //if (NetworkManager.LoggedIn)
+        //{
+        //    NetworkManager.Transaction(NetworkManager.Transactions.GIFT_PROGRESS, new Hashtable(), onGiftProgress);
             
-        } 
-        else
-        {
-            GameObject.Find("gift_panel").gameObject.SetActive(false);
-        }
+        //} 
+        //else
+        //{
+        //    GameObject.Find("gift_panel").gameObject.SetActive(false);
+        //}
 
         if(!GameNetwork.Instance.IsEnjinLinked)
         {
@@ -399,23 +399,23 @@ public class GameStore : EnigmaScene
         _openLootBoxPopUp.Open();
     }
 
-    private void onGiftProgress(JSONNode response)
-    {
-        if (response != null)
-        {
+    //private void onGiftProgress(JSONNode response)
+    //{
+    //    if (response != null)
+    //    {
 
-            JSONNode response_hash = response[0];
-            string status = response_hash["status"].ToString().Trim('"');
+    //        JSONNode response_hash = response[0];
+    //        string status = response_hash["status"].ToString().Trim('"');
 
-            print("onGiftProgress -> response: " + response.ToString() + " status: " + status);
+    //        print("onGiftProgress -> response: " + response.ToString() + " status: " + status);
 
-            if (status == "SUCCESS")
-            {
-                string progress = response_hash["progress"].ToString().Trim('"');
-                giftProgress.fillAmount = float.Parse(progress) / 1000.0f;
-                giftText.text = "$"+ progress + " / $1000";
-            }
+    //        if (status == "SUCCESS")
+    //        {
+    //            string progress = response_hash["progress"].ToString().Trim('"');
+    //            giftProgress.fillAmount = float.Parse(progress) / 1000.0f;
+    //            giftText.text = "$"+ progress + " / $1000";
+    //        }
             
-        }
-    }
+    //    }
+    //}
 }
