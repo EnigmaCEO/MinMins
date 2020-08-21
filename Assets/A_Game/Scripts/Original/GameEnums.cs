@@ -6,10 +6,7 @@ namespace GameEnums
         None = 0,
         //Swissborg,
         One,
-        Two,
-        Three,
-        Four,
-        Five
+        Two
     }
 
 //    public enum Games

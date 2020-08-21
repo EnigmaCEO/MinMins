@@ -246,10 +246,7 @@ public class Quest : MonoBehaviour
         Quests activeQuest = GameInventory.Instance.GetActiveQuest(); //gameStats.ActiveQuest;
 
         if ((activeQuest == Quests.One)
-            || (activeQuest == Quests.Two)
-            || (activeQuest == Quests.Three)
-            || (activeQuest == Quests.Four)
-            || (activeQuest == Quests.Five))
+            || (activeQuest == Quests.Two))
         {
             gameStats.QuestUnits = new List<string>() { "122", "123", "124", "125", "126" };
         }

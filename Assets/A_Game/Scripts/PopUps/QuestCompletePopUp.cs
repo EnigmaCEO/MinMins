@@ -29,7 +29,7 @@ public class QuestCompletePopUp : MonoBehaviour
         {
             if (quest != Quests.None)
             {
-                _messagesTermPerQuest.Add(quest, "You have completed Quest: " + quest.ToString());
+                _messagesTermPerQuest.Add(quest, LocalizationManager.GetTermTranslation("You have completed Quest:") + " " + quest.ToString());
             }
         }
     }

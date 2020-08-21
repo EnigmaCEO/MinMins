@@ -1612,12 +1612,12 @@ MonoBehaviour:
       - "\uD0A8(KIN)"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: GLOBAL GIFT PROGRESS
+    - Term: GLOBAL QUEST PROGRESS
       TermType: 0
       Description: 
       Languages:
-      - GLOBAL GIFT PROGRESS
-      - PROGRESO DE REGALO GLOBAL
+      - GLOBAL QUEST PROGRESS
+      - "PROGRESO DE B\xDASQUEDA GLOBAL"
       - 
       - 
       - 
@@ -2132,6 +2132,94 @@ MonoBehaviour:
       - 
       Flags: 0000000000
       Languages_Touch: []
+    - Term: 1 point for winning a new training level
+      TermType: 0
+      Description: 
+      Languages:
+      - 1  point for winning a new training level
+      - 1  punto por ganar un nuevo nivel de entrenamiento
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: 2 points for winning pvp
+      TermType: 0
+      Description: 
+      Languages:
+      - 2  points for winning pvp
+      - 2  puntos por ganar jcj
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: 5 points for purchasing box
+      TermType: 0
+      Description: 
+      Languages:
+      - 5  points for purchasing box
+      - 5  puntos por comprar caja
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: QUEST POINTS
+      TermType: 0
+      Description: 
+      Languages:
+      - QUEST POINTS
+      - "PUNTOS DE B\xDASQUEDA"
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Scout Battle
+      TermType: 0
+      Description: 
+      Languages:
+      - Scout Battle
+      - "Batalla de Exploraci\xF3n"
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: 'You have completed Quest:'
+      TermType: 0
+      Description: 
+      Languages:
+      - 'You have completed Quest:'
+      - "Haz completado B\xFAsqueda:"
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: 'Boss Min Min #'
+      TermType: 0
+      Description: 
+      Languages:
+      - 'Boss Min Min #'
+      - 'Jefe Min Min #'
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: 'Quest:'
+      TermType: 0
+      Description: 
+      Languages:
+      - 'Quest:'
+      - "B\xFAsqueda:"
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
     CaseInsensitiveTerms: 0
     OnMissingTranslation: 1
     mTerm_AppName: 
@@ -2156,7 +2244,7 @@ MonoBehaviour:
     Google_WebServiceURL: https://script.google.com/macros/s/AKfycbw05ISkGCPtIS0hMzFD5jshgfH09mIP6BAxRKhWsA/exec
     Google_SpreadsheetKey: 1iIWCtExuyR2XXyYkJv6y83PTVMPC4FxzSITGGroefcg
     Google_SpreadsheetName: I2Loc MinMins Localization
-    Google_LastUpdatedVersion: 1596775913389
+    Google_LastUpdatedVersion: 1597971189129
     Google_Password: shalwend
     GoogleUpdateFrequency: 3
     GoogleInEditorCheckFrequency: 2

@@ -213,11 +213,11 @@ public class War : NetworkEntity
             {
                 if (gameStats.SelectedLevelNumber == 0)
                 {
-                    _teamNameText2.text = "Quest Scout Battle";
+                    _teamNameText2.text = LocalizationManager.GetTermTranslation("Quest:") + " " + GameInventory.Instance.GetActiveQuest().ToString();
                 }
                 else
                 {
-                    _teamNameText2.text = "Boss Min Min #" + gameStats.QuestSelectedUnitName;
+                    _teamNameText2.text = LocalizationManager.GetTermTranslation("Boss Min Min #") + gameStats.QuestSelectedUnitName;
                 }
             }
             else
@@ -1514,16 +1514,16 @@ public class War : NetworkEntity
 
                     break;
                 case 1:
-                    unitsString = "122|124|123|126|125"; 
+                    unitsString = "122|124|123|126|125";
                     break;
                 case 2:
-                    unitsString = "124|126|122|125|123"; 
+                    unitsString = "123|126|122|125|124";
                     break;
                 case 3:
-                    unitsString = "125|126|123|122|124"; 
+                    unitsString = "124|126|123|122|125";
                     break;
                 case 4:
-                    unitsString = "124|126|122|125|123";  
+                    unitsString = "125|126|122|124|123";
                     break;
                 case 5:
                     unitsString = "126|125|122|123|124";
