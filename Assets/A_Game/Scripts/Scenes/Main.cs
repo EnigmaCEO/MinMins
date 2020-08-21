@@ -30,13 +30,13 @@ public class Main : EnigmaScene
     [SerializeField] private Image _questProgressFill;
     [SerializeField] private Text _questProgressText;
 
-    private Dictionary<Quests, string> _rewardIconResNameByQuest = new Dictionary<Quests, string>();
+    //private Dictionary<Quests, string> _rewardIconResNameByQuest = new Dictionary<Quests, string>();
 
     private const int _POINTS_FOR_QUEST = 1000;
 
     void Start()
     {
-        populateIconPathbyQuest();
+        //populateIconPathbyQuest();
         NetworkManager.Transaction(GameNetwork.Transactions.GET_QUEST_DATA, onGetQuestData);
 
         if (!NetworkManager.LoggedIn)
@@ -212,24 +212,18 @@ public class Main : EnigmaScene
         }
 
         Quests activeQuest = gameInventory.GetActiveQuest();
-        string iconPath = "Images/Units/" + _rewardIconResNameByQuest[activeQuest];
-        Sprite questIcon = (Sprite)Resources.Load<Sprite>(iconPath);
-
-        if (questIcon == null)
-        {
-            Debug.LogError("Icon was not found at path: " + iconPath);
-        }
+        Sprite rewardSprite = gameInventory.GetQuestRewardSprite(activeQuest);
 
         _questProgressText.text = points.ToString() + " / " + _POINTS_FOR_QUEST.ToString();
         _questProgressFill.fillAmount = ((float)points) / _POINTS_FOR_QUEST;
 
         if (points >= _POINTS_FOR_QUEST)
         {
-            _questButton.transform.Find("QuestName").GetComponent<Text>().text = activeQuest.ToString();
+            _questButton.transform.Find("QuestName").GetComponent<Text>().text = gameInventory.GetActiveQuestName();
 
-            if (questIcon != null)
+            if (rewardSprite != null)
             {
-                _questButton.transform.Find("icon").GetComponent<Image>().sprite = questIcon;
+                _questButton.transform.Find("icon").GetComponent<Image>().sprite = rewardSprite;
             }
 
             _questButton.SetActive(true);
@@ -237,20 +231,23 @@ public class Main : EnigmaScene
         }
         else
         {
-            if (questIcon != null)
+            if (rewardSprite != null)
             {
-                _questProgressPanel.transform.Find("Prize").GetComponent<Image>().sprite = questIcon;
+                _questProgressPanel.transform.Find("Prize").GetComponent<Image>().sprite = rewardSprite;
             }
 
             _questProgressPanel.SetActive(true);
         }
     }
 
-    private void populateIconPathbyQuest()
-    {
-        _rewardIconResNameByQuest.Add(Quests.One, "122");
-        _rewardIconResNameByQuest.Add(Quests.Two, "123");
-    }
+    //private void populateIconPathbyQuest()
+    //{
+    //    _rewardIconResNameByQuest.Add(Quests.EnjinLegend122, "122");
+    //    _rewardIconResNameByQuest.Add(Quests.EnjinLegend123, "123");
+    //    _rewardIconResNameByQuest.Add(Quests.EnjinLegend124, "124");
+    //    _rewardIconResNameByQuest.Add(Quests.EnjinLegend125, "125");
+    //    _rewardIconResNameByQuest.Add(Quests.EnjinLegend126, "126");
+    //}
 
     public void Init()
     {

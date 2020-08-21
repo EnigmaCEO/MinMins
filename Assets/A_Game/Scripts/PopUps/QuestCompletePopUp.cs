@@ -8,7 +8,8 @@ using UnityEngine.UI;
 
 public class QuestCompletePopUp : MonoBehaviour
 {
-    [SerializeField] private Text _message;
+    [SerializeField] private Text _questName;
+    [SerializeField] private Text _messageReward;
     [SerializeField] private Image _questIcon;
 
     private Dictionary<Quests, string> _messagesTermPerQuest = new Dictionary<Quests, string>();
@@ -16,22 +17,7 @@ public class QuestCompletePopUp : MonoBehaviour
 
     private void Start()
     {
-        fillQuestRewardMessages();
-
         Close();
-    }
-
-    private void fillQuestRewardMessages()
-    {
-        //_messagesTermPerQuest.Add(Quests.Swissborg, "Swissborg Reward");
-
-        foreach (Quests quest in Enum.GetValues(typeof(Quests)))
-        {
-            if (quest != Quests.None)
-            {
-                _messagesTermPerQuest.Add(quest, LocalizationManager.GetTermTranslation("You have completed Quest:") + " " + quest.ToString());
-            }
-        }
     }
 
     public void OnOkButtonDown()
@@ -43,35 +29,45 @@ public class QuestCompletePopUp : MonoBehaviour
     public void Open(MatchResultsPopUp resultsPopUp)
     {
         _resultsPopUp = resultsPopUp;
-        Quests activeQuest = GameInventory.Instance.GetActiveQuest(); //GameStats.Instance.ActiveQuest;
 
-        if (!_messagesTermPerQuest.ContainsKey(activeQuest))
-        {
-            Debug.LogError("There is not message set for Active Quest: " + activeQuest.ToString());
-        }
-        else
-        {
-            _message.text = LocalizationManager.GetTermTranslation(_messagesTermPerQuest[activeQuest]);
+        GameInventory gameInventory = GameInventory.Instance;
+        Quests activeQuest = gameInventory.GetActiveQuest(); 
 
-            string rewardImagePath = "Images/Quests/" + activeQuest.ToString() + " Reward";
+        _questName.text = gameInventory.GetQuestName(activeQuest);
 
-            Sprite questSprite = (Sprite)Resources.Load<Sprite>(rewardImagePath);
+        fillQuestRewardMessage(activeQuest);
+        handleRewardImage(activeQuest);
 
-            if (questSprite != null)
-            {
-                _questIcon.sprite = questSprite;
-            }
-            else
-            {
-                Debug.Log("Quest reward image was not found at path: " + rewardImagePath + " . Please check active quest is correct and image is in the right path.");
-            }
-
-            gameObject.SetActive(true);
-        }
+        gameObject.SetActive(true);
     }
 
     public void Close()
     {
         gameObject.SetActive(false);
+    }
+
+    private void fillQuestRewardMessage(Quests quest)
+    {
+        //_messagesTermPerQuest.Add(Quests.Swissborg, "Swissborg Reward");
+
+        if ((quest == Quests.EnjinLegend122) || (quest == Quests.EnjinLegend123) || (quest == Quests.EnjinLegend124)
+        || (quest == Quests.EnjinLegend125) || (quest == Quests.EnjinLegend126))
+        {
+            _messageReward.text = LocalizationManager.GetTermTranslation("You got this new unit in your inventory or experience bonus for it.");
+        }
+        else
+        {
+            Debug.LogError("There is not message set for Quest: " + quest.ToString());
+        }
+    }
+
+    private void handleRewardImage(Quests activeQuest)
+    {
+        Sprite questSprite = GameInventory.Instance.GetQuestRewardSprite(activeQuest);
+
+        if (questSprite != null)
+        {
+            _questIcon.sprite = questSprite;
+        }
     }
 }

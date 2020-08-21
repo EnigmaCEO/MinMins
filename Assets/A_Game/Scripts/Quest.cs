@@ -37,7 +37,7 @@ public class Quest : MonoBehaviour
 
         _notEnoughUnitsPopUp.SetActive(false);
 
-        _questNameTitle.text = gameInventory.GetActiveQuestString(); //gameStats.ActiveQuest.ToString();
+        _questNameTitle.text = gameInventory.GetActiveQuestName(); //gameStats.ActiveQuest.ToString();
 
         if (gameStats.QuestUnits.Count == 0)
         {
@@ -245,8 +245,8 @@ public class Quest : MonoBehaviour
         GameStats gameStats = GameStats.Instance;
         Quests activeQuest = GameInventory.Instance.GetActiveQuest(); //gameStats.ActiveQuest;
 
-        if ((activeQuest == Quests.One)
-            || (activeQuest == Quests.Two))
+        if ((activeQuest == Quests.EnjinLegend122) || (activeQuest == Quests.EnjinLegend123) || (activeQuest == Quests.EnjinLegend124)
+            || (activeQuest == Quests.EnjinLegend125) || (activeQuest == Quests.EnjinLegend126))
         {
             gameStats.QuestUnits = new List<string>() { "122", "123", "124", "125", "126" };
         }

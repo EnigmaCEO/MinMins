@@ -5,8 +5,11 @@ namespace GameEnums
     {
         None = 0,
         //Swissborg,
-        One,
-        Two
+        EnjinLegend122,
+        EnjinLegend123,
+        EnjinLegend124,
+        EnjinLegend125,
+        EnjinLegend126
     }
 
 //    public enum Games

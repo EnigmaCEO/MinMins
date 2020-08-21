@@ -206,6 +206,83 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         return InventoryManager.Instance.GetItem<string>(GroupNames.STATS, ItemKeys.ACTIVE_QUEST);
     }
 
+    public string GetActiveQuestName()
+    {
+        return GetQuestName(GetActiveQuest());
+    }
+
+    public string GetQuestName(Quests quest)
+    {
+        string questName = "";
+        string enjinLegendLocalized = LocalizationManager.GetTermTranslation("Enjin Legend:");
+
+        if (quest == Quests.EnjinLegend122)
+        {
+            questName = enjinLegendLocalized + " 122";
+        }
+        else if(quest == Quests.EnjinLegend123)
+        {
+            questName = enjinLegendLocalized + " 123";
+        }
+        else if (quest == Quests.EnjinLegend124)
+        {
+            questName = enjinLegendLocalized + " 124";
+        }
+        else if (quest == Quests.EnjinLegend125)
+        {
+            questName = enjinLegendLocalized + " 125";
+        }
+        else if (quest == Quests.EnjinLegend126)
+        {
+            questName = enjinLegendLocalized + " 126";
+        }
+
+        return questName;
+    }
+
+    public Sprite GetQuestRewardSprite(Quests quest)
+    {
+        string rewardImagePath = "";
+
+        if (quest == Quests.EnjinLegend122)
+        {
+            rewardImagePath = "Images/Units/122";
+        }
+        else if (quest == Quests.EnjinLegend123)
+        {
+            rewardImagePath = "Images/Units/123";
+        }
+        else if (quest == Quests.EnjinLegend124)
+        {
+            rewardImagePath = "Images/Units/124";
+        }
+        else if (quest == Quests.EnjinLegend125)
+        {
+            rewardImagePath = "Images/Units/125";
+        }
+        else if (quest == Quests.EnjinLegend126)
+        {
+            rewardImagePath = "Images/Units/126";
+        }
+        else
+        {
+            Debug.LogError("There is not image path for quest: " + quest);
+            return null;
+        }
+
+        Sprite questRewardSprite = (Sprite)Resources.Load<Sprite>(rewardImagePath);
+
+        if (questRewardSprite != null)
+        {
+            return questRewardSprite;
+        } 
+        else
+        {
+            Debug.Log("Quest reward image was not found at path: " + rewardImagePath + " . Please check active quest is correct and image is in the right path.");
+            return null;
+        }
+    }
+
     public void SetQuestEnemiesPositions(List<Vector3> positions)
     {
         string enemiesPositionsString = "";

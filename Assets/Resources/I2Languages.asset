@@ -2176,34 +2176,23 @@ MonoBehaviour:
       - 
       Flags: 0000000000
       Languages_Touch: []
-    - Term: Scout Battle
+    - Term: 'Enjin Legend:'
       TermType: 0
       Description: 
       Languages:
-      - Scout Battle
-      - "Batalla de Exploraci\xF3n"
+      - 'Enjin Legend:'
+      - 'Leyenda Enjin:'
       - 
       - 
       - 
       Flags: 0000000000
       Languages_Touch: []
-    - Term: 'You have completed Quest:'
+    - Term: You got this new unit in your inventory or experience bonus for it.
       TermType: 0
       Description: 
       Languages:
-      - 'You have completed Quest:'
-      - "Haz completado B\xFAsqueda:"
-      - 
-      - 
-      - 
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: 'Boss Min Min #'
-      TermType: 0
-      Description: 
-      Languages:
-      - 'Boss Min Min #'
-      - 'Jefe Min Min #'
+      - You got this new unit in your inventory or experience bonus for it.
+      - Obtuviste esta nueva unidad en tu inventario o bono de experiencia para ella.
       - 
       - 
       - 
@@ -2215,6 +2204,28 @@ MonoBehaviour:
       Languages:
       - 'Quest:'
       - "B\xFAsqueda:"
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: 'Quest Team #'
+      TermType: 0
+      Description: 
+      Languages:
+      - 'Quest Team #'
+      - "Equipo de B\xFAsqueda #"
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: 'You have completed Quest:'
+      TermType: 0
+      Description: 
+      Languages:
+      - 'You have completed the Quest:'
+      - "Has completado la B\xFAsqueda:"
       - 
       - 
       - 
@@ -2244,7 +2255,7 @@ MonoBehaviour:
     Google_WebServiceURL: https://script.google.com/macros/s/AKfycbw05ISkGCPtIS0hMzFD5jshgfH09mIP6BAxRKhWsA/exec
     Google_SpreadsheetKey: 1iIWCtExuyR2XXyYkJv6y83PTVMPC4FxzSITGGroefcg
     Google_SpreadsheetName: I2Loc MinMins Localization
-    Google_LastUpdatedVersion: 1597978678135
+    Google_LastUpdatedVersion: 1598041883072
     Google_Password: shalwend
     GoogleUpdateFrequency: 3
     GoogleInEditorCheckFrequency: 2

@@ -211,13 +211,9 @@ public class War : NetworkEntity
             }
             else if (gameStats.Mode == GameStats.Modes.Quest)
             {
-                if (gameStats.SelectedLevelNumber == 0)
+                if (gameStats.SelectedLevelNumber > 0)
                 {
-                    _teamNameText2.text = LocalizationManager.GetTermTranslation("Quest:") + " " + GameInventory.Instance.GetActiveQuest().ToString();
-                }
-                else
-                {
-                    _teamNameText2.text = LocalizationManager.GetTermTranslation("Boss Min Min #") + gameStats.QuestSelectedUnitName;
+                    _teamNameText2.text = GameInventory.Instance.GetActiveQuestName();
                 }
             }
             else
@@ -1492,63 +1488,28 @@ public class War : NetworkEntity
         string unitsString = "";
         Quests activeQuest = GameInventory.Instance.GetActiveQuest(); //GameStats.Instance.ActiveQuest;
 
-        if (activeQuest == Quests.One)
+        if ((activeQuest == Quests.EnjinLegend122) || (activeQuest == Quests.EnjinLegend123) || (activeQuest == Quests.EnjinLegend124)
+            || (activeQuest == Quests.EnjinLegend125) || (activeQuest == Quests.EnjinLegend126))
         {
             switch (level)
             {
                 case 0:
-                    int randomTeam = UnityEngine.Random.Range(1, 4); //1 to 3
+                    int randomTeamNumber = UnityEngine.Random.Range(1, 4); //1 to 3
 
-                    if (randomTeam == 1)
+                    if (randomTeamNumber == 1)
                     {
                         unitsString = "27|31|4|10|5";
                     }
-                    else if (randomTeam == 2)
+                    else if (randomTeamNumber == 2)
                     {
                         unitsString = "60|57|62|51|67";
                     }
-                    else if (randomTeam == 3)
+                    else if (randomTeamNumber == 3)
                     {
                         unitsString = "72|75|80|78|77";
                     }
 
-                    break;
-                case 1:
-                    unitsString = "122|124|123|126|125";
-                    break;
-                case 2:
-                    unitsString = "123|126|122|125|124";
-                    break;
-                case 3:
-                    unitsString = "124|126|123|122|125";
-                    break;
-                case 4:
-                    unitsString = "125|126|122|124|123";
-                    break;
-                case 5:
-                    unitsString = "126|125|122|123|124";
-                    break;
-            }
-        }
-        else if (activeQuest == Quests.Two)
-        {
-            switch (level)
-            {
-                case 0:
-                    int randomTeam = UnityEngine.Random.Range(1, 4); //1 to 3
-
-                    if (randomTeam == 1)
-                    {
-                        unitsString = "27|31|4|10|5";
-                    }
-                    else if (randomTeam == 2)
-                    {
-                        unitsString = "60|57|62|51|67";
-                    }
-                    else if (randomTeam == 3)
-                    {
-                        unitsString = "72|75|80|78|77";
-                    }
+                    _teamNameText2.text = LocalizationManager.GetTermTranslation("Quest Team #") + randomTeamNumber;
 
                     break;
                 case 1:
@@ -2801,13 +2762,25 @@ public class War : NetworkEntity
         GameInventory gameInventory = GameInventory.Instance;
         Quests activeQuest = gameInventory.GetActiveQuest();
 
-        if (activeQuest == Quests.One)
+        if (activeQuest == Quests.EnjinLegend122)
         {
             gameInventory.HandleAddUnitOrExp("122");
         }
-        else if (activeQuest == Quests.Two)
+        else if (activeQuest == Quests.EnjinLegend123)
         {
             gameInventory.HandleAddUnitOrExp("123");
+        }
+        else if (activeQuest == Quests.EnjinLegend124)
+        {
+            gameInventory.HandleAddUnitOrExp("124");
+        }
+        else if (activeQuest == Quests.EnjinLegend125)
+        {
+            gameInventory.HandleAddUnitOrExp("125");
+        }
+        else if (activeQuest == Quests.EnjinLegend126)
+        {
+            gameInventory.HandleAddUnitOrExp("126");
         }
     }
 
