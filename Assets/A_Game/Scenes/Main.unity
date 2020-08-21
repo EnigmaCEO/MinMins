@@ -562,7 +562,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -48.1, y: -35}
-  m_SizeDelta: {x: 681.9, y: 86.5}
+  m_SizeDelta: {x: 681.9, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &133406891
 MonoBehaviour:
@@ -1267,8 +1267,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -48.1, y: -208}
-  m_SizeDelta: {x: 681.9, y: 86.5}
+  m_AnchoredPosition: {x: -48.1, y: -183}
+  m_SizeDelta: {x: 681.9, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &509652163
 MonoBehaviour:
@@ -1711,8 +1711,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -48.1, y: 115}
-  m_SizeDelta: {x: 681.9, y: 86.5}
+  m_AnchoredPosition: {x: -48.1, y: 106}
+  m_SizeDelta: {x: 681.9, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &565162898
 MonoBehaviour:
@@ -4432,7 +4432,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: QUESTS POINTS
+  m_Text: QUEST POINTS
 --- !u!222 &1954167045
 CanvasRenderer:
   m_ObjectHideFlags: 0

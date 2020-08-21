@@ -2576,40 +2576,40 @@ public class War : NetworkEntity
         }
     }
 
-    private void onCompletedQuestResponse(JSONNode response)
-    {
-        if (GameHacks.Instance.CompleteLevelQuestFail)
-        {
-            _errorText.text = LocalizationManager.GetTermTranslation(GameNetwork.ServerResponseMessages.SERVER_ERROR);
-            _errorText.gameObject.SetActive(true);
+    //private void onCompletedQuestResponse(JSONNode response)
+    //{
+    //    if (GameHacks.Instance.CompleteLevelQuestFail)
+    //    {
+    //        _errorText.text = LocalizationManager.GetTermTranslation(GameNetwork.ServerResponseMessages.SERVER_ERROR);
+    //        _errorText.gameObject.SetActive(true);
 
-            _matchResultsPopUp.Open();
-        }
-        else if (NetworkManager.CheckInvalidServerResponse(response, nameof(onCompletedQuestResponse)))
-        {
-            JSONNode response_hash = response[0];
-            if (response_hash != null)
-            {
-                JSONNode statusNode = NetworkManager.CheckValidNode(response_hash, NetworkManager.TransactionKeys.STATUS);
+    //        _matchResultsPopUp.Open();
+    //    }
+    //    else if (NetworkManager.CheckInvalidServerResponse(response, nameof(onCompletedQuestResponse)))
+    //    {
+    //        JSONNode response_hash = response[0];
+    //        if (response_hash != null)
+    //        {
+    //            JSONNode statusNode = NetworkManager.CheckValidNode(response_hash, NetworkManager.TransactionKeys.STATUS);
 
-                if (statusNode != null)
-                {
-                    _errorText.text = LocalizationManager.GetTermTranslation(statusNode.ToString().Trim('"'));
-                }
-                else
-                {
-                    _errorText.text = LocalizationManager.GetTermTranslation(GameNetwork.ServerResponseMessages.SERVER_ERROR);
-                }
+    //            if (statusNode != null)
+    //            {
+    //                _errorText.text = LocalizationManager.GetTermTranslation(statusNode.ToString().Trim('"'));
+    //            }
+    //            else
+    //            {
+    //                _errorText.text = LocalizationManager.GetTermTranslation(GameNetwork.ServerResponseMessages.SERVER_ERROR);
+    //            }
 
-                _errorText.gameObject.SetActive(true);
-                _matchResultsPopUp.Open();
-            }
-        }
-        else
-        {       
-            _questCompletePopUp.Open(_matchResultsPopUp);
-        }
-    }
+    //            _errorText.gameObject.SetActive(true);
+    //            _matchResultsPopUp.Open();
+    //        }
+    //    }
+    //    else
+    //    {          
+    //        _questCompletePopUp.Open(_matchResultsPopUp);
+    //    }
+    //}
 
     private void onEnjinItemCollectedTransactionExternal(JSONNode response)
     {
@@ -2779,7 +2779,9 @@ public class War : NetworkEntity
                     //}
                     //else
                     {
-                        NetworkManager.Transaction(GameNetwork.Transactions.COMPLETED_QUEST_ID, onCompletedQuestResponse);
+                        //NetworkManager.Transaction(GameNetwork.Transactions.COMPLETED_QUEST_ID, onCompletedQuestResponse);
+                        grantQuestRewards();
+                        _questCompletePopUp.Open(_matchResultsPopUp);
                         questCompletedTransactionSent = true;
                     }
                 }
@@ -2789,6 +2791,23 @@ public class War : NetworkEntity
         if(!questCompletedTransactionSent)
         {
             _matchResultsPopUp.Open();
+        }
+    }
+
+    private void grantQuestRewards()
+    {
+        Debug.Log("grantQuestRewards");
+
+        GameInventory gameInventory = GameInventory.Instance;
+        Quests activeQuest = gameInventory.GetActiveQuest();
+
+        if (activeQuest == Quests.One)
+        {
+            gameInventory.HandleAddUnitOrExp("122");
+        }
+        else if (activeQuest == Quests.Two)
+        {
+            gameInventory.HandleAddUnitOrExp("123");
         }
     }
 

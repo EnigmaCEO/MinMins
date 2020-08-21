@@ -538,26 +538,30 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         }
         //List<int> lootBoxIndexes = LootBoxManager.Instance.PickRandomizedIndexes(lootBoxSize, false, _defaultRarityIndexes, specialRarities); //test
 
-        InventoryManager inventoryManager = InventoryManager.Instance;
         foreach (string lootBoxUnitName in unitPicks)
         {
             print("LootBoxUnitName got: " + lootBoxUnitName);
             string unitName = lootBoxUnitName.ToString();
-            if (inventoryManager.HasItem(GroupNames.UNITS_EXP, unitName, false))
-            {
-                AddExpToUnit(unitName, _expToAddOnDuplicateUnit);
-                print("Added " + _expToAddOnDuplicateUnit + " exp to unit " + unitName);
-            }
-            else
-            {
-                AddUnit(unitName, 0);
-            }
+            HandleAddUnitOrExp(unitName);
         }
 
         SaveUnits();
         ChangeLootBoxAmount(1, boxTier, false, true);
 
         return unitPicks;
+    }
+
+    public void HandleAddUnitOrExp(string unitName)
+    {
+        if (InventoryManager.Instance.HasItem(GroupNames.UNITS_EXP, unitName, false))
+        {
+            AddExpToUnit(unitName, _expToAddOnDuplicateUnit);
+            print("Added " + _expToAddOnDuplicateUnit + " exp to unit " + unitName);
+        }
+        else
+        {
+            AddUnit(unitName, 0);
+        }
     }
 
     public void AddUnit(string unitName, int exp, bool save = true)

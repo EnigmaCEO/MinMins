@@ -2154,12 +2154,12 @@ MonoBehaviour:
       - 
       Flags: 0000000000
       Languages_Touch: []
-    - Term: 5 points for purchasing box
+    - Term: 5 points for purchasing a box
       TermType: 0
       Description: 
       Languages:
-      - 5  points for purchasing box
-      - 5  puntos por comprar caja
+      - 5  points for purchasing a box
+      - 5  puntos por comprar una caja
       - 
       - 
       - 
@@ -2244,7 +2244,7 @@ MonoBehaviour:
     Google_WebServiceURL: https://script.google.com/macros/s/AKfycbw05ISkGCPtIS0hMzFD5jshgfH09mIP6BAxRKhWsA/exec
     Google_SpreadsheetKey: 1iIWCtExuyR2XXyYkJv6y83PTVMPC4FxzSITGGroefcg
     Google_SpreadsheetName: I2Loc MinMins Localization
-    Google_LastUpdatedVersion: 1597971189129
+    Google_LastUpdatedVersion: 1597978678135
     Google_Password: shalwend
     GoogleUpdateFrequency: 3
     GoogleInEditorCheckFrequency: 2
