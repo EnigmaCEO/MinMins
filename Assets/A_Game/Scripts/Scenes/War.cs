@@ -2346,6 +2346,9 @@ public class War : NetworkEntity
 
     private void handleMatchEnd(string winnerTeam)
     {
+        _lineRenderer1.gameObject.SetActive(false);
+        _lineRenderer2.gameObject.SetActive(false);
+
         string winnerNickname = "";
         if (GetUsesAi() && (winnerTeam == GameNetwork.TeamNames.GUEST))
         {
@@ -2456,7 +2459,15 @@ public class War : NetworkEntity
 
         if (_isVictory)
         {
-            if (gameStats.Mode == GameStats.Modes.Quest)
+            if (gameStats.Mode == GameStats.Modes.SinglePlayer)
+            {
+                int levelWon = gameStats.SelectedLevelNumber;
+                if (NetworkManager.LoggedIn && (levelWon > gameInventory.GetHigherSinglePlayerLevelCompleted()))
+                {
+                    NetworkManager.Transaction(GameNetwork.Transactions.NEW_TRAINING_LEVEL, GameNetwork.TransactionKeys.LEVEL, levelWon, onNewTrainingLevel);
+                }
+            }
+            else if (gameStats.Mode == GameStats.Modes.Quest)
             {
                 if (gameStats.SelectedLevelNumber == 0)
                 {
@@ -2534,6 +2545,15 @@ public class War : NetworkEntity
         else if(!enjinItemCollectedTransactionSent) //Training or Quest
         {
             setAndDisplayMatchResultsPopUp(false);
+        }
+    }
+
+    private void onNewTrainingLevel(JSONNode response)
+    {
+        if (NetworkManager.CheckInvalidServerResponse(response, nameof(onNewTrainingLevel)))
+        {
+            _errorText.text = LocalizationManager.GetTermTranslation(GameNetwork.ServerResponseMessages.SERVER_ERROR);
+            _errorText.gameObject.SetActive(true);
         }
     }
 

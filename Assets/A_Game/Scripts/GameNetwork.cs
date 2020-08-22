@@ -20,6 +20,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         public const int LOAD_FILE_FROM_SERVER = 26;
 
         public const int GET_QUEST_DATA = 27;
+        public const int NEW_TRAINING_LEVEL = 28;
     }
 
     public class TransactionKeys
@@ -33,6 +34,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
         public const string QUEST = "quest";
         public const string PROGRESS = "progress";
+        public const string LEVEL = "level";
 
         public const string WINNER_NICKNAME = "winner_nickname";
         public const string LOSER_NICKNAME = "loser_nickname";
