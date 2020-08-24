@@ -76,6 +76,8 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         public const string DEMON_DESTROYER = "demon_destroyer";
         public const string DEMON_TANK = "demon_tank";
 
+        public const string SWISSBORG_CYBORG = "swissborg_cyborg";
+
         /*
         public const string ENJIN_DEFENSE_ORE_ITEM_1 = "enjin_defense_ore_1";
         public const string ENJIN_DEFENSE_ORE_ITEM_2 = "enjin_defense_ore_2";
@@ -304,6 +306,8 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     public bool HasDemonScout = false;
     public bool HasDemonTank = false;
 
+    public bool HasSwissborgCyborg = false;
+
     public int[] rewardedTrainingLevels = new int[100];
 
     [Header("=================================")]
@@ -363,6 +367,8 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         HasDemonHealer = checkTokenAvailable(response_hash, TransactionKeys.DEMON_HEALER);
         HasDemonScout = checkTokenAvailable(response_hash, TransactionKeys.DEMON_SCOUT);
         HasDemonTank = checkTokenAvailable(response_hash, TransactionKeys.DEMON_TANK);
+
+        HasSwissborgCyborg = checkTokenAvailable(response_hash, TransactionKeys.SWISSBORG_CYBORG);
 
         CheckAllEnjinTeamBoostTokens(response_hash);
     }

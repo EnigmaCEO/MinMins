@@ -58,8 +58,8 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     [SerializeField] private int _tierSilver_unitsAmount = 30;
     [SerializeField] private int _tierGold_unitsAmount = 10;
 
-    [SerializeField] private int _enjin_firstUnitNumber = 100;
-    [SerializeField] private int _enjin_lastUnitNumer = 121;
+    [SerializeField] private int _legend_firstUnitNumber = 100;
+    [SerializeField] private int _legend_lastUnitNumer = 127;
 
     [SerializeField] private float _tierBronze_GroupRarity = 0.5f;
     [SerializeField] private float _tierSilver_GroupRarity = 0.3f;
@@ -797,7 +797,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         saveEnjinAttempts(GetEnjinAttempts() - 1);
         int enjinUnitStartingExperience = _experienceNeededPerUnitLevel[_enjinUnitStartingLevel - 1];
 
-        for (int i = _enjin_firstUnitNumber; i <= _enjin_lastUnitNumer; i++)
+        for (int i = _legend_firstUnitNumber; i <= _legend_lastUnitNumer; i++)
         {
             string unitName = i.ToString();
             if (!HasUnit(unitName))
@@ -815,7 +815,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
     public void AddMinMinEnjinUnits()
     {
-        for (int i = _enjin_firstUnitNumber; i <= _enjin_lastUnitNumer; i++)
+        for (int i = _legend_firstUnitNumber; i <= _legend_lastUnitNumer; i++)
         {
             GameNetwork gameNetwork = GameNetwork.Instance;
 
@@ -840,7 +840,8 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
                     checkAddUnit(unitName, "123", gameNetwork.HasEnjinEvan) ||
                     checkAddUnit(unitName, "124", gameNetwork.HasEnjinEsther) ||
                     checkAddUnit(unitName, "125", gameNetwork.HasEnjinBrad) ||
-                    checkAddUnit(unitName, "126", gameNetwork.HasEnjinLizz)
+                    checkAddUnit(unitName, "126", gameNetwork.HasEnjinLizz) ||
+                    checkAddUnit(unitName, "127", gameNetwork.HasSwissborgCyborg)
                 )
             {
                 AddUnit(unitName, 0);
@@ -863,7 +864,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     {
         bool hasAllEnjinUnits = true;
 
-        for (int i = _enjin_firstUnitNumber; i <= _enjin_lastUnitNumer; i++)
+        for (int i = _legend_firstUnitNumber; i <= _legend_lastUnitNumer; i++)
         {
             string unitName = i.ToString();
 
@@ -909,7 +910,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
     private void addEnjinUnitsToTierGoldList()
     {
-        for (int i = _enjin_firstUnitNumber; i <= _enjin_lastUnitNumer; i++)
+        for (int i = _legend_firstUnitNumber; i <= _legend_lastUnitNumer; i++)
         {
             _tierGold_units.Add(i.ToString());
         }

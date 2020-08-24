@@ -296,7 +296,9 @@ public class GameStore : EnigmaScene
                     checkDeactivateLegend(unitName, "111", gameNetwork.HasDemonScout) ||
                     checkDeactivateLegend(unitName, "112", gameNetwork.HasDemonDestroyer) ||
                     checkDeactivateLegend(unitName, "113", gameNetwork.HasDemonTank) ||
-                    checkDeactivateLegend(unitName, "114", gameNetwork.HasDemonHealer)
+                    checkDeactivateLegend(unitName, "114", gameNetwork.HasDemonHealer) ||
+
+                    checkDeactivateLegend(unitName, "127", gameNetwork.HasSwissborgCyborg)
                 )
             {
                 enjinTransform.gameObject.SetActive(false);

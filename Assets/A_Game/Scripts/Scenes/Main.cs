@@ -642,6 +642,8 @@ public class Main : EnigmaScene
             addToEnjinItemDisplay(text, gameNetwork.HasDemonDestroyer, "Demon King: Destroyer");
             addToEnjinItemDisplay(text, gameNetwork.HasDemonScout, "Demon King: Scout");
             addToEnjinItemDisplay(text, gameNetwork.HasDemonTank, "Demon King: Tank");
+
+            addToEnjinItemDisplay(text, gameNetwork.HasSwissborgCyborg, "Swissborg Cyborg");
         }
     }
 }
