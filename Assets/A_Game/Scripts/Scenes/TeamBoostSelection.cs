@@ -15,7 +15,7 @@ public class TeamBoostSelection : EnigmaScene
     [SerializeField] private BoostInfoPopUp _boostInfoPopUp;
 
     private TeamBoostGridItem _selectedGridItem;
-    private TeamBoostItem _selectedTeamBoost; 
+    private TeamBoostItemGroup _selectedTeamBoost; 
 
     void Start()
     {
@@ -31,7 +31,7 @@ public class TeamBoostSelection : EnigmaScene
         refreshTeamBoostItemsGrid();
         refreshTeamUnitsGrid();
 
-        GameStats.Instance.TeamBoostSelected = null;
+        GameStats.Instance.TeamBoostGroupSelected = null;
 
         if (GameHacks.Instance.ClearSavedTeamDataOnScenesEnter)
         {
@@ -64,7 +64,7 @@ public class TeamBoostSelection : EnigmaScene
             }
 
             TeamBoostGridItem gridItem = child.GetComponent<TeamBoostGridItem>();
-            TeamBoostItem boostItem = gridItem.BoostItem;
+            TeamBoostItemGroup boostItem = gridItem.BoostItem;
 
             if ((boostItem.Name == boostName) && (boostItem.Category == category) && (boostItem.Bonus.ToString() == bonus))
             {
@@ -108,12 +108,12 @@ public class TeamBoostSelection : EnigmaScene
 
         foreach (string teamBoostName in gameStats.TeamBoostTokensOwnedByName.Keys)
         {
-            TeamBoostItem tokenItem = gameStats.TeamBoostTokensOwnedByName[teamBoostName];
+            TeamBoostItemGroup tokenItem = gameStats.TeamBoostTokensOwnedByName[teamBoostName];
             addBoostItem(teamBoostItemTemplate, tokenItem, false);
         }
 
-        List<TeamBoostItem> oreItems = GameInventory.Instance.GetOreItemsOwned();
-        foreach (TeamBoostItem boostItem in oreItems)
+        List<TeamBoostItemGroup> oreItems = GameInventory.Instance.GetOreItemsOwned();
+        foreach (TeamBoostItemGroup boostItem in oreItems)
         {
             addBoostItem(teamBoostItemTemplate, boostItem, true);
         }
@@ -121,7 +121,7 @@ public class TeamBoostSelection : EnigmaScene
         teamBoostItemTemplate.SetActive(false);
     }
 
-    private void addBoostItem(GameObject teamBoostItemTemplate, TeamBoostItem boostItem, bool isOre)
+    private void addBoostItem(GameObject teamBoostItemTemplate, TeamBoostItemGroup boostItem, bool isOre)
     {
         for (int i = 0; i < boostItem.Amount; i++)
         {
@@ -151,7 +151,7 @@ public class TeamBoostSelection : EnigmaScene
                     gridItem.Deselect();
                     _boostInfoPopUp.Close();
 
-                    GameStats.Instance.TeamBoostSelected = null;
+                    GameStats.Instance.TeamBoostGroupSelected = null;
                     _selectedGridItem = null;
                 }
                 else
@@ -172,11 +172,11 @@ public class TeamBoostSelection : EnigmaScene
     private void selectTeamBoost(TeamBoostGridItem gridItem)
     {
         gridItem.Select();
-        TeamBoostItem boostItem = gridItem.BoostItem;
+        TeamBoostItemGroup boostItem = gridItem.BoostItem;
 
         _boostInfoPopUp.Open(boostItem.Name, boostItem.Category, boostItem.Bonus);
 
-        GameStats.Instance.TeamBoostSelected = gridItem.BoostItem;
+        GameStats.Instance.TeamBoostGroupSelected = gridItem.BoostItem;
         _selectedGridItem = gridItem;
     }
 

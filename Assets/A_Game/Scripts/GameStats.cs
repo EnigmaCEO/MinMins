@@ -32,10 +32,10 @@ public class GameStats : SingletonMonobehaviour<GameStats>
 
     public List<string> UnitsDamagedInSingleDestroyerAction = new List<string>();
 
-    public Dictionary<string, TeamBoostItem> TeamBoostTokensOwnedByName = new Dictionary<string, TeamBoostItem>();
+    public Dictionary<string, TeamBoostItemGroup> TeamBoostTokensOwnedByName = new Dictionary<string, TeamBoostItemGroup>();
     //public Dictionary<string, TeamBoostItem> TeamBoostOreItemsOwnedByName = new Dictionary<string, TeamBoostItem>();
 
-    public TeamBoostItem TeamBoostSelected;
+    public TeamBoostItemGroup TeamBoostGroupSelected;
 
     public int SelectedSaveSlot = 1; // 1 or 2
     public bool IsThereServerBackup;

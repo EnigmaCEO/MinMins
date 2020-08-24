@@ -1297,7 +1297,7 @@ public class War : NetworkEntity
 
     private void setLocalTeamBonuses()
     {
-        TeamBoostItem selectedBoostItem = GameStats.Instance.TeamBoostSelected;
+        TeamBoostItemGroup selectedBoostItem = GameStats.Instance.TeamBoostGroupSelected;
 
         int healthBonus = 0;
         int damageBonus = 0;
@@ -1352,6 +1352,16 @@ public class War : NetworkEntity
         NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.HEALTH_BONUS, healthBonus.ToString(), LocalPlayerTeam);
         NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.POWER_BONUS, powerBonus.ToString(), LocalPlayerTeam);
         NetworkManager.SetLocalPlayerCustomProperty(GameNetwork.PlayerCustomProperties.SIZE_BONUS, sizeBonus.ToString(), LocalPlayerTeam);
+
+        GameStats gameStats = GameStats.Instance;
+        if ((gameStats.TeamBoostGroupSelected != null) && (!gameStats.TeamBoostGroupSelected.IsToken))
+        {     
+            TeamBoostItemGroup boostItemGroup = GameInventory.Instance.GetOreItemGroup(gameStats.TeamBoostGroupSelected.Name);
+            boostItemGroup.Amount -= 1;
+            GameInventory.Instance.UpdateTeamBoostOreItem(boostItemGroup, true);
+
+            gameStats.TeamBoostGroupSelected = null;
+        }
     }
 
     private void setLocalTeamUnits()
@@ -2668,7 +2678,7 @@ public class War : NetworkEntity
         }
 #endif
 
-        TeamBoostItem boostReward = null;
+        TeamBoostItemGroup boostGroupReward = null;
         bool gotBoostReward = false;
 
         if (!isPrivateMatch && ((gameStats.Mode == GameStats.Modes.Pvp) || (gameStats.Mode == GameStats.Modes.Quest)))
@@ -2727,12 +2737,12 @@ public class War : NetworkEntity
 
             string oreItemName = rewardBaseName + " " + bonus;
 
-            TeamBoostItem boostItem = GameInventory.Instance.GetOreItem(oreItemName);
-            boostReward = new TeamBoostItem(oreItemName, boostItem.Amount + 1, bonus, rewardCategory);
-            GameInventory.Instance.UpdateTeamBoostOreItem(boostReward, true);
+            TeamBoostItemGroup boostItemGroup = GameInventory.Instance.GetOreItemGroup(oreItemName);
+            boostGroupReward = new TeamBoostItemGroup(oreItemName, boostItemGroup.Amount + 1, bonus, rewardCategory, false);
+            GameInventory.Instance.UpdateTeamBoostOreItem(boostGroupReward, true);
         }
 
-        _matchResultsPopUp.SetValues(_matchLocalData, boostReward);
+        _matchResultsPopUp.SetValues(_matchLocalData, boostGroupReward);
         bool questCompletedTransactionSent = false;
 
         if (_isVictory)

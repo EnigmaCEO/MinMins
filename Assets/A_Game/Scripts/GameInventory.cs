@@ -123,16 +123,16 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         return inventoryUnitIndexes;
     }
 
-    public TeamBoostItem GetOreItem(string itemName)
+    public TeamBoostItemGroup GetOreItemGroup(string itemName)
     {
-        return InventoryManager.Instance.GetItem<TeamBoostItem>(GroupNames.ORE, itemName);
+        return InventoryManager.Instance.GetItem<TeamBoostItemGroup>(GroupNames.ORE, itemName);
     }
 
     public bool IsThereAnyOreSingleItem()
     {
-        List<TeamBoostItem> teamBoostItems = GetOreItemsOwned();
+        List<TeamBoostItemGroup> teamBoostItems = GetOreItemsOwned();
 
-        foreach (TeamBoostItem teamBoost in teamBoostItems)
+        foreach (TeamBoostItemGroup teamBoost in teamBoostItems)
         {
             if (teamBoost.Amount > 0)
             {
@@ -143,9 +143,9 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         return false;
     }
 
-    public List<TeamBoostItem> GetOreItemsOwned()
+    public List<TeamBoostItemGroup> GetOreItemsOwned()
     {
-        List<TeamBoostItem> oreItems = new List<TeamBoostItem>();
+        List<TeamBoostItemGroup> oreItems = new List<TeamBoostItemGroup>();
 
         InventoryManager inventoryManager = InventoryManager.Instance;
 
@@ -153,7 +153,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         {
             foreach (string itemName in inventoryManager.GetGroupKeys(GroupNames.ORE))
             {
-                TeamBoostItem item = GetOreItem(itemName);
+                TeamBoostItemGroup item = GetOreItemGroup(itemName);
                 oreItems.Add(item);
             }
         }
@@ -1011,11 +1011,11 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
             inventoryManager.AddItem(GroupNames.LOOT_BOXES, tier.ToString(), 0);
         }
 
-        addDefaultOreItems(GameConstants.TeamBoostEnjinOreItems.DAMAGE, GameConstants.TeamBoostCategory.DAMAGE);
-        addDefaultOreItems(GameConstants.TeamBoostEnjinOreItems.DEFENSE, GameConstants.TeamBoostCategory.DEFENSE);
-        addDefaultOreItems(GameConstants.TeamBoostEnjinOreItems.HEALTH, GameConstants.TeamBoostCategory.HEALTH);
-        addDefaultOreItems(GameConstants.TeamBoostEnjinOreItems.POWER, GameConstants.TeamBoostCategory.POWER);
-        addDefaultOreItems(GameConstants.TeamBoostEnjinOreItems.SIZE, GameConstants.TeamBoostCategory.SIZE);
+        addDefaultOreItemGroups(GameConstants.TeamBoostEnjinOreItems.DAMAGE, GameConstants.TeamBoostCategory.DAMAGE);
+        addDefaultOreItemGroups(GameConstants.TeamBoostEnjinOreItems.DEFENSE, GameConstants.TeamBoostCategory.DEFENSE);
+        addDefaultOreItemGroups(GameConstants.TeamBoostEnjinOreItems.HEALTH, GameConstants.TeamBoostCategory.HEALTH);
+        addDefaultOreItemGroups(GameConstants.TeamBoostEnjinOreItems.POWER, GameConstants.TeamBoostCategory.POWER);
+        addDefaultOreItemGroups(GameConstants.TeamBoostEnjinOreItems.SIZE, GameConstants.TeamBoostCategory.SIZE);
 
         //SaveOre();
         //===========================================================================================
@@ -1080,7 +1080,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
                 int bonus = int.Parse(valueTerms[1]);
                 int amount = int.Parse(valueTerms[2]);
 
-                UpdateTeamBoostOreItem(new TeamBoostItem(oreItemName, amount, bonus, category), false);
+                UpdateTeamBoostOreItem(new TeamBoostItemGroup(oreItemName, amount, bonus, category, false), false);
             }
         }
 
@@ -1118,13 +1118,13 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     //    saveHashTableToFile();
     //}
 
-    private void addDefaultOreItems(string baseOreItemName, string category)
+    private void addDefaultOreItemGroups(string baseOreItemName, string category)
     {
         InventoryManager inventoryManager = InventoryManager.Instance;
         for (int i = 1; i <= _oreMaxBonus; i++)
         {
             string oreFullName = baseOreItemName + " " + i;
-            AddTeamBoostOreItem(new TeamBoostItem(oreFullName, 0, i, category), false);
+            AddTeamBoostOreItemGroup(new TeamBoostItemGroup(oreFullName, 0, i, category, false), false);
         }
     }
 
@@ -1144,7 +1144,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         saveHashKey(hashKey, number);
     }
 
-    public void UpdateTeamBoostOreItem(TeamBoostItem teamBoostItem, bool saveToFile)
+    public void UpdateTeamBoostOreItem(TeamBoostItemGroup teamBoostItem, bool saveToFile)
     {
         InventoryManager.Instance.UpdateItem(GroupNames.ORE, teamBoostItem.Name, teamBoostItem);
 
@@ -1154,7 +1154,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         }
     }
 
-    public void AddTeamBoostOreItem(TeamBoostItem teamBoostItem, bool saveToFile)
+    public void AddTeamBoostOreItemGroup(TeamBoostItemGroup teamBoostItem, bool saveToFile)
     {
         InventoryManager.Instance.AddItem(GroupNames.ORE, teamBoostItem.Name, teamBoostItem);
 
@@ -1171,7 +1171,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         InventoryManager inventoryManager = InventoryManager.Instance;
         foreach (string oreItemName in inventoryManager.GetGroupKeys(GroupNames.ORE))
         {
-            TeamBoostItem boostItem = inventoryManager.GetItem<TeamBoostItem>(GroupNames.ORE, oreItemName);
+            TeamBoostItemGroup boostItem = inventoryManager.GetItem<TeamBoostItemGroup>(GroupNames.ORE, oreItemName);
             string hashKey = GroupNames.ORE + _GROUP_WITH_KEY_SEPARATOR + boostItem.Name;
             string value = boostItem.Category + _GROUP_WITH_KEY_SEPARATOR + boostItem.Bonus + _GROUP_WITH_KEY_SEPARATOR + boostItem.Amount;
 

@@ -35,7 +35,7 @@ public class MatchResultsPopUp : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public void SetValues(War.MatchLocalData matchLocalData, TeamBoostItem boostItem)
+    public void SetValues(War.MatchLocalData matchLocalData, TeamBoostItemGroup boostItemGroup)
     {
         string winnerNickname = NetworkManager.GetRoomCustomProperty(GameNetwork.RoomCustomProperties.WINNER_NICKNAME);
         string localPlayerNickname = NetworkManager.GetLocalPlayerNickname();
@@ -99,10 +99,10 @@ public class MatchResultsPopUp : MonoBehaviour
             }
         }
 
-        if (boostItem != null)
+        if (boostItemGroup != null)
         {
             GameObject boostReward = Instantiate<GameObject>(boostRewardGridItemTemplate, _rewardsGridContent);
-            boostReward.GetComponent<BoostRewardGridItem>().SetUp(boostItem.Category, boostItem.Bonus);
+            boostReward.GetComponent<BoostRewardGridItem>().SetUp(boostItemGroup.Category, boostItemGroup.Bonus);
         }
 
         gameInventory.SaveLootBoxes();

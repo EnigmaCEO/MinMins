@@ -1050,7 +1050,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
         if (isAvailable)
         {
-            GameStats.Instance.TeamBoostTokensOwnedByName.Add(name, new TeamBoostItem(name, _DEFAULT_TOKEN_AMOUNT, _defaultTokenBonus, category));
+            GameStats.Instance.TeamBoostTokensOwnedByName.Add(name, new TeamBoostItemGroup(name, _DEFAULT_TOKEN_AMOUNT, _defaultTokenBonus, category, true));
         }
     }
 }

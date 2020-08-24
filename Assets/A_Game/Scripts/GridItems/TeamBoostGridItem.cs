@@ -9,13 +9,13 @@ public class TeamBoostGridItem : MonoBehaviour
     [SerializeField] private GameObject _tint;
     [SerializeField] private Text _bonusText;
 
-    public TeamBoostItem BoostItem
+    public TeamBoostItemGroup BoostItem
     {
         get;
         private set;
     }
 
-    public void SetUp(TeamBoostItem boostItem, bool isOre)
+    public void SetUp(TeamBoostItemGroup boostItem, bool isOre)
     {
         BoostItem = boostItem;
 
@@ -26,7 +26,7 @@ public class TeamBoostGridItem : MonoBehaviour
 
         if (isOre)
         {
-            spritePath = TeamBoostItem.GetOreImagePath(BoostItem.Category, BoostItem.Bonus);
+            spritePath = TeamBoostItemGroup.GetOreImagePath(BoostItem.Category, BoostItem.Bonus);
         }
         else
         {

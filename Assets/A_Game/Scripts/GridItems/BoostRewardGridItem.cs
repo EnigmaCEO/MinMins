@@ -16,7 +16,7 @@ public class BoostRewardGridItem : MonoBehaviour
         _bonusText.text = "+" + bonus.ToString();
         _categoryText.text = LocalizationManager.GetTermTranslation(category);
 
-        string imagePath = TeamBoostItem.GetOreImagePath(category, bonus);
+        string imagePath = TeamBoostItemGroup.GetOreImagePath(category, bonus);
 
         Sprite itemSprite = Resources.Load<Sprite>(imagePath);
 
