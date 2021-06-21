@@ -23,6 +23,7 @@ public class Quest : MonoBehaviour
     [SerializeField] private Text _questNameTitle;
 
     [SerializeField] GameObject _notEnoughUnitsPopUp;
+    [SerializeField] GameObject _tutorialPopUp;
 
     private string _unitClicked = "";
     private List<string> _revealedUnitNames = new List<string>();
@@ -82,7 +83,10 @@ public class Quest : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            StartCoroutine(handleMouseClick());
+            if (!_tutorialPopUp.GetActive())
+            {
+                StartCoroutine(handleMouseClick());
+            }
         }
     }
 
@@ -113,6 +117,11 @@ public class Quest : MonoBehaviour
         {
             _notEnoughUnitsPopUp.gameObject.SetActive(false);
         }
+    }
+
+    public void TutorialPopUpDismissButtonDown()
+    {
+        _tutorialPopUp.gameObject.SetActive(false);
     }
 
     private IEnumerator handleMouseClick()

@@ -464,7 +464,7 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
             //string productId = "";
 
             // Unity IAP's validation logic is only included on these platforms.
-#if (UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX)
+#if (UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX) && !UNITY_EDITOR
             // Prepare the validator with the secrets we prepared in the Editor
             // obfuscation window.
             CrossPlatformValidator validator = new CrossPlatformValidator(GooglePlayTangle.Data(), AppleTangle.Data(), Application.identifier);
@@ -509,6 +509,7 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
 
                     if (!args.purchasedProduct.definition.id.Contains(Application.identifier))
                     {
+                        Debug.Log("Invalid receipt, incorrect ID");
                         validPurchase = false;
                     }
 
@@ -516,6 +517,7 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
                     {
                         if (!transactionId.Contains("GPA"))
                         {
+                            Debug.Log("Invalid receipt, fake ID");
                             validPurchase = false;
                         }
                     }

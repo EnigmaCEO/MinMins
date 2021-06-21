@@ -44,15 +44,40 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PersistBetweenScenes: 1
-  DecisionTimeFreeze: 0
-  RandomizeUnitTypes: 0
-  AssignEffectByType: 0
-  BuyResultFalse: 0
-  BuyAndroid: 0
-  HideClouds: 0
+  EnableAllEnjinTokens: 0
   ForceEnjinRewardOnChest: 0
+  HideClouds: 0
+  BuyAndroid: 0
+  DecisionTimeFreeze: 0
   WarVictory: 0
   ChestHit: 0
+  ForcePvpAi: 0
+  AllEnjinTeamBoostTokens: 0
+  TreatBattleResultsAsPrivateMatch: 0
+  SinglePlayerLevel:
+    Enabled: 0
+    Value: 50
+  ForceTeamBoostReward:
+    Enabled: 0
+    Value: True
+  TeamBoostRewardCategory:
+    Enabled: 0
+    Value: Size
+  SetServerQuest:
+    Enabled: 0
+    Value: Torso
+  SizeBonus:
+    Enabled: 0
+    Value: 10
+  SetTeamBoostBonuses:
+    Enabled: 0
+    Value: 5
+  BuyResult:
+    Enabled: 0
+    Value: True
+  TimeWaitForRoomPvpAiSet:
+    Enabled: 0
+    Value: 10
   UnitTier:
     Enabled: 0
     Value: 1
@@ -89,3 +114,30 @@ MonoBehaviour:
   Damage:
     Enabled: 0
     Value: 1000
+  FightsWithoutAdsMaxCount:
+    Enabled: 0
+    Value: 2
+  HasPurchased:
+    Enabled: 0
+    Value: True
+  UnlockSinglePlayerLevels:
+    Enabled: 0
+    Value: 5
+  QuestsPoints:
+    Enabled: 0
+    Value: 1000
+  RandomizeUnitTypes: 0
+  AssignEffectByType: 0
+  GuestCameraAsHost: 0
+  CreateWarPrepLineRendererOnUpdate: 0
+  EnjinItemCollectedFailure: 0
+  CompleteLevelQuestFail: 0
+  CompleteQuestOffline: 0
+  ClearSavedTeamDataOnScenesEnter: 0
+  NegatePrefsBackup: 0
+  TriggerPlayerDisconnectPopUp:
+    Enabled: 0
+    Value: D
+  TriggerOpponentDisconnectPopUp:
+    Enabled: 0
+    Value: O

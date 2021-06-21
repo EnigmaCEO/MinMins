@@ -13,29 +13,12 @@
         android:allowBackup="false"
         tools:replace="android:allowBackup"
         >
-        <activity
-            android:name="com.oneaudience.unity.OneAudienceUnityActivity"
-            android:label="@string/app_name"
-			      android:screenOrientation="landscape">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
+        <activity android:name="com.unity3d.player.UnityPlayerActivity" android:label="@string/app_name" android:screenOrientation="landscape">
+          <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+          </intent-filter>
         </activity>
-        <receiver
-			android:name="com.oneaudience.sdk.OneAudienceReceiver"
-			android:enabled="true"
-			android:exported="true">
-		<intent-filter>
-			<action android:name="android.intent.action.PACKAGE_REMOVED"/>
-			<action android:name="android.intent.action.PACKAGE_REPLACED"/>
-			<action android:name="android.intent.action.PACKAGE_ADDED"/>
-			<data android:scheme="package"/>
-		</intent-filter>
-		<intent-filter>
-			<action android:name="com.oneaudience.action.CONFIGURATION"/>
-		</intent-filter>
-		</receiver>
   
     </application>
 </manifest>

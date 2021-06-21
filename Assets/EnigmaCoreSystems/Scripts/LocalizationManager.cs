@@ -10,25 +10,24 @@ public class LocalizationManager : MonoBehaviour
 {
     static public LocalizationManager Instance;
 
-
-    public enum Languages
-    {
-        English = 0,
-        Spanish,
-        Chinese_Simplified,
-        Chinese_Traditional,
-        Korean
-    }
+    [SerializeField] private List<SystemLanguage> _supportedLanguages = new List<SystemLanguage> { SystemLanguage.English, SystemLanguage.Spanish, SystemLanguage.Korean,
+                                                                                           SystemLanguage.Chinese, SystemLanguage.ChineseSimplified, SystemLanguage.ChineseTraditional  };
 
     private void Awake()
     {
         Instance = this;
 
-        load();
+        //load();
 
-        if (EnigmaHacks.Instance.Language.Enabled)
+        if (EnigmaHacks.Instance.LanguageHack)
         {
-            ChangeLanguage(EnigmaHacks.Instance.Language.GetValueAsEnum<Languages>());
+            SystemLanguage hackedLanguage = EnigmaHacks.Instance.HackedLanguage;
+            Debug.Log("Applying hacked language: " + hackedLanguage.ToString());
+            ChangeLanguage(hackedLanguage);
+        }
+        else
+        {
+            load();
         }
 
         UnityEngine.SceneManagement.SceneManager.sceneLoaded += onSceneLoaded;
@@ -102,12 +101,19 @@ public class LocalizationManager : MonoBehaviour
 
     static public void ChangeLanguage(string language)
     {
+        Debug.Log("Change Language: " + language);
+
+        if (language == SystemLanguage.Chinese.ToString())
+        {
+            language = SystemLanguage.ChineseSimplified.ToString();
+        }
+
         I2.Loc.LocalizationManager.CurrentLanguage = language;
     }
 
-    static public void ChangeLanguage(Languages language)
+    static public void ChangeLanguage(SystemLanguage language)
     {
-        ChangeLanguage(language.ToString());
+        ChangeLanguage(Instance.getSupportedLanguage(language).ToString());
     }
 
     static public string GetTermTranslation(string term)
@@ -122,9 +128,9 @@ public class LocalizationManager : MonoBehaviour
         return result;
     }
 
-    static private void load()
+   private void load()
     {
-        string language = Languages.English.ToString();
+        string language;
 
         if (PlayerPrefs.HasKey("Language"))
         {
@@ -132,12 +138,26 @@ public class LocalizationManager : MonoBehaviour
         }
         else
         {
-            if (Application.systemLanguage == SystemLanguage.Spanish)
-            {
-                language = Languages.Spanish.ToString();
-            }
+            language = getSupportedLanguage(Application.systemLanguage).ToString();      
         }
 
         ChangeLanguage(language);
+    }
+
+    private SystemLanguage getSupportedLanguage(SystemLanguage language)
+    {
+        SystemLanguage resultLanguage = SystemLanguage.English;
+
+        if (_supportedLanguages.Contains(language))
+        {
+            resultLanguage = language;
+            Debug.Log("Language " + language.ToString() + " is supported.");
+        }
+        else
+        {
+            Debug.Log("Language " + language.ToString() + " was not supported. Returning default language: English");
+        }
+
+        return resultLanguage;
     }
 }

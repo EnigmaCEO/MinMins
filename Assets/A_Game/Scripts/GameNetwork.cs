@@ -34,6 +34,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
         public const string QUEST = "quest";
         public const string PROGRESS = "progress";
+        public const string LEADERS = "leaders";
         public const string LEVEL = "level";
 
         public const string WINNER_NICKNAME = "winner_nickname";
@@ -829,6 +830,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
             if (status == NetworkManager.StatusOptions.SUCCESS)
             {
                 int updatedRating = response_hash[TransactionKeys.RATING].AsInt;
+                GameStats.Instance.Rating = updatedRating;
                 SetLocalPlayerRating(updatedRating, TeamNames.HOST);
                 _onSendResultsCallback(ServerResponseMessages.SUCCESS, updatedRating);
             }

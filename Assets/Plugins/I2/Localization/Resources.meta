@@ -1,8 +1,13 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Assets/Gizmos/GameAnalytics.meta
+guid: 0815a0dd77f0048c28eb65386cbbaa8f
+=======
 guid: a503f373bd6a3ab4fa977ced0d72eeac
+>>>>>>> 74311396... * Changed Enigma Hack to set system language from its own enum.:Assets/Plugins/I2/Localization/Resources.meta
 folderAsset: yes
+timeCreated: 1436017931
+licenseType: Free
 DefaultImporter:
-  externalObjects: {}
   userData: 
   assetBundleName: 
   assetBundleVariant: 

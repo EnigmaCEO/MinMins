@@ -29,6 +29,7 @@ public class Main : EnigmaScene
 
     [SerializeField] private Image _questProgressFill;
     [SerializeField] private Text _questProgressText;
+    [SerializeField] private Text _questLeadersText;
 
     //private Dictionary<Quests, string> _rewardIconResNameByQuest = new Dictionary<Quests, string>();
 
@@ -139,7 +140,7 @@ public class Main : EnigmaScene
 
             if (!questIsHacked)
             {
-                questNode = NetworkManager.CheckValidNode(response, GameNetwork.TransactionKeys.QUEST);
+                questNode = NetworkManager.CheckValidNode(response[0], GameNetwork.TransactionKeys.QUEST);
             }
 
             if (questIsHacked || (questNode != null)) 
@@ -173,10 +174,12 @@ public class Main : EnigmaScene
             if (activeQuest != Quests.None)
             {
                 JSONNode progressNode = null;
+                JSONNode leadersNode = null;
 
                 if (!questIsHacked)
                 {
-                    progressNode = NetworkManager.CheckValidNode(response, GameNetwork.TransactionKeys.PROGRESS);
+                    progressNode = NetworkManager.CheckValidNode(response[0], GameNetwork.TransactionKeys.PROGRESS);
+                    leadersNode = NetworkManager.CheckValidNode(response[0], GameNetwork.TransactionKeys.LEADERS);
                 }
 
                 if (questIsHacked || (progressNode != null))
@@ -189,6 +192,15 @@ public class Main : EnigmaScene
                     }
 
                     handleQuestPanelOrButtonVisibility(points);
+                }
+
+                if (leadersNode != null)
+                {
+                    foreach (JSONNode leaders in leadersNode.AsArray)
+                    {
+                        if (leaders["name"].ToString().Trim('"') != "null")
+                            _questLeadersText.text += leaders["name"].ToString().Trim('"') + " - " + leaders["points"].ToString().Trim('"') + "\n";
+                    }
                 }
             }
         }

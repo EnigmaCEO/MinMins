@@ -15,17 +15,72 @@ MonoBehaviour:
   mSource:
     UserAgreesToHaveItOnTheScene: 0
     UserAgreesToHaveItInsideThePluginsFolder: 0
-    GoogleLiveSyncIsUptoDate: 1
+    GoogleLiveSyncIsUptoDate: 0
     mTerms:
-    - Term: Waiting for Opponent...
+    - Term: (Bonus)
       TermType: 0
       Description: 
       Languages:
-      - Waiting for Opponent...
-      - Esperando Oponente...
-      - "\u7B49\u5F85\u5C0D\u624B\u2026"
-      - "\u7B49\u5F85\u5BF9\u624B\u2026"
-      - "\uC0C1\uB300 \uD50C\uB808\uC774\uC5B4 \uAE30\uB2E4\uB9AC\uB294 \uC911\u2026"
+      - (Bonus)
+      - (Bono)
+      - "(\u984D\u5916\u7D05\u5229)"
+      - "(\u989D\u5916\u7EA2\u5229)"
+      - "(\uBCF4\uB108\uC2A4)"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: '- Killed Units -'
+      TermType: 0
+      Description: 
+      Languages:
+      - '- Killed Units -'
+      - '- Unidades Muertas -'
+      - "- \u64CA\u6BBA\u55AE\u4F4D -"
+      - "- \u51FB\u6740\u5355\u4F4D -"
+      - "\uC8FD\uC740 \uCE90\uB9AD\uD130"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: 1 point for winning a new training level
+      TermType: 0
+      Description: 
+      Languages:
+      - 1  point for winning a new training level
+      - 1  punto por ganar un nuevo nivel de entrenamiento
+      - "\u8A13\u7DF4\u6642\u9054\u5230\u65B0\u7B49\u7D1A\u53EF\u7372 1 \u5206"
+      - "\u8D62\u5F97\u4E00\u4E2A\u65B0\u7684\u8BAD\u7EC3\u5173\u5361\u53EF\u4EE5\u83B7\u5F971\u5206"
+      - "\uC0C8 \uD2B8\uB808\uC774\uB2DD \uB808\uBCA8 \uC2B9\uB9AC \uC2DC 1\uC810"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: 2 points for winning pvp
+      TermType: 0
+      Description: 
+      Languages:
+      - 2  points for winning pvp
+      - 2  puntos por ganar jcj
+      - "\u52DD\u51FA\u73A9\u5BB6\u5C0D\u6230\u53EF\u7372 2 \u5206"
+      - "\u8D62\u5F97pvp\u53EF\u4EE5\u83B7\u5F972\u5206"
+      - "pvp \uC2B9\uB9AC \uC2DC 2\uC810"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: 5 points for purchasing a box
+      TermType: 0
+      Description: 
+      Languages:
+      - 5  points for purchasing a box
+      - 5  puntos por comprar una caja
+      - "\u8CFC\u8CB7\u5BF6\u7BB1\u53EF\u7372 5 \u5206"
+      - "\u8D2D\u4E70\u4E00\u4E2A\u76D2\u5B50\u53EF\u4EE5\u83B7\u5F975\u5206"
+      - "\uC0C1\uC790 1\uAC1C \uAD6C\uB9E4 \uC2DC 5\uC810"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: ARENA
+      TermType: 0
+      Description: 
+      Languages:
+      - ARENA
+      - ARENA
+      - "\u7AF6\u6280\u5834"
+      - "\u7ADE\u6280\u573A"
+      - "\uBC30\uD2C0 \uC7A5\uC18C"
       Flags: 0000000000
       Languages_Touch: []
     - Term: ARENA SELECTION
@@ -39,6 +94,163 @@ MonoBehaviour:
       - "\uBC30\uD2C0 \uC7A5\uC18C"
       Flags: 0000000000
       Languages_Touch: []
+    - Term: ATTACK
+      TermType: 0
+      Description: 
+      Languages:
+      - ATTACK
+      - ATACAR
+      - "\u653B\u64CA"
+      - "\u653B\u51FB"
+      - "\uACF5\uACA9"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Actions Left
+      TermType: 0
+      Description: 
+      Languages:
+      - Actions Left
+      - Acciones Restantes
+      - "\u5269\u9918\u52D5\u4F5C"
+      - "\u5269\u4F59\u52A8\u4F5C"
+      - "\uB0A8\uC740 \uACF5\uACA9 \uD69F\uC218"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: AdFailed
+      TermType: 0
+      Description: 
+      Languages:
+      - Ad Failed. Please try again.
+      - "Fall\xF3 el Ad. Favor intente otra vez."
+      - "\u5EE3\u544A\u5931\u6557"
+      - "\u5E7F\u544A\u5931\u8D25"
+      - "\uAD11\uACE0\uBCF4\uAE30 \uC2E4\uD328. \uB2E4\uC2DC \uC2DC\uB3C4\uD574\uC8FC\uC138\uC694."
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: AdvancedPack
+      TermType: 0
+      Description: 
+      Languages:
+      - Advanced Pack
+      - Paquete Avanzado
+      - "\u9032\u968E\u5305"
+      - "\u8FDB\u9636\u5305"
+      - "\uC5B4\uB4DC\uBC34\uC2A4\uB4DC \uD329"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Apochrome Sword
+      TermType: 0
+      Description: 
+      Languages:
+      - Epochrome Sword
+      - Espada Epochrome
+      - "\u7D00\u5143\u528D\u5203"
+      - "Epochrome\u5251"
+      - "\uD30C\uBA78\uC758 \uAE08\uC18D \uAC80"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Are you ready for Quest Levels? Log in with your Enigma Games account
+        to access them.
+      TermType: 0
+      Description: 
+      Languages:
+      - 'Are you ready for Quest Levels?
+
+
+        Log in with your Enigma Games account to access them.'
+      - "\xBFEst\xE1s listo para Niveles de B\xFAsqueda?\n\nAccede a tu cuenta de
+        Juegos Enigma para accesarlos."
+      - "\u4F60\u6E96\u5099\u597D\u8FCE\u63A5\u4EFB\u52D9\u7B49\u7D1A\u55CE\uFF1F\n\n\u4F7F\u7528
+        Enigma Games \u5E33\u6236\u767B\u5165\u5F8C\u5373\u53EF\u958B\u6230\u3002\u4F60\u6E96\u5099\u597D\u8FCE\u63A5\u4EFB\u52D9\u7B49\u7D1A\u55CE\uFF1F\n\n\u4F7F\u7528
+        Enigma Games \u5E33\u6236\u767B\u5165\u5F8C\u5373\u53EF\u958B\u6230\u3002\u4F60\u6E96\u5099\u597D\u8FCE\u63A5\u4EFB\u52D9\u7B49\u7D1A\u55CE\uFF1F\n\n\u4F7F\u7528
+        Enigma Games \u5E33\u6236\u767B\u5165\u5F8C\u5373\u53EF\u958B\u6230\u3002"
+      - "\u51C6\u5907\u597D\u6311\u6218\u4EFB\u52A1\u5173\u5361\u4E86\u5417\uFF1F\n\n\u767B\u5F55\u60A8\u7684Enigma
+        Games\u8D26\u53F7\u5C31\u80FD\u5F00\u59CB\u54AF\u3002\u51C6\u5907\u597D\u6311\u6218\u4EFB\u52A1\u5173\u5361\u4E86\u5417\uFF1F\n\n\u767B\u5F55\u60A8\u7684Enigma
+        Games\u8D26\u53F7\u5C31\u80FD\u5F00\u59CB\u54AF\u3002\u51C6\u5907\u597D\u6311\u6218\u4EFB\u52A1\u5173\u5361\u4E86\u5417\uFF1F\n\n\u767B\u5F55\u60A8\u7684Enigma
+        Games\u8D26\u53F7\u5C31\u80FD\u5F00\u59CB\u54AF\u3002"
+      - "\uD018\uC2A4\uD2B8 \uB808\uBCA8 \uC900\uBE44\uAC00 \uB418\uC168\uB098\uC694?\n\nEnigma
+        Games \uACC4\uC815\uC5D0 \uB85C\uADF8\uC778\uD558\uC5EC \uC561\uC138\uC2A4\uD558\uC138\uC694.\uD018\uC2A4\uD2B8
+        \uB808\uBCA8 \uC900\uBE44\uAC00 \uB418\uC168\uB098\uC694?\n\nEnigma Games
+        \uACC4\uC815\uC5D0 \uB85C\uADF8\uC778\uD558\uC5EC \uC561\uC138\uC2A4\uD558\uC138\uC694.\uD018\uC2A4\uD2B8
+        \uB808\uBCA8 \uC900\uBE44\uAC00 \uB418\uC168\uB098\uC694?\n\nEnigma Games
+        \uACC4\uC815\uC5D0 \uB85C\uADF8\uC778\uD558\uC5EC \uC561\uC138\uC2A4\uD558\uC138\uC694."
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Are you ready to battle other players? Log in with your Enigma Games account
+        to access the PvP arenas.
+      TermType: 0
+      Description: 
+      Languages:
+      - 'Are you ready to battle other players?
+
+
+        Log in with your Enigma Games account to access the PvP arenas.'
+      - "\xBFEst\xE1s listo para batallar otros jugadores?\n\nIngresa con tu cuenta
+        de Enigma Games para accesar las arenas JcJ."
+      - "\u4F60\u6E96\u5099\u597D\u548C\u5176\u4ED6\u73A9\u5BB6\u6230\u9B25\u4E86\u55CE?
+        \u7528\u4F60\u7684Enigma Games\u5E33\u865F\u767B\u5165\u4EE5\u9032\u5165\u73A9\u5BB6\u5C0D\u6230\u7AF6\u6280\u5834"
+      - "\u4F60\u51C6\u5907\u597D\u548C\u5176\u4ED6\u73A9\u5BB6\u6218\u6597\u4E86\u5417?
+        \u7528\u4F60\u7684Enigma Games\u5E10\u53F7\u767B\u5165\u4EE5\u8FDB\u5165\u73A9\u5BB6\u5BF9\u6218\u7ADE\u6280\u573A"
+      - "\uB2E4\uB978 \uD50C\uB808\uC774\uC5B4\uC640 \uACA8\uB8F0 \uC900\uBE44\uAC00
+        \uB410\uC2B5\uB2C8\uAE4C?\n \uC560\uB2C8\uADF8\uB9C8 \uAC8C\uC784 \uACC4\uC815\uC73C\uB85C
+        \uB85C\uADF8\uC778\uD558\uC138\uC694."
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Arena
+      TermType: 0
+      Description: 
+      Languages:
+      - Arena
+      - Arena
+      - "\u7AF6\u6280\u5834"
+      - "\u7ADE\u6280\u573A"
+      - "\uBC30\uD2C0 \uC7A5\uC18C"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Arena 1-6
+      TermType: 0
+      Description: 
+      Languages:
+      - Arena 1-6
+      - Arena 1-6
+      - "\u7AF6\u6280\u5834 1-6"
+      - "\u7ADE\u6280\u573A 1-6"
+      - "\uC544\uB808\uB098 1-6"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Assign the selected unit to a team position.
+      TermType: 0
+      Description: 
+      Languages:
+      - Assign the selected unit to a team position.
+      - "Asigna unidad seleccionada a una posici\xF3n de equipo."
+      - "\u7DE8\u914D\u6230\u968A\u6210\u54E1\u5230\u6307\u5B9A\u4F4D\u7F6E\u3002"
+      - "\u628A\u9009\u4E2D\u7684\u5355\u4F4D\u5206\u914D\u5230\u4E00\u4E2A\u961F\u4F0D\u4E2D\u7684\u4F4D\u7F6E\u3002"
+      - "\uC120\uD0DD\uD55C \uC720\uB2DB\uC744 \uD300 \uD3EC\uC9C0\uC158\uC5D0 \uD560\uB2F9\uD558\uC138\uC694."
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Attack
+      TermType: 0
+      Description: 
+      Languages:
+      - Attack
+      - Ataque
+      - "\u653B\u64CA"
+      - "\u653B\u51FB"
+      - "\uACF5\uACA9"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: AudioEffects
+      TermType: 0
+      Description: 
+      Languages:
+      - Audio Effects
+      - Efectos de Sonido
+      - "\u97F3\u6548"
+      - "\u97F3\u6548"
+      - "\uC624\uB514\uC624 \uD6A8\uACFC"
+      Flags: 0000000000
+      Languages_Touch: []
     - Term: BATTLE ALERT!
       TermType: 0
       Description: 
@@ -50,400 +262,15 @@ MonoBehaviour:
       - "\uBC30\uD2C0 \uC2DC\uC791!"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: You need at least 5 units to start a battle. Return to the Shop for assistance
-        in rebuilding your Min Min army.
+    - Term: BATTLE RESULTS
       TermType: 0
       Description: 
       Languages:
-      - "You need at least 5 units to start a battle.\n \nReturn to the Shop for assistance
-        in rebuilding your Min Min army."
-      - "Necesitas al menos 5 unidades para comenzar un combate.\n \nRegresa a la
-        tienda por ayuda en reconstruir tu ej\xE9rcito Min Min."
-      - "\u4F60\u9700\u8981\u81F3\u5C115\u55AE\u4F4D\u624D\u80FD\u958B\u59CB\u6230\u9B25.
-        \ \u8FD4\u56DE\u5546\u5E97\u4EE5\u5EFA\u9020\u4F60\u7684Min Min\u8ECD\u968A"
-      - "\u4F60\u9700\u8981\u81F3\u5C115\u5355\u4F4D\u624D\u80FD\u5F00\u59CB\u6218\u6597.
-        \u8FD4\u56DE\u5546\u5E97\u4EE5\u5EFA\u9020\u4F60\u7684Min Min\u519B\u961F"
-      - "\uBC30\uD2C0\uC744 \uC2DC\uC791\uD558\uB824\uBA74 \uCD5C\uC18C 5 \uAC1C\uC758
-        \uCE90\uB9AD\uD130 \uC720\uB2DB\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\n \n
-        \uC0C1\uC810\uC5D0 \uB4E4\uB7EC Min Min \uAD70\uB300\uB97C \uC7AC\uAC74\uD558\uC138\uC694!\uBC30\uD2C0\uC744
-        \uC2DC\uC791\uD558\uB824\uBA74 \uCD5C\uC18C 5 \uAC1C\uC758 \uCE90\uB9AD\uD130
-        \uC720\uB2DB\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\n \n \uC0C1\uC810\uC5D0
-        \uB4E4\uB7EC Min Min \uAD70\uB300\uB97C \uC7AC\uAC74\uD558\uC138\uC694!"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: You need at least 5 units for battle. We offer 2 free Starter Boxes or
-        40 off the Master Box!
-      TermType: 0
-      Description: 
-      Languages:
-      - "You need at least 5 units for battle. \n\nWe offer 2 free Starter Boxes or
-        40% off the Master Box!"
-      - "Necesitas al menos 5 unidades para el combate. \n\nOfrecemos estas 2 Cajas
-        de Inicio o 40% de la Caja Maestra!"
-      - "\u4F60\u9700\u8981\u81F3\u5C115\u55AE\u4F4D\u624D\u80FD\u958B\u59CB\u6230\u9B25.
-        \u6211\u5011\u63D0\u4F9B\u5169\u500B\u514D\u8CBB\u7684\u521D\u5FC3\u8005\u7BB1\u6216\u662F\u964D\u50F940%\u7684\u5927\u5E2B\u7BB1"
-      - "\u4F60\u9700\u8981\u81F3\u5C115\u5355\u4F4D\u624D\u80FD\u5F00\u59CB\u6218\u6597.
-        \u6211\u4EEC\u63D0\u4F9B\u4E24\u4E2A\u514D\u8D39\u7684\u521D\u5FC3\u8005\u7BB1\u6216\u662F\u964D\u4EF740%\u7684\u5927\u5E08\u7BB1"
-      - "\uBC30\uD2C0\uC744 \uC2DC\uC791\uD558\uB824\uBA74 \uCD5C\uC18C 5\uAC1C\uC758
-        \uCE90\uB9AD\uD130 \uC720\uB2DB\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\n \uB450\uAC1C\uC758
-        \uBB34\uB8CC \uC2A4\uD0C0\uD130 \uBC15\uC2A4 \uD639\uC740 \uB9C8\uC2A4\uD130
-        \uBC15\uC2A4 40% \uD560\uC778 \uD61C\uD0DD\uC744 \uB204\uB824\uBCF4\uC138\uC694!\uBC30\uD2C0\uC744
-        \uC2DC\uC791\uD558\uB824\uBA74 \uCD5C\uC18C 5\uAC1C\uC758 \uCE90\uB9AD\uD130
-        \uC720\uB2DB\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\n \uB450\uAC1C\uC758 \uBB34\uB8CC
-        \uC2A4\uD0C0\uD130 \uBC15\uC2A4 \uD639\uC740 \uB9C8\uC2A4\uD130 \uBC15\uC2A4
-        40% \uD560\uC778 \uD61C\uD0DD\uC744 \uB204\uB824\uBCF4\uC138\uC694!"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Free Boxes
-      TermType: 0
-      Description: 
-      Languages:
-      - Free Boxes
-      - Cajas Gratis
-      - "\u514D\u8CBB\u7BB1"
-      - "\u514D\u8D39\u7BB1"
-      - "\uBB34\uB8CC \uBC15\uC2A4"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: New user
-      TermType: 0
-      Description: 
-      Languages:
-      - New user
-      - Nuevo usuario
-      - "\u65B0\u7684\u4F7F\u7528\u8005"
-      - "\u65B0\u7684\u4F7F\u7528\u8005"
-      - "\uC2E0\uADDC \uC720\uC800"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: LINK WALLET
-      TermType: 0
-      Description: 
-      Languages:
-      - LINK WALLET
-      - 'ENLAZAR BILLETERA '
-      - "\u9023\u7D50\u9322\u5305"
-      - "\u8FDE\u7ED3\u94B1\u5305"
-      - "\uC5D4\uC9C4 \uC6D4\uB81B\uC5D0 \uC5F0\uACB0\uD558\uAE30"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: PvP
-      TermType: 0
-      Description: 
-      Languages:
-      - PvP
-      - JcJ
-      - "\u73A9\u5BB6\u5C0D\u6230"
-      - "\u73A9\u5BB6\u5BF9\u6218"
-      - "\uD50C\uB808\uC774\uC5B4 VS \uD50C\uB808\uC774\uC5B4"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Training
-      TermType: 0
-      Description: 
-      Languages:
-      - Training
-      - Entrenamiento
-      - "\u8A13\u7DF4"
-      - "\u8BAD\u7EC3"
-      - "\uC5F0\uC2B5 \uAC8C\uC784"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Confirm
-      TermType: 0
-      Description: 
-      Languages:
-      - Confirm
-      - Confirmar
-      - "\u78BA\u5B9A"
-      - "\u786E\u5B9A"
-      - "\uD655\uC778"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Enjin Address
-      TermType: 0
-      Description: 
-      Languages:
-      - Enjin Address
-      - "Direcci\xF3n Enjin"
-      - "Enjin \u5730\u5740"
-      - "Enjin \u5730\u5740"
-      - "\uC5D4\uC9C4 \uC8FC\uC18C"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: TryAgain
-      TermType: 5
-      Description: 
-      Languages:
-      - Try again today
-      - Trata hoy de nuevo
-      - "\u4ECA\u5929\u518D\u8A66\u4E00\u6B21"
-      - "\u4ECA\u5929\u518D\u8BD5\u4E00\u6B21"
-      - "\uC624\uB298 \uB2E4\uC2DC \uC2DC\uB3C4\uD574\uBCF4\uC138\uC694!"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: WatchVideo
-      TermType: 0
-      Description: 
-      Languages:
-      - Watch video
-      - "Ver v\xEDdeo"
-      - "\u89C0\u770B\u5F71\u7247"
-      - "\u89C2\u770B\u5F71\u7247"
-      - "\uC601\uC0C1 \uBCF4\uAE30"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Score
-      TermType: 0
-      Description: 
-      Languages:
-      - Your score is
-      - Tu puntaje es
-      - "\u4F60\u7684\u5206\u6578\u662F"
-      - "\u4F60\u7684\u5206\u6570\u662F"
-      - "\uB2F9\uC2E0\uC758 \uC810\uC218\uB294"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Timer
-      TermType: 0
-      Description: 
-      Languages:
-      - Timer
-      - Reloj
-      - "\u8A08\u6642\u5668"
-      - "\u8BA1\u65F6\u5668"
-      - 
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Start
-      TermType: 0
-      Description: 
-      Languages:
-      - Start
-      - Comenzar
-      - "\u958B\u59CB"
-      - "\u5F00\u59CB"
-      - "\uC2DC\uC791"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: LOGIN
-      TermType: 0
-      Description: 
-      Languages:
-      - LOGIN
-      - "INICIAR SESI\xD3N"
-      - "\u767B\u5165"
-      - "\u767B\u5165"
-      - "\uB85C\uADF8\uC778"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Login
-      TermType: 0
-      Description: 
-      Languages:
-      - Login
-      - "Iniciar Sesi\xF3n"
-      - "\u767B\u5165"
-      - "\u767B\u5165"
-      - "\uB85C\uADF8\uC778"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Logout
-      TermType: 0
-      Description: 
-      Languages:
-      - Logout
-      - "Cerrar Sesi\xF3n"
-      - "\u767B\u51FA"
-      - "\u767B\u51FA"
-      - "\uB85C\uADF8\uC544\uC6C3"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Register
-      TermType: 0
-      Description: 
-      Languages:
-      - Register
-      - Registrarse
-      - "\u8A3B\u518A"
-      - "\u6CE8\u518C"
-      - "\uB4F1\uB85D\uD558\uAE30"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Guest
-      TermType: 0
-      Description: 
-      Languages:
-      - Guest
-      - "Hu\xE9sped"
-      - "\u904A\u5BA2"
-      - "\u6E38\u5BA2"
-      - "\uAC8C\uC2A4\uD2B8"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Remember me
-      TermType: 0
-      Description: 
-      Languages:
-      - Remember me
-      - Recordarme
-      - "\u8A18\u4F4F\u6211"
-      - "\u8BB0\u4F4F\u6211"
-      - "\uB85C\uADF8\uC778 \uC815\uBCF4 \uAE30\uC5B5\uD558\uAE30"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Username
-      TermType: 0
-      Description: 
-      Languages:
-      - Username
-      - Usuario
-      - "\u4F7F\u7528\u8005\u540D\u7A31"
-      - "\u4F7F\u7528\u8005\u540D\u79F0"
-      - "\uC0AC\uC6A9\uC790 \uB124\uC784"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: WrongPassword
-      TermType: 0
-      Description: 
-      Languages:
-      - Wrong password
-      - "Contrase\xF1a equivocada"
-      - "\u5BC6\u78BC\u932F\u8AA4"
-      - "\u5BC6\u7801\u9519\u8BEF"
-      - "\uC798\uBABB\uB41C \uD328\uC2A4\uC6CC\uB4DC\uC785\uB2C8\uB2E4"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Banned
-      TermType: 0
-      Description: 
-      Languages:
-      - Banned
-      - Suspendido
-      - "\u88AB\u7981\u6B62"
-      - "\u88AB\u7981\u6B62"
-      - "\uAC8C\uC784 \uD50C\uB808\uC774 \uBD88\uAC00"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Invalid Username
-      TermType: 0
-      Description: 
-      Languages:
-      - Invalid username
-      - "Usuario inv\xE1lido"
-      - "\u7121\u6548\u7684\u4F7F\u7528\u8005\u540D\u7A31"
-      - "\u65E0\u6548\u7684\u4F7F\u7528\u8005\u540D\u79F0"
-      - "\uC798\uBABB\uB41C \uC0AC\uC6A9\uC790 \uB124\uC784\uC785\uB2C8\uB2E4"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Invalid Password
-      TermType: 0
-      Description: 
-      Languages:
-      - Invalid password
-      - "Contrase\xF1a inv\xE1lida"
-      - "\u7121\u6548\u7684\u5BC6\u78BC"
-      - "\u65E0\u6548\u7684\u5BC6\u7801"
-      - "\uC798\uBABB\uB41C \uD328\uC2A4\uC6CC\uB4DC\uC785\uB2C8\uB2E4"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Name
-      TermType: 0
-      Description: 
-      Languages:
-      - Name
-      - Nombre de usuario
-      - "\u540D\u5B57"
-      - "\u540D\u5B57"
-      - "\uC774\uB984"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: CurrentScore
-      TermType: 0
-      Description: 
-      Languages:
-      - Current Score
-      - Puntaje
-      - "\u7576\u524D\u5206\u6578"
-      - "\u5F53\u524D\u5206\u6570"
-      - "\uD604\uC7AC \uC810\uC218"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: HighScore
-      TermType: 0
-      Description: 
-      Languages:
-      - High Score
-      - Mejor Puntaje
-      - "\u6700\u9AD8\u5206"
-      - "\u6700\u9AD8\u5206"
-      - "\uD558\uC774\uC2A4\uCF54\uC5B4"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Title
-      TermType: 0
-      Description: 
-      Languages:
-      - Title
-      - "T\xEDtulo"
-      - "\u6A19\u984C"
-      - "\u6807\u9898"
-      - "\uD0C0\uC774\uD2C0"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Password
-      TermType: 0
-      Description: 
-      Languages:
-      - Password
-      - "Contrase\xF1a"
-      - "\u5BC6\u78BC"
-      - "\u5BC6\u7801"
-      - "\uD328\uC2A4\uC6CC\uB4DC"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: ConfirmPassword
-      TermType: 0
-      Description: 
-      Languages:
-      - Confirm Password
-      - "Confirmar Contrase\xF1a"
-      - "\u78BA\u8A8D\u5BC6\u78BC"
-      - "\u786E\u8BA4\u5BC6\u7801"
-      - "\uD328\uC2A4\uC6CC\uB4DC \uD655\uC778"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: PasswordConfirmFailed
-      TermType: 0
-      Description: 
-      Languages:
-      - Password confirm failed
-      - "La confirmaci\xF3n de contrase\xF1a fall\xF3"
-      - "\u5BC6\u78BC\u78BA\u8A8D\u5931\u6557"
-      - "\u5BC6\u7801\u786E\u8BA4\u5931\u8D25"
-      - "\uD328\uC2A4\uC6CC\uB4DC \uD655\uC778 \uC2E4\uD328"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Submit
-      TermType: 0
-      Description: 
-      Languages:
-      - Submit
-      - Enviar
-      - "\u63D0\u4EA4"
-      - "\u63D0\u4EA4"
-      - "\uC81C\uCD9C"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: E-mail
-      TermType: 0
-      Description: 
-      Languages:
-      - E-mail
-      - "Correo Electr\xF3nico"
-      - "\u96FB\u5B50\u4FE1\u7BB1"
-      - "\u7535\u5B50\u4FE1\u7BB1"
-      - "\uC774\uBA54\uC77C"
+      - BATTLE RESULTS
+      - RESULTADOS DE BATALLA
+      - "\u6230\u9B25\u7D50\u679C"
+      - "\u6218\u6597\u7ED3\u679C"
+      - "\uBC30\uD2C0 \uACB0\uACFC"
       Flags: 0000000000
       Languages_Touch: []
     - Term: Back
@@ -457,26 +284,114 @@ MonoBehaviour:
       - "\uB4A4\uB85C \uAC00\uAE30"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: Register Error
+    - Term: Banned
       TermType: 0
       Description: 
       Languages:
-      - Register Error
-      - Error de Registro
-      - "\u8A3B\u518A\u932F\u8AA4"
-      - "\u6CE8\u518C\u9519\u8BEF"
-      - "\uB4F1\uB85D \uC5D0\uB7EC"
+      - Banned
+      - Suspendido
+      - "\u88AB\u7981\u6B62"
+      - "\u88AB\u7981\u6B62"
+      - "\uAC8C\uC784 \uD50C\uB808\uC774 \uBD88\uAC00"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: Server Error
+    - Term: BasePriceOffer
       TermType: 0
       Description: 
       Languages:
-      - Server Error
-      - Error de Servidor
-      - "\u4F3A\u670D\u5668\u932F\u8AA4"
-      - "\u4F3A\u670D\u5668\u9519\u8BEF"
-      - "\uC11C\uBC84 \uC5D0\uB7EC"
+      - Base Deal!
+      - Oferta Base!
+      - "\u57FA\u672C\u4EA4\u6613"
+      - "\u57FA\u672C\u4EA4\u6613"
+      - "\uAE30\uBCF8 \uB51C!"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: BestOffer
+      TermType: 0
+      Description: 
+      Languages:
+      - Best Offer!
+      - Mejor Oferta!
+      - "\u6700\u4F73\u65B9\u6848!"
+      - "\u6700\u4F73\u65B9\u6848!"
+      - "\uCD5C\uC0C1\uD488 \uC624\uD37C!"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Bomber
+      TermType: 0
+      Description: 
+      Languages:
+      - Bomber
+      - Bombardero
+      - "\u8F5F\u70B8\u6A5F"
+      - "\u8F70\u70B8\u673A"
+      - "\uD3ED\uACA9\uC218(\uBCF4\uBA38)"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: 'Bonus:'
+      TermType: 0
+      Description: 
+      Languages:
+      - 'Bonus:'
+      - 'Bono:'
+      - "\u734E\u52F5\uFF1A"
+      - "\u52A0\u5206\uFF1A"
+      - "\uBCF4\uB108\uC2A4:"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: CANCEL
+      TermType: 0
+      Description: 
+      Languages:
+      - CANCEL
+      - CANCELAR
+      - "\u53D6\u6D88"
+      - "\u53D6\u6D88"
+      - "\uCDE8\uC18C"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: 'Category:'
+      TermType: 0
+      Description: 
+      Languages:
+      - 'Category:'
+      - "Categor\xEDa:"
+      - "\u5206\u985E\uFF1A"
+      - "\u79CD\u7C7B\uFF1A"
+      - "\uCE74\uD14C\uACE0\uB9AC:"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Confirm
+      TermType: 0
+      Description: 
+      Languages:
+      - Confirm
+      - Confirmar
+      - "\u78BA\u5B9A"
+      - "\u786E\u5B9A"
+      - "\uD655\uC778"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: ConfirmPassword
+      TermType: 0
+      Description: 
+      Languages:
+      - Confirm Password
+      - "Confirmar Contrase\xF1a"
+      - "\u78BA\u8A8D\u5BC6\u78BC"
+      - "\u786E\u8BA4\u5BC6\u7801"
+      - "\uD328\uC2A4\uC6CC\uB4DC \uD655\uC778"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: ConfirmPurchase
+      TermType: 0
+      Description: 
+      Languages:
+      - Confirm purchase?
+      - "\xBFConfirma compra?"
+      - "\u78BA\u8A8D\u8CFC\u8CB7?"
+      - "\u786E\u8BA4\u8D2D\u4E70?"
+      - "\uAD6C\uB9E4\uB97C \uD558\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?"
       Flags: 0000000000
       Languages_Touch: []
     - Term: Connection Error
@@ -490,71 +405,59 @@ MonoBehaviour:
       - "\uC5F0\uACB0 \uC5D0\uB7EC"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: E-mail is not valid
+    - Term: Continue
       TermType: 0
       Description: 
       Languages:
-      - E-mail is not valid
-      - "Correo electr\xF3nico inv\xE1lido"
-      - "\u7121\u6548\u4FE1\u7BB1"
-      - "\u65E0\u6548\u4FE1\u7BB1"
-      - "\uC798\uBABB\uB41C \uC774\uBA54\uC77C\uC785\uB2C8\uB2E4"
+      - Continue
+      - Continuar
+      - "\u7E7C\u7E8C"
+      - "\u7EE7\u7EED"
+      - "\uACC4\uC18D"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: Passwords don't match
+    - Term: Create
       TermType: 0
       Description: 
       Languages:
-      - Passwords don't match
-      - "Las contrase\xF1as no concuerdan"
-      - "\u5BC6\u78BC\u4E0D\u7B26"
-      - "\u5BC6\u7801\u4E0D\u7B26"
-      - "\uC77C\uCE58\uD558\uC9C0 \uC54A\uC740 \uD328\uC2A4\uC6CC\uB4DC\uC785\uB2C8\uB2E4"
+      - Create
+      - Crear
+      - "\u5EFA\u7ACB"
+      - "\u521B\u5EFA"
+      - "\uB9CC\uB4E4\uAE30"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: Please fill the Enjin ETH address
+    - Term: Currency
       TermType: 0
       Description: 
       Languages:
-      - Please fill the Enjin ETH address
-      - "Por favor llenar direcci\xF3n Enjin ETH"
-      - "\u8ACB\u586B\u5BEBEnjin ETH\u5730\u5740"
-      - "\u8BF7\u586B\u5199Enjin ETH\u5730\u5740"
-      - "\uC5D4\uC9C4 \uC8FC\uC18C\uB97C \uC785\uB825\uD558\uC138\uC694"
+      - Currency
+      - Moneda
+      - "\u8CA8\u5E63"
+      - "\u8D27\u5E01"
+      - "\uD654\uD3D0"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: Network Error
+    - Term: CurrentScore
       TermType: 0
       Description: 
       Languages:
-      - Network Error
-      - Error de Red
-      - "\u7DB2\u8DEF\u932F\u8AA4"
-      - "\u7F51\u8DEF\u9519\u8BEF"
-      - "\uB124\uD2B8\uC6CC\uD06C \uC5D0\uB7EC"
+      - Current Score
+      - Puntaje
+      - "\u7576\u524D\u5206\u6578"
+      - "\u5F53\u524D\u5206\u6570"
+      - "\uD604\uC7AC \uC810\uC218"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: Error connecting to the server. Restart the app and retry.
+    - Term: Damage
       TermType: 0
       Description: 
       Languages:
-      - Error connecting to the server. Restart the app and retry.
-      - Error conectando al servidor. Recomience el app y reintente.
-      - "\u7121\u6CD5\u9023\u63A5\u81F3\u4F3A\u670D\u5668\uFF0C\u8ACB\u91CD\u958B\u61C9\u7528\u7A0B\u5F0F\u4E26\u91CD\u8A66"
-      - "\u65E0\u6CD5\u8FDE\u63A5\u81F3\u4F3A\u670D\u5668\uFF0C\u8BF7\u91CD\u5F00\u5E94\u7528\u7A0B\u5F0F\u5E76\u91CD\u8BD5"
-      - "\uC11C\uBC84 \uC5F0\uACB0\uC911 \uC5D0\uB7EC \uBC1C\uC0DD. \uC571\uC744 \uB2E4\uC2DC
-        \uC2E4\uD589\uD558\uC138\uC694"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: OK
-      TermType: 0
-      Description: 
-      Languages:
-      - OK
-      - OK
-      - "\u53EF\u4EE5"
-      - "\u53EF\u4EE5"
-      - "\uD655\uC778"
+      - Damage
+      - "Da\xF1o"
+      - "\u7834\u58DE\u529B"
+      - "\u4F24\u5BB3"
+      - "\uB300\uBBF8\uC9C0"
       Flags: 0000000000
       Languages_Touch: []
     - Term: 'Damage Dealt:'
@@ -579,94 +482,6 @@ MonoBehaviour:
       - "\uBC1B\uC740 \uACF5\uACA9"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: 'Units Killed:'
-      TermType: 0
-      Description: 
-      Languages:
-      - 'Units Killed: '
-      - 'Unidades Matadas:'
-      - "\u6025\u6BBA\u55AE\u4F4D:"
-      - "\u6025\u6740\u5355\u4F4D:"
-      - "\uC8FD\uC740 \uCE90\uB9AD\uD130"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: 'Match Duration:'
-      TermType: 0
-      Description: 
-      Languages:
-      - 'Match Duration:'
-      - "Duraci\xF3n de la Partida:"
-      - "\u5C0D\u6230\u6642\u9593:"
-      - "\u5BF9\u6218\u65F6\u95F4:"
-      - "\uBC30\uD2C0 \uC2DC\uAC04"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: 'Rewards:'
-      TermType: 0
-      Description: 
-      Languages:
-      - 'Rewards:'
-      - 'Recompensas:'
-      - "\u734E\u52F5:"
-      - "\u5956\u52B1:"
-      - "\uB9AC\uC6CC\uB4DC"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: You win!
-      TermType: 0
-      Description: 
-      Languages:
-      - You win!
-      - "\xA1Has ganado!"
-      - "\u4F60\u7372\u52DD\u4E86!"
-      - "\u4F60\u83B7\u80DC\u4E86!"
-      - "\uC774\uACBC\uC2B5\uB2C8\uB2E4!"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: You lose!
-      TermType: 0
-      Description: 
-      Languages:
-      - You lose!
-      - "\xA1Has perdido!"
-      - "\u4F60\u5931\u6557\u4E86!"
-      - "\u4F60\u5931\u8D25\u4E86!"
-      - "\uC84C\uC2B5\uB2C8\uB2E4"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: 'Time Left:'
-      TermType: 0
-      Description: 
-      Languages:
-      - 'Time Left:'
-      - 'Tiempo Restante:'
-      - "\u5269\u9918\u6642\u9593:"
-      - "\u5269\u4F59\u65F6\u95F4:"
-      - "\uB0A8\uC740 \uC2DC\uAC04"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Loading...
-      TermType: 0
-      Description: 
-      Languages:
-      - Loading...
-      - Cargando...
-      - "\u8F09\u5165\u4E2D\u2026"
-      - "\u8F7D\u5165\u4E2D\u2026"
-      - "\uB85C\uB529\uC911\u2026"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: WeeklyChallenge
-      TermType: 0
-      Description: 
-      Languages:
-      - Weekly Challenge
-      - "Desaf\xEDo Semanal"
-      - "\u6BCF\u9031\u6311\u6230"
-      - "\u6BCF\u5468\u6311\u6218"
-      - "\uC8FC\uAC04 \uCC4C\uB9B0\uC9C0"
-      Flags: 0000000000
-      Languages_Touch: []
     - Term: Day
       TermType: 0
       Description: 
@@ -678,114 +493,285 @@ MonoBehaviour:
       - "\uB0A0"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: Of7
+    - Term: Defense
       TermType: 0
       Description: 
       Languages:
-      - of 7
-      - de 7
-      - "\u4E03\u65E5\u4E4B X or 7\u65E5\u4E4B X X for the current day"
-      - "\u4E03\u65E5\u4E4B X or 7\u65E5\u4E4B X X for the current day"
-      - "X\uBC88\uC9F8 (x/7)"
+      - Defense
+      - Defensa
+      - "\u9632\u79A6\u529B"
+      - "\u9632\u5FA1"
+      - "\uBC29\uC5B4\uB825"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: Shop
+    - Term: Demon King Box
       TermType: 0
       Description: 
       Languages:
-      - Shop
-      - Tienda
-      - "\u5546\u5E97"
-      - "\u5546\u5E97"
-      - "\uC0C1\uC810"
+      - Demon King Box
+      - Caja Rey Demonio
+      - "\u60E1\u738B\u5BF6\u7BB1"
+      - "\u9B54\u738B\u7684\u76D2\u5B50"
+      - "\uC545\uB9C8\uC758 \uC655 \uC0C1\uC790"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: SHOP
+    - Term: Demon King Box Description Term
       TermType: 0
       Description: 
       Languages:
-      - SHOP
-      - TIENDA
-      - "\u5546\u5E97"
-      - "\u5546\u5E97"
-      - "\uC0C1\uC810"
+      - '* 2 items total with purchase
+
+        * 1 guaranteed rare item
+
+        * 1 random playable demon king token
+
+        * Items are immediately sent to your Enjin wallet after trade approval'
+      - "* 2 \xEDtems totales con la compra\n* 1 \xEDtem raro garantizado\n* 1 ficha
+        rey demonio jugable aleatoria\n* Los \xEDtems son inmediatamente enviados
+        a tu Billetera Enjin luego de aprobarse el canje"
+      - "* \u8CFC\u8CB7\u5F8C\u53EF\u7372\u5F97 2 \u9805\u7269\u54C1\n* \u5176\u4E2D
+        1 \u9805\u70BA\u7A00\u6709\u54C1\n* \u96A8\u6A5F\u7372\u5F97 1 \u500B\u60E1\u738B\u4EE3\u5E63\uFF0C\u53EF\u5728\u904A\u6232\u4E2D\u4F7F\u7528\n*
+        \u4EA4\u6613\u4E00\u7D93\u5BE9\u6279\uFF0C\u6240\u5F97\u7269\u54C1\u6703\u7ACB\u5373\u65B0\u589E\u5230\u4F60\u7684
+        Enjin \u9322\u5305* \u8CFC\u8CB7\u5F8C\u53EF\u7372\u5F97 2 \u9805\u7269\u54C1\n*
+        \u5176\u4E2D 1 \u9805\u70BA\u7A00\u6709\u54C1\n* \u96A8\u6A5F\u7372\u5F97
+        1 \u500B\u60E1\u738B\u4EE3\u5E63\uFF0C\u53EF\u5728\u904A\u6232\u4E2D\u4F7F\u7528\n*
+        \u4EA4\u6613\u4E00\u7D93\u5BE9\u6279\uFF0C\u6240\u5F97\u7269\u54C1\u6703\u7ACB\u5373\u65B0\u589E\u5230\u4F60\u7684
+        Enjin \u9322\u5305"
+      - "* \u8D2D\u4E70\u603B\u5171\u5305\u542B2\u4E2A\u7269\u54C1\n* \u4FDD\u8BC1\u67091\u4E2A\u662F\u7A00\u6709\u7269\u54C1\n*
+        1\u4E2A\u968F\u673A\u53EF\u73A9\u7684\u9B54\u738B\u4EE3\u5E01\n* \u4EA4\u6613\u6210\u529F\u540E\u7269\u54C1\u4F1A\u7ACB\u5373\u53D1\u653E\u5230\u60A8\u7684Enjin
+        Wallet\u4E2D* \u8D2D\u4E70\u603B\u5171\u5305\u542B2\u4E2A\u7269\u54C1\n* \u4FDD\u8BC1\u67091\u4E2A\u662F\u7A00\u6709\u7269\u54C1\n*
+        1\u4E2A\u968F\u673A\u53EF\u73A9\u7684\u9B54\u738B\u4EE3\u5E01\n* \u4EA4\u6613\u6210\u529F\u540E\u7269\u54C1\u4F1A\u7ACB\u5373\u53D1\u653E\u5230\u60A8\u7684Enjin
+        Wallet\u4E2D"
+      - "* \uAD6C\uB9E4 \uC2DC \uC544\uC774\uD15C \uCD1D 2\uAC1C\n* 1\uAC1C\uC758
+        \uBCF4\uC7A5\uB41C \uD76C\uADC0 \uC544\uC774\uD15C\n* 1\uAC1C\uC758 \uBB34\uC791\uC704
+        \uD50C\uB808\uC774 \uAC00\uB2A5 \uC545\uB9C8\uC758 \uC655 \uD1A0\uD070\n*
+        \uC544\uC774\uD15C\uC740 \uAC70\uB798 \uC2B9\uC778 \uC2DC \uC5D4\uC9C4 \uC9C0\uAC11\uC5D0
+        \uBC14\uB85C \uC804\uC1A1\uB429\uB2C8\uB2E4* \uAD6C\uB9E4 \uC2DC \uC544\uC774\uD15C
+        \uCD1D 2\uAC1C\n* 1\uAC1C\uC758 \uBCF4\uC7A5\uB41C \uD76C\uADC0 \uC544\uC774\uD15C\n*
+        1\uAC1C\uC758 \uBB34\uC791\uC704 \uD50C\uB808\uC774 \uAC00\uB2A5 \uC545\uB9C8\uC758
+        \uC655 \uD1A0\uD070\n* \uC544\uC774\uD15C\uC740 \uAC70\uB798 \uC2B9\uC778
+        \uC2DC \uC5D4\uC9C4 \uC9C0\uAC11\uC5D0 \uBC14\uB85C \uC804\uC1A1\uB429\uB2C8\uB2E4"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: Starter Box
+    - Term: Destroyer
       TermType: 0
       Description: 
       Languages:
-      - Starter Box
-      - Caja de Inicio
-      - "\u521D\u5FC3\u8005\u7BB1"
-      - "\u521D\u5FC3\u8005\u7BB1"
-      - "\uC2A4\uD0C0\uD130 \uBC15\uC2A4"
+      - Destroyer
+      - Destructor
+      - "\u7834\u58DE\u8005"
+      - "\u7834\u574F\u8005"
+      - "\uB514\uC2A4\uD2B8\uB85C\uC774\uC5B4(\uD30C\uAD34\uC790)"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: Premium Box
+    - Term: Dismiss
       TermType: 0
       Description: 
       Languages:
-      - Premium Box
-      - Caja Premium
-      - "\u4E2D\u7D1A\u7BB1"
-      - "\u4E2D\u7EA7\u7BB1"
-      - "\uD504\uB9AC\uBBF8\uC5C4 \uBC15\uC2A4"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Master Box
-      TermType: 0
-      Description: 
-      Languages:
-      - Master Box
-      - Caja Master
-      - "\u5927\u5E2B\u7BB1"
-      - "\u5927\u5E08\u7BB1"
-      - "\uB9C8\uC2A4\uD130 \uBC15\uC2A4"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: CANCEL
-      TermType: 0
-      Description: 
-      Languages:
-      - CANCEL
-      - CANCELAR
-      - "\u53D6\u6D88"
-      - "\u53D6\u6D88"
+      - Dismiss
+      - Retirar
+      - "\u7565\u904E"
+      - "\u89E3\u6563"
       - "\uCDE8\uC18C"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: PURCHASE
+    - Term: Drag units to position.
       TermType: 0
       Description: 
       Languages:
-      - PURCHASE
-      - COMPRA
-      - "\u8CFC\u8CB7"
-      - "\u8D2D\u4E70"
-      - "\uAD6C\uB9E4"
+      - ' Drag units to position.'
+      - "Arrastra las unidades a posici\xF3n."
+      - "\u6309\u4F4F\u6230\u968A\u6210\u54E1\uFF0C\u62C9\u5230\u6307\u5B9A\u4F4D\u7F6E\u3002"
+      - "\u628A\u5355\u4F4D\u62D6\u62FD\u5230\u4F4D\u7F6E\u4E0A\u3002"
+      - "\uC720\uB2DB\uC744 \uD3EC\uC9C0\uC158\uC73C\uB85C \uB044\uC138\uC694."
       Flags: 0000000000
       Languages_Touch: []
-    - Term: NEW MIN MINS!
+    - Term: E-mail
       TermType: 0
       Description: 
       Languages:
-      - NEW MIN MINS!
-      - NUEVOS MIN MINS!
-      - "\u65B0MIN MINS!"
-      - "\u65B0MIN MINS!"
-      - "\uC0C8\uB85C\uC6B4 Min Mins!"
+      - E-mail
+      - "Correo Electr\xF3nico"
+      - "\u96FB\u5B50\u4FE1\u7BB1"
+      - "\u7535\u5B50\u4FE1\u7BB1"
+      - "\uC774\uBA54\uC77C"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: No guarantees.
+    - Term: E-mail is not valid
       TermType: 0
       Description: 
       Languages:
-      - No guarantees.
-      - "Sin garant\xEDas."
-      - "\u6C92\u6709\u4FDD\u5E95"
-      - "\u6CA1\u6709\u4FDD\u5E95"
-      - "\uCE90\uB9AD\uD130 \uC720\uB2DB \uB2F9\uCCA8 \uBCF4\uC7A5\uC5C6\uC74C"
+      - E-mail is not valid
+      - "Correo electr\xF3nico inv\xE1lido"
+      - "\u7121\u6548\u4FE1\u7BB1"
+      - "\u65E0\u6548\u4FE1\u7BB1"
+      - "\uC798\uBABB\uB41C \uC774\uBA54\uC77C\uC785\uB2C8\uB2E4"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: ENEMY TURN
+      TermType: 0
+      Description: 
+      Languages:
+      - ENEMY TURN
+      - TURNO  ENEMIGO
+      - "\u6575\u65B9\u56DE\u5408"
+      - "\u654C\u65B9\u56DE\u5408"
+      - "\uC801 \uACF5\uACA9 \uC21C\uC11C"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: ENJIN LEGENDS
+      TermType: 0
+      Description: 
+      Languages:
+      - ENJIN LEGENDS
+      - LEYENDAS ENJIN
+      - "ENJIN \u50B3\u5947"
+      - "ENJIN \u4F20\u5947"
+      - "\uC5D4\uC9C4 \uB808\uC804\uB4DC"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: ENJIN REWARDS
+      TermType: 0
+      Description: 
+      Languages:
+      - ENJIN REWARDS
+      - RECOMPENSAS ENJIN
+      - "ENJIN \u734E\u8CDE"
+      - "Enjin\u5956\u52B1"
+      - "\uC5D4\uC9C4 \uBCF4\uC0C1"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Enjin Address
+      TermType: 0
+      Description: 
+      Languages:
+      - Enjin Address
+      - "Direcci\xF3n Enjin"
+      - "Enjin \u5730\u5740"
+      - "Enjin \u5730\u5740"
+      - "\uC5D4\uC9C4 \uC8FC\uC18C"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Enjin Legend tokens required
+      TermType: 0
+      Description: 
+      Languages:
+      - Enjin Legend tokens required
+      - Fichas de Leyenda Enjin requeridos
+      - "\u9700\u8981\u6709 Enjin \u82F1\u96C4\u4EE3\u5E63"
+      - "\u9700\u8981Enjin Legend\u4EE3\u5E01"
+      - "\uC5D4\uC9C4 \uC804\uC124 \uD1A0\uD070 \uD544\uC694"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: 'Enjin Legend:'
+      TermType: 0
+      Description: 
+      Languages:
+      - 'Enjin Legend:'
+      - 'Leyenda Enjin:'
+      - "Enjin \u82F1\u96C4\uFF1A"
+      - "Enjin Legend\uFF1A"
+      - "\uC5D4\uC9C4 \uC804\uC124:"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Enjin MFT required
+      TermType: 0
+      Description: 
+      Languages:
+      - Enjin MFT required
+      - MFT Enjin requerido
+      - "\u9700\u8981\u6709 Enjin MFT"
+      - "\u9700\u8981Enjin MFT"
+      - "\uC5D4\uC9C4 MFT \uD544\uC694"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Enter name for a Private Room
+      TermType: 0
+      Description: 
+      Languages:
+      - Enter name for a Private Room
+      - Introduzca nombre para Sala Privada
+      - "\u8F38\u5165\u300C\u79C1\u4EBA\u623F\u9593\u300D\u540D\u7A31"
+      - "\u4E3A\u4E2A\u4EBA\u623F\u95F4\u8F93\u5165\u540D\u5B57"
+      - "\uBE44\uACF5\uAC1C \uBC29\uC758 \uC774\uB984 \uC785\uB825"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Error connecting to the server. Restart the app and retry.
+      TermType: 0
+      Description: 
+      Languages:
+      - Error connecting to the server. Restart the app and retry.
+      - Error conectando al servidor. Recomience el app y reintente.
+      - "\u7121\u6CD5\u9023\u63A5\u81F3\u4F3A\u670D\u5668\uFF0C\u8ACB\u91CD\u958B\u61C9\u7528\u7A0B\u5F0F\u4E26\u91CD\u8A66"
+      - "\u65E0\u6CD5\u8FDE\u63A5\u81F3\u4F3A\u670D\u5668\uFF0C\u8BF7\u91CD\u5F00\u5E94\u7528\u7A0B\u5F0F\u5E76\u91CD\u8BD5"
+      - "\uC11C\uBC84 \uC5F0\uACB0\uC911 \uC5D0\uB7EC \uBC1C\uC0DD. \uC571\uC744 \uB2E4\uC2DC
+        \uC2E4\uD589\uD558\uC138\uC694"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: FILE WARNING!
+      TermType: 0
+      Description: 
+      Languages:
+      - FILE WARNING!
+      - ALERTA DE ARCHIVO!
+      - "\u904A\u6232\u6A94\u8B66\u544A\uFF01"
+      - "\u6587\u4EF6\u8B66\u544A\uFF01"
+      - "\uD30C\uC77C \uACBD\uACE0!"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Free Boxes
+      TermType: 0
+      Description: 
+      Languages:
+      - Free Boxes
+      - Cajas Gratis
+      - "\u514D\u8CBB\u7BB1"
+      - "\u514D\u8D39\u7BB1"
+      - "\uBB34\uB8CC \uBC15\uC2A4"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: FreeCoins
+      TermType: 0
+      Description: 
+      Languages:
+      - Get free coins!
+      - "\xA1Obt\xE9n monedas gratis!"
+      - "\u7372\u5F97\u514D\u8CBB\u91D1\u5E63"
+      - "\u83B7\u5F97\u514D\u8D39\u91D1\u5E01"
+      - "\uBB34\uB8CC \uCF54\uC778\uBC1B\uAE30!"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: GLOBAL QUEST PROGRESS
+      TermType: 0
+      Description: 
+      Languages:
+      - GLOBAL QUEST PROGRESS
+      - "PROGRESO DE B\xDASQUEDA GLOBAL"
+      - "\u6574\u9AD4\u4EFB\u52D9\u9032\u5EA6"
+      - "\u5168\u7403\u4EFB\u52A1\u8FDB\u5EA6"
+      - "\uC804\uCCB4 \uD018\uC2A4\uD2B8 \uC9C4\uD589"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: GUARD
+      TermType: 0
+      Description: 
+      Languages:
+      - GUARD
+      - PROTEGER
+      - "\u9632\u5B88"
+      - "\u9632\u5B88"
+      - "\uBC29\uC5B4"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: GotLoginBonus
+      TermType: 0
+      Description: 
+      Languages:
+      - Got Login Bonus!
+      - "\xA1Obtuvo Bono por Sesi\xF3n!"
+      - "\u53D6\u5F97\u767B\u5165\u734E\u91D1"
+      - "\u53D6\u5F97\u767B\u5165\u5956\u91D1"
+      - "\uB85C\uADF8\uC778 \uBCF4\uB108\uC2A4 \uD68D\uB4DD!"
       Flags: 0000000000
       Languages_Touch: []
     - Term: Guarantees a 2 Stars Unit.
@@ -812,555 +798,15 @@ MonoBehaviour:
         \uBCF4\uC7A5!"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: Thanks for your Purchase!
+    - Term: Guest
       TermType: 0
       Description: 
       Languages:
-      - Thanks for your Purchase!
-      - "\xA1Gracias por su Compra!"
-      - "\u611F\u8B1D\u60A8\u7684\u8CFC\u8CB7!"
-      - "\u611F\u8C22\u60A8\u7684\u8D2D\u4E70!"
-      - "\uAD6C\uB9E4\uD574\uC8FC\uC154\uC11C \uAC10\uC0AC\uD569\uB2C8\uB2E4"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: UNIT SELECTION
-      TermType: 0
-      Description: 
-      Languages:
-      - UNIT SELECTION
-      - "SELECCI\xD3N DE UNIDADES"
-      - "\u55AE\u4F4D\u9078\u64C7"
-      - "\u5355\u4F4D\u9009\u62E9"
-      - "\uCE90\uB9AD\uD130 \uC120\uC815\uD558\uAE30"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Level
-      TermType: 0
-      Description: 
-      Languages:
-      - Level
-      - Nivel
-      - "\u7B49\u7D1A"
-      - "\u7B49\u7EA7"
-      - "\uB808\uBCA8"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Attack
-      TermType: 0
-      Description: 
-      Languages:
-      - Attack
-      - Ataque
-      - "\u653B\u64CA"
-      - "\u653B\u51FB"
-      - "\uACF5\uACA9"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Defense
-      TermType: 0
-      Description: 
-      Languages:
-      - Defense
-      - Defensa
-      - "\u9632\u79A6"
-      - "\u9632\u5FA1"
-      - "\uC218\uBE44"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: START
-      TermType: 0
-      Description: 
-      Languages:
-      - START
-      - 
-      - "\u958B\u59CB"
-      - "\u5F00\u59CB"
-      - "\uC2DC\uC791"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: ConfirmPurchase
-      TermType: 0
-      Description: 
-      Languages:
-      - Confirm purchase?
-      - "\xBFConfirma compra?"
-      - "\u78BA\u8A8D\u8CFC\u8CB7?"
-      - "\u786E\u8BA4\u8D2D\u4E70?"
-      - "\uAD6C\uB9E4\uB97C \uD558\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Purchase Failed. Please try again later.
-      TermType: 0
-      Description: 
-      Languages:
-      - Purchase Failed. Please try again later.
-      - "La compra fall\xF3. Por favor reintente luego."
-      - "\u8CFC\u8CB7\u5931\u6557\uFF0C\u8ACB\u7A0D\u5F8C\u91CD\u8A66"
-      - "\u8D2D\u4E70\u5931\u8D25\uFF0C\u8BF7\u7A0D\u540E\u91CD\u8BD5"
-      - "\uAD6C\uB9E4 \uC2E4\uD328. \uC7A0\uC2DC \uD6C4 \uB2E4\uC2DC \uC2DC\uB3C4\uD574\uC8FC\uC138\uC694."
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Please log in to access PvP.
-      TermType: 0
-      Description: 
-      Languages:
-      - 'Please log in to access PvP. '
-      - "Por favor inicie sesi\xF3n para accesar JcJ."
-      - "\u8ACB\u767B\u5165\u4EE5\u958B\u59CB\u73A9\u5BB6\u5C0D\u6230"
-      - "\u8BF7\u767B\u5165\u4EE5\u5F00\u59CB\u73A9\u5BB6\u5BF9\u6218"
-      - "\uD50C\uB808\uC774\uC5B4 VS \uD50C\uB808\uC774\uC5B4\uC5D0 \uC811\uC18D\uD558\uB824\uBA74
-        \uB85C\uADF8\uC778\uD574\uC8FC\uC138\uC694."
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: NotEnoughCurrency
-      TermType: 0
-      Description: 
-      Languages:
-      - Not enough currency.
-      - No hay suficientes monedas.
-      - "\u8CA8\u5E63\u4E0D\u8DB3"
-      - "\u8D27\u5E01\u4E0D\u8DB3"
-      - "\uD654\uD3D0 \uBD80\uC871"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: ThanksPurchase
-      TermType: 0
-      Description: 
-      Languages:
-      - Thanks for your purchase.
-      - Gracias por su compra.
-      - "\u611F\u8B1D\u60A8\u7684\u8CFC\u8CB7!"
-      - "\u611F\u8C22\u60A8\u7684\u8D2D\u4E70!"
-      - "\uAD6C\uB9E4\uD574\uC8FC\uC154\uC11C \uAC10\uC0AC\uD569\uB2C8\uB2E4"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: PurchaseFailed
-      TermType: 0
-      Description: 
-      Languages:
-      - Purchase failed.
-      - "La compra fall\xF3."
-      - "\u8CFC\u8CB7\u5931\u6557"
-      - "\u8D2D\u4E70\u5931\u8D25"
-      - "\uAD6C\uB9E4 \uC2E4\uD328"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Leaderboards
-      TermType: 0
-      Description: 
-      Languages:
-      - Leaderboards
-      - "L\xEDderes"
-      - "\u6392\u884C\u699C"
-      - "\u6392\u884C\u699C"
-      - "\uB9AC\uB354\uBCF4\uB4DC"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: GotLoginBonus
-      TermType: 0
-      Description: 
-      Languages:
-      - Got Login Bonus!
-      - "\xA1Obtuvo Bono por Sesi\xF3n!"
-      - "\u53D6\u5F97\u767B\u5165\u734E\u91D1"
-      - "\u53D6\u5F97\u767B\u5165\u5956\u91D1"
-      - "\uB85C\uADF8\uC778 \uBCF4\uB108\uC2A4 \uD68D\uB4DD!"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: AdFailed
-      TermType: 0
-      Description: 
-      Languages:
-      - Ad Failed. Please try again.
-      - "Fall\xF3 el Ad. Favor intente otra vez."
-      - "\u5EE3\u544A\u5931\u6557"
-      - "\u5E7F\u544A\u5931\u8D25"
-      - "\uAD11\uACE0\uBCF4\uAE30 \uC2E4\uD328. \uB2E4\uC2DC \uC2DC\uB3C4\uD574\uC8FC\uC138\uC694."
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Currency
-      TermType: 0
-      Description: 
-      Languages:
-      - Currency
-      - Moneda
-      - "\u8CA8\u5E63"
-      - "\u8D27\u5E01"
-      - "\uD654\uD3D0"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Settings
-      TermType: 0
-      Description: 
-      Languages:
-      - Settings
-      - Ajustes
-      - "\u8A2D\u5B9A"
-      - "\u8BBE\u5B9A"
-      - "\uC124\uC815"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: AudioEffects
-      TermType: 0
-      Description: 
-      Languages:
-      - Audio Effects
-      - Efectos de Sonido
-      - "\u97F3\u6548"
-      - "\u97F3\u6548"
-      - "\uC624\uB514\uC624 \uD6A8\uACFC"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: SecondsToAnswer
-      TermType: 0
-      Description: 
-      Languages:
-      - Seconds to answer.
-      - Segundos para contestar.
-      - "\u56DE\u7B54\u79D2\u6578"
-      - "\u56DE\u7B54\u79D2\u6570"
-      - "\uCD08 \uB0A8\uC558\uC2B5\uB2C8\uB2E4"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Continue
-      TermType: 0
-      Description: 
-      Languages:
-      - Continue
-      - Continuar
-      - "\u7E7C\u7E8C"
-      - "\u7EE7\u7EED"
-      - "\uACC4\uC18D"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Results
-      TermType: 0
-      Description: 
-      Languages:
-      - Results
-      - Resultados
-      - "\u7D50\u679C"
-      - "\u7ED3\u679C"
-      - "\uACB0\uACFC"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Time
-      TermType: 0
-      Description: 
-      Languages:
-      - Time
-      - Tiempo
-      - "\u6642\u9593"
-      - "\u65F6\u95F4"
-      - "\uC2DC\uAC04"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Points
-      TermType: 0
-      Description: 
-      Languages:
-      - Points
-      - Puntos
-      - "\u5206\u6578"
-      - "\u5206\u6570"
-      - "\uD3EC\uC778\uD2B8"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Totals
-      TermType: 0
-      Description: 
-      Languages:
-      - Totals
-      - Totales
-      - "\u7E3D\u5171"
-      - "\u603B\u5171"
-      - "\uD569\uACC4"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: (Bonus)
-      TermType: 0
-      Description: 
-      Languages:
-      - (Bonus)
-      - (Bono)
-      - "(\u984D\u5916\u7D05\u5229)"
-      - "(\u989D\u5916\u7EA2\u5229)"
-      - "(\uBCF4\uB108\uC2A4)"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: avg
-      TermType: 0
-      Description: 
-      Languages:
-      - avg
-      - prom
-      - "\u5E73\u5747"
-      - "\u5E73\u5747"
-      - "\uD3C9\uADE0"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: 'Score:'
-      TermType: 0
-      Description: 
-      Languages:
-      - 'Score:'
-      - 'Puntaje:'
-      - "\u5206\u6578:"
-      - "\u5206\u6570:"
-      - "\uC2A4\uCF54\uC5B4:"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: BestOffer
-      TermType: 0
-      Description: 
-      Languages:
-      - Best Offer!
-      - Mejor Oferta!
-      - "\u6700\u4F73\u65B9\u6848!"
-      - "\u6700\u4F73\u65B9\u6848!"
-      - "\uCD5C\uC0C1\uD488 \uC624\uD37C!"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Recommended
-      TermType: 0
-      Description: 
-      Languages:
-      - Recommended!
-      - Recomendado!
-      - "\u63A8\u85A6!"
-      - "\u63A8\u8350!"
-      - "\uCD94\uCC9C\uC0C1\uD488!"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: BasePriceOffer
-      TermType: 0
-      Description: 
-      Languages:
-      - Base Deal!
-      - Oferta Base!
-      - "\u57FA\u672C\u4EA4\u6613"
-      - "\u57FA\u672C\u4EA4\u6613"
-      - "\uAE30\uBCF8 \uB51C!"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: SimplePack
-      TermType: 0
-      Description: 
-      Languages:
-      - Simple Pack
-      - Paquete Simple
-      - "\u57FA\u672C\u5305"
-      - "\u57FA\u672C\u5305"
-      - "\uC2EC\uD50C \uD329"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: AdvancedPack
-      TermType: 0
-      Description: 
-      Languages:
-      - Advanced Pack
-      - Paquete Avanzado
-      - "\u9032\u968E\u5305"
-      - "\u8FDB\u9636\u5305"
-      - "\uC5B4\uB4DC\uBC34\uC2A4\uB4DC \uD329"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: MasterPack
-      TermType: 0
-      Description: 
-      Languages:
-      - Master Pack
-      - Paquete Maestro
-      - "\u5927\u5E2B\u5305"
-      - "\u5927\u5E08\u5305"
-      - "\uB9C8\uC2A4\uD130 \uD329"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: LegendaryPack
-      TermType: 0
-      Description: 
-      Languages:
-      - Legendary Pack
-      - Paquete Legendario
-      - "\u50B3\u5947\u5305"
-      - "\u4F20\u5947\u5305"
-      - "\uB808\uC804\uB4DC \uD329"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: LoginNowForFreeCoins
-      TermType: 0
-      Description: 
-      Languages:
-      - Login now for free coins
-      - Ingresa ahora para monedas gratis
-      - "\u73FE\u5728\u767B\u5165\u4EE5\u7372\u5F97\u514D\u8CBB\u91D1\u5E63"
-      - "\u73B0\u5728\u767B\u5165\u4EE5\u83B7\u5F97\u514D\u8D39\u91D1\u5E01"
-      - "\uBB34\uB8CC \uCF54\uC778\uC744 \uBC1B\uC73C\uB824\uBA74 \uC9C0\uAE08 \uB85C\uADF8\uC778\uD558\uC138\uC694"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: NewWeek
-      TermType: 0
-      Description: 
-      Languages:
-      - New week!
-      - "\xA1Nueva semana!"
-      - "\u65B0\u7684\u4E00\u9031!"
-      - "\u65B0\u7684\u4E00\u5468!"
-      - "\uC0C8\uB85C\uC6B4 \uD55C \uC8FC!"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: FreeCoins
-      TermType: 0
-      Description: 
-      Languages:
-      - Get free coins!
-      - "\xA1Obt\xE9n monedas gratis!"
-      - "\u7372\u5F97\u514D\u8CBB\u91D1\u5E63"
-      - "\u83B7\u5F97\u514D\u8D39\u91D1\u5E01"
-      - "\uBB34\uB8CC \uCF54\uC778\uBC1B\uAE30!"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Bomber
-      TermType: 0
-      Description: 
-      Languages:
-      - Bomber
-      - Bombardero
-      - "\u8F5F\u70B8\u6A5F"
-      - "\u8F70\u70B8\u673A"
-      - "\uD3ED\uACA9\uC218(\uBCF4\uBA38)"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Tank
-      TermType: 0
-      Description: 
-      Languages:
-      - Tank
-      - Tanque
-      - "\u5766\u514B"
-      - "\u5766\u514B"
-      - "\uD0F1\uD06C"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Scout
-      TermType: 0
-      Description: 
-      Languages:
-      - Scout
-      - Explorador
-      - "\u5075\u67E5\u5175"
-      - "\u4FA6\u67E5\u5175"
-      - "\uC815\uCC30\uBCD1(\uC2A4\uCE74\uC6B0\uD2B8)"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Healer
-      TermType: 0
-      Description: 
-      Languages:
-      - Healer
-      - Sanador
-      - "\u91AB\u8B77\u5175"
-      - "\u533B\u62A4\u5175"
-      - "\uD790\uB7EC"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Destroyer
-      TermType: 0
-      Description: 
-      Languages:
-      - Destroyer
-      - Destructor
-      - "\u7834\u58DE\u8005"
-      - "\u7834\u574F\u8005"
-      - "\uB514\uC2A4\uD2B8\uB85C\uC774\uC5B4(\uD30C\uAD34\uC790)"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: YOUR TURN
-      TermType: 0
-      Description: 
-      Languages:
-      - YOUR TURN
-      - TU TURNO
-      - "\u4F60\u7684\u56DE\u5408"
-      - "\u4F60\u7684\u56DE\u5408"
-      - "\uB2F9\uC2E0\uC758 \uC21C\uC11C\uC785\uB2C8\uB2E4"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Unit turn
-      TermType: 0
-      Description: 
-      Languages:
-      - Unit turn
-      - Turno de Unidad
-      - "\u55AE\u4F4D\u56DE\u5408"
-      - "\u5355\u4F4D\u56DE\u5408"
-      - "\uCE90\uB9AD\uD130 \uC720\uB2DB \uC21C\uC11C"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Index
-      TermType: 0
-      Description: 
-      Languages:
-      - Index
-      - "\xCDndice"
-      - "\u76EE\u9304"
-      - "\u76EE\u5F55"
-      - "\uC778\uB371\uC2A4"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Unit type
-      TermType: 0
-      Description: 
-      Languages:
-      - Unit type
-      - Tipo de Unidad
-      - "\u55AE\u4F4D\u985E\u578B"
-      - "\u5355\u4F4D\u7C7B\u578B"
-      - "\uC720\uB2DB \uD0C0\uC785"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Unit tier
-      TermType: 0
-      Description: 
-      Languages:
-      - Unit tier
-      - Nivel de Unidad
-      - "\u55AE\u4F4D\u6392\u540D"
-      - "\u5355\u4F4D\u6392\u540D"
-      - "\uC720\uB2DB \uACC4\uCE35"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Actions Left
-      TermType: 0
-      Description: 
-      Languages:
-      - Actions Left
-      - Acciones Restantes
-      - "\u5269\u9918\u52D5\u4F5C"
-      - "\u5269\u4F59\u52A8\u4F5C"
-      - "\uB0A8\uC740 \uACF5\uACA9 \uD69F\uC218"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: ATTACK
-      TermType: 0
-      Description: 
-      Languages:
-      - ATTACK
-      - ATACAR
-      - "\u653B\u64CA"
-      - "\u653B\u51FB"
-      - "\uACF5\uACA9"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: GUARD
-      TermType: 0
-      Description: 
-      Languages:
-      - GUARD
-      - PROTEGER
-      - "\u9632\u5B88"
-      - "\u9632\u5B88"
-      - "\uBC29\uC5B4"
+      - Guest
+      - "Hu\xE9sped"
+      - "\u904A\u5BA2"
+      - "\u6E38\u5BA2"
+      - "\uAC8C\uC2A4\uD2B8"
       Flags: 0000000000
       Languages_Touch: []
     - Term: HEAL
@@ -1374,156 +820,81 @@ MonoBehaviour:
       - "\uCE58\uB8CC"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: SCOUT
+    - Term: Healer
       TermType: 0
       Description: 
       Languages:
-      - SCOUT
-      - EXPLORAR
-      - "\u63A2\u6E2C"
-      - "\u63A2\u6D4B"
-      - "\uC815\uCC30"
+      - Healer
+      - Sanador
+      - "\u91AB\u8B77\u5175"
+      - "\u533B\u62A4\u5175"
+      - "\uD790\uB7EC"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: ENEMY TURN
+    - Term: Health
       TermType: 0
       Description: 
       Languages:
-      - ENEMY TURN
-      - TURNO  ENEMIGO
-      - "\u6575\u65B9\u56DE\u5408"
-      - "\u654C\u65B9\u56DE\u5408"
-      - "\uC801 \uACF5\uACA9 \uC21C\uC11C"
+      - Health
+      - Salud
+      - "\u9AD4\u529B"
+      - "\u751F\u547D\u503C"
+      - "\uCCB4\uB825"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: ARENA
+    - Term: HighScore
       TermType: 0
       Description: 
       Languages:
-      - ARENA
-      - ARENA
-      - "\u7AF6\u6280\u5834"
-      - "\u7ADE\u6280\u573A"
-      - "\uBC30\uD2C0 \uC7A5\uC18C"
+      - High Score
+      - Mejor Puntaje
+      - "\u6700\u9AD8\u5206"
+      - "\u6700\u9AD8\u5206"
+      - "\uD558\uC774\uC2A4\uCF54\uC5B4"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: BATTLE RESULTS
+    - Term: Index
       TermType: 0
       Description: 
       Languages:
-      - BATTLE RESULTS
-      - RESULTADOS DE BATALLA
-      - "\u6230\u9B25\u7D50\u679C"
-      - "\u6218\u6597\u7ED3\u679C"
-      - "\uBC30\uD2C0 \uACB0\uACFC"
+      - Index
+      - "\xCDndice"
+      - "\u76EE\u9304"
+      - "\u76EE\u5F55"
+      - "\uC778\uB371\uC2A4"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: Arena
+    - Term: Invalid Password
       TermType: 0
       Description: 
       Languages:
-      - Arena
-      - Arena
-      - "\u7AF6\u6280\u5834"
-      - "\u7ADE\u6280\u573A"
-      - "\uBC30\uD2C0 \uC7A5\uC18C"
+      - Invalid password
+      - "Contrase\xF1a inv\xE1lida"
+      - "\u7121\u6548\u7684\u5BC6\u78BC"
+      - "\u65E0\u6548\u7684\u5BC6\u7801"
+      - "\uC798\uBABB\uB41C \uD328\uC2A4\uC6CC\uB4DC\uC785\uB2C8\uB2E4"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: Round
+    - Term: Invalid Username
       TermType: 0
       Description: 
       Languages:
-      - Round
-      - Asalto
-      - "\u56DE\u5408"
-      - "\u56DE\u5408"
-      - "\uB77C\uC6B4\uB4DC"
+      - Invalid username
+      - "Usuario inv\xE1lido"
+      - "\u7121\u6548\u7684\u4F7F\u7528\u8005\u540D\u7A31"
+      - "\u65E0\u6548\u7684\u4F7F\u7528\u8005\u540D\u79F0"
+      - "\uC798\uBABB\uB41C \uC0AC\uC6A9\uC790 \uB124\uC784\uC785\uB2C8\uB2E4"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: '- Killed Units -'
+    - Term: KIN
       TermType: 0
       Description: 
       Languages:
-      - '- Killed Units -'
-      - '- Unidades Muertas -'
-      - "- \u64CA\u6BBA\u55AE\u4F4D -"
-      - "- \u51FB\u6740\u5355\u4F4D -"
-      - "\uC8FD\uC740 \uCE90\uB9AD\uD130"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Send Gift
-      TermType: 0
-      Description: 
-      Languages:
-      - Send Gift
-      - Mandar Regalo
-      - "\u8D08\u79AE"
-      - "\u8D60\u793C"
-      - "\uC120\uBB3C \uBCF4\uB0B4\uAE30"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: PvP Rating
-      TermType: 0
-      Description: 
-      Languages:
-      - PvP Rating
-      - "Valuaci\xF3n de JcJ"
-      - "\u73A9\u5BB6\u5C0D\u6230\u8A55\u5206"
-      - "\u73A9\u5BB6\u5BF9\u6218\u8BC4\u5206"
-      - "\uD50C\uB808\uC774\uC5B4 VS \uD50C\uB808\uC774\uC5B4 \uD3C9\uAC00"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Your opponent has disconnected.
-      TermType: 0
-      Description: 
-      Languages:
-      - Your opponent has disconnected.
-      - Tu oponente se ha desconectado.
-      - "\u4F60\u7684\u5C0D\u624B\u5DF2\u96E2\u7DDA"
-      - "\u4F60\u7684\u5BF9\u624B\u5DF2\u79BB\u7EBF"
-      - "\uB2F9\uC2E0\uC758 \uC801\uC758 \uC5F0\uACB0\uC774 \uB04A\uACBC\uC2B5\uB2C8\uB2E4"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: You have disconnected.
-      TermType: 0
-      Description: 
-      Languages:
-      - You have disconnected.
-      - Te has desconectado.
-      - "\u4F60\u5DF2\u96E2\u7DDA"
-      - "\u4F60\u5DF2\u79BB\u7EBF"
-      - "\uC5F0\uACB0\uC774 \uB04A\uACBC\uC2B5\uB2C8\uB2E4"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: PVP ARENAS
-      TermType: 0
-      Description: 
-      Languages:
-      - PVP ARENAS
-      - ARENAS DE JCJ
-      - "\u73A9\u5BB6\u5C0D\u6230\u7AF6\u6280\u5834"
-      - "\u73A9\u5BB6\u5BF9\u6218\u7ADE\u6280\u573A"
-      - "\uD50C\uB808\uC774\uC5B4 VS \uD50C\uB808\uC774\uC5B4 \uBC30\uD2C0 \uC7A5\uC18C"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Are you ready to battle other players? Log in with your Enigma Games account
-        to access the PvP arenas.
-      TermType: 0
-      Description: 
-      Languages:
-      - 'Are you ready to battle other players?
-
-
-        Log in with your Enigma Games account to access the PvP arenas.'
-      - "\xBFEst\xE1s listo para batallar otros jugadores?\n\nIngresa con tu cuenta
-        de Enigma Games para accesar las arenas JcJ."
-      - "\u4F60\u6E96\u5099\u597D\u548C\u5176\u4ED6\u73A9\u5BB6\u6230\u9B25\u4E86\u55CE?
-        \u7528\u4F60\u7684Enigma Games\u5E33\u865F\u767B\u5165\u4EE5\u9032\u5165\u73A9\u5BB6\u5C0D\u6230\u7AF6\u6280\u5834"
-      - "\u4F60\u51C6\u5907\u597D\u548C\u5176\u4ED6\u73A9\u5BB6\u6218\u6597\u4E86\u5417?
-        \u7528\u4F60\u7684Enigma Games\u5E10\u53F7\u767B\u5165\u4EE5\u8FDB\u5165\u73A9\u5BB6\u5BF9\u6218\u7ADE\u6280\u573A"
-      - "\uB2E4\uB978 \uD50C\uB808\uC774\uC5B4\uC640 \uACA8\uB8F0 \uC900\uBE44\uAC00
-        \uB410\uC2B5\uB2C8\uAE4C?\n \uC560\uB2C8\uADF8\uB9C8 \uAC8C\uC784 \uACC4\uC815\uC73C\uB85C
-        \uB85C\uADF8\uC778\uD558\uC138\uC694."
+      - KIN
+      - KIN
+      - KIN
+      - KIN
+      - "\uD0A8(KIN)"
       Flags: 0000000000
       Languages_Touch: []
     - Term: KIN CURRENCY
@@ -1557,345 +928,15 @@ MonoBehaviour:
         \uC120\uBB3C \uBC15\uC2A4 \uB9AC\uC6CC\uC988"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: ENJIN LEGENDS
-      TermType: 0
-      Description: 
-      Languages:
-      - ENJIN LEGENDS
-      - LEYENDAS ENJIN
-      - "ENJIN \u50B3\u5947"
-      - "ENJIN \u4F20\u5947"
-      - "\uC5D4\uC9C4 \uB808\uC804\uB4DC"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: SUMMON
-      TermType: 0
-      Description: 
-      Languages:
-      - SUMMON
-      - CONVOCAR
-      - "\u53EC\u559A"
-      - "\u53EC\u5524"
-      - "\uCE90\uB9AD\uD130 \uC720\uB2DB \uBD88\uB7EC\uC624\uAE30"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Summons remaining
-      TermType: 0
-      Description: 
-      Languages:
-      - Summons remaining
-      - Convocaciones restantes
-      - "\u5269\u9918\u53EC\u559A\u6B21\u6578"
-      - "\u5269\u4F59\u53EC\u5524\u6B21\u6570"
-      - "\uCE90\uB9AD\uD130 \uC720\uB2DB \uC18C\uD658 \uB0A8\uC740 \uD69F\uC218"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: VS
-      TermType: 0
-      Description: 
-      Languages:
-      - VS
-      - VS
-      - "\u8207"
-      - "\u4E0E"
-      - VS
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: KIN
-      TermType: 0
-      Description: 
-      Languages:
-      - KIN
-      - KIN
-      - KIN
-      - KIN
-      - "\uD0A8(KIN)"
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: GLOBAL QUEST PROGRESS
-      TermType: 0
-      Description: 
-      Languages:
-      - GLOBAL QUEST PROGRESS
-      - "PROGRESO DE B\xDASQUEDA GLOBAL"
-      - 
-      - 
-      - 
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: ENJIN REWARDS
-      TermType: 0
-      Description: 
-      Languages:
-      - ENJIN REWARDS
-      - RECOMPENSAS ENJIN
-      - 
-      - 
-      - 
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Enjin Legend tokens required
-      TermType: 0
-      Description: 
-      Languages:
-      - Enjin Legend tokens required
-      - Fichas de Leyenda Enjin requeridos
-      - 
-      - 
-      - 
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Min-Mins Token required
-      TermType: 0
-      Description: 
-      Languages:
-      - Min-Mins Token required
-      - Ficha de Min-Mins requerido
-      - 
-      - 
-      - 
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Legend Unit tokens required
-      TermType: 0
-      Description: 
-      Languages:
-      - Legend Unit tokens required
-      - Ficha de Unidad Leyenda requerido
-      - 
-      - 
-      - 
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Enjin MFT required
-      TermType: 0
-      Description: 
-      Languages:
-      - Enjin MFT required
-      - MFT Enjin requerido
-      - 
-      - 
-      - 
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Damage
-      TermType: 0
-      Description: 
-      Languages:
-      - Damage
-      - "Da\xF1o"
-      - 
-      - 
-      - 
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Health
-      TermType: 0
-      Description: 
-      Languages:
-      - Health
-      - Salud
-      - 
-      - 
-      - 
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Power
-      TermType: 0
-      Description: 
-      Languages:
-      - Power
-      - Poder
-      - 
-      - 
-      - 
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: TEAM BOOST SELECTION
-      TermType: 0
-      Description: 
-      Languages:
-      - TEAM BOOST SELECTION
-      - "SELECCI\xD3N DE AUMENTO PARA EQUIPO"
-      - 
-      - 
-      - 
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: 'Category:'
-      TermType: 0
-      Description: 
-      Languages:
-      - 'Category:'
-      - "Categor\xEDa:"
-      - 
-      - 
-      - 
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: 'Bonus:'
-      TermType: 0
-      Description: 
-      Languages:
-      - 'Bonus:'
-      - 'Bono:'
-      - 
-      - 
-      - 
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Apochrome Sword
-      TermType: 0
-      Description: 
-      Languages:
-      - Apochrome Sword
-      - Espada Apochrome
-      - 
-      - 
-      - 
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Soulshift Armor
-      TermType: 0
-      Description: 
-      Languages:
-      - Soulshift Armor
-      - Armadura Cambio de Alma
-      - 
-      - 
-      - 
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Shadowsong
-      TermType: 0
-      Description: 
-      Languages:
-      - Shadowsong
-      - "Canci\xF3n Sombr\xEDa"
-      - 
-      - 
-      - 
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Mark of the Bull
-      TermType: 0
-      Description: 
-      Languages:
-      - Mark of the Bull
-      - Marca del Toro
-      - 
-      - 
-      - 
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Arena 1-6
-      TermType: 0
-      Description: 
-      Languages:
-      - Arena 1-6
-      - Arena 1-6
-      - 
-      - 
-      - 
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Search
-      TermType: 0
-      Description: 
-      Languages:
-      - Search
-      - Buscar
-      - 
-      - 
-      - 
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Create
-      TermType: 0
-      Description: 
-      Languages:
-      - Create
-      - Crear
-      - 
-      - 
-      - 
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Name is already used. Please provide another.
-      TermType: 0
-      Description: 
-      Languages:
-      - Name is already used. Please provide another.
-      - "El nombre est\xE1 ocupado. Por favor proporcione otro."
-      - 
-      - 
-      - 
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Enter name for a Private Room
-      TermType: 0
-      Description: 
-      Languages:
-      - Enter name for a Private Room
-      - Introduzca nombre para Sala Privada
-      - 
-      - 
-      - 
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: 'Ping:'
-      TermType: 0
-      Description: 
-      Languages:
-      - 'Ping:'
-      - 'Ping:'
-      - 
-      - 
-      - 
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: 'Rating:'
-      TermType: 0
-      Description: 
-      Languages:
-      - 'Rating:'
-      - "Valuaci\xF3n:"
-      - 
-      - 
-      - 
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Open
-      TermType: 0
-      Description: 
-      Languages:
-      - Open
-      - Abierto
-      - 
-      - 
-      - 
-      Flags: 0000000000
-      Languages_Touch: []
     - Term: LEGEND UNITS
       TermType: 0
       Description: 
       Languages:
       - LEGEND UNITS
       - 'UNIDADES LEYENDAS '
-      - 
-      - 
-      - 
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: QUESTS
-      TermType: 0
-      Description: 
-      Languages:
-      - QUESTS
-      - "B\xDASQUEDAS"
-      - 
-      - 
-      - 
+      - "\u82F1\u96C4\u6230\u968A\u6210\u54E1"
+      - LEGEND UNIT
+      - "\uC804\uC124 \uC720\uB2DB"
       Flags: 0000000000
       Languages_Touch: []
     - Term: LEVEL SELECTION
@@ -1904,140 +945,53 @@ MonoBehaviour:
       Languages:
       - LEVEL SELECTION
       - ESCOGER NIVEL
-      - 
-      - 
-      - 
+      - "\u9078\u64C7\u7B49\u7D1A"
+      - "\u5173\u5361\u9009\u62E9"
+      - "\uB808\uBCA8 \uC120\uD0DD"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: QUEST LEVELS
+    - Term: LINK WALLET
       TermType: 0
       Description: 
       Languages:
-      - QUEST LEVELS
-      - "NIVELES DE B\xDASQUEDA"
-      - 
-      - 
-      - 
+      - LINK WALLET
+      - 'ENLAZAR BILLETERA '
+      - "\u9023\u7D50\u9322\u5305"
+      - "\u8FDE\u7ED3\u94B1\u5305"
+      - "\uC5D4\uC9C4 \uC6D4\uB81B\uC5D0 \uC5F0\uACB0\uD558\uAE30"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: Are you ready for Quest Levels? Log in with your Enigma Games account
-        to access them.
+    - Term: LOGIN
       TermType: 0
       Description: 
       Languages:
-      - 'Are you ready for Quest Levels?
-
-
-        Log in with your Enigma Games account to access them.'
-      - "\xBFEst\xE1s listo para Niveles de B\xFAsqueda?\n\nAccede a tu cuenta de
-        Juegos Enigma para accesarlos."
-      - 
-      - 
-      - 
+      - LOGIN
+      - "INICIAR SESI\xD3N"
+      - "\u767B\u5165"
+      - "\u767B\u5165"
+      - "\uB85C\uADF8\uC778"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: Teams
+    - Term: Leaderboards
       TermType: 0
       Description: 
       Languages:
-      - Teams
-      - Equipos
-      - 
-      - 
-      - 
+      - Leaderboards
+      - "L\xEDderes"
+      - "\u6392\u884C\u699C"
+      - "\u6392\u884C\u699C"
+      - "\uB9AC\uB354\uBCF4\uB4DC"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: Swissborg Reward
+    - Term: Legend Box
       TermType: 0
       Description: 
       Languages:
-      - 'Congratulations. You have been rewarded with the Cyborg Torso. The item will
-        be sent to your Enjin Wallet soon.
-
-
-        Good luck finding the other pieces and completing the Cyborg''s Quest!
-
-'
-      - "Felicidades. Has sido recompensado con el Torso Cyborg. El \xEDtem te ser\xE1
-        enviado a tu Billetera Enjin pronto.\n\n\xA1Buena suerte encontrando las otras
-        piezas y completando la B\xFAsqueda del Cyborg!"
-      - 
-      - 
-      - 
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Drag units to position.
-      TermType: 0
-      Description: 
-      Languages:
-      - ' Drag units to position.'
-      - "Arrastra las unidades a posici\xF3n."
-      - 
-      - 
-      - 
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Select a unit.
-      TermType: 0
-      Description: 
-      Languages:
-      - Select a unit.
-      - Selecciona una unidad.
-      - 
-      - 
-      - 
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Assign the selected unit to a team position.
-      TermType: 0
-      Description: 
-      Languages:
-      - Assign the selected unit to a team position.
-      - "Asigna unidad seleccionada a una posici\xF3n de equipo."
-      - 
-      - 
-      - 
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Press right arrow button to proceed.
-      TermType: 0
-      Description: 
-      Languages:
-      - Press right arrow button to proceed.
-      - "Presiona bot\xF3n de flecha derecha para proceder."
-      - 
-      - 
-      - 
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Tap boost to select/deselect.
-      TermType: 0
-      Description: 
-      Languages:
-      - Tap boost to select/deselect.
-      - Presiona aumento para seleccionar/deseleccionar.
-      - 
-      - 
-      - 
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Demon King Box Description Term
-      TermType: 0
-      Description: 
-      Languages:
-      - '* 2 items total with purchase
-
-        * 1 guaranteed rare item
-
-        * 1 random playable demon king token
-
-        * Items are immediately sent to your Enjin wallet after trade approval'
-      - "* 2 \xEDtems totales con la compra\n* 1 \xEDtem raro garantizado\n* 1 ficha
-        rey demonio jugable aleatoria\n* Los \xEDtems son inmediatamente enviados
-        a tu Billetera Enjin luego de aprobarse el canje"
-      - 
-      - 
-      - 
+      - Legend Box
+      - Caja Leyenda
+      - "\u82F1\u96C4\u5BF6\u7BB1"
+      - "\u4F20\u8BF4\u7684\u76D2\u5B50"
+      - "\uC804\uC124 \uC0C1\uC790"
       Flags: 0000000000
       Languages_Touch: []
     - Term: Legend Box Description Term
@@ -2055,31 +1009,575 @@ MonoBehaviour:
         \xEDtems aleatorios (80% chance de un \xEDtem com\xFAn, 20% chance de un \xEDtem
         raro)\n* Los \xEDtems son inmediatamente enviados a tu Billetera Enjin luego
         de aprobarse el canje"
-      - 
-      - 
-      - 
+      - "* \u8CFC\u8CB7\u5F8C\u53EF\u7372\u5F97 4 \u9805\u7269\u54C1\n* \u5176\u4E2D
+        2 \u9805\u70BA\u7A00\u6709\u54C1\n* \u96A8\u6A5F\u7372\u5F97 2 \u9805\u7269\u54C1
+        (80%\u6A5F\u6703\u70BA\u4E00\u822C\u7269\u54C1\uFF0C20%\u6A5F\u6703\u70BA\u7A00\u6709\u54C1)\n*
+        \u4EA4\u6613\u4E00\u7D93\u5BE9\u6279\uFF0C\u6240\u5F97\u7269\u54C1\u6703\u7ACB\u5373\u65B0\u589E\u5230\u4F60\u7684
+        Enjin \u9322\u5305* \u8CFC\u8CB7\u5F8C\u53EF\u7372\u5F97 4 \u9805\u7269\u54C1\n*
+        \u5176\u4E2D 2 \u9805\u70BA\u7A00\u6709\u54C1\n* \u96A8\u6A5F\u7372\u5F97
+        2 \u9805\u7269\u54C1 (80%\u6A5F\u6703\u70BA\u4E00\u822C\u7269\u54C1\uFF0C20%\u6A5F\u6703\u70BA\u7A00\u6709\u54C1)\n*
+        \u4EA4\u6613\u4E00\u7D93\u5BE9\u6279\uFF0C\u6240\u5F97\u7269\u54C1\u6703\u7ACB\u5373\u65B0\u589E\u5230\u4F60\u7684
+        Enjin \u9322\u5305"
+      - "* \u8D2D\u4E70\u603B\u5171\u5305\u542B4\u4E2A\u7269\u54C1\n* \u4FDD\u8BC1\u67092\u4E2A\u662F\u7A00\u6709\u7269\u54C1\n*
+        2\u4E2A\u968F\u673A\u7269\u54C1 (80%\u51E0\u7387\u83B7\u5F971\u4E2A\u666E\u901A\u7269\u54C1\uFF0C20%\u51E0\u7387\u83B7\u5F971\u4E2A\u7A00\u6709\u7269\u54C1)\n*
+        \u4EA4\u6613\u6210\u529F\u540E\u7269\u54C1\u4F1A\u7ACB\u5373\u53D1\u653E\u5230\u60A8\u7684Enjin
+        Wallet\u4E2D* \u8D2D\u4E70\u603B\u5171\u5305\u542B4\u4E2A\u7269\u54C1\n* \u4FDD\u8BC1\u67092\u4E2A\u662F\u7A00\u6709\u7269\u54C1\n*
+        2\u4E2A\u968F\u673A\u7269\u54C1 (80%\u51E0\u7387\u83B7\u5F971\u4E2A\u666E\u901A\u7269\u54C1\uFF0C20%\u51E0\u7387\u83B7\u5F971\u4E2A\u7A00\u6709\u7269\u54C1)\n*
+        \u4EA4\u6613\u6210\u529F\u540E\u7269\u54C1\u4F1A\u7ACB\u5373\u53D1\u653E\u5230\u60A8\u7684Enjin
+        Wallet\u4E2D"
+      - "* \uAD6C\uB9E4 \uC2DC \uC544\uC774\uD15C \uCD1D 4\uAC1C\n* 2\uAC1C\uC758
+        \uBCF4\uC7A5\uB41C \uD76C\uADC0 \uC544\uC774\uD15C\n* 2\uAC1C\uC758 \uBB34\uC791\uC704
+        \uC544\uC774\uD15C (80%\uC758 \uC77C\uBC18 \uC544\uC774\uD15C \uD655\uB960,
+        20%\uC758 \uD76C\uADC0 \uC544\uC774\uD15C \uD655\uB960)\n* \uC544\uC774\uD15C\uC740
+        \uAC70\uB798 \uC2B9\uC778 \uC2DC \uC5D4\uC9C4 \uC9C0\uAC11\uC5D0 \uBC14\uB85C
+        \uC804\uC1A1\uB429\uB2C8\uB2E4* \uAD6C\uB9E4 \uC2DC \uC544\uC774\uD15C \uCD1D
+        4\uAC1C\n* 2\uAC1C\uC758 \uBCF4\uC7A5\uB41C \uD76C\uADC0 \uC544\uC774\uD15C\n*
+        2\uAC1C\uC758 \uBB34\uC791\uC704 \uC544\uC774\uD15C (80%\uC758 \uC77C\uBC18
+        \uC544\uC774\uD15C \uD655\uB960, 20%\uC758 \uD76C\uADC0 \uC544\uC774\uD15C
+        \uD655\uB960)\n* \uC544\uC774\uD15C\uC740 \uAC70\uB798 \uC2B9\uC778 \uC2DC
+        \uC5D4\uC9C4 \uC9C0\uAC11\uC5D0 \uBC14\uB85C \uC804\uC1A1\uB429\uB2C8\uB2E4"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: Demon King Box
+    - Term: Legend Unit tokens required
       TermType: 0
       Description: 
       Languages:
-      - Demon King Box
-      - Caja Rey Demonio
-      - 
-      - 
-      - 
+      - Legend Unit tokens required
+      - Ficha de Unidad Leyenda requerido
+      - "\u9700\u8981\u6709\u82F1\u96C4\u6230\u968A\u6210\u54E1\u4EE3\u5E63"
+      - "\u9700\u8981Legend Unit\u4EE3\u5E01"
+      - "\uC804\uC124 \uC720\uB2DB \uD1A0\uD070 \uD544\uC694"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: Legend Box
+    - Term: LegendaryPack
       TermType: 0
       Description: 
       Languages:
-      - Legend Box
-      - Caja Leyenda
-      - 
-      - 
-      - 
+      - Legendary Pack
+      - Paquete Legendario
+      - "\u50B3\u5947\u5305"
+      - "\u4F20\u5947\u5305"
+      - "\uB808\uC804\uB4DC \uD329"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Level
+      TermType: 0
+      Description: 
+      Languages:
+      - Level
+      - Nivel
+      - "\u7B49\u7D1A"
+      - "\u7B49\u7EA7"
+      - "\uB808\uBCA8"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Loading...
+      TermType: 0
+      Description: 
+      Languages:
+      - Loading...
+      - Cargando...
+      - "\u8F09\u5165\u4E2D\u2026"
+      - "\u8F7D\u5165\u4E2D\u2026"
+      - "\uB85C\uB529\uC911\u2026"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Login
+      TermType: 0
+      Description: 
+      Languages:
+      - Login
+      - "Iniciar Sesi\xF3n"
+      - "\u767B\u5165"
+      - "\u767B\u5165"
+      - "\uB85C\uADF8\uC778"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: LoginNowForFreeCoins
+      TermType: 0
+      Description: 
+      Languages:
+      - Login now for free coins
+      - Ingresa ahora para monedas gratis
+      - "\u73FE\u5728\u767B\u5165\u4EE5\u7372\u5F97\u514D\u8CBB\u91D1\u5E63"
+      - "\u73B0\u5728\u767B\u5165\u4EE5\u83B7\u5F97\u514D\u8D39\u91D1\u5E01"
+      - "\uBB34\uB8CC \uCF54\uC778\uC744 \uBC1B\uC73C\uB824\uBA74 \uC9C0\uAE08 \uB85C\uADF8\uC778\uD558\uC138\uC694"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Logout
+      TermType: 0
+      Description: 
+      Languages:
+      - Logout
+      - "Cerrar Sesi\xF3n"
+      - "\u767B\u51FA"
+      - "\u767B\u51FA"
+      - "\uB85C\uADF8\uC544\uC6C3"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Mark of the Bull
+      TermType: 0
+      Description: 
+      Languages:
+      - Mark of the Bull
+      - Marca del Toro
+      - "\u516C\u725B\u5370\u8A18"
+      - "\u516C\u725B\u6807\u8BB0"
+      - "\uD669\uC18C\uC758 \uC0C1\uC9D5"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Master Box
+      TermType: 0
+      Description: 
+      Languages:
+      - Master Box
+      - Caja Master
+      - "\u5927\u5E2B\u7BB1"
+      - "\u5927\u5E08\u7BB1"
+      - "\uB9C8\uC2A4\uD130 \uBC15\uC2A4"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: MasterPack
+      TermType: 0
+      Description: 
+      Languages:
+      - Master Pack
+      - Paquete Maestro
+      - "\u5927\u5E2B\u5305"
+      - "\u5927\u5E08\u5305"
+      - "\uB9C8\uC2A4\uD130 \uD329"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: 'Match Duration:'
+      TermType: 0
+      Description: 
+      Languages:
+      - 'Match Duration:'
+      - "Duraci\xF3n de la Partida:"
+      - "\u5C0D\u6230\u6642\u9593:"
+      - "\u5BF9\u6218\u65F6\u95F4:"
+      - "\uBC30\uD2C0 \uC2DC\uAC04"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Min-Mins Token required
+      TermType: 0
+      Description: 
+      Languages:
+      - Min-Mins Token required
+      - Ficha de Min-Mins requerido
+      - "\u9700\u8981\u6709 Min-Mins \u4EE3\u5E63"
+      - "\u9700\u8981Min-Mins\u4EE3\u5E01"
+      - "\uBBFC\uBBFC\uC2A4 \uD1A0\uD070 \uD544\uC694"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: NEW MIN MINS!
+      TermType: 0
+      Description: 
+      Languages:
+      - NEW MIN MINS!
+      - NUEVOS MIN MINS!
+      - "\u65B0MIN MINS!"
+      - "\u65B0MIN MINS!"
+      - "\uC0C8\uB85C\uC6B4 Min Mins!"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Name
+      TermType: 0
+      Description: 
+      Languages:
+      - Name
+      - Nombre de usuario
+      - "\u540D\u5B57"
+      - "\u540D\u5B57"
+      - "\uC774\uB984"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Name is already used. Please provide another.
+      TermType: 0
+      Description: 
+      Languages:
+      - Name is already used. Please provide another.
+      - "El nombre est\xE1 ocupado. Por favor proporcione otro."
+      - "\u6B64\u540D\u7A31\u5DF2\u88AB\u53D6\u7528\uFF0C\u8ACB\u6539\u7528\u53E6\u4E00\u500B\u540D\u7A31\u3002"
+      - "\u540D\u5B57\u5DF2\u88AB\u4F7F\u7528\u3002\u8BF7\u6362\u4E00\u4E2A\u3002"
+      - "\uC774\uB984\uC774 \uC774\uBBF8 \uC0AC\uC6A9\uB418\uACE0 \uC788\uC2B5\uB2C8\uB2E4.
+        \uB2E4\uB978 \uC774\uB984\uC744 \uC0AC\uC6A9\uD574 \uBCF4\uC138\uC694."
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Network Error
+      TermType: 0
+      Description: 
+      Languages:
+      - Network Error
+      - Error de Red
+      - "\u7DB2\u8DEF\u932F\u8AA4"
+      - "\u7F51\u8DEF\u9519\u8BEF"
+      - "\uB124\uD2B8\uC6CC\uD06C \uC5D0\uB7EC"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: New user
+      TermType: 0
+      Description: 
+      Languages:
+      - New user
+      - Nuevo usuario
+      - "\u65B0\u7684\u4F7F\u7528\u8005"
+      - "\u65B0\u7684\u4F7F\u7528\u8005"
+      - "\uC2E0\uADDC \uC720\uC800"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: NewWeek
+      TermType: 0
+      Description: 
+      Languages:
+      - New week!
+      - "\xA1Nueva semana!"
+      - "\u65B0\u7684\u4E00\u9031!"
+      - "\u65B0\u7684\u4E00\u5468!"
+      - "\uC0C8\uB85C\uC6B4 \uD55C \uC8FC!"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: No guarantees.
+      TermType: 0
+      Description: 
+      Languages:
+      - No guarantees.
+      - "Sin garant\xEDas."
+      - "\u6C92\u6709\u4FDD\u5E95"
+      - "\u6CA1\u6709\u4FDD\u5E95"
+      - "\uCE90\uB9AD\uD130 \uC720\uB2DB \uB2F9\uCCA8 \uBCF4\uC7A5\uC5C6\uC74C"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: NotEnoughCurrency
+      TermType: 0
+      Description: 
+      Languages:
+      - Not enough currency.
+      - No hay suficientes monedas.
+      - "\u8CA8\u5E63\u4E0D\u8DB3"
+      - "\u8D27\u5E01\u4E0D\u8DB3"
+      - "\uD654\uD3D0 \uBD80\uC871"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: OK
+      TermType: 0
+      Description: 
+      Languages:
+      - OK
+      - OK
+      - "\u53EF\u4EE5"
+      - "\u53EF\u4EE5"
+      - "\uD655\uC778"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Of7
+      TermType: 0
+      Description: 
+      Languages:
+      - of 7
+      - de 7
+      - "\u4E03\u65E5\u4E4B X or 7\u65E5\u4E4B X X for the current day"
+      - "\u4E03\u65E5\u4E4B X or 7\u65E5\u4E4B X X for the current day"
+      - "X\uBC88\uC9F8 (x/7)"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Open
+      TermType: 0
+      Description: 
+      Languages:
+      - Open
+      - Abierto
+      - "\u6253\u958B"
+      - "\u6253\u5F00"
+      - "\uC5F4\uAE30"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: PURCHASE
+      TermType: 0
+      Description: 
+      Languages:
+      - PURCHASE
+      - COMPRA
+      - "\u8CFC\u8CB7"
+      - "\u8D2D\u4E70"
+      - "\uAD6C\uB9E4"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: PVP ARENAS
+      TermType: 0
+      Description: 
+      Languages:
+      - PVP ARENAS
+      - ARENAS DE JCJ
+      - "\u73A9\u5BB6\u5C0D\u6230\u7AF6\u6280\u5834"
+      - "\u73A9\u5BB6\u5BF9\u6218\u7ADE\u6280\u573A"
+      - "\uD50C\uB808\uC774\uC5B4 VS \uD50C\uB808\uC774\uC5B4 \uBC30\uD2C0 \uC7A5\uC18C"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Password
+      TermType: 0
+      Description: 
+      Languages:
+      - Password
+      - "Contrase\xF1a"
+      - "\u5BC6\u78BC"
+      - "\u5BC6\u7801"
+      - "\uD328\uC2A4\uC6CC\uB4DC"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: PasswordConfirmFailed
+      TermType: 0
+      Description: 
+      Languages:
+      - Password confirm failed
+      - "La confirmaci\xF3n de contrase\xF1a fall\xF3"
+      - "\u5BC6\u78BC\u78BA\u8A8D\u5931\u6557"
+      - "\u5BC6\u7801\u786E\u8BA4\u5931\u8D25"
+      - "\uD328\uC2A4\uC6CC\uB4DC \uD655\uC778 \uC2E4\uD328"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Passwords don't match
+      TermType: 0
+      Description: 
+      Languages:
+      - Passwords don't match
+      - "Las contrase\xF1as no concuerdan"
+      - "\u5BC6\u78BC\u4E0D\u7B26"
+      - "\u5BC6\u7801\u4E0D\u7B26"
+      - "\uC77C\uCE58\uD558\uC9C0 \uC54A\uC740 \uD328\uC2A4\uC6CC\uB4DC\uC785\uB2C8\uB2E4"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: 'Ping:'
+      TermType: 0
+      Description: 
+      Languages:
+      - 'Ping:'
+      - 'Ping:'
+      - "\u7DB2\u7D61\u5EF6\u9072\uFF1A"
+      - "Ping\u503C:"
+      - "\uD551:"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Please fill the Enjin ETH address
+      TermType: 0
+      Description: 
+      Languages:
+      - Please fill the Enjin ETH address
+      - "Por favor llenar direcci\xF3n Enjin ETH"
+      - "\u8ACB\u586B\u5BEBEnjin ETH\u5730\u5740"
+      - "\u8BF7\u586B\u5199Enjin ETH\u5730\u5740"
+      - "\uC5D4\uC9C4 \uC8FC\uC18C\uB97C \uC785\uB825\uD558\uC138\uC694"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Please log in to access PvP.
+      TermType: 0
+      Description: 
+      Languages:
+      - 'Please log in to access PvP. '
+      - "Por favor inicie sesi\xF3n para accesar JcJ."
+      - "\u8ACB\u767B\u5165\u4EE5\u958B\u59CB\u73A9\u5BB6\u5C0D\u6230"
+      - "\u8BF7\u767B\u5165\u4EE5\u5F00\u59CB\u73A9\u5BB6\u5BF9\u6218"
+      - "\uD50C\uB808\uC774\uC5B4 VS \uD50C\uB808\uC774\uC5B4\uC5D0 \uC811\uC18D\uD558\uB824\uBA74
+        \uB85C\uADF8\uC778\uD574\uC8FC\uC138\uC694."
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Points
+      TermType: 0
+      Description: 
+      Languages:
+      - Points
+      - Puntos
+      - "\u5206\u6578"
+      - "\u5206\u6570"
+      - "\uD3EC\uC778\uD2B8"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Power
+      TermType: 0
+      Description: 
+      Languages:
+      - Power
+      - Poder
+      - "\u5A01\u529B"
+      - "\u80FD\u91CF"
+      - "\uD30C\uC6CC"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Premium Box
+      TermType: 0
+      Description: 
+      Languages:
+      - Premium Box
+      - Caja Premium
+      - "\u4E2D\u7D1A\u7BB1"
+      - "\u4E2D\u7EA7\u7BB1"
+      - "\uD504\uB9AC\uBBF8\uC5C4 \uBC15\uC2A4"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Press right arrow button to proceed.
+      TermType: 0
+      Description: 
+      Languages:
+      - Press right arrow button to proceed.
+      - "Presiona bot\xF3n de flecha derecha para proceder."
+      - "\u6309 [\u53F3\u9375] \u7E7C\u7E8C\u3002"
+      - "\u6309\u4E0B\u5411\u53F3\u7BAD\u5934\u6309\u94AE\u53EF\u4EE5\u6267\u884C\u3002"
+      - "\uC624\uB978\uCABD \uD654\uC0B4\uD45C \uBC84\uD2BC\uC744 \uB20C\uB7EC\uC11C
+        \uACC4\uC18D\uD558\uC138\uC694."
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Purchase Failed. Please try again later.
+      TermType: 0
+      Description: 
+      Languages:
+      - Purchase Failed. Please try again later.
+      - "La compra fall\xF3. Por favor reintente luego."
+      - "\u8CFC\u8CB7\u5931\u6557\uFF0C\u8ACB\u7A0D\u5F8C\u91CD\u8A66"
+      - "\u8D2D\u4E70\u5931\u8D25\uFF0C\u8BF7\u7A0D\u540E\u91CD\u8BD5"
+      - "\uAD6C\uB9E4 \uC2E4\uD328. \uC7A0\uC2DC \uD6C4 \uB2E4\uC2DC \uC2DC\uB3C4\uD574\uC8FC\uC138\uC694."
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: PurchaseFailed
+      TermType: 0
+      Description: 
+      Languages:
+      - Purchase failed.
+      - "La compra fall\xF3."
+      - "\u8CFC\u8CB7\u5931\u6557"
+      - "\u8D2D\u4E70\u5931\u8D25"
+      - "\uAD6C\uB9E4 \uC2E4\uD328"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: PvP
+      TermType: 0
+      Description: 
+      Languages:
+      - PvP
+      - JcJ
+      - "\u73A9\u5BB6\u5C0D\u6230"
+      - "\u73A9\u5BB6\u5BF9\u6218"
+      - "\uD50C\uB808\uC774\uC5B4 VS \uD50C\uB808\uC774\uC5B4"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: PvP Rating
+      TermType: 0
+      Description: 
+      Languages:
+      - PvP Rating
+      - "Valuaci\xF3n de JcJ"
+      - "\u73A9\u5BB6\u5C0D\u6230\u8A55\u5206"
+      - "\u73A9\u5BB6\u5BF9\u6218\u8BC4\u5206"
+      - "\uD50C\uB808\uC774\uC5B4 VS \uD50C\uB808\uC774\uC5B4 \uD3C9\uAC00"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: QUEST LEVELS
+      TermType: 0
+      Description: 
+      Languages:
+      - QUEST LEVELS
+      - "NIVELES DE B\xDASQUEDA"
+      - "\u4EFB\u52D9\u7B49\u7D1A"
+      - "\u4EFB\u52A1\u5173\u5361"
+      - "\uD018\uC2A4\uD2B8 \uB808\uBCA8"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: QUEST POINTS
+      TermType: 0
+      Description: 
+      Languages:
+      - QUEST POINTS
+      - "PUNTOS DE B\xDASQUEDA"
+      - "\u4EFB\u52D9\u5F97\u5206"
+      - "\u4EFB\u52A1\u79EF\u5206"
+      - "\uD018\uC2A4\uD2B8 \uD3EC\uC778\uD2B8"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: QUESTS
+      TermType: 0
+      Description: 
+      Languages:
+      - QUESTS
+      - "B\xDASQUEDAS"
+      - "\u4EFB\u52D9"
+      - "\u4EFB\u52A1"
+      - "\uD018\uC2A4\uD2B8"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: 'Quest Team #'
+      TermType: 0
+      Description: 
+      Languages:
+      - 'Quest Team #'
+      - "Equipo de B\xFAsqueda #"
+      - "\u4EFB\u52D9\u6230\u968A #"
+      - "\u4EFB\u52A1\u961F\u4F0D #"
+      - "\uD018\uC2A4\uD2B8 \uD300 #"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: 'Quest:'
+      TermType: 0
+      Description: 
+      Languages:
+      - 'Quest:'
+      - "B\xFAsqueda:"
+      - "\u4EFB\u52D9\uFF1A"
+      - "\u4EFB\u52A1\uFF1A"
+      - "\uD018\uC2A4\uD2B8:"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: 'Rating:'
+      TermType: 0
+      Description: 
+      Languages:
+      - 'Rating:'
+      - "Valuaci\xF3n:"
+      - "\u7B49\u7D1A\u6392\u540D\uFF1A"
+      - "\u8BC4\u5206:"
+      - "\uB4F1\uAE09:"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Recommended
+      TermType: 0
+      Description: 
+      Languages:
+      - Recommended!
+      - Recomendado!
+      - "\u63A8\u85A6!"
+      - "\u63A8\u8350!"
+      - "\uCD94\uCC9C\uC0C1\uD488!"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Register
+      TermType: 0
+      Description: 
+      Languages:
+      - Register
+      - Registrarse
+      - "\u8A3B\u518A"
+      - "\u6CE8\u518C"
+      - "\uB4F1\uB85D\uD558\uAE30"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Register Error
+      TermType: 0
+      Description: 
+      Languages:
+      - Register Error
+      - Error de Registro
+      - "\u8A3B\u518A\u932F\u8AA4"
+      - "\u6CE8\u518C\u9519\u8BEF"
+      - "\uB4F1\uB85D \uC5D0\uB7EC"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Remember me
+      TermType: 0
+      Description: 
+      Languages:
+      - Remember me
+      - Recordarme
+      - "\u8A18\u4F4F\u6211"
+      - "\u8BB0\u4F4F\u6211"
+      - "\uB85C\uADF8\uC778 \uC815\uBCF4 \uAE30\uC5B5\uD558\uAE30"
       Flags: 0000000000
       Languages_Touch: []
     - Term: Restore
@@ -2088,20 +1586,548 @@ MonoBehaviour:
       Languages:
       - Restore
       - Restaurar
-      - 
-      - 
-      - 
+      - "\u6062\u5FA9\u904A\u6232\u6A94"
+      - "\u6062\u590D"
+      - "\uBCF5\uC6D0"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: FILE WARNING!
+    - Term: Results
       TermType: 0
       Description: 
       Languages:
-      - FILE WARNING!
-      - ALERTA DE ARCHIVO!
+      - Results
+      - Resultados
+      - "\u7D50\u679C"
+      - "\u7ED3\u679C"
+      - "\uACB0\uACFC"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: 'Rewards:'
+      TermType: 0
+      Description: 
+      Languages:
+      - 'Rewards:'
+      - 'Recompensas:'
+      - "\u734E\u52F5:"
+      - "\u5956\u52B1:"
+      - "\uB9AC\uC6CC\uB4DC"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Round
+      TermType: 0
+      Description: 
+      Languages:
+      - Round
+      - Asalto
+      - "\u56DE\u5408"
+      - "\u56DE\u5408"
+      - "\uB77C\uC6B4\uB4DC"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: SCOUT
+      TermType: 0
+      Description: 
+      Languages:
+      - SCOUT
+      - EXPLORAR
+      - "\u63A2\u6E2C"
+      - "\u63A2\u6D4B"
+      - "\uC815\uCC30"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: SHOP
+      TermType: 0
+      Description: 
+      Languages:
+      - SHOP
+      - TIENDA
+      - "\u5546\u5E97"
+      - "\u5546\u5E97"
+      - "\uC0C1\uC810"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: START
+      TermType: 0
+      Description: 
+      Languages:
+      - START
       - 
+      - "\u958B\u59CB"
+      - "\u5F00\u59CB"
+      - "\uC2DC\uC791"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: SUMMON
+      TermType: 0
+      Description: 
+      Languages:
+      - SUMMON
+      - CONVOCAR
+      - "\u53EC\u559A"
+      - "\u53EC\u5524"
+      - "\uCE90\uB9AD\uD130 \uC720\uB2DB \uBD88\uB7EC\uC624\uAE30"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Score
+      TermType: 0
+      Description: 
+      Languages:
+      - Your score is
+      - Tu puntaje es
+      - "\u4F60\u7684\u5206\u6578\u662F"
+      - "\u4F60\u7684\u5206\u6570\u662F"
+      - "\uB2F9\uC2E0\uC758 \uC810\uC218\uB294"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: 'Score:'
+      TermType: 0
+      Description: 
+      Languages:
+      - 'Score:'
+      - 'Puntaje:'
+      - "\u5206\u6578:"
+      - "\u5206\u6570:"
+      - "\uC2A4\uCF54\uC5B4:"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Scout
+      TermType: 0
+      Description: 
+      Languages:
+      - Scout
+      - Explorador
+      - "\u5075\u67E5\u5175"
+      - "\u4FA6\u67E5\u5175"
+      - "\uC815\uCC30\uBCD1(\uC2A4\uCE74\uC6B0\uD2B8)"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Search
+      TermType: 0
+      Description: 
+      Languages:
+      - Search
+      - Buscar
+      - "\u641C\u5C0B"
+      - "\u641C\u7D22"
+      - "\uAC80\uC0C9"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: SecondsToAnswer
+      TermType: 0
+      Description: 
+      Languages:
+      - Seconds to answer.
+      - Segundos para contestar.
+      - "\u56DE\u7B54\u79D2\u6578"
+      - "\u56DE\u7B54\u79D2\u6570"
+      - "\uCD08 \uB0A8\uC558\uC2B5\uB2C8\uB2E4"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Select a unit.
+      TermType: 0
+      Description: 
+      Languages:
+      - Select a unit.
+      - Selecciona una unidad.
+      - "\u8ACB\u9078\u64C7\u6230\u968A\u6210\u54E1\u3002"
+      - "\u9009\u62E9\u4E00\u4E2A\u5355\u4F4D\u3002"
+      - "\uC720\uB2DB \uD55C \uAC1C\uB97C \uC120\uD0DD\uD558\uC138\uC694."
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Send Gift
+      TermType: 0
+      Description: 
+      Languages:
+      - Send Gift
+      - Mandar Regalo
+      - "\u8D08\u79AE"
+      - "\u8D60\u793C"
+      - "\uC120\uBB3C \uBCF4\uB0B4\uAE30"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Server Error
+      TermType: 0
+      Description: 
+      Languages:
+      - Server Error
+      - Error de Servidor
+      - "\u4F3A\u670D\u5668\u932F\u8AA4"
+      - "\u4F3A\u670D\u5668\u9519\u8BEF"
+      - "\uC11C\uBC84 \uC5D0\uB7EC"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Settings
+      TermType: 0
+      Description: 
+      Languages:
+      - Settings
+      - Ajustes
+      - "\u8A2D\u5B9A"
+      - "\u8BBE\u5B9A"
+      - "\uC124\uC815"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Shadowsong
+      TermType: 0
+      Description: 
+      Languages:
+      - Shadowsong
+      - "Canci\xF3n Sombr\xEDa"
+      - "\u5F71\u6B4C"
+      - Shadowsong
+      - "\uADF8\uB9BC\uC790\uC758 \uB178\uB798"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Shop
+      TermType: 0
+      Description: 
+      Languages:
+      - Shop
+      - Tienda
+      - "\u5546\u5E97"
+      - "\u5546\u5E97"
+      - "\uC0C1\uC810"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: SimplePack
+      TermType: 0
+      Description: 
+      Languages:
+      - Simple Pack
+      - Paquete Simple
+      - "\u57FA\u672C\u5305"
+      - "\u57FA\u672C\u5305"
+      - "\uC2EC\uD50C \uD329"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Soulshift Armor
+      TermType: 0
+      Description: 
+      Languages:
+      - Soulshift Armor
+      - Armadura Cambio de Alma
+      - "\u9748\u9B42\u5C0D\u8ABF\u76D4\u7532"
+      - "Soulshift\u62A4\u7532"
+      - "\uC601\uD63C \uBCC0\uC774 \uBC29\uC5B4\uAD6C"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Start
+      TermType: 0
+      Description: 
+      Languages:
+      - Start
+      - Comenzar
+      - "\u958B\u59CB"
+      - "\u5F00\u59CB"
+      - "\uC2DC\uC791"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Starter Box
+      TermType: 0
+      Description: 
+      Languages:
+      - Starter Box
+      - Caja de Inicio
+      - "\u521D\u5FC3\u8005\u7BB1"
+      - "\u521D\u5FC3\u8005\u7BB1"
+      - "\uC2A4\uD0C0\uD130 \uBC15\uC2A4"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Submit
+      TermType: 0
+      Description: 
+      Languages:
+      - Submit
+      - Enviar
+      - "\u63D0\u4EA4"
+      - "\u63D0\u4EA4"
+      - "\uC81C\uCD9C"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Summons remaining
+      TermType: 0
+      Description: 
+      Languages:
+      - Summons remaining
+      - Convocaciones restantes
+      - "\u5269\u9918\u53EC\u559A\u9650\u984D"
+      - "\u53EC\u5524\u5269\u4F59\u65F6\u95F4"
+      - "\uB098\uBA38\uC9C0 \uC18C\uD658"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Swissborg Reward
+      TermType: 0
+      Description: 
+      Languages:
+      - 'Congratulations. You have been rewarded with the Cyborg Torso. The item will
+        be sent to your Enjin Wallet soon.
+
+
+        Good luck finding the other pieces and completing the Cyborg''s Quest!
+
+'
+      - "Felicidades. Has sido recompensado con el Torso Cyborg. El \xEDtem te ser\xE1
+        enviado a tu Billetera Enjin pronto.\n\n\xA1Buena suerte encontrando las otras
+        piezas y completando la B\xFAsqueda del Cyborg!"
+      - "\u7372\u5F97\u6539\u9020\u4EBA\u8EC0\u5E79\uFF01\u7269\u54C1\u7A0D\u5F8C\u6703\u65B0\u589E\u5230\u4F60\u7684
+        Enjin \u9322\u5305\u3002\n\n\u7E7C\u7E8C\u8490\u96C6\u5176\u4ED6\u7269\u54C1\uFF0C\u4E26\u5B8C\u6210\u6539\u9020\u4EBA\u4EFB\u52D9\uFF01\n\u7372\u5F97\u6539\u9020\u4EBA\u8EC0\u5E79\uFF01\u7269\u54C1\u7A0D\u5F8C\u6703\u65B0\u589E\u5230\u4F60\u7684
+        Enjin \u9322\u5305\u3002\n\n\u7E7C\u7E8C\u8490\u96C6\u5176\u4ED6\u7269\u54C1\uFF0C\u4E26\u5B8C\u6210\u6539\u9020\u4EBA\u4EFB\u52D9\uFF01"
+      - "\u606D\u559C\u60A8\u3002\u60A8\u83B7\u5F97\u4E86Cyborg Torso\u63D0\u4F9B\u7684\u5956\u52B1\u3002\u7269\u54C1\u7A0D\u540E\u4F1A\u53D1\u653E\u5230\u60A8\u7684Enjin
+        Wallet\u4E2D\u3002\n\n\u795D\u60A8\u7EE7\u7EED\u627E\u5230\u5176\u4ED6\u788E\u7247\u5E76\u5B8C\u6210Cyborg\u7684\u4EFB\u52A1\uFF01\n\u606D\u559C\u60A8\u3002\u60A8\u83B7\u5F97\u4E86Cyborg
+        Torso\u63D0\u4F9B\u7684\u5956\u52B1\u3002\u7269\u54C1\u7A0D\u540E\u4F1A\u53D1\u653E\u5230\u60A8\u7684Enjin
+        Wallet\u4E2D\u3002\n\n\u795D\u60A8\u7EE7\u7EED\u627E\u5230\u5176\u4ED6\u788E\u7247\u5E76\u5B8C\u6210Cyborg\u7684\u4EFB\u52A1\uFF01"
+      - "\uCD95\uD558\uD569\uB2C8\uB2E4. \uC0AC\uC774\uBCF4\uADF8 \uBAB8\uD1B5\uC744
+        \uBCF4\uC0C1\uC73C\uB85C \uBC1B\uC558\uC2B5\uB2C8\uB2E4. \uC774 \uC544\uC774\uD15C\uC740
+        \uACE7 \uC5D4\uC9C4 \uC9C0\uAC11\uC73C\uB85C \uC804\uC1A1\uB429\uB2C8\uB2E4.\n\n\uB2E4\uB978
+        \uC870\uAC01\uC744 \uCC3E\uC544\uC11C \uC0AC\uC774\uBCF4\uADF8 \uD018\uC2A4\uD2B8\uB97C
+        \uC644\uB8CC\uD558\uAE30\uB97C \uBC14\uB77C\uACA0\uC2B5\uB2C8\uB2E4!\n\uCD95\uD558\uD569\uB2C8\uB2E4.
+        \uC0AC\uC774\uBCF4\uADF8 \uBAB8\uD1B5\uC744 \uBCF4\uC0C1\uC73C\uB85C \uBC1B\uC558\uC2B5\uB2C8\uB2E4.
+        \uC774 \uC544\uC774\uD15C\uC740 \uACE7 \uC5D4\uC9C4 \uC9C0\uAC11\uC73C\uB85C
+        \uC804\uC1A1\uB429\uB2C8\uB2E4.\n\n\uB2E4\uB978 \uC870\uAC01\uC744 \uCC3E\uC544\uC11C
+        \uC0AC\uC774\uBCF4\uADF8 \uD018\uC2A4\uD2B8\uB97C \uC644\uB8CC\uD558\uAE30\uB97C
+        \uBC14\uB77C\uACA0\uC2B5\uB2C8\uB2E4!"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: TEAM BOOST SELECTION
+      TermType: 0
+      Description: 
+      Languages:
+      - TEAM BOOST SELECTION
+      - "SELECCI\xD3N DE AUMENTO PARA EQUIPO"
+      - "\u9078\u64C7\u589E\u5F37\u6230\u968A"
+      - "\u961F\u4F0D\u9053\u5177\u9009\u62E9"
+      - "\uD300 \uBD80\uC2A4\uD2B8 \uC120\uD0DD"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Tank
+      TermType: 0
+      Description: 
+      Languages:
+      - Tank
+      - Tanque
+      - "\u5766\u514B"
+      - "\u5766\u514B"
+      - "\uD0F1\uD06C"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Tap boost to select/deselect.
+      TermType: 0
+      Description: 
+      Languages:
+      - Tap boost to select/deselect.
+      - Presiona aumento para seleccionar/deseleccionar.
+      - "\u6309\u300C\u589E\u5F37\u300D\u5373\u53EF\u9078\u53D6 / \u53D6\u6D88\u9078\u9805\u3002"
+      - "\u70B9\u51FB\u9053\u5177\u53EF\u4EE5\u9009\u62E9/\u4E0D\u9009\u62E9\u3002"
+      - "\uBD80\uC2A4\uD2B8\uB97C \uD0ED\uD558\uC5EC \uC120\uD0DD/\uC120\uD0DD \uCDE8\uC18C\uD558\uC138\uC694."
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Teams
+      TermType: 0
+      Description: 
+      Languages:
+      - Teams
+      - Equipos
+      - "\u6230\u968A"
+      - "\u961F\u4F0D"
+      - "\uD300"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Thanks for your Purchase!
+      TermType: 0
+      Description: 
+      Languages:
+      - Thanks for your Purchase!
+      - "\xA1Gracias por su Compra!"
+      - "\u611F\u8B1D\u60A8\u7684\u8CFC\u8CB7!"
+      - "\u611F\u8C22\u60A8\u7684\u8D2D\u4E70!"
+      - "\uAD6C\uB9E4\uD574\uC8FC\uC154\uC11C \uAC10\uC0AC\uD569\uB2C8\uB2E4"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: ThanksPurchase
+      TermType: 0
+      Description: 
+      Languages:
+      - Thanks for your purchase.
+      - Gracias por su compra.
+      - "\u611F\u8B1D\u60A8\u7684\u8CFC\u8CB7!"
+      - "\u611F\u8C22\u60A8\u7684\u8D2D\u4E70!"
+      - "\uAD6C\uB9E4\uD574\uC8FC\uC154\uC11C \uAC10\uC0AC\uD569\uB2C8\uB2E4"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Time
+      TermType: 0
+      Description: 
+      Languages:
+      - Time
+      - Tiempo
+      - "\u6642\u9593"
+      - "\u65F6\u95F4"
+      - "\uC2DC\uAC04"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: 'Time Left:'
+      TermType: 0
+      Description: 
+      Languages:
+      - 'Time Left:'
+      - 'Tiempo Restante:'
+      - "\u5269\u9918\u6642\u9593:"
+      - "\u5269\u4F59\u65F6\u95F4:"
+      - "\uB0A8\uC740 \uC2DC\uAC04"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Timer
+      TermType: 0
+      Description: 
+      Languages:
+      - Timer
+      - Reloj
+      - "\u8A08\u6642\u5668"
+      - "\u8BA1\u65F6\u5668"
       - 
-      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Title
+      TermType: 0
+      Description: 
+      Languages:
+      - Title
+      - "T\xEDtulo"
+      - "\u6A19\u984C"
+      - "\u6807\u9898"
+      - "\uD0C0\uC774\uD2C0"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Totals
+      TermType: 0
+      Description: 
+      Languages:
+      - Totals
+      - Totales
+      - "\u7E3D\u5171"
+      - "\u603B\u5171"
+      - "\uD569\uACC4"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Training
+      TermType: 0
+      Description: 
+      Languages:
+      - Training
+      - Entrenamiento
+      - "\u8A13\u7DF4"
+      - "\u8BAD\u7EC3"
+      - "\uC5F0\uC2B5 \uAC8C\uC784"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: TryAgain
+      TermType: 5
+      Description: 
+      Languages:
+      - Try again today
+      - Trata hoy de nuevo
+      - "\u4ECA\u5929\u518D\u8A66\u4E00\u6B21"
+      - "\u4ECA\u5929\u518D\u8BD5\u4E00\u6B21"
+      - "\uC624\uB298 \uB2E4\uC2DC \uC2DC\uB3C4\uD574\uBCF4\uC138\uC694!"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: UNIT SELECTION
+      TermType: 0
+      Description: 
+      Languages:
+      - UNIT SELECTION
+      - "SELECCI\xD3N DE UNIDADES"
+      - "\u55AE\u4F4D\u9078\u64C7"
+      - "\u5355\u4F4D\u9009\u62E9"
+      - "\uCE90\uB9AD\uD130 \uC120\uC815\uD558\uAE30"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Unit tier
+      TermType: 0
+      Description: 
+      Languages:
+      - Unit tier
+      - Nivel de Unidad
+      - "\u55AE\u4F4D\u6392\u540D"
+      - "\u5355\u4F4D\u6392\u540D"
+      - "\uC720\uB2DB \uACC4\uCE35"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Unit turn
+      TermType: 0
+      Description: 
+      Languages:
+      - Unit turn
+      - Turno de Unidad
+      - "\u55AE\u4F4D\u56DE\u5408"
+      - "\u5355\u4F4D\u56DE\u5408"
+      - "\uCE90\uB9AD\uD130 \uC720\uB2DB \uC21C\uC11C"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Unit type
+      TermType: 0
+      Description: 
+      Languages:
+      - Unit type
+      - Tipo de Unidad
+      - "\u55AE\u4F4D\u985E\u578B"
+      - "\u5355\u4F4D\u7C7B\u578B"
+      - "\uC720\uB2DB \uD0C0\uC785"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: 'Units Killed:'
+      TermType: 0
+      Description: 
+      Languages:
+      - 'Units Killed: '
+      - 'Unidades Matadas:'
+      - "\u6025\u6BBA\u55AE\u4F4D:"
+      - "\u6025\u6740\u5355\u4F4D:"
+      - "\uC8FD\uC740 \uCE90\uB9AD\uD130"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Username
+      TermType: 0
+      Description: 
+      Languages:
+      - Username
+      - Usuario
+      - "\u4F7F\u7528\u8005\u540D\u7A31"
+      - "\u4F7F\u7528\u8005\u540D\u79F0"
+      - "\uC0AC\uC6A9\uC790 \uB124\uC784"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: VS
+      TermType: 0
+      Description: 
+      Languages:
+      - VS
+      - VS
+      - "\u8207"
+      - "\u4E0E"
+      - VS
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Waiting for Opponent...
+      TermType: 0
+      Description: 
+      Languages:
+      - Waiting for Opponent...
+      - Esperando Oponente...
+      - "\u7B49\u5F85\u5C0D\u624B\u2026"
+      - "\u7B49\u5F85\u5BF9\u624B\u2026"
+      - "\uC0C1\uB300 \uD50C\uB808\uC774\uC5B4 \uAE30\uB2E4\uB9AC\uB294 \uC911\u2026"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: WatchVideo
+      TermType: 0
+      Description: 
+      Languages:
+      - Watch video
+      - "Ver v\xEDdeo"
+      - "\u89C0\u770B\u5F71\u7247"
+      - "\u89C2\u770B\u5F71\u7247"
+      - "\uC601\uC0C1 \uBCF4\uAE30"
       Flags: 0000000000
       Languages_Touch: []
     - Term: We detected that your file is empty and does not match your backup. Do
@@ -2116,75 +2142,46 @@ MonoBehaviour:
       - "Detectamos que tu archivo est\xE1 vac\xEDo y no concuerda con tu respaldo.
         \xBFDeseas restaurar? Si no lo haces, la siguiente vez que tu archivo sea
         actualizado, tu respaldo ser\xE1 sobreescrito."
-      - 
-      - 
-      - 
+      - "\u6211\u5011\u767C\u73FE\u6A94\u6848\u70BA\u7A7A\u767D\u5167\u5BB9\uFF0C\u8207\u5099\u4EFD\u8CC7\u6599\u6709\u51FA\u5165\u3002\u4F60\u78BA\u5B9A\u8981\u6062\u5FA9\u904A\u6232\u6A94\u55CE\uFF1F\u82E5\u4F60\u9078\u64C7\u4E0D\u6062\u5FA9\uFF0C\u4E0B\u6B21\u904A\u6232\u6A94\u66F4\u65B0\u6642\uFF0C\u5099\u4EFD\u8CC7\u6599\u7684\u5167\u5BB9\u5C31\u6703\u88AB\u53D6\u4EE3\u3002"
+      - "\u6211\u4EEC\u68C0\u6D4B\u5230\u60A8\u7684\u6587\u4EF6\u4E3A\u7A7A\u548C\u60A8\u7684\u5907\u4EFD\u4E0D\u5339\u914D\u3002\u60A8\u5E0C\u671B\u6062\u590D\u5417\uFF1F\u5982\u679C\u4E0D\u6062\u590D\uFF0C\u4E0B\u6B21\u7B49\u5230\u60A8\u7684\u6587\u4EF6\u66F4\u65B0\u540E\uFF0C\u60A8\u7684\u5907\u4EFD\u5C06\u88AB\u8986\u76D6\u3002"
+      - "\uD30C\uC77C\uC774 \uBE44\uC5B4 \uC788\uACE0 \uBC31\uC5C5\uACFC \uC77C\uCE58\uD558\uC9C0
+        \uC54A\uC2B5\uB2C8\uB2E4. \uBCF5\uC6D0\uC744 \uD558\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?
+        \uBCF5\uC6D0\uC744 \uD558\uC9C0 \uC54A\uB294 \uACBD\uC6B0, \uB2E4\uC74C\uC5D0
+        \uD30C\uC77C\uC774 \uC5C5\uB370\uC774\uD2B8\uB420 \uB54C, \uBC31\uC5C5\uC774
+        \uC81A\uC5B4\uC4F0\uAE30\uB429\uB2C8\uB2E4."
       Flags: 0000000000
       Languages_Touch: []
-    - Term: Dismiss
+    - Term: WeeklyChallenge
       TermType: 0
       Description: 
       Languages:
-      - Dismiss
-      - Retirar
-      - 
-      - 
-      - 
+      - Weekly Challenge
+      - "Desaf\xEDo Semanal"
+      - "\u6BCF\u9031\u6311\u6230"
+      - "\u6BCF\u5468\u6311\u6218"
+      - "\uC8FC\uAC04 \uCC4C\uB9B0\uC9C0"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: 1 point for winning a new training level
+    - Term: WrongPassword
       TermType: 0
       Description: 
       Languages:
-      - 1  point for winning a new training level
-      - 1  punto por ganar un nuevo nivel de entrenamiento
-      - 
-      - 
-      - 
+      - Wrong password
+      - "Contrase\xF1a equivocada"
+      - "\u5BC6\u78BC\u932F\u8AA4"
+      - "\u5BC6\u7801\u9519\u8BEF"
+      - "\uC798\uBABB\uB41C \uD328\uC2A4\uC6CC\uB4DC\uC785\uB2C8\uB2E4"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: 2 points for winning pvp
+    - Term: YOUR TURN
       TermType: 0
       Description: 
       Languages:
-      - 2  points for winning pvp
-      - 2  puntos por ganar jcj
-      - 
-      - 
-      - 
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: 5 points for purchasing a box
-      TermType: 0
-      Description: 
-      Languages:
-      - 5  points for purchasing a box
-      - 5  puntos por comprar una caja
-      - 
-      - 
-      - 
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: QUEST POINTS
-      TermType: 0
-      Description: 
-      Languages:
-      - QUEST POINTS
-      - "PUNTOS DE B\xDASQUEDA"
-      - 
-      - 
-      - 
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: 'Enjin Legend:'
-      TermType: 0
-      Description: 
-      Languages:
-      - 'Enjin Legend:'
-      - 'Leyenda Enjin:'
-      - 
-      - 
-      - 
+      - YOUR TURN
+      - TU TURNO
+      - "\u4F60\u7684\u56DE\u5408"
+      - "\u4F60\u7684\u56DE\u5408"
+      - "\uB2F9\uC2E0\uC758 \uC21C\uC11C\uC785\uB2C8\uB2E4"
       Flags: 0000000000
       Languages_Touch: []
     - Term: You got this new unit in your inventory or experience bonus for it.
@@ -2193,42 +2190,120 @@ MonoBehaviour:
       Languages:
       - You got this new unit in your inventory or experience bonus for it.
       - Obtuviste esta nueva unidad en tu inventario o bono de experiencia para ella.
-      - 
-      - 
-      - 
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: 'Quest:'
-      TermType: 0
-      Description: 
-      Languages:
-      - 'Quest:'
-      - "B\xFAsqueda:"
-      - 
-      - 
-      - 
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: 'Quest Team #'
-      TermType: 0
-      Description: 
-      Languages:
-      - 'Quest Team #'
-      - "Equipo de B\xFAsqueda #"
-      - 
-      - 
-      - 
+      - "\u4F60\u7684\u540D\u55AE\u65B0\u589E\u4E86\u9019\u4F4D\u6230\u968A\u6210\u54E1\uFF0C\u4F60\u4E5F\u53EF\u80FD\u540C\u6642\u7372\u5F97\u76F8\u61C9\u7684\u984D\u5916\u7D93\u9A57\u503C\u3002"
+      - "\u60A8\u5728\u5E93\u5B58\u4E2D\u5F97\u5230\u8FD9\u4E2A\u65B0\u5355\u4F4D\u6216\u76F8\u5E94\u7684\u52A0\u5206\u3002"
+      - "\uC778\uBCA4\uD1A0\uB9AC\uC5D0 \uC0C8 \uC720\uB2DB\uC744 \uBC1B\uC558\uAC70\uB098
+        \uACBD\uD5D8\uCE58 \uBCF4\uB108\uC2A4\uB97C \uBC1B\uC558\uC2B5\uB2C8\uB2E4."
       Flags: 0000000000
       Languages_Touch: []
     - Term: 'You have completed Quest:'
       TermType: 0
       Description: 
       Languages:
-      - 'You have completed the Quest:'
+      - 'You have completed Quest:'
       - "Has completado la B\xFAsqueda:"
-      - 
-      - 
-      - 
+      - "\u4F60\u5DF2\u5B8C\u6210\u4EFB\u52D9\uFF1A"
+      - "\u60A8\u5DF2\u7ECF\u5B8C\u6210\u4E86\u4EFB\u52A1\uFF1A"
+      - "\uD018\uC2A4\uD2B8 \uC644\uB8CC:"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: You have disconnected.
+      TermType: 0
+      Description: 
+      Languages:
+      - You have disconnected.
+      - Te has desconectado.
+      - "\u4F60\u5DF2\u96E2\u7DDA"
+      - "\u4F60\u5DF2\u79BB\u7EBF"
+      - "\uC5F0\uACB0\uC774 \uB04A\uACBC\uC2B5\uB2C8\uB2E4"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: You lose!
+      TermType: 0
+      Description: 
+      Languages:
+      - You lose!
+      - "\xA1Has perdido!"
+      - "\u4F60\u5931\u6557\u4E86!"
+      - "\u4F60\u5931\u8D25\u4E86!"
+      - "\uC84C\uC2B5\uB2C8\uB2E4"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: You need at least 5 units for battle. We offer 2 free Starter Boxes or
+        40 off the Master Box!
+      TermType: 0
+      Description: 
+      Languages:
+      - "You need at least 5 units for battle. \n\nWe offer 2 free Starter Boxes or
+        40% off the Master Box!"
+      - "Necesitas al menos 5 unidades para el combate. \n\nOfrecemos estas 2 Cajas
+        de Inicio o 40% de la Caja Maestra!"
+      - "\u4F60\u9700\u8981\u81F3\u5C115\u55AE\u4F4D\u624D\u80FD\u958B\u59CB\u6230\u9B25.
+        \u6211\u5011\u63D0\u4F9B\u5169\u500B\u514D\u8CBB\u7684\u521D\u5FC3\u8005\u7BB1\u6216\u662F\u964D\u50F940%\u7684\u5927\u5E2B\u7BB1"
+      - "\u4F60\u9700\u8981\u81F3\u5C115\u5355\u4F4D\u624D\u80FD\u5F00\u59CB\u6218\u6597.
+        \u6211\u4EEC\u63D0\u4F9B\u4E24\u4E2A\u514D\u8D39\u7684\u521D\u5FC3\u8005\u7BB1\u6216\u662F\u964D\u4EF740%\u7684\u5927\u5E08\u7BB1"
+      - "\uBC30\uD2C0\uC744 \uC2DC\uC791\uD558\uB824\uBA74 \uCD5C\uC18C 5\uAC1C\uC758
+        \uCE90\uB9AD\uD130 \uC720\uB2DB\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\n \uB450\uAC1C\uC758
+        \uBB34\uB8CC \uC2A4\uD0C0\uD130 \uBC15\uC2A4 \uD639\uC740 \uB9C8\uC2A4\uD130
+        \uBC15\uC2A4 40% \uD560\uC778 \uD61C\uD0DD\uC744 \uB204\uB824\uBCF4\uC138\uC694!\uBC30\uD2C0\uC744
+        \uC2DC\uC791\uD558\uB824\uBA74 \uCD5C\uC18C 5\uAC1C\uC758 \uCE90\uB9AD\uD130
+        \uC720\uB2DB\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\n \uB450\uAC1C\uC758 \uBB34\uB8CC
+        \uC2A4\uD0C0\uD130 \uBC15\uC2A4 \uD639\uC740 \uB9C8\uC2A4\uD130 \uBC15\uC2A4
+        40% \uD560\uC778 \uD61C\uD0DD\uC744 \uB204\uB824\uBCF4\uC138\uC694!"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: You need at least 5 units to start a battle. Return to the Shop for assistance
+        in rebuilding your Min Min army.
+      TermType: 0
+      Description: 
+      Languages:
+      - "You need at least 5 units to start a battle.\n \nReturn to the Shop for assistance
+        in rebuilding your Min Min army."
+      - "Necesitas al menos 5 unidades para comenzar un combate.\n \nRegresa a la
+        tienda por ayuda en reconstruir tu ej\xE9rcito Min Min."
+      - "\u4F60\u9700\u8981\u81F3\u5C115\u55AE\u4F4D\u624D\u80FD\u958B\u59CB\u6230\u9B25.
+        \ \u8FD4\u56DE\u5546\u5E97\u4EE5\u5EFA\u9020\u4F60\u7684Min Min\u8ECD\u968A"
+      - "\u4F60\u9700\u8981\u81F3\u5C115\u5355\u4F4D\u624D\u80FD\u5F00\u59CB\u6218\u6597.
+        \u8FD4\u56DE\u5546\u5E97\u4EE5\u5EFA\u9020\u4F60\u7684Min Min\u519B\u961F"
+      - "\uBC30\uD2C0\uC744 \uC2DC\uC791\uD558\uB824\uBA74 \uCD5C\uC18C 5 \uAC1C\uC758
+        \uCE90\uB9AD\uD130 \uC720\uB2DB\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\n \n
+        \uC0C1\uC810\uC5D0 \uB4E4\uB7EC Min Min \uAD70\uB300\uB97C \uC7AC\uAC74\uD558\uC138\uC694!\uBC30\uD2C0\uC744
+        \uC2DC\uC791\uD558\uB824\uBA74 \uCD5C\uC18C 5 \uAC1C\uC758 \uCE90\uB9AD\uD130
+        \uC720\uB2DB\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\n \n \uC0C1\uC810\uC5D0
+        \uB4E4\uB7EC Min Min \uAD70\uB300\uB97C \uC7AC\uAC74\uD558\uC138\uC694!"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: You win!
+      TermType: 0
+      Description: 
+      Languages:
+      - You win!
+      - "\xA1Has ganado!"
+      - "\u4F60\u7372\u52DD\u4E86!"
+      - "\u4F60\u83B7\u80DC\u4E86!"
+      - "\uC774\uACBC\uC2B5\uB2C8\uB2E4!"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Your opponent has disconnected.
+      TermType: 0
+      Description: 
+      Languages:
+      - Your opponent has disconnected.
+      - Tu oponente se ha desconectado.
+      - "\u4F60\u7684\u5C0D\u624B\u5DF2\u96E2\u7DDA"
+      - "\u4F60\u7684\u5BF9\u624B\u5DF2\u79BB\u7EBF"
+      - "\uB2F9\uC2E0\uC758 \uC801\uC758 \uC5F0\uACB0\uC774 \uB04A\uACBC\uC2B5\uB2C8\uB2E4"
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: avg
+      TermType: 0
+      Description: 
+      Languages:
+      - avg
+      - prom
+      - "\u5E73\u5747"
+      - "\u5E73\u5747"
+      - "\uD3C9\uADE0"
       Flags: 0000000000
       Languages_Touch: []
     CaseInsensitiveTerms: 0
@@ -2241,24 +2316,24 @@ MonoBehaviour:
     - Name: Spanish
       Code: es
       Flags: 0
-    - Name: Chinese_Traditional
-      Code: 
+    - Name: ChineseTraditional
+      Code: zh-TW
       Flags: 0
-    - Name: Chinese_Simplified
-      Code: 
+    - Name: ChineseSimplified
+      Code: zh-CN
       Flags: 0
     - Name: Korean
       Code: ko
       Flags: 0
-    IgnoreDeviceLanguage: 0
+    IgnoreDeviceLanguage: 1
     _AllowUnloadingLanguages: 0
     Google_WebServiceURL: https://script.google.com/macros/s/AKfycbw05ISkGCPtIS0hMzFD5jshgfH09mIP6BAxRKhWsA/exec
     Google_SpreadsheetKey: 1iIWCtExuyR2XXyYkJv6y83PTVMPC4FxzSITGGroefcg
     Google_SpreadsheetName: I2Loc MinMins Localization
-    Google_LastUpdatedVersion: 1598041883072
+    Google_LastUpdatedVersion: 1603773704895
     Google_Password: shalwend
-    GoogleUpdateFrequency: 3
-    GoogleInEditorCheckFrequency: 2
+    GoogleUpdateFrequency: 0
+    GoogleInEditorCheckFrequency: 0
     GoogleUpdateSynchronization: 1
     GoogleUpdateDelay: 0
     Assets: []
