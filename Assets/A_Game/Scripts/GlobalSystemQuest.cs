@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Quest : MonoBehaviour
+public class GlobalSystemQuest : MonoBehaviour
 {
     public const string QUEST_PLAYER_UNIT_NAME = "quest_player_unit_name";
     public const string QUEST_PLAYER_TEAM_NAME = "quest_player_team_name";

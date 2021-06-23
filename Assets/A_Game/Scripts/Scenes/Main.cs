@@ -24,21 +24,15 @@ public class Main : EnigmaScene
     [SerializeField] GameObject _enjinIcon;
     //[SerializeField] Text _pvprating;
 
-    [SerializeField] GameObject _questButton;
-    [SerializeField] GameObject _questProgressPanel;
-
-    [SerializeField] private Image _questProgressFill;
-    [SerializeField] private Text _questProgressText;
-    [SerializeField] private Text _questLeadersText;
+    [SerializeField] Text _crystalsAmount;
 
     //private Dictionary<Quests, string> _rewardIconResNameByQuest = new Dictionary<Quests, string>();
 
-    private const int _POINTS_FOR_QUEST = 1000;
 
     void Start()
     {
         //populateIconPathbyQuest();
-        NetworkManager.Transaction(GameNetwork.Transactions.GET_QUEST_DATA, onGetQuestData);
+        //NetworkManager.Transaction(GameNetwork.Transactions.GET_QUEST_DATA, onGetQuestData);
 
         if (!NetworkManager.LoggedIn)
         {
@@ -56,11 +50,14 @@ public class Main : EnigmaScene
         _enjinIcon.SetActive(false);
         _enjinWindow.SetActive(false);
 
-        _questProgressPanel.SetActive(false);
-        _questButton.SetActive(false);
-
         _restoreButton.onClick.AddListener(delegate { OnRestoreButtonDown(); });
         _restoreButton.gameObject.SetActive(false);
+
+#if HUAWEI
+        _crystalsAmount.text = GameInventory.Instance.GetCrystalsAmount().ToString();
+#else
+        _crystalsAmount.transform.parent.gameObject.SetActive(false);
+#endif
 
         //_pvprating.text = "";
         /*
@@ -114,141 +111,6 @@ public class Main : EnigmaScene
         {
             updateRestoreButton();
             handleRestorePopUp();
-        }
-    }
-
-    private void onGetQuestData(JSONNode response)
-    {
-        GameHacks gameHacks = GameHacks.Instance;
-        Quests hackedQuest = Quests.None;
-        bool questIsHacked = false;
-
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
-        if (gameHacks.SetServerQuest.Enabled)
-        {
-            hackedQuest = gameHacks.SetServerQuest.GetValueAsEnum<Quests>();
-            questIsHacked = true;
-        }
-#endif
-
-        if (questIsHacked || !NetworkManager.CheckInvalidServerResponse(response, nameof(onGetQuestData)))
-        {
-            GameStats gameStats = GameStats.Instance;
-            GameInventory gameInventory = GameInventory.Instance;
-
-            JSONNode questNode = null;
-
-            if (!questIsHacked)
-            {
-                questNode = NetworkManager.CheckValidNode(response[0], GameNetwork.TransactionKeys.QUEST);
-            }
-
-            if (questIsHacked || (questNode != null)) 
-            {
-                Quests serverActiveQuest = Quests.None;
-
-                if (questIsHacked)
-                {
-                    serverActiveQuest = hackedQuest;
-                }
-                else
-                {
-                    serverActiveQuest = (Quests)questNode.AsInt; 
-                }              
-
-                Quests savedActiveQuest = gameInventory.GetActiveQuest();
-                if (serverActiveQuest != savedActiveQuest)
-                {
-                    if (savedActiveQuest != Quests.None)
-                    {
-                        gameInventory.SetQuestEnemiesPositions(new List<Vector3>());
-                        gameInventory.ClearQuestLevelsCompleted(savedActiveQuest.ToString());
-                        gameInventory.ClearScoutProgress();
-                    }
-
-                    gameInventory.SetActiveQuest(serverActiveQuest);
-                }
-            }
-
-            Quests activeQuest = gameInventory.GetActiveQuest();
-            if (activeQuest != Quests.None)
-            {
-                JSONNode progressNode = null;
-                JSONNode leadersNode = null;
-
-                if (!questIsHacked)
-                {
-                    progressNode = NetworkManager.CheckValidNode(response[0], GameNetwork.TransactionKeys.PROGRESS);
-                    leadersNode = NetworkManager.CheckValidNode(response[0], GameNetwork.TransactionKeys.LEADERS);
-                }
-
-                if (questIsHacked || (progressNode != null))
-                {
-                    int points = 0;
-
-                    if (!questIsHacked)
-                    {
-                        points = progressNode.AsInt;
-                    }
-
-                    handleQuestPanelOrButtonVisibility(points);
-                }
-
-                if (leadersNode != null)
-                {
-                    foreach (JSONNode leaders in leadersNode.AsArray)
-                    {
-                        if (leaders["name"].ToString().Trim('"') != "null")
-                            _questLeadersText.text += leaders["name"].ToString().Trim('"') + " - " + leaders["points"].ToString().Trim('"') + "\n";
-                    }
-                }
-            }
-        }
-
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
-        if (GameHacks.Instance.QuestsPoints.Enabled)
-        {
-            int points = GameHacks.Instance.QuestsPoints.ValueAsInt;
-            handleQuestPanelOrButtonVisibility(points);
-        }
-#endif
-    }
-
-    private void handleQuestPanelOrButtonVisibility(int points)
-    {
-        GameInventory gameInventory = GameInventory.Instance;
-
-        if (gameInventory.GetAllQuestLevelsCompleted())
-        {
-            return;
-        }
-
-        Quests activeQuest = gameInventory.GetActiveQuest();
-        Sprite rewardSprite = gameInventory.GetQuestRewardSprite(activeQuest);
-
-        _questProgressText.text = points.ToString() + " / " + _POINTS_FOR_QUEST.ToString();
-        _questProgressFill.fillAmount = ((float)points) / _POINTS_FOR_QUEST;
-
-        if (points >= _POINTS_FOR_QUEST)
-        {
-            _questButton.transform.Find("QuestName").GetComponent<Text>().text = gameInventory.GetActiveQuestName();
-
-            if (rewardSprite != null)
-            {
-                _questButton.transform.Find("icon").GetComponent<Image>().sprite = rewardSprite;
-            }
-
-            _questButton.SetActive(true);
-            _questProgressPanel.SetActive(false);
-        }
-        else
-        {
-            if (rewardSprite != null)
-            {
-                _questProgressPanel.transform.Find("Prize").GetComponent<Image>().sprite = rewardSprite;
-            }
-
-            _questProgressPanel.SetActive(true);
         }
     }
 
@@ -384,22 +246,12 @@ public class Main : EnigmaScene
         SceneManager.LoadScene(GameConstants.Scenes.STORE);
     }
 
-    public void OnQuestButtonDown()
+    public void OnQuestsButtonDown()
     {
-        print("OnQuestButtonDown");
+        print("OnQuestsButtonDown");
 
         SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
-
-        //if (NetworkManager.LoggedIn)
-        //{
-            GameStats.Instance.Mode = GameStats.Modes.Quest;
-            SceneManager.LoadScene(GameConstants.Scenes.QUEST);
-            //goToLevels();
-        //}
-        //else
-        //{
-        //    _loginForQuestPopUp.Open();
-        //}
+        SceneManager.LoadScene(GameConstants.Scenes.QUEST_SELECTION);
     }
 
     public void ShowLoginForm()
@@ -566,8 +418,8 @@ public class Main : EnigmaScene
 
     public void Logout()
     {
-        _questButton.gameObject.SetActive(false);
-        _questProgressPanel.SetActive(false);
+        //_questButton.gameObject.SetActive(false);
+        //_questProgressPanel.SetActive(false);
 
         NetworkManager.Logout();
 

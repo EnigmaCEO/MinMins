@@ -141,7 +141,7 @@ public class ActionArea : NetworkEntity
 
         float scaleFactor = 1;
 
-        if (OwnerUnitName != Quest.QUEST_PLAYER_UNIT_NAME)
+        if (OwnerUnitName != GlobalSystemQuest.QUEST_PLAYER_UNIT_NAME)
         {
             scaleFactor = float.Parse(getOwnerUnitProperty(GameNetwork.UnitPlayerProperties.EFFECT_SCALE));
         }

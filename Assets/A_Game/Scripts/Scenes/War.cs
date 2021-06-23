@@ -2097,7 +2097,7 @@ public class War : NetworkEntity
             }
             else
             {
-                NetworkManager.LoadScene(GameConstants.Scenes.QUEST);
+                NetworkManager.LoadScene(GameConstants.Scenes.QUEST_SELECTION);
             }
         }
         else

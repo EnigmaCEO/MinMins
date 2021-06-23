@@ -251,7 +251,7 @@ public class UnitSelectManager : EnigmaScene
 
         if (GameStats.Instance.Mode == GameStats.Modes.Quest)
         {
-            SceneManager.LoadScene(GameConstants.Scenes.QUEST);
+            SceneManager.LoadScene(GameConstants.Scenes.QUEST_SELECTION);
         }
         else
         {

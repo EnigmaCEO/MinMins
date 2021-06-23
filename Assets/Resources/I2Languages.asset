@@ -15,7 +15,7 @@ MonoBehaviour:
   mSource:
     UserAgreesToHaveItOnTheScene: 0
     UserAgreesToHaveItInsideThePluginsFolder: 0
-    GoogleLiveSyncIsUptoDate: 0
+    GoogleLiveSyncIsUptoDate: 1
     mTerms:
     - Term: (Bonus)
       TermType: 0
@@ -1910,17 +1910,6 @@ MonoBehaviour:
       - "\uD0F1\uD06C"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: Tap boost to select/deselect.
-      TermType: 0
-      Description: 
-      Languages:
-      - Tap boost to select/deselect.
-      - Presiona aumento para seleccionar/deseleccionar.
-      - "\u6309\u300C\u589E\u5F37\u300D\u5373\u53EF\u9078\u53D6 / \u53D6\u6D88\u9078\u9805\u3002"
-      - "\u70B9\u51FB\u9053\u5177\u53EF\u4EE5\u9009\u62E9/\u4E0D\u9009\u62E9\u3002"
-      - "\uBD80\uC2A4\uD2B8\uB97C \uD0ED\uD558\uC5EC \uC120\uD0DD/\uC120\uD0DD \uCDE8\uC18C\uD558\uC138\uC694."
-      Flags: 0000000000
-      Languages_Touch: []
     - Term: Teams
       TermType: 0
       Description: 
@@ -2306,6 +2295,39 @@ MonoBehaviour:
       - "\uD3C9\uADE0"
       Flags: 0000000000
       Languages_Touch: []
+    - Term: QUEST SELECTION
+      TermType: 0
+      Description: 
+      Languages:
+      - QUEST SELECTION
+      - "SELECCI\xD3N DE B\xDASQUEDA"
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Global System
+      TermType: 0
+      Description: 
+      Languages:
+      - Global System
+      - Sistema Global
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Tap boost to select/deselect.
+      TermType: 0
+      Description: 
+      Languages:
+      - Tap boost to select/deselect.
+      - Presiona aumento para seleccionar/deseleccionar.
+      - "\u6309\u300C\u589E\u5F37\u300D\u5373\u53EF\u9078\u53D6 / \u53D6\u6D88\u9078\u9805\u3002"
+      - "\u70B9\u51FB\u9053\u5177\u53EF\u4EE5\u9009\u62E9/\u4E0D\u9009\u62E9\u3002"
+      - "\uBD80\uC2A4\uD2B8\uB97C \uD0ED\uD558\uC5EC \uC120\uD0DD/\uC120\uD0DD \uCDE8\uC18C\uD558\uC138\uC694."
+      Flags: 0000000000
+      Languages_Touch: []
     CaseInsensitiveTerms: 0
     OnMissingTranslation: 1
     mTerm_AppName: 
@@ -2330,7 +2352,7 @@ MonoBehaviour:
     Google_WebServiceURL: https://script.google.com/macros/s/AKfycbw05ISkGCPtIS0hMzFD5jshgfH09mIP6BAxRKhWsA/exec
     Google_SpreadsheetKey: 1iIWCtExuyR2XXyYkJv6y83PTVMPC4FxzSITGGroefcg
     Google_SpreadsheetName: I2Loc MinMins Localization
-    Google_LastUpdatedVersion: 1603773704895
+    Google_LastUpdatedVersion: 1624407900399
     Google_Password: shalwend
     GoogleUpdateFrequency: 0
     GoogleInEditorCheckFrequency: 0
