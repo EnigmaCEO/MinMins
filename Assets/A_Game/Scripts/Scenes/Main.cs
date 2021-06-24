@@ -22,6 +22,9 @@ public class Main : EnigmaScene
     [SerializeField] GameObject _logoutButton;
     [SerializeField] Button _restoreButton;
     [SerializeField] GameObject _enjinIcon;
+    [SerializeField] Transform _enjinTokensContent;
+    private GameObject _enjinTokenTemplate;
+
     //[SerializeField] Text _pvprating;
 
     //[SerializeField] Text _crystalsAmount;
@@ -38,6 +41,10 @@ public class Main : EnigmaScene
         {
             GameNetwork.Instance.ResetLoginValues();
         }
+
+        _enjinTokenTemplate = _enjinTokensContent.GetChild(0).gameObject;
+        _enjinTokenTemplate.transform.SetParent(_enjinTokensContent.parent);
+        _enjinTokenTemplate.SetActive(false);
 
         SoundManager.Stop();
         SoundManager.MusicVolume = 0.5f;
@@ -430,22 +437,33 @@ public class Main : EnigmaScene
         _loginButton.gameObject.SetActive(true);
         _logoutButton.gameObject.SetActive(false);
 
-        Text text = _enjinIcon.GetComponentInChildren<Text>();
-        text.text = "";
+        //Text text = _enjinIcon.GetComponentInChildren<Text>();
+        //text.text = "";
+        _enjinTokensContent.DestroyChildren();
         _enjinIcon.SetActive(false);
         //_pvprating.text = "";
         StopCoroutine("handleEnjinLinkingCheck");
         _enjinWindow.gameObject.SetActive(false);
     }
 
-    private void addToEnjinItemDisplay(Text text, bool flag, string label)
+    private void addToEnjinItemDisplay(bool flag, string label)
     {
         if (flag)
         {
-            text.text += "\n" + label;
+            GameObject newEnjinTokenItem = Instantiate<GameObject>(_enjinTokenTemplate, _enjinTokensContent);
+            newEnjinTokenItem.GetComponent<Text>().text = label;
+            newEnjinTokenItem.SetActive(true);
         }
     }
-    
+
+    //private void addToEnjinItemDisplay(Text text, bool flag, string label)
+    //{
+    //    if (flag)
+    //    {
+    //        text.text += "\n" + label;
+    //    }
+    //}
+
     public void UpdateEnjinDisplay() 
     {
         GameNetwork gameNetwork = GameNetwork.Instance;
@@ -476,38 +494,40 @@ public class Main : EnigmaScene
         if (gameNetwork.IsEnjinLinked)
         {
             _enjinIcon.SetActive(true);
-            Text text = _enjinIcon.GetComponentInChildren<Text>();
-            text.text = ""; 
 
-            addToEnjinItemDisplay(text, gameNetwork.HasEnjinMft, "Enjin MFT");
-            addToEnjinItemDisplay(text, gameNetwork.HasEnjinEnigmaToken, "Enigma Token");
-            addToEnjinItemDisplay(text, gameNetwork.HasEnjinMinMinsToken, "Min-Mins Token");
+            _enjinTokensContent.DestroyChildren();
+            //Text text = _enjinIcon.GetComponentInChildren<Text>();
+            //text.text = ""; 
 
-            addToEnjinItemDisplay(text, gameNetwork.HasEnjinMaxim, "Maxim Legend");
-            addToEnjinItemDisplay(text, gameNetwork.HasEnjinWitek, "Witek Legend");
-            addToEnjinItemDisplay(text, gameNetwork.HasEnjinBryana, "Bryana Legend");
-            addToEnjinItemDisplay(text, gameNetwork.HasEnjinTassio, "Tassio Legend");
-            addToEnjinItemDisplay(text, gameNetwork.HasEnjinSimon, "Simon Legend");
+            addToEnjinItemDisplay(gameNetwork.HasEnjinMft, "Enjin MFT");
+            addToEnjinItemDisplay(gameNetwork.HasEnjinEnigmaToken, "Enigma Token");
+            addToEnjinItemDisplay(gameNetwork.HasEnjinMinMinsToken, "Min-Mins Token");
 
-            addToEnjinItemDisplay(text, gameNetwork.HasEnjinEsther, "Esther Legend");
-            addToEnjinItemDisplay(text, gameNetwork.HasEnjinAlex, "Alex Legend");
-            addToEnjinItemDisplay(text, gameNetwork.HasEnjinEvan, "Evan Legend");
-            addToEnjinItemDisplay(text, gameNetwork.HasEnjinLizz, "Lizz Legend");
-            addToEnjinItemDisplay(text, gameNetwork.HasEnjinBrad, "Brad Legend");
+            addToEnjinItemDisplay(gameNetwork.HasEnjinMaxim, "Maxim Legend");
+            addToEnjinItemDisplay(gameNetwork.HasEnjinWitek, "Witek Legend");
+            addToEnjinItemDisplay(gameNetwork.HasEnjinBryana, "Bryana Legend");
+            addToEnjinItemDisplay(gameNetwork.HasEnjinTassio, "Tassio Legend");
+            addToEnjinItemDisplay(gameNetwork.HasEnjinSimon, "Simon Legend");
 
-            addToEnjinItemDisplay(text, gameNetwork.HasKnightHealer, "Deadly Knight: Healer");
-            addToEnjinItemDisplay(text, gameNetwork.HasKnightBomber, "Deadly Knight: Bomber");
-            addToEnjinItemDisplay(text, gameNetwork.HasKnightDestroyer, "Deadly Knight: Destroyer");
-            addToEnjinItemDisplay(text, gameNetwork.HasKnightScout, "Deadly Knight: Scout");
-            addToEnjinItemDisplay(text, gameNetwork.HasKnightTank, "Deadly Knight: Tank");
+            addToEnjinItemDisplay(gameNetwork.HasEnjinEsther, "Esther Legend");
+            addToEnjinItemDisplay(gameNetwork.HasEnjinAlex, "Alex Legend");
+            addToEnjinItemDisplay(gameNetwork.HasEnjinEvan, "Evan Legend");
+            addToEnjinItemDisplay(gameNetwork.HasEnjinLizz, "Lizz Legend");
+            addToEnjinItemDisplay(gameNetwork.HasEnjinBrad, "Brad Legend");
 
-            addToEnjinItemDisplay(text, gameNetwork.HasDemonHealer, "Demon King: Healer");
-            addToEnjinItemDisplay(text, gameNetwork.HasDemonBomber, "Demon King: Bomber");
-            addToEnjinItemDisplay(text, gameNetwork.HasDemonDestroyer, "Demon King: Destroyer");
-            addToEnjinItemDisplay(text, gameNetwork.HasDemonScout, "Demon King: Scout");
-            addToEnjinItemDisplay(text, gameNetwork.HasDemonTank, "Demon King: Tank");
+            addToEnjinItemDisplay(gameNetwork.HasKnightHealer, "Deadly Knight: Healer");
+            addToEnjinItemDisplay(gameNetwork.HasKnightBomber, "Deadly Knight: Bomber");
+            addToEnjinItemDisplay(gameNetwork.HasKnightDestroyer, "Deadly Knight: Destroyer");
+            addToEnjinItemDisplay(gameNetwork.HasKnightScout, "Deadly Knight: Scout");
+            addToEnjinItemDisplay(gameNetwork.HasKnightTank, "Deadly Knight: Tank");
 
-            addToEnjinItemDisplay(text, gameNetwork.HasSwissborgCyborg, "Swissborg Cyborg");
+            addToEnjinItemDisplay(gameNetwork.HasDemonHealer, "Demon King: Healer");
+            addToEnjinItemDisplay(gameNetwork.HasDemonBomber, "Demon King: Bomber");
+            addToEnjinItemDisplay(gameNetwork.HasDemonDestroyer, "Demon King: Destroyer");
+            addToEnjinItemDisplay(gameNetwork.HasDemonScout, "Demon King: Scout");
+            addToEnjinItemDisplay(gameNetwork.HasDemonTank, "Demon King: Tank");
+
+            addToEnjinItemDisplay(gameNetwork.HasSwissborgCyborg, "Swissborg Cyborg");
         }
     }
 }
