@@ -326,6 +326,17 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
         UnityEngine.SceneManagement.SceneManager.sceneLoaded += onSceneLoaded;
     }
+
+    private void Start()
+    {
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+        if (GameHacks.Instance.EnjinLinked)
+        {
+            IsEnjinLinked = true;
+        }
+#endif
+    }
+
     public void UpdateEnjinGoodies(JSONNode response_hash)
     {
         //GameStats gameStats = GameStats.Instance;
@@ -546,6 +557,14 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     public void ResetLoginValues()
     {
         IsEnjinLinked = false;
+
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+        if (GameHacks.Instance.EnjinLinked)
+        {
+            IsEnjinLinked = true;
+        }
+#endif
+
         HasEnjinEnigmaToken = false;
         HasEnjinMft = false;
 

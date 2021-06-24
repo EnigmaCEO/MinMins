@@ -13,7 +13,12 @@ public class GameStore : EnigmaScene
     [SerializeField] private List<string> _confirmPopUpPackDescriptions = new List<string>() { "No guarantees.", "Guarantees a Silver Unit.", "Guarantees a Gold Unit.", "Demon King description.", "Legend Box description." };
 
     [SerializeField] private List<Image> _confirmPopUpPackImages;
+
+#if HUAWEI
+    [SerializeField] private List<string> _confirmPopUpPackPrices = new List<string>() { "99", "199", "499", "1000", "1000" };
+#else
     [SerializeField] private List<string> _confirmPopUpPackPrices = new List<string>() { "0.99", "1.99", "4.99", "10.00", "10.00" };
+#endif
 
     [SerializeField] private List<int> _packTiers = new List<int> { 1, 2, 3, 3 };
 
@@ -24,6 +29,8 @@ public class GameStore : EnigmaScene
     [SerializeField] private GameObject _extraLootBoxPopUp;
     [SerializeField] private GameObject _enjinmftPopUp;
     [SerializeField] private GameObject _minminPopUp;
+
+    [SerializeField] Text _crystalsAmount;
 
     [SerializeField] private Transform _lootBoxGridContent;
     //[SerializeField] private Image giftProgress;
@@ -56,19 +63,25 @@ public class GameStore : EnigmaScene
         _enjinmftPopUp.SetActive(false);
         _minminPopUp.SetActive(false);
 
+#if HUAWEI
+        _crystalsAmount.text = GameInventory.Instance.GetCrystalsAmount().ToString();
+#else
+        //_crystalsAmount.transform.parent.gameObject.SetActive(false);
+#endif
+
         refreshLootBoxesGrid();
 
         //if (NetworkManager.LoggedIn)
         //{
         //    NetworkManager.Transaction(NetworkManager.Transactions.GIFT_PROGRESS, new Hashtable(), onGiftProgress);
-            
+
         //} 
         //else
         //{
         //    GameObject.Find("gift_panel").gameObject.SetActive(false);
         //}
 
-        if(!GameNetwork.Instance.IsEnjinLinked)
+        if (!GameNetwork.Instance.IsEnjinLinked)
         {
             GameObject.Find("enjin_panel").gameObject.SetActive(false);
         }
@@ -112,7 +125,7 @@ public class GameStore : EnigmaScene
                 int boxTier = _packTiers[itemIndex];
                 grantBox(boxTier, 1);
             }
-            
+
             _buyResultPopUp.Open("Thanks for your Purchase!");
         }
         else
@@ -132,7 +145,8 @@ public class GameStore : EnigmaScene
         _lootBoxBuyConfirmPopUp.SetStars(_packTiers[packIndex]);
         _lootBoxBuyConfirmPopUp.SetPackSprite(_confirmPopUpPackImages[packIndex].sprite);
         _lootBoxBuyConfirmPopUp.SetPrice(_confirmPopUpPackPrices[packIndex]);
-        _lootBoxBuyConfirmPopUp.gameObject.SetActive(true);
+
+        _lootBoxBuyConfirmPopUp.Open();
     }
 
     public void OnLootBoxOpenPopUpDismissButtonDown()
@@ -148,14 +162,14 @@ public class GameStore : EnigmaScene
         _buyResultPopUp.Close();
     }
 
-    public void onExtraLootBoxPopUpDismissButtonDown()
+    public void OnExtraLootBoxPopUpDismissButtonDown()
     {
         SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
         grantBox(GameInventory.Tiers.BRONZE, 2);
         _extraLootBoxPopUp.SetActive(false);
     }
 
-    public void onEnjinPopUpDismissButtonDown()
+    public void OnEnjinPopUpSummonButtonDown()
     {
         SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
 
@@ -165,11 +179,11 @@ public class GameStore : EnigmaScene
         }
 
         GameInventory.Instance.AddMissingEnjinUnits();
-        
+
         _enjinmftPopUp.SetActive(false);
     }
 
-    public void onMinMinPopUpDismissButtonDown()
+    public void OnMinMinPopUpSummonButtonDown()
     {
         SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
         GameInventory.Instance.AddMinMinEnjinUnits();
@@ -177,68 +191,11 @@ public class GameStore : EnigmaScene
         _minminPopUp.SetActive(false);
     }
 
-    public void openEnjinPopUp()
+    public void OpenEnjinPopUp()
     {
         SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
 
-        int count = setupEnjinLegendsDisplay(_enjinmftPopUp);
-        if (count == 0 || !GameNetwork.Instance.HasEnjinMft)
-        {
-            _enjinmftPopUp.transform.Find("DismissButton").gameObject.SetActive(false);
-        }
-
-        int attempts = GameInventory.Instance.GetEnjinAttempts();
-        
-        _enjinmftPopUp.SetActive(true);
-
-        if (GameNetwork.Instance.HasEnjinMft)
-        {
-            _enjinmftPopUp.transform.Find("WindowMessage").GetComponent<Text>().text = attempts + " " + LocalizationManager.GetTermTranslation("Summons remaining");
-        }
-        else
-        {
-            _enjinmftPopUp.transform.Find("WindowMessage").GetComponent<Text>().text = LocalizationManager.GetTermTranslation("Enjin MFT required");
-        }
-    }
-
-    public void openMinMinPopUp()
-    {
-        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
-
-        int count = setupEnjinLegendsMinMinsDisplay(_minminPopUp);
-        Debug.Log("count: " + count);
-        if (count == 0 || !GameNetwork.Instance.HasEnjinMinMinsToken)
-        {
-            _minminPopUp.transform.Find("DismissButton").gameObject.SetActive(false);
-        }
-
-        _minminPopUp.SetActive(true);
-
-        if (GameNetwork.Instance.HasEnjinMinMinsToken)
-        {
-            _minminPopUp.transform.Find("WindowMessage").GetComponent<Text>().text = LocalizationManager.GetTermTranslation("Legend Unit tokens required");
-        }
-        else
-        {
-            _enjinmftPopUp.transform.Find("WindowMessage").GetComponent<Text>().text = LocalizationManager.GetTermTranslation("Min-Mins Token required");
-        }
-    }
-
-    public void closePopup(GameObject obj)
-    {
-        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
-        obj.SetActive(false);
-    }
-
-    public void OnBackButtonDown()
-    {
-        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
-        SceneManager.LoadScene(EnigmaConstants.Scenes.MAIN);
-    }
-
-    private int setupEnjinLegendsDisplay(GameObject popUp)
-    {
-        Transform enjinContent = popUp.transform.Find("EnjinGrid/Viewport/Content");
+        Transform enjinContent = _enjinmftPopUp.transform.Find("EnjinGrid/Viewport/Content");
         int count = enjinContent.childCount;
         GameInventory gameInventory = GameInventory.Instance;
 
@@ -253,17 +210,30 @@ public class GameStore : EnigmaScene
             }
         }
 
-        return count;
+        if (count == 0 || !GameNetwork.Instance.HasEnjinMft)
+        {
+            _enjinmftPopUp.transform.Find("SummonButton").gameObject.SetActive(false);
+        }
+
+        int attempts = GameInventory.Instance.GetEnjinAttempts();
+
+        _enjinmftPopUp.SetActive(true);
+
+        if (GameNetwork.Instance.HasEnjinMft)
+        {
+            _enjinmftPopUp.transform.Find("WindowMessage").GetComponent<Text>().text = attempts + " " + LocalizationManager.GetTermTranslation("Summons remaining");
+        }
+        else
+        {
+            _enjinmftPopUp.transform.Find("WindowMessage").GetComponent<Text>().text = LocalizationManager.GetTermTranslation("Enjin MFT required");
+        }
     }
 
-    private bool checkDeactivateLegend(string unitName, string checkName, bool flag)
+    public void OpenMinMinPopUp()
     {
-        return ((unitName == checkName) && (!flag || GameInventory.Instance.HasUnit(unitName))) ;
-    }
+        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
 
-    private int setupEnjinLegendsMinMinsDisplay(GameObject popUp)
-    {
-        Transform enjinContent = popUp.transform.Find("EnjinGrid/Viewport/Content");
+        Transform enjinContent = _minminPopUp.transform.Find("EnjinGrid/Viewport/Content");
         int count = enjinContent.childCount;
 
         GameInventory gameInventory = GameInventory.Instance;
@@ -274,31 +244,31 @@ public class GameStore : EnigmaScene
             string unitName = enjinTransform.name;
 
             if (
-                    checkDeactivateLegend(unitName, "100", gameNetwork.HasEnjinMaxim) ||
-                    checkDeactivateLegend(unitName, "101", gameNetwork.HasEnjinWitek) ||
-                    checkDeactivateLegend(unitName, "102", gameNetwork.HasEnjinBryana) ||
-                    checkDeactivateLegend(unitName, "103", gameNetwork.HasEnjinTassio) ||
-                    checkDeactivateLegend(unitName, "104", gameNetwork.HasEnjinSimon) ||
+                    handleLegendAvailability(unitName, "100", gameNetwork.HasEnjinMaxim) ||
+                    handleLegendAvailability(unitName, "101", gameNetwork.HasEnjinWitek) ||
+                    handleLegendAvailability(unitName, "102", gameNetwork.HasEnjinBryana) ||
+                    handleLegendAvailability(unitName, "103", gameNetwork.HasEnjinTassio) ||
+                    handleLegendAvailability(unitName, "104", gameNetwork.HasEnjinSimon) ||
 
-                    checkDeactivateLegend(unitName, "122", gameNetwork.HasEnjinAlex) ||
-                    checkDeactivateLegend(unitName, "123", gameNetwork.HasEnjinEvan) ||
-                    checkDeactivateLegend(unitName, "124", gameNetwork.HasEnjinEsther) ||
-                    checkDeactivateLegend(unitName, "125", gameNetwork.HasEnjinBrad) ||
-                    checkDeactivateLegend(unitName, "126", gameNetwork.HasEnjinLizz) ||
+                    handleLegendAvailability(unitName, "122", gameNetwork.HasEnjinAlex) ||
+                    handleLegendAvailability(unitName, "123", gameNetwork.HasEnjinEvan) ||
+                    handleLegendAvailability(unitName, "124", gameNetwork.HasEnjinEsther) ||
+                    handleLegendAvailability(unitName, "125", gameNetwork.HasEnjinBrad) ||
+                    handleLegendAvailability(unitName, "126", gameNetwork.HasEnjinLizz) ||
 
-                    checkDeactivateLegend(unitName, "105", gameNetwork.HasKnightTank) ||
-                    checkDeactivateLegend(unitName, "106", gameNetwork.HasKnightHealer) ||
-                    checkDeactivateLegend(unitName, "107", gameNetwork.HasKnightScout) ||
-                    checkDeactivateLegend(unitName, "108", gameNetwork.HasKnightDestroyer) ||
-                    checkDeactivateLegend(unitName, "109", gameNetwork.HasKnightBomber) ||
+                    handleLegendAvailability(unitName, "105", gameNetwork.HasKnightTank) ||
+                    handleLegendAvailability(unitName, "106", gameNetwork.HasKnightHealer) ||
+                    handleLegendAvailability(unitName, "107", gameNetwork.HasKnightScout) ||
+                    handleLegendAvailability(unitName, "108", gameNetwork.HasKnightDestroyer) ||
+                    handleLegendAvailability(unitName, "109", gameNetwork.HasKnightBomber) ||
 
-                    checkDeactivateLegend(unitName, "110", gameNetwork.HasDemonBomber) ||
-                    checkDeactivateLegend(unitName, "111", gameNetwork.HasDemonScout) ||
-                    checkDeactivateLegend(unitName, "112", gameNetwork.HasDemonDestroyer) ||
-                    checkDeactivateLegend(unitName, "113", gameNetwork.HasDemonTank) ||
-                    checkDeactivateLegend(unitName, "114", gameNetwork.HasDemonHealer) ||
+                    handleLegendAvailability(unitName, "110", gameNetwork.HasDemonBomber) ||
+                    handleLegendAvailability(unitName, "111", gameNetwork.HasDemonScout) ||
+                    handleLegendAvailability(unitName, "112", gameNetwork.HasDemonDestroyer) ||
+                    handleLegendAvailability(unitName, "113", gameNetwork.HasDemonTank) ||
+                    handleLegendAvailability(unitName, "114", gameNetwork.HasDemonHealer) ||
 
-                    checkDeactivateLegend(unitName, "127", gameNetwork.HasSwissborgCyborg)
+                    handleLegendAvailability(unitName, "127", gameNetwork.HasSwissborgCyborg)
                 )
             {
                 enjinTransform.gameObject.SetActive(false);
@@ -306,7 +276,39 @@ public class GameStore : EnigmaScene
             }
         }
 
-        return count;
+        Debug.Log("count: " + count);
+        if (count == 0 /*|| !GameNetwork.Instance.HasEnjinMinMinsToken*/)
+        {
+            _minminPopUp.transform.Find("SummonButton").gameObject.SetActive(false);
+        }
+
+        _minminPopUp.SetActive(true);
+
+        //if (GameNetwork.Instance.HasEnjinMinMinsToken)
+        {
+            _minminPopUp.transform.Find("WindowMessage").GetComponent<Text>().text = LocalizationManager.GetTermTranslation("Legend Unit tokens required");
+        }
+        //else
+        //{
+        //    _enjinmftPopUp.transform.Find("WindowMessage").GetComponent<Text>().text = LocalizationManager.GetTermTranslation("Min-Mins Token required");
+        //}
+    }
+
+    private bool handleLegendAvailability(string gridUnitName, string tokenUnitName, bool hasToken)
+    {
+        return ((gridUnitName == tokenUnitName) && (!hasToken || GameInventory.Instance.HasUnit(gridUnitName)));
+    }
+
+    public void ClosePopup(GameObject obj)
+    {
+        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
+        obj.SetActive(false);
+    }
+
+    public void OnBackButtonDown()
+    {
+        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
+        SceneManager.LoadScene(EnigmaConstants.Scenes.MAIN);
     }
 
     private void handleFreeLootBoxGifts()
@@ -358,18 +360,35 @@ public class GameStore : EnigmaScene
     {
         SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
 
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
+#if HUAWEI
+        GameInventory gameInventory = GameInventory.Instance;
+
+        int price = int.Parse(_confirmPopUpPackPrices[_selectedPackIndex]);
+        int currency = gameInventory.GetCrystalsAmount();
+
+        if (price > currency)
+        {
+            _buyResultPopUp.Open(GameConstants.PopUpMessages.NOT_ENOUGH_CURRENCY);
+        }
+        else
+        {
+            handleCurrencyBuyResult(IAPManager.Instance.IAP_IDS[_selectedPackIndex], true);
+            gameInventory.ChangeCrystalsAmount(-price);
+            _crystalsAmount.text = gameInventory.GetCrystalsAmount().ToString();
+        }
+#elif DEVELOPMENT_BUILD || UNITY_EDITOR
         if (GameHacks.Instance.BuyAndroid)
         {
             handleCurrencyBuyResult(IAPManager.Instance.IAP_IDS[_selectedPackIndex], true);  // Buy hack to work on android
         }
         else
-#endif
+#else
         {
             IAPManager.BuyConsumable(_selectedPackIndex);
         }
+#endif
 
-        _lootBoxBuyConfirmPopUp.Close();
+            _lootBoxBuyConfirmPopUp.Close();
     }
 
     public void onLootBoxBuyCancelButtonDown()
@@ -417,7 +436,7 @@ public class GameStore : EnigmaScene
     //            giftProgress.fillAmount = float.Parse(progress) / 1000.0f;
     //            giftText.text = "$"+ progress + " / $1000";
     //        }
-            
+
     //    }
     //}
 }

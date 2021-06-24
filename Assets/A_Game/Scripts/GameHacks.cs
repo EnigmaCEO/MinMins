@@ -16,6 +16,7 @@ public class GameHacks : SingletonMonobehaviour<GameHacks>
     public bool ChestHit;
     public bool ForcePvpAi;
     public bool AllEnjinTeamBoostTokens;
+    public bool EnjinLinked;
     public bool TreatBattleResultsAsPrivateMatch;
 
     public ValueHack SinglePlayerLevel = new ValueHack("50");
@@ -43,6 +44,7 @@ public class GameHacks : SingletonMonobehaviour<GameHacks>
     public ValueHack HasPurchased = new ValueHack("True");
     public ValueHack UnlockSinglePlayerLevels = new ValueHack("5");
     public ValueHack QuestsPoints = new ValueHack("1000");
+    public ValueHack Crystals = new ValueHack("1000");
 #endif
 
     public bool RandomizeUnitTypes;

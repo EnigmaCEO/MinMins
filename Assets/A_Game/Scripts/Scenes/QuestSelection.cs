@@ -25,6 +25,12 @@ public class QuestSelection : MonoBehaviour
         _globalSystemQuestButton.SetActive(false);
     }
 
+    public void OnBackButtonDown()
+    {
+        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
+        SceneManager.LoadScene(EnigmaConstants.Scenes.MAIN);
+    }
+
     private void handleQuestPanelOrButtonVisibility(int points)
     {
         GameInventory gameInventory = GameInventory.Instance;

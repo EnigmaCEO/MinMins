@@ -44,11 +44,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PersistBetweenScenes: 1
-  EnjinIdNotNull: 0
-  EnjinCodeNotNull: 0
-  EnjinLinked: 0
-  ResetFileManagerAtStart: 0
   ByPassIAPReceiptCheck: 0
-  Language:
+  ResetFileManagerAtStart: 0
+  EnjinIdIsNull:
     Enabled: 0
-    Value: Spanish
+    Value: false
+  EnjinCodeIsNull:
+    Enabled: 0
+    Value: false
+  HeartBeatDelay:
+    Enabled: 0
+    Value: 3
+  FailHeartBeat: 0
+  MuteMusic: 0
+  PreventAutoLogin: 0
+  LanguageHack: 1
+  HackedLanguage: 23

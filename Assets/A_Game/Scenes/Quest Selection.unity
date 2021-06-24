@@ -2455,7 +2455,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 2059866142}
         m_MethodName: OnBackButtonDown
         m_Mode: 1
         m_Arguments:
@@ -3795,6 +3795,11 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 5347732333797103389, guid: 0459aa9779084c840b2237deb3977e25,
+        type: 3}
+      propertyPath: m_Name
+      value: Global System Quest Button
+      objectReference: {fileID: 0}
     - target: {fileID: 7930664274483748610, guid: 0459aa9779084c840b2237deb3977e25,
         type: 3}
       propertyPath: m_SizeDelta.x
@@ -3804,11 +3809,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5347732333797103389, guid: 0459aa9779084c840b2237deb3977e25,
-        type: 3}
-      propertyPath: m_Name
-      value: Global System Quest Button
       objectReference: {fileID: 0}
     - target: {fileID: 5347732333797103385, guid: 0459aa9779084c840b2237deb3977e25,
         type: 3}

@@ -24,7 +24,7 @@ public class Main : EnigmaScene
     [SerializeField] GameObject _enjinIcon;
     //[SerializeField] Text _pvprating;
 
-    [SerializeField] Text _crystalsAmount;
+    //[SerializeField] Text _crystalsAmount;
 
     //private Dictionary<Quests, string> _rewardIconResNameByQuest = new Dictionary<Quests, string>();
 
@@ -56,7 +56,7 @@ public class Main : EnigmaScene
 #if HUAWEI
         _crystalsAmount.text = GameInventory.Instance.GetCrystalsAmount().ToString();
 #else
-        _crystalsAmount.transform.parent.gameObject.SetActive(false);
+        //_crystalsAmount.transform.parent.gameObject.SetActive(false);
 #endif
 
         //_pvprating.text = "";

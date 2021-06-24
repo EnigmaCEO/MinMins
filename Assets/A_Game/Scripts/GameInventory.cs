@@ -23,7 +23,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         public const string STATS = "Stats";
         public const string UNITS_EXP = "Units";
         public const string ORE = "Ore";
-        public const string QUESTS_LEVEL_PROGRESS = "QuestsLevelsProgress"; 
+        public const string QUESTS_LEVEL_PROGRESS = "QuestsLevelsProgress";
         public const string QUESTS_SCOUT_PROGRESS = "QuestsScoutProgress";
         public const string QUESTS_ENEMIES_POSITIONS = "QuestsEnemiesPositions";
     }
@@ -33,6 +33,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         public const string SINGLE_PLAYER_LEVEL = "SinglePlayerLevel";
         public const string ENJIN_ATTEMPTS = "EnjinAttempts";
         public const string ACTIVE_QUEST = "ActiveQuest";
+        public const string CRYSTALS = "Crystals";
     }
 
     [SerializeField] List<int> _experienceNeededPerUnitLevel = new List<int>() { 0, 10, 30, 70, 150, 310 };  //Rule: Doubles each level
@@ -190,6 +191,20 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         return value;
     }
 
+    public int GetCrystalsAmount()
+    {
+        int value = InventoryManager.Instance.GetItem<int>(GroupNames.STATS, ItemKeys.CRYSTALS);
+        return value;
+    }
+
+    public void ChangeCrystalsAmount(int diff)
+    {
+        int currentValue = GetCrystalsAmount();
+        currentValue += diff;
+        InventoryManager.Instance.UpdateItem(GroupNames.STATS, ItemKeys.CRYSTALS, currentValue);
+        saveInventoryItemToFile<int>(GroupNames.STATS, ItemKeys.CRYSTALS);
+    }
+
     public void SetActiveQuest(Quests activeQuest)
     {
         InventoryManager.Instance.UpdateItem(GroupNames.STATS, ItemKeys.ACTIVE_QUEST, activeQuest.ToString());
@@ -220,7 +235,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         {
             questName = enjinLegendLocalized + " 122";
         }
-        else if(quest == Quests.EnjinLegend123)
+        else if (quest == Quests.EnjinLegend123)
         {
             questName = enjinLegendLocalized + " 123";
         }
@@ -275,7 +290,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         if (questRewardSprite != null)
         {
             return questRewardSprite;
-        } 
+        }
         else
         {
             Debug.Log("Quest reward image was not found at path: " + rewardImagePath + " . Please check active quest is correct and image is in the right path.");
@@ -468,29 +483,29 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         return questCompleted;
     }
 
-//    public int GetHighestQuestLevelCompleted()
-//    {
-//        Quests activeQuest = GameStats.Instance.ActiveQuest;
+    //    public int GetHighestQuestLevelCompleted()
+    //    {
+    //        Quests activeQuest = GameStats.Instance.ActiveQuest;
 
-//        if (activeQuest == Quests.None)
-//        {
-//            Debug.LogError("Attempting to get progress for an active quest of None.");
-//            return -1;
-//        }
-//        else
-//        {
-//            int value = InventoryManager.Instance.GetItem<int>(GroupNames.QUESTS_PROGRESS, activeQuest.ToString());
+    //        if (activeQuest == Quests.None)
+    //        {
+    //            Debug.LogError("Attempting to get progress for an active quest of None.");
+    //            return -1;
+    //        }
+    //        else
+    //        {
+    //            int value = InventoryManager.Instance.GetItem<int>(GroupNames.QUESTS_PROGRESS, activeQuest.ToString());
 
-//#if DEVELOPMENT_BUILD || UNITY_EDITOR
-//            if (GameHacks.Instance.AnyQuestProgress.Enabled)
-//            {
-//                value = GameHacks.Instance.AnyQuestProgress.ValueAsInt;
-//            }
-//#endif
+    //#if DEVELOPMENT_BUILD || UNITY_EDITOR
+    //            if (GameHacks.Instance.AnyQuestProgress.Enabled)
+    //            {
+    //                value = GameHacks.Instance.AnyQuestProgress.ValueAsInt;
+    //            }
+    //#endif
 
-//            return value;
-//        }
-//    }
+    //            return value;
+    //        }
+    //    }
 
     public int GetEnjinAttempts()
     {
@@ -826,7 +841,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
                     checkAddUnit(unitName, "102", gameNetwork.HasEnjinBryana) ||
                     checkAddUnit(unitName, "103", gameNetwork.HasEnjinTassio) ||
                     checkAddUnit(unitName, "104", gameNetwork.HasEnjinSimon) ||
-                    checkAddUnit(unitName, "105",gameNetwork.HasKnightTank) ||
+                    checkAddUnit(unitName, "105", gameNetwork.HasKnightTank) ||
                     checkAddUnit(unitName, "106", gameNetwork.HasKnightHealer) ||
                     checkAddUnit(unitName, "107", gameNetwork.HasKnightScout) ||
                     checkAddUnit(unitName, "108", gameNetwork.HasKnightDestroyer) ||
@@ -987,9 +1002,10 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         inventoryManager.ClearAllGroups();
 
         //Set default values ========================================================================
-        inventoryManager.AddItem(GroupNames.STATS, ItemKeys.SINGLE_PLAYER_LEVEL, 0);       
+        inventoryManager.AddItem(GroupNames.STATS, ItemKeys.SINGLE_PLAYER_LEVEL, 0);
         inventoryManager.AddItem(GroupNames.STATS, ItemKeys.ENJIN_ATTEMPTS, 5);
         inventoryManager.AddItem(GroupNames.STATS, ItemKeys.ACTIVE_QUEST, Quests.None.ToString());
+        inventoryManager.AddItem(GroupNames.STATS, ItemKeys.CRYSTALS, 50);
 
         foreach (Quests quest in Enum.GetValues(typeof(Quests)))
         {
@@ -1051,6 +1067,16 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
                 }
                 else if ((keyString == GameInventory.ItemKeys.SINGLE_PLAYER_LEVEL) || (keyString == GameInventory.ItemKeys.ENJIN_ATTEMPTS))
                 {
+                    inventoryManager.UpdateItem(groupName, keyString, int.Parse(valueString));
+                }
+                else if (keyString == GameInventory.ItemKeys.CRYSTALS)
+                {
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+                    if (GameHacks.Instance.Crystals.Enabled)
+                    {
+                        valueString = GameHacks.Instance.Crystals.Value;
+                    }
+#endif
                     inventoryManager.UpdateItem(groupName, keyString, int.Parse(valueString));
                 }
                 else
@@ -1269,7 +1295,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         if (!string.IsNullOrEmpty(dataString))
         {
             FileManager fileManager = FileManager.Instance;
-            if (fileManager.CheckDataStringAgainstGivenSec(dataString, sec)) 
+            if (fileManager.CheckDataStringAgainstGivenSec(dataString, sec))
             {
                 Debug.LogWarning("onLoadFileFromServer::Security Breach.");
             }
@@ -1278,7 +1304,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
                 FileManager.Instance.SaveDataRaw(dataString);
                 loadDataFromString(dataString);  //To avoid loading from a file that was saved in the same frame. 
             }
-        } 
+        }
     }
 
     public bool IsTherePrefsBackupSave()
