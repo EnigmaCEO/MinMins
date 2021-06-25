@@ -175,6 +175,37 @@ public class QuestSelection : MonoBehaviour
     public void GlobalSystemButtonDown()
     {
         SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
-        _questConfirmPopUp.Open(GameConstants.Scenes.GLOBAL_SYSTEM_QUEST, null, null, new List<string> { "123", "124", "125" });
+        _questConfirmPopUp.Open(GameConstants.Scenes.GLOBAL_SYSTEM_QUEST, null, null, new List<string> { getRewardUnitName() });
+    }
+
+    private string getRewardUnitName()
+    {
+        Quests activeQuest = GameInventory.Instance.GetActiveQuest();
+
+        string rewardUnitName;
+
+        switch (activeQuest)
+        {
+            case Quests.EnjinLegend122:
+                rewardUnitName = "122";
+                break;
+            case Quests.EnjinLegend123:
+                rewardUnitName = "123";
+                break;
+            case Quests.EnjinLegend124:
+                rewardUnitName = "124";
+                break;
+            case Quests.EnjinLegend125:
+                rewardUnitName = "125";
+                break;
+            case Quests.EnjinLegend126:
+                rewardUnitName = "126";
+                break;
+            default:
+                rewardUnitName = "122";
+                break;
+        }
+
+        return rewardUnitName;
     }
 }
