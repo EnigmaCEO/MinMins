@@ -46,7 +46,7 @@ MonoBehaviour:
   PersistBetweenScenes: 1
   EnableAllEnjinTokens: 1
   ForceEnjinRewardOnChest: 0
-  HideClouds: 0
+  HideClouds: 1
   BuyAndroid: 0
   DecisionTimeFreeze: 0
   WarVictory: 0
@@ -59,7 +59,7 @@ MonoBehaviour:
     Enabled: 0
     Value: 50
   ForceTeamBoostReward:
-    Enabled: 0
+    Enabled: 1
     Value: True
   TeamBoostRewardCategory:
     Enabled: 0
@@ -92,8 +92,8 @@ MonoBehaviour:
     Enabled: 0
     Value: Tank
   SetAllUnitsType:
-    Enabled: 0
-    Value: Bomber
+    Enabled: 1
+    Value: Destroyer
   PowerScale:
     Enabled: 0
     Value: 5
@@ -110,8 +110,8 @@ MonoBehaviour:
     Enabled: 0
     Value: 150
   RoundCount:
-    Enabled: 0
-    Value: 2
+    Enabled: 1
+    Value: 1
   Damage:
     Enabled: 0
     Value: 1000
@@ -125,7 +125,7 @@ MonoBehaviour:
     Enabled: 0
     Value: 5
   QuestsPoints:
-    Enabled: 0
+    Enabled: 1
     Value: 1000
   Crystals:
     Enabled: 0

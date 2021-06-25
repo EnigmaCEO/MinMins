@@ -14,12 +14,15 @@ public class QuestSelection : MonoBehaviour
     [SerializeField] private Image _questProgressFill;
     [SerializeField] private Text _questProgressText;
 
+    [SerializeField] private QuestConfirmPopUp _questConfirmPopUp;
 
     private const int _POINTS_FOR_QUEST = 1000;
 
     private void Start()
     {
         NetworkManager.Transaction(GameNetwork.Transactions.GET_QUEST_DATA, onGetQuestData);
+
+        _questConfirmPopUp.Close();
 
         _questProgressPanel.SetActive(false);
         _globalSystemQuestButton.SetActive(false);
@@ -158,8 +161,6 @@ public class QuestSelection : MonoBehaviour
     public void GlobalSystemButtonDown()
     {
         SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
-
-        GameStats.Instance.Mode = GameStats.Modes.Quest;
-        SceneManager.LoadScene(GameConstants.Scenes.GLOBAL_SYSTEM_QUEST);
+        _questConfirmPopUp.Open(GameConstants.Scenes.GLOBAL_SYSTEM_QUEST, null, null, new List<string> { "123", "124", "125" });
     }
 }

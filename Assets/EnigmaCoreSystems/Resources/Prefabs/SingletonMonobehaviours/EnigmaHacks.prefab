@@ -58,5 +58,5 @@ MonoBehaviour:
   FailHeartBeat: 0
   MuteMusic: 0
   PreventAutoLogin: 0
-  LanguageHack: 1
+  LanguageHack: 0
   HackedLanguage: 23
