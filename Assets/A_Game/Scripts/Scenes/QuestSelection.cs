@@ -13,6 +13,7 @@ public class QuestSelection : MonoBehaviour
 
     [SerializeField] private Image _questProgressFill;
     [SerializeField] private Text _questProgressText;
+    [SerializeField] private Text _questLeadersText;
 
     [SerializeField] private QuestConfirmPopUp _questConfirmPopUp;
 
@@ -92,6 +93,7 @@ public class QuestSelection : MonoBehaviour
             GameInventory gameInventory = GameInventory.Instance;
 
             JSONNode questNode = null;
+            JSONNode leadersNode = null;
 
             if (!questIsHacked)
             {
@@ -133,6 +135,7 @@ public class QuestSelection : MonoBehaviour
                 if (!questIsHacked)
                 {
                     progressNode = NetworkManager.CheckValidNode(response[0], GameNetwork.TransactionKeys.PROGRESS);
+                    leadersNode = NetworkManager.CheckValidNode(response[0], GameNetwork.TransactionKeys.LEADERS);
                 }
 
                 if (questIsHacked || (progressNode != null))
@@ -145,6 +148,17 @@ public class QuestSelection : MonoBehaviour
                     }
 
                     handleQuestPanelOrButtonVisibility(points);
+                }
+
+                if (leadersNode != null)
+                {
+                    foreach (JSONNode leaders in leadersNode.AsArray)
+                    {
+                        if (leaders["name"].ToString().Trim('"') != "null")
+                        {
+                            _questLeadersText.text += leaders["name"].ToString().Trim('"') + " - " + leaders["points"].ToString().Trim('"') + "\n";
+                        }
+                    }
                 }
             }
         }
