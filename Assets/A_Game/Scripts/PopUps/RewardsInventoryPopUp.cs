@@ -1,6 +1,7 @@
 ﻿using Enigma.CoreSystems;
 using GameConstants;
 using SimpleJSON;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -69,10 +70,10 @@ public class RewardsInventoryPopUp : MonoBehaviour
             {
                 foreach (JSONNode reward in rewardsNode.AsArray)
                 {
-                    string itemCode = rewardsNode[GameNetwork.TransactionKeys.REWARD_CODE];
-                    string itemType = rewardsNode[GameNetwork.TransactionKeys.REWARD_TYPE];
+                    string rewardCode = rewardsNode[GameNetwork.TransactionKeys.REWARD_CODE];
+                    string rewardType = rewardsNode[GameNetwork.TransactionKeys.REWARD_TYPE];
 
-                    addRewardItem(itemCode, itemType);
+                    addRewardItem(rewardCode, rewardType);
                 }
 
                 _initialized = true;
@@ -85,11 +86,16 @@ public class RewardsInventoryPopUp : MonoBehaviour
         }
     }
 
-    private void addRewardItem(string code, string rewardType)
+    private void addRewardItem(string rewardCode, string rewardType)
     {
         GameObject newRewardItem = Instantiate<GameObject>(_rewardItemTemplate, _gridContent);
-        newRewardItem.GetComponent<RewardInventoryItem>().Setup(getRewardName(code), getRewardCost(rewardType), getRewardSprite(code, rewardType));
+        newRewardItem.GetComponent<RewardInventoryItem>().Setup(rewardCode, getRewardName(rewardCode), getRewardCost(rewardType), getRewardSprite(rewardCode, rewardType), onRewardButtonDown);
         newRewardItem.SetActive(true);
+    }
+
+    private void onRewardButtonDown(RewardInventoryItem rewardItemSelected)
+    {
+        Debug.Log("onRewardButtonDown -> code: " + rewardItemSelected.RewardCode);
     }
 
     private string getRewardName(string tokenKey)
