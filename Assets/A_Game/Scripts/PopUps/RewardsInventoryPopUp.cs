@@ -14,10 +14,11 @@ public class RewardsInventoryPopUp : MonoBehaviour
     [SerializeField] private float _specialCost = 2.0f;
 
     [SerializeField] private string _coinName = "JENJ";
+    [SerializeField] private string _defaultTokenName = "Unknown";
 
     [SerializeField] private string _imagesFolder = "Images/";
     [SerializeField] private string _enigmaCollectiblesFolder = "EnigmaCollectibles/";
-    [SerializeField] private string _oreFolder = "Ore/";
+    [SerializeField] private string _oreFolder = "EnjinTokens/";
     [SerializeField] private string _unitsFolder = "Units/";
 
     [SerializeField] private Sprite _defaultRewardSprite;
@@ -70,10 +71,10 @@ public class RewardsInventoryPopUp : MonoBehaviour
             {
                 foreach (JSONNode reward in rewardsNode.AsArray)
                 {
-                    string rewardCode = rewardsNode[GameNetwork.TransactionKeys.REWARD_CODE];
-                    string rewardType = rewardsNode[GameNetwork.TransactionKeys.REWARD_TYPE];
+                    string tokenKey = rewardsNode[GameNetwork.TransactionKeys.TOKEN_KEY];
+                    string tokenType = rewardsNode[GameNetwork.TransactionKeys.TOKEN_TYPE];
 
-                    addRewardItem(rewardCode, rewardType);
+                    addRewardItem(tokenKey, tokenType);
                 }
 
                 _initialized = true;
@@ -86,10 +87,10 @@ public class RewardsInventoryPopUp : MonoBehaviour
         }
     }
 
-    private void addRewardItem(string rewardCode, string rewardType)
+    private void addRewardItem(string enjinToken, string tokenType)
     {
         GameObject newRewardItem = Instantiate<GameObject>(_rewardItemTemplate, _gridContent);
-        newRewardItem.GetComponent<RewardInventoryItem>().Setup(rewardCode, getRewardName(rewardCode), getRewardCost(rewardType), getRewardSprite(rewardCode, rewardType), onRewardButtonDown);
+        newRewardItem.GetComponent<RewardInventoryItem>().Setup(enjinToken, getRewardName(enjinToken), getRewardCost(tokenType), getRewardSprite(enjinToken, tokenType), onRewardButtonDown);
         newRewardItem.SetActive(true);
     }
 
@@ -173,8 +174,21 @@ public class RewardsInventoryPopUp : MonoBehaviour
                 tokenName = "127";
                 break;
 
+            case TokenKeys.ENJIN_SWORD:
+                tokenName = TeamBoostEnjinTokens.SWORD;
+                break;
+            case TokenKeys.ENJIN_ARMOR:
+                tokenName = TeamBoostEnjinTokens.ARMOR;
+                break;
+            case TokenKeys.ENJIN_SHADOWSONG:
+                tokenName = TeamBoostEnjinTokens.SHADOW_SONG;
+                break;
+            case TokenKeys.ENJIN_BULL:
+                tokenName = TeamBoostEnjinTokens.BULL;
+                break;
+
             default:
-                    tokenName = "100";
+                    tokenName = "Unknown";
                     break;
         }
 
@@ -203,7 +217,7 @@ public class RewardsInventoryPopUp : MonoBehaviour
         return rewardCost;
     }
 
-    private Sprite getRewardSprite(string rewardCode, string rewardType)
+    private Sprite getRewardSprite(string enjinToken, string rewardType)
     {
         string path = "Images/";
         Sprite sprite = _defaultRewardSprite;
@@ -211,13 +225,13 @@ public class RewardsInventoryPopUp : MonoBehaviour
         switch (rewardType)
         {
             default:
-                path += _enigmaCollectiblesFolder + rewardCode;
+                path += _enigmaCollectiblesFolder + enjinToken;
                 break;
             case RewardTypes.PREMIUM:
-                path += _oreFolder + rewardCode;
+                path += _oreFolder + getRewardName(enjinToken);
                 break;
             case RewardTypes.SPECIAL:
-                path += _unitsFolder + getRewardName(rewardCode);
+                path += _unitsFolder + getRewardName(enjinToken);
                 break;
         }
 

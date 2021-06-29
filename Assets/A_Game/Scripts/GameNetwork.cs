@@ -41,8 +41,8 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         public const string LEVEL = "level";
 
         public const string REWARDS = "rewards";
-        public const string REWARD_TYPE = "reward_type";
-        public const string REWARD_CODE = "reward_code";
+        public const string TOKEN_TYPE = "reward_type";
+        public const string TOKEN_KEY = "reward_code";
 
         public const string WINNER_NICKNAME = "winner_nickname";
         public const string LOSER_NICKNAME = "loser_nickname";
@@ -1025,10 +1025,10 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     {
         GameStats.Instance.TeamBoostTokensOwnedByName.Clear();
 
-        checkSingleEnjinTeamBoostToken(response_hash, TokenKeys.ENJIN_SWORD, GameConstants.TeamBoostEnjinTokens.SWORD, GameConstants.TeamBoostCategory.DAMAGE);
-        checkSingleEnjinTeamBoostToken(response_hash, TokenKeys.ENJIN_ARMOR, GameConstants.TeamBoostEnjinTokens.ARMOR, GameConstants.TeamBoostCategory.DEFENSE);
-        checkSingleEnjinTeamBoostToken(response_hash, TokenKeys.ENJIN_SHADOWSONG, GameConstants.TeamBoostEnjinTokens.SHADOW_SONG, GameConstants.TeamBoostCategory.HEALTH);
-        checkSingleEnjinTeamBoostToken(response_hash, TokenKeys.ENJIN_BULL, GameConstants.TeamBoostEnjinTokens.BULL, GameConstants.TeamBoostCategory.POWER);
+        checkSingleEnjinTeamBoostToken(response_hash, TokenKeys.ENJIN_SWORD, TeamBoostEnjinTokens.SWORD, TeamBoostCategory.DAMAGE);
+        checkSingleEnjinTeamBoostToken(response_hash, TokenKeys.ENJIN_ARMOR, TeamBoostEnjinTokens.ARMOR, TeamBoostCategory.DEFENSE);
+        checkSingleEnjinTeamBoostToken(response_hash, TokenKeys.ENJIN_SHADOWSONG, TeamBoostEnjinTokens.SHADOW_SONG, TeamBoostCategory.HEALTH);
+        checkSingleEnjinTeamBoostToken(response_hash, TokenKeys.ENJIN_BULL, TeamBoostEnjinTokens.BULL, TeamBoostCategory.POWER);
     }
 
     private void checkSingleEnjinTeamBoostToken(SimpleJSON.JSONNode response_hash, string transactionKey, string name, string category)
