@@ -22,8 +22,10 @@ public class Main : EnigmaScene
     [SerializeField] GameObject _loginButton;
     [SerializeField] GameObject _logoutButton;
     [SerializeField] Button _restoreButton;
+    [SerializeField] GameObject _rewardsInventoryButton;
     [SerializeField] GameObject _enjinIcon;
     [SerializeField] Transform _enjinTokensContent;
+    [SerializeField] GameObject _enjinTokenList;
 
     private GameObject _enjinTokenTemplate;
 
@@ -47,6 +49,8 @@ public class Main : EnigmaScene
         _enjinTokenTemplate = _enjinTokensContent.GetChild(0).gameObject;
         _enjinTokenTemplate.transform.SetParent(_enjinTokensContent.parent);
         _enjinTokenTemplate.SetActive(false);
+
+        _enjinTokenList.SetActive(false);
 
         SoundManager.Stop();
         SoundManager.MusicVolume = 0.5f;
@@ -146,6 +150,8 @@ public class Main : EnigmaScene
         //    _questProgressPanel.SetActive(false);
         //}
 
+        _rewardsInventoryButton.SetActive(loggedIn);
+
         _loginButton.gameObject.SetActive(!loggedIn);
         _logoutButton.gameObject.SetActive(loggedIn);
 
@@ -181,6 +187,20 @@ public class Main : EnigmaScene
     public void OnRewardsInventoryButtonDown()
     {
         _rewardsInventoryPopUp.Open();
+    }
+
+    public void OnEnjinButtonDown()
+    {
+        if (_enjinTokenList.activeSelf)
+        {
+            GameSounds.Instance.PlayUiBackSound();
+            _enjinTokenList.SetActive(false);
+        }
+        else
+        {
+            GameSounds.Instance.PlayUiAdvanceSound();
+            _enjinTokenList.SetActive(true);
+        }
     }
 
     public void OnRestoreButtonDown()
@@ -449,6 +469,8 @@ public class Main : EnigmaScene
         //text.text = "";
         _enjinTokensContent.DestroyChildren();
         _enjinIcon.SetActive(false);
+        _rewardsInventoryButton.SetActive(false);
+
         //_pvprating.text = "";
         StopCoroutine("handleEnjinLinkingCheck");
         _enjinWindow.gameObject.SetActive(false);
