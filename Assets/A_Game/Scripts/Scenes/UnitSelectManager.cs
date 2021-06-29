@@ -36,6 +36,7 @@ public class UnitSelectManager : EnigmaScene
     //[SerializeField] private Transform _patternBG;
 
     [SerializeField] private Text _helpText;
+    [SerializeField] GameObject _expPopUp;
 
     private Transform _teamGridContent;
     private string _selectedUnitName;
@@ -45,7 +46,6 @@ public class UnitSelectManager : EnigmaScene
     private Vector2[] _waypoints;
     private GameObject _attack;
 
-    [SerializeField] GameObject _expPopUp;
 
    
     void Start()
@@ -501,7 +501,8 @@ public class UnitSelectManager : EnigmaScene
         return (GameStats.Instance.SelectedSaveSlot + "_" + GameStats.Instance.Mode.ToString() + "_teamUnits");
     }
 
-    public void OpenExpPopup() {
+    public void OpenExpPopup() 
+    {
         _expPopUp.SetActive(true);
     }
 
