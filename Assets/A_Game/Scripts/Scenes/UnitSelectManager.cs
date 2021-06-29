@@ -225,7 +225,7 @@ public class UnitSelectManager : EnigmaScene
 
     private void onNextButtonDown()
     {
-        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+        GameSounds.Instance.PlayUiAdvanceSound();
         saveUnitSelection();
 
         if ((GameStats.Instance.TeamBoostTokensOwnedByName.Count > 0) || GameInventory.Instance.IsThereAnyOreSingleItem())
@@ -240,14 +240,14 @@ public class UnitSelectManager : EnigmaScene
 
     private void onInfoBackButtonDown()
     {
-        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
+        GameSounds.Instance.PlayUiBackSound();
         disableUnitInfo();
         enableTeamGrid();
     }
 
     private void onSceneBackButtonDown()
     {
-        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
+        GameSounds.Instance.PlayUiBackSound();
 
         if (GameStats.Instance.Mode == GameStats.Modes.Quest)
         {
@@ -261,14 +261,14 @@ public class UnitSelectManager : EnigmaScene
 
     private void onClearTeamButtonDown()
     {
-        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
+        GameSounds.Instance.PlayUiBackSound();
         PlayerPrefs.DeleteKey(getTeamUnitsKey());
         SceneManager.LoadScene(GameConstants.Scenes.UNIT_SELECT);  //Reload
     }
 
     private void onUnitFightButtonDown(string unitName)
     {
-        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+        GameSounds.Instance.PlayUiAdvanceSound();
         _selectedUnitName = unitName;
 
         displayAssignUnitHelp();
@@ -296,7 +296,7 @@ public class UnitSelectManager : EnigmaScene
 
     private void onUnitInfoButtonDown(string unitName)
     {
-        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+        GameSounds.Instance.PlayUiAdvanceSound();
         _selectedUnitName = unitName;
         loadUnitInfo();
 
@@ -309,7 +309,7 @@ public class UnitSelectManager : EnigmaScene
 
     private void onTeamSlotButtonDown(int slotIndex, Image slotImage)
     {
-        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
+        GameSounds.Instance.PlayUiBackSound();
         GameObject unitGameObject = _unitsGridContent.Find(_selectedUnitName).gameObject;
 
         selectUnit(slotIndex, slotImage, unitGameObject);
@@ -511,7 +511,7 @@ public class UnitSelectManager : EnigmaScene
     }
 
     public void ShowAd() {
-        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+        GameSounds.Instance.PlayUiAdvanceSound();
         AdsManager.Instance.ShowRewardAd();
     }
 

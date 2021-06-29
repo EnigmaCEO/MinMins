@@ -383,7 +383,7 @@ namespace Enigma.CoreSystems
             JSONNode node = parentNode[key];
             if (node == null)
             { 
-                Debug.LogError("onGetQuestData -> node with key " + key + " was null.");
+                Debug.LogError("CheckValidNode -> node with key " + key + " was null.");
             }
 
             return node;

@@ -107,7 +107,7 @@ public class GlobalSystemQuest : MonoBehaviour
 
     public void OnNotEnoughUnitsPopUpDismissButtonDown()
     {
-        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
+        GameSounds.Instance.PlayUiBackSound();
 
         if (GameConfig.Instance.SendToShopAutomaticallyOnUnitsNeeded)
         {

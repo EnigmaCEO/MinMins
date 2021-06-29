@@ -1,5 +1,5 @@
 ﻿
-public class GameConstants
+namespace GameConstants
 {
     public class Scenes
     {
@@ -12,6 +12,13 @@ public class GameConstants
         public const string TEAM_BOOST = "TeamBoost";
         public const string QUEST_SELECTION = "Quest Selection";
         public const string GLOBAL_SYSTEM_QUEST = "Global System Quest";
+    }
+
+    public class RewardTypes
+    {
+        public const string COMMON = "Common";
+        public const string PREMIUM = "Premium";
+        public const string SPECIAL = "Special";
     }
 
     public class TeamBoostCategory
@@ -47,9 +54,10 @@ public class GameConstants
         public const string PERFECT = "Perfect";
     }
 
-    public class LobbyPopUpMessages
+    public class UiMessages
     {
         public const string PRIVATE_ROOM_ALREADY_USED = "Name is already used. Please provide another.";
+        public const string LOADING = "Loading...";
     }
 
     public class Terms
@@ -72,6 +80,40 @@ public class GameConstants
 
         public const string UI_ADVANCE = "ui";
         public const string UI_BACK = "ui2";
+    }
+
+    public class TokenKeys
+    {
+        public const string ENJIN_MAXIM = "enjin_maxim";
+        public const string ENJIN_WITEK = "enjin_witek";
+        public const string ENJIN_BRYANA = "enjin_bryana";
+        public const string ENJIN_TASSIO = "enjin_tassio";
+        public const string ENJIN_SIMON = "enjin_simon";
+
+        public const string ENJIN_ESTHER = "enjin_esther"; //fairy 124
+        public const string ENJIN_ALEX = "enjin_alex";  //black 122
+        public const string ENJIN_LIZZ = "enjin_lizz";  //fire 126
+        public const string ENJIN_EVAN = "enjin_evan";  //wizard 123
+        public const string ENJIN_BRAD = "enjin_brad";  //book 125
+
+        public const string ENJIN_SWORD = "enjin_sword";
+        public const string ENJIN_ARMOR = "enjin_armor";
+        public const string ENJIN_SHADOWSONG = "enjin_shadowsong";
+        public const string ENJIN_BULL = "enjin_bull";
+
+        public const string KNIGHT_HEALER = "knight_healer";
+        public const string KNIGHT_BOMBER = "knight_bomber";
+        public const string KNIGHT_SCOUT = "knight_scout";
+        public const string KNIGHT_DESTROYER = "knight_destroyer";
+        public const string KNIGHT_TANK = "knight_tank";
+
+        public const string DEMON_HEALER = "demon_healer";
+        public const string DEMON_BOMBER = "demon_bomber";
+        public const string DEMON_SCOUT = "demon_scout";
+        public const string DEMON_DESTROYER = "demon_destroyer";
+        public const string DEMON_TANK = "demon_tank";
+
+        public const string SWISSBORG_CYBORG = "swissborg_cyborg";
     }
 }
  

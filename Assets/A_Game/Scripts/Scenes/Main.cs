@@ -15,6 +15,7 @@ public class Main : EnigmaScene
     [SerializeField] BasicPopUp _loginForPvpPopUp;
     //[SerializeField] LoginForGameModePopUp _loginForQuestPopUp;
     [SerializeField] GameObject _restorePopUp;
+    [SerializeField] RewardsInventoryPopUp _rewardsInventoryPopUp;
 
     [SerializeField] GameObject _enjinWindow;
     [SerializeField] private int _checkEnjinLinkingDelay = 2;
@@ -23,6 +24,7 @@ public class Main : EnigmaScene
     [SerializeField] Button _restoreButton;
     [SerializeField] GameObject _enjinIcon;
     [SerializeField] Transform _enjinTokensContent;
+
     private GameObject _enjinTokenTemplate;
 
     //[SerializeField] Text _pvprating;
@@ -56,6 +58,7 @@ public class Main : EnigmaScene
         _loginModal.SetActive(false);
         _enjinIcon.SetActive(false);
         _enjinWindow.SetActive(false);
+        _rewardsInventoryPopUp.Close();
 
         _restoreButton.onClick.AddListener(delegate { OnRestoreButtonDown(); });
         _restoreButton.gameObject.SetActive(false);
@@ -175,35 +178,9 @@ public class Main : EnigmaScene
 
     }
 
-    private void handleRestorePopUp()
+    public void OnRewardsInventoryButtonDown()
     {
-        if (_restoreButton.gameObject.GetActive())
-        {
-            _restorePopUp.SetActive(true);
-        }
-    }
-
-    private void updateRestoreButton()
-    {
-        _restoreButton.gameObject.SetActive(false);
-        GameInventory gameInventory = GameInventory.Instance;
-
-        if ((GameConfig.Instance.EnableServerBackup && NetworkManager.LoggedIn && GameStats.Instance.IsThereServerBackup) 
-            || GameInventory.Instance.IsTherePrefsBackupSave())
-        {
-            if(FileManager.Instance.CheckFileNullOrEmpty())
-            {
-                _restoreButton.gameObject.SetActive(true);
-            }
-            else
-            {
-                Debug.Log("updateRestoreButton ->  There is a saved file.");
-            }
-        }
-        else
-        {
-            Debug.Log("updateRestoreButton ->  Restore is not available.");
-        }
+        _rewardsInventoryPopUp.Open();
     }
 
     public void OnRestoreButtonDown()
@@ -225,7 +202,7 @@ public class Main : EnigmaScene
     public void OnSinglePlayerButtonDown()
     {
         print("OnSinglePlayerButtonDown");
-        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+        GameSounds.Instance.PlayUiAdvanceSound();
         GameStats.Instance.Mode = GameStats.Modes.SinglePlayer;
         goToLevels();
     }
@@ -233,7 +210,7 @@ public class Main : EnigmaScene
     public void OnPvpButtonDown()
     {
         print("OnPvpButtonDown");
-        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+        GameSounds.Instance.PlayUiAdvanceSound();
 
         if (NetworkManager.LoggedIn)
         {
@@ -249,7 +226,7 @@ public class Main : EnigmaScene
     public void OnStoreButtonDown()
     {
         print("OnStoreButtonDown");
-        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+        GameSounds.Instance.PlayUiAdvanceSound();
         SceneManager.LoadScene(GameConstants.Scenes.STORE);
     }
 
@@ -257,13 +234,13 @@ public class Main : EnigmaScene
     {
         print("OnQuestsButtonDown");
 
-        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+        GameSounds.Instance.PlayUiAdvanceSound();
         SceneManager.LoadScene(GameConstants.Scenes.QUEST_SELECTION);
     }
 
     public void ShowLoginForm()
     {
-        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+        GameSounds.Instance.PlayUiAdvanceSound();
         _loginModal.SetActive(true);
         _loginModal.GetComponent<EnjinLogin>().resetForm();
     }
@@ -285,11 +262,11 @@ public class Main : EnigmaScene
     {
         //Enjin.CleanUpPlatform();
         StopCoroutine("handleEnjinLinkingCheck");
-        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
+        GameSounds.Instance.PlayUiBackSound();
         _enjinWindow.gameObject.SetActive(false);
     }
 
-    IEnumerator handleEnjinLinkingCheck(int delay)
+    private IEnumerator handleEnjinLinkingCheck(int delay)
     {
         Debug.Log("Checking server for Link2 " + delay);
         yield return new WaitForSeconds(delay);
@@ -299,6 +276,37 @@ public class Main : EnigmaScene
         NetworkManager.Transaction(NetworkManager.Transactions.ENJIN_LINKED, val, onLinkedTransaction);
 
         yield break;
+    }
+
+    private void handleRestorePopUp()
+    {
+        if (_restoreButton.gameObject.GetActive())
+        {
+            _restorePopUp.SetActive(true);
+        }
+    }
+
+    private void updateRestoreButton()
+    {
+        _restoreButton.gameObject.SetActive(false);
+        GameInventory gameInventory = GameInventory.Instance;
+
+        if ((GameConfig.Instance.EnableServerBackup && NetworkManager.LoggedIn && GameStats.Instance.IsThereServerBackup)
+            || GameInventory.Instance.IsTherePrefsBackupSave())
+        {
+            if (FileManager.Instance.CheckFileNullOrEmpty())
+            {
+                _restoreButton.gameObject.SetActive(true);
+            }
+            else
+            {
+                Debug.Log("updateRestoreButton ->  There is a saved file.");
+            }
+        }
+        else
+        {
+            Debug.Log("updateRestoreButton ->  Restore is not available.");
+        }
     }
 
     //private void onGiftProgress(SimpleJSON.JSONNode response)
@@ -419,7 +427,7 @@ public class Main : EnigmaScene
 
     public void closeQRDialog()
     {
-        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
+        GameSounds.Instance.PlayUiBackSound();
         _enjinWindow.SetActive(false);
     }
 
@@ -430,7 +438,7 @@ public class Main : EnigmaScene
 
         NetworkManager.Logout();
 
-        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
+        GameSounds.Instance.PlayUiBackSound();
 
         GameNetwork.Instance.ResetLoginValues();
 

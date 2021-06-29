@@ -205,7 +205,7 @@ public class WarPrepManager : EnigmaScene
 
     private void onNextButtonDown()
     {
-        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+        GameSounds.Instance.PlayUiAdvanceSound();
 
         GameNetwork gameNetwork = GameNetwork.Instance;
         GameStats gameStats = GameStats.Instance;
@@ -271,7 +271,7 @@ public class WarPrepManager : EnigmaScene
 
     private void onBackButtonDown()
     {
-        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
+        GameSounds.Instance.PlayUiBackSound();
         SceneManager.LoadScene(GameConstants.Scenes.TEAM_BOOST);
     }
 }

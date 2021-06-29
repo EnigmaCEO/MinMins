@@ -31,7 +31,7 @@ public class QuestSelection : MonoBehaviour
 
     public void OnBackButtonDown()
     {
-        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
+        GameSounds.Instance.PlayUiBackSound();
         SceneManager.LoadScene(EnigmaConstants.Scenes.MAIN);
     }
 
@@ -174,7 +174,7 @@ public class QuestSelection : MonoBehaviour
 
     public void GlobalSystemButtonDown()
     {
-        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+        GameSounds.Instance.PlayUiAdvanceSound();
         _questConfirmPopUp.Open(GameConstants.Scenes.GLOBAL_SYSTEM_QUEST, null, null, new List<string> { getRewardUnitName() });
     }
 

@@ -72,14 +72,14 @@ public class QuestConfirmPopUp : MonoBehaviour
 
     public void OnOkButtonDown()
     {
-        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+        GameSounds.Instance.PlayUiAdvanceSound();
         GameStats.Instance.Mode = GameStats.Modes.Quest;
         SceneManager.LoadScene(_sceneToLoad);
     }
 
     public void OnCancelButtonDown()
     {
-        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
+        GameSounds.Instance.PlayUiBackSound();
         Close();
     }
 }

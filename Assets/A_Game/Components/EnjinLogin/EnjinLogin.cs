@@ -48,18 +48,18 @@ public class EnjinLogin : MonoBehaviour
     public void rememberMeToggleChanged()
     {
         if (_rememberMeToggle.isOn)
-        {
-            SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+        { 
+            GameSounds.Instance.PlayUiAdvanceSound();
         }
         else
         {
-            SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
+            GameSounds.Instance.PlayUiBackSound();
         }
     }
 
     public void closeButtonDown()
     {
-        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
+        GameSounds.Instance.PlayUiBackSound();
         closeDialog();
     }
 
@@ -70,14 +70,14 @@ public class EnjinLogin : MonoBehaviour
 
     public void switchToRegister()
     {
-        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+        GameSounds.Instance.PlayUiAdvanceSound();
         loginGroup.SetActive(false);
         registerGroup.SetActive(true);
     }
 
     public void switchToLogin()
     {
-        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+        GameSounds.Instance.PlayUiAdvanceSound();
 
         loginGroup.SetActive(true);
         registerGroup.SetActive(false);
@@ -109,11 +109,11 @@ public class EnjinLogin : MonoBehaviour
 
         if (ethFieldIsActive)
         {
-            SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
+            GameSounds.Instance.PlayUiBackSound();
         }
         else
         {
-            SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+            GameSounds.Instance.PlayUiAdvanceSound();
         }
 
         ETHField.gameObject.SetActive(!ethFieldIsActive);
@@ -160,7 +160,7 @@ public class EnjinLogin : MonoBehaviour
 
     public void registerSubmit()
     {
-        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+        GameSounds.Instance.PlayUiAdvanceSound();
         showLoadingScreen();
 
         Hashtable extras = new Hashtable();
@@ -187,7 +187,7 @@ public class EnjinLogin : MonoBehaviour
 
     public void LoginSubtmiButtonDown()
     {
-        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+        GameSounds.Instance.PlayUiAdvanceSound();
         loginSubmit();
     }
 

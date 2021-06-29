@@ -29,7 +29,7 @@ public class MessagePopUp : MonoBehaviour
 
     private void onDismissButtonDown()
     {
-        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
+        GameSounds.Instance.PlayUiBackSound();
 
         if (OnDismissButtonDownCallback != null)
             OnDismissButtonDownCallback(_text.text);

@@ -1,4 +1,5 @@
 ﻿using Enigma.CoreSystems;
+using GameConstants;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -107,7 +108,7 @@ public class NewLobby : NetworkEntity
 
     private void onBackButtonDown()
     {
-        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
+        GameSounds.Instance.PlayUiBackSound();
 
         NetworkManager.Disconnect();
         NetworkManager.LoadScene(GameConstants.Scenes.UNIT_SELECT);
@@ -115,7 +116,7 @@ public class NewLobby : NetworkEntity
 
     private void onCreateButtonDown()
     {
-        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+        GameSounds.Instance.PlayUiAdvanceSound();
 
         Debug.Log("onCreateButtonDown");
         if (_privateRoomNameInput.text == "")
@@ -132,7 +133,7 @@ public class NewLobby : NetworkEntity
             }
             else
             {
-                _messagePopUp.Open(GameConstants.LobbyPopUpMessages.PRIVATE_ROOM_ALREADY_USED);
+                _messagePopUp.Open(UiMessages.PRIVATE_ROOM_ALREADY_USED);
             }
         }
     }
@@ -152,9 +153,9 @@ public class NewLobby : NetworkEntity
 
     private void onMessagePopUpDismiss(string message)
     {
-        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
+        GameSounds.Instance.PlayUiBackSound();
 
-        if (message == GameConstants.LobbyPopUpMessages.PRIVATE_ROOM_ALREADY_USED)
+        if (message == UiMessages.PRIVATE_ROOM_ALREADY_USED)
         {
             _privateRoomNameInput.text = "";
         }

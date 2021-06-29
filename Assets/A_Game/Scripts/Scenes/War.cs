@@ -1004,7 +1004,7 @@ public class War : NetworkEntity
         {
             if (!_actionPopUp.gameObject.GetActive() && Input.GetMouseButtonDown(0))
             {
-                SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+                GameSounds.Instance.PlayUiAdvanceSound();
 
                 Vector3 tapWorldPosition = _gameCamera.MyCamera.ScreenToWorldPoint(Input.mousePosition);
                 GameConfig gameConfig = GameConfig.Instance;
@@ -2076,13 +2076,13 @@ public class War : NetworkEntity
 
     public void onActionPopUpDismissButtonDown()
     {
-        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+        GameSounds.Instance.PlayUiAdvanceSound();
         sendActionPopUpClose();
     }
 
     public void OnMatchResultsDismissButtonDown()
     {
-        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
+        GameSounds.Instance.PlayUiBackSound();
 
         //GameNetwork.ClearLocalTeamUnits(_localPlayerTeam);
         NetworkManager.Disconnect();

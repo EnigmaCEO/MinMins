@@ -12,11 +12,15 @@ public class RewardGridItem : MonoBehaviour
     {
         int starsContentLenght = _tierStarsContent.childCount;
         for (int i = 0; i < starsContentLenght; i++)
+        {
             _tierStarsContent.GetChild(i).GetComponent<Image>().enabled = (i < tier);
+        }
 
         string path = "Images/shop_chest" + tier;
         if (isEnjin)
+        {
             path = "Images/Enjin Logo";
+        }
 
         _boxImage.sprite = (Sprite)Resources.Load<Sprite>(path);
     }

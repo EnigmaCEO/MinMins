@@ -66,7 +66,7 @@ public class WarPrepDragger : MonoBehaviour
     void OnMouseDown()
     {
         Debug.LogWarning("WarPrepDragger::OnMouseDown -> target: " + Target.name);
-        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+        GameSounds.Instance.PlayUiAdvanceSound();
 
         //print("OnMouseDown: " + gameObject.name);
         _screenPoint = Camera.main.WorldToScreenPoint(gameObject.transform.position);
@@ -97,7 +97,7 @@ public class WarPrepDragger : MonoBehaviour
     void OnMouseUp()
     {
         Debug.LogWarning("WarPrepDragger::OnMouseUp -> target: " + Target.name);
-        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
+        GameSounds.Instance.PlayUiBackSound();
         DropOnBattlefield();
     }
 

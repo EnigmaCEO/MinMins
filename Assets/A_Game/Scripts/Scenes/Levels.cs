@@ -135,7 +135,7 @@ public class Levels : EnigmaScene
 
     private void onLevelFightButtonDown(int levelNumber)
     {
-        SoundManager.Play(GameConstants.SoundNames.UI_ADVANCE, SoundManager.AudioTypes.Sfx);
+        GameSounds.Instance.PlayUiAdvanceSound();
 
         if (GameInventory.Instance.HasEnoughUnitsForBattle())
         {
@@ -150,7 +150,7 @@ public class Levels : EnigmaScene
 
     public void OnNotEnoughUnitsPopUpDismissButtonDown()
     {
-        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
+        GameSounds.Instance.PlayUiBackSound();
 
         if (GameConfig.Instance.SendToShopAutomaticallyOnUnitsNeeded)
         {
@@ -164,7 +164,7 @@ public class Levels : EnigmaScene
 
     public void OnBackButtonDown()
     {
-        SoundManager.Play(GameConstants.SoundNames.UI_BACK, SoundManager.AudioTypes.Sfx);
+        GameSounds.Instance.PlayUiBackSound();
         SceneManager.LoadScene(EnigmaConstants.Scenes.MAIN);
     }
 }
