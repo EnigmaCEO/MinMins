@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using SimpleJSON;
+using GameConstants;
 
 public class GameStore : EnigmaScene
 {
     [SerializeField] private int _maxBoxTierNumber = 3;
 
-    [SerializeField] private List<string> _confirmPopUpPackNames = new List<string>() { "STARTER BOX", "PREMIUM BOX", "MASTER BOX", "DEMON KING BOX", "LEGEND BOX" };
-    [SerializeField] private List<string> _confirmPopUpPackDescriptions = new List<string>() { "No guarantees.", "Guarantees a Silver Unit.", "Guarantees a Gold Unit.", "Demon King description.", "Legend Box description." };
+    [SerializeField] private List<string> _confirmPopUpPackNames = new List<string>() { "STARTER BOX", "PREMIUM BOX", "MASTER BOX", "SPECIAL BOX", "DEMON KING BOX", "LEGEND BOX" };
+    [SerializeField] private List<string> _confirmPopUpPackDescriptions = new List<string>() { "No guarantees.", "Guarantees a Silver Unit.", "Guarantees a Gold Unit.", "Special Box", "Demon King description Term", "Legend Box description Term" };
 
     [SerializeField] private List<Image> _confirmPopUpPackImages;
 
@@ -20,7 +21,6 @@ public class GameStore : EnigmaScene
     [SerializeField] private List<string> _confirmPopUpPackPrices = new List<string>() { "0.99", "1.99", "4.99", "10.00", "10.00" };
 #endif
 
-    [SerializeField] private List<int> _packTiers = new List<int> { 1, 2, 3, 3 };
 
     [SerializeField] private LootBoxBuyConfirmPopUp _lootBoxBuyConfirmPopUp;
     [SerializeField] private OpenLootBoxPopUp _openLootBoxPopUp;
@@ -120,10 +120,10 @@ public class GameStore : EnigmaScene
                 }
             }
 
-            if (itemIndex < 4)
+            if (itemIndex <= BoxIndexes.LEGEND)
             {
-                int boxTier = _packTiers[itemIndex];
-                grantBox(boxTier, 1);
+                //int boxTier = _packTiers[itemIndex];
+                grantBox(itemIndex, 1);
             }
 
             _buyResultPopUp.Open("Thanks for your Purchase!");
@@ -142,7 +142,7 @@ public class GameStore : EnigmaScene
 
         _lootBoxBuyConfirmPopUp.SetPackName(_confirmPopUpPackNames[packIndex]);
         _lootBoxBuyConfirmPopUp.SetPackDescription(_confirmPopUpPackDescriptions[packIndex]);
-        _lootBoxBuyConfirmPopUp.SetStars(_packTiers[packIndex]);
+        _lootBoxBuyConfirmPopUp.SetStars(GameInventory.Instance.GetPackTier(packIndex));
         _lootBoxBuyConfirmPopUp.SetPackSprite(_confirmPopUpPackImages[packIndex].sprite);
         _lootBoxBuyConfirmPopUp.SetPrice(_confirmPopUpPackPrices[packIndex]);
 
@@ -165,7 +165,7 @@ public class GameStore : EnigmaScene
     public void OnExtraLootBoxPopUpDismissButtonDown()
     {
         GameSounds.Instance.PlayUiBackSound();
-        grantBox(GameInventory.Tiers.BRONZE, 2);
+        grantBox(/*GameInventory.Tiers.BRONZE*/ BoxIndexes.STARTER, 2);
         _extraLootBoxPopUp.SetActive(false);
     }
 
@@ -329,20 +329,22 @@ public class GameStore : EnigmaScene
         foreach (Transform child in _lootBoxGridContent)
         {
             if (child.gameObject != boxGridItemTemplate)
+            {
                 Destroy(child.gameObject);
+            }
         }
 
-        for (int tier = 1; tier <= _maxBoxTierNumber; tier++)
+        for (int boxIndex = 0; boxIndex <= BoxIndexes.LEGEND; boxIndex++)
         {
-            int tierAmount = GameInventory.Instance.GetLootBoxTierAmount(tier);  //TODO: Check if this needs to return stats
-            for (int i = 0; i < tierAmount; i++)
+            int boxIndexAmount = GameInventory.Instance.GetLootBoxIndexAmount(boxIndex);  //TODO: Check if this needs to return stats
+            for (int i = 0; i < boxIndexAmount; i++)
             {
                 Transform unitTransform = Instantiate<GameObject>(boxGridItemTemplate, _lootBoxGridContent).transform;
-                unitTransform.name = "BoxGridItem_Tier " + tier;
+                unitTransform.name = "BoxGridItem_BoxIndex " + boxIndex;
                 BoxGridItem box = unitTransform.GetComponent<BoxGridItem>();
-                box.SetUp(tier);
-                int tierCopy = tier;
-                box.OpenButton.onClick.AddListener(() => onLootBoxOpenButtonDown(tierCopy));
+                box.SetUp(boxIndex);
+                int boxIndexCopy = boxIndex;
+                box.OpenButton.onClick.AddListener(() => onLootBoxOpenButtonDown(boxIndexCopy));
             }
         }
 
@@ -351,7 +353,7 @@ public class GameStore : EnigmaScene
 
     public void BuyMasterBoxOffer()
     {
-        _selectedPackIndex = 3;
+        _selectedPackIndex = BoxIndexes.SPECIAL;
         onLootBoxBuyConfirmButtonDown();
         _extraLootBoxPopUp.SetActive(false);
     }
@@ -397,22 +399,24 @@ public class GameStore : EnigmaScene
         _lootBoxBuyConfirmPopUp.Close();
     }
 
-    private void grantBox(int lootBoxTier, int amount)
+    private void grantBox(int boxIndex, int amount)
     {
-        GameInventory.Instance.ChangeLootBoxAmount(amount, lootBoxTier, true, true);
+        GameInventory.Instance.ChangeLootBoxAmount(amount, boxIndex, true, true);
         refreshLootBoxesGrid();
     }
 
-    private void onLootBoxOpenButtonDown(int lootBoxTier)
+    private void onLootBoxOpenButtonDown(int boxIndex)
     {
         GameSounds.Instance.PlayUiAdvanceSound();
 
         Dictionary<string, int> unitsWithTier = new Dictionary<string, int>();
         GameInventory gameInventory = GameInventory.Instance;
 
-        List<string> lootBoxUnitNumbers = gameInventory.OpenLootBox(lootBoxTier);
+        List<string> lootBoxUnitNumbers = gameInventory.OpenLootBox(boxIndex);
         foreach (string unitName in lootBoxUnitNumbers)
+        {
             unitsWithTier.Add(unitName.ToString(), gameInventory.GetUnitTier(unitName));
+        }
 
         refreshLootBoxesGrid();
 

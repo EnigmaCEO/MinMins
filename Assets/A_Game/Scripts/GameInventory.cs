@@ -1,5 +1,6 @@
 ﻿using CodeStage.AntiCheat.Storage;
 using Enigma.CoreSystems;
+using GameConstants;
 using GameEnums;
 using I2.Loc.SimpleJSON;
 using System;
@@ -69,6 +70,8 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     [SerializeField] private int _enjinUnitStartingLevel = 3;
     [SerializeField] private int _oreMaxBonus = 10;
 
+    [SerializeField] private List<int> _packTiers = new List<int> { 1, 2, 3, 3, 3, 3 };
+
     private Hashtable _saveHashTable = new Hashtable();
 
     private List<string> _tierBronze_units = new List<string>();
@@ -95,6 +98,11 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     public bool IsThereFileSaved()
     {
         return (_saveHashTable.Count > 0);
+    }
+
+    public int GetPackTier(int boxIndex)
+    {
+        return _packTiers[boxIndex];
     }
 
     public int GetRandomTier()
@@ -548,9 +556,9 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         return minMin;
     }
 
-    public int GetLootBoxTierAmount(int tier)
+    public int GetLootBoxIndexAmount(int boxIndex)
     {
-        return InventoryManager.Instance.GetItem<int>(GroupNames.LOOT_BOXES, tier.ToString());
+        return InventoryManager.Instance.GetItem<int>(GroupNames.LOOT_BOXES, boxIndex.ToString());
     }
 
     public bool HasAnyLootBox()
@@ -560,23 +568,24 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
     public int GetLootBoxesTotalAmount()
     {
-        return (GetLootBoxTierAmount(Tiers.BRONZE) + GetLootBoxTierAmount(Tiers.SILVER) + GetLootBoxTierAmount(Tiers.GOLD));
-    }
+        return (GetLootBoxIndexAmount(BoxIndexes.STARTER) + GetLootBoxIndexAmount(BoxIndexes.MASTER) + GetLootBoxIndexAmount(BoxIndexes.PREMIUM)
+                + GetLootBoxIndexAmount(BoxIndexes.SPECIAL) + GetLootBoxIndexAmount(BoxIndexes.DEMON) + GetLootBoxIndexAmount(BoxIndexes.LEGEND));
+    } 
 
-    public void ChangeLootBoxAmount(int amount, int tier, bool isAddition, bool shouldSave)
+    public void ChangeLootBoxAmount(int amount, int boxIndex, bool isAddition, bool shouldSave)
     {
-        int newtierLootBoxesAmount = InventoryManager.Instance.GetItem<int>(GroupNames.LOOT_BOXES, tier.ToString());
+        int newIndexLootBoxesAmount = InventoryManager.Instance.GetItem<int>(GroupNames.LOOT_BOXES, boxIndex.ToString());
 
         if (isAddition)
         {
-            newtierLootBoxesAmount += amount;
+            newIndexLootBoxesAmount += amount;
         }
         else
         {
-            newtierLootBoxesAmount -= amount;
+            newIndexLootBoxesAmount -= amount;
         }
 
-        InventoryManager.Instance.UpdateItem(GroupNames.LOOT_BOXES, tier.ToString(), newtierLootBoxesAmount);
+        InventoryManager.Instance.UpdateItem(GroupNames.LOOT_BOXES, boxIndex.ToString(), newIndexLootBoxesAmount);
 
         if (shouldSave)
         {
@@ -584,8 +593,9 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         }
     }
 
-    public List<string> OpenLootBox(int boxTier)
+    public List<string> OpenLootBox(int boxIndex)
     {
+        int boxTier = GetPackTier(boxIndex);
         Dictionary<string, double> specialRarities = new Dictionary<string, double>();
         foreach (UnitRarity rarity in _unitSpecialRarities)
         {
@@ -638,7 +648,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         }
 
         SaveUnits();
-        ChangeLootBoxAmount(1, boxTier, false, true);
+        ChangeLootBoxAmount(1, boxIndex, false, true);
 
         return unitPicks;
     }
@@ -1023,9 +1033,9 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
             }
         }
 
-        for (int tier = 1; tier <= _lootBoxTiersAmount; tier++)
+        for (int boxIndex = 0; boxIndex <= BoxIndexes.LEGEND; boxIndex++)
         {
-            inventoryManager.AddItem(GroupNames.LOOT_BOXES, tier.ToString(), 0);
+            inventoryManager.AddItem(GroupNames.LOOT_BOXES, boxIndex.ToString(), 0);
         }
 
         addDefaultOreItemGroups(GameConstants.TeamBoostEnjinOreItems.DAMAGE, GameConstants.TeamBoostCategory.DAMAGE);

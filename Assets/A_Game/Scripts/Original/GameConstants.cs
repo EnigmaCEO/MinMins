@@ -115,5 +115,15 @@ namespace GameConstants
 
         public const string SWISSBORG_CYBORG = "swissborg_cyborg";
     }
+
+    public class BoxIndexes
+    {
+        public const int STARTER = 0;
+        public const int PREMIUM = 1;
+        public const int MASTER = 2;
+        public const int SPECIAL = 3;
+        public const int DEMON = 4;
+        public const int LEGEND = 5;
+    }
 }
  
