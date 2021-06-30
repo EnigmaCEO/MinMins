@@ -481,6 +481,7 @@ public class Main : EnigmaScene
         if (flag)
         {
             GameObject newEnjinTokenItem = Instantiate<GameObject>(_enjinTokenTemplate, _enjinTokensContent);
+            newEnjinTokenItem.name = label;
             newEnjinTokenItem.GetComponent<Text>().text = label;
             newEnjinTokenItem.SetActive(true);
         }

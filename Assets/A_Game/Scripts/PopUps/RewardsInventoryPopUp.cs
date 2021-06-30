@@ -25,6 +25,8 @@ public class RewardsInventoryPopUp : MonoBehaviour
     [SerializeField] private Transform _gridContent;
     [SerializeField] private Text _statusUI;
 
+    [SerializeField] private EnjinWithdrawalPopUp _enjinWithdrawalPopUp;
+
     private GameObject _rewardItemTemplate;
     private bool _initialized = false;
 
@@ -97,6 +99,7 @@ public class RewardsInventoryPopUp : MonoBehaviour
     private void onRewardButtonDown(RewardInventoryItem rewardItemSelected)
     {
         Debug.Log("onRewardButtonDown -> code: " + rewardItemSelected.RewardCode);
+        _enjinWithdrawalPopUp.Open(rewardItemSelected.RewardCode);
     }
 
     private string getRewardName(string tokenKey)

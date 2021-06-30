@@ -58,6 +58,9 @@ namespace GameConstants
     {
         public const string PRIVATE_ROOM_ALREADY_USED = "Name is already used. Please provide another.";
         public const string LOADING = "Loading...";
+        public const string PERFORMING_WITHDRAWL = "Performing Withdrawal...";
+        public const string WITHDRAWAL_DESCRIPTION = "Press OK to start withdrawal process, or close window to go back.";
+        public const string GET_ENJIN_WALLET_DESCRIPTION = "Press OK to request an Enjin Wallet so you can withdraw your tokens or close window to go back.";
     }
 
     public class Terms
