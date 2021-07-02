@@ -22,6 +22,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     {
         public const string LOOT_BOXES = "Lootboxes";
         public const string STATS = "Stats";
+        public const string ENJIN_TOKENS_WITHDRAWAL = "EnjinTokensWithdrawal";
         public const string UNITS_EXP = "Units";
         public const string ORE = "Ore";
         public const string QUESTS_LEVEL_PROGRESS = "QuestsLevelsProgress";
@@ -33,6 +34,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     {
         public const string SINGLE_PLAYER_LEVEL = "SinglePlayerLevel";
         public const string ENJIN_ATTEMPTS = "EnjinAttempts";
+        public const string WITHDRAWN_TOKENS = "WithdrawnTokens";
         public const string ACTIVE_QUEST = "ActiveQuest";
         public const string CRYSTALS = "Crystals";
     }
@@ -1044,6 +1046,8 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         addDefaultOreItemGroups(GameConstants.TeamBoostEnjinOreItems.POWER, GameConstants.TeamBoostCategory.POWER);
         addDefaultOreItemGroups(GameConstants.TeamBoostEnjinOreItems.SIZE, GameConstants.TeamBoostCategory.SIZE);
 
+        //addTokenWithdrawalDefaultValues();
+
         //SaveOre();
         //===========================================================================================
 
@@ -1127,6 +1131,45 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         //    saveLootBoxes();
         //}
     }
+
+    //private void addTokenWithdrawalDefaultValues()
+    //{
+    //    addTokenWithdrawalDefaultValue(TokenKeys.ENJIN_MAXIM);
+    //    addTokenWithdrawalDefaultValue(TokenKeys.ENJIN_WITEK);
+    //    addTokenWithdrawalDefaultValue(TokenKeys.ENJIN_BRYANA);
+    //    addTokenWithdrawalDefaultValue(TokenKeys.ENJIN_TASSIO);
+    //    addTokenWithdrawalDefaultValue(TokenKeys.ENJIN_SIMON);
+
+    //    addTokenWithdrawalDefaultValue(TokenKeys.ENJIN_ESTHER);
+    //    addTokenWithdrawalDefaultValue(TokenKeys.ENJIN_ALEX);
+    //    addTokenWithdrawalDefaultValue(TokenKeys.ENJIN_LIZZ);
+    //    addTokenWithdrawalDefaultValue(TokenKeys.ENJIN_EVAN);
+    //    addTokenWithdrawalDefaultValue(TokenKeys.ENJIN_BRAD);
+
+    //    addTokenWithdrawalDefaultValue(TokenKeys.ENJIN_SWORD);
+    //    addTokenWithdrawalDefaultValue(TokenKeys.ENJIN_ARMOR);
+    //    addTokenWithdrawalDefaultValue(TokenKeys.ENJIN_SHADOWSONG);
+    //    addTokenWithdrawalDefaultValue(TokenKeys.ENJIN_BULL);
+
+    //    addTokenWithdrawalDefaultValue(TokenKeys.KNIGHT_HEALER);
+    //    addTokenWithdrawalDefaultValue(TokenKeys.KNIGHT_BOMBER);
+    //    addTokenWithdrawalDefaultValue(TokenKeys.KNIGHT_SCOUT);
+    //    addTokenWithdrawalDefaultValue(TokenKeys.KNIGHT_DESTROYER);
+    //    addTokenWithdrawalDefaultValue(TokenKeys.KNIGHT_TANK);
+
+    //    addTokenWithdrawalDefaultValue(TokenKeys.DEMON_HEALER);
+    //    addTokenWithdrawalDefaultValue(TokenKeys.DEMON_BOMBER);
+    //    addTokenWithdrawalDefaultValue(TokenKeys.DEMON_SCOUT);
+    //    addTokenWithdrawalDefaultValue(TokenKeys.DEMON_DESTROYER);
+    //    addTokenWithdrawalDefaultValue(TokenKeys.DEMON_TANK);
+
+    //    addTokenWithdrawalDefaultValue(TokenKeys.SWISSBORG_CYBORG);
+    //}
+
+    //private void addTokenWithdrawalDefaultValue(string tokenKey)
+    //{
+    //    InventoryManager.Instance.AddItem(GroupNames.ENJIN_TOKENS_WITHDRAWAL, tokenKey, false);
+    //}
 
     public void ClearQuestLevelsCompleted(string questString)
     {

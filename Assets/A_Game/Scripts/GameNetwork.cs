@@ -24,6 +24,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         public const int NEW_TRAINING_LEVEL = 28;
 
         public const int GET_REWARDS_INVENTORY = 29;
+        public const int ENJIN_WITHDRAWAL = 30;
     }
 
     public class TransactionKeys
@@ -41,8 +42,9 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         public const string LEVEL = "level";
 
         public const string REWARDS = "rewards";
-        public const string TOKEN_TYPE = "reward_type";
-        public const string TOKEN_KEY = "reward_code";
+        public const string TOKEN_TYPE = "token_type";
+        public const string TOKEN_KEY = "token_code";
+        public const string TOKEN_WITHDRAWN = "token_withdrawn";
 
         public const string WINNER_NICKNAME = "winner_nickname";
         public const string LOSER_NICKNAME = "loser_nickname";
@@ -54,6 +56,10 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         public const string LOSER_UNITS_KILLED = "loser_units_killed";
 
         public const string MATCH_DURATION = "match_duration";
+
+        public const string BALANCES = "balances";
+        public const string ENJ_BALANCE = "enjBAlance";
+        public const string WALLET = "wallet";
 
         /*
         public const string ENJIN_DEFENSE_ORE_ITEM_1 = "enjin_defense_ore_1";
@@ -96,6 +102,8 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         public const string SUCCESS = "Success";
         public const string SERVER_ERROR = "Server Error";
         public const string CONNECTION_ERROR = "Connection Error";
+        public const string PENDING = "Pending";
+        public const string ERROR = "Error";
     }
 
     public class PlayerCustomProperties
@@ -1055,5 +1063,33 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         {
             GameStats.Instance.TeamBoostTokensOwnedByName.Add(name, new TeamBoostItemGroup(name, _DEFAULT_TOKEN_AMOUNT, _defaultTokenBonus, category, true));
         }
+    }
+
+    public void UpdateBalancesFromNode(JSONNode userDataNode)
+    {
+        JSONNode balancesNode = userDataNode[GameNetwork.TransactionKeys.BALANCES];
+        if (balancesNode != null)
+        {
+            JSONNode balancesData = balancesNode[GameNetwork.TransactionKeys.DATA];
+            if (balancesData != null)
+            {
+                JSONNode walletNode = balancesData[GameNetwork.TransactionKeys.WALLET];
+                if (walletNode != null)
+                {
+                    JSONNode enjBalanceNode = walletNode[GameNetwork.TransactionKeys.ENJ_BALANCE];
+                    if (enjBalanceNode != null)
+                    {
+                        GameStats.Instance.EnjBalance = enjBalanceNode.AsInt;
+                    }
+                }
+            }
+        }
+
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+        if (GameHacks.Instance.StartingEnjBalance.Enabled)
+        {
+            GameStats.Instance.EnjBalance = GameHacks.Instance.StartingEnjBalance.ValueAsInt;
+        }
+#endif 
     }
 }

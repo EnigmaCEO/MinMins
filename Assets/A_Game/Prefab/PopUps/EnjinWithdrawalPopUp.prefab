@@ -70,13 +70,13 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 10
     m_MaxSize: 106
-    m_Alignment: 4
+    m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Press OK to start withdrawal process, or close window to go back.
+  m_Text: Press OK to start withdrawal process. Close window to go back.
 --- !u!1 &1399663692356722948
 GameObject:
   m_ObjectHideFlags: 0
@@ -525,6 +525,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff02a35005de9ce4183c2d5101dc554c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _getEnjinWalletURL: https://enjin.io/software/wallet
+  _hackedWithdrawalDelay: 2
   _statusUiText: {fileID: 1725586121345046595}
   _descriptionText: {fileID: 1399663691465960604}
   _okButton: {fileID: 1399663692356722948}

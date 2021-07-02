@@ -307,7 +307,7 @@ public class EnjinLogin : MonoBehaviour
             JSONNode ratingNode = userDataNode[GameNetwork.TransactionKeys.RATING];
             if (ratingNode != null)
             {
-                GameStats.Instance.Rating = ratingNode.AsInt;
+                gameStats.Rating = ratingNode.AsInt;
             }
 
             JSONNode userNameNode = userDataNode[GameNetwork.TransactionKeys.USERNAME];
@@ -315,6 +315,8 @@ public class EnjinLogin : MonoBehaviour
             {
                 NetworkManager.SetLocalPlayerNickName(userNameNode.ToString().Trim('"'));
             }
+
+            GameNetwork.Instance.UpdateBalancesFromNode(userDataNode);
         }
 
         string enjinId = "null";

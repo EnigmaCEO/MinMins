@@ -24,28 +24,65 @@ public class RewardsInventoryPopUp : MonoBehaviour
     [SerializeField] private Sprite _defaultRewardSprite;
     [SerializeField] private Transform _gridContent;
     [SerializeField] private Text _statusUI;
+    [SerializeField] private Text _currencyText;
 
     [SerializeField] private EnjinWithdrawalPopUp _enjinWithdrawalPopUp;
 
     private GameObject _rewardItemTemplate;
     private bool _initialized = false;
 
-    private void Start()
+    private void Awake()
     {
         _rewardItemTemplate = _gridContent.GetChild(0).gameObject;
         _rewardItemTemplate.transform.SetParent(_gridContent.parent);
         _rewardItemTemplate.SetActive(false);
+
+        _enjinWithdrawalPopUp.SetInventoryChangedCallback(onInventoryChanged);
     }
 
     public void Open()
     {
-        gameObject.SetActive(true);
-
         if (!_initialized)
         {
-            _statusUI.text = LocalizationManager.GetTermTranslation(UiMessages.LOADING);
+            initializeInventory();
+        }
+
+        UpdateCurrencyUI();
+        gameObject.SetActive(true);
+    }
+
+    private void initializeInventory()
+    {
+        _statusUI.text = LocalizationManager.GetTermTranslation(UiMessages.LOADING);
+        _gridContent.DestroyChildren();
+
+        bool useOnlineRewardsInventory = true;
+
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+        if (GameHacks.Instance.UseOfflineTestInventoryRewards)
+        {
+            useOnlineRewardsInventory = false;
+            List<GameHacks.InventoryRewardsTestItem> testRewardItems = GameHacks.Instance.OfflineTestInventoryRewards;
+
+            foreach (GameHacks.InventoryRewardsTestItem testRewardItem in testRewardItems)
+            {
+                addRewardItem(testRewardItem.TokenCode, testRewardItem.TokenType, testRewardItem.Withdrawn);
+            }
+
+            _initialized = true;
+            _statusUI.gameObject.SetActive(false);
+        }
+#endif
+
+        if (useOnlineRewardsInventory)
+        {
             NetworkManager.Transaction(GameNetwork.Transactions.GET_REWARDS_INVENTORY, onRewardInventoryReceived);
         }
+    }
+
+    public void UpdateCurrencyUI()
+    {
+        _currencyText.text = GameStats.Instance.EnjBalance + " " + _coinName;
     }
 
     public void Close()
@@ -57,6 +94,12 @@ public class RewardsInventoryPopUp : MonoBehaviour
     {
         GameSounds.Instance.PlayUiBackSound();
         Close();
+    }
+
+    private void onInventoryChanged()
+    {
+        initializeInventory();
+        UpdateCurrencyUI();
     }
 
     private void onRewardInventoryReceived(JSONNode response)
@@ -73,10 +116,11 @@ public class RewardsInventoryPopUp : MonoBehaviour
             {
                 foreach (JSONNode reward in rewardsNode.AsArray)
                 {
-                    string tokenKey = rewardsNode[GameNetwork.TransactionKeys.TOKEN_KEY];
-                    string tokenType = rewardsNode[GameNetwork.TransactionKeys.TOKEN_TYPE];
+                    string tokenKey = rewardsNode[GameNetwork.TransactionKeys.TOKEN_KEY].ToString().Trim('"');
+                    string tokenType = rewardsNode[GameNetwork.TransactionKeys.TOKEN_TYPE].ToString().Trim('"');
+                    string withdrawn = rewardsNode[GameNetwork.TransactionKeys.TOKEN_WITHDRAWN].ToString().Trim('"');
 
-                    addRewardItem(tokenKey, tokenType);
+                    addRewardItem(tokenKey, tokenType, withdrawn);
                 }
 
                 _initialized = true;
@@ -89,17 +133,17 @@ public class RewardsInventoryPopUp : MonoBehaviour
         }
     }
 
-    private void addRewardItem(string enjinToken, string tokenType)
+    private void addRewardItem(string tokenCode, string tokenType, string withdrawn)
     {
         GameObject newRewardItem = Instantiate<GameObject>(_rewardItemTemplate, _gridContent);
-        newRewardItem.GetComponent<RewardInventoryItem>().Setup(enjinToken, getRewardName(enjinToken), getRewardCost(tokenType), getRewardSprite(enjinToken, tokenType), onRewardButtonDown);
+        newRewardItem.GetComponent<RewardInventoryItem>().Setup(tokenCode, getRewardName(tokenCode), getRewardCost(tokenType), _coinName, getRewardSprite(tokenCode, tokenType), withdrawn, onRewardButtonDown);
         newRewardItem.SetActive(true);
     }
 
     private void onRewardButtonDown(RewardInventoryItem rewardItemSelected)
     {
         Debug.Log("onRewardButtonDown -> code: " + rewardItemSelected.RewardCode);
-        _enjinWithdrawalPopUp.Open(rewardItemSelected.RewardCode);
+        _enjinWithdrawalPopUp.Open(rewardItemSelected);
     }
 
     private string getRewardName(string tokenKey)
@@ -191,7 +235,7 @@ public class RewardsInventoryPopUp : MonoBehaviour
                 break;
 
             default:
-                    tokenName = "Unknown";
+                    tokenName = _defaultTokenName;
                     break;
         }
 
@@ -215,14 +259,12 @@ public class RewardsInventoryPopUp : MonoBehaviour
                 break;
         }
 
-        rewardCost += " " + _coinName;
-
         return rewardCost;
     }
 
     private Sprite getRewardSprite(string enjinToken, string rewardType)
     {
-        string path = "Images/";
+        string path = _imagesFolder;
         Sprite sprite = _defaultRewardSprite;
 
         switch (rewardType)
@@ -242,8 +284,11 @@ public class RewardsInventoryPopUp : MonoBehaviour
 
         if (loadedSprite != null)
         {
-            Debug.LogError("RewardsInventoryPopUp::getRewardSprite -> Reward sprite at path: " + path + " was not found. Returning default sprite.");
             sprite = loadedSprite;
+        }
+        else
+        {
+            Debug.LogError("RewardsInventoryPopUp::getRewardSprite -> Reward sprite at path: " + path + " was not found. Returning default sprite.");
         }
 
         return sprite;

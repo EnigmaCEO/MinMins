@@ -2328,6 +2328,87 @@ MonoBehaviour:
       - 
       Flags: 0000000000
       Languages_Touch: []
+    - Term: Use buttons to withdrawn Enjin Tokens.
+      TermType: 0
+      Description: 
+      Languages:
+      - Use buttons to withdrawn Enjin Tokens.
+      - Usa los botones para retirar los Token Enjin.
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Performing withdrawal...
+      TermType: 0
+      Description: 
+      Languages:
+      - Performing withdrawal...
+      - Realizando retiro...
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Press OK to start withdrawal process. Close window to go back.
+      TermType: 0
+      Description: 
+      Languages:
+      - Press OK to start withdrawal process. Close window to go back.
+      - "Presiona OK para comenzar el proceso de retiro. Cierra la ventana para volver
+        atr\xE1s."
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Press OK to request an Enjin Wallet so you can withdraw your tokens. Close
+        window to go back.
+      TermType: 0
+      Description: 
+      Languages:
+      - Press OK to request an Enjin Wallet so you can withdraw your tokens. Close
+        window to go back.
+      - "Presiona OK para solicitar una Cartera Enjin para que puedas retirar tus
+        tokens. Cierra la ventana para volver atr\xE1s."
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: ENJIN WITHDRAWAL
+      TermType: 0
+      Description: 
+      Languages:
+      - ENJIN WITHDRAWAL
+      - RETIRO ENJIN
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Withdrawal completed!
+      TermType: 0
+      Description: 
+      Languages:
+      - Withdrawal completed!
+      - "\xA1Retiro completado!"
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Withdrawal failed. Please try again.
+      TermType: 0
+      Description: 
+      Languages:
+      - Withdrawal failed. Please try again.
+      - "Retiro fall\xF3. Por favor intente otra vez."
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
     - Term: Tap boost to select/deselect.
       TermType: 0
       Description: 
@@ -2363,7 +2444,7 @@ MonoBehaviour:
     Google_WebServiceURL: https://script.google.com/macros/s/AKfycbw05ISkGCPtIS0hMzFD5jshgfH09mIP6BAxRKhWsA/exec
     Google_SpreadsheetKey: 1iIWCtExuyR2XXyYkJv6y83PTVMPC4FxzSITGGroefcg
     Google_SpreadsheetName: I2Loc MinMins Localization
-    Google_LastUpdatedVersion: 1624928560305
+    Google_LastUpdatedVersion: 1625185010603
     Google_Password: shalwend
     GoogleUpdateFrequency: 0
     GoogleInEditorCheckFrequency: 0

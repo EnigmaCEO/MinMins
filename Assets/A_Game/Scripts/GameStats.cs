@@ -1,5 +1,5 @@
 ﻿using GameEnums;
-using I2.Loc.SimpleJSON;
+using SimpleJSON;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -43,4 +43,6 @@ public class GameStats : SingletonMonobehaviour<GameStats>
     public bool QuestScoutPending = false;
     public Vector3 LastScoutPosition = Vector3.zero;
     public List<string> QuestUnits = new List<string>();
+
+    public int EnjBalance = 0;
 }
