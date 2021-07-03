@@ -44,18 +44,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PersistBetweenScenes: 1
-  EnableAllEnjinTokens: 1
+  EnableAllEnjinTokens: 0
   ForceEnjinRewardOnChest: 0
-  HideClouds: 1
-  BuyAndroid: 1
+  HideClouds: 0
+  BuyAndroid: 0
   DecisionTimeFreeze: 0
   WarVictory: 0
   ChestHit: 0
   ForcePvpAi: 0
-  AllEnjinTeamBoostTokens: 1
-  EnjinLinked: 1
+  AllEnjinTeamBoostTokens: 0
+  EnjinLinked: 0
   TreatBattleResultsAsPrivateMatch: 0
-  UseOfflineTestInventoryRewards: 1
+  UseOfflineTestInventoryRewards: 0
   OfflineTestInventoryRewards:
   - TokenCode: enjin_maxim
     TokenType: Special
@@ -70,16 +70,16 @@ MonoBehaviour:
     TokenType: Special
     Withdrawn: False
   WithdrawalResponse:
-    Enabled: 1
+    Enabled: 0
     Value: Error
   StartingEnjBalance:
-    Enabled: 1
+    Enabled: 0
     Value: 100
   SinglePlayerLevel:
     Enabled: 0
     Value: 50
   ForceTeamBoostReward:
-    Enabled: 1
+    Enabled: 0
     Value: True
   TeamBoostRewardCategory:
     Enabled: 0
@@ -91,7 +91,7 @@ MonoBehaviour:
     Enabled: 0
     Value: 10
   SetTeamBoostBonuses:
-    Enabled: 1
+    Enabled: 0
     Value: 5
   BuyResult:
     Enabled: 0
@@ -112,7 +112,7 @@ MonoBehaviour:
     Enabled: 0
     Value: Tank
   SetAllUnitsType:
-    Enabled: 1
+    Enabled: 0
     Value: Destroyer
   PowerScale:
     Enabled: 0
@@ -130,7 +130,7 @@ MonoBehaviour:
     Enabled: 0
     Value: 150
   RoundCount:
-    Enabled: 1
+    Enabled: 0
     Value: 1
   Damage:
     Enabled: 0
