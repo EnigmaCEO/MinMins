@@ -58,7 +58,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         public const string MATCH_DURATION = "match_duration";
 
         public const string BALANCES = "balances";
-        public const string ENJ_BALANCE = "enjBAlance";
+        public const string ENJ_BALANCE = "enjBalance";
         public const string WALLET = "wallet";
 
         /*
@@ -1079,7 +1079,9 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
                     JSONNode enjBalanceNode = walletNode[GameNetwork.TransactionKeys.ENJ_BALANCE];
                     if (enjBalanceNode != null)
                     {
-                        GameStats.Instance.EnjBalance = enjBalanceNode.AsInt;
+                        string balanceString = enjBalanceNode.ToString();
+                        balanceString = balanceString.Trim('"');
+                        GameStats.Instance.EnjBalance = float.Parse(balanceString);
                     }
                 }
             }

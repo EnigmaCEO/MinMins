@@ -44,5 +44,5 @@ public class GameStats : SingletonMonobehaviour<GameStats>
     public Vector3 LastScoutPosition = Vector3.zero;
     public List<string> QuestUnits = new List<string>();
 
-    public int EnjBalance = 0;
+    public float EnjBalance = 0;
 }

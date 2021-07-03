@@ -19,7 +19,7 @@ public class RewardInventoryItem : MonoBehaviour
         private set;
     }
 
-    public int CostNumber
+    public float CostNumber
     {
         get;
         private set;
@@ -31,7 +31,7 @@ public class RewardInventoryItem : MonoBehaviour
 
         _nameText.text = rewardName;
 
-        CostNumber = int.Parse(rewardCost);
+        CostNumber = float.Parse(rewardCost);
         _costText.text = rewardCost += " " + coinName; ;
 
         _icon.sprite = sprite;
