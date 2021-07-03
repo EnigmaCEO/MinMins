@@ -52,6 +52,9 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     [SerializeField] private int _lootBoxTiersAmount = 3;
     [SerializeField] private int _guaranteedUnitTierAmount = 1;
 
+    [SerializeField] private int _demonBoxUnitsAmount = 3;
+    [SerializeField] private int _legendBoxUnitAmount = 3;
+
     [SerializeField] private int _expToAddOnDuplicateUnit = 10;
 
     [SerializeField] private int _lastTierBronze_unitNumber = 40;
@@ -64,6 +67,9 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
     [SerializeField] private int _legend_firstUnitNumber = 100;
     [SerializeField] private int _legend_lastUnitNumer = 127;
+
+    [SerializeField] private int _demonFirstUnitNumber = 110;
+    [SerializeField] private int _demonLastUnitNumber = 114;
 
     [SerializeField] private float _tierBronze_GroupRarity = 0.5f;
     [SerializeField] private float _tierSilver_GroupRarity = 0.3f;
@@ -80,8 +86,13 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     private List<string> _tierSilver_units = new List<string>();
     private List<string> _tierGold_units = new List<string>();
 
-    private List<UnitRarity> _unitSpecialRarities = new List<UnitRarity>();
+    private List<string> _demon_units = new List<string>();
+    private List<string> _legend_units = new List<string>();
+
+    //private List<UnitRarity> _unitSpecialRarities = new List<UnitRarity>();
     //private Dictionary<Quests, int> _maxLevelByQuest = new Dictionary<Quests, int>();
+
+    private Dictionary<string, double> _rarityByUnit = new Dictionary<string, double>();
 
     private const char _GROUP_WITH_KEY_SEPARATOR = '|';
     private const char QUEST_WITH_LEVEL_SEPARATOR = ':';
@@ -597,23 +608,33 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
     public List<string> OpenLootBox(int boxIndex)
     {
+        LootBoxManager lootBoxManager = LootBoxManager.Instance;
+
         int boxTier = GetPackTier(boxIndex);
-        Dictionary<string, double> specialRarities = new Dictionary<string, double>();
-        foreach (UnitRarity rarity in _unitSpecialRarities)
-        {
-            specialRarities.Add(rarity.UnitName, (double)rarity.Rarity);
-        }
+        //Dictionary<string, double> specialRarities = new Dictionary<string, double>();
+        //foreach (UnitRarity rarity in _unitSpecialRarities)
+        //{
+        //    specialRarities.Add(rarity.UnitName, (double)rarity.Rarity);
+        //}
 
         List<string> unitPicks = null;
-        LootBoxManager lootBoxManager = LootBoxManager.Instance;
-        if (boxTier == Tiers.BRONZE)
+
+        if (boxIndex == BoxIndexes.DEMON)
         {
-            unitPicks = lootBoxManager.PickRandomizedNames(_lootBoxSize, true, null, specialRarities);
+            unitPicks = lootBoxManager.PickRandomizedNames(_demonBoxUnitsAmount, true, _demon_units, null, true);
+        }
+        else if (boxIndex == BoxIndexes.LEGEND)
+        {
+            unitPicks = lootBoxManager.PickRandomizedNames(_legendBoxUnitAmount, true, _legend_units, null, true);
+        }
+        else if (boxTier == Tiers.BRONZE)
+        {
+            unitPicks = lootBoxManager.PickRandomizedNames(_lootBoxSize, true, null, _rarityByUnit);
         }
         else
         {
             int specialRarityAmountToPick = _lootBoxSize - _guaranteedUnitTierAmount;
-            unitPicks = lootBoxManager.PickRandomizedNames(specialRarityAmountToPick, true, null, specialRarities);
+            unitPicks = lootBoxManager.PickRandomizedNames(specialRarityAmountToPick, true, null, _rarityByUnit);
             List<string> guaranteedTierUnits = null;
             if (boxTier == Tiers.SILVER)
             {
@@ -640,6 +661,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
                 unitPicks.Add(guaranteedUnitName);
             }
         }
+
         //List<int> lootBoxIndexes = LootBoxManager.Instance.PickRandomizedIndexes(lootBoxSize, false, _defaultRarityIndexes, specialRarities); //test
 
         foreach (string lootBoxUnitName in unitPicks)
@@ -915,31 +937,24 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     private void createUnitTierLists()
     {
         int firstTierBronze_number = 1;
-        for (int unitNumber = firstTierBronze_number; unitNumber <= _lastTierBronze_unitNumber; unitNumber++)
-        {
-            _tierBronze_units.Add(unitNumber.ToString());
-        }
-
+        populateUnitList(_tierBronze_units, firstTierBronze_number, _lastTierBronze_unitNumber);
+        
         int firstTierSilver_number = _lastTierBronze_unitNumber + 1;
-        for (int unitNumber = firstTierSilver_number; unitNumber <= _lastTierSilver_unitNumber; unitNumber++)
-        {
-            _tierSilver_units.Add(unitNumber.ToString());
-        }
+        populateUnitList(_tierSilver_units, firstTierSilver_number, _lastTierSilver_unitNumber);
 
         int firstTierGold_number = _lastTierSilver_unitNumber + 1;
-        for (int unitNumber = firstTierGold_number; unitNumber <= _lastTierGold_unitNumber; unitNumber++)
-        {
-            _tierGold_units.Add(unitNumber.ToString());
-        }
+        populateUnitList(_tierGold_units, firstTierGold_number, _lastTierGold_unitNumber);
 
-        addEnjinUnitsToTierGoldList();
+        populateUnitList(_tierGold_units, _legend_firstUnitNumber, _legend_lastUnitNumer);
+        populateUnitList(_legend_units, _legend_firstUnitNumber, _legend_lastUnitNumer);
+        populateUnitList(_demon_units, _demonFirstUnitNumber, _demonLastUnitNumber);
     }
 
-    private void addEnjinUnitsToTierGoldList()
+    public void populateUnitList(List<string> unitList, int firstUnitNumber, int lastUnitNumber)
     {
-        for (int i = _legend_firstUnitNumber; i <= _legend_lastUnitNumer; i++)
+        for (int i = firstUnitNumber; i <= lastUnitNumber; i++)
         {
-            _tierGold_units.Add(i.ToString());
+            unitList.Add(i.ToString());
         }
     }
 
@@ -969,7 +984,8 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
                 rarity = tierSilver_rarity;
             }
 
-            _unitSpecialRarities.Add(new UnitRarity(i.ToString(), rarity));
+            //_unitSpecialRarities.Add(new UnitRarity(i.ToString(), rarity));
+            _rarityByUnit.Add(i.ToString(), rarity);
         }
     }
 

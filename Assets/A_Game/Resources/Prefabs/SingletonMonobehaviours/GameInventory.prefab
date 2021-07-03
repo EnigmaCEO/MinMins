@@ -52,6 +52,8 @@ MonoBehaviour:
   _lootBoxSize: 3
   _lootBoxTiersAmount: 3
   _guaranteedUnitTierAmount: 1
+  _demonBoxUnitsAmount: 3
+  _legendBoxUnitAmount: 3
   _expToAddOnDuplicateUnit: 10
   _lastTierBronze_unitNumber: 40
   _lastTierSilver_unitNumber: 70
@@ -59,10 +61,13 @@ MonoBehaviour:
   _tierBronze_unitsAmount: 40
   _tierSilver_unitsAmount: 30
   _tierGold_unitsAmount: 10
-  _enjin_firstUnitNumber: 100
-  _enjin_lastUnitNumer: 127
+  _legend_firstUnitNumber: 100
+  _legend_lastUnitNumer: 127
+  _demonFirstUnitNumber: 110
+  _demonLastUnitNumber: 114
   _tierBronze_GroupRarity: 0.7
   _tierSilver_GroupRarity: 0.2
   _tierGold_GroupRarity: 0.1
   _enjinUnitStartingLevel: 3
   _oreMaxBonus: 10
+  _packTiers: 010000000200000003000000030000000300000003000000

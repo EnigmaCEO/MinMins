@@ -36,7 +36,7 @@ public class GameStore : EnigmaScene
     //[SerializeField] private Image giftProgress;
     //[SerializeField] private Text giftText;
 
-    private int _selectedPackIndex;
+    private int _selectedBoxIndex;
 
     override public void Awake()
     {
@@ -134,17 +134,17 @@ public class GameStore : EnigmaScene
         }
     }
 
-    public void OnPackBuyButtonDown(int packIndex)
+    public void OnPackBuyButtonDown(int boxIndex)
     {
         GameSounds.Instance.PlayUiAdvanceSound();
 
-        _selectedPackIndex = packIndex;
+        _selectedBoxIndex = boxIndex;
 
-        _lootBoxBuyConfirmPopUp.SetPackName(_confirmPopUpPackNames[packIndex]);
-        _lootBoxBuyConfirmPopUp.SetPackDescription(_confirmPopUpPackDescriptions[packIndex]);
-        _lootBoxBuyConfirmPopUp.SetStars(GameInventory.Instance.GetPackTier(packIndex));
-        _lootBoxBuyConfirmPopUp.SetPackSprite(_confirmPopUpPackImages[packIndex].sprite);
-        _lootBoxBuyConfirmPopUp.SetPrice(_confirmPopUpPackPrices[packIndex]);
+        _lootBoxBuyConfirmPopUp.SetPackName(_confirmPopUpPackNames[boxIndex]);
+        _lootBoxBuyConfirmPopUp.SetPackDescription(_confirmPopUpPackDescriptions[boxIndex], boxIndex);
+        _lootBoxBuyConfirmPopUp.SetStars(GameInventory.Instance.GetPackTier(boxIndex));
+        _lootBoxBuyConfirmPopUp.SetPackSprite(_confirmPopUpPackImages[boxIndex].sprite);
+        _lootBoxBuyConfirmPopUp.SetPrice(_confirmPopUpPackPrices[boxIndex]);
 
         _lootBoxBuyConfirmPopUp.Open();
     }
@@ -165,7 +165,7 @@ public class GameStore : EnigmaScene
     public void OnExtraLootBoxPopUpDismissButtonDown()
     {
         GameSounds.Instance.PlayUiBackSound();
-        grantBox(/*GameInventory.Tiers.BRONZE*/ BoxIndexes.STARTER, 2);
+        grantBox(BoxIndexes.STARTER, 2);
         _extraLootBoxPopUp.SetActive(false);
     }
 
@@ -353,7 +353,7 @@ public class GameStore : EnigmaScene
 
     public void BuyMasterBoxOffer()
     {
-        _selectedPackIndex = BoxIndexes.SPECIAL;
+        _selectedBoxIndex = BoxIndexes.SPECIAL;
         onLootBoxBuyConfirmButtonDown();
         _extraLootBoxPopUp.SetActive(false);
     }
@@ -381,7 +381,7 @@ public class GameStore : EnigmaScene
 #elif DEVELOPMENT_BUILD || UNITY_EDITOR
         if (GameHacks.Instance.BuyAndroid)
         {
-            handleCurrencyBuyResult(IAPManager.Instance.IAP_IDS[_selectedPackIndex], true);  // Buy hack to work on android
+            handleCurrencyBuyResult(IAPManager.Instance.IAP_IDS[_selectedBoxIndex], true);  // Buy hack to work on android
         }
         else
 #else

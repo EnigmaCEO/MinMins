@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using GameConstants;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class LootBoxBuyConfirmPopUp : MonoBehaviour
@@ -18,7 +19,9 @@ public class LootBoxBuyConfirmPopUp : MonoBehaviour
     {
         int starsContentLenght = _tierStarsContent.childCount;
         for (int i = 0; i < starsContentLenght; i++)
+        {
             _tierStarsContent.GetChild(i).GetComponent<Image>().enabled = (i < tier);
+        }
     }
 
     public void SetPackName(string name)
@@ -27,10 +30,18 @@ public class LootBoxBuyConfirmPopUp : MonoBehaviour
         LocalizationManager.LocalizeText(_packNameText);
     }
 
-    public void SetPackDescription(string description)
+    public void SetPackDescription(string description, int boxIndex)
     {
         _packNameDescriptionText.text = description;
         LocalizationManager.LocalizeText(_packNameDescriptionText);
+
+        if (GameNetwork.Instance.IsEnjinLinked)
+        {
+            if ((boxIndex == BoxIndexes.DEMON) || (boxIndex == BoxIndexes.LEGEND))
+            {
+                _packNameDescriptionText.text += "\n" + LocalizationManager.GetTermTranslation(UiMessages.ENJIN_AUTO_WITHDRAWAL);
+            }
+        }
     }
 
     public void SetPrice(string price)

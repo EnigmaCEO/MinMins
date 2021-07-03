@@ -63,6 +63,7 @@ namespace GameConstants
         public const string GET_ENJIN_WALLET_DESCRIPTION = "Press OK to request an Enjin Wallet so you can withdraw your tokens. Close window to go back.";
         public const string WITHDRAWAL_COMPLETED = "Withdrawal completed!";
         public const string WITHDRAWAL_FAILED = "Withdrawal failed. Please try again.";
+        public const string ENJIN_AUTO_WITHDRAWAL = "* Items are immediately sent to your Enjin wallet after trade approval";
     }
 
     public class Terms

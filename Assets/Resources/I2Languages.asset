@@ -519,38 +519,13 @@ MonoBehaviour:
       TermType: 0
       Description: 
       Languages:
-      - '* 2 items total with purchase
+      - '* 3 items total with purchase
 
-        * 1 guaranteed rare item
-
-        * 1 random playable demon king token
-
-        * Items are immediately sent to your Enjin wallet after trade approval'
-      - "* 2 \xEDtems totales con la compra\n* 1 \xEDtem raro garantizado\n* 1 ficha
-        rey demonio jugable aleatoria\n* Los \xEDtems son inmediatamente enviados
-        a tu Billetera Enjin luego de aprobarse el canje"
-      - "* \u8CFC\u8CB7\u5F8C\u53EF\u7372\u5F97 2 \u9805\u7269\u54C1\n* \u5176\u4E2D
-        1 \u9805\u70BA\u7A00\u6709\u54C1\n* \u96A8\u6A5F\u7372\u5F97 1 \u500B\u60E1\u738B\u4EE3\u5E63\uFF0C\u53EF\u5728\u904A\u6232\u4E2D\u4F7F\u7528\n*
-        \u4EA4\u6613\u4E00\u7D93\u5BE9\u6279\uFF0C\u6240\u5F97\u7269\u54C1\u6703\u7ACB\u5373\u65B0\u589E\u5230\u4F60\u7684
-        Enjin \u9322\u5305* \u8CFC\u8CB7\u5F8C\u53EF\u7372\u5F97 2 \u9805\u7269\u54C1\n*
-        \u5176\u4E2D 1 \u9805\u70BA\u7A00\u6709\u54C1\n* \u96A8\u6A5F\u7372\u5F97
-        1 \u500B\u60E1\u738B\u4EE3\u5E63\uFF0C\u53EF\u5728\u904A\u6232\u4E2D\u4F7F\u7528\n*
-        \u4EA4\u6613\u4E00\u7D93\u5BE9\u6279\uFF0C\u6240\u5F97\u7269\u54C1\u6703\u7ACB\u5373\u65B0\u589E\u5230\u4F60\u7684
-        Enjin \u9322\u5305"
-      - "* \u8D2D\u4E70\u603B\u5171\u5305\u542B2\u4E2A\u7269\u54C1\n* \u4FDD\u8BC1\u67091\u4E2A\u662F\u7A00\u6709\u7269\u54C1\n*
-        1\u4E2A\u968F\u673A\u53EF\u73A9\u7684\u9B54\u738B\u4EE3\u5E01\n* \u4EA4\u6613\u6210\u529F\u540E\u7269\u54C1\u4F1A\u7ACB\u5373\u53D1\u653E\u5230\u60A8\u7684Enjin
-        Wallet\u4E2D* \u8D2D\u4E70\u603B\u5171\u5305\u542B2\u4E2A\u7269\u54C1\n* \u4FDD\u8BC1\u67091\u4E2A\u662F\u7A00\u6709\u7269\u54C1\n*
-        1\u4E2A\u968F\u673A\u53EF\u73A9\u7684\u9B54\u738B\u4EE3\u5E01\n* \u4EA4\u6613\u6210\u529F\u540E\u7269\u54C1\u4F1A\u7ACB\u5373\u53D1\u653E\u5230\u60A8\u7684Enjin
-        Wallet\u4E2D"
-      - "* \uAD6C\uB9E4 \uC2DC \uC544\uC774\uD15C \uCD1D 2\uAC1C\n* 1\uAC1C\uC758
-        \uBCF4\uC7A5\uB41C \uD76C\uADC0 \uC544\uC774\uD15C\n* 1\uAC1C\uC758 \uBB34\uC791\uC704
-        \uD50C\uB808\uC774 \uAC00\uB2A5 \uC545\uB9C8\uC758 \uC655 \uD1A0\uD070\n*
-        \uC544\uC774\uD15C\uC740 \uAC70\uB798 \uC2B9\uC778 \uC2DC \uC5D4\uC9C4 \uC9C0\uAC11\uC5D0
-        \uBC14\uB85C \uC804\uC1A1\uB429\uB2C8\uB2E4* \uAD6C\uB9E4 \uC2DC \uC544\uC774\uD15C
-        \uCD1D 2\uAC1C\n* 1\uAC1C\uC758 \uBCF4\uC7A5\uB41C \uD76C\uADC0 \uC544\uC774\uD15C\n*
-        1\uAC1C\uC758 \uBB34\uC791\uC704 \uD50C\uB808\uC774 \uAC00\uB2A5 \uC545\uB9C8\uC758
-        \uC655 \uD1A0\uD070\n* \uC544\uC774\uD15C\uC740 \uAC70\uB798 \uC2B9\uC778
-        \uC2DC \uC5D4\uC9C4 \uC9C0\uAC11\uC5D0 \uBC14\uB85C \uC804\uC1A1\uB429\uB2C8\uB2E4"
+        * 3 random playable demon king token'
+      - "* 3 \xEDtems totales con la compra\n* 3 fichas rey demonio jugable aleatorias"
+      - 
+      - 
+      - 
       Flags: 0000000000
       Languages_Touch: []
     - Term: Destroyer
@@ -998,44 +973,25 @@ MonoBehaviour:
       TermType: 0
       Description: 
       Languages:
-      - '* 4 items total with purchase
+      - '* 3 items total with purchase
 
-        * 2 guaranteed rare items
-
-        * 2 random items (80% chance of a common item, 20% chance of a rare item)
-
-        * Items are immediately sent to your Enjin wallet after trade approval'
-      - "* 4 \xEDtems totales con la compra\n* 2 \xEDtems raros garantizados\n* 2
-        \xEDtems aleatorios (80% chance de un \xEDtem com\xFAn, 20% chance de un \xEDtem
-        raro)\n* Los \xEDtems son inmediatamente enviados a tu Billetera Enjin luego
-        de aprobarse el canje"
-      - "* \u8CFC\u8CB7\u5F8C\u53EF\u7372\u5F97 4 \u9805\u7269\u54C1\n* \u5176\u4E2D
-        2 \u9805\u70BA\u7A00\u6709\u54C1\n* \u96A8\u6A5F\u7372\u5F97 2 \u9805\u7269\u54C1
-        (80%\u6A5F\u6703\u70BA\u4E00\u822C\u7269\u54C1\uFF0C20%\u6A5F\u6703\u70BA\u7A00\u6709\u54C1)\n*
-        \u4EA4\u6613\u4E00\u7D93\u5BE9\u6279\uFF0C\u6240\u5F97\u7269\u54C1\u6703\u7ACB\u5373\u65B0\u589E\u5230\u4F60\u7684
-        Enjin \u9322\u5305* \u8CFC\u8CB7\u5F8C\u53EF\u7372\u5F97 4 \u9805\u7269\u54C1\n*
-        \u5176\u4E2D 2 \u9805\u70BA\u7A00\u6709\u54C1\n* \u96A8\u6A5F\u7372\u5F97
-        2 \u9805\u7269\u54C1 (80%\u6A5F\u6703\u70BA\u4E00\u822C\u7269\u54C1\uFF0C20%\u6A5F\u6703\u70BA\u7A00\u6709\u54C1)\n*
-        \u4EA4\u6613\u4E00\u7D93\u5BE9\u6279\uFF0C\u6240\u5F97\u7269\u54C1\u6703\u7ACB\u5373\u65B0\u589E\u5230\u4F60\u7684
-        Enjin \u9322\u5305"
-      - "* \u8D2D\u4E70\u603B\u5171\u5305\u542B4\u4E2A\u7269\u54C1\n* \u4FDD\u8BC1\u67092\u4E2A\u662F\u7A00\u6709\u7269\u54C1\n*
-        2\u4E2A\u968F\u673A\u7269\u54C1 (80%\u51E0\u7387\u83B7\u5F971\u4E2A\u666E\u901A\u7269\u54C1\uFF0C20%\u51E0\u7387\u83B7\u5F971\u4E2A\u7A00\u6709\u7269\u54C1)\n*
-        \u4EA4\u6613\u6210\u529F\u540E\u7269\u54C1\u4F1A\u7ACB\u5373\u53D1\u653E\u5230\u60A8\u7684Enjin
-        Wallet\u4E2D* \u8D2D\u4E70\u603B\u5171\u5305\u542B4\u4E2A\u7269\u54C1\n* \u4FDD\u8BC1\u67092\u4E2A\u662F\u7A00\u6709\u7269\u54C1\n*
-        2\u4E2A\u968F\u673A\u7269\u54C1 (80%\u51E0\u7387\u83B7\u5F971\u4E2A\u666E\u901A\u7269\u54C1\uFF0C20%\u51E0\u7387\u83B7\u5F971\u4E2A\u7A00\u6709\u7269\u54C1)\n*
-        \u4EA4\u6613\u6210\u529F\u540E\u7269\u54C1\u4F1A\u7ACB\u5373\u53D1\u653E\u5230\u60A8\u7684Enjin
-        Wallet\u4E2D"
-      - "* \uAD6C\uB9E4 \uC2DC \uC544\uC774\uD15C \uCD1D 4\uAC1C\n* 2\uAC1C\uC758
-        \uBCF4\uC7A5\uB41C \uD76C\uADC0 \uC544\uC774\uD15C\n* 2\uAC1C\uC758 \uBB34\uC791\uC704
-        \uC544\uC774\uD15C (80%\uC758 \uC77C\uBC18 \uC544\uC774\uD15C \uD655\uB960,
-        20%\uC758 \uD76C\uADC0 \uC544\uC774\uD15C \uD655\uB960)\n* \uC544\uC774\uD15C\uC740
-        \uAC70\uB798 \uC2B9\uC778 \uC2DC \uC5D4\uC9C4 \uC9C0\uAC11\uC5D0 \uBC14\uB85C
-        \uC804\uC1A1\uB429\uB2C8\uB2E4* \uAD6C\uB9E4 \uC2DC \uC544\uC774\uD15C \uCD1D
-        4\uAC1C\n* 2\uAC1C\uC758 \uBCF4\uC7A5\uB41C \uD76C\uADC0 \uC544\uC774\uD15C\n*
-        2\uAC1C\uC758 \uBB34\uC791\uC704 \uC544\uC774\uD15C (80%\uC758 \uC77C\uBC18
-        \uC544\uC774\uD15C \uD655\uB960, 20%\uC758 \uD76C\uADC0 \uC544\uC774\uD15C
-        \uD655\uB960)\n* \uC544\uC774\uD15C\uC740 \uAC70\uB798 \uC2B9\uC778 \uC2DC
-        \uC5D4\uC9C4 \uC9C0\uAC11\uC5D0 \uBC14\uB85C \uC804\uC1A1\uB429\uB2C8\uB2E4"
+        * 3 random playable legend units'
+      - "* 3 \xEDtems totales con la compra\n* 3 unidades leyenda jugables aleatorias\n"
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: '* Items are immediately sent to your Enjin wallet after trade approval'
+      TermType: 0
+      Description: 
+      Languages:
+      - '* Items are immediately sent to your Enjin wallet after trade approval'
+      - "* Los \xEDtems son inmediatamente enviados a tu Billetera Enjin luego de
+        aprobarse el canje"
+      - 
+      - 
+      - 
       Flags: 0000000000
       Languages_Touch: []
     - Term: Legend Unit tokens required
@@ -2444,7 +2400,7 @@ MonoBehaviour:
     Google_WebServiceURL: https://script.google.com/macros/s/AKfycbw05ISkGCPtIS0hMzFD5jshgfH09mIP6BAxRKhWsA/exec
     Google_SpreadsheetKey: 1iIWCtExuyR2XXyYkJv6y83PTVMPC4FxzSITGGroefcg
     Google_SpreadsheetName: I2Loc MinMins Localization
-    Google_LastUpdatedVersion: 1625185010603
+    Google_LastUpdatedVersion: 1625271479943
     Google_Password: shalwend
     GoogleUpdateFrequency: 0
     GoogleInEditorCheckFrequency: 0
