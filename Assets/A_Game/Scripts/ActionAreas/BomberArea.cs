@@ -18,8 +18,10 @@ public class BomberArea : ActionArea
         if (_warRef.GetIsHost())
         {
             MinMinUnit unit = getUnitFromCollider(coll);
-            if((unit != null) && (unit.TeamName != OwnerTeamName))
+            if ((unit != null) && (unit.TeamName != OwnerTeamName))
+            {
                 dealDamage(unit.name);
+            }
         }
     }
 
@@ -27,16 +29,18 @@ public class BomberArea : ActionArea
     {
         base.setEffect(effectName);
 
-        if (effectName == MinMinUnit.EffectNames.FireExplosion)
-        {
-            _colliderEffect = _effect.transform.Find("FireBurst").gameObject;
+        //if (effectName == MinMinUnit.EffectNames.FireExplosion)
+        //{
+            _colliderEffect = _effect.transform.Find("Burst").gameObject;
             _colliderEffect.SetActive(false);
 
-            _chargeEffect = _effect.transform.Find("FireCharge").gameObject;
-        }
+            _chargeEffect = _effect.transform.Find("Charge").gameObject;
+        //}
 
         if (_colliderEffect != null)
+        {
             _colliderEffect.SetActive(false);
+        }
     }
 
     protected override void enableCollider(bool enabled)
@@ -46,9 +50,13 @@ public class BomberArea : ActionArea
         SoundManager.Play(GameConstants.SoundNames.BOMB, SoundManager.AudioTypes.Sfx);
 
         if (_colliderEffect != null)
+        {
             _colliderEffect.SetActive(true);
+        }
 
         if (_chargeEffect != null)
+        {
             _chargeEffect.SetActive(false);
+        }
     }
 }

@@ -18,11 +18,11 @@ public class DestroyerArea : ActionArea
         base.SetUpActionArea(areaName, position, direction, unitName, effectName, teamName, networkPlayerId);
         _velocity = direction * GameConfig.Instance.ProjectilesSpeed;
 
-        if (effectName == MinMinUnit.EffectNames.LightningProjectile)
+        //if (effectName == MinMinUnit.EffectNames.LightningProjectile)
         {
             foreach (ParticleSystem particles in _effect.GetComponentsInChildren<ParticleSystem>())
             {
-                particles.startSize = this.transform.localScale.x * ScaleFactorToParticleSizeFactor;
+                particles.startSize *= this.transform.localScale.x * ScaleFactorToParticleSizeFactor;
             }
         }
 

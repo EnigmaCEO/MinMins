@@ -10,7 +10,9 @@ public class TankArea : ActionArea
         base.SetWarRef(warRef);
 
         if (_warRef.GetIsHost())
+        {
             _warRef.AddTankArea(this);
+        }
 
         SoundManager.Play(GameConstants.SoundNames.GUARD, SoundManager.AudioTypes.Sfx);
     }

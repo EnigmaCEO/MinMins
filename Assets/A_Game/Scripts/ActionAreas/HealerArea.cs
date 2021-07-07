@@ -10,7 +10,9 @@ public class HealerArea : ActionArea
         base.SetWarRef(warRef);
 
         if (_warRef.GetIsHost())
+        {
             _warRef.AddHealerArea(this);
+        }
 
         SoundManager.Play(GameConstants.SoundNames.HEAL, SoundManager.AudioTypes.Sfx);
     }
@@ -23,8 +25,10 @@ public class HealerArea : ActionArea
         {
             MinMinUnit unit = getUnitFromCollider(coll);
 
-            if((unit != null) && (unit.TeamName == OwnerTeamName))
+            if ((unit != null) && (unit.TeamName == OwnerTeamName))
+            {
                 _warRef.SetUnitForHealing(unit.name, this);
+            }
         }
     }
 }

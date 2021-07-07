@@ -23,7 +23,12 @@ public class MinMinUnit : NetworkEntity
         LightningProjectile,
         ScoutLight,
         ShieldEffect,
-        Six
+        //Six
+        FireExplosionDemon,
+        LifeAreaDemon,
+        LightningProjectileDemon,
+        ScoutLightDemon,
+        ShieldEffectDemon,
     }
 
     public float Strength = 1;
