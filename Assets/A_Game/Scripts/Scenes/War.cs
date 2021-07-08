@@ -9,6 +9,7 @@ using CodeStage.AntiCheat.Storage;
 using SimpleJSON;
 using System.Runtime.ConstrainedExecution;
 using GameEnums;
+using GameConstants;
 
 public class War : NetworkEntity
 {
@@ -2503,7 +2504,7 @@ public class War : NetworkEntity
                     int chance = 5;
                     int enjinWinsRequired = 10;
 
-                    if (gameNetwork.HasEnjinMinMinsToken)
+                    if (gameNetwork.GetTokenAvailable(EnjinTokenKeys.MINMINS_TOKEN))
                     {
                         chance = 25;
                         enjinWinsRequired = 5;

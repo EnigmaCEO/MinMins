@@ -97,7 +97,9 @@ public class TeamBoostSelection : EnigmaScene
         foreach (Transform child in _teamBoostGridContent)
         {
             if (child.gameObject != teamBoostItemTemplate)
+            {
                 Destroy(child.gameObject);
+            }
         }
 
         GameStats gameStats = GameStats.Instance;
@@ -112,10 +114,10 @@ public class TeamBoostSelection : EnigmaScene
             addBoostItem(teamBoostItemTemplate, tokenItem, false);
         }
 
-        List<TeamBoostItemGroup> oreItems = GameInventory.Instance.GetOreItemsOwned();
-        foreach (TeamBoostItemGroup boostItem in oreItems)
+        List<TeamBoostItemGroup> oreItemGroups = GameInventory.Instance.GetOreItemsOwned();
+        foreach (TeamBoostItemGroup boostItemGroup in oreItemGroups)
         {
-            addBoostItem(teamBoostItemTemplate, boostItem, true);
+            addBoostItem(teamBoostItemTemplate, boostItemGroup, true);
         }
 
         teamBoostItemTemplate.SetActive(false);

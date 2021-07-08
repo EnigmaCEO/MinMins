@@ -13,7 +13,7 @@ public class RewardInventoryItem : MonoBehaviour
 
     private Action<RewardInventoryItem> _callback;
 
-    public string RewardCode
+    public string TokenKey
     {
         get;
         private set;
@@ -25,9 +25,9 @@ public class RewardInventoryItem : MonoBehaviour
         private set;
     }
 
-    public void Setup(string rewardCode, string rewardName, string rewardCost, string coinName, Sprite sprite, string withdrawn, Action<RewardInventoryItem> buttonDownCallback)
+    public void Setup(string tokenKey, string rewardName, string rewardCost, string coinName, Sprite sprite, Action<RewardInventoryItem> buttonDownCallback)
     {
-        RewardCode = rewardCode;
+        TokenKey = tokenKey;
 
         _nameText.text = rewardName;
 
@@ -37,11 +37,12 @@ public class RewardInventoryItem : MonoBehaviour
         _icon.sprite = sprite;
 
         _callback = buttonDownCallback;
+    }
 
-        bool withdrawnBool = bool.Parse(withdrawn);
-
-        _withdrawButton.enabled = !withdrawnBool;
-        _withdrawButton.GetComponent<Image>().color = withdrawnBool ? Color.grey : Color.white ;
+    public void SetWithdrawn()
+    {
+        _withdrawButton.enabled = false;
+        _withdrawButton.GetComponent<Image>().color = Color.gray; // withdrawn ? Color.grey : Color.white;
     }
 
     public void ButtonDown()

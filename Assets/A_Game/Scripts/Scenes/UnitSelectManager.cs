@@ -58,8 +58,10 @@ public class UnitSelectManager : EnigmaScene
 
         AdsManager.OnAdRewardGranted += handleAdReward;
         CloseExpPopup();
-        
-        List<string> inventoryUnitNames = GameInventory.Instance.GetInventoryUnitNames();  //TODO: Check if this needs to return stats
+
+        GameInventory gameInventory = GameInventory.Instance;
+
+        List<string> inventoryUnitNames = gameInventory.GetInventoryUnitNames();  //TODO: Check if this needs to return stats
         int unitsLength = inventoryUnitNames.Count;
         GameObject unitGridItemTemplate = _unitsGridContent.GetChild(0).gameObject;
 
@@ -72,7 +74,7 @@ public class UnitSelectManager : EnigmaScene
             unitTransform.GetComponent<Button>().onClick.AddListener(() => { onUnitFightButtonDown(unitName); });
             unitTransform.Find("InfoButton").GetComponent<Button>().onClick.AddListener(() => { onUnitInfoButtonDown(unitName); });
 
-            int unitTier = GameInventory.Instance.GetUnitTier(unitName);
+            int unitTier = gameInventory.GetUnitTier(unitName);
             unitTransform.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/unit_frame_t" + unitTier);
 
             for (int x = 1; x < 4; x++)
@@ -83,8 +85,7 @@ public class UnitSelectManager : EnigmaScene
                 }
             }
 
-            unitTransform.Find("level/txt_level").GetComponent<Text>().text = GameInventory.Instance.GetLocalUnitLevel(unitName).ToString();
-
+            unitTransform.Find("level/txt_level").GetComponent<Text>().text = gameInventory.GetLocalUnitLevel(unitName).ToString();
         }
 
         unitGridItemTemplate.SetActive(false);

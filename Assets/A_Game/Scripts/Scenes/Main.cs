@@ -8,6 +8,7 @@ using UnityEngine.UDP;
 using System;
 using SimpleJSON;
 using System.Collections.Generic;
+using GameConstants;
 
 public class Main : EnigmaScene
 {
@@ -175,7 +176,10 @@ public class Main : EnigmaScene
         }
         //===========================================================================================================================
 
-        UpdateEnjinDisplay();
+        if (loggedIn)
+        {
+            UpdateEnjinDisplay();
+        }
 
         //if (loggedIn)
         //{
@@ -476,9 +480,9 @@ public class Main : EnigmaScene
         _enjinWindow.gameObject.SetActive(false);
     }
 
-    private void addToEnjinItemDisplay(bool flag, string label)
+    private void addToEnjinItemDisplay(string tokenName, string label)
     {
-        if (flag)
+        if (GameNetwork.Instance.GetTokenAvailable(tokenName))
         {
             GameObject newEnjinTokenItem = Instantiate<GameObject>(_enjinTokenTemplate, _enjinTokensContent);
             newEnjinTokenItem.name = label;
@@ -530,35 +534,91 @@ public class Main : EnigmaScene
             //Text text = _enjinIcon.GetComponentInChildren<Text>();
             //text.text = ""; 
 
-            addToEnjinItemDisplay(gameNetwork.HasEnjinMft, "Enjin MFT");
-            addToEnjinItemDisplay(gameNetwork.HasEnjinEnigmaToken, "Enigma Token");
-            addToEnjinItemDisplay(gameNetwork.HasEnjinMinMinsToken, "Min-Mins Token");
+            addToEnjinItemDisplay(EnigmaConstants.TokenKeys.ENJIN_MFT, "Enjin MFT");
+            addToEnjinItemDisplay(EnigmaConstants.TokenKeys.ENIGMA_TOKEN, "Enigma Token");
 
-            addToEnjinItemDisplay(gameNetwork.HasEnjinMaxim, "Maxim Legend");
-            addToEnjinItemDisplay(gameNetwork.HasEnjinWitek, "Witek Legend");
-            addToEnjinItemDisplay(gameNetwork.HasEnjinBryana, "Bryana Legend");
-            addToEnjinItemDisplay(gameNetwork.HasEnjinTassio, "Tassio Legend");
-            addToEnjinItemDisplay(gameNetwork.HasEnjinSimon, "Simon Legend");
+            addToEnjinItemDisplay(EnjinTokenKeys.MINMINS_TOKEN, "Min-Mins Token");
 
-            addToEnjinItemDisplay(gameNetwork.HasEnjinEsther, "Esther Legend");
-            addToEnjinItemDisplay(gameNetwork.HasEnjinAlex, "Alex Legend");
-            addToEnjinItemDisplay(gameNetwork.HasEnjinEvan, "Evan Legend");
-            addToEnjinItemDisplay(gameNetwork.HasEnjinLizz, "Lizz Legend");
-            addToEnjinItemDisplay(gameNetwork.HasEnjinBrad, "Brad Legend");
+            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_MAXIM, "Maxim Legend");
+            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_WITEK, "Witek Legend");
+            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_BRYANA, "Bryana Legend");
+            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_TASSIO, "Tassio Legend");
+            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_SIMON, "Simon Legend");
 
-            addToEnjinItemDisplay(gameNetwork.HasKnightHealer, "Deadly Knight: Healer");
-            addToEnjinItemDisplay(gameNetwork.HasKnightBomber, "Deadly Knight: Bomber");
-            addToEnjinItemDisplay(gameNetwork.HasKnightDestroyer, "Deadly Knight: Destroyer");
-            addToEnjinItemDisplay(gameNetwork.HasKnightScout, "Deadly Knight: Scout");
-            addToEnjinItemDisplay(gameNetwork.HasKnightTank, "Deadly Knight: Tank");
+            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_ESTHER, "Esther Legend");
+            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_ALEX, "Alex Legend");
+            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_EVAN, "Evan Legend");
+            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_LIZZ, "Lizz Legend");
+            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_BRAD, "Brad Legend");
 
-            addToEnjinItemDisplay(gameNetwork.HasDemonHealer, "Demon King: Healer");
-            addToEnjinItemDisplay(gameNetwork.HasDemonBomber, "Demon King: Bomber");
-            addToEnjinItemDisplay(gameNetwork.HasDemonDestroyer, "Demon King: Destroyer");
-            addToEnjinItemDisplay(gameNetwork.HasDemonScout, "Demon King: Scout");
-            addToEnjinItemDisplay(gameNetwork.HasDemonTank, "Demon King: Tank");
+            addToEnjinItemDisplay(EnjinTokenKeys.KNIGHT_HEALER, "Deadly Knight: Healer");
+            addToEnjinItemDisplay(EnjinTokenKeys.KNIGHT_BOMBER, "Deadly Knight: Bomber");
+            addToEnjinItemDisplay(EnjinTokenKeys.KNIGHT_DESTROYER, "Deadly Knight: Destroyer");
+            addToEnjinItemDisplay(EnjinTokenKeys.KNIGHT_SCOUT, "Deadly Knight: Scout");
+            addToEnjinItemDisplay(EnjinTokenKeys.KNIGHT_TANK, "Deadly Knight: Tank");
 
-            addToEnjinItemDisplay(gameNetwork.HasSwissborgCyborg, "Swissborg Cyborg");
+            addToEnjinItemDisplay(EnjinTokenKeys.DEMON_HEALER, "Demon King: Healer");
+            addToEnjinItemDisplay(EnjinTokenKeys.DEMON_BOMBER, "Demon King: Bomber");
+            addToEnjinItemDisplay(EnjinTokenKeys.DEMON_DESTROYER, "Demon King: Destroyer");
+            addToEnjinItemDisplay(EnjinTokenKeys.DEMON_SCOUT, "Demon King: Scout");
+            addToEnjinItemDisplay(EnjinTokenKeys.DEMON_TANK, "Demon King: Tank");
+
+            addToEnjinItemDisplay(EnjinTokenKeys.SWISSBORG_CYBORG, "Swissborg Cyborg");
+
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_1, "Damage Ore +1");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_2, "Damage Ore +2");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_3, "Damage Ore +3");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_4, "Damage Ore +4");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_5, "Damage Ore +5");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_6, "Damage Ore +6");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_7, "Damage Ore +7");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_8, "Damage Ore +8");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_9, "Damage Ore +9");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_10, "Damage Ore +10");
+
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_1, "Defense Ore +1");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_2, "Defense Ore +2");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_3, "Defense Ore +3");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_4, "Defense Ore +4");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_5, "Defense Ore +5");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_6, "Defense Ore +6");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_7, "Defense Ore +7");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_8, "Defense Ore +8");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_9, "Defense Ore +9");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_10, "Defense Ore +10");
+
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_1, "Health Ore +1");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_2, "Health Ore +2");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_3, "Health Ore +3");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_4, "Health Ore +4");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_5, "Health Ore +5");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_6, "Health Ore +6");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_7, "Health Ore +7");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_8, "Health Ore +8");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_9, "Health Ore +9");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_10, "Health Ore +10");
+
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_POWER_ORE_ITEM_1, "Power Ore +1");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_POWER_ORE_ITEM_2, "Power Ore +2");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_POWER_ORE_ITEM_3, "Power Ore +3");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_POWER_ORE_ITEM_4, "Power Ore +4");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_POWER_ORE_ITEM_5, "Power Ore +5");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_POWER_ORE_ITEM_6, "Power Ore +6");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_POWER_ORE_ITEM_7, "Power Ore +7");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_POWER_ORE_ITEM_8, "Power Ore +8");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_POWER_ORE_ITEM_9, "Power Ore +9");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_POWER_ORE_ITEM_10, "Power Ore +10");
+
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_1, "Size Ore +1");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_2, "Size Ore +2");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_3, "Size Ore +3");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_4, "Size Ore +4");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_5, "Size Ore +5");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_6, "Size Ore +6");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_7, "Size Ore +7");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_8, "Size Ore +8");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_9, "Size Ore +9");
+            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_10, "Size Ore +10");
         }
     }
 }

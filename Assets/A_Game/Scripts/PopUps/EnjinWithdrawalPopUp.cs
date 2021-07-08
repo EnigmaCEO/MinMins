@@ -105,7 +105,7 @@ public class EnjinWithdrawalPopUp : MonoBehaviour
 
         if (handleWithdrawalOnline)
         {
-            NetworkManager.Transaction(GameNetwork.Transactions.ENJIN_WITHDRAWAL, GameNetwork.TransactionKeys.TOKEN_KEY, _tokenSelected.RewardCode, onWithdrawalServerResponse);
+            NetworkManager.Transaction(GameNetwork.Transactions.ENJIN_WITHDRAWAL, GameNetwork.TransactionKeys.TOKEN_KEY, _tokenSelected.TokenKey, onWithdrawalServerResponse);
         }
 
         yield return 0;

@@ -23,7 +23,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         public const int GET_QUEST_DATA = 27;
         public const int NEW_TRAINING_LEVEL = 28;
 
-        public const int GET_REWARDS_INVENTORY = 29;
+        public const int GET_WITHDRAWN_ITEMS = 29;
         public const int ENJIN_WITHDRAWAL = 30;
     }
 
@@ -44,7 +44,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         public const string REWARDS = "rewards";
         public const string TOKEN_TYPE = "token_type";
         public const string TOKEN_KEY = "token_code";
-        public const string TOKEN_WITHDRAWN = "token_withdrawn";
+        //public const string TOKEN_WITHDRAWN = "token_withdrawn";
 
         public const string WINNER_NICKNAME = "winner_nickname";
         public const string LOSER_NICKNAME = "loser_nickname";
@@ -60,41 +60,6 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         public const string BALANCES = "balances";
         public const string ENJ_BALANCE = "enjBalance";
         public const string WALLET = "wallet";
-
-        /*
-        public const string ENJIN_DEFENSE_ORE_ITEM_1 = "enjin_defense_ore_1";
-        public const string ENJIN_DEFENSE_ORE_ITEM_2 = "enjin_defense_ore_2";
-        public const string ENJIN_DEFENSE_ORE_ITEM_3 = "enjin_defense_ore_3";
-        public const string ENJIN_DEFENSE_ORE_ITEM_4 = "enjin_defense_ore_4";
-        public const string ENJIN_DEFENSE_ORE_ITEM_5 = "enjin_defense_ore_5";
-        public const string ENJIN_DEFENSE_ORE_ITEM_6 = "enjin_defense_ore_6";
-        public const string ENJIN_DEFENSE_ORE_ITEM_7 = "enjin_defense_ore_7";
-        public const string ENJIN_DEFENSE_ORE_ITEM_8 = "enjin_defense_ore_8";
-        public const string ENJIN_DEFENSE_ORE_ITEM_9 = "enjin_defense_ore_9";
-        public const string ENJIN_DEFENSE_ORE_ITEM_10 = "enjin_defense_ore_10";
-
-        public const string ENJIN_HEALTH_ORE_ITEM_1 = "enjin_health_ore_1";
-        public const string ENJIN_HEALTH_ORE_ITEM_2 = "enjin_health_ore_2";
-        public const string ENJIN_HEALTH_ORE_ITEM_3 = "enjin_health_ore_3";
-        public const string ENJIN_HEALTH_ORE_ITEM_4 = "enjin_health_ore_4";
-        public const string ENJIN_HEALTH_ORE_ITEM_5 = "enjin_health_ore_5";
-        public const string ENJIN_HEALTH_ORE_ITEM_6 = "enjin_health_ore_6";
-        public const string ENJIN_HEALTH_ORE_ITEM_7 = "enjin_health_ore_7";
-        public const string ENJIN_HEALTH_ORE_ITEM_8 = "enjin_health_ore_8";
-        public const string ENJIN_HEALTH_ORE_ITEM_9 = "enjin_health_ore_9";
-        public const string ENJIN_HEALTH_ORE_ITEM_10 = "enjin_health_ore_10";
-
-        public const string ENJIN_POWER_ORE_ITEM_1 = "enjin_power_ore_1";
-        public const string ENJIN_POWER_ORE_ITEM_2 = "enjin_power_ore_2";
-        public const string ENJIN_POWER_ORE_ITEM_3 = "enjin_power_ore_3";
-        public const string ENJIN_POWER_ORE_ITEM_4 = "enjin_power_ore_4";
-        public const string ENJIN_POWER_ORE_ITEM_5 = "enjin_power_ore_5";
-        public const string ENJIN_POWER_ORE_ITEM_6 = "enjin_power_ore_6";
-        public const string ENJIN_POWER_ORE_ITEM_7 = "enjin_power_ore_7";
-        public const string ENJIN_POWER_ORE_ITEM_8 = "enjin_power_ore_8";
-        public const string ENJIN_POWER_ORE_ITEM_9 = "enjin_power_ore_9";
-        public const string ENJIN_POWER_ORE_ITEM_10 = "enjin_power_ore_10";
-        */
     }
 
     public class ServerResponseMessages
@@ -263,41 +228,44 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
     [Header("Only for display. Set at runtime:")]
     public bool IsEnjinLinked = false;
-    public bool HasEnjinEnigmaToken = false;
-    public bool HasEnjinMft = false;
-    public bool HasEnjinMinMinsToken = false;
 
-    public bool HasEnjinMaxim = false;
-    public bool HasEnjinBryana = false;
-    public bool HasEnjinWitek = false;
-    public bool HasEnjinTassio = false;
-    public bool HasEnjinSimon = false;
+    //public bool HasEnjinEnigmaToken = false;
+    //public bool HasEnjinMft = false;
 
-    public bool HasEnjinEsther = false;
-    public bool HasEnjinAlex = false;
-    public bool HasEnjinLizz = false;
-    public bool HasEnjinEvan = false;
-    public bool HasEnjinBrad = false;
+    //public bool HasEnjinMinMinsToken = false;
 
-    public bool HasKnightHealer = false;
-    public bool HasKnightBomber = false;
-    public bool HasKnightDestroyer = false;
-    public bool HasKnightScout = false;
-    public bool HasKnightTank = false;
+    //public bool HasEnjinMaxim = false;
+    //public bool HasEnjinBryana = false;
+    //public bool HasEnjinWitek = false;
+    //public bool HasEnjinTassio = false;
+    //public bool HasEnjinSimon = false;
 
-    public bool HasDemonHealer = false;
-    public bool HasDemonBomber = false;
-    public bool HasDemonDestroyer = false;
-    public bool HasDemonScout = false;
-    public bool HasDemonTank = false;
+    //public bool HasEnjinEsther = false;
+    //public bool HasEnjinAlex = false;
+    //public bool HasEnjinLizz = false;
+    //public bool HasEnjinEvan = false;
+    //public bool HasEnjinBrad = false;
 
-    public bool HasSwissborgCyborg = false;
+    //public bool HasKnightHealer = false;
+    //public bool HasKnightBomber = false;
+    //public bool HasKnightDestroyer = false;
+    //public bool HasKnightScout = false;
+    //public bool HasKnightTank = false;
+
+    //public bool HasDemonHealer = false;
+    //public bool HasDemonBomber = false;
+    //public bool HasDemonDestroyer = false;
+    //public bool HasDemonScout = false;
+    //public bool HasDemonTank = false;
+
+    //public bool HasSwissborgCyborg = false;
 
     public int[] rewardedTrainingLevels = new int[100];
 
     [Header("=================================")]
 
     private Hashtable _matchResultshashTable = new Hashtable();
+    private Dictionary<string, bool> _availabilityByToken = new Dictionary<string, bool>();
 
 
     void Awake()
@@ -336,43 +304,38 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 //        }
 //#endif
 
-        HasEnjinMft = checkTokenAvailable(response_hash, NetworkManager.TransactionKeys.ENJIN_MFT);
-        HasEnjinMinMinsToken = checkTokenAvailable(response_hash, NetworkManager.TransactionKeys.MINMINS_TOKEN);
-        HasEnjinEnigmaToken = checkTokenAvailable(response_hash, NetworkManager.TransactionKeys.ENIGMA_TOKEN);
+        setTokenAvailable(response_hash, EnigmaConstants.TokenKeys.ENJIN_MFT);
+        setTokenAvailable(response_hash, EnigmaConstants.TokenKeys.ENIGMA_TOKEN);
 
-        HasEnjinBryana = checkTokenAvailable(response_hash, TokenKeys.ENJIN_BRYANA);
-        HasEnjinMaxim = checkTokenAvailable(response_hash, TokenKeys.ENJIN_MAXIM);
-        HasEnjinSimon = checkTokenAvailable(response_hash, TokenKeys.ENJIN_SIMON);
-        HasEnjinTassio = checkTokenAvailable(response_hash, TokenKeys.ENJIN_TASSIO);
-        HasEnjinWitek = checkTokenAvailable(response_hash, TokenKeys.ENJIN_WITEK);
+        setTokenAvailable(response_hash, EnjinTokenKeys.MINMINS_TOKEN);
 
-        HasEnjinEsther = checkTokenAvailable(response_hash, TokenKeys.ENJIN_ESTHER);
-        HasEnjinAlex = checkTokenAvailable(response_hash, TokenKeys.ENJIN_ALEX);
-        HasEnjinLizz = checkTokenAvailable(response_hash, TokenKeys.ENJIN_LIZZ);
-        HasEnjinEvan = checkTokenAvailable(response_hash, TokenKeys.ENJIN_EVAN);
-        HasEnjinBrad = checkTokenAvailable(response_hash, TokenKeys.ENJIN_BRAD);
+        GameInventory gameInventory = GameInventory.Instance;
 
-        HasKnightBomber = checkTokenAvailable(response_hash, TokenKeys.KNIGHT_BOMBER);
-        HasKnightDestroyer = checkTokenAvailable(response_hash, TokenKeys.KNIGHT_DESTROYER);
-        HasKnightHealer = checkTokenAvailable(response_hash, TokenKeys.KNIGHT_HEALER);
-        HasKnightScout = checkTokenAvailable(response_hash, TokenKeys.KNIGHT_SCOUT);
-        HasKnightTank = checkTokenAvailable(response_hash, TokenKeys.KNIGHT_TANK);
+        List<string> oreTokens = gameInventory.GetOreTokens();
+        foreach (string oreToken in oreTokens)
+        {
+            setTokenAvailable(response_hash, oreToken);
+        }
 
-        HasDemonBomber = checkTokenAvailable(response_hash, TokenKeys.DEMON_BOMBER);
-        HasDemonDestroyer = checkTokenAvailable(response_hash, TokenKeys.DEMON_DESTROYER);
-        HasDemonHealer = checkTokenAvailable(response_hash, TokenKeys.DEMON_HEALER);
-        HasDemonScout = checkTokenAvailable(response_hash, TokenKeys.DEMON_SCOUT);
-        HasDemonTank = checkTokenAvailable(response_hash, TokenKeys.DEMON_TANK);
-
-        HasSwissborgCyborg = checkTokenAvailable(response_hash, TokenKeys.SWISSBORG_CYBORG);
+        List<string> legendUnits = GameInventory.Instance.GetLegendUnitNames();
+        foreach (string legendUnit in legendUnits)
+        {
+            string tokenName = gameInventory.GetUnitNameToken(legendUnit);
+            setTokenAvailable(response_hash, tokenName);
+        }
 
         CheckAllEnjinTeamBoostTokens(response_hash);
     }
 
-    private bool checkTokenAvailable(SimpleJSON.JSONNode response_hash, string transactionKey)
+    public bool GetTokenAvailable(string token)
+    {
+        return _availabilityByToken[token];
+    }
+
+    private void setTokenAvailable(SimpleJSON.JSONNode response_hash, string tokenKey)
     {
         string tokenAvailable = "";
-        SimpleJSON.JSONNode tokenNode = response_hash[NetworkManager.TransactionKeys.USER_DATA][transactionKey];
+        SimpleJSON.JSONNode tokenNode = response_hash[NetworkManager.TransactionKeys.USER_DATA][tokenKey];
 
         if (tokenNode != null)
         {
@@ -386,7 +349,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         }
 #endif
 
-        return (tokenAvailable == "1");
+        _availabilityByToken.Add(tokenKey, (tokenAvailable == "1"));
     }
 
     private void onPlayerDisconnected(int disconnectedPlayerId)
@@ -549,32 +512,37 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         }
 #endif
 
-        HasEnjinEnigmaToken = false;
-        HasEnjinMft = false;
+        foreach (string token in _availabilityByToken.Keys)
+        {
+            _availabilityByToken[token] = false;
+        }
 
-        HasEnjinMaxim = false;
-        HasEnjinBryana = false;
-        HasEnjinWitek = false;
-        HasEnjinTassio = false;
-        HasEnjinSimon = false;
+        //HasEnjinEnigmaToken = false;
+        //HasEnjinMft = false;
 
-        HasEnjinEsther = false;
-        HasEnjinAlex = false;
-        HasEnjinLizz = false;
-        HasEnjinEvan = false;
-        HasEnjinBrad = false;
+        //HasEnjinMaxim = false;
+        //HasEnjinBryana = false;
+        //HasEnjinWitek = false;
+        //HasEnjinTassio = false;
+        //HasEnjinSimon = false;
 
-        HasKnightHealer = false;
-        HasKnightBomber = false;
-        HasKnightDestroyer = false;
-        HasKnightScout = false;
-        HasKnightTank = false;
+        //HasEnjinEsther = false;
+        //HasEnjinAlex = false;
+        //HasEnjinLizz = false;
+        //HasEnjinEvan = false;
+        //HasEnjinBrad = false;
 
-        HasDemonHealer = false;
-        HasDemonBomber = false;
-        HasDemonDestroyer = false;
-        HasDemonScout = false;
-        HasDemonTank = false;
+        //HasKnightHealer = false;
+        //HasKnightBomber = false;
+        //HasKnightDestroyer = false;
+        //HasKnightScout = false;
+        //HasKnightTank = false;
+
+        //HasDemonHealer = false;
+        //HasDemonBomber = false;
+        //HasDemonDestroyer = false;
+        //HasDemonScout = false;
+        //HasDemonTank = false;
 
         GameStats.Instance.TeamBoostTokensOwnedByName.Clear();
     }
@@ -1033,10 +1001,10 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     {
         GameStats.Instance.TeamBoostTokensOwnedByName.Clear();
 
-        checkSingleEnjinTeamBoostToken(response_hash, TokenKeys.ENJIN_SWORD, TeamBoostEnjinTokens.SWORD, TeamBoostCategory.DAMAGE);
-        checkSingleEnjinTeamBoostToken(response_hash, TokenKeys.ENJIN_ARMOR, TeamBoostEnjinTokens.ARMOR, TeamBoostCategory.DEFENSE);
-        checkSingleEnjinTeamBoostToken(response_hash, TokenKeys.ENJIN_SHADOWSONG, TeamBoostEnjinTokens.SHADOW_SONG, TeamBoostCategory.HEALTH);
-        checkSingleEnjinTeamBoostToken(response_hash, TokenKeys.ENJIN_BULL, TeamBoostEnjinTokens.BULL, TeamBoostCategory.POWER);
+        checkSingleEnjinTeamBoostToken(response_hash, EnjinTokenKeys.ENJIN_SWORD, TeamBoostEnjinTokens.SWORD, TeamBoostCategory.DAMAGE);
+        checkSingleEnjinTeamBoostToken(response_hash, EnjinTokenKeys.ENJIN_ARMOR, TeamBoostEnjinTokens.ARMOR, TeamBoostCategory.DEFENSE);
+        checkSingleEnjinTeamBoostToken(response_hash, EnjinTokenKeys.ENJIN_SHADOWSONG, TeamBoostEnjinTokens.SHADOW_SONG, TeamBoostCategory.HEALTH);
+        checkSingleEnjinTeamBoostToken(response_hash, EnjinTokenKeys.ENJIN_BULL, TeamBoostEnjinTokens.BULL, TeamBoostCategory.POWER);
     }
 
     private void checkSingleEnjinTeamBoostToken(SimpleJSON.JSONNode response_hash, string transactionKey, string name, string category)

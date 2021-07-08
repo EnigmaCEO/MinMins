@@ -56,17 +56,19 @@ public class RewardsInventoryPopUp : MonoBehaviour
         _statusUI.text = LocalizationManager.GetTermTranslation(UiMessages.LOADING);
         _gridContent.DestroyChildren();
 
-        bool useOnlineRewardsInventory = true;
+        bool useOnlineWithdrawnItems = true;
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
-        if (GameHacks.Instance.UseOfflineTestInventoryRewards)
+        if (GameHacks.Instance.UseOfflineTestWithdrawnItems)
         {
-            useOnlineRewardsInventory = false;
-            List<GameHacks.InventoryRewardsTestItem> testRewardItems = GameHacks.Instance.OfflineTestInventoryRewards;
+            addOwnedItems();
 
-            foreach (GameHacks.InventoryRewardsTestItem testRewardItem in testRewardItems)
+            useOnlineWithdrawnItems = false;
+            List<string> testWithdrawnTokenKeys = GameHacks.Instance.OfflineTestWithdrawnTokenKeys;
+
+            foreach (string testWithdrawnTokenKey in testWithdrawnTokenKeys)
             {
-                addRewardItem(testRewardItem.TokenCode, testRewardItem.TokenType, testRewardItem.Withdrawn);
+                setWithdrawnToken(testWithdrawnTokenKey);
             }
 
             _initialized = true;
@@ -74,9 +76,37 @@ public class RewardsInventoryPopUp : MonoBehaviour
         }
 #endif
 
-        if (useOnlineRewardsInventory)
+        if (useOnlineWithdrawnItems)
         {
-            NetworkManager.Transaction(GameNetwork.Transactions.GET_REWARDS_INVENTORY, onRewardInventoryReceived);
+            NetworkManager.Transaction(GameNetwork.Transactions.GET_WITHDRAWN_ITEMS, onWithdrawnItemsReceived);
+        }
+    }
+
+    private void setWithdrawnToken(string tokenKey)
+    {
+        foreach (Transform tokenTransform in _gridContent)
+        {
+            RewardInventoryItem rewardItem = tokenTransform.GetComponent<RewardInventoryItem>();
+            if (rewardItem.TokenKey == tokenKey)
+            {
+                rewardItem.SetWithdrawn();
+                break;
+            }
+        }
+    }
+
+    private void addOwnedItems()
+    {
+        GameInventory gameInventory = GameInventory.Instance;
+
+        List<string> ownedUnitNames = gameInventory.GetInventoryUnitNames();
+
+        foreach (string unitName in ownedUnitNames)
+        {
+            if (gameInventory.CheckCanBeWithdrawn(unitName))
+            {
+                addRewardItem(gameInventory.GetUnitNameToken(unitName), EnjinTokenTypes.SPECIAL);
+            }
         }
     }
 
@@ -102,9 +132,9 @@ public class RewardsInventoryPopUp : MonoBehaviour
         UpdateCurrencyUI();
     }
 
-    private void onRewardInventoryReceived(JSONNode response)
+    private void onWithdrawnItemsReceived(JSONNode response)
     {
-        if (NetworkManager.CheckInvalidServerResponse(response, nameof(onRewardInventoryReceived)))
+        if (NetworkManager.CheckInvalidServerResponse(response, nameof(onWithdrawnItemsReceived)))
         {
             _statusUI.text = LocalizationManager.GetTermTranslation(GameNetwork.ServerResponseMessages.SERVER_ERROR);
         }
@@ -114,13 +144,12 @@ public class RewardsInventoryPopUp : MonoBehaviour
 
             if (rewardsNode != null)
             {
+                addOwnedItems();
+
                 foreach (JSONNode reward in rewardsNode.AsArray)
                 {
                     string tokenKey = rewardsNode[GameNetwork.TransactionKeys.TOKEN_KEY].ToString().Trim('"');
-                    string tokenType = rewardsNode[GameNetwork.TransactionKeys.TOKEN_TYPE].ToString().Trim('"');
-                    string withdrawn = rewardsNode[GameNetwork.TransactionKeys.TOKEN_WITHDRAWN].ToString().Trim('"');
-
-                    addRewardItem(tokenKey, tokenType, withdrawn);
+                    setWithdrawnToken(tokenKey);
                 }
 
                 _initialized = true;
@@ -133,113 +162,17 @@ public class RewardsInventoryPopUp : MonoBehaviour
         }
     }
 
-    private void addRewardItem(string tokenCode, string tokenType, string withdrawn)
+    private void addRewardItem(string tokenName, string tokenType)
     {
         GameObject newRewardItem = Instantiate<GameObject>(_rewardItemTemplate, _gridContent);
-        newRewardItem.GetComponent<RewardInventoryItem>().Setup(tokenCode, getRewardName(tokenCode), getRewardCost(tokenType), _coinName, getRewardSprite(tokenCode, tokenType), withdrawn, onRewardButtonDown);
+        newRewardItem.GetComponent<RewardInventoryItem>().Setup(tokenName, GameInventory.Instance.GetTokenUnitName(tokenName), getRewardCost(tokenType), _coinName, getRewardSprite(tokenName, tokenType), onRewardButtonDown);
         newRewardItem.SetActive(true);
     }
 
     private void onRewardButtonDown(RewardInventoryItem rewardItemSelected)
     {
-        Debug.Log("onRewardButtonDown -> code: " + rewardItemSelected.RewardCode);
+        Debug.Log("onRewardButtonDown -> code: " + rewardItemSelected.TokenKey);
         _enjinWithdrawalPopUp.Open(rewardItemSelected);
-    }
-
-    private string getRewardName(string tokenKey)
-    { 
-        string tokenName = "";
-
-        switch (tokenKey)
-        {
-            case TokenKeys.ENJIN_MAXIM:
-                tokenName = "100";
-                break;
-            case TokenKeys.ENJIN_WITEK:
-                tokenName = "101";
-                break;
-            case TokenKeys.ENJIN_BRYANA:
-                tokenName = "102";
-                break;
-            case TokenKeys.ENJIN_TASSIO:
-                tokenName = "103";
-                break;
-            case TokenKeys.ENJIN_SIMON:
-                tokenName = "104";
-                break;
-
-
-            case TokenKeys.KNIGHT_TANK:
-                tokenName = "105";
-                break;
-            case TokenKeys.KNIGHT_HEALER:
-                tokenName = "106";
-                break;
-            case TokenKeys.KNIGHT_SCOUT:
-                tokenName = "107";
-                break;
-            case TokenKeys.KNIGHT_DESTROYER:
-                tokenName = "108";
-                break;
-            case TokenKeys.KNIGHT_BOMBER:
-                tokenName = "109";
-                break;
-
-            case TokenKeys.DEMON_BOMBER:
-                tokenName = "110";
-                break;
-            case TokenKeys.DEMON_SCOUT:
-                tokenName = "111";
-                break;
-            case TokenKeys.DEMON_DESTROYER:
-                tokenName = "113";
-                break;
-            case TokenKeys.DEMON_TANK:
-                tokenName = "114";
-                break;
-            case TokenKeys.DEMON_HEALER:
-                tokenName = "115";
-                break;
-
-            case TokenKeys.ENJIN_ALEX:
-                tokenName = "122";
-                break;
-            case TokenKeys.ENJIN_EVAN:
-                tokenName = "123";
-                break;
-            case TokenKeys.ENJIN_ESTHER:
-                tokenName = "124";
-                break;
-            case TokenKeys.ENJIN_BRAD:
-                tokenName = "125";
-                break;
-            case TokenKeys.ENJIN_LIZZ:
-                tokenName = "126";
-                break;
-
-            case TokenKeys.SWISSBORG_CYBORG:
-                tokenName = "127";
-                break;
-
-            case TokenKeys.ENJIN_SWORD:
-                tokenName = TeamBoostEnjinTokens.SWORD;
-                break;
-            case TokenKeys.ENJIN_ARMOR:
-                tokenName = TeamBoostEnjinTokens.ARMOR;
-                break;
-            case TokenKeys.ENJIN_SHADOWSONG:
-                tokenName = TeamBoostEnjinTokens.SHADOW_SONG;
-                break;
-            case TokenKeys.ENJIN_BULL:
-                tokenName = TeamBoostEnjinTokens.BULL;
-                break;
-
-            default:
-                    tokenName = _defaultTokenName;
-                    break;
-        }
-
-        return tokenName;
     }
 
     private string getRewardCost(string rewardType)
@@ -251,10 +184,10 @@ public class RewardsInventoryPopUp : MonoBehaviour
             default:
                 rewardCost = _commonCost.ToString();
                 break;
-            case RewardTypes.PREMIUM:
+            case EnjinTokenTypes.PREMIUM:
                 rewardCost = _premiumCost.ToString();
                 break;
-            case RewardTypes.SPECIAL:
+            case EnjinTokenTypes.SPECIAL:
                 rewardCost = _specialCost.ToString();
                 break;
         }
@@ -272,11 +205,11 @@ public class RewardsInventoryPopUp : MonoBehaviour
             default:
                 path += _enigmaCollectiblesFolder + enjinToken;
                 break;
-            case RewardTypes.PREMIUM:
-                path += _oreFolder + getRewardName(enjinToken);
+            case EnjinTokenTypes.PREMIUM:
+                path += _oreFolder + GameInventory.Instance.GetTokenUnitName(enjinToken);
                 break;
-            case RewardTypes.SPECIAL:
-                path += _unitsFolder + getRewardName(enjinToken);
+            case EnjinTokenTypes.SPECIAL:
+                path += _unitsFolder + GameInventory.Instance.GetTokenUnitName(enjinToken);
                 break;
         }
 

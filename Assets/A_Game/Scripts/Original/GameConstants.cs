@@ -14,7 +14,7 @@ namespace GameConstants
         public const string GLOBAL_SYSTEM_QUEST = "Global System Quest";
     }
 
-    public class RewardTypes
+    public class EnjinTokenTypes
     {
         public const string COMMON = "Common";
         public const string PREMIUM = "Premium";
@@ -88,8 +88,10 @@ namespace GameConstants
         public const string UI_BACK = "ui2";
     }
 
-    public class TokenKeys
+    public class EnjinTokenKeys
     {
+        public const string MINMINS_TOKEN = "minmins_token";
+
         public const string ENJIN_MAXIM = "enjin_maxim";
         public const string ENJIN_WITEK = "enjin_witek";
         public const string ENJIN_BRYANA = "enjin_bryana";
@@ -119,7 +121,72 @@ namespace GameConstants
         public const string DEMON_DESTROYER = "demon_destroyer";
         public const string DEMON_TANK = "demon_tank";
 
+        public const string GOD_HEALER = "god_healer";
+        public const string GOD_BOMBER = "god_bomber";
+        public const string GOD_SCOUT = "god_scout";
+        public const string GOD_DESTROYER_1 = "god_destroyer_1";
+        public const string GOD_DESTROYER_2 = "god_destroyer_2";
+        public const string GOD_TANK_1 = "god_tank_1";
+        public const string GOD_TANK_2 = "god_tank_2";
+
         public const string SWISSBORG_CYBORG = "swissborg_cyborg";
+
+        /*
+        public const string ENJIN_DEFENSE_ORE_ITEM_1 = "enjin_defense_ore_1";
+        public const string ENJIN_DEFENSE_ORE_ITEM_2 = "enjin_defense_ore_2";
+        public const string ENJIN_DEFENSE_ORE_ITEM_3 = "enjin_defense_ore_3";
+        public const string ENJIN_DEFENSE_ORE_ITEM_4 = "enjin_defense_ore_4";
+        public const string ENJIN_DEFENSE_ORE_ITEM_5 = "enjin_defense_ore_5";
+        public const string ENJIN_DEFENSE_ORE_ITEM_6 = "enjin_defense_ore_6";
+        public const string ENJIN_DEFENSE_ORE_ITEM_7 = "enjin_defense_ore_7";
+        public const string ENJIN_DEFENSE_ORE_ITEM_8 = "enjin_defense_ore_8";
+        public const string ENJIN_DEFENSE_ORE_ITEM_9 = "enjin_defense_ore_9";
+        public const string ENJIN_DEFENSE_ORE_ITEM_10 = "enjin_defense_ore_10";
+
+        public const string ENJIN_HEALTH_ORE_ITEM_1 = "enjin_health_ore_1";
+        public const string ENJIN_HEALTH_ORE_ITEM_2 = "enjin_health_ore_2";
+        public const string ENJIN_HEALTH_ORE_ITEM_3 = "enjin_health_ore_3";
+        public const string ENJIN_HEALTH_ORE_ITEM_4 = "enjin_health_ore_4";
+        public const string ENJIN_HEALTH_ORE_ITEM_5 = "enjin_health_ore_5";
+        public const string ENJIN_HEALTH_ORE_ITEM_6 = "enjin_health_ore_6";
+        public const string ENJIN_HEALTH_ORE_ITEM_7 = "enjin_health_ore_7";
+        public const string ENJIN_HEALTH_ORE_ITEM_8 = "enjin_health_ore_8";
+        public const string ENJIN_HEALTH_ORE_ITEM_9 = "enjin_health_ore_9";
+        public const string ENJIN_HEALTH_ORE_ITEM_10 = "enjin_health_ore_10";
+
+        public const string ENJIN_POWER_ORE_ITEM_1 = "enjin_power_ore_1";
+        public const string ENJIN_POWER_ORE_ITEM_2 = "enjin_power_ore_2";
+        public const string ENJIN_POWER_ORE_ITEM_3 = "enjin_power_ore_3";
+        public const string ENJIN_POWER_ORE_ITEM_4 = "enjin_power_ore_4";
+        public const string ENJIN_POWER_ORE_ITEM_5 = "enjin_power_ore_5";
+        public const string ENJIN_POWER_ORE_ITEM_6 = "enjin_power_ore_6";
+        public const string ENJIN_POWER_ORE_ITEM_7 = "enjin_power_ore_7";
+        public const string ENJIN_POWER_ORE_ITEM_8 = "enjin_power_ore_8";
+        public const string ENJIN_POWER_ORE_ITEM_9 = "enjin_power_ore_9";
+        public const string ENJIN_POWER_ORE_ITEM_10 = "enjin_power_ore_10";
+
+        public const string ENJIN_DAMAGE_ORE_ITEM_1 = "enjin_damage_ore_1";
+        public const string ENJIN_DAMAGE_ORE_ITEM_2 = "enjin_damage_ore_2";
+        public const string ENJIN_DAMAGE_ORE_ITEM_3 = "enjin_damage_ore_3";
+        public const string ENJIN_DAMAGE_ORE_ITEM_4 = "enjin_damage_ore_4";
+        public const string ENJIN_DAMAGE_ORE_ITEM_5 = "enjin_damage_ore_5";
+        public const string ENJIN_DAMAGE_ORE_ITEM_6 = "enjin_damage_ore_6";
+        public const string ENJIN_DAMAGE_ORE_ITEM_7 = "enjin_damage_ore_7";
+        public const string ENJIN_DAMAGE_ORE_ITEM_8 = "enjin_damage_ore_8";
+        public const string ENJIN_DAMAGE_ORE_ITEM_9 = "enjin_damage_ore_9";
+        public const string ENJIN_DAMAGE_ORE_ITEM_10 = "enjin_damage_ore_10";
+
+        public const string ENJIN_SIZE_ORE_ITEM_1 = "enjin_size_ore_1";
+        public const string ENJIN_SIZE_ORE_ITEM_2 = "enjin_size_ore_2";
+        public const string ENJIN_SIZE_ORE_ITEM_3 = "enjin_size_ore_3";
+        public const string ENJIN_SIZE_ORE_ITEM_4 = "enjin_size_ore_4";
+        public const string ENJIN_SIZE_ORE_ITEM_5 = "enjin_size_ore_5";
+        public const string ENJIN_SIZE_ORE_ITEM_6 = "enjin_size_ore_6";
+        public const string ENJIN_SIZE_ORE_ITEM_7 = "enjin_size_ore_7";
+        public const string ENJIN_SIZE_ORE_ITEM_8 = "enjin_size_ore_8";
+        public const string ENJIN_SIZE_ORE_ITEM_9 = "enjin_size_ore_9";
+        public const string ENJIN_SIZE_ORE_ITEM_10 = "enjin_size_ore_10";
+        */
     }
 
     public class BoxIndexes

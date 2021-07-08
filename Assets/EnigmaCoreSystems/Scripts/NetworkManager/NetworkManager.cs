@@ -60,9 +60,6 @@ namespace Enigma.CoreSystems
 
             public const string ENJIN_ID = "enjin_id";
             public const string ENJIN_CODE = "enjin_code";
-            public const string ENJIN_MFT = "enjin_mft";
-            public const string MINMINS_TOKEN = "minmins_token";
-            public const string ENIGMA_TOKEN = "enigma_token";
         }
 
         public class PlayerPropertyOptions

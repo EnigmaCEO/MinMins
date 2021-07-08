@@ -210,7 +210,7 @@ public class GameStore : EnigmaScene
             }
         }
 
-        if (count == 0 || !GameNetwork.Instance.HasEnjinMft)
+        if (count == 0 || !GameNetwork.Instance.GetTokenAvailable(EnigmaConstants.TokenKeys.ENJIN_MFT))
         {
             _enjinmftPopUp.transform.Find("SummonButton").gameObject.SetActive(false);
         }
@@ -219,7 +219,7 @@ public class GameStore : EnigmaScene
 
         _enjinmftPopUp.SetActive(true);
 
-        if (GameNetwork.Instance.HasEnjinMft)
+        if (GameNetwork.Instance.GetTokenAvailable(EnigmaConstants.TokenKeys.ENJIN_MFT))
         {
             _enjinmftPopUp.transform.Find("WindowMessage").GetComponent<Text>().text = attempts + " " + LocalizationManager.GetTermTranslation("Summons remaining");
         }
@@ -242,34 +242,9 @@ public class GameStore : EnigmaScene
         foreach (Transform enjinTransform in enjinContent)
         {
             string unitName = enjinTransform.name;
+            string tokenName = gameInventory.GetUnitNameToken(unitName);
 
-            if (
-                    handleLegendAvailability(unitName, "100", gameNetwork.HasEnjinMaxim) ||
-                    handleLegendAvailability(unitName, "101", gameNetwork.HasEnjinWitek) ||
-                    handleLegendAvailability(unitName, "102", gameNetwork.HasEnjinBryana) ||
-                    handleLegendAvailability(unitName, "103", gameNetwork.HasEnjinTassio) ||
-                    handleLegendAvailability(unitName, "104", gameNetwork.HasEnjinSimon) ||
-
-                    handleLegendAvailability(unitName, "122", gameNetwork.HasEnjinAlex) ||
-                    handleLegendAvailability(unitName, "123", gameNetwork.HasEnjinEvan) ||
-                    handleLegendAvailability(unitName, "124", gameNetwork.HasEnjinEsther) ||
-                    handleLegendAvailability(unitName, "125", gameNetwork.HasEnjinBrad) ||
-                    handleLegendAvailability(unitName, "126", gameNetwork.HasEnjinLizz) ||
-
-                    handleLegendAvailability(unitName, "105", gameNetwork.HasKnightTank) ||
-                    handleLegendAvailability(unitName, "106", gameNetwork.HasKnightHealer) ||
-                    handleLegendAvailability(unitName, "107", gameNetwork.HasKnightScout) ||
-                    handleLegendAvailability(unitName, "108", gameNetwork.HasKnightDestroyer) ||
-                    handleLegendAvailability(unitName, "109", gameNetwork.HasKnightBomber) ||
-
-                    handleLegendAvailability(unitName, "110", gameNetwork.HasDemonBomber) ||
-                    handleLegendAvailability(unitName, "111", gameNetwork.HasDemonScout) ||
-                    handleLegendAvailability(unitName, "112", gameNetwork.HasDemonDestroyer) ||
-                    handleLegendAvailability(unitName, "113", gameNetwork.HasDemonTank) ||
-                    handleLegendAvailability(unitName, "114", gameNetwork.HasDemonHealer) ||
-
-                    handleLegendAvailability(unitName, "127", gameNetwork.HasSwissborgCyborg)
-                )
+            if (!gameNetwork.GetTokenAvailable(tokenName) || gameInventory.HasUnit(unitName))
             {
                 enjinTransform.gameObject.SetActive(false);
                 count--;

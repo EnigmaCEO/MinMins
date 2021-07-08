@@ -93,6 +93,9 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     //private Dictionary<Quests, int> _maxLevelByQuest = new Dictionary<Quests, int>();
 
     private Dictionary<string, double> _rarityByUnit = new Dictionary<string, double>();
+    private Dictionary<string, string> _unitNameByToken = new Dictionary<string, string>();
+    private Dictionary<string, string> _tokenByUnitName = new Dictionary<string, string>();
+    private List<string> _oreTokens = new List<string>();
 
     private const char _GROUP_WITH_KEY_SEPARATOR = '|';
     private const char QUEST_WITH_LEVEL_SEPARATOR = ':';
@@ -102,10 +105,28 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     private void Awake()
     {
         //initializeMaxLevelsByQuest();
+
+        //initializeOreTokens();
+        initializeUnitNameByToken();
         createUnitTierLists();
         createRarity();
         loadDataFromFile();
         initializeInventory();
+    }
+
+    public List<string> GetLegendUnitNames()
+    {
+        return new List<string>(_legend_units);
+    }
+
+    public string GetTokenUnitName(string tokenName)
+    {
+        return _unitNameByToken[tokenName];
+    }
+
+    public string GetUnitNameToken(string unitName)
+    {
+        return _tokenByUnitName[unitName];
     }
 
     public bool IsThereFileSaved()
@@ -380,26 +401,6 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         return getPositionsFromString(scoutProgressString);
     }
 
-    private List<Vector3> getPositionsFromString(string positionsString)
-    {
-        List<Vector3> positionsList = new List<Vector3>();
-
-        if (positionsString != "")
-        {
-            string[] positions = positionsString.Split(POSITIONS_SEPARATOR);
-
-            foreach (string positionString in positions)
-            {
-                string[] coords = positionString.Split(COORDS_SEPARATOR);
-
-                Vector3 position = new Vector3(float.Parse(coords[0]), float.Parse(coords[1]), float.Parse(coords[2]));
-                positionsList.Add(position);
-            }
-        }
-
-        return positionsList;
-    }
-
     public void SetQuestLevelCompleted(int newLevel)
     {
         Debug.LogWarning("GameInventory::SetQuestLevelCompleted -> level: " + newLevel);
@@ -535,7 +536,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
     public void AddExpToUnit(string unitName, int expToAdd)
     {
-        if (GameNetwork.Instance.HasEnjinMinMinsToken)
+        if (GameNetwork.Instance.GetTokenAvailable(EnjinTokenKeys.MINMINS_TOKEN))
         {
             expToAdd *= 2; // Min Min Token perk
         }
@@ -611,11 +612,6 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         LootBoxManager lootBoxManager = LootBoxManager.Instance;
 
         int boxTier = GetPackTier(boxIndex);
-        //Dictionary<string, double> specialRarities = new Dictionary<string, double>();
-        //foreach (UnitRarity rarity in _unitSpecialRarities)
-        //{
-        //    specialRarities.Add(rarity.UnitName, (double)rarity.Rarity);
-        //}
 
         List<string> unitPicks = null;
 
@@ -744,6 +740,11 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         saveHashTableToFileAndBackup();
     }
 
+    public int GetSinglePlayerMaxLevel()
+    {
+        return _maxArenaLevel;
+    }
+
     //private void initializeMaxLevelsByQuest()
     //{
     //    _maxLevelByQuest.Add(Quests.Swissborg, 4);
@@ -753,31 +754,6 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     //{
     //    return _maxLevelByQuest[GameStats.Instance.ActiveQuest];
     //}
-
-    public int GetSinglePlayerMaxLevel()
-    {
-        return _maxArenaLevel;
-    }
-
-    private void removeGroupFromSaveHashTable(string groupName)
-    {
-        List<object> keysToRemove = new List<object>();
-
-        foreach (DictionaryEntry entry in _saveHashTable)
-        {
-            string[] terms = entry.Key.ToString().Split(_GROUP_WITH_KEY_SEPARATOR);
-
-            if (groupName == terms[0])
-            {
-                keysToRemove.Add(entry.Key);
-            }
-        }
-
-        foreach (object key in keysToRemove)
-        {
-            _saveHashTable.Remove(key);
-        }
-    }
 
     public void SaveLootBoxes()
     {
@@ -857,53 +833,20 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
         SaveUnits();
     }
-    private bool checkAddUnit(string unitName, string checkName, bool flag)
-    {
-        return ((unitName == checkName) && flag && !HasUnit(unitName));
-    }
 
     public void AddMinMinEnjinUnits()
     {
+        GameInventory gameInventory = GameInventory.Instance;
+        GameNetwork gameNetwork = GameNetwork.Instance;
+
         for (int i = _legend_firstUnitNumber; i <= _legend_lastUnitNumer; i++)
         {
-            GameNetwork gameNetwork = GameNetwork.Instance;
-
             string unitName = i.ToString();
-            if (
-                    checkAddUnit(unitName, "100", gameNetwork.HasEnjinMaxim) ||
-                    checkAddUnit(unitName, "101", gameNetwork.HasEnjinWitek) ||
-                    checkAddUnit(unitName, "102", gameNetwork.HasEnjinBryana) ||
-                    checkAddUnit(unitName, "103", gameNetwork.HasEnjinTassio) ||
-                    checkAddUnit(unitName, "104", gameNetwork.HasEnjinSimon) ||
-                    checkAddUnit(unitName, "105", gameNetwork.HasKnightTank) ||
-                    checkAddUnit(unitName, "106", gameNetwork.HasKnightHealer) ||
-                    checkAddUnit(unitName, "107", gameNetwork.HasKnightScout) ||
-                    checkAddUnit(unitName, "108", gameNetwork.HasKnightDestroyer) ||
-                    checkAddUnit(unitName, "109", gameNetwork.HasKnightBomber) ||
-                    checkAddUnit(unitName, "110", gameNetwork.HasDemonBomber) ||
-                    checkAddUnit(unitName, "111", gameNetwork.HasDemonScout) ||
-                    checkAddUnit(unitName, "112", gameNetwork.HasDemonDestroyer) ||
-                    checkAddUnit(unitName, "113", gameNetwork.HasDemonTank) ||
-                    checkAddUnit(unitName, "114", gameNetwork.HasDemonHealer) ||
-                    checkAddUnit(unitName, "122", gameNetwork.HasEnjinAlex) ||
-                    checkAddUnit(unitName, "123", gameNetwork.HasEnjinEvan) ||
-                    checkAddUnit(unitName, "124", gameNetwork.HasEnjinEsther) ||
-                    checkAddUnit(unitName, "125", gameNetwork.HasEnjinBrad) ||
-                    checkAddUnit(unitName, "126", gameNetwork.HasEnjinLizz) ||
-                    checkAddUnit(unitName, "127", gameNetwork.HasSwissborgCyborg)
-                )
+            if (gameNetwork.GetTokenAvailable(gameInventory.GetUnitNameToken(unitName)) && !HasUnit(unitName))
             {
                 AddUnit(unitName, 0);
             }
         }
-
-        /*
-         *         public const string ENJIN_ESTHER = "enjin_esther"; //fairy 124
-        public const string ENJIN_ALEX = "enjin_alex";  //black 122
-        public const string ENJIN_LIZZ = "enjin_lizz";  //fire 126
-        public const string ENJIN_EVAN = "enjin_evan";  //wizard 123
-        public const string ENJIN_BRAD = "enjin_brad";  //book 125
-         * */
 
         SaveUnits();
     }
@@ -924,6 +867,191 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
             }
         }
         return hasAllEnjinUnits;
+    }
+
+    public bool CheckCanBeWithdrawn(string unitName)
+    {
+        bool canBeWithdrawn = true; 
+        int unitNumber = int.Parse(unitName);
+
+        if (unitNumber < _legend_firstUnitNumber)
+        {
+            canBeWithdrawn = false;
+        }
+        else if (unitName == GetTokenUnitName(EnjinTokenKeys.SWISSBORG_CYBORG))
+        {
+            canBeWithdrawn = false;
+        }
+        else if (checkUnitBetweenTokens(unitNumber, EnjinTokenKeys.ENJIN_MAXIM, EnjinTokenKeys.ENJIN_SIMON))
+        {
+            canBeWithdrawn = false;
+        }
+        else if (checkUnitBetweenTokens(unitNumber, EnjinTokenKeys.ENJIN_ALEX, EnjinTokenKeys.ENJIN_LIZZ))
+        {
+            canBeWithdrawn = false;
+        }
+
+        return canBeWithdrawn;
+    }
+
+    private bool checkUnitBetweenTokens(int unitNumber, string firstUnitTokenKey, string lastUnitTokenKey)
+    {
+        int firstUnitNumber = int.Parse(GetTokenUnitName(firstUnitTokenKey));
+        int lastUnitNumber = int.Parse(GetTokenUnitName(lastUnitTokenKey));
+
+        return ((unitNumber >= firstUnitNumber) && (unitNumber <= lastUnitNumber));
+
+    }
+
+    public List<string> GetOreTokens()
+    {
+        return new List<string>(_oreTokens);
+    }
+
+    //private void initializeOreTokens()
+    //{
+    //    addOreToken(EnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_1);
+    //    addOreToken(EnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_2);
+    //    addOreToken(EnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_3);
+    //    addOreToken(EnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_4);
+    //    addOreToken(EnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_5);
+    //    addOreToken(EnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_6);
+    //    addOreToken(EnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_7);
+    //    addOreToken(EnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_8);
+    //    addOreToken(EnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_9);
+    //    addOreToken(EnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_10);
+
+    //    addOreToken(EnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_1);
+    //    addOreToken(EnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_2);
+    //    addOreToken(EnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_3);
+    //    addOreToken(EnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_4);
+    //    addOreToken(EnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_5);
+    //    addOreToken(EnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_6);
+    //    addOreToken(EnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_7);
+    //    addOreToken(EnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_8);
+    //    addOreToken(EnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_9);
+    //    addOreToken(EnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_10);
+
+    //    addOreToken(EnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_1);
+    //    addOreToken(EnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_2);
+    //    addOreToken(EnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_3);
+    //    addOreToken(EnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_4);
+    //    addOreToken(EnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_5);
+    //    addOreToken(EnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_6);
+    //    addOreToken(EnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_7);
+    //    addOreToken(EnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_8);
+    //    addOreToken(EnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_9);
+    //    addOreToken(EnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_10);
+
+    //    addOreToken(EnjinTokenKeys.ENJIN_POWER_ORE_ITEM_1);
+    //    addOreToken(EnjinTokenKeys.ENJIN_POWER_ORE_ITEM_2);
+    //    addOreToken(EnjinTokenKeys.ENJIN_POWER_ORE_ITEM_3);
+    //    addOreToken(EnjinTokenKeys.ENJIN_POWER_ORE_ITEM_4);
+    //    addOreToken(EnjinTokenKeys.ENJIN_POWER_ORE_ITEM_5);
+    //    addOreToken(EnjinTokenKeys.ENJIN_POWER_ORE_ITEM_6);
+    //    addOreToken(EnjinTokenKeys.ENJIN_POWER_ORE_ITEM_7);
+    //    addOreToken(EnjinTokenKeys.ENJIN_POWER_ORE_ITEM_8);
+    //    addOreToken(EnjinTokenKeys.ENJIN_POWER_ORE_ITEM_9);
+    //    addOreToken(EnjinTokenKeys.ENJIN_POWER_ORE_ITEM_10);
+
+    //    addOreToken(EnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_1);
+    //    addOreToken(EnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_2);
+    //    addOreToken(EnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_3);
+    //    addOreToken(EnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_4);
+    //    addOreToken(EnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_5);
+    //    addOreToken(EnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_6);
+    //    addOreToken(EnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_7);
+    //    addOreToken(EnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_8);
+    //    addOreToken(EnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_9);
+    //    addOreToken(EnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_10);
+    //}
+
+    private void addOreToken(string tokenKey)
+    {
+        _oreTokens.Add(tokenKey);
+    }
+
+    private void initializeUnitNameByToken()
+    {
+        linkUnitAndToken("100", EnjinTokenKeys.ENJIN_MAXIM);
+        linkUnitAndToken("101", EnjinTokenKeys.ENJIN_WITEK);
+        linkUnitAndToken("102", EnjinTokenKeys.ENJIN_BRYANA);
+        linkUnitAndToken("103", EnjinTokenKeys.ENJIN_TASSIO);
+        linkUnitAndToken("104", EnjinTokenKeys.ENJIN_SIMON);
+
+        linkUnitAndToken("105", EnjinTokenKeys.KNIGHT_TANK);
+        linkUnitAndToken("106", EnjinTokenKeys.KNIGHT_HEALER);
+        linkUnitAndToken("107", EnjinTokenKeys.KNIGHT_SCOUT);
+        linkUnitAndToken("108", EnjinTokenKeys.KNIGHT_DESTROYER);
+        linkUnitAndToken("109", EnjinTokenKeys.KNIGHT_BOMBER);
+
+        linkUnitAndToken("110", EnjinTokenKeys.DEMON_BOMBER);
+        linkUnitAndToken("111", EnjinTokenKeys.DEMON_SCOUT);
+        linkUnitAndToken("112", EnjinTokenKeys.DEMON_DESTROYER);
+        linkUnitAndToken("113", EnjinTokenKeys.DEMON_TANK);
+        linkUnitAndToken("114", EnjinTokenKeys.DEMON_HEALER);
+
+        linkUnitAndToken("115", EnjinTokenKeys.GOD_TANK_1);
+        linkUnitAndToken("116", EnjinTokenKeys.GOD_TANK_2);
+        linkUnitAndToken("117", EnjinTokenKeys.GOD_DESTROYER_1);
+        linkUnitAndToken("118", EnjinTokenKeys.GOD_BOMBER);
+        linkUnitAndToken("119", EnjinTokenKeys.GOD_HEALER);
+        linkUnitAndToken("120", EnjinTokenKeys.GOD_DESTROYER_2);
+        linkUnitAndToken("121", EnjinTokenKeys.GOD_SCOUT);
+
+        linkUnitAndToken("122", EnjinTokenKeys.ENJIN_ALEX);
+        linkUnitAndToken("123", EnjinTokenKeys.ENJIN_EVAN);
+        linkUnitAndToken("124", EnjinTokenKeys.ENJIN_ESTHER);
+        linkUnitAndToken("125", EnjinTokenKeys.ENJIN_BRAD);
+        linkUnitAndToken("126", EnjinTokenKeys.ENJIN_LIZZ);
+
+        linkUnitAndToken("127", EnjinTokenKeys.SWISSBORG_CYBORG);
+    }
+
+    private void linkUnitAndToken(string unitName, string tokenName)
+    {
+        _unitNameByToken.Add(tokenName, unitName);
+        _tokenByUnitName.Add(unitName, tokenName);
+    }
+
+    private List<Vector3> getPositionsFromString(string positionsString)
+    {
+        List<Vector3> positionsList = new List<Vector3>();
+
+        if (positionsString != "")
+        {
+            string[] positions = positionsString.Split(POSITIONS_SEPARATOR);
+
+            foreach (string positionString in positions)
+            {
+                string[] coords = positionString.Split(COORDS_SEPARATOR);
+
+                Vector3 position = new Vector3(float.Parse(coords[0]), float.Parse(coords[1]), float.Parse(coords[2]));
+                positionsList.Add(position);
+            }
+        }
+
+        return positionsList;
+    }
+
+    private void removeGroupFromSaveHashTable(string groupName)
+    {
+        List<object> keysToRemove = new List<object>();
+
+        foreach (DictionaryEntry entry in _saveHashTable)
+        {
+            string[] terms = entry.Key.ToString().Split(_GROUP_WITH_KEY_SEPARATOR);
+
+            if (groupName == terms[0])
+            {
+                keysToRemove.Add(entry.Key);
+            }
+        }
+
+        foreach (object key in keysToRemove)
+        {
+            _saveHashTable.Remove(key);
+        }
     }
 
 

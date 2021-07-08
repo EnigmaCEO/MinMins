@@ -19,8 +19,8 @@ public class GameHacks : SingletonMonobehaviour<GameHacks>
     public bool EnjinLinked;
     public bool TreatBattleResultsAsPrivateMatch;
 
-    public bool UseOfflineTestInventoryRewards = false;
-    public List<InventoryRewardsTestItem> OfflineTestInventoryRewards = new List<InventoryRewardsTestItem>();
+    public bool UseOfflineTestWithdrawnItems = false;
+    public List<string> OfflineTestWithdrawnTokenKeys = new List<string>();
     public ValueHack WithdrawalResponse = new ValueHack("Success");  //Success, Pending or Error
     public ValueHack StartingEnjBalance = new ValueHack("100");
 
@@ -68,12 +68,4 @@ public class GameHacks : SingletonMonobehaviour<GameHacks>
 
     public ValueHack TriggerPlayerDisconnectPopUp = new ValueHack("D");
     public ValueHack TriggerOpponentDisconnectPopUp = new ValueHack("O");
-
-    [System.Serializable]
-    public class InventoryRewardsTestItem
-    {
-        public string TokenCode;
-        public string TokenType;
-        public string Withdrawn;
-    }
 }
