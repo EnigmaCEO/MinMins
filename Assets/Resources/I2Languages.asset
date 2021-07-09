@@ -1193,15 +1193,15 @@ MonoBehaviour:
       - "\uC0C8\uB85C\uC6B4 \uD55C \uC8FC!"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: No guarantees.
+    - Term: Starter Box Description
       TermType: 0
       Description: 
       Languages:
-      - No guarantees.
-      - "Sin garant\xEDas."
-      - "\u6C92\u6709\u4FDD\u5E95"
-      - "\u6CA1\u6709\u4FDD\u5E95"
-      - "\uCE90\uB9AD\uD130 \uC720\uB2DB \uB2F9\uCCA8 \uBCF4\uC7A5\uC5C6\uC74C"
+      - "* 3 random units.\r\n* Stronger units have higher rarity."
+      - "* 3 unidades aleatorias.\r\n* Unidades fuertes tienen m\xE1s alta rareza."
+      - 
+      - 
+      - 
       Flags: 0000000000
       Languages_Touch: []
     - Term: NotEnoughCurrency
@@ -2400,7 +2400,7 @@ MonoBehaviour:
     Google_WebServiceURL: https://script.google.com/macros/s/AKfycbw05ISkGCPtIS0hMzFD5jshgfH09mIP6BAxRKhWsA/exec
     Google_SpreadsheetKey: 1iIWCtExuyR2XXyYkJv6y83PTVMPC4FxzSITGGroefcg
     Google_SpreadsheetName: I2Loc MinMins Localization
-    Google_LastUpdatedVersion: 1625271479943
+    Google_LastUpdatedVersion: 1625867943644
     Google_Password: shalwend
     GoogleUpdateFrequency: 0
     GoogleInEditorCheckFrequency: 0

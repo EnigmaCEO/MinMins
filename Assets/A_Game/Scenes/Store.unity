@@ -433,7 +433,7 @@ MonoBehaviour:
   - Demon King Box
   - Legend Box
   _confirmPopUpPackDescriptions:
-  - No guarantees.
+  - Starter Box Description
   - Guarantees a 2 Stars Unit.
   - Guarantees a 3 Stars Unit.
   - Special Box (Hidden)
@@ -453,7 +453,6 @@ MonoBehaviour:
   - 
   - 10.00
   - 10.00
-  _packTiers: 010000000200000003000000030000000300000003000000
   _lootBoxBuyConfirmPopUp: {fileID: 710730721}
   _openLootBoxPopUp: {fileID: 162382233}
   _buyResultPopUp: {fileID: 1473502415}
