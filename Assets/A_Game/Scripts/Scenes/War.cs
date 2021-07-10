@@ -2504,7 +2504,7 @@ public class War : NetworkEntity
                     int chance = 5;
                     int enjinWinsRequired = 10;
 
-                    if (gameNetwork.GetTokenAvailable(EnjinTokenKeys.MINMINS_TOKEN))
+                    if (gameNetwork.GetIsTokenAvailable(EnjinTokenKeys.MINMINS_TOKEN))
                     {
                         chance = 25;
                         enjinWinsRequired = 5;

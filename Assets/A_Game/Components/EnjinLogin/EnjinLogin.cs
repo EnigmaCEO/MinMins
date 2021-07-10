@@ -315,8 +315,6 @@ public class EnjinLogin : MonoBehaviour
             {
                 NetworkManager.SetLocalPlayerNickName(userNameNode.ToString().Trim('"'));
             }
-
-            GameNetwork.Instance.UpdateBalancesFromNode(userDataNode);
         }
 
         string enjinId = "null";

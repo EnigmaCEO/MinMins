@@ -10,7 +10,7 @@ using UnityEngine.UI;
 public class EnjinWithdrawalPopUp : MonoBehaviour
 {
     [SerializeField] private string _getEnjinWalletURL = "https://enjin.io/software/wallet";
-    [SerializeField] private float _hackedWithdrawalDelay = 2;
+    [SerializeField] private float _withdrawalRetryDelay = 3;
 
     [SerializeField] private Text _statusUiText;
     [SerializeField] private Text _descriptionText;
@@ -67,7 +67,7 @@ public class EnjinWithdrawalPopUp : MonoBehaviour
             _statusUiText.text = LocalizationManager.GetTermTranslation(UiMessages.PERFORMING_WITHDRAWAL);
             _statusUiText.gameObject.SetActive(true);
 
-            StartCoroutine(handleWithdrawalProcess());
+            StartCoroutine(handleWithdrawalProcess(0));
         }
         else
         {
@@ -81,7 +81,7 @@ public class EnjinWithdrawalPopUp : MonoBehaviour
         Close();
     }
 
-    private IEnumerator handleWithdrawalProcess()
+    private IEnumerator handleWithdrawalProcess(float delay)
     {
         Debug.Log("handleWithdrawalProcess");
 
@@ -90,7 +90,7 @@ public class EnjinWithdrawalPopUp : MonoBehaviour
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
         if (GameHacks.Instance.WithdrawalResponse.Enabled)
         {
-            yield return new WaitForSeconds(_hackedWithdrawalDelay);
+            yield return new WaitForSeconds(GameHacks.Instance.OfflineWithdrawalDelay);
 
             string withdrawalStatus = GameHacks.Instance.WithdrawalResponse.Value;
             if (handleWithdrawalStatus(withdrawalStatus))
@@ -105,6 +105,7 @@ public class EnjinWithdrawalPopUp : MonoBehaviour
 
         if (handleWithdrawalOnline)
         {
+            yield return new WaitForSeconds(delay);
             NetworkManager.Transaction(GameNetwork.Transactions.ENJIN_WITHDRAWAL, GameNetwork.TransactionKeys.TOKEN_KEY, _tokenSelected.TokenKey, onWithdrawalServerResponse);
         }
 
@@ -131,7 +132,7 @@ public class EnjinWithdrawalPopUp : MonoBehaviour
                 string status = response_hash[NetworkManager.TransactionKeys.STATUS].ToString().Trim('"');
                 if (handleWithdrawalStatus(status))
                 {
-                    GameNetwork.Instance.UpdateBalancesFromNode(response_hash);
+                    GameNetwork.Instance.UpdateEnjinGoodies(response_hash);
                     _inventoryChangedCallback();
                 }
             }
@@ -156,9 +157,9 @@ public class EnjinWithdrawalPopUp : MonoBehaviour
         {
             if (status == GameNetwork.ServerResponseMessages.PENDING)
             {
-                StartCoroutine(handleWithdrawalProcess());
+                StartCoroutine(handleWithdrawalProcess(_withdrawalRetryDelay));
             }
-            else
+            else //Error
             {
                 _statusUiText.text = LocalizationManager.GetTermTranslation(UiMessages.WITHDRAWAL_FAILED);
             }

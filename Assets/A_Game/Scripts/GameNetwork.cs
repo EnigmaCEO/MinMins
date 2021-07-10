@@ -23,8 +23,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         public const int GET_QUEST_DATA = 27;
         public const int NEW_TRAINING_LEVEL = 28;
 
-        public const int GET_WITHDRAWN_ITEMS = 29;
-        public const int ENJIN_WITHDRAWAL = 30;
+        public const int ENJIN_WITHDRAWAL = 29;
     }
 
     public class TransactionKeys
@@ -292,17 +291,23 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     public void UpdateEnjinGoodies(JSONNode response_hash)
     {
         //GameStats gameStats = GameStats.Instance;
-//        GameInventory gameInventory = GameInventory.Instance;
-//        //gameStats.ActiveQuest = (Quests)response_hash[NetworkManager.TransactionKeys.USER_DATA][GameNetwork.TransactionKeys.QUEST].AsInt;
-//        gameInventory.SetActiveQuest((Quests)response_hash[NetworkManager.TransactionKeys.USER_DATA][GameNetwork.TransactionKeys.QUEST].AsInt);
+        //        GameInventory gameInventory = GameInventory.Instance;
+        //        //gameStats.ActiveQuest = (Quests)response_hash[NetworkManager.TransactionKeys.USER_DATA][GameNetwork.TransactionKeys.QUEST].AsInt;
+        //        gameInventory.SetActiveQuest((Quests)response_hash[NetworkManager.TransactionKeys.USER_DATA][GameNetwork.TransactionKeys.QUEST].AsInt);
 
-//#if DEVELOPMENT_BUILD || UNITY_EDITOR
-//        if (GameHacks.Instance.SetLoginQuest.Enabled)
-//        {
-//            //gameStats.ActiveQuest = GameHacks.Instance.SetLoginQuest.GetValueAsEnum<Quests>();
-//            gameInventory.SetActiveQuest(GameHacks.Instance.SetLoginQuest.GetValueAsEnum<Quests>());
-//        }
-//#endif
+        //#if DEVELOPMENT_BUILD || UNITY_EDITOR
+        //        if (GameHacks.Instance.SetLoginQuest.Enabled)
+        //        {
+        //            //gameStats.ActiveQuest = GameHacks.Instance.SetLoginQuest.GetValueAsEnum<Quests>();
+        //            gameInventory.SetActiveQuest(GameHacks.Instance.SetLoginQuest.GetValueAsEnum<Quests>());
+        //        }
+        //#endif
+
+        JSONNode userDataNode = response_hash[NetworkManager.TransactionKeys.USER_DATA];
+        if (userDataNode != null)
+        {
+            updateBalancesFromNode(userDataNode);
+        }
 
         setTokenAvailable(response_hash, EnigmaConstants.TokenKeys.ENJIN_MFT);
         setTokenAvailable(response_hash, EnigmaConstants.TokenKeys.ENIGMA_TOKEN);
@@ -311,11 +316,11 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
         GameInventory gameInventory = GameInventory.Instance;
 
-        List<string> oreTokens = gameInventory.GetOreTokens();
-        foreach (string oreToken in oreTokens)
-        {
-            setTokenAvailable(response_hash, oreToken);
-        }
+        //List<string> oreTokens = gameInventory.GetOreTokens();
+        //foreach (string oreToken in oreTokens)
+        //{
+        //    setTokenAvailable(response_hash, oreToken);
+        //}
 
         List<string> legendUnits = GameInventory.Instance.GetLegendUnitNames();
         foreach (string legendUnit in legendUnits)
@@ -327,9 +332,24 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         CheckAllEnjinTeamBoostTokens(response_hash);
     }
 
-    public bool GetTokenAvailable(string token)
+    public bool GetIsTokenAvailable(string token)
     {
         return _availabilityByToken[token];
+    }
+
+    public List<string> GetTokensAvailable()
+    {
+        List<string> tokensAvailable = new List<string>();
+
+        foreach (string token in _availabilityByToken.Keys)
+        {
+            if (_availabilityByToken[token])
+            {
+                tokensAvailable.Add(token);
+            }
+        }
+
+        return tokensAvailable;
     }
 
     private void setTokenAvailable(SimpleJSON.JSONNode response_hash, string tokenKey)
@@ -516,33 +536,6 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         {
             _availabilityByToken[token] = false;
         }
-
-        //HasEnjinEnigmaToken = false;
-        //HasEnjinMft = false;
-
-        //HasEnjinMaxim = false;
-        //HasEnjinBryana = false;
-        //HasEnjinWitek = false;
-        //HasEnjinTassio = false;
-        //HasEnjinSimon = false;
-
-        //HasEnjinEsther = false;
-        //HasEnjinAlex = false;
-        //HasEnjinLizz = false;
-        //HasEnjinEvan = false;
-        //HasEnjinBrad = false;
-
-        //HasKnightHealer = false;
-        //HasKnightBomber = false;
-        //HasKnightDestroyer = false;
-        //HasKnightScout = false;
-        //HasKnightTank = false;
-
-        //HasDemonHealer = false;
-        //HasDemonBomber = false;
-        //HasDemonDestroyer = false;
-        //HasDemonScout = false;
-        //HasDemonTank = false;
 
         GameStats.Instance.TeamBoostTokensOwnedByName.Clear();
     }
@@ -1033,7 +1026,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         }
     }
 
-    public void UpdateBalancesFromNode(JSONNode userDataNode)
+    private void updateBalancesFromNode(JSONNode userDataNode)
     {
         JSONNode balancesNode = userDataNode[GameNetwork.TransactionKeys.BALANCES];
         if (balancesNode != null)

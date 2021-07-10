@@ -19,6 +19,7 @@ namespace GameConstants
         public const string COMMON = "Common";
         public const string PREMIUM = "Premium";
         public const string SPECIAL = "Special";
+        public const string ULTIMATE = "Ultimate";
     }
 
     public class TeamBoostCategory

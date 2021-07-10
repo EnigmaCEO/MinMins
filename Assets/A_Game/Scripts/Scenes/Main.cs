@@ -482,7 +482,7 @@ public class Main : EnigmaScene
 
     private void addToEnjinItemDisplay(string tokenName, string label)
     {
-        if (GameNetwork.Instance.GetTokenAvailable(tokenName))
+        if (GameNetwork.Instance.GetIsTokenAvailable(tokenName))
         {
             GameObject newEnjinTokenItem = Instantiate<GameObject>(_enjinTokenTemplate, _enjinTokensContent);
             newEnjinTokenItem.name = label;

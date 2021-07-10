@@ -536,7 +536,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
     public void AddExpToUnit(string unitName, int expToAdd)
     {
-        if (GameNetwork.Instance.GetTokenAvailable(EnjinTokenKeys.MINMINS_TOKEN))
+        if (GameNetwork.Instance.GetIsTokenAvailable(EnjinTokenKeys.MINMINS_TOKEN))
         {
             expToAdd *= 2; // Min Min Token perk
         }
@@ -842,7 +842,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         for (int i = _legend_firstUnitNumber; i <= _legend_lastUnitNumer; i++)
         {
             string unitName = i.ToString();
-            if (gameNetwork.GetTokenAvailable(gameInventory.GetUnitNameToken(unitName)) && !HasUnit(unitName))
+            if (gameNetwork.GetIsTokenAvailable(gameInventory.GetUnitNameToken(unitName)) && !HasUnit(unitName))
             {
                 AddUnit(unitName, 0);
             }
@@ -966,10 +966,10 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     //    addOreToken(EnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_10);
     //}
 
-    private void addOreToken(string tokenKey)
-    {
-        _oreTokens.Add(tokenKey);
-    }
+    //private void addOreToken(string tokenKey)
+    //{
+    //    _oreTokens.Add(tokenKey);
+    //}
 
     private void initializeUnitNameByToken()
     {

@@ -12,12 +12,14 @@ public class RewardsInventoryPopUp : MonoBehaviour
     [SerializeField] private float _commonCost = 0.5f;
     [SerializeField] private float _premiumCost = 1.0f;
     [SerializeField] private float _specialCost = 2.0f;
+    [SerializeField] private float _ultimateCost = 5.0f;
 
     [SerializeField] private string _coinName = "JENJ";
     [SerializeField] private string _defaultTokenName = "Unknown";
 
     [SerializeField] private string _imagesFolder = "Images/";
     [SerializeField] private string _enigmaCollectiblesFolder = "EnigmaCollectibles/";
+    [SerializeField] private string _ultimateTokensFolder = "UltimateTokens/";
     [SerializeField] private string _oreFolder = "EnjinTokens/";
     [SerializeField] private string _unitsFolder = "Units/";
 
@@ -47,22 +49,23 @@ public class RewardsInventoryPopUp : MonoBehaviour
             initializeInventory();
         }
 
-        UpdateCurrencyUI();
         gameObject.SetActive(true);
     }
 
     private void initializeInventory()
     {
+        _currencyText.text = GameStats.Instance.EnjBalance + " " + _coinName;
+
         _statusUI.text = LocalizationManager.GetTermTranslation(UiMessages.LOADING);
         _gridContent.DestroyChildren();
 
         bool useOnlineWithdrawnItems = true;
 
+        addOwnedItems();
+
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
         if (GameHacks.Instance.UseOfflineTestWithdrawnItems)
         {
-            addOwnedItems();
-
             useOnlineWithdrawnItems = false;
             List<string> testWithdrawnTokenKeys = GameHacks.Instance.OfflineTestWithdrawnTokenKeys;
 
@@ -70,16 +73,20 @@ public class RewardsInventoryPopUp : MonoBehaviour
             {
                 setWithdrawnToken(testWithdrawnTokenKey);
             }
-
-            _initialized = true;
-            _statusUI.gameObject.SetActive(false);
         }
 #endif
 
         if (useOnlineWithdrawnItems)
         {
-            NetworkManager.Transaction(GameNetwork.Transactions.GET_WITHDRAWN_ITEMS, onWithdrawnItemsReceived);
+            List<string> availableTokens = GameNetwork.Instance.GetTokensAvailable();
+            foreach (string tokenKey in availableTokens)
+            {
+                setWithdrawnToken(tokenKey);
+            }
         }
+
+        _initialized = true;
+        _statusUI.gameObject.SetActive(false);
     }
 
     private void setWithdrawnToken(string tokenKey)
@@ -110,11 +117,6 @@ public class RewardsInventoryPopUp : MonoBehaviour
         }
     }
 
-    public void UpdateCurrencyUI()
-    {
-        _currencyText.text = GameStats.Instance.EnjBalance + " " + _coinName;
-    }
-
     public void Close()
     {
         gameObject.SetActive(false);
@@ -129,38 +131,30 @@ public class RewardsInventoryPopUp : MonoBehaviour
     private void onInventoryChanged()
     {
         initializeInventory();
-        UpdateCurrencyUI();
     }
 
-    private void onWithdrawnItemsReceived(JSONNode response)
-    {
-        if (NetworkManager.CheckInvalidServerResponse(response, nameof(onWithdrawnItemsReceived)))
-        {
-            _statusUI.text = LocalizationManager.GetTermTranslation(GameNetwork.ServerResponseMessages.SERVER_ERROR);
-        }
-        else
-        {
-            JSONNode rewardsNode = NetworkManager.CheckValidNode(response[0], GameNetwork.TransactionKeys.REWARDS);
+    //private void onWithdrawnItemsReceived(JSONNode response)
+    //{
+    //    if (NetworkManager.CheckInvalidServerResponse(response, nameof(onWithdrawnItemsReceived)))
+    //    {
+    //        _statusUI.text = LocalizationManager.GetTermTranslation(GameNetwork.ServerResponseMessages.SERVER_ERROR);
+    //    }
+    //    else
+    //    {
+    //        JSONNode rewardsNode = NetworkManager.CheckValidNode(response[0], GameNetwork.TransactionKeys.REWARDS);
 
-            if (rewardsNode != null)
-            {
-                addOwnedItems();
+    //        if (rewardsNode != null)
+    //        {
+    //            addOwnedItems();
 
-                foreach (JSONNode reward in rewardsNode.AsArray)
-                {
-                    string tokenKey = rewardsNode[GameNetwork.TransactionKeys.TOKEN_KEY].ToString().Trim('"');
-                    setWithdrawnToken(tokenKey);
-                }
 
-                _initialized = true;
-                _statusUI.gameObject.SetActive(false);
-            }
-            else
-            {
-                _statusUI.text = LocalizationManager.GetTermTranslation(GameNetwork.ServerResponseMessages.SERVER_ERROR);
-            }
-        }
-    }
+    //        }
+    //        else
+    //        {
+    //            _statusUI.text = LocalizationManager.GetTermTranslation(GameNetwork.ServerResponseMessages.SERVER_ERROR);
+    //        }
+    //    }
+    //}
 
     private void addRewardItem(string tokenName, string tokenType)
     {
@@ -190,6 +184,9 @@ public class RewardsInventoryPopUp : MonoBehaviour
             case EnjinTokenTypes.SPECIAL:
                 rewardCost = _specialCost.ToString();
                 break;
+            case EnjinTokenTypes.ULTIMATE:
+                rewardCost = _ultimateCost.ToString();
+                break;
         }
 
         return rewardCost;
@@ -199,6 +196,7 @@ public class RewardsInventoryPopUp : MonoBehaviour
     {
         string path = _imagesFolder;
         Sprite sprite = _defaultRewardSprite;
+        GameInventory gameInventory = GameInventory.Instance;
 
         switch (rewardType)
         {
@@ -206,10 +204,13 @@ public class RewardsInventoryPopUp : MonoBehaviour
                 path += _enigmaCollectiblesFolder + enjinToken;
                 break;
             case EnjinTokenTypes.PREMIUM:
-                path += _oreFolder + GameInventory.Instance.GetTokenUnitName(enjinToken);
+                path += _oreFolder + gameInventory.GetTokenUnitName(enjinToken);
                 break;
             case EnjinTokenTypes.SPECIAL:
-                path += _unitsFolder + GameInventory.Instance.GetTokenUnitName(enjinToken);
+                path += _unitsFolder + gameInventory.GetTokenUnitName(enjinToken);
+                break;
+            case EnjinTokenTypes.ULTIMATE:
+                path += _ultimateTokensFolder + enjinToken;
                 break;
         }
 

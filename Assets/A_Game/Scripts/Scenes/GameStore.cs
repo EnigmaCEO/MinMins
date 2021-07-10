@@ -210,7 +210,7 @@ public class GameStore : EnigmaScene
             }
         }
 
-        if (count == 0 || !GameNetwork.Instance.GetTokenAvailable(EnigmaConstants.TokenKeys.ENJIN_MFT))
+        if (count == 0 || !GameNetwork.Instance.GetIsTokenAvailable(EnigmaConstants.TokenKeys.ENJIN_MFT))
         {
             _enjinmftPopUp.transform.Find("SummonButton").gameObject.SetActive(false);
         }
@@ -219,7 +219,7 @@ public class GameStore : EnigmaScene
 
         _enjinmftPopUp.SetActive(true);
 
-        if (GameNetwork.Instance.GetTokenAvailable(EnigmaConstants.TokenKeys.ENJIN_MFT))
+        if (GameNetwork.Instance.GetIsTokenAvailable(EnigmaConstants.TokenKeys.ENJIN_MFT))
         {
             _enjinmftPopUp.transform.Find("WindowMessage").GetComponent<Text>().text = attempts + " " + LocalizationManager.GetTermTranslation("Summons remaining");
         }
@@ -244,7 +244,7 @@ public class GameStore : EnigmaScene
             string unitName = enjinTransform.name;
             string tokenName = gameInventory.GetUnitNameToken(unitName);
 
-            if (!gameNetwork.GetTokenAvailable(tokenName) || gameInventory.HasUnit(unitName))
+            if (!gameNetwork.GetIsTokenAvailable(tokenName) || gameInventory.HasUnit(unitName))
             {
                 enjinTransform.gameObject.SetActive(false);
                 count--;

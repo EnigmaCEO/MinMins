@@ -22,6 +22,7 @@ public class GameHacks : SingletonMonobehaviour<GameHacks>
     public bool UseOfflineTestWithdrawnItems = false;
     public List<string> OfflineTestWithdrawnTokenKeys = new List<string>();
     public ValueHack WithdrawalResponse = new ValueHack("Success");  //Success, Pending or Error
+    public float OfflineWithdrawalDelay = 2;
     public ValueHack StartingEnjBalance = new ValueHack("100");
 
     public ValueHack SinglePlayerLevel = new ValueHack("50");
