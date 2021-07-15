@@ -1,21 +1,14 @@
-﻿using GameEnums;
+﻿using GameConstants;
+using GameEnums;
 using SimpleJSON;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameStats : SingletonMonobehaviour<GameStats>
+public class GameStats : SingletonPersistentPrefab<GameStats>
 {
-    public enum Modes
-    {
-        None,
-        SinglePlayer,
-        Pvp,
-        Quest
-    }
-
     [Header("Only for display. Set at runtime:")]
-    public Modes Mode = Modes.None;
+    public GameModes Mode = GameModes.None;
     public int SelectedLevelNumber = 0;
     public string QuestSelectedUnitName = "";
 
@@ -23,7 +16,7 @@ public class GameStats : SingletonMonobehaviour<GameStats>
     public bool HasPurchased = false;
     public int FightWithoutAdsCount = 0;
 
-    //public Quests ActiveQuest = Quests.None;
+    public string SelectedQuestString = nameof(GlobalSystemQuests.None);
 
     public List<Vector3> PreparationPositions = new List<Vector3>();
     public List<string> TeamUnits = new List<string>();

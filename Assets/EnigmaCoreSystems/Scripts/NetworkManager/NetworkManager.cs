@@ -449,7 +449,10 @@ namespace Enigma.CoreSystems
 
             foreach (DictionaryEntry pair in hashtable)
             {
-                if (pair.Key == null || pair.Value == null) continue;
+                if (pair.Key == null || pair.Value == null)
+                {
+                    continue;
+                }
 
                 Debug.Log(pair.Key + " " + pair.Value);
                 if (pair.Key.ToString() == TransactionKeys.IMAGE)

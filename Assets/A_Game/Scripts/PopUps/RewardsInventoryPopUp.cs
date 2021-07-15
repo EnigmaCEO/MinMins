@@ -19,7 +19,6 @@ public class RewardsInventoryPopUp : MonoBehaviour
 
     [SerializeField] private string _imagesFolder = "Images/";
     [SerializeField] private string _enigmaCollectiblesFolder = "EnigmaCollectibles/";
-    [SerializeField] private string _ultimateTokensFolder = "UltimateTokens/";
     [SerializeField] private string _oreFolder = "EnjinTokens/";
     [SerializeField] private string _unitsFolder = "Units/";
 
@@ -133,29 +132,6 @@ public class RewardsInventoryPopUp : MonoBehaviour
         initializeInventory();
     }
 
-    //private void onWithdrawnItemsReceived(JSONNode response)
-    //{
-    //    if (NetworkManager.CheckInvalidServerResponse(response, nameof(onWithdrawnItemsReceived)))
-    //    {
-    //        _statusUI.text = LocalizationManager.GetTermTranslation(GameNetwork.ServerResponseMessages.SERVER_ERROR);
-    //    }
-    //    else
-    //    {
-    //        JSONNode rewardsNode = NetworkManager.CheckValidNode(response[0], GameNetwork.TransactionKeys.REWARDS);
-
-    //        if (rewardsNode != null)
-    //        {
-    //            addOwnedItems();
-
-
-    //        }
-    //        else
-    //        {
-    //            _statusUI.text = LocalizationManager.GetTermTranslation(GameNetwork.ServerResponseMessages.SERVER_ERROR);
-    //        }
-    //    }
-    //}
-
     private void addRewardItem(string tokenName, string tokenType)
     {
         GameObject newRewardItem = Instantiate<GameObject>(_rewardItemTemplate, _gridContent);
@@ -207,10 +183,8 @@ public class RewardsInventoryPopUp : MonoBehaviour
                 path += _oreFolder + gameInventory.GetTokenUnitName(enjinToken);
                 break;
             case EnjinTokenTypes.SPECIAL:
-                path += _unitsFolder + gameInventory.GetTokenUnitName(enjinToken);
-                break;
             case EnjinTokenTypes.ULTIMATE:
-                path += _ultimateTokensFolder + enjinToken;
+                path += _unitsFolder + gameInventory.GetTokenUnitName(enjinToken);
                 break;
         }
 

@@ -10,6 +10,7 @@ using SimpleJSON;
 using System.Runtime.ConstrainedExecution;
 using GameEnums;
 using GameConstants;
+using EnigmaConstants;
 
 public class War : NetworkEntity
 {
@@ -206,15 +207,15 @@ public class War : NetworkEntity
 
         if (GetUsesAi())
         {
-            if (gameStats.Mode == GameStats.Modes.Pvp)
+            if (gameStats.Mode == GameModes.Pvp)
             {
                 _teamNameText2.text = NetworkManager.GetRoomCustomProperty(GameNetwork.RoomCustomProperties.GUEST_NAME); //NetworkManager.GetRandomOnlineName();
             }
-            else if (gameStats.Mode == GameStats.Modes.Quest)
+            else if (gameStats.Mode == GameModes.Quest)
             {
                 if (gameStats.SelectedLevelNumber > 0)
                 {
-                    _teamNameText2.text = GameInventory.Instance.GetActiveQuestName();
+                    _teamNameText2.text = GameInventory.Instance.GetGlobalSystemActiveQuestName();
                 }
             }
             else
@@ -250,7 +251,7 @@ public class War : NetworkEntity
             _tankAreasByTargetByTeam.Add(GameNetwork.TeamNames.GUEST, new Dictionary<string, List<TankArea>>());
         }
 
-        if ((gameStats.Mode == GameStats.Modes.SinglePlayer) || (gameStats.Mode == GameStats.Modes.Quest))
+        if ((gameStats.Mode ==GameModes.SinglePlayer) || (gameStats.Mode == GameModes.Quest))
         {
             GameNetwork.Instance.CreatePublicRoom();
         }
@@ -355,7 +356,7 @@ public class War : NetworkEntity
 
     public bool GetUsesAi()
     {
-        return ((GameStats.Instance.Mode == GameStats.Modes.SinglePlayer) || (GameStats.Instance.Mode == GameStats.Modes.Quest) || GameStats.Instance.UsesAiForPvp);
+        return ((GameStats.Instance.Mode == GameModes.SinglePlayer) || (GameStats.Instance.Mode == GameModes.Quest) || GameStats.Instance.UsesAiForPvp);
     }
 
     public bool GetIsAiTurn()
@@ -415,7 +416,7 @@ public class War : NetworkEntity
     {
         print("War::OnJoinedRoom -> Is Master Client: " + NetworkManager.GetIsMasterClient());
 
-        if ((GameStats.Instance.Mode == GameStats.Modes.SinglePlayer) || (GameStats.Instance.Mode == GameStats.Modes.Quest))
+        if ((GameStats.Instance.Mode == GameModes.SinglePlayer) || (GameStats.Instance.Mode == GameModes.Quest))
         {
             GameNetwork.Instance.HostPlayerId = NetworkManager.GetLocalPlayerId();
             GameNetwork.Instance.GuestPlayerId = NetworkManager.GetLocalPlayerId();
@@ -444,7 +445,7 @@ public class War : NetworkEntity
 
     private void handleDisconnection()
     {
-        bool isPvp = (GameStats.Instance.Mode == GameStats.Modes.Pvp);
+        bool isPvp = (GameStats.Instance.Mode == GameModes.Pvp);
         Debug.LogWarning("War::HandleDisconnection -> isPvp: " + isPvp);
 
         if(isPvp)   //Shouldn't be called, but just in case.
@@ -476,18 +477,20 @@ public class War : NetworkEntity
 
             if (isTeamSetHost)
             {
-                if (gameStats.Mode == GameStats.Modes.SinglePlayer)
+                if (gameStats.Mode == GameModes.SinglePlayer)
                 {
                     setUpSinglePlayerAiTeamUnits();
                 }
-                else if (gameStats.Mode == GameStats.Modes.Quest)
+                else if (gameStats.Mode == GameModes.Quest)
                 {
                     setupQuestAiTeamUnits();
                 }
                 else //Pvp
                 {
                     if (gameStats.UsesAiForPvp)
+                    {
                         setUpPvpAiTeamUnits();
+                    }
                 }
             }
             else // Team set is Host
@@ -585,7 +588,7 @@ public class War : NetworkEntity
         Debug.LogWarning("receiveReadyPopUpDismiss");
         ReadyPopup.SetActive(false);
 
-        if (GameStats.Instance.Mode == GameStats.Modes.Pvp)
+        if (GameStats.Instance.Mode == GameModes.Pvp)
         {
             if (GetIsHost() || GetIsGuest())
             {
@@ -1435,7 +1438,7 @@ public class War : NetworkEntity
 
         Debug.Log("GetSinglePlayerLevel: " + gameInventory.GetHigherSinglePlayerLevelCompleted());
 
-        if ((gameStats.Mode == GameStats.Modes.SinglePlayer) && (gameStats.SelectedLevelNumber <= gameInventory.GetHigherSinglePlayerLevelCompleted()))
+        if ((gameStats.Mode == GameModes.SinglePlayer) && (gameStats.SelectedLevelNumber <= gameInventory.GetHigherSinglePlayerLevelCompleted()))
         {
             if (GameNetwork.Instance.rewardedTrainingLevels[GameStats.Instance.SelectedLevelNumber - 1] == 0)  //By pass check if they didn't got enjin drop, and give it to player
             {
@@ -1495,12 +1498,13 @@ public class War : NetworkEntity
     private void setupQuestAiTeamUnits()
     {
         print("War::setupQuestAiTeamUnits");
-        int level = GameStats.Instance.SelectedLevelNumber;
+        GameStats gameStats = GameStats.Instance;
+        int level = gameStats.SelectedLevelNumber;
         string unitsString = "";
-        Quests activeQuest = GameInventory.Instance.GetActiveQuest(); //GameStats.Instance.ActiveQuest;
+        string selectedQuest = gameStats.SelectedQuestString;
 
-        if ((activeQuest == Quests.EnjinLegend122) || (activeQuest == Quests.EnjinLegend123) || (activeQuest == Quests.EnjinLegend124)
-            || (activeQuest == Quests.EnjinLegend125) || (activeQuest == Quests.EnjinLegend126))
+        if ((selectedQuest == nameof(GlobalSystemQuests.EnjinLegend122)) || (selectedQuest == nameof(GlobalSystemQuests.EnjinLegend123)) || (selectedQuest == nameof(GlobalSystemQuests.EnjinLegend124))
+            || (selectedQuest == nameof(GlobalSystemQuests.EnjinLegend125)) || (selectedQuest == nameof(GlobalSystemQuests.EnjinLegend126)))
         {
             switch (level)
             {
@@ -1540,29 +1544,24 @@ public class War : NetworkEntity
                     break;
             }
         }
-
-        //if (activeQuest == Quests.Swissborg)
-        //{
-        //    switch (level)
-        //    {
-        //        case 1:
-        //            unitsString = "27|31|4|10|5"; //27, bomber, 31 Destroyer, 4 Tank, 10 healer, 5 Scout
-        //            exp = 150;
-        //            break;
-        //        case 2:
-        //            unitsString = "60|57|62|51|67"; //60 bomber, 57 scout, 62 healer, 51 destroyer, 67 Tank
-        //            exp = 150;
-        //            break;
-        //        case 3:
-        //            unitsString = "72|75|80|78|77"; // 72 Tank, 75 Healer, 80 Destroyer, 78 scout, 77 Bomber
-        //            exp = 150;
-        //            break;
-        //        case 4:
-        //            unitsString = "125|116|104|109|102"; //125 Healer, 116 Tank, 104 Destroyer, 109 bomber, 102 Scout 
-        //            exp = 150;
-        //            break;
-        //    }
-        //}
+        else if(selectedQuest == nameof(LegendUnitQuests.Shalwend))
+        {
+            switch (level)
+            {
+                case 1:
+                    unitsString = "27|31|4|10|5"; //27, bomber, 31 Destroyer, 4 Tank, 10 healer, 5 Scout
+                    break;
+                case 2:
+                    unitsString = "60|57|62|51|67"; //60 bomber, 57 scout, 62 healer, 51 destroyer, 67 Tank
+                    break;
+                case 3:
+                    unitsString = "72|75|80|78|77"; // 72 Tank, 75 Healer, 80 Destroyer, 78 scout, 77 Bomber
+                    break;
+                case 4:
+                    unitsString = "125|116|104|109|102"; //125 Healer, 116 Tank, 104 Destroyer, 109 bomber, 102 Scout 
+                    break;
+            }
+        }
 
         finalizeUnitsExpAndPos(unitsString, GameConfig.Instance.QuestUnitExp);
         finelizeAiSetup(unitsString);
@@ -2090,15 +2089,19 @@ public class War : NetworkEntity
         //SceneManager.LoadScene(GameConstants.Scenes.LEVELS);
         GameStats gameStats = GameStats.Instance;
 
-        if (gameStats.Mode == GameStats.Modes.Quest)
+        if (gameStats.Mode == GameModes.Quest)
         {
-            if (GameInventory.Instance.GetAllQuestLevelsCompleted())
+            if (gameStats.SelectedQuestString == nameof(LegendUnitQuests.Shalwend))
             {
-                NetworkManager.LoadScene(EnigmaConstants.Scenes.MAIN);
+                NetworkManager.LoadScene(GameConstants.Scenes.LEVELS);
+            }
+            else if (GameInventory.Instance.GetAllGlobalSystemQuestLevelsCompleted())
+            {
+                NetworkManager.LoadScene(GameConstants.Scenes.QUEST_SELECTION);
             }
             else
             {
-                NetworkManager.LoadScene(GameConstants.Scenes.QUEST_SELECTION);
+                NetworkManager.LoadScene(GameConstants.Scenes.GLOBAL_SYSTEM_QUEST);
             }
         }
         else
@@ -2437,7 +2440,7 @@ public class War : NetworkEntity
             int minMinHealth = GameNetwork.GetUnitRoomPropertyAsInt(GameNetwork.UnitRoomProperties.HEALTH, _localPlayerTeam, unitName);
             if (minMinHealth > 0)
             {
-                if (gameStats.Mode == GameStats.Modes.SinglePlayer)
+                if (gameStats.Mode == GameModes.SinglePlayer)
                 {
                     if (_isVictory)
                     {
@@ -2470,7 +2473,7 @@ public class War : NetworkEntity
 
         if (_isVictory)
         {
-            if (gameStats.Mode == GameStats.Modes.SinglePlayer)
+            if (gameStats.Mode == GameModes.SinglePlayer)
             {
                 int levelWon = gameStats.SelectedLevelNumber;
                 if (NetworkManager.LoggedIn && (levelWon > gameInventory.GetHigherSinglePlayerLevelCompleted()))
@@ -2478,7 +2481,7 @@ public class War : NetworkEntity
                     NetworkManager.Transaction(GameNetwork.Transactions.NEW_TRAINING_LEVEL, GameNetwork.TransactionKeys.LEVEL, levelWon, onNewTrainingLevel);
                 }
             }
-            else if (gameStats.Mode == GameStats.Modes.Quest)
+            else if (gameStats.Mode == GameModes.Quest)
             {
                 if (gameStats.SelectedLevelNumber == 0)
                 {
@@ -2546,7 +2549,7 @@ public class War : NetworkEntity
             }
         }
 
-        if (gameStats.Mode == GameStats.Modes.Pvp)
+        if (gameStats.Mode == GameModes.Pvp)
         {
             if (GetIsHost())
             {
@@ -2568,40 +2571,42 @@ public class War : NetworkEntity
         }
     }
 
-    //private void onCompletedQuestResponse(JSONNode response)
-    //{
-    //    if (GameHacks.Instance.CompleteLevelQuestFail)
-    //    {
-    //        _errorText.text = LocalizationManager.GetTermTranslation(GameNetwork.ServerResponseMessages.SERVER_ERROR);
-    //        _errorText.gameObject.SetActive(true);
+    private void onCompletedQuestResponse(JSONNode response)
+    {
+        if (GameHacks.Instance.CompleteLevelQuestFail)
+        {
+            _errorText.text = LocalizationManager.GetTermTranslation(GameNetwork.ServerResponseMessages.SERVER_ERROR);
+            _errorText.gameObject.SetActive(true);
 
-    //        _matchResultsPopUp.Open();
-    //    }
-    //    else if (NetworkManager.CheckInvalidServerResponse(response, nameof(onCompletedQuestResponse)))
-    //    {
-    //        JSONNode response_hash = response[0];
-    //        if (response_hash != null)
-    //        {
-    //            JSONNode statusNode = NetworkManager.CheckValidNode(response_hash, NetworkManager.TransactionKeys.STATUS);
+            _matchResultsPopUp.Open();
+        }
+        else if (NetworkManager.CheckInvalidServerResponse(response, nameof(onCompletedQuestResponse)))
+        {
+            JSONNode response_hash = response[0];
+            if (response_hash != null)
+            {
+                JSONNode statusNode = NetworkManager.CheckValidNode(response_hash, NetworkManager.TransactionKeys.STATUS);
 
-    //            if (statusNode != null)
-    //            {
-    //                _errorText.text = LocalizationManager.GetTermTranslation(statusNode.ToString().Trim('"'));
-    //            }
-    //            else
-    //            {
-    //                _errorText.text = LocalizationManager.GetTermTranslation(GameNetwork.ServerResponseMessages.SERVER_ERROR);
-    //            }
+                if (statusNode != null)
+                {
+                    _errorText.text = LocalizationManager.GetTermTranslation(statusNode.ToString().Trim('"'));
+                }
+                else
+                {
+                    _errorText.text = LocalizationManager.GetTermTranslation(GameNetwork.ServerResponseMessages.SERVER_ERROR);
+                }
 
-    //            _errorText.gameObject.SetActive(true);
-    //            _matchResultsPopUp.Open();
-    //        }
-    //    }
-    //    else
-    //    {          
-    //        _questCompletePopUp.Open(_matchResultsPopUp);
-    //    }
-    //}
+                _errorText.gameObject.SetActive(true);
+                _matchResultsPopUp.Open();
+            }
+        }
+        else
+        {
+            grantQuestRewards();
+
+            _questCompletePopUp.Open(_matchResultsPopUp);
+        }
+    }
 
     private void onEnjinItemCollectedTransactionExternal(JSONNode response)
     {
@@ -2682,7 +2687,7 @@ public class War : NetworkEntity
         TeamBoostItemGroup boostGroupReward = null;
         bool gotBoostReward = false;
 
-        if (!isPrivateMatch && ((gameStats.Mode == GameStats.Modes.Pvp) || (gameStats.Mode == GameStats.Modes.Quest)))
+        if (!isPrivateMatch && ((gameStats.Mode == GameModes.Pvp) || (gameStats.Mode == GameModes.Quest)))
         {
             int randomInt = UnityEngine.Random.Range(1, 101);
             Debug.LogWarning("Ore reward random int: " + randomInt);
@@ -2750,30 +2755,31 @@ public class War : NetworkEntity
         {
             int levelCompleted = GameStats.Instance.SelectedLevelNumber;
 
-            if (gameStats.Mode == GameStats.Modes.SinglePlayer)
+            if (gameStats.Mode == GameModes.SinglePlayer)
             {
                 gameInventory.SetHigherSinglePlayerLevelCompleted(levelCompleted);
             }
-            else if (gameStats.Mode == GameStats.Modes.Quest)
+            else if (gameStats.Mode == GameModes.Quest)
             {
                 if (levelCompleted != 0)  //0 is to reveal enemies
                 {
                     gameInventory.SetQuestLevelCompleted(levelCompleted);
                 }
 
-                if (gameInventory.GetQuestCompleted())
+                if (gameInventory.GetQuestCompleted()) 
                 //if (levelCompleted == gameInventory.GetActiveQuestMaxLevel())
                 {
-                    //if (gameHacks.CompleteQuestOffline)
-                    //{
-                    //    _questCompletePopUp.Open(_matchResultsPopUp);
-                    //    GameStats.Instance.ActiveQuest = Quests.None;
-                    //}
-                    //else
+                    if (gameHacks.CompleteQuestOffline)
                     {
-                        //NetworkManager.Transaction(GameNetwork.Transactions.COMPLETED_QUEST_ID, onCompletedQuestResponse);
                         grantQuestRewards();
                         _questCompletePopUp.Open(_matchResultsPopUp);
+                        GameStats.Instance.SelectedQuestString = Constants.NONE;
+                    }
+                    else
+                    {
+                        NetworkManager.Transaction(GameNetwork.Transactions.COMPLETED_QUEST_ID, onCompletedQuestResponse);
+                        //grantQuestRewards();
+                        //_questCompletePopUp.Open(_matchResultsPopUp);
                         questCompletedTransactionSent = true;
                     }
                 }
@@ -2790,28 +2796,29 @@ public class War : NetworkEntity
     {
         Debug.Log("grantQuestRewards");
 
+        string selectedQuestString = GameStats.Instance.SelectedQuestString;
         GameInventory gameInventory = GameInventory.Instance;
-        Quests activeQuest = gameInventory.GetActiveQuest();
 
-        if (activeQuest == Quests.EnjinLegend122)
+        switch (selectedQuestString)
         {
-            gameInventory.HandleAddUnitOrExp("122");
-        }
-        else if (activeQuest == Quests.EnjinLegend123)
-        {
-            gameInventory.HandleAddUnitOrExp("123");
-        }
-        else if (activeQuest == Quests.EnjinLegend124)
-        {
-            gameInventory.HandleAddUnitOrExp("124");
-        }
-        else if (activeQuest == Quests.EnjinLegend125)
-        {
-            gameInventory.HandleAddUnitOrExp("125");
-        }
-        else if (activeQuest == Quests.EnjinLegend126)
-        {
-            gameInventory.HandleAddUnitOrExp("126");
+            case nameof(GlobalSystemQuests.EnjinLegend122):
+                gameInventory.HandleAddUnitOrExp("122");
+                break;
+            case nameof(GlobalSystemQuests.EnjinLegend123):
+                gameInventory.HandleAddUnitOrExp("123");
+                break;
+            case nameof(GlobalSystemQuests.EnjinLegend124):
+                gameInventory.HandleAddUnitOrExp("124");
+                break;
+            case nameof(GlobalSystemQuests.EnjinLegend125):
+                gameInventory.HandleAddUnitOrExp("125");
+                break;
+            case nameof(GlobalSystemQuests.EnjinLegend126):
+                gameInventory.HandleAddUnitOrExp("126");
+                break;
+            case nameof(LegendUnitQuests.Shalwend):
+                gameInventory.HandleAddUnitOrExp("128");
+                break;
         }
     }
 

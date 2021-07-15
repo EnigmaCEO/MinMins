@@ -227,7 +227,7 @@ public class Main : EnigmaScene
     {
         print("OnSinglePlayerButtonDown");
         GameSounds.Instance.PlayUiAdvanceSound();
-        GameStats.Instance.Mode = GameStats.Modes.SinglePlayer;
+        GameStats.Instance.Mode = GameModes.SinglePlayer;
         goToLevels();
     }
 
@@ -238,7 +238,7 @@ public class Main : EnigmaScene
 
         if (NetworkManager.LoggedIn)
         {
-            GameStats.Instance.Mode = GameStats.Modes.Pvp;
+            GameStats.Instance.Mode = GameModes.Pvp;
             goToLevels();
         }
         else
@@ -370,7 +370,7 @@ public class Main : EnigmaScene
             }
 
             //updateEnjinItems(response_hash);
-            GameNetwork.Instance.UpdateEnjinGoodies(response_hash);
+            GameNetwork.Instance.UpdateEnjinGoodies(response_hash, true);
             UpdateEnjinDisplay();
 
             if (_enjinWindow != null)

@@ -1,5 +1,6 @@
 ﻿using Enigma.CoreSystems;
 using GameEnums;
+using GameConstants;
 using SimpleJSON;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ using UnityEngine.UI;
 public class QuestSelection : MonoBehaviour
 {
     [SerializeField] GameObject _globalSystemQuestButton;
+    [SerializeField] GameObject _shalwendQuestButton;
     [SerializeField] GameObject _questProgressPanel;
 
     [SerializeField] private Image _questProgressFill;
@@ -22,11 +24,14 @@ public class QuestSelection : MonoBehaviour
     private void Start()
     {
         NetworkManager.Transaction(GameNetwork.Transactions.GET_QUEST_DATA, onGetQuestData);
+        //GameNetwork.CheckEnjinTokenAvailable()
 
         _questConfirmPopUp.Close();
 
         _questProgressPanel.SetActive(false);
         _globalSystemQuestButton.SetActive(false);
+
+        _shalwendQuestButton.SetActive(GameNetwork.Instance.GetIsTokenAvailable(EnjinTokenKeys.QUEST_SHALWEND));
     }
 
     public void OnBackButtonDown()
@@ -35,24 +40,24 @@ public class QuestSelection : MonoBehaviour
         SceneManager.LoadScene(EnigmaConstants.Scenes.MAIN);
     }
 
-    private void handleQuestPanelOrButtonVisibility(int points)
+    private void handleGlobalSystemQuestPanelAndButtonVisibility(int points)
     {
         GameInventory gameInventory = GameInventory.Instance;
 
-        if (gameInventory.GetAllQuestLevelsCompleted())
+        if (gameInventory.GetAllGlobalSystemQuestLevelsCompleted())
         {
             return;
         }
 
-        Quests activeQuest = gameInventory.GetActiveQuest();
-        Sprite rewardSprite = gameInventory.GetQuestRewardSprite(activeQuest);
+        GlobalSystemQuests globalSystemActiveQuest = gameInventory.GetGlobalSystemActiveQuest();
+        Sprite rewardSprite = gameInventory.GetQuestRewardSprite(globalSystemActiveQuest.ToString());
 
         _questProgressText.text = points.ToString() + " / " + _POINTS_FOR_QUEST.ToString();
         _questProgressFill.fillAmount = ((float)points) / _POINTS_FOR_QUEST;
 
         if (points >= _POINTS_FOR_QUEST)
         {
-            _globalSystemQuestButton.transform.Find("QuestName").GetComponent<Text>().text = gameInventory.GetActiveQuestName();
+            _globalSystemQuestButton.transform.Find("QuestName").GetComponent<Text>().text = gameInventory.GetGlobalSystemActiveQuestName();
 
             if (rewardSprite != null)
             {
@@ -76,13 +81,13 @@ public class QuestSelection : MonoBehaviour
     private void onGetQuestData(JSONNode response)
     {
         GameHacks gameHacks = GameHacks.Instance;
-        Quests hackedQuest = Quests.None;
+        GlobalSystemQuests hackedQuest = GlobalSystemQuests.None;
         bool questIsHacked = false;
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
         if (gameHacks.SetServerQuest.Enabled)
         {
-            hackedQuest = gameHacks.SetServerQuest.GetValueAsEnum<Quests>();
+            hackedQuest = gameHacks.SetServerQuest.GetValueAsEnum<GlobalSystemQuests>();
             questIsHacked = true;
         }
 #endif
@@ -102,7 +107,7 @@ public class QuestSelection : MonoBehaviour
 
             if (questIsHacked || (questNode != null))
             {
-                Quests serverActiveQuest = Quests.None;
+                GlobalSystemQuests serverActiveQuest = GlobalSystemQuests.None;
 
                 if (questIsHacked)
                 {
@@ -110,25 +115,25 @@ public class QuestSelection : MonoBehaviour
                 }
                 else
                 {
-                    serverActiveQuest = (Quests)questNode.AsInt;
+                    serverActiveQuest = (GlobalSystemQuests)questNode.AsInt;
                 }
 
-                Quests savedActiveQuest = gameInventory.GetActiveQuest();
+                GlobalSystemQuests savedActiveQuest = gameInventory.GetGlobalSystemActiveQuest();
                 if (serverActiveQuest != savedActiveQuest)
                 {
-                    if (savedActiveQuest != Quests.None)
+                    if (savedActiveQuest != GlobalSystemQuests.None)
                     {
-                        gameInventory.SetQuestEnemiesPositions(new List<Vector3>());
+                        gameInventory.SetGlobalSystemQuestEnemiesPositions(new List<Vector3>());
                         gameInventory.ClearQuestLevelsCompleted(savedActiveQuest.ToString());
-                        gameInventory.ClearScoutProgress();
+                        gameInventory.ClearGlobalSystemScoutProgress();
                     }
 
-                    gameInventory.SetActiveQuest(serverActiveQuest);
+                    gameInventory.SetGlobalSystemActiveQuest(serverActiveQuest);
                 }
             }
 
-            Quests activeQuest = gameInventory.GetActiveQuest();
-            if (activeQuest != Quests.None)
+            GlobalSystemQuests globalSystemActiveQuest = gameInventory.GetGlobalSystemActiveQuest();
+            if (globalSystemActiveQuest != GlobalSystemQuests.None)
             {
                 JSONNode progressNode = null;
 
@@ -147,7 +152,7 @@ public class QuestSelection : MonoBehaviour
                         points = progressNode.AsInt;
                     }
 
-                    handleQuestPanelOrButtonVisibility(points);
+                    handleGlobalSystemQuestPanelAndButtonVisibility(points);
                 }
 
                 if (leadersNode != null)
@@ -167,7 +172,7 @@ public class QuestSelection : MonoBehaviour
         if (GameHacks.Instance.QuestsPoints.Enabled)
         {
             int points = GameHacks.Instance.QuestsPoints.ValueAsInt;
-            handleQuestPanelOrButtonVisibility(points);
+            handleGlobalSystemQuestPanelAndButtonVisibility(points);
         }
 #endif
     }
@@ -175,37 +180,12 @@ public class QuestSelection : MonoBehaviour
     public void GlobalSystemButtonDown()
     {
         GameSounds.Instance.PlayUiAdvanceSound();
-        _questConfirmPopUp.Open(GameConstants.Scenes.GLOBAL_SYSTEM_QUEST, null, null, new List<string> { getRewardUnitName() });
+        _questConfirmPopUp.Open(GameInventory.Instance.GetGlobalSystemActiveQuest().ToString(), GameConstants.Scenes.GLOBAL_SYSTEM_QUEST, null, null);
     }
 
-    private string getRewardUnitName()
+    public void ShalwendQuestButtonDown()
     {
-        Quests activeQuest = GameInventory.Instance.GetActiveQuest();
-
-        string rewardUnitName;
-
-        switch (activeQuest)
-        {
-            case Quests.EnjinLegend122:
-                rewardUnitName = "122";
-                break;
-            case Quests.EnjinLegend123:
-                rewardUnitName = "123";
-                break;
-            case Quests.EnjinLegend124:
-                rewardUnitName = "124";
-                break;
-            case Quests.EnjinLegend125:
-                rewardUnitName = "125";
-                break;
-            case Quests.EnjinLegend126:
-                rewardUnitName = "126";
-                break;
-            default:
-                rewardUnitName = "122";
-                break;
-        }
-
-        return rewardUnitName;
+        GameSounds.Instance.PlayUiAdvanceSound();
+        _questConfirmPopUp.Open(nameof(LegendUnitQuests.Shalwend), GameConstants.Scenes.LEVELS, null, null);
     }
 }

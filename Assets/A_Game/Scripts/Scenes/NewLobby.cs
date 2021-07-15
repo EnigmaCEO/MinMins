@@ -100,7 +100,7 @@ public class NewLobby : NetworkEntity
         NetworkManager.OnPlayerDisconnectedCallback -= onPlayerDisconnected;
         NetworkManager.OnDisconnectedFromNetworkCallback -= onDisconnectedFromNetwork;
 
-        if (GameNetwork.HasInstance())
+        if (GameNetwork.HasInstance)
         {
             GameNetwork.Instance.OnPvpAiSetCallback -= onPvpAiSet;
         }

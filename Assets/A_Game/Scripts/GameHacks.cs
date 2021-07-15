@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Security.Permissions;
 using UnityEngine;
 
-public class GameHacks : SingletonMonobehaviour<GameHacks>
+public class GameHacks : SingletonPersistentPrefab<GameHacks>
 {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
     public bool EnableAllEnjinTokens;

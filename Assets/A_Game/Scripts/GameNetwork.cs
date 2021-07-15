@@ -2,12 +2,14 @@
 using GameConstants;
 using GameEnums;
 using SimpleJSON;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static Enigma.CoreSystems.NetworkManager;
 
-public class GameNetwork : SingletonMonobehaviour<GameNetwork>
+public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
 {
     public const string TRANSACTION_GAME_NAME = "MinMins";
 
@@ -58,7 +60,10 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
         public const string BALANCES = "balances";
         public const string ENJ_BALANCE = "enjBalance";
+        public const string ETH_ADDRESS = "ethAddress";
         public const string WALLET = "wallet";
+        public const string GAME_ID = "gameId";
+        public const string CODE = "code";
     }
 
     public class ServerResponseMessages
@@ -260,15 +265,21 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
     //public bool HasSwissborgCyborg = false;
 
     public int[] rewardedTrainingLevels = new int[100];
-
     [Header("=================================")]
 
     private Hashtable _matchResultshashTable = new Hashtable();
     private Dictionary<string, bool> _availabilityByToken = new Dictionary<string, bool>();
 
-
-    void Awake()
+    public string EthAdress
     {
+        get;
+        private set;
+    }
+
+    override protected void Awake()
+    {
+        base.Awake();
+
         NetworkManager.OnPlayerCustomPropertiesChangedCallback += OnPlayerCustomPropertiesChanged;
         NetworkManager.OnRoomCustomPropertiesChangedCallback += OnRoomCustomPropertiesChanged;
 
@@ -286,9 +297,29 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
             IsEnjinLinked = true;
         }
 #endif
+
+        setTokenAvailabilityFalseByDefault();
     }
 
-    public void UpdateEnjinGoodies(JSONNode response_hash)
+    private void setTokenAvailabilityFalseByDefault()
+    {
+        SetTokenAvailable(EnigmaConstants.TokenKeys.ENJIN_MFT, false);
+        SetTokenAvailable(EnigmaConstants.TokenKeys.ENIGMA_TOKEN, false);
+
+        SetTokenAvailable(EnjinTokenKeys.MINMINS_TOKEN, false);
+
+        GameInventory gameInventory = GameInventory.Instance;
+        List<string> legendUnits = GameInventory.Instance.GetLegendUnitNames();
+        foreach (string legendUnit in legendUnits)
+        {
+            string tokenName = gameInventory.GetUnitNameToken(legendUnit);
+            SetTokenAvailable(tokenName, false);
+        }
+
+        SetTokenAvailable(EnjinTokenKeys.QUEST_SHALWEND, false);
+    }
+
+    public void UpdateEnjinGoodies(JSONNode response_hash, bool updateEthAddress)
     {
         //GameStats gameStats = GameStats.Instance;
         //        GameInventory gameInventory = GameInventory.Instance;
@@ -303,16 +334,16 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         //        }
         //#endif
 
-        JSONNode userDataNode = response_hash[NetworkManager.TransactionKeys.USER_DATA];
+        JSONNode userDataNode = response_hash[Enigma.CoreSystems.NetworkManager.TransactionKeys.USER_DATA];
         if (userDataNode != null)
         {
-            updateBalancesFromNode(userDataNode);
+            updateWalletFromUserDataNode(userDataNode, updateEthAddress);
         }
 
-        setTokenAvailable(response_hash, EnigmaConstants.TokenKeys.ENJIN_MFT);
-        setTokenAvailable(response_hash, EnigmaConstants.TokenKeys.ENIGMA_TOKEN);
+        determineTokenAvailable(response_hash, EnigmaConstants.TokenKeys.ENJIN_MFT);
+        determineTokenAvailable(response_hash, EnigmaConstants.TokenKeys.ENIGMA_TOKEN);
 
-        setTokenAvailable(response_hash, EnjinTokenKeys.MINMINS_TOKEN);
+        determineTokenAvailable(response_hash, EnjinTokenKeys.MINMINS_TOKEN);
 
         GameInventory gameInventory = GameInventory.Instance;
 
@@ -326,7 +357,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         foreach (string legendUnit in legendUnits)
         {
             string tokenName = gameInventory.GetUnitNameToken(legendUnit);
-            setTokenAvailable(response_hash, tokenName);
+            determineTokenAvailable(response_hash, tokenName);
         }
 
         CheckAllEnjinTeamBoostTokens(response_hash);
@@ -352,7 +383,12 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         return tokensAvailable;
     }
 
-    private void setTokenAvailable(SimpleJSON.JSONNode response_hash, string tokenKey)
+    public void SetTokenAvailable(string tokenKey, bool available)
+    {
+        _availabilityByToken[tokenKey] = available;
+    }
+
+    private void determineTokenAvailable(SimpleJSON.JSONNode response_hash, string tokenKey)
     {
         string tokenAvailable = "";
         SimpleJSON.JSONNode tokenNode = response_hash[NetworkManager.TransactionKeys.USER_DATA][tokenKey];
@@ -369,7 +405,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         }
 #endif
 
-        _availabilityByToken.Add(tokenKey, (tokenAvailable == "1"));
+        SetTokenAvailable(tokenKey, (tokenAvailable == "1"));
     }
 
     private void onPlayerDisconnected(int disconnectedPlayerId)
@@ -385,7 +421,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
     private void onDisconnectedFromNetwork()
     {
-        if (GameStats.Instance.Mode == GameStats.Modes.Pvp)
+        if (GameStats.Instance.Mode == GameModes.Pvp)
         {
             if (_messagePopUp)
             {
@@ -534,7 +570,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
 
         foreach (string token in _availabilityByToken.Keys)
         {
-            _availabilityByToken[token] = false;
+            SetTokenAvailable(token, false);
         }
 
         GameStats.Instance.TeamBoostTokensOwnedByName.Clear();
@@ -943,7 +979,7 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         forcePvpAi = GameHacks.Instance.ForcePvpAi;
 #endif
 
-        if ((GameStats.Instance.Mode == GameStats.Modes.Pvp) && forcePvpAi)
+        if ((GameStats.Instance.Mode == GameModes.Pvp) && forcePvpAi)
         {
             isOpen = false;
         }
@@ -1026,23 +1062,33 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
         }
     }
 
-    private void updateBalancesFromNode(JSONNode userDataNode)
+    private void updateWalletFromUserDataNode(JSONNode userDataNode, bool updateAddress)
     {
-        JSONNode balancesNode = userDataNode[GameNetwork.TransactionKeys.BALANCES];
+        JSONNode balancesNode = userDataNode[TransactionKeys.BALANCES];
         if (balancesNode != null)
         {
-            JSONNode balancesData = balancesNode[GameNetwork.TransactionKeys.DATA];
+            JSONNode balancesData = balancesNode[TransactionKeys.DATA];
             if (balancesData != null)
             {
-                JSONNode walletNode = balancesData[GameNetwork.TransactionKeys.WALLET];
+                JSONNode walletNode = balancesData[TransactionKeys.WALLET];
                 if (walletNode != null)
                 {
-                    JSONNode enjBalanceNode = walletNode[GameNetwork.TransactionKeys.ENJ_BALANCE];
+                    JSONNode enjBalanceNode = walletNode[TransactionKeys.ENJ_BALANCE];
                     if (enjBalanceNode != null)
                     {
                         string balanceString = enjBalanceNode.ToString();
                         balanceString = balanceString.Trim('"');
                         GameStats.Instance.EnjBalance = float.Parse(balanceString);
+                    }
+
+                    if (updateAddress)
+                    {
+                        JSONNode ethAddressNode = walletNode[TransactionKeys.ETH_ADDRESS];
+                        string ethString = ethAddressNode.ToString();
+                        EthAdress = ethString.Trim('"');
+
+                        Hashtable hashtable = new Hashtable() { { TransactionKeys.GAME_ID, "1" }, { TransactionKeys.WALLET, EthAdress } };
+                        StartCoroutine(checkEnjinTokenAvailable(hashtable, onCheckEnjinTokenAvailableResponse));
                     }
                 }
             }
@@ -1054,5 +1100,94 @@ public class GameNetwork : SingletonMonobehaviour<GameNetwork>
             GameStats.Instance.EnjBalance = GameHacks.Instance.StartingEnjBalance.ValueAsInt;
         }
 #endif 
+    }
+
+    private void onCheckEnjinTokenAvailableResponse(JSONNode response)
+    {
+        if (response == null)
+        {
+            Debug.LogError("Transaction response " + nameof(checkEnjinTokenAvailable) + " transaction got null.");
+        }
+        else
+        {
+            Debug.Log(response.ToString());
+
+            JSONNode codeNode = response[0][TransactionKeys.CODE];
+            if (codeNode != null)
+            {
+                string code = codeNode.ToString();
+                code = code.Trim('"');
+
+                Debug.Log("Shalwend code: " + code);
+
+                if (code == EnjinTokenKeys.QUEST_SHALWEND)
+                {
+                    SetTokenAvailable(EnjinTokenKeys.QUEST_SHALWEND, true);
+                }
+                else if (code == "")
+                {
+                    SetTokenAvailable(EnjinTokenKeys.QUEST_SHALWEND, false);
+                }
+                else
+                {
+                    Debug.LogError("Shalwend quest code was not recognized.");
+                }
+            }
+            else
+            {
+                Debug.LogError("Code field was not found at response from " + nameof(checkEnjinTokenAvailable) + ".");
+            }
+        }
+    }
+
+    static private IEnumerator checkEnjinTokenAvailable(Hashtable hashtable, Callback externalCallback, Callback localCallback = null)
+    {
+        string url = "https://tn8wa4zqy8.execute-api.us-east-1.amazonaws.com/prod/getcodes";
+
+        WWWForm formData = new WWWForm();
+
+        foreach (DictionaryEntry pair in hashtable)
+        {
+            if (pair.Key == null || pair.Value == null)
+            {
+                continue;
+            }
+
+            formData.AddField(pair.Key.ToString(), pair.Value.ToString());
+        }
+
+        Debug.Log(nameof(checkEnjinTokenAvailable) + " url: " + url);
+        var www = UnityEngine.Networking.UnityWebRequest.Post(url, formData);
+        yield return www.SendWebRequest();
+
+        if (www.isNetworkError || www.isHttpError)
+        {
+            Debug.Log(www.error + " on " + nameof(checkEnjinTokenAvailable));
+
+            JSONNode response = JSON.Parse(www.error);
+
+            if (localCallback != null)
+            {
+                localCallback(response);
+            }
+
+            externalCallback(response);
+        }
+        else
+        {
+            if (externalCallback != null)
+            {
+                string responseString = www.downloadHandler.text;
+                responseString = responseString.Trim('"');
+                JSONNode response = JSON.Parse(responseString);
+
+                if (localCallback != null)
+                {
+                    localCallback(response);
+                }
+
+                externalCallback(response);
+            }
+        }
     }
 }

@@ -5,6 +5,11 @@ using UnityEngine;
 
 namespace EnigmaConstants
 {
+    public class Constants
+    {
+        public const string NONE = "None";
+    }
+
     public class TokenKeys
     {
         public const string ENJIN_MFT = "enjin_mft";

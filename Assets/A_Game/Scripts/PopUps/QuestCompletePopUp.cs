@@ -12,7 +12,6 @@ public class QuestCompletePopUp : MonoBehaviour
     [SerializeField] private Text _messageReward;
     [SerializeField] private Image _questIcon;
 
-    private Dictionary<Quests, string> _messagesTermPerQuest = new Dictionary<Quests, string>();
     private MatchResultsPopUp _resultsPopUp;
 
     private void Start()
@@ -30,13 +29,12 @@ public class QuestCompletePopUp : MonoBehaviour
     {
         _resultsPopUp = resultsPopUp;
 
-        GameInventory gameInventory = GameInventory.Instance;
-        Quests activeQuest = gameInventory.GetActiveQuest(); 
+        string selectedQuestString = GameStats.Instance.SelectedQuestString;
 
-        _questName.text = gameInventory.GetQuestName(activeQuest);
+        _questName.text = GameInventory.Instance.GetQuestName(selectedQuestString);
 
-        fillQuestRewardMessage(activeQuest);
-        handleRewardImage(activeQuest);
+        fillQuestRewardMessage(selectedQuestString);
+        handleRewardImage(selectedQuestString);
 
         gameObject.SetActive(true);
     }
@@ -46,24 +44,22 @@ public class QuestCompletePopUp : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    private void fillQuestRewardMessage(Quests quest)
+    private void fillQuestRewardMessage(string questString)
     {
-        //_messagesTermPerQuest.Add(Quests.Swissborg, "Swissborg Reward");
-
-        if ((quest == Quests.EnjinLegend122) || (quest == Quests.EnjinLegend123) || (quest == Quests.EnjinLegend124)
-        || (quest == Quests.EnjinLegend125) || (quest == Quests.EnjinLegend126))
+        if ((questString == nameof(GlobalSystemQuests.EnjinLegend122)) || (questString == nameof(GlobalSystemQuests.EnjinLegend123)) || (questString == nameof(GlobalSystemQuests.EnjinLegend124))
+        || (questString == nameof(GlobalSystemQuests.EnjinLegend125)) || (questString == nameof(GlobalSystemQuests.EnjinLegend126)) || (questString == nameof(LegendUnitQuests.Shalwend)))
         {
             _messageReward.text = LocalizationManager.GetTermTranslation("You got this new unit in your inventory or experience bonus for it.");
         }
         else
         {
-            Debug.LogError("There is not message set for Quest: " + quest.ToString());
+            Debug.LogError("There is not message set for Quest: " + questString.ToString());
         }
     }
 
-    private void handleRewardImage(Quests activeQuest)
+    private void handleRewardImage(string questString)
     {
-        Sprite questSprite = GameInventory.Instance.GetQuestRewardSprite(activeQuest);
+        Sprite questSprite = GameInventory.Instance.GetQuestRewardSprite(questString);
 
         if (questSprite != null)
         {

@@ -1,4 +1,6 @@
 ﻿using Enigma.CoreSystems;
+using GameConstants;
+using GameEnums;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -34,10 +36,10 @@ public class Levels : EnigmaScene
 #endif
 
         GameObject levelGridItemTemplate = _levelsGridContent.GetChild(0).gameObject;
-        GameStats.Modes mode = gameStats.Mode;
+        GameModes mode = gameStats.Mode;
 
         int levelsLenght = 0;
-        if (mode == GameStats.Modes.SinglePlayer)
+        if (mode == GameModes.SinglePlayer)
         {
             levelsLenght = gameInventory.GetHigherSinglePlayerLevelCompleted() + 1;
             int arenaMaxLevel = gameInventory.GetSinglePlayerMaxLevel();
@@ -49,38 +51,44 @@ public class Levels : EnigmaScene
 
             _title.text = LocalizationManager.GetTermTranslation("LEVEL SELECTION");
         }
-        else if (mode == GameStats.Modes.Pvp)
+        else if (mode == GameModes.Pvp)
         {
             levelsLenght = GameNetwork.Instance.GetLocalPlayerPvpLevelNumber();
         }
-        //else if (mode == GameStats.Modes.Quest)
-        //{
-        //    levelsLenght = GameInventory.Instance.GetHighestQuestLevelCompleted() + 1;
-        //    //int questMaxLevel = gameInventory.GetActiveQuestMaxLevel();
+        else if (mode == GameModes.Quest)
+        {
+            if (gameStats.SelectedQuestString == nameof(LegendUnitQuests.Shalwend))
+            {
+                levelsLenght = gameInventory.GetHighestQuestLevelCompletedAmount() + 1;
+                int questMaxLevel = gameInventory.GetSelectedLegendUnitQuestMaxLevel();
 
-        //    _title.text = GameStats.Instance.ActiveQuest.ToString(); //(GameStats.Instance.ActiveQuest.ToString() + " Quest").ToUpper();
+                _title.text = gameInventory.GetQuestName(gameStats.SelectedQuestString);
 
-        //    //if (levelsLenght > questMaxLevel)
-        //    //{
-        //    //    levelsLenght = questMaxLevel;
-        //    //}
-        //}
+                if (levelsLenght > questMaxLevel)
+                {
+                    levelsLenght = questMaxLevel;
+                }
+            }
+        }
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
-        if (gameHacks.UnlockSinglePlayerLevels.Enabled && (mode == (GameStats.Modes.SinglePlayer)))
+        if (gameHacks.UnlockSinglePlayerLevels.Enabled && (mode == (GameModes.SinglePlayer)))
         {
             levelsLenght = GameHacks.Instance.UnlockSinglePlayerLevels.ValueAsInt;
         }
 #endif
 
         Debug.LogWarning(">Levels::Start -> Levels lenght: " + levelsLenght);
-        GameEnums.Quests activeQuest = gameInventory.GetActiveQuest(); //GameStats.Instance.ActiveQuest;
+        string selectedQuestString = gameStats.SelectedQuestString;
 
-        int activeQuestLastLevel = 0;
+        int selectedQuestLastLevel = 0;
 
-        if (mode == GameStats.Modes.Quest)
+        if (mode == GameModes.Quest)
         {
-            //activeQuestLastLevel = GameInventory.Instance.GetActiveQuestMaxLevel();
+            if (selectedQuestString == nameof(LegendUnitQuests.Shalwend))
+            {
+                selectedQuestLastLevel = gameInventory.GetSelectedLegendUnitQuestMaxLevel();
+            }
         }
 
         for (int i = 0; i < levelsLenght; i++)
@@ -93,25 +101,28 @@ public class Levels : EnigmaScene
             levelGridItem.SetLabel(levelNumber.ToString());
             levelGridItem.FightButton.onClick.AddListener(() => { onLevelFightButtonDown(levelNumber); });
 
-            if (mode == GameStats.Modes.Quest)
+            if (mode == GameModes.Quest)
             {
-                //if ((i + 1) == activeQuestLastLevel) // if level number equals max level
-                //{
-                //    string iconPath = "Images/Quests/" + activeQuest.ToString() + " Icon";
-                //    Sprite questIcon = (Sprite)Resources.Load<Sprite>(iconPath);
+                if (selectedQuestString == nameof(LegendUnitQuests.Shalwend))
+                {
+                    if ((i + 1) == selectedQuestLastLevel) // if level number equals max level
+                    {
+                        string iconPath = "Images/Quests/" + selectedQuestString + " Icon";
+                        Sprite questIcon = (Sprite)Resources.Load<Sprite>(iconPath);
 
-                //    if (questIcon != null)
-                //    {
-                //        levelGridItem.SetImageSprite(questIcon);
-                //    }
-                //    else
-                //    {
-                //        Debug.Log("Quest Icon image was not found at path: " + iconPath + " . Please check active quest is correct and image is in the right path.");
-                //    }
-                //}
+                        if (questIcon != null)
+                        {
+                            levelGridItem.SetImageSprite(questIcon);
+                        }
+                        else
+                        {
+                            Debug.Log("Quest Icon image was not found at path: " + iconPath + " . Please check active quest is correct and image is in the right path.");
+                        }
+                    }
+                }
             }
 
-            if ((mode == GameStats.Modes.Quest) || (mode == GameStats.Modes.Pvp))
+            if ((mode == GameModes.Quest) || (mode == GameModes.Pvp))
             {
                 levelGridItem.enjinReward.SetActive(false);
             }

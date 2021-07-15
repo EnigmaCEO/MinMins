@@ -132,7 +132,7 @@ public class EnjinWithdrawalPopUp : MonoBehaviour
                 string status = response_hash[NetworkManager.TransactionKeys.STATUS].ToString().Trim('"');
                 if (handleWithdrawalStatus(status))
                 {
-                    GameNetwork.Instance.UpdateEnjinGoodies(response_hash);
+                    GameNetwork.Instance.UpdateEnjinGoodies(response_hash, false);
                     _inventoryChangedCallback();
                 }
             }

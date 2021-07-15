@@ -43,7 +43,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4be46d782ebefb14fb5db0554234c907, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PersistBetweenScenes: 1
   EnableAllEnjinTokens: 0
   ForceEnjinRewardOnChest: 0
   HideClouds: 0
@@ -55,23 +54,15 @@ MonoBehaviour:
   AllEnjinTeamBoostTokens: 0
   EnjinLinked: 0
   TreatBattleResultsAsPrivateMatch: 0
-  UseOfflineTestInventoryRewards: 0
-  OfflineTestInventoryRewards:
-  - TokenCode: enjin_maxim
-    TokenType: Special
-    Withdrawn: True
-  - TokenCode: enjin_sword
-    TokenType: Premium
-    Withdrawn: False
-  - TokenCode: knight_destroyer
-    TokenType: Special
-    Withdrawn: True
-  - TokenCode: demon_bomber
-    TokenType: Special
-    Withdrawn: False
+  UseOfflineTestWithdrawnItems: 0
+  OfflineTestWithdrawnTokenKeys:
+  - demon_bomber
+  - demon_destroyer
+  - god_destroyer_1
   WithdrawalResponse:
     Enabled: 0
     Value: Error
+  OfflineWithdrawalDelay: 2
   StartingEnjBalance:
     Enabled: 0
     Value: 100
@@ -116,7 +107,7 @@ MonoBehaviour:
     Value: Destroyer
   PowerScale:
     Enabled: 0
-    Value: 5
+    Value: 2
   UnitLevel:
     Enabled: 0
     Value: 5

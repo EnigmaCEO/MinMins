@@ -1,5 +1,6 @@
 ﻿using CodeStage.AntiCheat.Storage;
 using Enigma.CoreSystems;
+using EnigmaConstants;
 using GameConstants;
 using GameEnums;
 using I2.Loc.SimpleJSON;
@@ -9,7 +10,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class GameInventory : SingletonMonobehaviour<GameInventory>
+public class GameInventory : SingletonPersistentPrefab<GameInventory>
 {
     public class Tiers
     {
@@ -35,7 +36,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         public const string SINGLE_PLAYER_LEVEL = "SinglePlayerLevel";
         public const string ENJIN_ATTEMPTS = "EnjinAttempts";
         public const string WITHDRAWN_TOKENS = "WithdrawnTokens";
-        public const string ACTIVE_QUEST = "ActiveQuest";
+        public const string GLOBAL_SYSTEM_ACTIVE_QUEST = "ActiveQuest";
         public const string CRYSTALS = "Crystals";
     }
 
@@ -90,7 +91,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     private List<string> _legend_units = new List<string>();
 
     //private List<UnitRarity> _unitSpecialRarities = new List<UnitRarity>();
-    //private Dictionary<Quests, int> _maxLevelByQuest = new Dictionary<Quests, int>();
+    private Dictionary<LegendUnitQuests, int> _maxLevelLegendUnitQuest = new Dictionary<LegendUnitQuests, int>();
 
     private Dictionary<string, double> _rarityByUnit = new Dictionary<string, double>();
     private Dictionary<string, string> _unitNameByToken = new Dictionary<string, string>();
@@ -102,9 +103,11 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     private const char POSITIONS_SEPARATOR = ';';
     private const char COORDS_SEPARATOR = ',';
 
-    private void Awake()
+    override protected void Awake()
     {
-        //initializeMaxLevelsByQuest();
+        base.Awake();
+
+        initializeMaxLevelsByLevelUnitQuest();
 
         //initializeOreTokens();
         initializeUnitNameByToken();
@@ -214,7 +217,6 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
             {
                 InventoryManager.Instance.UpdateItem(GroupNames.STATS, ItemKeys.SINGLE_PLAYER_LEVEL, newLevel, true);
                 saveInventoryItemToFile<int>(GroupNames.STATS, ItemKeys.SINGLE_PLAYER_LEVEL);
-                //saveSinglePlayerLevelNumber();
             }
         }
     }
@@ -247,84 +249,84 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         saveInventoryItemToFile<int>(GroupNames.STATS, ItemKeys.CRYSTALS);
     }
 
-    public void SetActiveQuest(Quests activeQuest)
+    public void SetGlobalSystemActiveQuest(GlobalSystemQuests activeQuest)
     {
-        InventoryManager.Instance.UpdateItem(GroupNames.STATS, ItemKeys.ACTIVE_QUEST, activeQuest.ToString());
-        saveInventoryItemToFile<string>(GroupNames.STATS, ItemKeys.ACTIVE_QUEST);
+        InventoryManager.Instance.UpdateItem(GroupNames.STATS, ItemKeys.GLOBAL_SYSTEM_ACTIVE_QUEST, activeQuest.ToString());
+        saveInventoryItemToFile<string>(GroupNames.STATS, ItemKeys.GLOBAL_SYSTEM_ACTIVE_QUEST);
     }
 
-    public Quests GetActiveQuest()
+    public GlobalSystemQuests GetGlobalSystemActiveQuest()
     {
-        return (Quests)Enum.Parse(typeof(Quests), GetActiveQuestString());
+        return (GlobalSystemQuests)Enum.Parse(typeof(GlobalSystemQuests), GetGlobalSystemActiveQuestString());
     }
 
-    public string GetActiveQuestString()
+    public string GetGlobalSystemActiveQuestString()
     {
-        return InventoryManager.Instance.GetItem<string>(GroupNames.STATS, ItemKeys.ACTIVE_QUEST);
+        return InventoryManager.Instance.GetItem<string>(GroupNames.STATS, ItemKeys.GLOBAL_SYSTEM_ACTIVE_QUEST);
     }
 
-    public string GetActiveQuestName()
+    public string GetGlobalSystemActiveQuestName()
     {
-        return GetQuestName(GetActiveQuest());
+        return GetQuestName(GetGlobalSystemActiveQuest().ToString());
     }
 
-    public string GetQuestName(Quests quest)
+    public string GetQuestName(string questString)
     {
-        string questName = "";
         string enjinLegendLocalized = LocalizationManager.GetTermTranslation("Enjin Legend:");
+        string questName = enjinLegendLocalized + " ";
 
-        if (quest == Quests.EnjinLegend122)
+        switch(questString)
         {
-            questName = enjinLegendLocalized + " 122";
-        }
-        else if (quest == Quests.EnjinLegend123)
-        {
-            questName = enjinLegendLocalized + " 123";
-        }
-        else if (quest == Quests.EnjinLegend124)
-        {
-            questName = enjinLegendLocalized + " 124";
-        }
-        else if (quest == Quests.EnjinLegend125)
-        {
-            questName = enjinLegendLocalized + " 125";
-        }
-        else if (quest == Quests.EnjinLegend126)
-        {
-            questName = enjinLegendLocalized + " 126";
+            case nameof(GlobalSystemQuests.EnjinLegend122):
+                questName += "122";
+                break;
+            case nameof(GlobalSystemQuests.EnjinLegend123):
+                questName += "123";
+                break;
+            case nameof(GlobalSystemQuests.EnjinLegend124):
+                questName += "124";
+                break;
+            case nameof(GlobalSystemQuests.EnjinLegend125):
+                questName += "125";
+                break;
+            case nameof(GlobalSystemQuests.EnjinLegend126):
+                questName += "126";
+                break;
+            case nameof(LegendUnitQuests.Shalwend):
+                questName += "Shalwend";
+                break;
         }
 
         return questName;
     }
 
-    public Sprite GetQuestRewardSprite(Quests quest)
+    public Sprite GetQuestRewardSprite(string questString)
     {
         string rewardImagePath = "";
 
-        if (quest == Quests.EnjinLegend122)
+        switch (questString)
         {
-            rewardImagePath = "Images/Units/122";
-        }
-        else if (quest == Quests.EnjinLegend123)
-        {
-            rewardImagePath = "Images/Units/123";
-        }
-        else if (quest == Quests.EnjinLegend124)
-        {
-            rewardImagePath = "Images/Units/124";
-        }
-        else if (quest == Quests.EnjinLegend125)
-        {
-            rewardImagePath = "Images/Units/125";
-        }
-        else if (quest == Quests.EnjinLegend126)
-        {
-            rewardImagePath = "Images/Units/126";
-        }
-        else
-        {
-            Debug.LogError("There is not image path for quest: " + quest);
-            return null;
+            case nameof(GlobalSystemQuests.EnjinLegend122):
+                rewardImagePath = "Images/Units/122";
+                break;
+            case nameof(GlobalSystemQuests.EnjinLegend123):
+                rewardImagePath = "Images/Units/123";
+                break;
+            case nameof(GlobalSystemQuests.EnjinLegend124):
+                rewardImagePath = "Images/Units/124";
+                break;
+            case nameof(GlobalSystemQuests.EnjinLegend125):
+                rewardImagePath = "Images/Units/125";
+                break;
+            case nameof(GlobalSystemQuests.EnjinLegend126):
+                rewardImagePath = "Images/Units/126";
+                break;
+            case nameof(LegendUnitQuests.Shalwend):
+                rewardImagePath = "Images/Units/128";
+                break;
+            default:
+                Debug.LogError("There is not image path for quest: " + questString);
+                return null;
         }
 
         Sprite questRewardSprite = (Sprite)Resources.Load<Sprite>(rewardImagePath);
@@ -340,94 +342,34 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         }
     }
 
-    public void SetQuestEnemiesPositions(List<Vector3> positions)
-    {
-        string enemiesPositionsString = "";
-
-        foreach (Vector3 pos in positions)
-        {
-            if (enemiesPositionsString != "")
-            {
-                enemiesPositionsString += POSITIONS_SEPARATOR;
-            }
-
-            enemiesPositionsString += pos.x.ToString() + COORDS_SEPARATOR + pos.y.ToString() + COORDS_SEPARATOR + pos.z.ToString();
-        }
-
-        string questString = GameInventory.Instance.GetActiveQuestString(); //GameStats.Instance.ActiveQuest.ToString();
-        InventoryManager.Instance.UpdateItem(GroupNames.QUESTS_ENEMIES_POSITIONS, questString, enemiesPositionsString);
-        saveInventoryItemToFile<string>(GroupNames.QUESTS_ENEMIES_POSITIONS, questString);
-    }
-
-    public List<Vector3> GetEnemiesPositions()
-    {
-        string activeQuestString = GameInventory.Instance.GetActiveQuestString(); //GameStats.Instance.ActiveQuest.ToString();
-        string enemiesPositionsString = InventoryManager.Instance.GetItem<string>(GroupNames.QUESTS_ENEMIES_POSITIONS, activeQuestString);
-
-        return getPositionsFromString(enemiesPositionsString);
-    }
-
-    public void ClearScoutProgress()
-    {
-        string activeQuestString = GameInventory.Instance.GetActiveQuestString();
-        InventoryManager.Instance.UpdateItem(GroupNames.QUESTS_SCOUT_PROGRESS, activeQuestString, "");
-        saveInventoryItemToFile<string>(GroupNames.QUESTS_SCOUT_PROGRESS, activeQuestString);
-    }
-
-    public void SetQuestNewScoutPosition(Vector3 newPos)
-    {
-        InventoryManager inventoryManager = InventoryManager.Instance;
-        string activeQuestString = GameInventory.Instance.GetActiveQuestString(); //GameStats.Instance.ActiveQuest.ToString();
-
-        string scoutProgressString = inventoryManager.GetItem<string>(GroupNames.QUESTS_SCOUT_PROGRESS, activeQuestString);
-
-        if (scoutProgressString != "")
-        {
-            scoutProgressString += POSITIONS_SEPARATOR;
-        }
-
-        scoutProgressString += newPos.x.ToString() + COORDS_SEPARATOR + newPos.y.ToString() + COORDS_SEPARATOR + newPos.z.ToString();
-
-        inventoryManager.UpdateItem(GroupNames.QUESTS_SCOUT_PROGRESS, activeQuestString, scoutProgressString);
-        saveInventoryItemToFile<string>(GroupNames.QUESTS_SCOUT_PROGRESS, activeQuestString);
-        //saveQuestScoutProgress();
-    }
-
-    public List<Vector3> GetQuestScoutProgress()
-    {
-        string activeQuestString = GameInventory.Instance.GetActiveQuestString(); //GameStats.Instance.ActiveQuest.ToString();
-        string scoutProgressString = InventoryManager.Instance.GetItem<string>(GroupNames.QUESTS_SCOUT_PROGRESS, activeQuestString);
-
-        return getPositionsFromString(scoutProgressString);
-    }
-
     public void SetQuestLevelCompleted(int newLevel)
     {
         Debug.LogWarning("GameInventory::SetQuestLevelCompleted -> level: " + newLevel);
 
-        Quests activeQuest = GameInventory.Instance.GetActiveQuest(); //GameStats.Instance.ActiveQuest;
-        string questLevelKey = activeQuest.ToString() + QUEST_WITH_LEVEL_SEPARATOR + newLevel;
+        string activeQuestString = GameStats.Instance.SelectedQuestString;
+        string questLevelKey = activeQuestString + QUEST_WITH_LEVEL_SEPARATOR + newLevel;
 
         InventoryManager.Instance.UpdateItem(GroupNames.QUESTS_LEVEL_PROGRESS, questLevelKey, true, true);
         saveInventoryItemToFile<bool>(GroupNames.QUESTS_LEVEL_PROGRESS, questLevelKey);
         //saveQuestLevelProgress();
     }
 
-    public bool GetQuestLevelCompleted(int level)
+    public bool GetQuestLevelCompleted(string questString, int level)
     {
         bool levelCompleted = InventoryManager.Instance.GetItem<bool>(GroupNames.QUESTS_LEVEL_PROGRESS,
-                                                                      GameInventory.Instance.GetActiveQuestString() + QUEST_WITH_LEVEL_SEPARATOR + level);
+                                                                      questString + QUEST_WITH_LEVEL_SEPARATOR + level);
 
         return levelCompleted;
     }
 
-    public bool GetAllQuestLevelsCompleted()
+    public bool GetAllGlobalSystemQuestLevelsCompleted()
     {
         int maxQuestLevels = GameConfig.Instance.MaxQuestLevel;
+        string globalSystemActiveQuestString = GameInventory.Instance.GetGlobalSystemActiveQuestString();
 
         for (int i = 1; i <= maxQuestLevels; i++)
         {
-            if (!GetQuestLevelCompleted(i))
+            if (!GetQuestLevelCompleted(globalSystemActiveQuestString, i))
             {
                 return false;
             }
@@ -452,11 +394,64 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     //    }
     //}
 
+    public bool GetQuestCompleted()
+    {
+        bool questCompleted = true;
+        string selectedQuestString = GameStats.Instance.SelectedQuestString;
+
+        if (selectedQuestString == Constants.NONE)
+        {
+            Debug.LogError("Attempting to get progress for an active quest of None.");
+            questCompleted = false;
+        }
+        else
+        {
+            int maxQuestLevel = GameConfig.Instance.MaxQuestLevel;
+
+            if (selectedQuestString == nameof(LegendUnitQuests.Shalwend))
+            {
+                maxQuestLevel = GetSelectedLegendUnitQuestMaxLevel();
+            }
+
+            for (int i = 1; i <= maxQuestLevel; i++)
+            {
+                string questLevelString = selectedQuestString + QUEST_WITH_LEVEL_SEPARATOR + i;
+                bool levelIsCompleted = InventoryManager.Instance.GetItem<bool>(GroupNames.QUESTS_LEVEL_PROGRESS, questLevelString);
+
+                if (!levelIsCompleted)
+                {
+                    questCompleted = false;
+                }
+            }
+        }
+
+        return questCompleted;
+    }
+
+    private void initializeMaxLevelsByLevelUnitQuest()
+    {
+        //_maxLevelByQuest.Add(Quests.Swissborg, 4);
+        _maxLevelLegendUnitQuest.Add(LegendUnitQuests.Shalwend, 4);
+    }
+
+    public int GetSelectedLegendUnitQuestMaxLevel()
+    {
+        LegendUnitQuests legendUnitQuest = (LegendUnitQuests)Enum.Parse(typeof(LegendUnitQuests), GameStats.Instance.SelectedQuestString);
+
+        if (_maxLevelLegendUnitQuest.ContainsKey(legendUnitQuest))
+        {
+            return _maxLevelLegendUnitQuest[legendUnitQuest];
+        }
+        else
+        {
+            Debug.LogError("");
+            return 0;
+        }
+    }
+
     public int GetHighestQuestLevelCompletedAmount()
     {
-        Quests activeQuest = GameInventory.Instance.GetActiveQuest(); //GameStats.Instance.ActiveQuest;
-
-        if (activeQuest == Quests.None)
+        if ((GameStats.Instance.SelectedQuestString == Constants.NONE))
         {
             Debug.LogError("Attempting to get progress for an active quest of None.");
             return -1;
@@ -468,7 +463,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
             for (int i = 1; i <= GameConfig.Instance.MaxQuestLevel; i++)
             {
-                if (GetQuestLevelCompleted(i))
+                if (GetQuestLevelCompleted(GameStats.Instance.SelectedQuestString, i))
                 {
                     amount++;
                 }
@@ -476,33 +471,6 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
 
             return amount;
         }
-    }
-
-    public bool GetQuestCompleted()
-    {
-        bool questCompleted = true;
-        Quests activeQuest = GameInventory.Instance.GetActiveQuest(); //GameStats.Instance.ActiveQuest;
-
-        if (activeQuest == Quests.None)
-        {
-            Debug.LogError("Attempting to get progress for an active quest of None.");
-            questCompleted = false;
-        }
-        else
-        {
-            for (int i = 1; i <= GameConfig.Instance.MaxQuestLevel; i++)
-            {
-                string questLevelString = activeQuest.ToString() + QUEST_WITH_LEVEL_SEPARATOR + i;
-                bool levelIsCompleted = InventoryManager.Instance.GetItem<bool>(GroupNames.QUESTS_LEVEL_PROGRESS, questLevelString);
-
-                if (!levelIsCompleted)
-                {
-                    questCompleted = false;
-                }
-            }
-        }
-
-        return questCompleted;
     }
 
     //    public int GetHighestQuestLevelCompleted()
@@ -528,6 +496,66 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     //            return value;
     //        }
     //    }
+
+    public void SetGlobalSystemQuestEnemiesPositions(List<Vector3> positions)
+    {
+        string enemiesPositionsString = "";
+
+        foreach (Vector3 pos in positions)
+        {
+            if (enemiesPositionsString != "")
+            {
+                enemiesPositionsString += POSITIONS_SEPARATOR;
+            }
+
+            enemiesPositionsString += pos.x.ToString() + COORDS_SEPARATOR + pos.y.ToString() + COORDS_SEPARATOR + pos.z.ToString();
+        }
+
+        string questString = GameInventory.Instance.GetGlobalSystemActiveQuestString(); 
+        InventoryManager.Instance.UpdateItem(GroupNames.QUESTS_ENEMIES_POSITIONS, questString, enemiesPositionsString);
+        saveInventoryItemToFile<string>(GroupNames.QUESTS_ENEMIES_POSITIONS, questString);
+    }
+
+    public List<Vector3> GetGlobalSystemEnemiesPositions()
+    {
+        string activeQuestString = GameInventory.Instance.GetGlobalSystemActiveQuestString(); 
+        string enemiesPositionsString = InventoryManager.Instance.GetItem<string>(GroupNames.QUESTS_ENEMIES_POSITIONS, activeQuestString);
+
+        return getPositionsFromString(enemiesPositionsString);
+    }
+
+    public void ClearGlobalSystemScoutProgress()
+    {
+        string activeQuestString = GameInventory.Instance.GetGlobalSystemActiveQuestString();
+        InventoryManager.Instance.UpdateItem(GroupNames.QUESTS_SCOUT_PROGRESS, activeQuestString, "");
+        saveInventoryItemToFile<string>(GroupNames.QUESTS_SCOUT_PROGRESS, activeQuestString);
+    }
+
+    public void SetQuestNewScoutPosition(Vector3 newPos)
+    {
+        InventoryManager inventoryManager = InventoryManager.Instance;
+        string activeQuestString = GameInventory.Instance.GetGlobalSystemActiveQuestString(); 
+
+        string scoutProgressString = inventoryManager.GetItem<string>(GroupNames.QUESTS_SCOUT_PROGRESS, activeQuestString);
+
+        if (scoutProgressString != "")
+        {
+            scoutProgressString += POSITIONS_SEPARATOR;
+        }
+
+        scoutProgressString += newPos.x.ToString() + COORDS_SEPARATOR + newPos.y.ToString() + COORDS_SEPARATOR + newPos.z.ToString();
+
+        inventoryManager.UpdateItem(GroupNames.QUESTS_SCOUT_PROGRESS, activeQuestString, scoutProgressString);
+        saveInventoryItemToFile<string>(GroupNames.QUESTS_SCOUT_PROGRESS, activeQuestString);
+    }
+
+    public List<Vector3> GetGlobalSystemQuestScoutProgress()
+    {
+        string activeQuestString = GameInventory.Instance.GetGlobalSystemActiveQuestString(); 
+        string scoutProgressString = InventoryManager.Instance.GetItem<string>(GroupNames.QUESTS_SCOUT_PROGRESS, activeQuestString);
+
+        return getPositionsFromString(scoutProgressString);
+    }
 
     public int GetEnjinAttempts()
     {
@@ -744,16 +772,6 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
     {
         return _maxArenaLevel;
     }
-
-    //private void initializeMaxLevelsByQuest()
-    //{
-    //    _maxLevelByQuest.Add(Quests.Swissborg, 4);
-    //}
-
-    //public int GetActiveQuestMaxLevel()
-    //{
-    //    return _maxLevelByQuest[GameStats.Instance.ActiveQuest];
-    //}
 
     public void SaveLootBoxes()
     {
@@ -1006,6 +1024,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         linkUnitAndToken("126", EnjinTokenKeys.ENJIN_LIZZ);
 
         linkUnitAndToken("127", EnjinTokenKeys.SWISSBORG_CYBORG);
+        linkUnitAndToken("128", EnjinTokenKeys.SHALWEND);
     }
 
     private void linkUnitAndToken(string unitName, string tokenName)
@@ -1160,16 +1179,30 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
         //Set default values ========================================================================
         inventoryManager.AddItem(GroupNames.STATS, ItemKeys.SINGLE_PLAYER_LEVEL, 0);
         inventoryManager.AddItem(GroupNames.STATS, ItemKeys.ENJIN_ATTEMPTS, 5);
-        inventoryManager.AddItem(GroupNames.STATS, ItemKeys.ACTIVE_QUEST, Quests.None.ToString());
+        inventoryManager.AddItem(GroupNames.STATS, ItemKeys.GLOBAL_SYSTEM_ACTIVE_QUEST, GlobalSystemQuests.None.ToString());
         inventoryManager.AddItem(GroupNames.STATS, ItemKeys.CRYSTALS, 50);
 
-        foreach (Quests quest in Enum.GetValues(typeof(Quests)))
+        foreach (GlobalSystemQuests quest in Enum.GetValues(typeof(GlobalSystemQuests)))
         {
-            if (quest != Quests.None)
+            if (quest != GlobalSystemQuests.None)
             {
                 string questString = quest.ToString();
                 inventoryManager.AddItem(GroupNames.QUESTS_SCOUT_PROGRESS, questString, "");
                 inventoryManager.AddItem(GroupNames.QUESTS_ENEMIES_POSITIONS, questString, "");
+
+                int maxQuestLevel = GameConfig.Instance.MaxQuestLevel;
+                for (int i = 1; i <= maxQuestLevel; i++)
+                {
+                    inventoryManager.AddItem(GroupNames.QUESTS_LEVEL_PROGRESS, questString + QUEST_WITH_LEVEL_SEPARATOR + i, false);
+                }
+            }
+        }
+
+        foreach (LegendUnitQuests quest in Enum.GetValues(typeof(LegendUnitQuests)))
+        {
+            if (quest != LegendUnitQuests.None)
+            {
+                string questString = quest.ToString();
 
                 int maxQuestLevel = GameConfig.Instance.MaxQuestLevel;
                 for (int i = 1; i <= maxQuestLevel; i++)
@@ -1219,7 +1252,7 @@ public class GameInventory : SingletonMonobehaviour<GameInventory>
             }
             else if (groupName == GroupNames.STATS)
             {
-                if (keyString == GameInventory.ItemKeys.ACTIVE_QUEST)
+                if (keyString == GameInventory.ItemKeys.GLOBAL_SYSTEM_ACTIVE_QUEST)
                 {
                     inventoryManager.UpdateItem(groupName, keyString, valueString);
                 }

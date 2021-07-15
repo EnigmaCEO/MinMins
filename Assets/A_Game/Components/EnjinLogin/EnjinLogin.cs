@@ -370,7 +370,7 @@ public class EnjinLogin : MonoBehaviour
                 gameNetwork.IsEnjinLinked = true;
             }
 
-            gameNetwork.UpdateEnjinGoodies(response_hash);
+            gameNetwork.UpdateEnjinGoodies(response_hash, true);
 
             JSONNode trainingRewardsNode = response_hash[NetworkManager.TransactionKeys.REWARDS];
             if (trainingRewardsNode != null)

@@ -38,7 +38,7 @@ public class GlobalSystemQuest : MonoBehaviour
 
         _notEnoughUnitsPopUp.SetActive(false);
 
-        _questNameTitle.text = gameInventory.GetActiveQuestName(); //gameStats.ActiveQuest.ToString();
+        _questNameTitle.text = gameInventory.GetGlobalSystemActiveQuestName(); //gameStats.ActiveQuest.ToString();
 
         if (gameStats.QuestUnits.Count == 0)
         {
@@ -97,7 +97,7 @@ public class GlobalSystemQuest : MonoBehaviour
 
     private void loadScouting()
     {
-        List<Vector3> positions = GameInventory.Instance.GetQuestScoutProgress();
+        List<Vector3> positions = GameInventory.Instance.GetGlobalSystemQuestScoutProgress();
 
         foreach (Vector3 pos in positions)
         {
@@ -211,7 +211,7 @@ public class GlobalSystemQuest : MonoBehaviour
 
         int questUnitsCount = questUnits.Count;
 
-        List<Vector3> enemiesPositions = gameInventory.GetEnemiesPositions();
+        List<Vector3> enemiesPositions = gameInventory.GetGlobalSystemEnemiesPositions();
         if (enemiesPositions.Count == 0)
         {
             for (int i = 0; i < questUnitsCount; i++)
@@ -222,12 +222,13 @@ public class GlobalSystemQuest : MonoBehaviour
                 enemiesPositions.Add(randomPosition);
             }
 
-            gameInventory.SetQuestEnemiesPositions(enemiesPositions);
+            gameInventory.SetGlobalSystemQuestEnemiesPositions(enemiesPositions);
         }
 
+        string activeGlobalSystemQuest = gameInventory.GetGlobalSystemActiveQuestString();
         for(int i = 0; i < questUnitsCount; i++)
         {
-            if (gameInventory.GetQuestLevelCompleted(i + 1))
+            if (gameInventory.GetQuestLevelCompleted(activeGlobalSystemQuest, i + 1))
             {
                 continue;
             }
@@ -252,16 +253,16 @@ public class GlobalSystemQuest : MonoBehaviour
     private void determineQuestTeam()
     {
         GameStats gameStats = GameStats.Instance;
-        Quests activeQuest = GameInventory.Instance.GetActiveQuest(); //gameStats.ActiveQuest;
+        string selecteQuestString = gameStats.SelectedQuestString;
 
-        if ((activeQuest == Quests.EnjinLegend122) || (activeQuest == Quests.EnjinLegend123) || (activeQuest == Quests.EnjinLegend124)
-            || (activeQuest == Quests.EnjinLegend125) || (activeQuest == Quests.EnjinLegend126))
+        if ((selecteQuestString == nameof(GlobalSystemQuests.EnjinLegend122)) || (selecteQuestString == nameof(GlobalSystemQuests.EnjinLegend123)) || (selecteQuestString == nameof(GlobalSystemQuests.EnjinLegend124))
+            || (selecteQuestString == nameof(GlobalSystemQuests.EnjinLegend125)) || (selecteQuestString == nameof(GlobalSystemQuests.EnjinLegend126)))
         {
             gameStats.QuestUnits = new List<string>() { "122", "123", "124", "125", "126" };
         }
         else
         {
-            Debug.LogError("There is no quest team for active quest: " + activeQuest);
+            Debug.LogError("There is no quest team for selected quest: " + selecteQuestString);
         }
     }
 
@@ -273,13 +274,15 @@ public class GlobalSystemQuest : MonoBehaviour
         List<string> unitNames = GameStats.Instance.QuestUnits;
         int unitsCount = unitNames.Count;
 
+        string activeGlobalSystemQuestString = gameInventory.GetGlobalSystemActiveQuestString();
+
         for (int i = 0; i < unitsCount; i++)
         {
             Transform unitSlot = _enemyUnitsGridContent.Find("slot" + (i + 1));
             GameObject unitImageObject = unitSlot.Find("Sprite").gameObject;
             GameObject unitLevelObject = unitSlot.Find("level/txt_level").gameObject;
 
-            if (gameInventory.GetQuestLevelCompleted(i + 1))
+            if (gameInventory.GetQuestLevelCompleted(activeGlobalSystemQuestString, i + 1))
             {
                 unitImageObject.SetActive(false);
                 unitLevelObject.SetActive(false);

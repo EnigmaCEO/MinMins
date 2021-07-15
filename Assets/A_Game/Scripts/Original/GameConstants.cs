@@ -131,6 +131,9 @@ namespace GameConstants
         public const string GOD_TANK_2 = "god_tank_2";
 
         public const string SWISSBORG_CYBORG = "swissborg_cyborg";
+        public const string SHALWEND = "shalwend";
+
+        public const string QUEST_SHALWEND = "quest_shalwend";
 
         /*
         public const string ENJIN_DEFENSE_ORE_ITEM_1 = "enjin_defense_ore_1";

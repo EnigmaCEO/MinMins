@@ -1,4 +1,6 @@
 ﻿using Enigma.CoreSystems;
+using GameConstants;
+using GameEnums;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +14,7 @@ public class QuestConfirmPopUp : MonoBehaviour
     [SerializeField] private GameObject _boxRewardTemplate;
 
     private string _sceneToLoad = "";
+    private string _questStringToConfirm = nameof(GlobalSystemQuests.None);
 
     private void Start()
     {
@@ -26,8 +29,9 @@ public class QuestConfirmPopUp : MonoBehaviour
         gridTemplate.SetActive(false);
     }
 
-    public void Open(string sceneToLoad, Dictionary<int, int> boxTiersWithAmountRewards, List<TeamBoostItemGroup> boostItemGroups, List<string> unitNames)
+    public void Open(string questStringToConfirm, string sceneToLoad, Dictionary<int, int> boxTiersWithAmountRewards, List<TeamBoostItemGroup> boostItemGroups)
     {
+        _questStringToConfirm = questStringToConfirm;
         _sceneToLoad = sceneToLoad;
 
         if (boxTiersWithAmountRewards != null)
@@ -53,6 +57,7 @@ public class QuestConfirmPopUp : MonoBehaviour
             }
         }
 
+        List<string> unitNames = getRewardUnitsNames(questStringToConfirm); 
         if (unitNames != null)
         {
             foreach (string unitName in unitNames)
@@ -73,7 +78,10 @@ public class QuestConfirmPopUp : MonoBehaviour
     public void OnOkButtonDown()
     {
         GameSounds.Instance.PlayUiAdvanceSound();
-        GameStats.Instance.Mode = GameStats.Modes.Quest;
+
+        GameStats.Instance.Mode = GameModes.Quest;
+        GameStats.Instance.SelectedQuestString = _questStringToConfirm;
+
         SceneManager.LoadScene(_sceneToLoad);
     }
 
@@ -81,5 +89,38 @@ public class QuestConfirmPopUp : MonoBehaviour
     {
         GameSounds.Instance.PlayUiBackSound();
         Close();
+    }
+
+
+    private List<string> getRewardUnitsNames(string questString)
+    {
+        List<string> rewardUnitsNames = new List<string>(); ;
+
+        switch (questString)
+        {
+            case nameof(GlobalSystemQuests.EnjinLegend122):
+                rewardUnitsNames.Add("122");
+                break;
+            case nameof(GlobalSystemQuests.EnjinLegend123):
+                rewardUnitsNames.Add("123");
+                break;
+            case nameof(GlobalSystemQuests.EnjinLegend124):
+                rewardUnitsNames.Add("124");
+                break;
+            case nameof(GlobalSystemQuests.EnjinLegend125):
+                rewardUnitsNames.Add("125");
+                break;
+            case nameof(GlobalSystemQuests.EnjinLegend126):
+                rewardUnitsNames.Add("126");
+                break;
+            case nameof(LegendUnitQuests.Shalwend):
+                rewardUnitsNames.Add("128");
+                break;
+            default:
+                rewardUnitsNames.Add("122");
+                break;
+        }
+
+        return rewardUnitsNames;
     }
 }

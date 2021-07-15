@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using Enigma.CoreSystems;
 using UnityEngine.Video;
+using GameConstants;
+using GameEnums;
 
 public class WarPrepManager : EnigmaScene
 {
@@ -240,13 +242,13 @@ public class WarPrepManager : EnigmaScene
             }
         }
 
-        GameStats.Modes gameMode = GameStats.Instance.Mode;
-        if ((gameMode == GameStats.Modes.SinglePlayer) || (gameMode == GameStats.Modes.Quest))
+        GameModes gameMode = GameStats.Instance.Mode;
+        if ((gameMode == GameModes.SinglePlayer) || (gameMode == GameModes.Quest))
         {
             NetworkManager.Connect(true);
             SceneManager.LoadScene(GameConstants.Scenes.WAR, true);
         }
-        else if (gameMode == GameStats.Modes.Pvp)
+        else if (gameMode == GameModes.Pvp)
         {
             NetworkManager.Connect(false);
             SceneManager.LoadScene(GameConstants.Scenes.LOBBY);

@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Enigma.CoreSystems;
-
+using GameConstants;
+using GameEnums;
 
 public class UnitSelectManager : EnigmaScene
 {
@@ -250,7 +251,7 @@ public class UnitSelectManager : EnigmaScene
     {
         GameSounds.Instance.PlayUiBackSound();
 
-        if (GameStats.Instance.Mode == GameStats.Modes.Quest)
+        if (GameStats.Instance.Mode == GameModes.Quest)
         {
             SceneManager.LoadScene(GameConstants.Scenes.QUEST_SELECTION);
         }

@@ -3388,6 +3388,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _globalSystemQuestButton: {fileID: 2821414724241911092}
+  _shalwendQuestButton: {fileID: 7859163460647926314}
   _questProgressPanel: {fileID: 1498016821}
   _questProgressFill: {fileID: 1498016820}
   _questProgressText: {fileID: 1498016819}
@@ -3550,18 +3551,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 7859163460647926313}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2821414724241911093
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2821414724241911092}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 821f058402342304b81b30c68a1f09ea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &4536879587596514030 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2979166289750225912, guid: 74d7bc385a48b714d88d89f40b1b744e,
@@ -4132,11 +4121,6 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 5347732333797103389, guid: 0459aa9779084c840b2237deb3977e25,
-        type: 3}
-      propertyPath: m_Name
-      value: Global System Quest Button
-      objectReference: {fileID: 0}
     - target: {fileID: 7930664274483748610, guid: 0459aa9779084c840b2237deb3977e25,
         type: 3}
       propertyPath: m_SizeDelta.x
@@ -4179,28 +4163,49 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5347732333797103388, guid: 0459aa9779084c840b2237deb3977e25,
         type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5347732333797103388, guid: 0459aa9779084c840b2237deb3977e25,
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2059866142}
+    - target: {fileID: 6622295531990366784, guid: 0459aa9779084c840b2237deb3977e25,
         type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: GlobalSystemButtonDown
+      propertyPath: m_AnchorMin.y
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5347732333797103388, guid: 0459aa9779084c840b2237deb3977e25,
+    - target: {fileID: 6622295531990366784, guid: 0459aa9779084c840b2237deb3977e25,
         type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5347732333797103388, guid: 0459aa9779084c840b2237deb3977e25,
+    - target: {fileID: 6622295531990366784, guid: 0459aa9779084c840b2237deb3977e25,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6622295531990366784, guid: 0459aa9779084c840b2237deb3977e25,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6622295531990366784, guid: 0459aa9779084c840b2237deb3977e25,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6622295531990366784, guid: 0459aa9779084c840b2237deb3977e25,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6622295531990366789, guid: 0459aa9779084c840b2237deb3977e25,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2059866142}
-    - target: {fileID: 5347732333347256554, guid: 0459aa9779084c840b2237deb3977e25,
-        type: 3}
-      propertyPath: m_Text
-      value: Global System
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0459aa9779084c840b2237deb3977e25, type: 3}
+--- !u!1 &7859163460647926314 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6622295531990366788, guid: 0459aa9779084c840b2237deb3977e25,
+    type: 3}
+  m_PrefabInstance: {fileID: 7859163460647926313}
+  m_PrefabAsset: {fileID: 0}
