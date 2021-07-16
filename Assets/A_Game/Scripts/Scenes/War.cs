@@ -2766,7 +2766,7 @@ public class War : NetworkEntity
                     gameInventory.SetQuestLevelCompleted(levelCompleted);
                 }
 
-                if (gameInventory.GetQuestCompleted()) 
+                if (gameInventory.GetSelectedQuestCompleted()) 
                 //if (levelCompleted == gameInventory.GetActiveQuestMaxLevel())
                 {
                     if (gameHacks.CompleteQuestOffline)

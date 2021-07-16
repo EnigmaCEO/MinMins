@@ -30,8 +30,15 @@ public class QuestSelection : MonoBehaviour
 
         _questProgressPanel.SetActive(false);
         _globalSystemQuestButton.SetActive(false);
+        _shalwendQuestButton.SetActive(false);
 
-        _shalwendQuestButton.SetActive(GameNetwork.Instance.GetIsTokenAvailable(EnjinTokenKeys.QUEST_SHALWEND));
+        if (!GameInventory.Instance.GetQuestCompleted(nameof(LegendUnitQuests.Shalwend)))
+        {
+            if (GameNetwork.Instance.GetIsTokenAvailable(EnjinTokenKeys.QUEST_SHALWEND))
+            {
+                _shalwendQuestButton.SetActive(true);
+            }
+        }
     }
 
     public void OnBackButtonDown()

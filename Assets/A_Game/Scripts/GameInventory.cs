@@ -67,7 +67,7 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
     [SerializeField] private int _tierGold_unitsAmount = 10;
 
     [SerializeField] private int _legend_firstUnitNumber = 100;
-    [SerializeField] private int _legend_lastUnitNumer = 127;
+    [SerializeField] private int _legend_lastUnitNumer = 128;
 
     [SerializeField] private int _demonFirstUnitNumber = 110;
     [SerializeField] private int _demonLastUnitNumber = 114;
@@ -346,8 +346,8 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
     {
         Debug.LogWarning("GameInventory::SetQuestLevelCompleted -> level: " + newLevel);
 
-        string activeQuestString = GameStats.Instance.SelectedQuestString;
-        string questLevelKey = activeQuestString + QUEST_WITH_LEVEL_SEPARATOR + newLevel;
+        string selectedQuestString = GameStats.Instance.SelectedQuestString;
+        string questLevelKey = selectedQuestString + QUEST_WITH_LEVEL_SEPARATOR + newLevel;
 
         InventoryManager.Instance.UpdateItem(GroupNames.QUESTS_LEVEL_PROGRESS, questLevelKey, true, true);
         saveInventoryItemToFile<bool>(GroupNames.QUESTS_LEVEL_PROGRESS, questLevelKey);
@@ -394,12 +394,16 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
     //    }
     //}
 
-    public bool GetQuestCompleted()
+    public bool GetSelectedQuestCompleted()
+    {
+        return GetQuestCompleted(GameStats.Instance.SelectedQuestString);
+    }
+
+    public bool GetQuestCompleted(string questString)
     {
         bool questCompleted = true;
-        string selectedQuestString = GameStats.Instance.SelectedQuestString;
 
-        if (selectedQuestString == Constants.NONE)
+        if (questString == Constants.NONE)
         {
             Debug.LogError("Attempting to get progress for an active quest of None.");
             questCompleted = false;
@@ -408,19 +412,20 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
         {
             int maxQuestLevel = GameConfig.Instance.MaxQuestLevel;
 
-            if (selectedQuestString == nameof(LegendUnitQuests.Shalwend))
+            if (questString == nameof(LegendUnitQuests.Shalwend))
             {
-                maxQuestLevel = GetSelectedLegendUnitQuestMaxLevel();
+                maxQuestLevel = GetLegendUnitQuestMaxLevel(LegendUnitQuests.Shalwend);
             }
 
             for (int i = 1; i <= maxQuestLevel; i++)
             {
-                string questLevelString = selectedQuestString + QUEST_WITH_LEVEL_SEPARATOR + i;
+                string questLevelString = questString + QUEST_WITH_LEVEL_SEPARATOR + i;
                 bool levelIsCompleted = InventoryManager.Instance.GetItem<bool>(GroupNames.QUESTS_LEVEL_PROGRESS, questLevelString);
 
                 if (!levelIsCompleted)
                 {
                     questCompleted = false;
+                    break;
                 }
             }
         }
@@ -434,10 +439,8 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
         _maxLevelLegendUnitQuest.Add(LegendUnitQuests.Shalwend, 4);
     }
 
-    public int GetSelectedLegendUnitQuestMaxLevel()
+    public int GetLegendUnitQuestMaxLevel(LegendUnitQuests legendUnitQuest)
     {
-        LegendUnitQuests legendUnitQuest = (LegendUnitQuests)Enum.Parse(typeof(LegendUnitQuests), GameStats.Instance.SelectedQuestString);
-
         if (_maxLevelLegendUnitQuest.ContainsKey(legendUnitQuest))
         {
             return _maxLevelLegendUnitQuest[legendUnitQuest];
