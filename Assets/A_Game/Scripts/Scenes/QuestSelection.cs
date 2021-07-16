@@ -26,15 +26,28 @@ public class QuestSelection : MonoBehaviour
         NetworkManager.Transaction(GameNetwork.Transactions.GET_QUEST_DATA, onGetQuestData);
         //GameNetwork.CheckEnjinTokenAvailable()
 
-        _questConfirmPopUp.Close();
+        _questConfirmPopUp.Close(false);
 
         _questProgressPanel.SetActive(false);
         _globalSystemQuestButton.SetActive(false);
         _shalwendQuestButton.SetActive(false);
 
-        if (!GameInventory.Instance.GetQuestCompleted(nameof(LegendUnitQuests.Shalwend)))
+        bool shalwendQuestHackEnabled = false;
+
+        GameHacks gameHacks = GameHacks.Instance;
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+        if (gameHacks.SetLegendUnitServerQuest.Enabled)
         {
-            if (GameNetwork.Instance.GetIsTokenAvailable(EnjinTokenKeys.QUEST_SHALWEND))
+            if (gameHacks.SetLegendUnitServerQuest.GetValueAsEnum<LegendUnitQuests>() == LegendUnitQuests.Shalwend)
+            {
+                shalwendQuestHackEnabled = true;
+            }
+        }
+#endif
+
+        if (shalwendQuestHackEnabled || !GameInventory.Instance.GetQuestCompleted(nameof(LegendUnitQuests.Shalwend)))
+        {
+            if (shalwendQuestHackEnabled || GameNetwork.Instance.GetIsTokenAvailable(EnjinTokenKeys.QUEST_SHALWEND))
             {
                 _shalwendQuestButton.SetActive(true);
             }
@@ -92,9 +105,9 @@ public class QuestSelection : MonoBehaviour
         bool questIsHacked = false;
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
-        if (gameHacks.SetServerQuest.Enabled)
+        if (gameHacks.SetGlobalSystemServerQuest.Enabled)
         {
-            hackedQuest = gameHacks.SetServerQuest.GetValueAsEnum<GlobalSystemQuests>();
+            hackedQuest = gameHacks.SetGlobalSystemServerQuest.GetValueAsEnum<GlobalSystemQuests>();
             questIsHacked = true;
         }
 #endif

@@ -64,14 +64,20 @@ public class QuestConfirmPopUp : MonoBehaviour
             {
                 GameObject unitReward = Instantiate<GameObject>(_unitRewardTemplate, _rewardsGridContent);
                 unitReward.GetComponent<UnitRewardGridItem>().Setup(unitName);
+                unitReward.SetActive(true);
             }
         }
 
         gameObject.SetActive(true);
     }
 
-    public void Close()
+    public void Close(bool destroyChildren)
     {
+        if (destroyChildren)
+        {
+            _rewardsGridContent.DestroyChildren();
+        }
+
         gameObject.SetActive(false);
     }
 
@@ -88,9 +94,8 @@ public class QuestConfirmPopUp : MonoBehaviour
     public void OnCancelButtonDown()
     {
         GameSounds.Instance.PlayUiBackSound();
-        Close();
+        Close(true);
     }
-
 
     private List<string> getRewardUnitsNames(string questString)
     {

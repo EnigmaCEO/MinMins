@@ -1,8 +1,4 @@
-﻿using Enigma.CoreSystems;
-using GameConstants;
-using SimpleJSON;
-using System;
-using System.Collections;
+﻿using GameConstants;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -95,7 +91,7 @@ public class RewardsInventoryPopUp : MonoBehaviour
             RewardInventoryItem rewardItem = tokenTransform.GetComponent<RewardInventoryItem>();
             if (rewardItem.TokenKey == tokenKey)
             {
-                rewardItem.SetWithdrawn();
+                rewardItem.SetAsWithdrawn();
                 break;
             }
         }
@@ -132,10 +128,12 @@ public class RewardsInventoryPopUp : MonoBehaviour
         initializeInventory();
     }
 
-    private void addRewardItem(string tokenName, string tokenType)
+    private void addRewardItem(string tokenKey, string tokenType)
     {
         GameObject newRewardItem = Instantiate<GameObject>(_rewardItemTemplate, _gridContent);
-        newRewardItem.GetComponent<RewardInventoryItem>().Setup(tokenName, GameInventory.Instance.GetTokenUnitName(tokenName), getRewardCost(tokenType), _coinName, getRewardSprite(tokenName, tokenType), onRewardButtonDown);
+        string tokenUnitName = GameInventory.Instance.GetTokenUnitName(tokenKey);
+        newRewardItem.GetComponent<RewardInventoryItem>().Setup(tokenKey, tokenUnitName, getRewardCost(tokenType), _coinName, getRewardSprite(tokenKey, tokenType), onRewardButtonDown);
+        newRewardItem.name = tokenKey;
         newRewardItem.SetActive(true);
     }
 

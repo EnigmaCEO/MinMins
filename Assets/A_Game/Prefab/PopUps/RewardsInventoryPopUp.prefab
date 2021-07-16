@@ -1388,6 +1388,7 @@ MonoBehaviour:
   _commonCost: 0.5
   _premiumCost: 1
   _specialCost: 2
+  _ultimateCost: 5
   _coinName: JENJ
   _defaultTokenName: Unknown
   _imagesFolder: Images/

@@ -29,7 +29,8 @@ public class GameHacks : SingletonPersistentPrefab<GameHacks>
     //public ValueHack AnyQuestProgress = new ValueHack("3");
     public ValueHack ForceTeamBoostReward = new ValueHack("True");
     public ValueHack TeamBoostRewardCategory = new ValueHack("Size");
-    public ValueHack SetServerQuest = new ValueHack("Torso");
+    public ValueHack SetGlobalSystemServerQuest = new ValueHack("EnjinLegend122"); 
+    public ValueHack SetLegendUnitServerQuest = new ValueHack("Shalwend");
     public ValueHack SizeBonus = new ValueHack("10");
     public ValueHack SetTeamBoostBonuses = new ValueHack("5");
     public ValueHack BuyResult = new ValueHack("True");
