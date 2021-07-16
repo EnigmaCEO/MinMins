@@ -176,6 +176,14 @@ public class Levels : EnigmaScene
     public void OnBackButtonDown()
     {
         GameSounds.Instance.PlayUiBackSound();
-        SceneManager.LoadScene(EnigmaConstants.Scenes.MAIN);
+
+        if (GameStats.Instance.Mode == GameModes.Quest)
+        {
+            SceneManager.LoadScene(GameConstants.Scenes.QUEST_SELECTION);
+        }
+        else
+        {
+            SceneManager.LoadScene(EnigmaConstants.Scenes.MAIN);
+        }
     }
 }

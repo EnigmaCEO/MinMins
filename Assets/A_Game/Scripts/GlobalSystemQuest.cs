@@ -92,7 +92,7 @@ public class GlobalSystemQuest : MonoBehaviour
 
     public void OnBackButtonDown()
     {
-        SceneManager.LoadScene(EnigmaConstants.Scenes.MAIN);
+        SceneManager.LoadScene(GameConstants.Scenes.QUEST_SELECTION);
     }
 
     private void loadScouting()
