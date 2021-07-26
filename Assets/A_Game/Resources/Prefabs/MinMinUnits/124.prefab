@@ -579,8 +579,10 @@ MonoBehaviour:
   EffectScale: 1
   Effect: 6
   Type: 5
+  Role: 5
   Attacks: 0a000000
   EffectName: 4
+  AbilityEffect: 4
   Tier: 0
 --- !u!114 &8733496283851668516
 MonoBehaviour:

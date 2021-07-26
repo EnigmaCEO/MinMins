@@ -23,7 +23,7 @@ public class QuestSelection : MonoBehaviour
 
     private void Start()
     {
-        NetworkManager.Transaction(GameNetwork.Transactions.GET_QUEST_DATA, onGetQuestData);
+        NetworkManager.Transaction(Transactions.GET_QUEST_DATA, onGetQuestData);
         //GameNetwork.CheckEnjinTokenAvailable()
 
         _questConfirmPopUp.Close(false);

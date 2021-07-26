@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using GameEnums;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -26,34 +27,42 @@ public class AiPlayer
         createGridTargets();
     }
 
-    public Vector2 GetWorldInput2D(MinMinUnit.Types unitType, Dictionary<string, MinMinUnit> aiPlayerTeamUnits, Dictionary<string, List<MinMinUnit>> exposedUnitsByTeam,  Dictionary<string, Dictionary<string, List<HealerArea>>> healerAreasByTargetByTeam)
+    public Vector2 GetUnitWorldInput2D(UnitRoles unitRole, Dictionary<string, MinMinUnit> aiPlayerTeamUnits, Dictionary<string, List<MinMinUnit>> exposedUnitsByTeam,  Dictionary<string, Dictionary<string, List<HealerArea>>> healerAreasByTargetByTeam)
     {
         int targetIndex = -1;
         Vector2 input = Vector2.zero;
 
-        if (unitType == MinMinUnit.Types.Bomber)
+        if (unitRole == UnitRoles.Bomber)
         {
             targetIndex = getTargetIndexForAttackers(LastBomberAttackWasSuccessful, _lastBomberTargetGridIndex, _bomberGridTargetIndexesTried);
             _lastBomberTargetGridIndex = targetIndex;
             //Debug.LogWarning("AiPlayer::GetWorldInput2D -> LastBomberAttackWasSuccessful: " + LastBomberAttackWasSuccessful + " _lastBomberTargetGridIndex: " + _lastBomberTargetGridIndex);
             LastBomberAttackWasSuccessful = false;
         }
-        else if (unitType == MinMinUnit.Types.Destroyer)
+        else if (unitRole == UnitRoles.Destroyer)
         {
             targetIndex = getTargetIndexForAttackers(LastDestroyerAttackWasSuccessful, _lastDestroyerTargetGridIndex, _destroyerGridTargetIndexesTried);
             _lastDestroyerTargetGridIndex = targetIndex;
             //Debug.LogWarning("AiPlayer::GetWorldInput2D -> LastDestroyerAttackWasSuccessful: " + LastDestroyerAttackWasSuccessful + " _lastDestroyerTargetGridIndex: " + _lastDestroyerTargetGridIndex);
             LastDestroyerAttackWasSuccessful = false;
         }
-        else if (unitType == MinMinUnit.Types.Scout)
+        else if (unitRole == UnitRoles.Scout)
+        {
             targetIndex = getRandomTargetIndexNotTried(_scoutGridTargetIndexesTried);
+        }
 
         if (targetIndex != -1)
+        {
             input = _gridTargets[targetIndex];
-        else if (unitType == MinMinUnit.Types.Tank)
+        }
+        else if (unitRole == UnitRoles.Tank)
+        {
             input = getTankTargetPosition(aiPlayerTeamUnits);
-        else if (unitType == MinMinUnit.Types.Healer)
+        }
+        else if (unitRole == UnitRoles.Healer)
+        {
             input = getHealerTargetPosition(aiPlayerTeamUnits, exposedUnitsByTeam, healerAreasByTargetByTeam);
+        }
 
         return input;
     }
@@ -88,9 +97,13 @@ public class AiPlayer
     {
         int targetIndex = -1;
         if (lastAttackWasSuccessful)
+        {
             targetIndex = lastTargetGridIndex;
+        }
         else
+        {
             targetIndex = getRandomTargetIndexNotTried(targetIndexesTried);
+        }
 
         return targetIndex;
     }
@@ -101,7 +114,9 @@ public class AiPlayer
         for (int i = 0; i < _gridTargets.Count; i++)
         {
             if (!targetIndexesTried.Contains(i))
+            {
                 candidateIndexes.Add(i);
+            }
         }
 
         int selectedIndex = Random.Range(0, candidateIndexes.Count);
@@ -129,8 +144,12 @@ public class AiPlayer
             {
                 aliveUnits.Add(unit);
 
-                if ((unit.Type == MinMinUnit.Types.Bomber) || (unit.Type == MinMinUnit.Types.Destroyer))
+                UnitRoles role = unit.Role;
+
+                if ((role == UnitRoles.Bomber) || (role == UnitRoles.Destroyer))
+                {
                     attackerUnits.Add(unit);
+                }
 
                 int injury = GetUnitInjury(unit.name);
                 if (injury > 0)
@@ -145,7 +164,9 @@ public class AiPlayer
                     else if (injury == maxInjury)
                     {
                         if (Random.Range(0, 2) == 1)  //So selected among units with same injury is not the last unit
+                        {
                             maxInjuryUnit = unit;
+                        }
                     }
                 }
             }
@@ -212,7 +233,9 @@ public class AiPlayer
                         else if (injury == maxInjury)
                         {
                             if (Random.Range(0, 2) == 1)  //So selected among units with same injury is not the last unit
+                            {
                                 maxInjuryUnit = unit;
+                            }
                         }
                     }
                 }
@@ -267,7 +290,9 @@ public class AiPlayer
         if (units.Count > 0)
         {
             if (units.Count == 1)
+            {
                 selectedUnit = units[0];
+            }
             else
             {
                 int randomIndex = Random.Range(0, units.Count);

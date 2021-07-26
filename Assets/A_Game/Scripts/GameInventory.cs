@@ -1472,7 +1472,7 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
             hashTable.Add(GameNetwork.TransactionKeys.DATA, dataString);
             hashTable.Add(GameNetwork.TransactionKeys.SEC_CODE, fileSec);
 
-            NetworkManager.Transaction(GameNetwork.Transactions.SAVE_FILE_TO_SERVER, hashTable, onSaveFileToServer);
+            NetworkManager.Transaction(GameConstants.Transactions.SAVE_FILE_TO_SERVER, hashTable, onSaveFileToServer);
         }
 
         ObscuredPrefs.SetString(GameNetwork.TransactionKeys.DATA, dataString);
@@ -1490,7 +1490,7 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
     {
         if (NetworkManager.LoggedIn && GameConfig.Instance.EnableServerBackup && GameStats.Instance.IsThereServerBackup)
         {
-            NetworkManager.Transaction(GameNetwork.Transactions.LOAD_FILE_FROM_SERVER, onLoadFileFromServer);
+            NetworkManager.Transaction(GameConstants.Transactions.LOAD_FILE_FROM_SERVER, onLoadFileFromServer);
         }
         else
         {

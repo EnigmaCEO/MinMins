@@ -4,6 +4,7 @@ namespace GameEnums
     public enum GameModes
     {
         None,
+
         SinglePlayer,
         Pvp,
         Quest
@@ -12,6 +13,7 @@ namespace GameEnums
     public enum GlobalSystemQuests
     {
         None = 0,
+
         EnjinLegend122,
         EnjinLegend123,
         EnjinLegend124,
@@ -22,26 +24,38 @@ namespace GameEnums
     public enum LegendUnitQuests
     {
         None = 0,
+
         Shalwend,
         //Swissborg,
     }
 
-    //    public enum Games
-    //    {
-    //        Greek,
-    //        Norse,
-    //        Egypt,
-    //        Celtic,
-    //        Irish,
-    //        Jewish,
-    //        Test
-    //    }
+    public enum UnitRoles
+    {
+        None,
 
-    //    public enum Layouts
-    //    {
-    //        Default,
-    //        Basic
-    //    }
+        Healer,
+        Bomber,
+        Tank,
+        Destroyer,
+        Scout
+    }
+
+    public enum AbilityEffects
+    {
+        None,
+
+        FireExplosion = 1,
+        LifeArea,
+        LightningProjectile,
+        ScoutLight,
+        ShieldEffect,
+
+        FireExplosionDemon,
+        LifeAreaDemon,
+        LightningProjectileDemon,
+        ScoutLightDemon,
+        ShieldEffectDemon,
+    }
 
     public enum Powers
     {

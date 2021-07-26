@@ -202,5 +202,20 @@ namespace GameConstants
         public const int DEMON = 4;
         public const int LEGEND = 5;
     }
+
+    public class Transactions
+    {
+        public const int CHANGE_RATING = 18;
+        public const int RANK_CHANGED_TRANSACTION_ID = 19;
+        public const int COMPLETED_QUEST_ID = 20;
+
+        public const int SAVE_FILE_TO_SERVER = 25;
+        public const int LOAD_FILE_FROM_SERVER = 26;
+
+        public const int GET_QUEST_DATA = 27;
+        public const int NEW_TRAINING_LEVEL = 28;
+
+        public const int ENJIN_WITHDRAWAL = 29;
+    }
 }
  

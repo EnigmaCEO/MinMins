@@ -8,6 +8,7 @@ using SimpleJSON;
 using UnityEngine.Purchasing;
 using UnityEngine.Purchasing.Extension;
 using UnityEngine.Purchasing.Security;
+using EnigmaConstants;
 
 public delegate void IAPManagerPurchaseCompleteCallback();
 
@@ -562,12 +563,12 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
                                                     );
 */
 
-                NetworkManager.Transaction(NetworkManager.Transactions.PURCHASE, hashtable, onPurchaseTransaction);
+                NetworkManager.Transaction(Transactions.PURCHASE, hashtable, onPurchaseTransaction);
             } 
             else
             {
                 hashtable.Add("results", "fail");
-                NetworkManager.Transaction(NetworkManager.Transactions.PURCHASE, hashtable, onPurchaseTransaction);
+                NetworkManager.Transaction(Transactions.PURCHASE, hashtable, onPurchaseTransaction);
             }
         }
 

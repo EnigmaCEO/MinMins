@@ -297,7 +297,7 @@ public class Main : EnigmaScene
         Debug.Log("Checking server for Link3");
         Hashtable val = new Hashtable();
         val.Add(NetworkManager.TransactionKeys.GAME, GameNetwork.TRANSACTION_GAME_NAME);
-        NetworkManager.Transaction(NetworkManager.Transactions.ENJIN_LINKED, val, onLinkedTransaction);
+        NetworkManager.Transaction(EnigmaConstants.Transactions.ENJIN_LINKED, val, onLinkedTransaction);
 
         yield break;
     }

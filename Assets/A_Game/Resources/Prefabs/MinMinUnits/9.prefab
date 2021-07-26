@@ -356,6 +356,7 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -527,8 +528,10 @@ MonoBehaviour:
   EffectScale: 1
   Effect: 5
   Type: 3
+  Role: 3
   Attacks: 09000000
   EffectName: 5
+  AbilityEffect: 5
   Tier: 0
 --- !u!114 &5123270053158287141
 MonoBehaviour:

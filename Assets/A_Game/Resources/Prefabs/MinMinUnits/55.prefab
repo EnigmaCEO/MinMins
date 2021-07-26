@@ -384,8 +384,10 @@ MonoBehaviour:
   EffectScale: 1
   Effect: 6
   Type: 4
+  Role: 4
   Attacks: 0a000000
   EffectName: 3
+  AbilityEffect: 3
   Tier: 0
 --- !u!114 &5986994790587954045
 MonoBehaviour:
@@ -473,6 +475,7 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0

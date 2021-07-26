@@ -13,21 +13,6 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
 {
     public const string TRANSACTION_GAME_NAME = "MinMins";
 
-    public class Transactions
-    {
-        public const int CHANGE_RATING = 18;
-        public const int RANK_CHANGED_TRANSACTION_ID = 19;
-        public const int COMPLETED_QUEST_ID = 20;
-
-        public const int SAVE_FILE_TO_SERVER = 25;
-        public const int LOAD_FILE_FROM_SERVER = 26;
-
-        public const int GET_QUEST_DATA = 27;
-        public const int NEW_TRAINING_LEVEL = 28;
-
-        public const int ENJIN_WITHDRAWAL = 29;
-    }
-
     public class TransactionKeys
     {
         public const string SEC_CODE = "code";
@@ -232,37 +217,6 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
 
     [Header("Only for display. Set at runtime:")]
     public bool IsEnjinLinked = false;
-
-    //public bool HasEnjinEnigmaToken = false;
-    //public bool HasEnjinMft = false;
-
-    //public bool HasEnjinMinMinsToken = false;
-
-    //public bool HasEnjinMaxim = false;
-    //public bool HasEnjinBryana = false;
-    //public bool HasEnjinWitek = false;
-    //public bool HasEnjinTassio = false;
-    //public bool HasEnjinSimon = false;
-
-    //public bool HasEnjinEsther = false;
-    //public bool HasEnjinAlex = false;
-    //public bool HasEnjinLizz = false;
-    //public bool HasEnjinEvan = false;
-    //public bool HasEnjinBrad = false;
-
-    //public bool HasKnightHealer = false;
-    //public bool HasKnightBomber = false;
-    //public bool HasKnightDestroyer = false;
-    //public bool HasKnightScout = false;
-    //public bool HasKnightTank = false;
-
-    //public bool HasDemonHealer = false;
-    //public bool HasDemonBomber = false;
-    //public bool HasDemonDestroyer = false;
-    //public bool HasDemonScout = false;
-    //public bool HasDemonTank = false;
-
-    //public bool HasSwissborgCyborg = false;
 
     public int[] rewardedTrainingLevels = new int[100];
     [Header("=================================")]
@@ -514,9 +468,13 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
         string oppositeTeam = "";
 
         if (teamName == GameNetwork.TeamNames.HOST)
+        {
             oppositeTeam = GameNetwork.TeamNames.GUEST;
+        }
         else if (teamName == GameNetwork.TeamNames.GUEST)
+        {
             oppositeTeam = GameNetwork.TeamNames.HOST;
+        }
 
         return oppositeTeam;
     }
@@ -551,7 +509,9 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
         string unitsString = NetworkManager.GetAnyPlayerCustomProperty(GameNetwork.PlayerCustomProperties.TEAM_UNITS, teamName, networkPlayerId);
 
         if (unitsString == "")
+        {
             return null;
+        }
 
         string[] unitNames = unitsString.Split(NetworkManager.Separators.VALUES);
         return unitNames;
@@ -592,27 +552,37 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
             if (idPart == RoomCustomProperties.ROUND_COUNT)
             {
                 if (OnRoundStartedCallback != null)
+                {
                     OnRoundStartedCallback(int.Parse(value));
+                }
             }
             else if (idPart == RoomCustomProperties.TEAM_IN_TURN)
             {
                 if (OnTeamTurnChangedCallback != null)
+                {
                     OnTeamTurnChangedCallback(value);
+                }
             }
             else if (idPart == RoomCustomProperties.HOST_UNIT_INDEX)
             {
                 if (OnHostUnitIndexChangedCallback != null)
+                {
                     OnHostUnitIndexChangedCallback(int.Parse(value));
+                }
             }
             else if (idPart == RoomCustomProperties.GUEST_UNIT_INDEX)
             {
                 if (OnGuestUnitIndexChangedCallback != null)
+                {
                     OnGuestUnitIndexChangedCallback(int.Parse(value));
+                }
             }
             else if (idPart == RoomCustomProperties.ACTIONS_LEFT)
             {
                 if (OnActionStartedCallback != null)
+                {
                     OnActionStartedCallback(int.Parse(value));
+                }
             }
             else if (idPart == UnitRoomProperties.HEALTH)
             {
@@ -620,19 +590,25 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
                 string unitName = keyParts[2];
 
                 if (OnUnitHealthSetCallback != null)
+                {
                     OnUnitHealthSetCallback(team, unitName, int.Parse(value));
+                }
             }
             else if (idPart == TeamRoomProperties.HEALTH)
             {
                 string team = keyParts[1];
 
                 if (OnTeamHealthSetCallback != null)
+                {
                     OnTeamHealthSetCallback(team, int.Parse(value));
+                }
             }
             else if (idPart == RoomCustomProperties.HAS_PVP_AI)
             {
                 if (OnPvpAiSetCallback != null)
+                {
                     OnPvpAiSetCallback(bool.Parse(value));
+                }
             }
             else if (idPart == RoomCustomProperties.HOST_PING)
             {
@@ -815,7 +791,7 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
 
     private void performResultsSendingTransaction()
     {
-        NetworkManager.Transaction(Transactions.CHANGE_RATING, _matchResultshashTable, onSendMatchResults);
+        NetworkManager.Transaction(GameConstants.Transactions.CHANGE_RATING, _matchResultshashTable, onSendMatchResults);
     }
 
     private void onSendMatchResults(JSONNode response)

@@ -1,4 +1,5 @@
 ﻿using Enigma.CoreSystems;
+using GameEnums;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,7 +13,7 @@ public class MinMinUnit : NetworkEntity
         Bomber,
         Tank,
         Destroyer,
-        Scout,
+        Scout
     }
 
     public enum EffectNames
@@ -38,11 +39,11 @@ public class MinMinUnit : NetworkEntity
 
     public float EffectScale = 1;
 
-    public int Effect;
-    public Types Type;
+    //public int Effect;
+    public UnitRoles Role;
     public int[] Attacks;
 
-    public EffectNames EffectName;
+    public AbilityEffects AbilityEffect;
 
     private string _teamName;
     private int _teamIndex;
@@ -77,31 +78,31 @@ public class MinMinUnit : NetworkEntity
         Tier = GameInventory.Instance.GetUnitTier(gameObject.name);
     }
 
-    static public EffectNames GetEffectName(MinMinUnit unit)
+    static public AbilityEffects GetEffectName(MinMinUnit unit)
     {
-        EffectNames effect = unit.EffectName;
+        AbilityEffects effect = unit.AbilityEffect;
 
         if (GameHacks.Instance.AssignEffectByType)
         {
-            if (unit.Type == Types.Bomber)
+            if (unit.Role == UnitRoles.Bomber)
             {
-                effect = EffectNames.FireExplosion;
+                effect = AbilityEffects.FireExplosion;
             }
-            else if (unit.Type == Types.Destroyer)
+            else if (unit.Role == UnitRoles.Destroyer)
             {
-                effect = EffectNames.LightningProjectile;
+                effect = AbilityEffects.LightningProjectile;
             }
-            else if (unit.Type == Types.Healer)
+            else if (unit.Role == UnitRoles.Healer)
             {
-                effect = EffectNames.LifeArea;
+                effect = AbilityEffects.LifeArea;
             }
-            else if (unit.Type == Types.Scout)
+            else if (unit.Role == UnitRoles.Scout)
             {
-                effect = EffectNames.ScoutLight;
+                effect = AbilityEffects.ScoutLight;
             }
-            else if (unit.Type == Types.Tank)
+            else if (unit.Role == UnitRoles.Tank)
             {
-                effect = EffectNames.ShieldEffect;
+                effect = AbilityEffects.ShieldEffect;
             }
         }
 
@@ -154,6 +155,6 @@ public class MinMinUnit : NetworkEntity
     [PunRPC]
     private void receiveDebugSettingsForWar(int unitType)
     {
-        Type = (Types)unitType;
+        Role = (UnitRoles)unitType; 
     }
 }

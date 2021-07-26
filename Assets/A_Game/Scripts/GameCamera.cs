@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using GameEnums;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,16 +29,16 @@ public class GameCamera : MonoBehaviour
         transform.position = new Vector3(team2_pos.x, team2_pos.y, transform.position.z);
     }
 
-    public void HandleMovement(string teamInTurn, MinMinUnit.Types unitType)
+    public void HandleMovement(string teamInTurn, UnitRoles unitRole)
     {
         string oppositeTeam = GameNetwork.GetOppositeTeamName(teamInTurn);
 
-        if ((unitType == MinMinUnit.Types.Bomber) || (unitType == MinMinUnit.Types.Destroyer) || (unitType == MinMinUnit.Types.Scout))
+        if ((unitRole == UnitRoles.Bomber) || (unitRole == UnitRoles.Destroyer) || (unitRole == UnitRoles.Scout))
         {
             moveToSide(oppositeTeam);
             IsAtOppponentSide = true;
         }
-        else if (unitType != MinMinUnit.Types.None)
+        else if (unitRole != UnitRoles.None)
         {
             moveToSide(teamInTurn);
             IsAtOppponentSide = false;

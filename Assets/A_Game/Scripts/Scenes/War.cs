@@ -20,6 +20,8 @@ public class War : NetworkEntity
         public const string TEAM_2 = "Team2";
     }
 
+    //public Button ActionButton;
+
     [HideInInspector] public bool Ready = true;
 
     [SerializeField] private float _battleFieldRightSideBaseOffset = 0;
@@ -41,7 +43,6 @@ public class War : NetworkEntity
     [SerializeField] private int _mftEnjinItemChance = 10;
 
     [SerializeField] private Text _errorText;
-    [SerializeField] private MatchResultsPopUp _matchResultsPopUp;
 
     [SerializeField] private Text _timeLeftText;
 
@@ -71,12 +72,16 @@ public class War : NetworkEntity
 
     [SerializeField] private Transform _cloudsContainer;
 
-    [SerializeField] private GameObject _roundPopUp;
     [SerializeField] private Text _roundPopUpText;
 
     [SerializeField] private float _pingUpdateDelay = 2;
 
     [SerializeField] private QuestCompletePopUp _questCompletePopUp;
+
+    [SerializeField] private ActionPopUp _actionPopUp;
+    [SerializeField] private GameObject _readyPopup;
+    [SerializeField] private MatchResultsPopUp _matchResultsPopUp;
+    [SerializeField] private GameObject _roundPopUp;
 
     private Transform _hostGrid;
     private Transform _guestGrid;
@@ -86,9 +91,6 @@ public class War : NetworkEntity
 
     private Dictionary<string, MinMinUnit> _hostUnits = new Dictionary<string, MinMinUnit>();
     private Dictionary<string, MinMinUnit> _guestUnits = new Dictionary<string, MinMinUnit>();
-
-    //private Dictionary<string, Dictionary<string, Dictionary<string, List<HealerArea>>>> _healerAreasByOwnerByTargetByTeam;
-    //private Dictionary<string, Dictionary<string, Dictionary<string, List<TankArea>>>> _tanksAreasByOwnerByTargetByTeam;
 
     private Dictionary<string, Dictionary<string, List<HealerArea>>> _healerAreasByOwnerByTeam;
     private Dictionary<string, Dictionary<string, List<HealerArea>>> _healerAreasByTargetByTeam;
@@ -108,20 +110,15 @@ public class War : NetworkEntity
 
     private Dictionary<string, bool> _readyByTeam = new Dictionary<string, bool>();
 
-    public string LocalPlayerTeam { get { return _localPlayerTeam; } }
-
     private AiPlayer _aiPlayer;
     private double _lastNetworkTime;
 
-    public GameObject ReadyPopup;
-    public Button ActionButton;
-
-    [SerializeField] private ActionPopUp _actionPopUp;
-
-    LineRenderer _lineRenderer1;
-    LineRenderer _lineRenderer2;
+    private LineRenderer _lineRenderer1;
+    private LineRenderer _lineRenderer2;
 
     private bool _isVictory = false;
+
+    public string LocalPlayerTeam { get { return _localPlayerTeam; } }
 
     override protected void Awake()
     {
@@ -381,7 +378,7 @@ public class War : NetworkEntity
     {         
         if (!_exposedUnitsByTeam[teamName].Contains(unit))
         {
-            Debug.LogWarning("War::HandleExposedUnit Added to exposed units: -> teamName: " + teamName + " unit name: " + unit.name + " unit type: " + unit.Type);
+            Debug.LogWarning("War::HandleExposedUnit Added to exposed units: -> teamName: " + teamName + " unit name: " + unit.name + " unit role: " + unit.Role);
             _exposedUnitsByTeam[teamName].Add(unit);
         }
     }
@@ -390,7 +387,7 @@ public class War : NetworkEntity
     {
         if (_exposedUnitsByTeam[teamName].Contains(unit))
         {
-            Debug.LogWarning("War::HandleExposedUnit Removed from exposed units: -> teamName: " + teamName + " unit name: " + unit.name + " unit type: " + unit.Type);
+            Debug.LogWarning("War::HandleExposedUnit Removed from exposed units: -> teamName: " + teamName + " unit name: " + unit.name + " unit role: " + unit.Role);
             _exposedUnitsByTeam[teamName].Remove(unit);
         }
     }
@@ -586,7 +583,7 @@ public class War : NetworkEntity
     private void receiveReadyPopUpDismiss()
     {
         Debug.LogWarning("receiveReadyPopUpDismiss");
-        ReadyPopup.SetActive(false);
+        _readyPopup.SetActive(false);
 
         if (GameStats.Instance.Mode == GameModes.Pvp)
         {
@@ -857,7 +854,7 @@ public class War : NetworkEntity
             MinMinUnit unit = units.Values.ElementAt(unitIndex);
             string unitName = unit.name;
 
-            if (GetIsHost() && (unit.Type == MinMinUnit.Types.Tank))
+            if (GetIsHost() && ((unit.Role == UnitRoles.Tank)))
             {
                 Debug.LogWarning("War::handleUnitIndexChanged ->  Removing tank areas for owner teamName: " + teamName + " unitName: " + unitName);
                 removeAreasForOwner<TankArea>(teamName, unitName, _tankAreasByOwnerByTeam, _tankAreasByTargetByTeam);
@@ -869,7 +866,7 @@ public class War : NetworkEntity
             {
                 _unitTurnText.text = LocalizationManager.GetTermTranslation("Unit turn") + ": " + unitName + " | " + LocalizationManager.GetTermTranslation("Index") + ": " + unitIndex;
                 handleHighlight(unitIndex, teamName);
-                _gameCamera.HandleMovement(teamName, units[unitName].Type);
+                _gameCamera.HandleMovement(teamName, units[unitName].Role);
             }
             else if (GetIsHost())
             {
@@ -898,7 +895,7 @@ public class War : NetworkEntity
 #endif
 
         _unitTierTurnText.text = LocalizationManager.GetTermTranslation("Unit tier") + ": " + unitTier.ToString();
-        _unitTypeTurnText.text = LocalizationManager.GetTermTranslation("Unit type") + ": " + LocalizationManager.GetTermTranslation(unit.Type.ToString());
+        _unitTypeTurnText.text = LocalizationManager.GetTermTranslation("Unit type") + ": " + LocalizationManager.GetTermTranslation(unit.Role.ToString());
 
         if (GetIsHost())
         {
@@ -944,7 +941,7 @@ public class War : NetworkEntity
             if (GetIsHost())
             {
                 MinMinUnit unit = getUnitInTurn();
-                sendActionPopUpOpen(unit.name, unit.Type);
+                sendActionPopUpOpen(unit.name, unit.Role);
             }
         }
         else if (GetIsHost())
@@ -953,7 +950,7 @@ public class War : NetworkEntity
         }
     }
 
-    private void sendActionPopUpOpen(string unitName, MinMinUnit.Types unitType)
+    private void sendActionPopUpOpen(string unitName, UnitRoles unitType)
     {
         base.SendRpcToAll(nameof(receiveActionPopUpOpen), unitName, unitType);
     }
@@ -989,7 +986,7 @@ public class War : NetworkEntity
 
                 MinMinUnit unit = getUnitInTurn();
                 Dictionary<string, MinMinUnit> teamInTurnUnits = GetTeamUnitsDictionary(teamInTurn);
-                Vector2 aiWorldInput2D = _aiPlayer.GetWorldInput2D(unit.Type, teamInTurnUnits, _exposedUnitsByTeam, _healerAreasByTargetByTeam);
+                Vector2 aiWorldInput2D = _aiPlayer.GetUnitWorldInput2D(unit.Role, teamInTurnUnits, _exposedUnitsByTeam, _healerAreasByTargetByTeam);
                 Vector3 aiWorldInput3D = new Vector3(aiWorldInput2D.x, aiWorldInput2D.y, _actionAreaPosZ);
                 sendPlayerTargetInput(aiWorldInput3D, GameNetwork.TeamNames.GUEST);
                 yield break;
@@ -1115,7 +1112,7 @@ public class War : NetworkEntity
 
         List<Vector3> directions = new List<Vector3>();
 
-        if (unitInTurn.Type == MinMinUnit.Types.Destroyer)
+        if (unitInTurn.Role == UnitRoles.Destroyer)
         {
             int unitTier = GameInventory.Instance.GetUnitTier(unitInTurn.name);
             GameConfig gameConfig = GameConfig.Instance;
@@ -1155,10 +1152,10 @@ public class War : NetworkEntity
         float actionTime = 0;
         foreach (Vector3 direction in directions)
         {
-            string unitTypeString = unit.Type.ToString();
+            string unitTypeString = unit.Role.ToString();
             string actionAreaPrefabName = unitTypeString + "Area";
 
-            MinMinUnit.EffectNames effectName = MinMinUnit.GetEffectName(unit);
+            AbilityEffects effectName = MinMinUnit.GetEffectName(unit);
 
             object[] instantiationData = { actionAreaPrefabName, inputWorldPosition, direction, unit.name, effectName, teamName, networkPlayerId };
             GameObject actionAreaObject = NetworkManager.InstantiateObject(ActionArea.ACTION_AREAS_RESOURCES_FOLDER_PATH + actionAreaPrefabName, Vector3.zero, Quaternion.identity, 0, instantiationData);
@@ -2003,13 +2000,13 @@ public class War : NetworkEntity
         foreach (string unitName in hostUnits)
         {
             // Setup team for loading screen
-            Transform Team1ItemTransform = ReadyPopup.transform.Find("panel1/ReadyTeam1/Viewport/Content/WarTeamGridItem" + itemNumber++);
+            Transform Team1ItemTransform = _readyPopup.transform.Find("panel1/ReadyTeam1/Viewport/Content/WarTeamGridItem" + itemNumber++);
             WarTeamGridItem Team1GridItem = Team1ItemTransform.GetComponent<WarTeamGridItem>();
 
             int unitTier = GameInventory.Instance.GetUnitTier(unitName);
             Dictionary<string, MinMinUnit> teamUnits = GetTeamUnitsDictionary(GameNetwork.TeamNames.HOST);
             MinMinUnit unit = teamUnits[unitName];
-            Team1ItemTransform.GetComponentInChildren<Text>().text = LocalizationManager.GetTermTranslation(unit.Type.ToString());
+            Team1ItemTransform.GetComponentInChildren<Text>().text = LocalizationManager.GetTermTranslation(unit.Role.ToString());
 
             Team1GridItem.View.sprite = Resources.Load<Sprite>("Images/Units/" + unitName);
             Team1GridItem.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/unit_frame_t" + unitTier);
@@ -2021,13 +2018,13 @@ public class War : NetworkEntity
         foreach (string unitName in guestUnits)
         {
             // Setup team for loading screen
-            Transform Team2ItemTransform = ReadyPopup.transform.Find("panel2/ReadyTeam2/Viewport/Content/WarTeamGridItem" + itemNumber++);
+            Transform Team2ItemTransform = _readyPopup.transform.Find("panel2/ReadyTeam2/Viewport/Content/WarTeamGridItem" + itemNumber++);
             WarTeamGridItem Team2GridItem = Team2ItemTransform.GetComponent<WarTeamGridItem>();
 
             int unitTier = GameInventory.Instance.GetUnitTier(unitName);
             Dictionary<string, MinMinUnit> teamUnits = GetTeamUnitsDictionary(GameNetwork.TeamNames.GUEST);
             MinMinUnit unit = teamUnits[unitName];
-            Team2ItemTransform.GetComponentInChildren<Text>().text = LocalizationManager.GetTermTranslation(unit.Type.ToString());
+            Team2ItemTransform.GetComponentInChildren<Text>().text = LocalizationManager.GetTermTranslation(unit.Role.ToString());
 
             Team2GridItem.View.sprite = Resources.Load<Sprite>("Images/Units/" + unitName);
             Team2GridItem.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/unit_frame_t" + unitTier);
@@ -2478,7 +2475,7 @@ public class War : NetworkEntity
                 int levelWon = gameStats.SelectedLevelNumber;
                 if (NetworkManager.LoggedIn && (levelWon > gameInventory.GetHigherSinglePlayerLevelCompleted()))
                 {
-                    NetworkManager.Transaction(GameNetwork.Transactions.NEW_TRAINING_LEVEL, GameNetwork.TransactionKeys.LEVEL, levelWon, onNewTrainingLevel);
+                    NetworkManager.Transaction(GameConstants.Transactions.NEW_TRAINING_LEVEL, GameNetwork.TransactionKeys.LEVEL, levelWon, onNewTrainingLevel);
                 }
             }
             else if (gameStats.Mode == GameModes.Quest)
@@ -2777,7 +2774,7 @@ public class War : NetworkEntity
                     }
                     else
                     {
-                        NetworkManager.Transaction(GameNetwork.Transactions.COMPLETED_QUEST_ID, onCompletedQuestResponse);
+                        NetworkManager.Transaction(GameConstants.Transactions.COMPLETED_QUEST_ID, onCompletedQuestResponse);
                         //grantQuestRewards();
                         //_questCompletePopUp.Open(_matchResultsPopUp);
                         questCompletedTransactionSent = true;

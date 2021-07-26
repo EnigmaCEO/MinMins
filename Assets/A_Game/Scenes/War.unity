@@ -1457,7 +1457,6 @@ MonoBehaviour:
   _baseEnjinItemChance: 5
   _mftEnjinItemChance: 10
   _errorText: {fileID: 341928546}
-  _matchResultsPopUp: {fileID: 1772417009217988587}
   _timeLeftText: {fileID: 1531636807}
   _teamTurnText: {fileID: 1248981079}
   _unitTurnText: {fileID: 587655290}
@@ -1476,13 +1475,13 @@ MonoBehaviour:
   _battleField: {fileID: 610611885}
   _gameCamera: {fileID: 52628419}
   _cloudsContainer: {fileID: 1695987507}
-  _roundPopUp: {fileID: 1734012548}
   _roundPopUpText: {fileID: 1554598577}
   _pingUpdateDelay: 2
   _questCompletePopUp: {fileID: 4212690677297344437}
-  ReadyPopup: {fileID: 439721365}
-  ActionButton: {fileID: 3421622119815411320}
   _actionPopUp: {fileID: 3421622119307276688}
+  _readyPopup: {fileID: 439721365}
+  _matchResultsPopUp: {fileID: 1772417009217988587}
+  _roundPopUp: {fileID: 1734012548}
 --- !u!4 &110419163
 Transform:
   m_ObjectHideFlags: 0
@@ -3398,7 +3397,7 @@ GameObject:
   - component: {fileID: 439721366}
   - component: {fileID: 439721367}
   m_Layer: 5
-  m_Name: ReadyScreen
+  m_Name: ReadyPopUp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10589,7 +10588,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: -20}
+  m_AnchoredPosition: {x: 0, y: -20.00003}
   m_SizeDelta: {x: 1348, y: 255}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1526821177
@@ -16195,18 +16194,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b6cc441006a9773449d5034e63656445, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &3421622119815411320 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7797778318781398421, guid: cb4c16a658534904fb77c391b8736d67,
-    type: 3}
-  m_PrefabInstance: {fileID: 4849054229920369645}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &3821239964272515428

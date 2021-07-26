@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.Networking;
 using SimpleJSON;
 using Tiny;
+using EnigmaConstants;
 
 namespace Enigma.CoreSystems
 {
@@ -15,19 +16,6 @@ namespace Enigma.CoreSystems
             public const char VALUES = '|';
             public const char KEYS = '-';
             public const char VIRTUAL_PLAYER_KEY = ':';
-        }
-
-        public class Transactions
-        {
-            public const int IP_AND_COUNTRY = 0;
-            public const int LOGIN = 3;
-            public const int REGISTRATION = 5;
-            public const int COINS_EARNED = 6;
-            public const int HEART_BEAT = 14;
-            public const int ENJIN_LINKED = 15;
-            public const int ENJIN_ITEM_COLLECTED_TRANSACTION = 17;
-            public const int GIFT_PROGRESS = 21;
-            public const int PURCHASE = 22;
         }
 
         public class TransactionKeys

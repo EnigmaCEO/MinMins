@@ -106,7 +106,7 @@ public class EnjinWithdrawalPopUp : MonoBehaviour
         if (handleWithdrawalOnline)
         {
             yield return new WaitForSeconds(delay);
-            NetworkManager.Transaction(GameNetwork.Transactions.ENJIN_WITHDRAWAL, GameNetwork.TransactionKeys.TOKEN_KEY, _tokenSelected.TokenKey, onWithdrawalServerResponse);
+            NetworkManager.Transaction(Transactions.ENJIN_WITHDRAWAL, GameNetwork.TransactionKeys.TOKEN_KEY, _tokenSelected.TokenKey, onWithdrawalServerResponse);
         }
 
         yield return 0;
