@@ -2893,6 +2893,20 @@ public class War : NetworkEntity
             case nameof(ScoutQuests.EnjinLegend126):
                 gameInventory.HandleAddUnitOrExp("126");
                 break;
+
+            case nameof(ScoutQuests.SwoleCheese130):
+                gameInventory.HandleAddUnitOrExp("130");
+                break;
+            case nameof(ScoutQuests.SwoleEmerald131):
+                gameInventory.HandleAddUnitOrExp("131");
+                break;
+            case nameof(ScoutQuests.SwoleCrimson132):
+                gameInventory.HandleAddUnitOrExp("132");
+                break;
+            case nameof(ScoutQuests.SwoleDiamond133):
+                gameInventory.HandleAddUnitOrExp("133");
+                break;
+
             case nameof(LegendUnitQuests.Shalwend):
                 gameInventory.HandleAddUnitOrExp("128");
                 break;
