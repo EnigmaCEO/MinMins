@@ -250,14 +250,22 @@ public class UnitSelectManager : EnigmaScene
     private void onSceneBackButtonDown()
     {
         GameSounds.Instance.PlayUiBackSound();
+        GameStats gameStats = GameStats.Instance;
 
         if (GameStats.Instance.Mode == GameModes.Quest)
         {
-            SceneManager.LoadScene(GameConstants.Scenes.QUEST_SELECTION);
+            if (gameStats.QuestType == QuestTypes.Scout)
+            {
+                SceneManager.LoadScene(Scenes.SCOUT_QUEST);
+            }
+            else
+            {
+                SceneManager.LoadScene(Scenes.LEVELS);
+            }
         }
         else
         {
-            SceneManager.LoadScene(GameConstants.Scenes.LEVELS);
+            SceneManager.LoadScene(Scenes.LEVELS);
         }
     }
 

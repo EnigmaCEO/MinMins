@@ -3,12 +3,10 @@ using Enigma.CoreSystems;
 using EnigmaConstants;
 using GameConstants;
 using GameEnums;
-using I2.Loc.SimpleJSON;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class GameInventory : SingletonPersistentPrefab<GameInventory>
 {
@@ -37,6 +35,7 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
         public const string ENJIN_ATTEMPTS = "EnjinAttempts";
         public const string WITHDRAWN_TOKENS = "WithdrawnTokens";
         public const string GLOBAL_SYSTEM_ACTIVE_QUEST = "ActiveQuest";
+        public const string SWOLESOME_ACTIVE_QUEST = "SwolesomeActiveQuest";
         public const string CRYSTALS = "Crystals";
     }
 
@@ -67,10 +66,13 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
     [SerializeField] private int _tierGold_unitsAmount = 10;
 
     [SerializeField] private int _legend_firstUnitNumber = 100;
-    [SerializeField] private int _legend_lastUnitNumer = 128;
+    [SerializeField] private int _legend_lastUnitNumer = 133;
 
     [SerializeField] private int _demonFirstUnitNumber = 110;
     [SerializeField] private int _demonLastUnitNumber = 114;
+
+    [SerializeField] private int _swolesomeFirstUnitNumber = 129;
+    [SerializeField] private int _swolesomeLastUnitNumber = 133;
 
     [SerializeField] private float _tierBronze_GroupRarity = 0.5f;
     [SerializeField] private float _tierSilver_GroupRarity = 0.3f;
@@ -88,6 +90,7 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
     private List<string> _tierGold_units = new List<string>();
 
     private List<string> _demon_units = new List<string>();
+    private List<string> _swolesome_units = new List<string>();
     private List<string> _legend_units = new List<string>();
 
     //private List<UnitRarity> _unitSpecialRarities = new List<UnitRarity>();
@@ -120,6 +123,11 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
     public List<string> GetLegendUnitNames()
     {
         return new List<string>(_legend_units);
+    }
+
+    public List<string> GetSwolesomeUnitNames()
+    {
+        return new List<string>(_swolesome_units);
     }
 
     public string GetTokenUnitName(string tokenName)
@@ -249,15 +257,15 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
         saveInventoryItemToFile<int>(GroupNames.STATS, ItemKeys.CRYSTALS);
     }
 
-    public void SetGlobalSystemActiveQuest(GlobalSystemQuests activeQuest)
+    public void SetGlobalSystemActiveQuest(ScoutQuests activeQuest)
     {
         InventoryManager.Instance.UpdateItem(GroupNames.STATS, ItemKeys.GLOBAL_SYSTEM_ACTIVE_QUEST, activeQuest.ToString());
         saveInventoryItemToFile<string>(GroupNames.STATS, ItemKeys.GLOBAL_SYSTEM_ACTIVE_QUEST);
     }
 
-    public GlobalSystemQuests GetGlobalSystemActiveQuest()
+    public ScoutQuests GetGlobalSystemActiveQuest()
     {
-        return (GlobalSystemQuests)Enum.Parse(typeof(GlobalSystemQuests), GetGlobalSystemActiveQuestString());
+        return (ScoutQuests)Enum.Parse(typeof(ScoutQuests), GetGlobalSystemActiveQuestString());
     }
 
     public string GetGlobalSystemActiveQuestString()
@@ -267,7 +275,33 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
 
     public string GetGlobalSystemActiveQuestName()
     {
-        return GetQuestName(GetGlobalSystemActiveQuest().ToString());
+        return GetQuestName(GetGlobalSystemActiveQuestString());
+    }
+
+    public void SetSwolesomeActiveQuest(ScoutQuests activeQuest)
+    {
+        InventoryManager.Instance.UpdateItem(GroupNames.STATS, ItemKeys.SWOLESOME_ACTIVE_QUEST, activeQuest.ToString());
+        saveInventoryItemToFile<string>(GroupNames.STATS, ItemKeys.SWOLESOME_ACTIVE_QUEST);
+    }
+
+    public ScoutQuests GetSwolesomeActiveQuest()
+    {
+        return (ScoutQuests)Enum.Parse(typeof(ScoutQuests), GetSwolesomeActiveQuestString());
+    }
+
+    public string GetSwolesomeActiveQuestString()
+    {
+        return InventoryManager.Instance.GetItem<string>(GroupNames.STATS, ItemKeys.SWOLESOME_ACTIVE_QUEST);
+    }
+
+    public string GetSwolesomeActiveQuestName()
+    {
+        return GetQuestName(GetSwolesomeActiveQuestString());
+    }
+
+    public string GetSelectedQuestName()
+    {
+        return GetQuestName(GameStats.Instance.SelectedQuestString);
     }
 
     public string GetQuestName(string questString)
@@ -277,21 +311,36 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
 
         switch(questString)
         {
-            case nameof(GlobalSystemQuests.EnjinLegend122):
+            case nameof(ScoutQuests.EnjinLegend122):
                 questName += "122";
                 break;
-            case nameof(GlobalSystemQuests.EnjinLegend123):
+            case nameof(ScoutQuests.EnjinLegend123):
                 questName += "123";
                 break;
-            case nameof(GlobalSystemQuests.EnjinLegend124):
+            case nameof(ScoutQuests.EnjinLegend124):
                 questName += "124";
                 break;
-            case nameof(GlobalSystemQuests.EnjinLegend125):
+            case nameof(ScoutQuests.EnjinLegend125):
                 questName += "125";
                 break;
-            case nameof(GlobalSystemQuests.EnjinLegend126):
+
+            case nameof(ScoutQuests.EnjinLegend126):
                 questName += "126";
                 break;
+
+            case nameof(ScoutQuests.SwoleCheese130):
+                questName += "130";
+                break;
+            case nameof(ScoutQuests.SwoleEmerald131):
+                questName += "131";
+                break;
+            case nameof(ScoutQuests.SwoleCrimson132):
+                questName += "132";
+                break;
+            case nameof(ScoutQuests.SwoleDiamond133):
+                questName += "133";
+                break;
+
             case nameof(LegendUnitQuests.Shalwend):
                 questName += "Shalwend";
                 break;
@@ -306,23 +355,35 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
 
         switch (questString)
         {
-            case nameof(GlobalSystemQuests.EnjinLegend122):
-                rewardImagePath = "Images/Units/122";
+            case nameof(ScoutQuests.EnjinLegend122):
+                rewardImagePath = ResourcePaths.UNIT_IMAGES + "122";
                 break;
-            case nameof(GlobalSystemQuests.EnjinLegend123):
-                rewardImagePath = "Images/Units/123";
+            case nameof(ScoutQuests.EnjinLegend123):
+                rewardImagePath = ResourcePaths.UNIT_IMAGES + "123";
                 break;
-            case nameof(GlobalSystemQuests.EnjinLegend124):
-                rewardImagePath = "Images/Units/124";
+            case nameof(ScoutQuests.EnjinLegend124):
+                rewardImagePath = ResourcePaths.UNIT_IMAGES + "124";
                 break;
-            case nameof(GlobalSystemQuests.EnjinLegend125):
-                rewardImagePath = "Images/Units/125";
+            case nameof(ScoutQuests.EnjinLegend125):
+                rewardImagePath = ResourcePaths.UNIT_IMAGES + "125";
                 break;
-            case nameof(GlobalSystemQuests.EnjinLegend126):
-                rewardImagePath = "Images/Units/126";
+            case nameof(ScoutQuests.EnjinLegend126):
+                rewardImagePath = ResourcePaths.UNIT_IMAGES + "126";
                 break;
             case nameof(LegendUnitQuests.Shalwend):
-                rewardImagePath = "Images/Units/128";
+                rewardImagePath = ResourcePaths.UNIT_IMAGES + "128";
+                break;
+            case nameof(ScoutQuests.SwoleCheese130):
+                rewardImagePath = ResourcePaths.UNIT_IMAGES + "130";
+                break;
+            case nameof(ScoutQuests.SwoleEmerald131):
+                rewardImagePath = ResourcePaths.UNIT_IMAGES + "131";
+                break;
+            case nameof(ScoutQuests.SwoleCrimson132):
+                rewardImagePath = ResourcePaths.UNIT_IMAGES + "132";
+                break;
+            case nameof(ScoutQuests.SwoleDiamond133):
+                rewardImagePath = ResourcePaths.UNIT_IMAGES + "133";
                 break;
             default:
                 Debug.LogError("There is not image path for quest: " + questString);
@@ -364,12 +425,21 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
 
     public bool GetAllGlobalSystemQuestLevelsCompleted()
     {
-        int maxQuestLevels = GameConfig.Instance.MaxQuestLevel;
-        string globalSystemActiveQuestString = GameInventory.Instance.GetGlobalSystemActiveQuestString();
+        return getQuestLevelsCompleted(GameConfig.Instance.MaxQuestLevel, GameInventory.Instance.GetGlobalSystemActiveQuestString());
+    }
 
-        for (int i = 1; i <= maxQuestLevels; i++)
+    public bool GetAllSwolesomeQuestLevelsCompleted()
+    {
+        return getQuestLevelsCompleted(GameConfig.Instance.SwolesomeMaxQuestLevel, GameInventory.Instance.GetSwolesomeActiveQuestString());
+    }
+
+    private bool getQuestLevelsCompleted(int maxQuestLevel, string questString)
+    {
+        string swoleSomeActiveQuestString = GameInventory.Instance.GetSwolesomeActiveQuestString();
+
+        for (int i = 1; i <= maxQuestLevel; i++)
         {
-            if (!GetQuestLevelCompleted(globalSystemActiveQuestString, i))
+            if (!GetQuestLevelCompleted(questString, i))
             {
                 return false;
             }
@@ -410,11 +480,16 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
         }
         else
         {
-            int maxQuestLevel = GameConfig.Instance.MaxQuestLevel;
+            GameConfig gameConfig = GameConfig.Instance;
+            int maxQuestLevel = gameConfig.MaxQuestLevel;
 
             if (questString == nameof(LegendUnitQuests.Shalwend))
             {
                 maxQuestLevel = GetLegendUnitQuestMaxLevel(LegendUnitQuests.Shalwend);
+            }
+            else if (questString.Contains("Swole"))
+            {
+                maxQuestLevel = gameConfig.SwolesomeMaxQuestLevel;
             }
 
             for (int i = 1; i <= maxQuestLevel; i++)
@@ -500,7 +575,7 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
     //        }
     //    }
 
-    public void SetGlobalSystemQuestEnemiesPositions(List<Vector3> positions)
+    public void SetScoutQuestEnemiesPositions(ScoutQuests quest, List<Vector3> positions)
     {
         string enemiesPositionsString = "";
 
@@ -514,32 +589,30 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
             enemiesPositionsString += pos.x.ToString() + COORDS_SEPARATOR + pos.y.ToString() + COORDS_SEPARATOR + pos.z.ToString();
         }
 
-        string questString = GameInventory.Instance.GetGlobalSystemActiveQuestString(); 
+        string questString = quest.ToString();
         InventoryManager.Instance.UpdateItem(GroupNames.QUESTS_ENEMIES_POSITIONS, questString, enemiesPositionsString);
         saveInventoryItemToFile<string>(GroupNames.QUESTS_ENEMIES_POSITIONS, questString);
     }
 
-    public List<Vector3> GetGlobalSystemEnemiesPositions()
+    public List<Vector3> GetScoutQuestEnemiesPositions(ScoutQuests quest)
     {
-        string activeQuestString = GameInventory.Instance.GetGlobalSystemActiveQuestString(); 
-        string enemiesPositionsString = InventoryManager.Instance.GetItem<string>(GroupNames.QUESTS_ENEMIES_POSITIONS, activeQuestString);
-
+        string enemiesPositionsString = InventoryManager.Instance.GetItem<string>(GroupNames.QUESTS_ENEMIES_POSITIONS, quest.ToString());
         return getPositionsFromString(enemiesPositionsString);
     }
 
-    public void ClearGlobalSystemScoutProgress()
+    public void ClearQuestScoutProgress(ScoutQuests quest)
     {
-        string activeQuestString = GameInventory.Instance.GetGlobalSystemActiveQuestString();
-        InventoryManager.Instance.UpdateItem(GroupNames.QUESTS_SCOUT_PROGRESS, activeQuestString, "");
-        saveInventoryItemToFile<string>(GroupNames.QUESTS_SCOUT_PROGRESS, activeQuestString);
+        string questString = quest.ToString();
+        InventoryManager.Instance.UpdateItem(GroupNames.QUESTS_SCOUT_PROGRESS, questString, "");
+        saveInventoryItemToFile<string>(GroupNames.QUESTS_SCOUT_PROGRESS, questString);
     }
 
-    public void SetQuestNewScoutPosition(Vector3 newPos)
+    public void SetQuestNewScoutPosition(ScoutQuests quest, Vector3 newPos)
     {
         InventoryManager inventoryManager = InventoryManager.Instance;
-        string activeQuestString = GameInventory.Instance.GetGlobalSystemActiveQuestString(); 
+        string questString = quest.ToString();
 
-        string scoutProgressString = inventoryManager.GetItem<string>(GroupNames.QUESTS_SCOUT_PROGRESS, activeQuestString);
+        string scoutProgressString = inventoryManager.GetItem<string>(GroupNames.QUESTS_SCOUT_PROGRESS, questString);
 
         if (scoutProgressString != "")
         {
@@ -548,15 +621,13 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
 
         scoutProgressString += newPos.x.ToString() + COORDS_SEPARATOR + newPos.y.ToString() + COORDS_SEPARATOR + newPos.z.ToString();
 
-        inventoryManager.UpdateItem(GroupNames.QUESTS_SCOUT_PROGRESS, activeQuestString, scoutProgressString);
-        saveInventoryItemToFile<string>(GroupNames.QUESTS_SCOUT_PROGRESS, activeQuestString);
+        inventoryManager.UpdateItem(GroupNames.QUESTS_SCOUT_PROGRESS, questString, scoutProgressString);
+        saveInventoryItemToFile<string>(GroupNames.QUESTS_SCOUT_PROGRESS, questString);
     }
 
-    public List<Vector3> GetGlobalSystemQuestScoutProgress()
+    public List<Vector3> GetQuestScoutProgress(ScoutQuests quest)
     {
-        string activeQuestString = GameInventory.Instance.GetGlobalSystemActiveQuestString(); 
-        string scoutProgressString = InventoryManager.Instance.GetItem<string>(GroupNames.QUESTS_SCOUT_PROGRESS, activeQuestString);
-
+        string scoutProgressString = InventoryManager.Instance.GetItem<string>(GroupNames.QUESTS_SCOUT_PROGRESS, quest.ToString());
         return getPositionsFromString(scoutProgressString);
     }
 
@@ -1026,6 +1097,12 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
         linkUnitAndToken("125", EnjinTokenKeys.ENJIN_BRAD);
         linkUnitAndToken("126", EnjinTokenKeys.ENJIN_LIZZ);
 
+        linkUnitAndToken("129", EnjinTokenKeys.BLUE_NARWHAL);
+        linkUnitAndToken("130", EnjinTokenKeys.CHEESE_NARWHAL);
+        linkUnitAndToken("131", EnjinTokenKeys.EMERALD_NARWHAL);
+        linkUnitAndToken("132", EnjinTokenKeys.CRIMSON_NARWHAL);
+        linkUnitAndToken("133", EnjinTokenKeys.DIAMOND_NARWHAL);
+
         linkUnitAndToken("127", EnjinTokenKeys.SWISSBORG_CYBORG);
         linkUnitAndToken("128", EnjinTokenKeys.SHALWEND);
     }
@@ -1098,6 +1175,7 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
         populateUnitList(_tierGold_units, _legend_firstUnitNumber, _legend_lastUnitNumer);
         populateUnitList(_legend_units, _legend_firstUnitNumber, _legend_lastUnitNumer);
         populateUnitList(_demon_units, _demonFirstUnitNumber, _demonLastUnitNumber);
+        populateUnitList(_swolesome_units, _swolesomeFirstUnitNumber, _swolesomeLastUnitNumber);
     }
 
     public void populateUnitList(List<string> unitList, int firstUnitNumber, int lastUnitNumber)
@@ -1182,12 +1260,13 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
         //Set default values ========================================================================
         inventoryManager.AddItem(GroupNames.STATS, ItemKeys.SINGLE_PLAYER_LEVEL, 0);
         inventoryManager.AddItem(GroupNames.STATS, ItemKeys.ENJIN_ATTEMPTS, 5);
-        inventoryManager.AddItem(GroupNames.STATS, ItemKeys.GLOBAL_SYSTEM_ACTIVE_QUEST, GlobalSystemQuests.None.ToString());
+        inventoryManager.AddItem(GroupNames.STATS, ItemKeys.GLOBAL_SYSTEM_ACTIVE_QUEST, ScoutQuests.None.ToString());
+        inventoryManager.AddItem(GroupNames.STATS, ItemKeys.SWOLESOME_ACTIVE_QUEST, ScoutQuests.None.ToString());
         inventoryManager.AddItem(GroupNames.STATS, ItemKeys.CRYSTALS, 50);
 
-        foreach (GlobalSystemQuests quest in Enum.GetValues(typeof(GlobalSystemQuests)))
+        foreach (ScoutQuests quest in Enum.GetValues(typeof(ScoutQuests)))
         {
-            if (quest != GlobalSystemQuests.None)
+            if (quest != ScoutQuests.None)
             {
                 string questString = quest.ToString();
                 inventoryManager.AddItem(GroupNames.QUESTS_SCOUT_PROGRESS, questString, "");
@@ -1255,7 +1334,7 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
             }
             else if (groupName == GroupNames.STATS)
             {
-                if (keyString == GameInventory.ItemKeys.GLOBAL_SYSTEM_ACTIVE_QUEST)
+                if ((keyString == GameInventory.ItemKeys.GLOBAL_SYSTEM_ACTIVE_QUEST) || (keyString == GameInventory.ItemKeys.SWOLESOME_ACTIVE_QUEST))
                 {
                     inventoryManager.UpdateItem(groupName, keyString, valueString);
                 }
@@ -1351,10 +1430,11 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
     //    InventoryManager.Instance.AddItem(GroupNames.ENJIN_TOKENS_WITHDRAWAL, tokenKey, false);
     //}
 
-    public void ClearQuestLevelsCompleted(string questString)
+    public void ClearQuestLevelsCompleted(ScoutQuests quest)
     {
         InventoryManager inventoryManager = InventoryManager.Instance;
         int maxQuestLevel = GameConfig.Instance.MaxQuestLevel;
+        string questString = quest.ToString();
 
         for (int i = 1; i <= maxQuestLevel; i++)
         {

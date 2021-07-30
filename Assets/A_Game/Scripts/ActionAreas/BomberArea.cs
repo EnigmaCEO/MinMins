@@ -1,4 +1,5 @@
 ﻿using Enigma.CoreSystems;
+using GameEnums;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,7 +26,7 @@ public class BomberArea : ActionArea
         }
     }
 
-    override protected void setEffect(MinMinUnit.EffectNames effectName)
+    override protected void setEffect(AbilityEffects effectName)
     {
         base.setEffect(effectName);
 

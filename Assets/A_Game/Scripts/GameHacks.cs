@@ -55,7 +55,7 @@ public class GameHacks : SingletonPersistentPrefab<GameHacks>
 #endif
 
     public bool RandomizeUnitTypes;
-    public bool AssignEffectByType;
+    public bool AssignDefaultEffectByType;
 
     public bool GuestCameraAsHost;
 

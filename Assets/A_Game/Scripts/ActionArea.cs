@@ -1,4 +1,5 @@
 ﻿using Enigma.CoreSystems;
+using GameEnums;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -29,7 +30,8 @@ public class ActionArea : NetworkEntity
     protected Collider2D _collider;
     protected GameObject _effect;
 
-    protected MinMinUnit.EffectNames _effectName;
+    //protected MinMinUnit.EffectNames _effectName;
+    protected AbilityEffects _effectName;
 
 
     override protected void Awake()
@@ -42,7 +44,7 @@ public class ActionArea : NetworkEntity
         object[] data = base.GetInstantiationData();
         if (data != null)
         {
-            SetUpActionArea((string)data[0], (Vector3)data[1], (Vector3)data[2], (string)data[3], (MinMinUnit.EffectNames)data[4], (string)data[5], (int)data[6]);
+            SetUpActionArea((string)data[0], (Vector3)data[1], (Vector3)data[2], (string)data[3], (AbilityEffects)data[4], (string)data[5], (int)data[6]);
         }
 
         if (OwnerUnitName != "")
@@ -126,7 +128,7 @@ public class ActionArea : NetworkEntity
         }
     }
 
-    virtual public void SetUpActionArea(string areaName, Vector3 position, Vector3 direction, string unitName, MinMinUnit.EffectNames effectName, string teamName, int networkPlayerId)
+    virtual public void SetUpActionArea(string areaName, Vector3 position, Vector3 direction, string unitName, AbilityEffects effectName, string teamName, int networkPlayerId)
     {
         _effectName = effectName;
         this.name = areaName;
@@ -141,7 +143,7 @@ public class ActionArea : NetworkEntity
 
         float scaleFactor = 1;
 
-        if (OwnerUnitName != GlobalSystemQuest.QUEST_PLAYER_UNIT_NAME)
+        if (OwnerUnitName != ScoutQuestManager.QUEST_PLAYER_UNIT_NAME)
         {
             scaleFactor = float.Parse(getOwnerUnitProperty(GameNetwork.UnitPlayerProperties.EFFECT_SCALE));
         }
@@ -189,7 +191,7 @@ public class ActionArea : NetworkEntity
         //Debug.LogWarning("ActionArea::OnTriggerEnter2D: " + coll.name + " collided with " + this.name);
     }
 
-    virtual protected void setEffect(MinMinUnit.EffectNames effectName)
+    virtual protected void setEffect(AbilityEffects effectName)
     {
         string effectFullPath = EFFECTS_RESOURCES_FOLDER_PATH + (effectName.ToString());
 

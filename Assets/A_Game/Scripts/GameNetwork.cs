@@ -294,10 +294,10 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
             updateWalletFromUserDataNode(userDataNode, updateEthAddress);
         }
 
-        determineTokenAvailable(response_hash, EnigmaConstants.TokenKeys.ENJIN_MFT);
-        determineTokenAvailable(response_hash, EnigmaConstants.TokenKeys.ENIGMA_TOKEN);
+        determineTokenAvailable(userDataNode, EnigmaConstants.TokenKeys.ENJIN_MFT);
+        determineTokenAvailable(userDataNode, EnigmaConstants.TokenKeys.ENIGMA_TOKEN);
 
-        determineTokenAvailable(response_hash, EnjinTokenKeys.MINMINS_TOKEN);
+        determineTokenAvailable(userDataNode, EnjinTokenKeys.MINMINS_TOKEN);
 
         GameInventory gameInventory = GameInventory.Instance;
 
@@ -307,11 +307,18 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
         //    setTokenAvailable(response_hash, oreToken);
         //}
 
-        List<string> legendUnits = GameInventory.Instance.GetLegendUnitNames();
+        List<string> legendUnits = gameInventory.GetLegendUnitNames();
+        List<string> swolesomeUnits = gameInventory.GetSwolesomeUnitNames();
+
         foreach (string legendUnit in legendUnits)
         {
+            if (swolesomeUnits.Contains(legendUnit))
+            {
+                continue;
+            }
+
             string tokenName = gameInventory.GetUnitNameToken(legendUnit);
-            determineTokenAvailable(response_hash, tokenName);
+            determineTokenAvailable(userDataNode, tokenName);
         }
 
         CheckAllEnjinTeamBoostTokens(response_hash);
@@ -342,25 +349,10 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
         _availabilityByToken[tokenKey] = available;
     }
 
-    private void determineTokenAvailable(SimpleJSON.JSONNode response_hash, string tokenKey)
-    {
-        string tokenAvailable = "";
-        SimpleJSON.JSONNode tokenNode = response_hash[NetworkManager.TransactionKeys.USER_DATA][tokenKey];
-
-        if (tokenNode != null)
-        {
-            tokenAvailable = tokenNode;
-        }
-
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
-        if (GameHacks.Instance.EnableAllEnjinTokens)
-        {
-            tokenAvailable = "1";
-        }
-#endif
-
-        SetTokenAvailable(tokenKey, (tokenAvailable == "1"));
-    }
+    //private void determineTokenAvailable(SimpleJSON.JSONNode response_hash, string tokenKey)
+    //{
+    //    checkTokenAvailableInNode(response_hash[NetworkManager.TransactionKeys.USER_DATA], tokenKey);
+    //}
 
     private void onPlayerDisconnected(int disconnectedPlayerId)
     {
@@ -1086,7 +1078,7 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
         }
         else
         {
-            Debug.Log(response.ToString());
+            Debug.Log(nameof(onCheckEnjinTokenAvailableResponse) + " " + response.ToString());
 
             JSONNode codeNode = response[0][TransactionKeys.CODE];
             if (codeNode != null)
@@ -1108,6 +1100,14 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
                 {
                     Debug.LogError("Shalwend quest code was not recognized.");
                 }
+
+                GameInventory gameInventory = GameInventory.Instance;
+                List<string> swolesomeUnits = gameInventory.GetSwolesomeUnitNames();
+                foreach (string swolesomeUnit in swolesomeUnits)
+                {
+                    string tokenKey = gameInventory.GetUnitNameToken(swolesomeUnit);
+                    determineTokenAvailable(response[0], tokenKey);
+                }
             }
             else
             {
@@ -1116,9 +1116,29 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
         }
     }
 
+    private void determineTokenAvailable(JSONNode node, string tokenKey)
+    {
+        string tokenAvailable = "";
+        SimpleJSON.JSONNode tokenNode = node[tokenKey];
+
+        if (tokenNode != null)
+        {
+            tokenAvailable = tokenNode;
+        }
+
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+        if (GameHacks.Instance.EnableAllEnjinTokens)
+        {
+            tokenAvailable = "1";
+        }
+#endif
+
+        SetTokenAvailable(tokenKey, (tokenAvailable == "1"));
+    }
+
     static private IEnumerator checkEnjinTokenAvailable(Hashtable hashtable, Callback externalCallback, Callback localCallback = null)
     {
-        string url = "https://tn8wa4zqy8.execute-api.us-east-1.amazonaws.com/prod/getcodes";
+        string url = "https://api.playnft.io/getcodes";
 
         WWWForm formData = new WWWForm();
 

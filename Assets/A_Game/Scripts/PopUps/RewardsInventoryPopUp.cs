@@ -11,7 +11,7 @@ public class RewardsInventoryPopUp : MonoBehaviour
     [SerializeField] private float _ultimateCost = 5.0f;
 
     [SerializeField] private string _coinName = "JENJ";
-    [SerializeField] private string _defaultTokenName = "Unknown";
+    //[SerializeField] private string _defaultTokenName = "Unknown";
 
     [SerializeField] private string _imagesFolder = "Images/";
     [SerializeField] private string _enigmaCollectiblesFolder = "EnigmaCollectibles/";

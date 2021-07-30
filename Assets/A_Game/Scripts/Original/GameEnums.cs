@@ -10,15 +10,28 @@ namespace GameEnums
         Quest
     }
 
-    public enum GlobalSystemQuests
+    public enum QuestTypes
+    {
+        None,
+        Scout,
+        Levels
+    }
+
+    public enum ScoutQuests
     {
         None = 0,
-
-        EnjinLegend122,
+        
+        //Global System
+        EnjinLegend122, 
         EnjinLegend123,
         EnjinLegend124,
         EnjinLegend125,
-        EnjinLegend126 
+        EnjinLegend126, 
+
+        SwoleCheese130,
+        SwoleEmerald131,
+        SwoleCrimson132,
+        SwoleDiamond133
     }
 
     public enum LegendUnitQuests

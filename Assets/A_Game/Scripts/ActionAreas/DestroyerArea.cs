@@ -1,4 +1,5 @@
 ﻿using Enigma.CoreSystems;
+using GameEnums;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,7 +14,7 @@ public class DestroyerArea : ActionArea
         transform.position += _velocity * Time.deltaTime;
     }
 
-    override public void SetUpActionArea(string areaName, Vector3 position, Vector3 direction, string unitName, MinMinUnit.EffectNames effectName, string teamName, int networkPlayerId)
+    override public void SetUpActionArea(string areaName, Vector3 position, Vector3 direction, string unitName, AbilityEffects effectName, string teamName, int networkPlayerId)
     {
         base.SetUpActionArea(areaName, position, direction, unitName, effectName, teamName, networkPlayerId);
         _velocity = direction * GameConfig.Instance.ProjectilesSpeed;

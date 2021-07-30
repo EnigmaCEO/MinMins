@@ -42,7 +42,7 @@ EditorBuildSettings:
     path: Assets/A_Game/Scenes/NewLobby.unity
     guid: a8fb8daf96db64f4fb77554805b2b184
   - enabled: 1
-    path: Assets/A_Game/Scenes/Global System Quest.unity
+    path: Assets/A_Game/Scenes/Scout Quest.unity
     guid: ba26f5eaf0c1f1040aa1fa487a88c8f4
   - enabled: 0
     path: Assets/Huawei/Demos/AccountDemo.unity

@@ -1125,7 +1125,9 @@ namespace Enigma.CoreSystems
 
         static public int GetAnyPlayerCustomPropertyAsInt(string key, string virtualPlayerId, int networkPlayerId)
         {
-            return int.Parse(GetAnyPlayerCustomProperty(key, virtualPlayerId, networkPlayerId));
+            string value = GetAnyPlayerCustomProperty(key, virtualPlayerId, networkPlayerId);
+            Debug.Log("GetAnyPlayerCustomPropertyAsInt -> value: " + value);
+            return int.Parse(value);
         }
 
         static public string GetAnyPlayerCustomProperty(string key, string virtualPlayerId, int networkPlayerId)

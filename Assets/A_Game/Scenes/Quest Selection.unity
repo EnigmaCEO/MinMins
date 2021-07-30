@@ -3388,6 +3388,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _globalSystemQuestButton: {fileID: 2821414724241911092}
+  _swoleCheeseQuestButton: {fileID: 7859163460647926318}
+  _swoleEmeraldQuestButton: {fileID: 7859163460647926317}
+  _swoleCrimsonQuestButton: {fileID: 7859163460647926316}
+  _swoleDiamondQuestButton: {fileID: 7859163460647926315}
   _shalwendQuestButton: {fileID: 7859163460647926314}
   _questProgressPanel: {fileID: 1498016821}
   _questProgressFill: {fileID: 1498016820}
@@ -4431,11 +4435,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Quests Grid
       objectReference: {fileID: 0}
-    - target: {fileID: 7860890791681387574, guid: 0459aa9779084c840b2237deb3977e25,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7930557514885133144, guid: 0459aa9779084c840b2237deb3977e25,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4621,11 +4620,195 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2059866142}
+    - target: {fileID: 6622295531317745671, guid: 0459aa9779084c840b2237deb3977e25,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6622295531317745671, guid: 0459aa9779084c840b2237deb3977e25,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6622295531317745671, guid: 0459aa9779084c840b2237deb3977e25,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6622295531317745671, guid: 0459aa9779084c840b2237deb3977e25,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6622295531317745671, guid: 0459aa9779084c840b2237deb3977e25,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6622295531317745671, guid: 0459aa9779084c840b2237deb3977e25,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6622295531317745666, guid: 0459aa9779084c840b2237deb3977e25,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2059866142}
+    - target: {fileID: 6622295531317745666, guid: 0459aa9779084c840b2237deb3977e25,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SwoleCheeseQuestButtonDown
+      objectReference: {fileID: 0}
+    - target: {fileID: 7201430257431106202, guid: 0459aa9779084c840b2237deb3977e25,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7201430257431106202, guid: 0459aa9779084c840b2237deb3977e25,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7201430257431106202, guid: 0459aa9779084c840b2237deb3977e25,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7201430257431106202, guid: 0459aa9779084c840b2237deb3977e25,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7201430257431106202, guid: 0459aa9779084c840b2237deb3977e25,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7201430257431106202, guid: 0459aa9779084c840b2237deb3977e25,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7201430257431106207, guid: 0459aa9779084c840b2237deb3977e25,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2059866142}
+    - target: {fileID: 7201430257431106207, guid: 0459aa9779084c840b2237deb3977e25,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SwoleCrimsonQuestButtonDown
+      objectReference: {fileID: 0}
+    - target: {fileID: 6176114480078449045, guid: 0459aa9779084c840b2237deb3977e25,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6176114480078449045, guid: 0459aa9779084c840b2237deb3977e25,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6176114480078449045, guid: 0459aa9779084c840b2237deb3977e25,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6176114480078449045, guid: 0459aa9779084c840b2237deb3977e25,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6176114480078449045, guid: 0459aa9779084c840b2237deb3977e25,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6176114480078449045, guid: 0459aa9779084c840b2237deb3977e25,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6176114480078449040, guid: 0459aa9779084c840b2237deb3977e25,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2059866142}
+    - target: {fileID: 6176114480078449040, guid: 0459aa9779084c840b2237deb3977e25,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SwoleEmeraldQuestButtonDown
+      objectReference: {fileID: 0}
+    - target: {fileID: 459910862767063400, guid: 0459aa9779084c840b2237deb3977e25,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 459910862767063400, guid: 0459aa9779084c840b2237deb3977e25,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 459910862767063400, guid: 0459aa9779084c840b2237deb3977e25,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 459910862767063400, guid: 0459aa9779084c840b2237deb3977e25,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 459910862767063400, guid: 0459aa9779084c840b2237deb3977e25,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 459910862767063400, guid: 0459aa9779084c840b2237deb3977e25,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 459910862767063405, guid: 0459aa9779084c840b2237deb3977e25,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2059866142}
+    - target: {fileID: 459910862767063405, guid: 0459aa9779084c840b2237deb3977e25,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SwoleDiamonQuestButtonDown
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0459aa9779084c840b2237deb3977e25, type: 3}
 --- !u!1 &7859163460647926314 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6622295531990366788, guid: 0459aa9779084c840b2237deb3977e25,
+    type: 3}
+  m_PrefabInstance: {fileID: 7859163460647926313}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7859163460647926315 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 459910862767063404, guid: 0459aa9779084c840b2237deb3977e25,
+    type: 3}
+  m_PrefabInstance: {fileID: 7859163460647926313}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7859163460647926316 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7201430257431106206, guid: 0459aa9779084c840b2237deb3977e25,
+    type: 3}
+  m_PrefabInstance: {fileID: 7859163460647926313}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7859163460647926317 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6176114480078449041, guid: 0459aa9779084c840b2237deb3977e25,
+    type: 3}
+  m_PrefabInstance: {fileID: 7859163460647926313}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7859163460647926318 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6622295531317745667, guid: 0459aa9779084c840b2237deb3977e25,
     type: 3}
   m_PrefabInstance: {fileID: 7859163460647926313}
   m_PrefabAsset: {fileID: 0}

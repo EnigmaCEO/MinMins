@@ -6,31 +6,31 @@ using UnityEngine;
 
 public class MinMinUnit : NetworkEntity
 {
-    public enum Types
-    {
-        None,
-        Healer,
-        Bomber,
-        Tank,
-        Destroyer,
-        Scout
-    }
+    //public enum Types
+    //{
+    //    None,
+    //    Healer,
+    //    Bomber,
+    //    Tank,
+    //    Destroyer,
+    //    Scout
+    //}
 
-    public enum EffectNames
-    {
-        None,
-        FireExplosion = 1,
-        LifeArea,
-        LightningProjectile,
-        ScoutLight,
-        ShieldEffect,
-        //Six
-        FireExplosionDemon,
-        LifeAreaDemon,
-        LightningProjectileDemon,
-        ScoutLightDemon,
-        ShieldEffectDemon,
-    }
+    //public enum EffectNames
+    //{
+    //    None,
+    //    FireExplosion = 1,
+    //    LifeArea,
+    //    LightningProjectile,
+    //    ScoutLight,
+    //    ShieldEffect,
+    //    //Six
+    //    FireExplosionDemon,
+    //    LifeAreaDemon,
+    //    LightningProjectileDemon,
+    //    ScoutLightDemon,
+    //    ShieldEffectDemon,
+    //}
 
     public float Strength = 1;
     public float Defense = 1;
@@ -82,7 +82,7 @@ public class MinMinUnit : NetworkEntity
     {
         AbilityEffects effect = unit.AbilityEffect;
 
-        if (GameHacks.Instance.AssignEffectByType)
+        if (GameHacks.Instance.AssignDefaultEffectByType)
         {
             if (unit.Role == UnitRoles.Bomber)
             {
@@ -147,9 +147,9 @@ public class MinMinUnit : NetworkEntity
         _spriteTransform.localPosition = new Vector3(posX, posY, _spriteTransform.localPosition.z);
     }
 
-    public void SendDebugSettingsForWar(Types unitType)
+    public void SendDebugSettingsForWar(UnitRoles unitRoles)
     {
-        SendRpcToAll(nameof(receiveDebugSettingsForWar), (int)unitType);
+        SendRpcToAll(nameof(receiveDebugSettingsForWar), (int)unitRoles);
     }
 
     [PunRPC]

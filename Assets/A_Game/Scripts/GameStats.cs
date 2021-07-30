@@ -1,6 +1,7 @@
 ﻿using GameConstants;
 using GameEnums;
 using SimpleJSON;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,8 @@ public class GameStats : SingletonPersistentPrefab<GameStats>
 {
     [Header("Only for display. Set at runtime:")]
     public GameModes Mode = GameModes.None;
+    public QuestTypes QuestType = QuestTypes.None;
+
     public int SelectedLevelNumber = 0;
     public string QuestSelectedUnitName = "";
 
@@ -16,7 +19,7 @@ public class GameStats : SingletonPersistentPrefab<GameStats>
     public bool HasPurchased = false;
     public int FightWithoutAdsCount = 0;
 
-    public string SelectedQuestString = nameof(GlobalSystemQuests.None);
+    public string SelectedQuestString = nameof(ScoutQuests.None);
 
     public List<Vector3> PreparationPositions = new List<Vector3>();
     public List<string> TeamUnits = new List<string>();
@@ -38,4 +41,30 @@ public class GameStats : SingletonPersistentPrefab<GameStats>
     public List<string> QuestUnits = new List<string>();
 
     public float EnjBalance = 0;
+
+    public ScoutQuests SelectedScoutQuest
+    {
+        get
+        {
+            return (ScoutQuests)Enum.Parse(typeof(ScoutQuests), SelectedQuestString);
+        }
+
+        set
+        {
+            SelectedQuestString = value.ToString();
+        }
+    }
+
+    public LegendUnitQuests SelectedLegendUnitQuest
+    {
+        get
+        {
+            return (LegendUnitQuests)Enum.Parse(typeof(LegendUnitQuests), SelectedQuestString);
+        }
+
+        set
+        {
+            SelectedQuestString = value.ToString();
+        }
+    }
 }

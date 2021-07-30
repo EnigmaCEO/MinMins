@@ -57,7 +57,7 @@ public class Levels : EnigmaScene
         }
         else if (mode == GameModes.Quest)
         {
-            if (gameStats.SelectedQuestString == nameof(LegendUnitQuests.Shalwend))
+            if (gameStats.SelectedLegendUnitQuest == LegendUnitQuests.Shalwend)
             {
                 levelsLenght = gameInventory.GetHighestQuestLevelCompletedAmount() + 1;
                 int questMaxLevel = gameInventory.GetLegendUnitQuestMaxLevel(LegendUnitQuests.Shalwend);
@@ -79,9 +79,10 @@ public class Levels : EnigmaScene
 #endif
 
         Debug.LogWarning(">Levels::Start -> Levels lenght: " + levelsLenght);
+
         string selectedQuestString = gameStats.SelectedQuestString;
 
-        int selectedQuestLastLevel = 0;
+int selectedQuestLastLevel = 0;
 
         if (mode == GameModes.Quest)
         {

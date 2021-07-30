@@ -11,7 +11,7 @@ namespace GameConstants
         public const string UNIT_SELECT = "UnitSelect";
         public const string TEAM_BOOST = "TeamBoost";
         public const string QUEST_SELECTION = "Quest Selection";
-        public const string GLOBAL_SYSTEM_QUEST = "Global System Quest";
+        public const string SCOUT_QUEST = "Scout Quest";
     }
 
     public class EnjinTokenTypes
@@ -133,6 +133,12 @@ namespace GameConstants
         public const string SWISSBORG_CYBORG = "swissborg_cyborg";
         public const string SHALWEND = "shalwend";
 
+        public const string BLUE_NARWHAL = "quest_bluenarwhal";
+        public const string CHEESE_NARWHAL = "quest_cheesenarwhal";
+        public const string EMERALD_NARWHAL = "quest_emeraldnarwhal";
+        public const string CRIMSON_NARWHAL = "quest_crimsonnarwhal";
+        public const string DIAMOND_NARWHAL = "quest_diamond_narwhal";
+
         public const string QUEST_SHALWEND = "quest_shalwend";
 
         /*
@@ -216,6 +222,11 @@ namespace GameConstants
         public const int NEW_TRAINING_LEVEL = 28;
 
         public const int ENJIN_WITHDRAWAL = 29;
+    }
+
+    public class ResourcePaths
+    {
+        public const string UNIT_IMAGES = "Images/Units/";
     }
 }
  

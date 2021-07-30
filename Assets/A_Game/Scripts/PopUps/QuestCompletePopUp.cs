@@ -21,7 +21,7 @@ public class QuestCompletePopUp : MonoBehaviour
 
     public void OnOkButtonDown()
     {
-        _resultsPopUp.Open();
+        _resultsPopUp.Open(true);
         Close();
     }
 
@@ -46,15 +46,15 @@ public class QuestCompletePopUp : MonoBehaviour
 
     private void fillQuestRewardMessage(string questString)
     {
-        if ((questString == nameof(GlobalSystemQuests.EnjinLegend122)) || (questString == nameof(GlobalSystemQuests.EnjinLegend123)) || (questString == nameof(GlobalSystemQuests.EnjinLegend124))
-        || (questString == nameof(GlobalSystemQuests.EnjinLegend125)) || (questString == nameof(GlobalSystemQuests.EnjinLegend126)) || (questString == nameof(LegendUnitQuests.Shalwend)))
+        //if ((questString == nameof(ScoutQuests.EnjinLegend122)) || (questString == nameof(ScoutQuests.EnjinLegend123)) || (questString == nameof(ScoutQuests.EnjinLegend124))
+        //|| (questString == nameof(ScoutQuests.EnjinLegend125)) || (questString == nameof(ScoutQuests.EnjinLegend126)) || (questString == nameof(LegendUnitQuests.Shalwend)))
         {
             _messageReward.text = LocalizationManager.GetTermTranslation("You got this new unit in your inventory or experience bonus for it.");
         }
-        else
-        {
-            Debug.LogError("There is not message set for Quest: " + questString.ToString());
-        }
+        //else
+        //{
+        //    Debug.LogError("There is not message set for Quest: " + questString.ToString());
+        //}
     }
 
     private void handleRewardImage(string questString)

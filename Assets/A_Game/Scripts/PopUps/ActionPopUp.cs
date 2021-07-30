@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using GameEnums;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,25 +11,25 @@ public class ActionPopUp : MonoBehaviour
     [SerializeField ] private Image _unitImage;
     [SerializeField] private Text _buttonText;
 
-    public void Open(string unitName, MinMinUnit.Types unitType, bool enableActionButton)
+    public void Open(string unitName, UnitRoles unitRole, bool enableActionButton)
     {
         _unitImage.sprite = Resources.Load<Sprite>("Images/Units/" + unitName);
 
         if (enableActionButton)
         {
-            if (unitType == MinMinUnit.Types.Bomber || unitType == MinMinUnit.Types.Destroyer)
+            if (unitRole == UnitRoles.Bomber || unitRole == UnitRoles.Destroyer)
             {
                 DismissButton.GetComponentInChildren<Text>().text = LocalizationManager.GetTermTranslation("ATTACK");
             }
-            if (unitType == MinMinUnit.Types.Scout)
+            if (unitRole == UnitRoles.Scout)
             {
                 DismissButton.GetComponentInChildren<Text>().text = LocalizationManager.GetTermTranslation("SCOUT");
             }
-            if (unitType == MinMinUnit.Types.Healer)
+            if (unitRole == UnitRoles.Healer)
             {
                 DismissButton.GetComponentInChildren<Text>().text = LocalizationManager.GetTermTranslation("HEAL");
             }
-            if (unitType == MinMinUnit.Types.Tank)
+            if (unitRole == UnitRoles.Tank)
             {
                 DismissButton.GetComponentInChildren<Text>().text = LocalizationManager.GetTermTranslation("GUARD");
             }

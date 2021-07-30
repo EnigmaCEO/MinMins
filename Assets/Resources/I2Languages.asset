@@ -2365,6 +2365,17 @@ MonoBehaviour:
       - 
       Flags: 0000000000
       Languages_Touch: []
+    - Term: 'You have completed the Quest:'
+      TermType: 0
+      Description: 
+      Languages:
+      - 'You have completed the Quest:'
+      - "Has completado la B\xFAsqueda:"
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
     - Term: Tap boost to select/deselect.
       TermType: 0
       Description: 
@@ -2400,7 +2411,7 @@ MonoBehaviour:
     Google_WebServiceURL: https://script.google.com/macros/s/AKfycbw05ISkGCPtIS0hMzFD5jshgfH09mIP6BAxRKhWsA/exec
     Google_SpreadsheetKey: 1iIWCtExuyR2XXyYkJv6y83PTVMPC4FxzSITGGroefcg
     Google_SpreadsheetName: I2Loc MinMins Localization
-    Google_LastUpdatedVersion: 1625867943644
+    Google_LastUpdatedVersion: 1627596430021
     Google_Password: shalwend
     GoogleUpdateFrequency: 0
     GoogleInEditorCheckFrequency: 0

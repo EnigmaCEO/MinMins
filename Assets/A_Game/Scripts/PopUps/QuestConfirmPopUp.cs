@@ -14,7 +14,8 @@ public class QuestConfirmPopUp : MonoBehaviour
     [SerializeField] private GameObject _boxRewardTemplate;
 
     private string _sceneToLoad = "";
-    private string _questStringToConfirm = nameof(GlobalSystemQuests.None);
+    private string _questStringToConfirm = nameof(ScoutQuests.None);
+    private QuestTypes _questTypeToConfirm = QuestTypes.None;
 
     private void Start()
     {
@@ -29,11 +30,13 @@ public class QuestConfirmPopUp : MonoBehaviour
         gridTemplate.SetActive(false);
     }
 
-    public void Open(string questStringToConfirm, string sceneToLoad, Dictionary<int, int> boxTiersWithAmountRewards, List<TeamBoostItemGroup> boostItemGroups)
+    public void Open(string questStringToConfirm, string sceneToLoad, QuestTypes questTypeToConfirm /*, Dictionary<int, int> boxTiersWithAmountRewards, List<TeamBoostItemGroup> boostItemGroups*/)
     {
         _questStringToConfirm = questStringToConfirm;
         _sceneToLoad = sceneToLoad;
+        _questTypeToConfirm = questTypeToConfirm;
 
+        /*
         if (boxTiersWithAmountRewards != null)
         {
             foreach (KeyValuePair<int, int> amountByTier in boxTiersWithAmountRewards)
@@ -56,6 +59,7 @@ public class QuestConfirmPopUp : MonoBehaviour
                 boostReward.SetActive(true);
             }
         }
+        */
 
         List<string> unitNames = getRewardUnitsNames(questStringToConfirm); 
         if (unitNames != null)
@@ -85,8 +89,11 @@ public class QuestConfirmPopUp : MonoBehaviour
     {
         GameSounds.Instance.PlayUiAdvanceSound();
 
-        GameStats.Instance.Mode = GameModes.Quest;
-        GameStats.Instance.SelectedQuestString = _questStringToConfirm;
+        GameStats gameStats = GameStats.Instance;
+
+        gameStats.Mode = GameModes.Quest;
+        gameStats.SelectedQuestString = _questStringToConfirm;
+        gameStats.QuestType = _questTypeToConfirm;
 
         SceneManager.LoadScene(_sceneToLoad);
     }
@@ -103,23 +110,35 @@ public class QuestConfirmPopUp : MonoBehaviour
 
         switch (questString)
         {
-            case nameof(GlobalSystemQuests.EnjinLegend122):
+            case nameof(ScoutQuests.EnjinLegend122):
                 rewardUnitsNames.Add("122");
                 break;
-            case nameof(GlobalSystemQuests.EnjinLegend123):
+            case nameof(ScoutQuests.EnjinLegend123):
                 rewardUnitsNames.Add("123");
                 break;
-            case nameof(GlobalSystemQuests.EnjinLegend124):
+            case nameof(ScoutQuests.EnjinLegend124):
                 rewardUnitsNames.Add("124");
                 break;
-            case nameof(GlobalSystemQuests.EnjinLegend125):
+            case nameof(ScoutQuests.EnjinLegend125):
                 rewardUnitsNames.Add("125");
                 break;
-            case nameof(GlobalSystemQuests.EnjinLegend126):
+            case nameof(ScoutQuests.EnjinLegend126):
                 rewardUnitsNames.Add("126");
                 break;
             case nameof(LegendUnitQuests.Shalwend):
                 rewardUnitsNames.Add("128");
+                break;
+            case nameof(ScoutQuests.SwoleCheese130):
+                rewardUnitsNames.Add("130");
+                break;
+            case nameof(ScoutQuests.SwoleEmerald131):
+                rewardUnitsNames.Add("131");
+                break;
+            case nameof(ScoutQuests.SwoleCrimson132):
+                rewardUnitsNames.Add("132");
+                break;
+            case nameof(ScoutQuests.SwoleDiamond133):
+                rewardUnitsNames.Add("133");
                 break;
             default:
                 rewardUnitsNames.Add("122");

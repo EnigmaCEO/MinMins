@@ -1,4 +1,5 @@
 ﻿using Enigma.CoreSystems;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,7 +7,9 @@ using UnityEngine.UI;
 
 public class MatchResultsPopUp : MonoBehaviour
 {
-    public Button DismissButton;
+    //public Button DismissButton;
+
+    public Action<bool> DismissButtonDown;
 
     [SerializeField] private Text _winnerText;
 
@@ -19,14 +22,24 @@ public class MatchResultsPopUp : MonoBehaviour
     [SerializeField] private Transform _rewardsGridContent;
 
     private War _warRef;
+    private bool _questWasCompleted = false;
 
     private void Awake()
     {
         _warRef = War.GetSceneInstance();
     }
 
-    public void Open()
+    public void OnDismissButtonDown()
     {
+        if (DismissButtonDown != null)
+        {
+            DismissButtonDown(_questWasCompleted);
+        }
+    }
+
+    public void Open(bool questWasCompleted)
+    {
+        _questWasCompleted = questWasCompleted;
         gameObject.SetActive(true);
     }
 

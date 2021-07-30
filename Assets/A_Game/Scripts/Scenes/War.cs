@@ -181,7 +181,8 @@ public class War : NetworkEntity
         _errorText.gameObject.SetActive(false);
         enableTimeLeftDisplay(false);
 
-        _matchResultsPopUp.DismissButton.onClick.AddListener(() => OnMatchResultsDismissButtonDown());
+        //_matchResultsPopUp.DismissButton.onClick.AddListener(() => OnMatchResultsDismissButtonDown());
+        _matchResultsPopUp.DismissButtonDown += onDismissButtonDown;
         _matchResultsPopUp.gameObject.SetActive(false);
 
         UnitTurnHighlightTransform.gameObject.SetActive(false);
@@ -212,7 +213,7 @@ public class War : NetworkEntity
             {
                 if (gameStats.SelectedLevelNumber > 0)
                 {
-                    _teamNameText2.text = GameInventory.Instance.GetGlobalSystemActiveQuestName();
+                    _teamNameText2.text = GameInventory.Instance.GetSelectedQuestName();
                 }
             }
             else
@@ -322,6 +323,11 @@ public class War : NetworkEntity
         GameNetwork.OnGuestPingSetCallback -= onGuestPingSet;
 
         GameCamera.OnMovementCompletedCallback -= onCameraMovementCompleted;
+
+        if (_matchResultsPopUp != null)
+        {
+            _matchResultsPopUp.DismissButtonDown -= onDismissButtonDown;
+        }
     }
 
     static public string GetTeamGridName(string teamName)
@@ -950,16 +956,16 @@ public class War : NetworkEntity
         }
     }
 
-    private void sendActionPopUpOpen(string unitName, UnitRoles unitType)
+    private void sendActionPopUpOpen(string unitName, UnitRoles unitRole)
     {
-        base.SendRpcToAll(nameof(receiveActionPopUpOpen), unitName, unitType);
+        base.SendRpcToAll(nameof(receiveActionPopUpOpen), unitName, unitRole);
     }
 
     [PunRPC]
-    private void receiveActionPopUpOpen(string unitName, MinMinUnit.Types unitType)
+    private void receiveActionPopUpOpen(string unitName, UnitRoles unitRole)
     {
         string teamInTurn = GameNetwork.GetTeamInTurn();
-        _actionPopUp.Open(unitName, unitType, (teamInTurn == _localPlayerTeam));
+        _actionPopUp.Open(unitName, unitRole, (teamInTurn == _localPlayerTeam));
     }
 
     private void sendActionPopUpClose()
@@ -1500,8 +1506,8 @@ public class War : NetworkEntity
         string unitsString = "";
         string selectedQuest = gameStats.SelectedQuestString;
 
-        if ((selectedQuest == nameof(GlobalSystemQuests.EnjinLegend122)) || (selectedQuest == nameof(GlobalSystemQuests.EnjinLegend123)) || (selectedQuest == nameof(GlobalSystemQuests.EnjinLegend124))
-            || (selectedQuest == nameof(GlobalSystemQuests.EnjinLegend125)) || (selectedQuest == nameof(GlobalSystemQuests.EnjinLegend126)))
+        if ((selectedQuest == nameof(ScoutQuests.EnjinLegend122)) || (selectedQuest == nameof(ScoutQuests.EnjinLegend123)) || (selectedQuest == nameof(ScoutQuests.EnjinLegend124))
+            || (selectedQuest == nameof(ScoutQuests.EnjinLegend125)) || (selectedQuest == nameof(ScoutQuests.EnjinLegend126)))
         {
             switch (level)
             {
@@ -1538,6 +1544,47 @@ public class War : NetworkEntity
                     break;
                 case 5:
                     unitsString = "126|125|122|123|124";
+                    break;
+            }
+        }
+        else if ((selectedQuest == nameof(ScoutQuests.SwoleCheese130)) || (selectedQuest == nameof(ScoutQuests.SwoleEmerald131))
+                || (selectedQuest == nameof(ScoutQuests.SwoleCrimson132)) || (selectedQuest == nameof(ScoutQuests.SwoleDiamond133)))
+        {
+            switch (level)
+            {
+                case 0:
+                    int randomTeamNumber = UnityEngine.Random.Range(1, 4); //1 to 3
+
+                    if (randomTeamNumber == 1)
+                    {
+                        unitsString = "25|1|12|9|6|"; 
+                    }
+                    else if (randomTeamNumber == 2)
+                    {
+                        unitsString = "50|59|40|44|63"; 
+                    }
+                    else if (randomTeamNumber == 3)
+                    {
+                        unitsString = "67|75|70|71|64"; 
+                    }
+
+                    _teamNameText2.text = LocalizationManager.GetTermTranslation("Quest Team #") + randomTeamNumber;
+
+                    break;
+                case 1:
+                    unitsString = "129|130|133|132|131";
+                    break;
+                case 2:
+                    unitsString = "130|131|129|133|132";
+                    break;
+                case 3:
+                    unitsString = "131|133|132|129|130";
+                    break;
+                case 4:
+                    unitsString = "132|133|130|131|129";
+                    break;
+                case 5:
+                    unitsString = "133|129|131|130|132";
                     break;
             }
         }
@@ -1781,6 +1828,11 @@ public class War : NetworkEntity
 
     private void finalizeUnitsExpAndPos(string unitsString, int exp)
     {
+        if (unitsString == "")
+        {
+            Debug.LogError(nameof(finalizeUnitsExpAndPos) + " -> Unit name is empty");
+        }
+
         string guestTeam = GameNetwork.TeamNames.GUEST;
 
         for (int i = 0; i < 5; i++)
@@ -1917,6 +1969,12 @@ public class War : NetworkEntity
         {
             string unitName = teamUnits[i];
 
+            if (unitName == "")
+            {
+                //Debug.Log("Unit name is empty at index: " + i);
+                continue;
+            }
+
             int unitExp = GameNetwork.GetAnyPlayerUnitPropertyAsInt(GameNetwork.UnitPlayerProperties.EXPERIENCE, unitName, teamName, networkPlayerId);
             int unitLevel = GameInventory.Instance.GetUnitExpData(unitExp).Level;
             gameNetwork.BuildUnitLevels(unitName, unitLevel, networkPlayerId, teamName);
@@ -1947,31 +2005,31 @@ public class War : NetworkEntity
             MinMinUnit unit = unitGameObject.GetComponent<MinMinUnit>();
 
             GameHacks gameHacks = GameHacks.Instance;
-            MinMinUnit.Types unitHackType = MinMinUnit.Types.None;
+            UnitRoles unitHackedRole = UnitRoles.None;
 
             if (GameHacks.Instance.RandomizeUnitTypes)
             {
-                unitHackType = (MinMinUnit.Types)UnityEngine.Random.Range(1, 6);
+                unitHackedRole = (UnitRoles)UnityEngine.Random.Range(1, 6);
             }
 
             if (gameHacks.SetHostUnitType.Enabled && (teamName == GameNetwork.TeamNames.HOST))
             {
-                unitHackType = gameHacks.SetHostUnitType.GetValueAsEnum<MinMinUnit.Types>();
+                unitHackedRole = gameHacks.SetHostUnitType.GetValueAsEnum<UnitRoles>();
             }
 
             if (gameHacks.SetGuestUnitType.Enabled && (teamName == GameNetwork.TeamNames.GUEST))
             {
-                unitHackType = gameHacks.SetGuestUnitType.GetValueAsEnum<MinMinUnit.Types>();
+                unitHackedRole = gameHacks.SetGuestUnitType.GetValueAsEnum<UnitRoles>();
             }
 
             if (gameHacks.SetAllUnitsType.Enabled)
             {
-                unitHackType = gameHacks.SetAllUnitsType.GetValueAsEnum<MinMinUnit.Types>();
+                unitHackedRole = gameHacks.SetAllUnitsType.GetValueAsEnum<UnitRoles>();
             }
 
-            if (unitHackType != MinMinUnit.Types.None)
+            if (unitHackedRole != UnitRoles.None)
             {
-                unit.SendDebugSettingsForWar(unitHackType);
+                unit.SendDebugSettingsForWar(unitHackedRole);
             }
 #endif
         }
@@ -1999,6 +2057,11 @@ public class War : NetworkEntity
         int itemNumber = 1;
         foreach (string unitName in hostUnits)
         {
+            if (unitName == "")
+            {
+                continue;
+            }
+
             // Setup team for loading screen
             Transform Team1ItemTransform = _readyPopup.transform.Find("panel1/ReadyTeam1/Viewport/Content/WarTeamGridItem" + itemNumber++);
             WarTeamGridItem Team1GridItem = Team1ItemTransform.GetComponent<WarTeamGridItem>();
@@ -2017,6 +2080,11 @@ public class War : NetworkEntity
         itemNumber = 1;
         foreach (string unitName in guestUnits)
         {
+            if (unitName == "")
+            {
+                continue;
+            }
+
             // Setup team for loading screen
             Transform Team2ItemTransform = _readyPopup.transform.Find("panel2/ReadyTeam2/Viewport/Content/WarTeamGridItem" + itemNumber++);
             WarTeamGridItem Team2GridItem = Team2ItemTransform.GetComponent<WarTeamGridItem>();
@@ -2077,7 +2145,7 @@ public class War : NetworkEntity
         sendActionPopUpClose();
     }
 
-    public void OnMatchResultsDismissButtonDown()
+    private void onDismissButtonDown(bool questWasCompleted)
     {
         GameSounds.Instance.PlayUiBackSound();
 
@@ -2088,17 +2156,29 @@ public class War : NetworkEntity
 
         if (gameStats.Mode == GameModes.Quest)
         {
-            if (gameStats.SelectedQuestString == nameof(LegendUnitQuests.Shalwend))
-            {
-                NetworkManager.LoadScene(GameConstants.Scenes.LEVELS);
-            }
-            else if (GameInventory.Instance.GetAllGlobalSystemQuestLevelsCompleted())
+            if (questWasCompleted)
             {
                 NetworkManager.LoadScene(GameConstants.Scenes.QUEST_SELECTION);
             }
             else
             {
-                NetworkManager.LoadScene(GameConstants.Scenes.GLOBAL_SYSTEM_QUEST);
+                //if (gameStats.SelectedQuestString == nameof(LegendUnitQuests.Shalwend))
+                //{
+                //    NetworkManager.LoadScene(GameConstants.Scenes.LEVELS);
+                //}
+                //else if (GameInventory.Instance.GetAllGlobalSystemQuestLevelsCompleted())
+                //{
+                //    NetworkManager.LoadScene(GameConstants.Scenes.QUEST_SELECTION);
+                //}
+
+                if (gameStats.QuestType == QuestTypes.Levels)
+                {
+                    NetworkManager.LoadScene(GameConstants.Scenes.LEVELS);
+                }
+                else
+                {
+                    NetworkManager.LoadScene(GameConstants.Scenes.SCOUT_QUEST);
+                }
             }
         }
         else
@@ -2575,7 +2655,7 @@ public class War : NetworkEntity
             _errorText.text = LocalizationManager.GetTermTranslation(GameNetwork.ServerResponseMessages.SERVER_ERROR);
             _errorText.gameObject.SetActive(true);
 
-            _matchResultsPopUp.Open();
+            _matchResultsPopUp.Open(false);
         }
         else if (NetworkManager.CheckInvalidServerResponse(response, nameof(onCompletedQuestResponse)))
         {
@@ -2594,7 +2674,7 @@ public class War : NetworkEntity
                 }
 
                 _errorText.gameObject.SetActive(true);
-                _matchResultsPopUp.Open();
+                _matchResultsPopUp.Open(false);
             }
         }
         else
@@ -2774,10 +2854,10 @@ public class War : NetworkEntity
                     }
                     else
                     {
-                        NetworkManager.Transaction(GameConstants.Transactions.COMPLETED_QUEST_ID, onCompletedQuestResponse);
-                        //grantQuestRewards();
+                        //NetworkManager.Transaction(GameConstants.Transactions.COMPLETED_QUEST_ID, onCompletedQuestResponse);
+                        grantQuestRewards();
                         //_questCompletePopUp.Open(_matchResultsPopUp);
-                        questCompletedTransactionSent = true;
+                        //questCompletedTransactionSent = true;
                     }
                 }
             }
@@ -2785,7 +2865,7 @@ public class War : NetworkEntity
 
         if(!questCompletedTransactionSent)
         {
-            _matchResultsPopUp.Open();
+            _matchResultsPopUp.Open(false);
         }
     }
 
@@ -2798,19 +2878,19 @@ public class War : NetworkEntity
 
         switch (selectedQuestString)
         {
-            case nameof(GlobalSystemQuests.EnjinLegend122):
+            case nameof(ScoutQuests.EnjinLegend122):
                 gameInventory.HandleAddUnitOrExp("122");
                 break;
-            case nameof(GlobalSystemQuests.EnjinLegend123):
+            case nameof(ScoutQuests.EnjinLegend123):
                 gameInventory.HandleAddUnitOrExp("123");
                 break;
-            case nameof(GlobalSystemQuests.EnjinLegend124):
+            case nameof(ScoutQuests.EnjinLegend124):
                 gameInventory.HandleAddUnitOrExp("124");
                 break;
-            case nameof(GlobalSystemQuests.EnjinLegend125):
+            case nameof(ScoutQuests.EnjinLegend125):
                 gameInventory.HandleAddUnitOrExp("125");
                 break;
-            case nameof(GlobalSystemQuests.EnjinLegend126):
+            case nameof(ScoutQuests.EnjinLegend126):
                 gameInventory.HandleAddUnitOrExp("126");
                 break;
             case nameof(LegendUnitQuests.Shalwend):
@@ -2920,6 +3000,11 @@ public class War : NetworkEntity
         int total = 0;
         foreach (string unitName in teamUnitsForTotalCalculus)
         {
+            if (unitName == "")
+            {
+                continue;
+            }
+
             total += GameNetwork.GetUnitRoomPropertyAsInt(unitRoomProperty, teamName, unitName);
         }
 
