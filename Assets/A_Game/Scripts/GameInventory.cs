@@ -66,13 +66,13 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
     [SerializeField] private int _tierGold_unitsAmount = 10;
 
     [SerializeField] private int _legend_firstUnitNumber = 100;
-    [SerializeField] private int _legend_lastUnitNumer = 133;
+    [SerializeField] private int _legend_lastUnitNumer = 134;
 
     [SerializeField] private int _demonFirstUnitNumber = 110;
     [SerializeField] private int _demonLastUnitNumber = 114;
 
-    [SerializeField] private int _swolesomeFirstUnitNumber = 129;
-    [SerializeField] private int _swolesomeLastUnitNumber = 133;
+    [SerializeField] private int _narwhalFirstUnitNumber = 129;
+    [SerializeField] private int _narwhalLastUnitNumber = 133;
 
     [SerializeField] private float _tierBronze_GroupRarity = 0.5f;
     [SerializeField] private float _tierSilver_GroupRarity = 0.3f;
@@ -94,7 +94,7 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
     private List<string> _legend_units = new List<string>();
 
     //private List<UnitRarity> _unitSpecialRarities = new List<UnitRarity>();
-    private Dictionary<LegendUnitQuests, int> _maxLevelLegendUnitQuest = new Dictionary<LegendUnitQuests, int>();
+    private Dictionary<SerialQuests, int> _maxLevelBySerialQuest = new Dictionary<SerialQuests, int>();
 
     private Dictionary<string, double> _rarityByUnit = new Dictionary<string, double>();
     private Dictionary<string, string> _unitNameByToken = new Dictionary<string, string>();
@@ -328,21 +328,24 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
                 questName += "126";
                 break;
 
-            case nameof(ScoutQuests.SwoleCheese130):
-                questName += "130";
+            case nameof(ScoutQuests.NarwhalBlue):
+                questName = "Blue Narwhal";
                 break;
-            case nameof(ScoutQuests.SwoleEmerald131):
-                questName += "131";
+            case nameof(ScoutQuests.NarwhalCheese):
+                questName = "Cheese Narwhal";
                 break;
-            case nameof(ScoutQuests.SwoleCrimson132):
-                questName += "132";
+            case nameof(ScoutQuests.NarwhalEmerald):
+                questName = "Emerald Narwhal";
                 break;
-            case nameof(ScoutQuests.SwoleDiamond133):
-                questName += "133";
+            case nameof(ScoutQuests.NarwhalCrimson):
+                questName = "Crimson Narwhal";
                 break;
 
-            case nameof(LegendUnitQuests.Shalwend):
-                questName += "Shalwend";
+            case nameof(SerialQuests.ShalwendWargod):
+                questName = "Wargod Shalwend";
+                break;
+            case nameof(SerialQuests.ShalwendDeadlyKnight):
+                questName = "Deadly Knight Shalwend";
                 break;
         }
 
@@ -370,19 +373,22 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
             case nameof(ScoutQuests.EnjinLegend126):
                 rewardImagePath = ResourcePaths.UNIT_IMAGES + "126";
                 break;
-            case nameof(LegendUnitQuests.Shalwend):
+            case nameof(SerialQuests.ShalwendWargod):
                 rewardImagePath = ResourcePaths.UNIT_IMAGES + "128";
                 break;
-            case nameof(ScoutQuests.SwoleCheese130):
+            case nameof(SerialQuests.ShalwendDeadlyKnight):
+                rewardImagePath = ResourcePaths.UNIT_IMAGES + "134";
+                break;
+            case nameof(ScoutQuests.NarwhalBlue):
                 rewardImagePath = ResourcePaths.UNIT_IMAGES + "130";
                 break;
-            case nameof(ScoutQuests.SwoleEmerald131):
+            case nameof(ScoutQuests.NarwhalCheese):
                 rewardImagePath = ResourcePaths.UNIT_IMAGES + "131";
                 break;
-            case nameof(ScoutQuests.SwoleCrimson132):
+            case nameof(ScoutQuests.NarwhalEmerald):
                 rewardImagePath = ResourcePaths.UNIT_IMAGES + "132";
                 break;
-            case nameof(ScoutQuests.SwoleDiamond133):
+            case nameof(ScoutQuests.NarwhalCrimson):
                 rewardImagePath = ResourcePaths.UNIT_IMAGES + "133";
                 break;
             default:
@@ -430,7 +436,7 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
 
     public bool GetAllSwolesomeQuestLevelsCompleted()
     {
-        return getQuestLevelsCompleted(GameConfig.Instance.SwolesomeMaxQuestLevel, GameInventory.Instance.GetSwolesomeActiveQuestString());
+        return getQuestLevelsCompleted(GameConfig.Instance.NarwhalMaxQuestLevel, GameInventory.Instance.GetSwolesomeActiveQuestString());
     }
 
     private bool getQuestLevelsCompleted(int maxQuestLevel, string questString)
@@ -483,13 +489,17 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
             GameConfig gameConfig = GameConfig.Instance;
             int maxQuestLevel = gameConfig.MaxQuestLevel;
 
-            if (questString == nameof(LegendUnitQuests.Shalwend))
+            if (questString == nameof(SerialQuests.ShalwendWargod))
             {
-                maxQuestLevel = GetLegendUnitQuestMaxLevel(LegendUnitQuests.Shalwend);
+                maxQuestLevel = GetSerialQuestMaxLevel(SerialQuests.ShalwendWargod);
             }
-            else if (questString.Contains("Swole"))
+            else if (questString == nameof(SerialQuests.ShalwendDeadlyKnight))
             {
-                maxQuestLevel = gameConfig.SwolesomeMaxQuestLevel;
+                maxQuestLevel = GetSerialQuestMaxLevel(SerialQuests.ShalwendDeadlyKnight);
+            }
+            else if (questString.Contains("Narwhal"))
+            {
+                maxQuestLevel = gameConfig.NarwhalMaxQuestLevel;
             }
 
             for (int i = 1; i <= maxQuestLevel; i++)
@@ -511,14 +521,15 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
     private void initializeMaxLevelsByLevelUnitQuest()
     {
         //_maxLevelByQuest.Add(Quests.Swissborg, 4);
-        _maxLevelLegendUnitQuest.Add(LegendUnitQuests.Shalwend, 4);
+        _maxLevelBySerialQuest.Add(SerialQuests.ShalwendWargod, 4);
+        _maxLevelBySerialQuest.Add(SerialQuests.ShalwendDeadlyKnight, 4);
     }
 
-    public int GetLegendUnitQuestMaxLevel(LegendUnitQuests legendUnitQuest)
+    public int GetSerialQuestMaxLevel(SerialQuests serialQuest)
     {
-        if (_maxLevelLegendUnitQuest.ContainsKey(legendUnitQuest))
+        if (_maxLevelBySerialQuest.ContainsKey(serialQuest))
         {
-            return _maxLevelLegendUnitQuest[legendUnitQuest];
+            return _maxLevelBySerialQuest[serialQuest];
         }
         else
         {
@@ -1097,14 +1108,15 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
         linkUnitAndToken("125", EnjinTokenKeys.ENJIN_BRAD);
         linkUnitAndToken("126", EnjinTokenKeys.ENJIN_LIZZ);
 
-        linkUnitAndToken("129", EnjinTokenKeys.BLUE_NARWHAL);
-        linkUnitAndToken("130", EnjinTokenKeys.CHEESE_NARWHAL);
-        linkUnitAndToken("131", EnjinTokenKeys.EMERALD_NARWHAL);
-        linkUnitAndToken("132", EnjinTokenKeys.CRIMSON_NARWHAL);
-        linkUnitAndToken("133", EnjinTokenKeys.DIAMOND_NARWHAL);
+        linkUnitAndToken("129", EnjinTokenKeys.NARWHAL_BLUE);
+        linkUnitAndToken("130", EnjinTokenKeys.NARWHAL_CHEESE);
+        linkUnitAndToken("131", EnjinTokenKeys.NARWHAL_EMERALD);
+        linkUnitAndToken("132", EnjinTokenKeys.NARWHAL_CRIMSON);
+        linkUnitAndToken("133", EnjinTokenKeys.NARWHAL_DIAMOND);
 
         linkUnitAndToken("127", EnjinTokenKeys.SWISSBORG_CYBORG);
-        linkUnitAndToken("128", EnjinTokenKeys.SHALWEND);
+        linkUnitAndToken("128", EnjinTokenKeys.SHALWEND_WARGOD);
+        linkUnitAndToken("134", EnjinTokenKeys.SHALWEND_DEADLY_KNIGHT);
     }
 
     private void linkUnitAndToken(string unitName, string tokenName)
@@ -1175,7 +1187,7 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
         populateUnitList(_tierGold_units, _legend_firstUnitNumber, _legend_lastUnitNumer);
         populateUnitList(_legend_units, _legend_firstUnitNumber, _legend_lastUnitNumer);
         populateUnitList(_demon_units, _demonFirstUnitNumber, _demonLastUnitNumber);
-        populateUnitList(_swolesome_units, _swolesomeFirstUnitNumber, _swolesomeLastUnitNumber);
+        populateUnitList(_swolesome_units, _narwhalFirstUnitNumber, _narwhalLastUnitNumber);
     }
 
     public void populateUnitList(List<string> unitList, int firstUnitNumber, int lastUnitNumber)
@@ -1280,9 +1292,9 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
             }
         }
 
-        foreach (LegendUnitQuests quest in Enum.GetValues(typeof(LegendUnitQuests)))
+        foreach (SerialQuests quest in Enum.GetValues(typeof(SerialQuests)))
         {
-            if (quest != LegendUnitQuests.None)
+            if (quest != SerialQuests.None)
             {
                 string questString = quest.ToString();
 

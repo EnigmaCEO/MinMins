@@ -61,9 +61,11 @@ MonoBehaviour:
   _tierSilver_unitsAmount: 30
   _tierGold_unitsAmount: 10
   _legend_firstUnitNumber: 100
-  _legend_lastUnitNumer: 133
+  _legend_lastUnitNumer: 134
   _demonFirstUnitNumber: 110
   _demonLastUnitNumber: 114
+  _swolesomeFirstUnitNumber: 129
+  _swolesomeLastUnitNumber: 133
   _tierBronze_GroupRarity: 0.7
   _tierSilver_GroupRarity: 0.2
   _tierGold_GroupRarity: 0.1

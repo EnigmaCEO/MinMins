@@ -131,15 +131,22 @@ namespace GameConstants
         public const string GOD_TANK_2 = "god_tank_2";
 
         public const string SWISSBORG_CYBORG = "swissborg_cyborg";
-        public const string SHALWEND = "shalwend";
+        public const string SHALWEND_WARGOD = "shalwend_wargod";
+        public const string SHALWEND_DEADLY_KNIGHT = "shalwend_deadlyknight";
 
-        public const string BLUE_NARWHAL = "quest_bluenarwhal";
-        public const string CHEESE_NARWHAL = "quest_cheesenarwhal";
-        public const string EMERALD_NARWHAL = "quest_emeraldnarwhal";
-        public const string CRIMSON_NARWHAL = "quest_crimsonnarwhal";
-        public const string DIAMOND_NARWHAL = "quest_diamond_narwhal";
+        public const string NARWHAL_BLUE = "narwhal_blue";
+        public const string NARWHAL_CHEESE = "nawhal_cheese";
+        public const string NARWHAL_EMERALD = "narwhal_emerald";
+        public const string NARWHAL_CRIMSON = "narwhal_crimson";
+        public const string NARWHAL_DIAMOND = "narwhal_diamond";
 
-        public const string QUEST_SHALWEND = "quest_shalwend";
+        public const string QUEST_BLUE_NARWHAL = "quest_bluenarwhal";
+        public const string QUEST_CHEESE_NARWHAL = "quest_cheesenarwhal";
+        public const string QUEST_EMERALD_NARWHAL = "quest_emeraldnarwhal";
+        public const string QUEST_CRIMSON_NARWHAL = "quest_crimsonnarwhal";
+
+        public const string QUEST_WARGOD_SHALWEND = "quest_shalwend";
+        public const string QUEST_DEADLY_KNIGHT_SHALWEND = "quest_deadlyknight";
 
         /*
         public const string ENJIN_DEFENSE_ORE_ITEM_1 = "enjin_defense_ore_1";

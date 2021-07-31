@@ -14,7 +14,7 @@ namespace GameEnums
     {
         None,
         Scout,
-        Levels
+        Serial
     }
 
     public enum ScoutQuests
@@ -28,17 +28,18 @@ namespace GameEnums
         EnjinLegend125,
         EnjinLegend126, 
 
-        SwoleCheese130,
-        SwoleEmerald131,
-        SwoleCrimson132,
-        SwoleDiamond133
+        NarwhalBlue,
+        NarwhalCheese,
+        NarwhalEmerald,
+        NarwhalCrimson
     }
 
-    public enum LegendUnitQuests
+    public enum SerialQuests
     {
         None = 0,
 
-        Shalwend,
+        ShalwendWargod,
+        ShalwendDeadlyKnight
         //Swissborg,
     }
 

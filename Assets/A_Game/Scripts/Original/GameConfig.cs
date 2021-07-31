@@ -23,7 +23,7 @@ public class GameConfig : SingletonPersistentPrefab<GameConfig>
     [SerializeField] public bool SendToShopAutomaticallyOnUnitsNeeded = false;
 
     [SerializeField] public int MaxQuestLevel = 5;
-    [SerializeField] public int SwolesomeMaxQuestLevel = 5;
+    [SerializeField] public int NarwhalMaxQuestLevel = 5;
     [SerializeField] public int QuestUnitExp = 150;
 
     public Vector2 GetRandomBattlefieldPosition()

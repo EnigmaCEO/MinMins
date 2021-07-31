@@ -261,8 +261,8 @@ public class ScoutQuestManager : MonoBehaviour
         {
             gameStats.QuestUnits = new List<string>() { "122", "123", "124", "125", "126" };
         }
-        else if ((selectedQuestString == nameof(ScoutQuests.SwoleCheese130)) || (selectedQuestString == nameof(ScoutQuests.SwoleEmerald131))
-            || (selectedQuestString == nameof(ScoutQuests.SwoleCrimson132)) || (selectedQuestString == nameof(ScoutQuests.SwoleDiamond133)))
+        else if ((selectedQuestString == nameof(ScoutQuests.NarwhalBlue)) || (selectedQuestString == nameof(ScoutQuests.NarwhalCheese))
+            || (selectedQuestString == nameof(ScoutQuests.NarwhalEmerald)) || (selectedQuestString == nameof(ScoutQuests.NarwhalCrimson)))
         {
             gameStats.QuestUnits = new List<string>() { "129", "130", "131", "132", "133" };
         }

@@ -6,17 +6,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class QuestSelection : MonoBehaviour
 {
     [SerializeField] GameObject _globalSystemQuestButton;
 
-    [SerializeField] GameObject _swoleCheeseQuestButton;
-    [SerializeField] GameObject _swoleEmeraldQuestButton;
-    [SerializeField] GameObject _swoleCrimsonQuestButton;
-    [SerializeField] GameObject _swoleDiamondQuestButton;
+    [SerializeField] GameObject _narwhalBlueQuestButton;
+    [SerializeField] GameObject _narwhalCheeseQuestButton;
+    [SerializeField] GameObject _narwwhalEmeraldQuestButton;
+    [SerializeField] GameObject _narwhalCrimsonQuestButton;
 
-    [SerializeField] GameObject _shalwendQuestButton;
+    [SerializeField] GameObject _shalwendWargodQuestButton; 
+    [SerializeField] GameObject _shalwendDeadlyKnightQuestButton;
+
     [SerializeField] GameObject _questProgressPanel;
 
     [SerializeField] private Image _questProgressFill;
@@ -36,41 +39,49 @@ public class QuestSelection : MonoBehaviour
 
         _questProgressPanel.SetActive(false);
         _globalSystemQuestButton.SetActive(false);
-        _shalwendQuestButton.SetActive(false);
 
-        bool shalwendQuestHackEnabled = false;
+        _globalSystemQuestButton.GetComponent<Button>().onClick.AddListener(() => { onQuestButtonDown(GameInventory.Instance.GetGlobalSystemActiveQuestString(), QuestTypes.Scout); });  
 
-        GameHacks gameHacks = GameHacks.Instance;
+        setNonGlobalQuestButton(_shalwendWargodQuestButton, EnjinTokenKeys.QUEST_WARGOD_SHALWEND, nameof(SerialQuests.ShalwendWargod), QuestTypes.Serial);
+        setNonGlobalQuestButton(_shalwendDeadlyKnightQuestButton, EnjinTokenKeys.QUEST_DEADLY_KNIGHT_SHALWEND, nameof(SerialQuests.ShalwendDeadlyKnight), QuestTypes.Serial);
+
+        setNonGlobalQuestButton(_narwhalBlueQuestButton, EnjinTokenKeys.QUEST_BLUE_NARWHAL, nameof(ScoutQuests.NarwhalBlue), QuestTypes.Scout);
+        setNonGlobalQuestButton(_narwhalCheeseQuestButton, EnjinTokenKeys.QUEST_CHEESE_NARWHAL, nameof(ScoutQuests.NarwhalCheese), QuestTypes.Scout);
+        setNonGlobalQuestButton(_narwwhalEmeraldQuestButton, EnjinTokenKeys.QUEST_EMERALD_NARWHAL, nameof(ScoutQuests.NarwhalEmerald), QuestTypes.Scout);
+        setNonGlobalQuestButton(_narwhalCrimsonQuestButton, EnjinTokenKeys.QUEST_CRIMSON_NARWHAL, nameof(ScoutQuests.NarwhalCrimson), QuestTypes.Scout);
+    }
+
+    private void setNonGlobalQuestButton(GameObject button, string tokenKey, string questString, QuestTypes questType)
+    {
+        bool allEnjinTokenQuestsEnabled = false;
+
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
-        if (gameHacks.SetLegendUnitServerQuest.Enabled)
+        if (GameHacks.Instance.EnableAllEnjinTokenQuests)
         {
-            if (gameHacks.SetLegendUnitServerQuest.GetValueAsEnum<LegendUnitQuests>() == LegendUnitQuests.Shalwend)
-            {
-                shalwendQuestHackEnabled = true;
-            }
+            allEnjinTokenQuestsEnabled = true;
         }
 #endif
 
-        if (shalwendQuestHackEnabled || !GameInventory.Instance.GetQuestCompleted(nameof(LegendUnitQuests.Shalwend)))
-        {
-            if (shalwendQuestHackEnabled || GameNetwork.Instance.GetIsTokenAvailable(EnjinTokenKeys.QUEST_SHALWEND))
-            {
-                _shalwendQuestButton.SetActive(true);
-            }
-        }
+        bool tokenAvailable = GameNetwork.Instance.GetIsTokenAvailable(tokenKey);
+        bool questCompleted = GameInventory.Instance.GetQuestCompleted(questString);
 
-        handleSwolesomeQuestVisibility(_swoleCheeseQuestButton, EnjinTokenKeys.BLUE_NARWHAL, ScoutQuests.SwoleCheese130);
-        handleSwolesomeQuestVisibility(_swoleEmeraldQuestButton, EnjinTokenKeys.CHEESE_NARWHAL, ScoutQuests.SwoleEmerald131);
-        handleSwolesomeQuestVisibility(_swoleCrimsonQuestButton, EnjinTokenKeys.EMERALD_NARWHAL, ScoutQuests.SwoleCrimson132);
-        handleSwolesomeQuestVisibility(_swoleDiamondQuestButton, EnjinTokenKeys.CRIMSON_NARWHAL, ScoutQuests.SwoleDiamond133);
+        button.GetComponent<Button>().onClick.AddListener(() => { onQuestButtonDown(questString, questType); });
+
+        button.SetActive(allEnjinTokenQuestsEnabled || (tokenAvailable && !questCompleted));
     }
 
-    private void handleSwolesomeQuestVisibility(GameObject button, string tokenKey, ScoutQuests swolesomeQuest)
+    private void onQuestButtonDown(string questString, QuestTypes questType)
     {
-        bool tokenAvailable = GameNetwork.Instance.GetIsTokenAvailable(tokenKey);
-        bool questCompleted = GameInventory.Instance.GetQuestCompleted(swolesomeQuest.ToString());
+        GameSounds.Instance.PlayUiAdvanceSound();
 
-        button.SetActive(tokenAvailable && !questCompleted);
+        string sceneToLoad = Scenes.LEVELS;
+
+        if (questType == QuestTypes.Scout)
+        {
+            sceneToLoad = Scenes.SCOUT_QUEST;
+        }
+
+        _questConfirmPopUp.Open(questString, sceneToLoad, questType);
     }
 
     public void OnBackButtonDown()
@@ -134,14 +145,14 @@ public class QuestSelection : MonoBehaviour
         ScoutQuests swolesomeActiveQuest = gameInventory.GetSwolesomeActiveQuest();
         Sprite rewardSprite = gameInventory.GetQuestRewardSprite(swolesomeActiveQuest.ToString());
 
-        _swoleCrimsonQuestButton.transform.Find("QuestName").GetComponent<Text>().text = gameInventory.GetSwolesomeActiveQuestName();
+        _narwwhalEmeraldQuestButton.transform.Find("QuestName").GetComponent<Text>().text = gameInventory.GetSwolesomeActiveQuestName();
 
         if (rewardSprite != null)
         {
-            _swoleCrimsonQuestButton.transform.Find("icon").GetComponent<Image>().sprite = rewardSprite;
+            _narwwhalEmeraldQuestButton.transform.Find("icon").GetComponent<Image>().sprite = rewardSprite;
         }
 
-        _swoleCrimsonQuestButton.SetActive(true);
+        _narwwhalEmeraldQuestButton.SetActive(true);
     }
 
     private void onGetQuestData(JSONNode response)
@@ -241,41 +252,5 @@ public class QuestSelection : MonoBehaviour
             handleGlobalSystemQuestPanelAndButtonVisibility(points);
         }
 #endif
-    }
-
-    public void GlobalSystemButtonDown()
-    {
-        GameSounds.Instance.PlayUiAdvanceSound();
-        _questConfirmPopUp.Open(GameInventory.Instance.GetGlobalSystemActiveQuestString(), GameConstants.Scenes.SCOUT_QUEST, QuestTypes.Scout);
-    }
-
-    public void ShalwendQuestButtonDown()
-    {
-        GameSounds.Instance.PlayUiAdvanceSound();
-        _questConfirmPopUp.Open(nameof(LegendUnitQuests.Shalwend), GameConstants.Scenes.LEVELS, QuestTypes.Levels);
-    }
-
-    public void SwoleCheeseQuestButtonDown()
-    {
-        GameSounds.Instance.PlayUiAdvanceSound();
-        _questConfirmPopUp.Open(ScoutQuests.SwoleCheese130.ToString(), GameConstants.Scenes.SCOUT_QUEST, QuestTypes.Scout); ;
-    }
-
-    public void SwoleEmeraldQuestButtonDown()
-    {
-        GameSounds.Instance.PlayUiAdvanceSound();
-        _questConfirmPopUp.Open(ScoutQuests.SwoleEmerald131.ToString(), GameConstants.Scenes.SCOUT_QUEST, QuestTypes.Scout);
-    }
-
-    public void SwoleCrimsonQuestButtonDown()
-    {
-        GameSounds.Instance.PlayUiAdvanceSound();
-        _questConfirmPopUp.Open(ScoutQuests.SwoleCrimson132.ToString(), GameConstants.Scenes.SCOUT_QUEST, QuestTypes.Scout);
-    }
-
-    public void SwoleDiamonQuestButtonDown()
-    {
-        GameSounds.Instance.PlayUiAdvanceSound();
-        _questConfirmPopUp.Open(ScoutQuests.SwoleDiamond133.ToString(), GameConstants.Scenes.SCOUT_QUEST, QuestTypes.Scout);
     }
 }

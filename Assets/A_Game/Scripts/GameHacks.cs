@@ -7,7 +7,7 @@ using UnityEngine;
 public class GameHacks : SingletonPersistentPrefab<GameHacks>
 {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
-    public bool EnableAllEnjinTokens;
+    public bool EnableAllEnjinUnitTokens;
     public bool ForceEnjinRewardOnChest;
     public bool HideClouds;
     public bool BuyAndroid;
@@ -18,6 +18,7 @@ public class GameHacks : SingletonPersistentPrefab<GameHacks>
     public bool AllEnjinTeamBoostTokens;
     public bool EnjinLinked;
     public bool TreatBattleResultsAsPrivateMatch;
+    public bool EnableAllEnjinTokenQuests;
 
     public bool UseOfflineTestWithdrawnItems = false;
     public List<string> OfflineTestWithdrawnTokenKeys = new List<string>();
@@ -30,7 +31,6 @@ public class GameHacks : SingletonPersistentPrefab<GameHacks>
     public ValueHack ForceTeamBoostReward = new ValueHack("True");
     public ValueHack TeamBoostRewardCategory = new ValueHack("Size");
     public ValueHack SetGlobalSystemServerQuest = new ValueHack("EnjinLegend122"); 
-    public ValueHack SetLegendUnitServerQuest = new ValueHack("Shalwend");
     public ValueHack SizeBonus = new ValueHack("10");
     public ValueHack SetTeamBoostBonuses = new ValueHack("5");
     public ValueHack BuyResult = new ValueHack("True");

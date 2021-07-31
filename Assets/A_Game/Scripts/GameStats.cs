@@ -55,11 +55,11 @@ public class GameStats : SingletonPersistentPrefab<GameStats>
         }
     }
 
-    public LegendUnitQuests SelectedLegendUnitQuest
+    public SerialQuests SelectedSerialQuest
     {
         get
         {
-            return (LegendUnitQuests)Enum.Parse(typeof(LegendUnitQuests), SelectedQuestString);
+            return (SerialQuests)Enum.Parse(typeof(SerialQuests), SelectedQuestString);
         }
 
         set

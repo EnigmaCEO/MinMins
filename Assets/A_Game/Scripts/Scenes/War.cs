@@ -1547,8 +1547,8 @@ public class War : NetworkEntity
                     break;
             }
         }
-        else if ((selectedQuest == nameof(ScoutQuests.SwoleCheese130)) || (selectedQuest == nameof(ScoutQuests.SwoleEmerald131))
-                || (selectedQuest == nameof(ScoutQuests.SwoleCrimson132)) || (selectedQuest == nameof(ScoutQuests.SwoleDiamond133)))
+        else if ((selectedQuest == nameof(ScoutQuests.NarwhalBlue)) || (selectedQuest == nameof(ScoutQuests.NarwhalCheese))
+                || (selectedQuest == nameof(ScoutQuests.NarwhalEmerald)) || (selectedQuest == nameof(ScoutQuests.NarwhalCrimson)))
         {
             switch (level)
             {
@@ -1588,21 +1588,39 @@ public class War : NetworkEntity
                     break;
             }
         }
-        else if(selectedQuest == nameof(LegendUnitQuests.Shalwend))
+        else if(selectedQuest == nameof(SerialQuests.ShalwendWargod))
         {
             switch (level)
             {
                 case 1:
-                    unitsString = "27|31|4|10|5"; //27, bomber, 31 Destroyer, 4 Tank, 10 healer, 5 Scout
+                    unitsString = "1|2|3|4|5";  //bomber, destroyer, healer, tank, scout
                     break;
                 case 2:
-                    unitsString = "60|57|62|51|67"; //60 bomber, 57 scout, 62 healer, 51 destroyer, 67 Tank
+                    unitsString = "6|8|10|14|18";  //destroyer, bomber, healer, tank, scout
                     break;
                 case 3:
-                    unitsString = "72|75|80|78|77"; // 72 Tank, 75 Healer, 80 Destroyer, 78 scout, 77 Bomber
+                    unitsString = "23|25|30|42|50"; //scout, healer, destroyer, bomber
                     break;
                 case 4:
-                    unitsString = "125|116|104|109|102"; //125 Healer, 116 Tank, 104 Destroyer, 109 bomber, 102 Scout 
+                    unitsString = "72|77|100|68|69"; //tank, bomber, healer, scout, destroyer
+                    break;
+            }
+        }
+        else if (selectedQuest == nameof(SerialQuests.ShalwendDeadlyKnight))
+        {
+            switch (level)
+            {
+                case 1:
+                    unitsString = "27|31|4|10|5";
+                    break;
+                case 2:
+                    unitsString = "60|57|62|51|67";
+                    break;
+                case 3:
+                    unitsString = "72|75|80|78|77";
+                    break;
+                case 4:
+                    unitsString = "125|116|104|109|102";
                     break;
             }
         }
@@ -2171,7 +2189,7 @@ public class War : NetworkEntity
                 //    NetworkManager.LoadScene(GameConstants.Scenes.QUEST_SELECTION);
                 //}
 
-                if (gameStats.QuestType == QuestTypes.Levels)
+                if (gameStats.QuestType == QuestTypes.Serial)
                 {
                     NetworkManager.LoadScene(GameConstants.Scenes.LEVELS);
                 }
@@ -2826,7 +2844,7 @@ public class War : NetworkEntity
         }
 
         _matchResultsPopUp.SetValues(_matchLocalData, boostGroupReward);
-        bool questCompletedTransactionSent = false;
+        bool questCompleted = false;
 
         if (_isVictory)
         {
@@ -2844,7 +2862,6 @@ public class War : NetworkEntity
                 }
 
                 if (gameInventory.GetSelectedQuestCompleted()) 
-                //if (levelCompleted == gameInventory.GetActiveQuestMaxLevel())
                 {
                     if (gameHacks.CompleteQuestOffline)
                     {
@@ -2856,14 +2873,15 @@ public class War : NetworkEntity
                     {
                         //NetworkManager.Transaction(GameConstants.Transactions.COMPLETED_QUEST_ID, onCompletedQuestResponse);
                         grantQuestRewards();
-                        //_questCompletePopUp.Open(_matchResultsPopUp);
-                        //questCompletedTransactionSent = true;
+                        _questCompletePopUp.Open(_matchResultsPopUp);                
                     }
+
+                    questCompleted = true;
                 }
             }
         }
-
-        if(!questCompletedTransactionSent)
+        
+        if(!questCompleted)
         {
             _matchResultsPopUp.Open(false);
         }
@@ -2894,20 +2912,20 @@ public class War : NetworkEntity
                 gameInventory.HandleAddUnitOrExp("126");
                 break;
 
-            case nameof(ScoutQuests.SwoleCheese130):
+            case nameof(ScoutQuests.NarwhalBlue):
                 gameInventory.HandleAddUnitOrExp("130");
                 break;
-            case nameof(ScoutQuests.SwoleEmerald131):
+            case nameof(ScoutQuests.NarwhalCheese):
                 gameInventory.HandleAddUnitOrExp("131");
                 break;
-            case nameof(ScoutQuests.SwoleCrimson132):
+            case nameof(ScoutQuests.NarwhalEmerald):
                 gameInventory.HandleAddUnitOrExp("132");
                 break;
-            case nameof(ScoutQuests.SwoleDiamond133):
+            case nameof(ScoutQuests.NarwhalCrimson):
                 gameInventory.HandleAddUnitOrExp("133");
                 break;
 
-            case nameof(LegendUnitQuests.Shalwend):
+            case nameof(SerialQuests.ShalwendWargod):
                 gameInventory.HandleAddUnitOrExp("128");
                 break;
         }

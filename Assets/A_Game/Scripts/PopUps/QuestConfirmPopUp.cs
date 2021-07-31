@@ -125,19 +125,22 @@ public class QuestConfirmPopUp : MonoBehaviour
             case nameof(ScoutQuests.EnjinLegend126):
                 rewardUnitsNames.Add("126");
                 break;
-            case nameof(LegendUnitQuests.Shalwend):
+            case nameof(SerialQuests.ShalwendWargod):
                 rewardUnitsNames.Add("128");
                 break;
-            case nameof(ScoutQuests.SwoleCheese130):
+            case nameof(SerialQuests.ShalwendDeadlyKnight):
+                rewardUnitsNames.Add("134");
+                break;
+            case nameof(ScoutQuests.NarwhalBlue):
                 rewardUnitsNames.Add("130");
                 break;
-            case nameof(ScoutQuests.SwoleEmerald131):
+            case nameof(ScoutQuests.NarwhalCheese):
                 rewardUnitsNames.Add("131");
                 break;
-            case nameof(ScoutQuests.SwoleCrimson132):
+            case nameof(ScoutQuests.NarwhalEmerald):
                 rewardUnitsNames.Add("132");
                 break;
-            case nameof(ScoutQuests.SwoleDiamond133):
+            case nameof(ScoutQuests.NarwhalCrimson):
                 rewardUnitsNames.Add("133");
                 break;
             default:

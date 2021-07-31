@@ -57,10 +57,10 @@ public class Levels : EnigmaScene
         }
         else if (mode == GameModes.Quest)
         {
-            if (gameStats.SelectedLegendUnitQuest == LegendUnitQuests.Shalwend)
+            //if (gameStats.SelectedSerialQuest == SerialQuests.ShalwendWargod)
             {
                 levelsLenght = gameInventory.GetHighestQuestLevelCompletedAmount() + 1;
-                int questMaxLevel = gameInventory.GetLegendUnitQuestMaxLevel(LegendUnitQuests.Shalwend);
+                int questMaxLevel = gameInventory.GetSerialQuestMaxLevel(gameStats.SelectedSerialQuest);
 
                 _title.text = gameInventory.GetQuestName(gameStats.SelectedQuestString);
 
@@ -86,9 +86,9 @@ int selectedQuestLastLevel = 0;
 
         if (mode == GameModes.Quest)
         {
-            if (selectedQuestString == nameof(LegendUnitQuests.Shalwend))
+            if (selectedQuestString == nameof(SerialQuests.ShalwendWargod))
             {
-                selectedQuestLastLevel = gameInventory.GetLegendUnitQuestMaxLevel(LegendUnitQuests.Shalwend);
+                selectedQuestLastLevel = gameInventory.GetSerialQuestMaxLevel(SerialQuests.ShalwendWargod);
             }
         }
 
@@ -104,7 +104,7 @@ int selectedQuestLastLevel = 0;
 
             if (mode == GameModes.Quest)
             {
-                if (selectedQuestString == nameof(LegendUnitQuests.Shalwend))
+                if (selectedQuestString == nameof(SerialQuests.ShalwendWargod))
                 {
                     if ((i + 1) == selectedQuestLastLevel) // if level number equals max level
                     {

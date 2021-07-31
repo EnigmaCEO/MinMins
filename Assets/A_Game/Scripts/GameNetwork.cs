@@ -53,10 +53,10 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
 
     public class ServerResponseMessages
     {
-        public const string SUCCESS = "Success";
+        public const string SUCCESS = "SUCCESS";
         public const string SERVER_ERROR = "Server Error";
         public const string CONNECTION_ERROR = "Connection Error";
-        public const string PENDING = "Pending";
+        public const string PENDING = "PENDING";
         public const string ERROR = "Error";
     }
 
@@ -270,7 +270,13 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
             SetTokenAvailable(tokenName, false);
         }
 
-        SetTokenAvailable(EnjinTokenKeys.QUEST_SHALWEND, false);
+        SetTokenAvailable(EnjinTokenKeys.QUEST_BLUE_NARWHAL, false);
+        SetTokenAvailable(EnjinTokenKeys.QUEST_CHEESE_NARWHAL, false);
+        SetTokenAvailable(EnjinTokenKeys.QUEST_EMERALD_NARWHAL, false);
+        SetTokenAvailable(EnjinTokenKeys.QUEST_CRIMSON_NARWHAL, false);
+
+        SetTokenAvailable(EnjinTokenKeys.QUEST_WARGOD_SHALWEND, false);
+        SetTokenAvailable(EnjinTokenKeys.QUEST_DEADLY_KNIGHT_SHALWEND, false);
     }
 
     public void UpdateEnjinGoodies(JSONNode response_hash, bool updateEthAddress)
@@ -294,10 +300,10 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
             updateWalletFromUserDataNode(userDataNode, updateEthAddress);
         }
 
-        determineTokenAvailable(userDataNode, EnigmaConstants.TokenKeys.ENJIN_MFT);
-        determineTokenAvailable(userDataNode, EnigmaConstants.TokenKeys.ENIGMA_TOKEN);
+        determineServerTokenAvailable(userDataNode, EnigmaConstants.TokenKeys.ENJIN_MFT);
+        determineServerTokenAvailable(userDataNode, EnigmaConstants.TokenKeys.ENIGMA_TOKEN);
 
-        determineTokenAvailable(userDataNode, EnjinTokenKeys.MINMINS_TOKEN);
+        determineServerTokenAvailable(userDataNode, EnjinTokenKeys.MINMINS_TOKEN);
 
         GameInventory gameInventory = GameInventory.Instance;
 
@@ -308,17 +314,11 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
         //}
 
         List<string> legendUnits = gameInventory.GetLegendUnitNames();
-        List<string> swolesomeUnits = gameInventory.GetSwolesomeUnitNames();
 
         foreach (string legendUnit in legendUnits)
         {
-            if (swolesomeUnits.Contains(legendUnit))
-            {
-                continue;
-            }
-
             string tokenName = gameInventory.GetUnitNameToken(legendUnit);
-            determineTokenAvailable(userDataNode, tokenName);
+            determineServerTokenAvailable(userDataNode, tokenName);
         }
 
         CheckAllEnjinTeamBoostTokens(response_hash);
@@ -1080,43 +1080,31 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
         {
             Debug.Log(nameof(onCheckEnjinTokenAvailableResponse) + " " + response.ToString());
 
-            JSONNode codeNode = response[0][TransactionKeys.CODE];
-            if (codeNode != null)
+            int count = response.Count;
+            for (int i = 0; i < count; i++)
             {
-                string code = codeNode.ToString();
-                code = code.Trim('"');
-
-                Debug.Log("Shalwend code: " + code);
-
-                if (code == EnjinTokenKeys.QUEST_SHALWEND)
+                JSONNode codeNode = response[i][TransactionKeys.CODE];
+                if (codeNode != null)
                 {
-                    SetTokenAvailable(EnjinTokenKeys.QUEST_SHALWEND, true);
-                }
-                else if (code == "")
-                {
-                    SetTokenAvailable(EnjinTokenKeys.QUEST_SHALWEND, false);
+                    string code = codeNode.ToString();
+                    code = code.Trim('"');
+
+                    Debug.Log("Code: " + code);
+
+                    if (code != "")
+                    {
+                        SetTokenAvailable(code, true);
+                    }
                 }
                 else
                 {
-                    Debug.LogError("Shalwend quest code was not recognized.");
+                    Debug.LogError("Code field was not found at response from " + nameof(checkEnjinTokenAvailable) + ".");
                 }
-
-                GameInventory gameInventory = GameInventory.Instance;
-                List<string> swolesomeUnits = gameInventory.GetSwolesomeUnitNames();
-                foreach (string swolesomeUnit in swolesomeUnits)
-                {
-                    string tokenKey = gameInventory.GetUnitNameToken(swolesomeUnit);
-                    determineTokenAvailable(response[0], tokenKey);
-                }
-            }
-            else
-            {
-                Debug.LogError("Code field was not found at response from " + nameof(checkEnjinTokenAvailable) + ".");
             }
         }
     }
 
-    private void determineTokenAvailable(JSONNode node, string tokenKey)
+    private void determineServerTokenAvailable(JSONNode node, string tokenKey)
     {
         string tokenAvailable = "";
         SimpleJSON.JSONNode tokenNode = node[tokenKey];
@@ -1127,7 +1115,7 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
         }
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
-        if (GameHacks.Instance.EnableAllEnjinTokens)
+        if (GameHacks.Instance.EnableAllEnjinUnitTokens)
         {
             tokenAvailable = "1";
         }
