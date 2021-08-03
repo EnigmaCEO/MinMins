@@ -9,7 +9,6 @@ public class RewardInventoryItem : MonoBehaviour
     [SerializeField] private Text _nameText;
     [SerializeField] private Text _costText;
     [SerializeField] private Image _icon;
-    //[SerializeField] private Button _withdrawButton;
 
     private Action<RewardInventoryItem> _callback;
 
@@ -41,9 +40,6 @@ public class RewardInventoryItem : MonoBehaviour
 
     public void SetAsWithdrawn()
     {
-        //_withdrawButton.enabled = false;
-        //_withdrawButton.GetComponent<Image>().color = Color.gray; // withdrawn ? Color.grey : Color.white;
-
         Destroy(gameObject);
     }
 

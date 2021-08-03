@@ -998,10 +998,10 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
     {
         GameStats.Instance.TeamBoostTokensOwnedByName.Clear();
 
-        checkSingleEnjinTeamBoostToken(response_hash, EnjinTokenKeys.ENJIN_SWORD, TeamBoostEnjinTokens.SWORD, TeamBoostCategory.DAMAGE);
-        checkSingleEnjinTeamBoostToken(response_hash, EnjinTokenKeys.ENJIN_ARMOR, TeamBoostEnjinTokens.ARMOR, TeamBoostCategory.DEFENSE);
-        checkSingleEnjinTeamBoostToken(response_hash, EnjinTokenKeys.ENJIN_SHADOWSONG, TeamBoostEnjinTokens.SHADOW_SONG, TeamBoostCategory.HEALTH);
-        checkSingleEnjinTeamBoostToken(response_hash, EnjinTokenKeys.ENJIN_BULL, TeamBoostEnjinTokens.BULL, TeamBoostCategory.POWER);
+        checkSingleEnjinTeamBoostToken(response_hash, EnjinTokenKeys.ENJIN_SWORD, TeamBoostEnjinTokens.SWORD, BoostCategory.DAMAGE);
+        checkSingleEnjinTeamBoostToken(response_hash, EnjinTokenKeys.ENJIN_ARMOR, TeamBoostEnjinTokens.ARMOR, BoostCategory.DEFENSE);
+        checkSingleEnjinTeamBoostToken(response_hash, EnjinTokenKeys.ENJIN_SHADOWSONG, TeamBoostEnjinTokens.SHADOW_SONG, BoostCategory.HEALTH);
+        checkSingleEnjinTeamBoostToken(response_hash, EnjinTokenKeys.ENJIN_BULL, TeamBoostEnjinTokens.BULL, BoostCategory.POWER);
     }
 
     private void checkSingleEnjinTeamBoostToken(SimpleJSON.JSONNode response_hash, string transactionKey, string name, string category)
@@ -1056,7 +1056,7 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
                         EthAdress = ethString.Trim('"');
 
                         Hashtable hashtable = new Hashtable() { { TransactionKeys.GAME_ID, "1" }, { TransactionKeys.WALLET, EthAdress } };
-                        StartCoroutine(checkEnjinTokenAvailable(hashtable, onCheckEnjinTokenAvailableResponse));
+                        StartCoroutine(checkNftEnjinTokenAvailable(hashtable, onCheckNftEnjinTokenAvailableResponse));
                     }
                 }
             }
@@ -1070,15 +1070,15 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
 #endif 
     }
 
-    private void onCheckEnjinTokenAvailableResponse(JSONNode response)
+    private void onCheckNftEnjinTokenAvailableResponse(JSONNode response)
     {
         if (response == null)
         {
-            Debug.LogError("Transaction response " + nameof(checkEnjinTokenAvailable) + " transaction got null.");
+            Debug.LogError("Transaction response " + nameof(checkNftEnjinTokenAvailable) + " transaction got null.");
         }
         else
         {
-            Debug.Log(nameof(onCheckEnjinTokenAvailableResponse) + " " + response.ToString());
+            Debug.Log(nameof(onCheckNftEnjinTokenAvailableResponse) + " " + response.ToString());
 
             int count = response.Count;
             for (int i = 0; i < count; i++)
@@ -1098,7 +1098,7 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
                 }
                 else
                 {
-                    Debug.LogError("Code field was not found at response from " + nameof(checkEnjinTokenAvailable) + ".");
+                    Debug.LogError("Code field was not found at response from " + nameof(checkNftEnjinTokenAvailable) + ".");
                 }
             }
         }
@@ -1124,7 +1124,7 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
         SetTokenAvailable(tokenKey, (tokenAvailable == "1"));
     }
 
-    static private IEnumerator checkEnjinTokenAvailable(Hashtable hashtable, Callback externalCallback, Callback localCallback = null)
+    static private IEnumerator checkNftEnjinTokenAvailable(Hashtable hashtable, Callback externalCallback, Callback localCallback = null)
     {
         string url = "https://api.playnft.io/getcodes";
 
@@ -1140,13 +1140,13 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
             formData.AddField(pair.Key.ToString(), pair.Value.ToString());
         }
 
-        Debug.Log(nameof(checkEnjinTokenAvailable) + " url: " + url);
+        Debug.Log(nameof(checkNftEnjinTokenAvailable) + " url: " + url);
         var www = UnityEngine.Networking.UnityWebRequest.Post(url, formData);
         yield return www.SendWebRequest();
 
         if (www.isNetworkError || www.isHttpError)
         {
-            Debug.Log(www.error + " on " + nameof(checkEnjinTokenAvailable));
+            Debug.Log(www.error + " on " + nameof(checkNftEnjinTokenAvailable));
 
             JSONNode response = JSON.Parse(www.error);
 

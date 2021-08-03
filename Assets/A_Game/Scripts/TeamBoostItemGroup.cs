@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using GameConstants;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,15 +22,15 @@ public class TeamBoostItemGroup
 
     public static string GetOreImagePath(string category, int bonus)
     {
-        string oreTierSuffix = GameConstants.OreTier.RAW;
+        string oreTierSuffix = OreTiers.RAW;
 
-        if (bonus == 10)
+        if (bonus == OreBonuses.PERFECT_ORE)
         {
-            oreTierSuffix = GameConstants.OreTier.POLISHED;
+            oreTierSuffix = OreTiers.PERFECT;
         }
-        else if (bonus >= 6)
+        else if (bonus >= OreBonuses.POLISHED_ORE_MIN)
         {
-            oreTierSuffix = GameConstants.OreTier.PERFECT;
+            oreTierSuffix = OreTiers.POLISHED;
         }
 
         return ("Images/Ore/" + category + "Ore" + oreTierSuffix);

@@ -1,6 +1,13 @@
 ﻿
 namespace GameConstants
 {
+    public class BoxTiers
+    {
+        public const int BRONZE = 1;
+        public const int SILVER = 2;
+        public const int GOLD = 3;
+    }
+
     public class Scenes
     {
         public const string LEVELS = "Levels";
@@ -22,7 +29,7 @@ namespace GameConstants
         public const string ULTIMATE = "Ultimate";
     }
 
-    public class TeamBoostCategory
+    public class BoostCategory
     {
         public const string DAMAGE = "Damage";
         public const string DEFENSE = "Defense";
@@ -39,7 +46,7 @@ namespace GameConstants
         public const string BULL = "Mark of the Bull";
     }
 
-    public class TeamBoostEnjinOreItems
+    public class BoostEnjinOreItems
     {
         public const string DAMAGE = "Enjin Damage Ore Item";
         public const string DEFENSE = "Enjin Defense Ore Item";
@@ -48,11 +55,18 @@ namespace GameConstants
         public const string SIZE = "Enjin Size Ore Item";
     }
 
-    public class OreTier
+    public class OreTiers
     {
         public const string RAW = "Raw";
         public const string POLISHED = "Polished";
         public const string PERFECT = "Perfect";
+    }
+
+    public class OreBonuses
+    {
+        public const int PERFECT_ORE = 10;
+        public const int POLISHED_ORE_MIN = 6;
+        public const int RAW_ORE_MIN = 1;
     }
 
     public class UiMessages

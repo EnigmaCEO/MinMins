@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class RewardGridItem : MonoBehaviour
+public class BoxRewardGridItem : MonoBehaviour
 {
     [SerializeField] private Transform _tierStarsContent;
     [SerializeField] private Image _boxImage;

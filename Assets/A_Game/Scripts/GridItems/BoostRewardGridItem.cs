@@ -10,10 +10,22 @@ public class BoostRewardGridItem : MonoBehaviour
     [SerializeField] private Text _bonusText;
     [SerializeField] private Text _categoryText;
 
-    public void SetUp(string category, int bonus)
+    public void SetUp(string category, int bonus, bool displayBonus)
     {
-        this.name = category + " +" + bonus;
-        _bonusText.text = "+" + bonus.ToString();
+        this.name = category;
+        if (displayBonus)
+        {
+            this.name += " +" + bonus;
+        }
+
+        _bonusText.gameObject.SetActive(displayBonus);
+
+        if (displayBonus)
+        {
+            _bonusText.text = "+" + bonus.ToString();
+        }
+
+
         _categoryText.text = LocalizationManager.GetTermTranslation(category);
 
         string imagePath = TeamBoostItemGroup.GetOreImagePath(category, bonus);
@@ -24,5 +36,10 @@ public class BoostRewardGridItem : MonoBehaviour
         {
             _image.sprite = itemSprite;
         }
+    }
+
+    public void SetTextForQuestReward(string oreTier, string categoryLabel)
+    {
+        _categoryText.text = LocalizationManager.GetTermTranslation(oreTier) + " " + LocalizationManager.GetTermTranslation("Ore") + ": " + LocalizationManager.GetTermTranslation(categoryLabel);
     }
 }

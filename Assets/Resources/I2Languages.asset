@@ -2376,6 +2376,61 @@ MonoBehaviour:
       - 
       Flags: 0000000000
       Languages_Touch: []
+    - Term: Perfect
+      TermType: 0
+      Description: 
+      Languages:
+      - Perfect
+      - Perfecto
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Polished
+      TermType: 0
+      Description: 
+      Languages:
+      - Polished
+      - Pulido
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Raw
+      TermType: 0
+      Description: 
+      Languages:
+      - Raw
+      - Crudo
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Ore
+      TermType: 0
+      Description: 
+      Languages:
+      - Ore
+      - Mineral
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Quests
+      TermType: 0
+      Description: 
+      Languages:
+      - Quests
+      - "B\xFAsquedas"
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
     - Term: Tap boost to select/deselect.
       TermType: 0
       Description: 
@@ -2411,7 +2466,7 @@ MonoBehaviour:
     Google_WebServiceURL: https://script.google.com/macros/s/AKfycbw05ISkGCPtIS0hMzFD5jshgfH09mIP6BAxRKhWsA/exec
     Google_SpreadsheetKey: 1iIWCtExuyR2XXyYkJv6y83PTVMPC4FxzSITGGroefcg
     Google_SpreadsheetName: I2Loc MinMins Localization
-    Google_LastUpdatedVersion: 1627596430021
+    Google_LastUpdatedVersion: 1627952038926
     Google_Password: shalwend
     GoogleUpdateFrequency: 0
     GoogleInEditorCheckFrequency: 0

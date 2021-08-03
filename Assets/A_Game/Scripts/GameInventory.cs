@@ -10,13 +10,6 @@ using UnityEngine;
 
 public class GameInventory : SingletonPersistentPrefab<GameInventory>
 {
-    public class Tiers
-    {
-        public const int BRONZE = 1;
-        public const int SILVER = 2;
-        public const int GOLD = 3;
-    }
-
     public class GroupNames
     {
         public const string LOOT_BOXES = "Lootboxes";
@@ -106,6 +99,30 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
     private const char POSITIONS_SEPARATOR = ';';
     private const char COORDS_SEPARATOR = ',';
 
+    private string[] _boostCategories = { GameConstants.BoostCategory.DAMAGE, GameConstants.BoostCategory.DEFENSE,
+                                    GameConstants.BoostCategory.HEALTH, GameConstants.BoostCategory.POWER,
+                                    GameConstants.BoostCategory.SIZE };
+
+    private string[] _boostBaseNames = { GameConstants.BoostEnjinOreItems.DAMAGE, GameConstants.BoostEnjinOreItems.DEFENSE,
+                                   GameConstants.BoostEnjinOreItems.HEALTH, GameConstants.BoostEnjinOreItems.POWER,
+                                   GameConstants.BoostEnjinOreItems.SIZE };
+
+    public string[] BoostCategories
+    {
+        get
+        {
+            return _boostCategories;
+        }
+    }
+
+    public string[] BoostBaseNames
+    {
+        get
+        {
+            return _boostBaseNames;
+        }
+    }
+
     override protected void Awake()
     {
         base.Awake();
@@ -152,7 +169,7 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
 
     public int GetRandomTier()
     {
-        return UnityEngine.Random.Range(Tiers.BRONZE, Tiers.GOLD + 1);
+        return UnityEngine.Random.Range(BoxTiers.BRONZE, BoxTiers.GOLD + 1);
     }
 
     public bool HasEnoughUnitsForBattle()
@@ -486,21 +503,7 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
         }
         else
         {
-            GameConfig gameConfig = GameConfig.Instance;
-            int maxQuestLevel = gameConfig.MaxQuestLevel;
-
-            if (questString == nameof(SerialQuests.ShalwendWargod))
-            {
-                maxQuestLevel = GetSerialQuestMaxLevel(SerialQuests.ShalwendWargod);
-            }
-            else if (questString == nameof(SerialQuests.ShalwendDeadlyKnight))
-            {
-                maxQuestLevel = GetSerialQuestMaxLevel(SerialQuests.ShalwendDeadlyKnight);
-            }
-            else if (questString.Contains("Narwhal"))
-            {
-                maxQuestLevel = gameConfig.NarwhalMaxQuestLevel;
-            }
+            int maxQuestLevel = GetQuestMaxLevel(questString);
 
             for (int i = 1; i <= maxQuestLevel; i++)
             {
@@ -516,6 +519,37 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
         }
 
         return questCompleted;
+    }
+
+    public int GetLevelMinBonus(int levelNumber)
+    {
+        return levelNumber;
+    }
+
+    public int GetLevelMaxBonus(int levelNumber)
+    {
+        return levelNumber * 2;
+    }
+
+    public int GetQuestMaxLevel(string questString)
+    {
+        GameConfig gameConfig = GameConfig.Instance;
+        int maxQuestLevel = gameConfig.MaxQuestLevel;
+
+        if (questString == nameof(SerialQuests.ShalwendWargod))
+        {
+            maxQuestLevel = GetSerialQuestMaxLevel(SerialQuests.ShalwendWargod);
+        }
+        else if (questString == nameof(SerialQuests.ShalwendDeadlyKnight))
+        {
+            maxQuestLevel = GetSerialQuestMaxLevel(SerialQuests.ShalwendDeadlyKnight);
+        }
+        else if (questString.Contains("Narwhal"))
+        {
+            maxQuestLevel = gameConfig.NarwhalMaxQuestLevel;
+        }
+
+        return maxQuestLevel;
     }
 
     private void initializeMaxLevelsByLevelUnitQuest()
@@ -736,7 +770,7 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
         {
             unitPicks = lootBoxManager.PickRandomizedNames(_legendBoxUnitAmount, true, _legend_units, null, true);
         }
-        else if (boxTier == Tiers.BRONZE)
+        else if (boxTier == BoxTiers.BRONZE)
         {
             unitPicks = lootBoxManager.PickRandomizedNames(_lootBoxSize, true, null, _rarityByUnit);
         }
@@ -745,7 +779,7 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
             int specialRarityAmountToPick = _lootBoxSize - _guaranteedUnitTierAmount;
             unitPicks = lootBoxManager.PickRandomizedNames(specialRarityAmountToPick, true, null, _rarityByUnit);
             List<string> guaranteedTierUnits = null;
-            if (boxTier == Tiers.SILVER)
+            if (boxTier == BoxTiers.SILVER)
             {
                 guaranteedTierUnits = _tierSilver_units;
             }
@@ -822,14 +856,14 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
 
     public int GetUnitTier(string unitName)
     {
-        int unitTier = Tiers.BRONZE;
+        int unitTier = BoxTiers.BRONZE;
         if (_tierSilver_units.Contains(unitName))
         {
-            unitTier = Tiers.SILVER;
+            unitTier = BoxTiers.SILVER;
         }
         else if (_tierGold_units.Contains(unitName))
         {
-            unitTier = Tiers.GOLD;
+            unitTier = BoxTiers.GOLD;
         }
 
         return unitTier;
@@ -876,11 +910,11 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
     public List<string> GetRandomUnitsFromTier(int amount, int tier)
     {
         List<string> tierUnits = _tierBronze_units;
-        if (tier == Tiers.SILVER)
+        if (tier == BoxTiers.SILVER)
         {
             tierUnits = _tierSilver_units;
         }
-        else if (tier == Tiers.GOLD)
+        else if (tier == BoxTiers.GOLD)
         {
             tierUnits = _tierGold_units;
         }
@@ -1311,11 +1345,11 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
             inventoryManager.AddItem(GroupNames.LOOT_BOXES, boxIndex.ToString(), 0);
         }
 
-        addDefaultOreItemGroups(GameConstants.TeamBoostEnjinOreItems.DAMAGE, GameConstants.TeamBoostCategory.DAMAGE);
-        addDefaultOreItemGroups(GameConstants.TeamBoostEnjinOreItems.DEFENSE, GameConstants.TeamBoostCategory.DEFENSE);
-        addDefaultOreItemGroups(GameConstants.TeamBoostEnjinOreItems.HEALTH, GameConstants.TeamBoostCategory.HEALTH);
-        addDefaultOreItemGroups(GameConstants.TeamBoostEnjinOreItems.POWER, GameConstants.TeamBoostCategory.POWER);
-        addDefaultOreItemGroups(GameConstants.TeamBoostEnjinOreItems.SIZE, GameConstants.TeamBoostCategory.SIZE);
+        addDefaultOreItemGroups(GameConstants.BoostEnjinOreItems.DAMAGE, GameConstants.BoostCategory.DAMAGE);
+        addDefaultOreItemGroups(GameConstants.BoostEnjinOreItems.DEFENSE, GameConstants.BoostCategory.DEFENSE);
+        addDefaultOreItemGroups(GameConstants.BoostEnjinOreItems.HEALTH, GameConstants.BoostCategory.HEALTH);
+        addDefaultOreItemGroups(GameConstants.BoostEnjinOreItems.POWER, GameConstants.BoostCategory.POWER);
+        addDefaultOreItemGroups(GameConstants.BoostEnjinOreItems.SIZE, GameConstants.BoostCategory.SIZE);
 
         //addTokenWithdrawalDefaultValues();
 
@@ -1398,7 +1432,7 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
 
         //if (!isThereAnyUnit && !isThereAnyLootBox)
         //{
-        //    inventoryManager.UpdateItem(GroupNames.LOOT_BOXES, Tiers.BRONZE.ToString(), _initialBronzeLootBoxes, false);
+        //    inventoryManager.UpdateItem(GroupNames.LOOT_BOXES, BoxTiers.BRONZE.ToString(), _initialBronzeLootBoxes, false);
         //    saveLootBoxes();
         //}
     }

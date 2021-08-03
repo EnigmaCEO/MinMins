@@ -1,4 +1,5 @@
 ﻿using Enigma.CoreSystems;
+using GameConstants;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -115,14 +116,14 @@ public class MatchResultsPopUp : MonoBehaviour
         if (boostItemGroup != null)
         {
             GameObject boostReward = Instantiate<GameObject>(boostRewardGridItemTemplate, _rewardsGridContent);
-            boostReward.GetComponent<BoostRewardGridItem>().SetUp(boostItemGroup.Category, boostItemGroup.Bonus);
+            boostReward.GetComponent<BoostRewardGridItem>().SetUp(boostItemGroup.Category, boostItemGroup.Bonus, true);
         }
 
         gameInventory.SaveLootBoxes();
 
         if (matchLocalData.EnjinCollected)
         {
-            createRewardGridItem(unitRewardGridItemTemplate, GameInventory.Tiers.GOLD, true);
+            createRewardGridItem(unitRewardGridItemTemplate, BoxTiers.GOLD, true);
         }
 
         unitRewardGridItemTemplate.SetActive(false);
@@ -132,6 +133,6 @@ public class MatchResultsPopUp : MonoBehaviour
     private void createRewardGridItem(GameObject rewardGridItemTemplate, int tier, bool isEnjin)
     {
         GameObject reward = Instantiate<GameObject>(rewardGridItemTemplate, _rewardsGridContent);
-        reward.GetComponent<RewardGridItem>().SetUp(tier, isEnjin);
+        reward.GetComponent<BoxRewardGridItem>().SetUp(tier, isEnjin);
     }
 }

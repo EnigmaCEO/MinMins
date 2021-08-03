@@ -1123,19 +1123,19 @@ public class War : NetworkEntity
             int unitTier = GameInventory.Instance.GetUnitTier(unitInTurn.name);
             GameConfig gameConfig = GameConfig.Instance;
 
-            if (unitTier >= GameInventory.Tiers.GOLD)
+            if (unitTier >= BoxTiers.GOLD)
             {
                 directions.Add(gameConfig.GoldProjectileBaseDirection);
                 directions.Add(-gameConfig.GoldProjectileBaseDirection);
             }
 
-            if (unitTier >= GameInventory.Tiers.SILVER)
+            if (unitTier >= BoxTiers.SILVER)
             {
                 directions.Add(gameConfig.SilverProjectileBaseDirection);
                 directions.Add(-gameConfig.SilverProjectileBaseDirection);
             }
 
-            if (unitTier >= GameInventory.Tiers.BRONZE)
+            if (unitTier >= BoxTiers.BRONZE)
             {
                 directions.Add(gameConfig.BronzeProjectileBaseDirection);
                 directions.Add(-gameConfig.BronzeProjectileBaseDirection);
@@ -1331,23 +1331,23 @@ public class War : NetworkEntity
                 string boostCategory = selectedBoostItem.Category;
                 int boostBonus = selectedBoostItem.Bonus;
 
-                if (boostCategory == GameConstants.TeamBoostCategory.DAMAGE)
+                if (boostCategory == GameConstants.BoostCategory.DAMAGE)
                 {
                     damageBonus = boostBonus;
                 }
-                else if (boostCategory == GameConstants.TeamBoostCategory.DEFENSE)
+                else if (boostCategory == GameConstants.BoostCategory.DEFENSE)
                 {
                     defenseBonus = boostBonus;
                 }
-                else if (boostCategory == GameConstants.TeamBoostCategory.HEALTH)
+                else if (boostCategory == GameConstants.BoostCategory.HEALTH)
                 {
                     healthBonus = boostBonus;
                 }
-                else if (boostCategory == GameConstants.TeamBoostCategory.POWER)
+                else if (boostCategory == GameConstants.BoostCategory.POWER)
                 {
                     powerBonus = boostBonus;
                 }
-                else if (boostCategory == GameConstants.TeamBoostCategory.SIZE)
+                else if (boostCategory == GameConstants.BoostCategory.SIZE)
                 {
                     sizeBonus = boostBonus;
                 }
@@ -1878,23 +1878,23 @@ public class War : NetworkEntity
         {
             int unitTier = gameInventory.GetUnitTier(unitName);
 
-            if (unitTier == GameInventory.Tiers.BRONZE)
+            if (unitTier == BoxTiers.BRONZE)
             {
                 hostBronzeUnits.Add(unitName);
             }
-            else if (unitTier == GameInventory.Tiers.SILVER)
+            else if (unitTier == BoxTiers.SILVER)
             {
                 hostSilverUnits.Add(unitName);
             }
-            else if (unitTier == GameInventory.Tiers.GOLD)
+            else if (unitTier == BoxTiers.GOLD)
             {
                 hostGoldUnits.Add(unitName);
             }
         }
 
-        List<string> guestBronzeUnits = gameInventory.GetRandomUnitsFromTier(hostBronzeUnits.Count, GameInventory.Tiers.BRONZE);
-        List<string> guestSilverUnits = gameInventory.GetRandomUnitsFromTier(hostSilverUnits.Count, GameInventory.Tiers.SILVER);
-        List<string> guestGoldUnits = gameInventory.GetRandomUnitsFromTier(hostGoldUnits.Count, GameInventory.Tiers.GOLD);
+        List<string> guestBronzeUnits = gameInventory.GetRandomUnitsFromTier(hostBronzeUnits.Count, BoxTiers.BRONZE);
+        List<string> guestSilverUnits = gameInventory.GetRandomUnitsFromTier(hostSilverUnits.Count, BoxTiers.SILVER);
+        List<string> guestGoldUnits = gameInventory.GetRandomUnitsFromTier(hostGoldUnits.Count, BoxTiers.GOLD);
 
         string unitsString = "";
         unitsString = setGuestAiUnits(hostBronzeUnits, guestBronzeUnits, unitsString);
@@ -2639,7 +2639,7 @@ public class War : NetworkEntity
 
                 if (!enjinItemCollectedTransactionSent)
                 {
-                    rewardWithTierBox(GameInventory.Tiers.BRONZE);
+                    rewardWithTierBox(BoxTiers.BRONZE);
                 }
             }
         }
@@ -2716,7 +2716,7 @@ public class War : NetworkEntity
         }
         else
         {
-            rewardWithTierBox(GameInventory.Tiers.BRONZE);
+            rewardWithTierBox(BoxTiers.BRONZE);
         }
 
         bool isPrivateRoom = (((string)NetworkManager.GetRoomCustomProperty(GameNetwork.RoomCustomProperties.IS_PRIVATE)) == "True");
@@ -2752,7 +2752,7 @@ public class War : NetworkEntity
 
             if (updatedLevel > oldArenaLevel)
             {
-                rewardWithTierBox(GameInventory.Tiers.GOLD);
+                rewardWithTierBox(BoxTiers.GOLD);
             }
         }
         else
@@ -2805,17 +2805,12 @@ public class War : NetworkEntity
                 arenaNumber = 1;
             }
 
-            int minBonus = arenaNumber;
-            int maxBonus = arenaNumber * 2;
+            int minBonus = gameInventory.GetLevelMinBonus(arenaNumber);
+            int maxBonus = gameInventory.GetLevelMaxBonus(arenaNumber);
 
             int bonus = UnityEngine.Random.Range(minBonus, maxBonus);
-            string[] categories = { GameConstants.TeamBoostCategory.DAMAGE, GameConstants.TeamBoostCategory.DEFENSE,
-                                    GameConstants.TeamBoostCategory.HEALTH, GameConstants.TeamBoostCategory.POWER,
-                                    GameConstants.TeamBoostCategory.SIZE };
-
-            string[] baseNames = { GameConstants.TeamBoostEnjinOreItems.DAMAGE, GameConstants.TeamBoostEnjinOreItems.DEFENSE,
-                                   GameConstants.TeamBoostEnjinOreItems.HEALTH, GameConstants.TeamBoostEnjinOreItems.POWER,
-                                   GameConstants.TeamBoostEnjinOreItems.SIZE };
+            string[] categories = gameInventory.BoostCategories;
+            string[] baseNames = gameInventory.BoostBaseNames;
 
             int randomNumber = UnityEngine.Random.Range(0, 5);  //Picks from index 0 to 4
 
@@ -3062,9 +3057,9 @@ public class War : NetworkEntity
 
         public MatchLocalData()
         {
-            BoxTiersWithAmountsRewards.Add(GameInventory.Tiers.BRONZE, 0);
-            BoxTiersWithAmountsRewards.Add(GameInventory.Tiers.SILVER, 0);
-            BoxTiersWithAmountsRewards.Add(GameInventory.Tiers.GOLD, 0);
+            BoxTiersWithAmountsRewards.Add(BoxTiers.BRONZE, 0);
+            BoxTiersWithAmountsRewards.Add(BoxTiers.SILVER, 0);
+            BoxTiersWithAmountsRewards.Add(BoxTiers.GOLD, 0);
         }
     }
 

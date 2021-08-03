@@ -10,7 +10,7 @@ public class QuestConfirmPopUp : MonoBehaviour
     [SerializeField] private Transform _rewardsGridContent;
 
     [SerializeField] private GameObject _unitRewardTemplate;
-    [SerializeField] private GameObject _teamBoostRewardTemplate;
+    [SerializeField] private GameObject _boostRewardTemplate;
     [SerializeField] private GameObject _boxRewardTemplate;
 
     private string _sceneToLoad = "";
@@ -20,7 +20,7 @@ public class QuestConfirmPopUp : MonoBehaviour
     private void Start()
     {
         prepareGridTemplate(_unitRewardTemplate);
-        prepareGridTemplate(_teamBoostRewardTemplate);
+        prepareGridTemplate(_boostRewardTemplate);
         prepareGridTemplate(_boxRewardTemplate);
     }
 
@@ -30,46 +30,45 @@ public class QuestConfirmPopUp : MonoBehaviour
         gridTemplate.SetActive(false);
     }
 
-    public void Open(string questStringToConfirm, string sceneToLoad, QuestTypes questTypeToConfirm /*, Dictionary<int, int> boxTiersWithAmountRewards, List<TeamBoostItemGroup> boostItemGroups*/)
+    public void Open(string questStringToConfirm, string sceneToLoad, QuestTypes questTypeToConfirm)
     {
         _questStringToConfirm = questStringToConfirm;
         _sceneToLoad = sceneToLoad;
         _questTypeToConfirm = questTypeToConfirm;
 
-        /*
-        if (boxTiersWithAmountRewards != null)
+        string unitName = getQuestUnitRewardName(questStringToConfirm); 
+        if (unitName != "")
         {
-            foreach (KeyValuePair<int, int> amountByTier in boxTiersWithAmountRewards)
-            {
-                int count = amountByTier.Value;
-                for (int i = 0; i < count; i++)
-                {
-                    GameObject boxReward = Instantiate<GameObject>(_boxRewardTemplate, _rewardsGridContent);
-                    boxReward.SetActive(true);
-                }
-            }
+            GameObject unitReward = Instantiate<GameObject>(_unitRewardTemplate, _rewardsGridContent);
+            unitReward.GetComponent<UnitRewardGridItem>().Setup(unitName);
+            setGuaranteed(unitReward, true);
+            unitReward.SetActive(true);
         }
 
-        if (boostItemGroups != null)
-        {
-            foreach (TeamBoostItemGroup boostItemGroup in boostItemGroups)
-            {
-                GameObject boostReward = Instantiate<GameObject>(_teamBoostRewardTemplate, _rewardsGridContent);
-                boostReward.GetComponent<BoostRewardGridItem>().SetUp(boostItemGroup.Category, boostItemGroup.Bonus);
-                boostReward.SetActive(true);
-            }
-        }
-        */
+        addBoxReward(BoxTiers.GOLD, true);
+        addBoxReward(BoxTiers.BRONZE, false);
 
-        List<string> unitNames = getRewardUnitsNames(questStringToConfirm); 
-        if (unitNames != null)
+        GameInventory gameInventory = GameInventory.Instance;
+        int maxLevel = gameInventory.GetQuestMaxLevel(questStringToConfirm);
+        int maxOreBonus = gameInventory.GetLevelMaxBonus(maxLevel);
+
+        string[] boostCategories = gameInventory.BoostCategories;
+
+        int count = boostCategories.Length;
+        for (int i = 0; i < count; i++)
         {
-            foreach (string unitName in unitNames)
+            string boostCategory = boostCategories[i];
+            if (maxOreBonus == OreBonuses.PERFECT_ORE)
             {
-                GameObject unitReward = Instantiate<GameObject>(_unitRewardTemplate, _rewardsGridContent);
-                unitReward.GetComponent<UnitRewardGridItem>().Setup(unitName);
-                unitReward.SetActive(true);
+                addBoostReward(boostCategory, OreTiers.PERFECT, OreBonuses.PERFECT_ORE, false);
             }
+
+            if (maxOreBonus >= OreBonuses.POLISHED_ORE_MIN)
+            {
+                addBoostReward(boostCategory, OreTiers.POLISHED, OreBonuses.POLISHED_ORE_MIN, false);
+            }
+
+            addBoostReward(boostCategory, OreTiers.RAW, OreBonuses.RAW_ORE_MIN, false);
         }
 
         gameObject.SetActive(true);
@@ -104,50 +103,73 @@ public class QuestConfirmPopUp : MonoBehaviour
         Close(true);
     }
 
-    private List<string> getRewardUnitsNames(string questString)
+    private void addBoxReward(int boxTier, bool guaranteed)
     {
-        List<string> rewardUnitsNames = new List<string>(); ;
+        GameObject reward = Instantiate<GameObject>(_boxRewardTemplate, _rewardsGridContent);
+        reward.GetComponent<BoxRewardGridItem>().SetUp(boxTier, false);
+        setGuaranteed(reward, guaranteed);
+        reward.SetActive(true);
+    }
+
+    private void addBoostReward(string category, string oreTier, int bonus, bool guaranteed)
+    {
+        GameObject boostReward = Instantiate<GameObject>(_boostRewardTemplate, _rewardsGridContent);
+        BoostRewardGridItem boostRewardScript = boostReward.GetComponent<BoostRewardGridItem>();
+        boostRewardScript.SetUp(category, bonus, false);
+        boostRewardScript.SetTextForQuestReward(oreTier, category);
+        setGuaranteed(boostReward, guaranteed);
+        boostReward.SetActive(true);
+    }
+
+    private void setGuaranteed(GameObject reward, bool guaranteed)
+    {
+        reward.GetComponent<RewardChanceDisplay>().Set(guaranteed);
+    }
+
+    private string getQuestUnitRewardName(string questString)
+    {
+        string rewardUnitName = ""; 
 
         switch (questString)
         {
             case nameof(ScoutQuests.EnjinLegend122):
-                rewardUnitsNames.Add("122");
+                rewardUnitName = "122";
                 break;
             case nameof(ScoutQuests.EnjinLegend123):
-                rewardUnitsNames.Add("123");
+                rewardUnitName = "123";
                 break;
             case nameof(ScoutQuests.EnjinLegend124):
-                rewardUnitsNames.Add("124");
+                rewardUnitName = "124";
                 break;
             case nameof(ScoutQuests.EnjinLegend125):
-                rewardUnitsNames.Add("125");
+                rewardUnitName = "125";
                 break;
             case nameof(ScoutQuests.EnjinLegend126):
-                rewardUnitsNames.Add("126");
+                rewardUnitName = "126";
                 break;
             case nameof(SerialQuests.ShalwendWargod):
-                rewardUnitsNames.Add("128");
+                rewardUnitName = "128";
                 break;
             case nameof(SerialQuests.ShalwendDeadlyKnight):
-                rewardUnitsNames.Add("134");
+                rewardUnitName = "134";
                 break;
             case nameof(ScoutQuests.NarwhalBlue):
-                rewardUnitsNames.Add("130");
+                rewardUnitName = "130";
                 break;
             case nameof(ScoutQuests.NarwhalCheese):
-                rewardUnitsNames.Add("131");
+                rewardUnitName = "131";
                 break;
             case nameof(ScoutQuests.NarwhalEmerald):
-                rewardUnitsNames.Add("132");
+                rewardUnitName = "132";
                 break;
             case nameof(ScoutQuests.NarwhalCrimson):
-                rewardUnitsNames.Add("133");
+                rewardUnitName = "133";
                 break;
             default:
-                rewardUnitsNames.Add("122");
+                rewardUnitName = "122";
                 break;
         }
 
-        return rewardUnitsNames;
+        return rewardUnitName;
     }
 }
