@@ -551,6 +551,7 @@ public class Main : EnigmaScene
             addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_LIZZ, "Lizz Legend");
             addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_BRAD, "Brad Legend");
 
+            addToEnjinItemDisplay(EnjinTokenKeys.SHALWEND_DEADLY_KNIGHT, "Deadly Knight: Shalwend");
             addToEnjinItemDisplay(EnjinTokenKeys.KNIGHT_HEALER, "Deadly Knight: Healer");
             addToEnjinItemDisplay(EnjinTokenKeys.KNIGHT_BOMBER, "Deadly Knight: Bomber");
             addToEnjinItemDisplay(EnjinTokenKeys.KNIGHT_DESTROYER, "Deadly Knight: Destroyer");
@@ -563,7 +564,14 @@ public class Main : EnigmaScene
             addToEnjinItemDisplay(EnjinTokenKeys.DEMON_SCOUT, "Demon King: Scout");
             addToEnjinItemDisplay(EnjinTokenKeys.DEMON_TANK, "Demon King: Tank");
 
+            addToEnjinItemDisplay(EnjinTokenKeys.NARWHAL_BLUE, "Narhwal Blue");
+            addToEnjinItemDisplay(EnjinTokenKeys.NARWHAL_CHEESE, "Narwhal Cheese");
+            addToEnjinItemDisplay(EnjinTokenKeys.NARWHAL_EMERALD, "Narwhal Emerald");
+            addToEnjinItemDisplay(EnjinTokenKeys.NARWHAL_CRIMSON, "Narwhal Crimson");
+            addToEnjinItemDisplay(EnjinTokenKeys.NARWHAL_DIAMOND, "Narwhal Diamond");
+
             addToEnjinItemDisplay(EnjinTokenKeys.SWISSBORG_CYBORG, "Swissborg Cyborg");
+            addToEnjinItemDisplay(EnjinTokenKeys.SHALWEND_WARGOD, "Wargod Shalwend");           
 
             //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_1, "Damage Ore +1");
             //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_2, "Damage Ore +2");
