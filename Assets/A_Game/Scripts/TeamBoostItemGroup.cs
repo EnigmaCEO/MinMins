@@ -20,18 +20,25 @@ public class TeamBoostItemGroup
         IsToken = isToken;
     }
 
-    public static string GetOreImagePath(string category, int bonus)
+    public static string GetOreTier(int bonus)
     {
-        string oreTierSuffix = OreTiers.RAW;
+        string oreTier = OreTiers.RAW;
 
         if (bonus == OreBonuses.PERFECT_ORE)
         {
-            oreTierSuffix = OreTiers.PERFECT;
+            oreTier = OreTiers.PERFECT;
         }
         else if (bonus >= OreBonuses.POLISHED_ORE_MIN)
         {
-            oreTierSuffix = OreTiers.POLISHED;
+            oreTier = OreTiers.POLISHED;
         }
+
+        return oreTier;
+    }
+
+    public static string GetOreImagePath(string category, int bonus)
+    {
+        string oreTierSuffix = GetOreTier(bonus);
 
         return ("Images/Ore/" + category + "Ore" + oreTierSuffix);
     }

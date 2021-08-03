@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using GameConstants;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,11 +15,25 @@ public class BoostInfoPopUp : MonoBehaviour
         Close();
     }
 
-    public void Open(string name, string category, int bonus)
+    public void Open(TeamBoostItemGroup boostItemGroup)
     {
-        _nameText.text = LocalizationManager.GetTermTranslation(name);
-        _categoryText.text = LocalizationManager.GetTermTranslation(category);
-        _bonusText.text = "+" + bonus.ToString();
+        string displayName = "";
+
+        if (boostItemGroup.IsToken)
+        {
+            displayName = LocalizationManager.GetTermTranslation(boostItemGroup.Name);
+        }
+        else
+        {
+            string translatedOreTier = LocalizationManager.GetTermTranslation(TeamBoostItemGroup.GetOreTier(boostItemGroup.Bonus));
+            string translatedOreTerm = LocalizationManager.GetTermTranslation(Terms.ORE);
+
+            displayName = translatedOreTier + " " + translatedOreTerm;
+        }
+
+        _nameText.text = displayName;
+        _categoryText.text = LocalizationManager.GetTermTranslation(boostItemGroup.Category);
+        _bonusText.text = "+" + boostItemGroup.Bonus.ToString();
 
         gameObject.SetActive(true);
     }

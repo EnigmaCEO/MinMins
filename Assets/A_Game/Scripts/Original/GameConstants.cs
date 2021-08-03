@@ -84,6 +84,7 @@ namespace GameConstants
     public class Terms
     {
         public const string PING = "Ping:";
+        public const string ORE = "Ore";
     }
 
     public class SoundNames

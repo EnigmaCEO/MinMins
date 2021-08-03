@@ -64,7 +64,7 @@ public class TeamBoostSelection : EnigmaScene
             }
 
             TeamBoostGridItem gridItem = child.GetComponent<TeamBoostGridItem>();
-            TeamBoostItemGroup boostItem = gridItem.BoostItem;
+            TeamBoostItemGroup boostItem = gridItem.BoostItemGroup;
 
             if ((boostItem.Name == boostName) && (boostItem.Category == category) && (boostItem.Bonus.ToString() == bonus))
             {
@@ -78,7 +78,7 @@ public class TeamBoostSelection : EnigmaScene
     {
         if (_selectedGridItem != null)
         {
-            string teamBoostString = _selectedGridItem.name + "|" + _selectedGridItem.BoostItem.Category + "|" + _selectedGridItem.BoostItem.Bonus;
+            string teamBoostString = _selectedGridItem.name + "|" + _selectedGridItem.BoostItemGroup.Category + "|" + _selectedGridItem.BoostItemGroup.Bonus;
             PlayerPrefs.SetString(getTeamBoostKey(), teamBoostString);
             PlayerPrefs.Save();
         }
@@ -123,15 +123,15 @@ public class TeamBoostSelection : EnigmaScene
         teamBoostItemTemplate.SetActive(false);
     }
 
-    private void addBoostItem(GameObject teamBoostItemTemplate, TeamBoostItemGroup boostItem, bool isOre)
+    private void addBoostItem(GameObject teamBoostItemTemplate, TeamBoostItemGroup boostItemGroup, bool isOre)
     {
-        for (int i = 0; i < boostItem.Amount; i++)
+        for (int i = 0; i < boostItemGroup.Amount; i++)
         {
             GameObject itemObject = Instantiate<GameObject>(teamBoostItemTemplate, _teamBoostGridContent);
             Transform itemTransform = itemObject.transform;
 
             TeamBoostGridItem gridItem = itemObject.GetComponent<TeamBoostGridItem>();
-            gridItem.SetUp(boostItem, isOre);
+            gridItem.SetUp(boostItemGroup, isOre);
 
             gridItem.GetComponent<Button>().onClick.AddListener(() => onTeamBoostItemClicked(gridItem));
 
@@ -174,11 +174,11 @@ public class TeamBoostSelection : EnigmaScene
     private void selectTeamBoost(TeamBoostGridItem gridItem)
     {
         gridItem.Select();
-        TeamBoostItemGroup boostItem = gridItem.BoostItem;
+        TeamBoostItemGroup boostItemGroup = gridItem.BoostItemGroup;
 
-        _boostInfoPopUp.Open(boostItem.Name, boostItem.Category, boostItem.Bonus);
+        _boostInfoPopUp.Open(boostItemGroup);
 
-        GameStats.Instance.TeamBoostGroupSelected = gridItem.BoostItem;
+        GameStats.Instance.TeamBoostGroupSelected = gridItem.BoostItemGroup;
         _selectedGridItem = gridItem;
     }
 
