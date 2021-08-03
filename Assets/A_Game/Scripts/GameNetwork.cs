@@ -519,9 +519,10 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
             IsEnjinLinked = true;
         }
 #endif
-
-        foreach (string token in _availabilityByToken.Keys)
+        List<string> keys = new List<string>(_availabilityByToken.Keys);
+        foreach (string token in keys)
         {
+            //Debug.Log("Reset login values -> token: " + token);
             SetTokenAvailable(token, false);
         }
 
