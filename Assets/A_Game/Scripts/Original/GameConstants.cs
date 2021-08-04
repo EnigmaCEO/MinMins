@@ -64,7 +64,7 @@ namespace GameConstants
 
     public class OreBonuses
     {
-        public const int PERFECT_ORE = 10;
+        public const int PERFECT_ORE_MIN = 10;
         public const int POLISHED_ORE_MIN = 6;
         public const int RAW_ORE_MIN = 1;
     }
@@ -249,6 +249,18 @@ namespace GameConstants
     public class ResourcePaths
     {
         public const string UNIT_IMAGES = "Images/Units/";
+    }
+
+    public class RewardsChances
+    {
+        public const int GUARANTEED_ODDS = 100;
+        public const int ORE_ODDS = 20;
+
+        public const int ENJIN_REWARDS_ODDS = 5;
+        public const int ENJIN_REWARDS_ODDS_WITH_MINMINS_TOKEN = 25;
+
+        public const int ENJIN_WINS_FOR_GUARANTEED_ENJIN_REWARD = 10;
+        public const int ENJIN_WINS_FOR_GUARANTEED_ENJIN_REWARD_WITH_MINMINS_TOKEN = 5;
     }
 }
  

@@ -1,4 +1,5 @@
-﻿using Enigma.CoreSystems;
+﻿using CodeStage.AntiCheat.Storage;
+using Enigma.CoreSystems;
 using GameConstants;
 using GameEnums;
 using System.Collections;
@@ -36,42 +37,83 @@ public class QuestConfirmPopUp : MonoBehaviour
         _sceneToLoad = sceneToLoad;
         _questTypeToConfirm = questTypeToConfirm;
 
+        int guaranteedOdds = RewardsChances.GUARANTEED_ODDS;
+
         string unitName = getQuestUnitRewardName(questStringToConfirm); 
         if (unitName != "")
         {
             GameObject unitReward = Instantiate<GameObject>(_unitRewardTemplate, _rewardsGridContent);
             unitReward.GetComponent<UnitRewardGridItem>().Setup(unitName);
-            setGuaranteed(unitReward, true);
+            setOdds(unitReward, guaranteedOdds);
             unitReward.SetActive(true);
         }
 
-        addBoxReward(BoxTiers.GOLD, true);
-        addBoxReward(BoxTiers.BRONZE, false);
+        addBoxReward(BoxTiers.GOLD, guaranteedOdds);
+        addBoxReward(BoxTiers.BRONZE, guaranteedOdds);
 
         GameInventory gameInventory = GameInventory.Instance;
+
         int maxLevel = gameInventory.GetQuestMaxLevel(questStringToConfirm);
-        int maxOreBonus = gameInventory.GetLevelMaxBonus(maxLevel);
+
+        float maxOreBonusAtMaxLevel = (float)gameInventory.GetLevelMaxBonus(maxLevel);
+        float minOreBonusAtMaxLevel = (float)gameInventory.GetLevelMinBonus(maxLevel);
+        
+
+
+        float oreProbability = (float)RewardsChances.ORE_ODDS/(float)RewardsChances.GUARANTEED_ODDS;
 
         string[] boostCategories = gameInventory.BoostCategories;
+
+        float perfectOreProbability = getOreTierProbability(maxOreBonusAtMaxLevel, minOreBonusAtMaxLevel, (float)OreBonuses.PERFECT_ORE_MIN);
+        float finalPerfectOreProbability = oreProbability * perfectOreProbability;
+
+        float polishedOreProbability = getOreTierProbability(maxOreBonusAtMaxLevel, minOreBonusAtMaxLevel, (float)OreBonuses.POLISHED_ORE_MIN);
+        float finalPolishedOreProbability = oreProbability * polishedOreProbability;
+
+        int minLevel = 1;
+        float maxOreBonusAtMinLevel = (float)gameInventory.GetLevelMaxBonus(minLevel);
+        float minOreBonusAtMinLevel = (float)gameInventory.GetLevelMinBonus(minLevel);
+        float rawOreProbability = getOreTierProbability(maxOreBonusAtMinLevel, minOreBonusAtMinLevel, (float)OreBonuses.RAW_ORE_MIN);
+        float finalRawOreProbability = rawOreProbability * oreProbability;
 
         int count = boostCategories.Length;
         for (int i = 0; i < count; i++)
         {
             string boostCategory = boostCategories[i];
-            if (maxOreBonus == OreBonuses.PERFECT_ORE)
+            if (finalPerfectOreProbability > 0)
             {
-                addBoostReward(boostCategory, OreTiers.PERFECT, OreBonuses.PERFECT_ORE, false);
+                addBoostReward(boostCategory, OreTiers.PERFECT, OreBonuses.PERFECT_ORE_MIN, getOddFromProbability(finalPerfectOreProbability));
             }
 
-            if (maxOreBonus >= OreBonuses.POLISHED_ORE_MIN)
+            if (finalPolishedOreProbability > 0)
             {
-                addBoostReward(boostCategory, OreTiers.POLISHED, OreBonuses.POLISHED_ORE_MIN, false);
+                addBoostReward(boostCategory, OreTiers.POLISHED, OreBonuses.POLISHED_ORE_MIN, getOddFromProbability(finalPolishedOreProbability));
             }
 
-            addBoostReward(boostCategory, OreTiers.RAW, OreBonuses.RAW_ORE_MIN, false);
+            addBoostReward(boostCategory, OreTiers.RAW, OreBonuses.RAW_ORE_MIN, getOddFromProbability(finalRawOreProbability));
         }
 
         gameObject.SetActive(true);
+    }
+
+    private int getOddFromProbability(float probability)
+    {
+        return Mathf.FloorToInt(probability * (float)RewardsChances.GUARANTEED_ODDS);
+    }
+
+    private float getOreTierProbability(float maxOreBonus, float minOreBonus, float minRequiredBonus)
+    {
+        float oreTierProbabilityNumerator = maxOreBonus - minRequiredBonus + 1.0f;
+        if (oreTierProbabilityNumerator < 0)
+        {
+            oreTierProbabilityNumerator = 0;
+        }
+
+        float oreTierProbabilityDenominator = maxOreBonus - minOreBonus + 1.0f;
+
+        float oreTierProbability = oreTierProbabilityNumerator / oreTierProbabilityDenominator;
+        
+        return oreTierProbability;
     }
 
     public void Close(bool destroyChildren)
@@ -103,27 +145,27 @@ public class QuestConfirmPopUp : MonoBehaviour
         Close(true);
     }
 
-    private void addBoxReward(int boxTier, bool guaranteed)
+    private void addBoxReward(int boxTier, int odds)
     {
         GameObject reward = Instantiate<GameObject>(_boxRewardTemplate, _rewardsGridContent);
         reward.GetComponent<BoxRewardGridItem>().SetUp(boxTier, false);
-        setGuaranteed(reward, guaranteed);
+        setOdds(reward, odds);
         reward.SetActive(true);
     }
 
-    private void addBoostReward(string category, string oreTier, int bonus, bool guaranteed)
+    private void addBoostReward(string category, string oreTier, int bonus, int odds)
     {
         GameObject boostReward = Instantiate<GameObject>(_boostRewardTemplate, _rewardsGridContent);
         BoostRewardGridItem boostRewardScript = boostReward.GetComponent<BoostRewardGridItem>();
         boostRewardScript.SetUp(category, bonus, false);
         boostRewardScript.SetTextForQuestReward(oreTier, category);
-        setGuaranteed(boostReward, guaranteed);
+        setOdds(boostReward, odds);
         boostReward.SetActive(true);
     }
 
-    private void setGuaranteed(GameObject reward, bool guaranteed)
+    private void setOdds(GameObject reward, int odds)
     {
-        reward.GetComponent<RewardChanceDisplay>().Set(guaranteed);
+        reward.GetComponent<RewardChanceDisplay>().Set(odds);
     }
 
     private string getQuestUnitRewardName(string questString)

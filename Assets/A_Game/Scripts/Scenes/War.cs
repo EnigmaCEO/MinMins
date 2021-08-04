@@ -2599,20 +2599,20 @@ public class War : NetworkEntity
                 
                 if (NetworkManager.LoggedIn && gameNetwork.IsEnjinLinked)
                 {
-                    int chance = 5;
-                    int enjinWinsRequired = 10;
+                    int chance = RewardsChances.ENJIN_REWARDS_ODDS;
+                    int enjinWinsRequired = RewardsChances.ENJIN_WINS_FOR_GUARANTEED_ENJIN_REWARD;
 
                     if (gameNetwork.GetIsTokenAvailable(EnjinTokenKeys.MINMINS_TOKEN))
                     {
-                        chance = 25;
-                        enjinWinsRequired = 5;
+                        chance = RewardsChances.ENJIN_REWARDS_ODDS_WITH_MINMINS_TOKEN;
+                        enjinWinsRequired = RewardsChances.ENJIN_WINS_FOR_GUARANTEED_ENJIN_REWARD_WITH_MINMINS_TOKEN;
                     }
 
                     Debug.Log("EnjinWins: " + ObscuredPrefs.GetInt("EnjinWins", 0));
 
                     if(ObscuredPrefs.GetInt("EnjinWins", 0) >= enjinWinsRequired)
                     {
-                        chance = 100;
+                        chance = RewardsChances.GUARANTEED_ODDS;
                         ObscuredPrefs.SetInt("EnjinWins", 0);
                     } 
                     else
@@ -2621,7 +2621,6 @@ public class War : NetworkEntity
                     }
 
                     int random = UnityEngine.Random.Range(1, 101);
-                    //random = 25;
                     Debug.Log("Chance: " + chance + " random: " + random);
 
                     bool forceEnjinRewardsOnChest = false;
@@ -2786,7 +2785,7 @@ public class War : NetworkEntity
         {
             int randomInt = UnityEngine.Random.Range(1, 101);
             Debug.LogWarning("Ore reward random int: " + randomInt);
-            gotBoostReward = (randomInt <= 20); //20% chance
+            gotBoostReward = (randomInt <= RewardsChances.ORE_ODDS); 
         }
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR

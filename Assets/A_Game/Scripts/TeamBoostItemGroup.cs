@@ -24,7 +24,7 @@ public class TeamBoostItemGroup
     {
         string oreTier = OreTiers.RAW;
 
-        if (bonus == OreBonuses.PERFECT_ORE)
+        if (bonus == OreBonuses.PERFECT_ORE_MIN)
         {
             oreTier = OreTiers.PERFECT;
         }

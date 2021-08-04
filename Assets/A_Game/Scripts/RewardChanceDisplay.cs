@@ -1,13 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RewardChanceDisplay : MonoBehaviour
 {
-    [SerializeField] private GameObject _guaranteedUI;
+    [SerializeField] private Text _guaranteedText;
 
-    public void Set(bool guaranteed)
+    public void Set(int odds)
     {
-        _guaranteedUI.SetActive(guaranteed);
+        _guaranteedText.text = odds.ToString() + "%";
     }
 }
