@@ -3439,7 +3439,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 583bd75ebbae7c141b728fb8e2379446, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DismissButton: {fileID: 0}
   _winnerText: {fileID: 0}
   _damageDealtValue: {fileID: 0}
   _damageReceivedValue: {fileID: 0}
@@ -3533,7 +3532,7 @@ AudioSource:
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -12449,7 +12448,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 583bd75ebbae7c141b728fb8e2379446, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DismissButton: {fileID: 0}
   _winnerText: {fileID: 0}
   _damageDealtValue: {fileID: 0}
   _damageReceivedValue: {fileID: 0}

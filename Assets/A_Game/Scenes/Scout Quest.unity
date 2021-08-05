@@ -3840,7 +3840,7 @@ GameObject:
   - component: {fileID: 1553381051}
   - component: {fileID: 1553381050}
   m_Layer: 0
-  m_Name: Global System Quest
+  m_Name: ScoutQuestManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
