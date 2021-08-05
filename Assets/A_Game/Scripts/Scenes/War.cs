@@ -603,7 +603,7 @@ public class War : NetworkEntity
     private void onHostPingSet(int value)
     {
         Debug.LogWarning("War::onHostPingSet -> value: " + value + " GetIsHost(): " + GetIsHost() + " GetIsGuest(): " + GetIsGuest());
-        string text = LocalizationManager.GetTermTranslation(GameConstants.Terms.PING) + " " + value.ToString(); 
+        string text = LocalizationManager.GetTermTranslation(GameConstants.LocalizationTerms.PING) + " " + value.ToString(); 
 
         if (GetIsHost())
         {
@@ -628,7 +628,7 @@ public class War : NetworkEntity
     private void onGuestPingSet(int value)
     {
         Debug.LogWarning("War::onGuestPingSet -> value: " + value + " GetIsHost(): " + GetIsHost() + " GetIsGuest(): " + GetIsGuest());
-        string text = LocalizationManager.GetTermTranslation(GameConstants.Terms.PING) + " " + value.ToString();
+        string text = LocalizationManager.GetTermTranslation(GameConstants.LocalizationTerms.PING) + " " + value.ToString();
 
         if (GetIsHost())
         {

@@ -26,7 +26,7 @@ public class BoostInfoPopUp : MonoBehaviour
         else
         {
             string translatedOreTier = LocalizationManager.GetTermTranslation(TeamBoostItemGroup.GetOreTier(boostItemGroup.Bonus));
-            string translatedOreTerm = LocalizationManager.GetTermTranslation(Terms.ORE);
+            string translatedOreTerm = LocalizationManager.GetTermTranslation(LocalizationTerms.ORE);
 
             displayName = translatedOreTier + " " + translatedOreTerm;
         }

@@ -8,17 +8,18 @@ public class GameHacks : SingletonPersistentPrefab<GameHacks>
 {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
     public bool EnableAllEnjinUnitTokens;
+    public bool EnableAllEnjinTokenQuests;
     public bool ForceEnjinRewardOnChest;
+    public bool AllEnjinTeamBoostTokens;
+    public bool EnjinLinked;
+
     public bool HideClouds;
     public bool BuyAndroid;
     public bool DecisionTimeFreeze;
     public bool WarVictory;
     public bool ChestHit;
     public bool ForcePvpAi;
-    public bool AllEnjinTeamBoostTokens;
-    public bool EnjinLinked;
     public bool TreatBattleResultsAsPrivateMatch;
-    public bool EnableAllEnjinTokenQuests;
 
     public bool UseOfflineTestWithdrawnItems = false;
     public List<string> OfflineTestWithdrawnTokenKeys = new List<string>();

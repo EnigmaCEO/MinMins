@@ -60,6 +60,7 @@ namespace GameConstants
         public const string RAW = "Raw";
         public const string POLISHED = "Polished";
         public const string PERFECT = "Perfect";
+        public const string QUEST_COMPLETED = "Quest completed";
     }
 
     public class OreBonuses
@@ -81,10 +82,13 @@ namespace GameConstants
         public const string ENJIN_AUTO_WITHDRAWAL = "* Items are immediately sent to your Enjin wallet after trade approval";
     }
 
-    public class Terms
+    public class LocalizationTerms
     {
         public const string PING = "Ping:";
         public const string ORE = "Ore";
+        public const string REQUIRES_TOKEN = "Requires Token: ";
+        public const string REQUIRES_ENOUGH_GLOBAL_SYSTEM_QUEST_POINTS = "Requires enough Global System Quest points.";
+        public const string QUEST_COMPLETED = "Quest Completed.";
     }
 
     public class SoundNames

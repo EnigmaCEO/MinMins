@@ -4,15 +4,10 @@ using UnityEngine;
 
 public class QuestGridItem : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] private GameObject _questCompletedUI;
 
-    // Update is called once per frame
-    void Update()
+    public void Set(bool completed)
     {
-        
+        _questCompletedUI.SetActive(completed);
     }
 }

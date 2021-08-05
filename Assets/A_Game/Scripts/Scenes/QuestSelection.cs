@@ -40,8 +40,6 @@ public class QuestSelection : MonoBehaviour
         _questProgressPanel.SetActive(false);
         _globalSystemQuestButton.SetActive(false);
 
-        _globalSystemQuestButton.GetComponent<Button>().onClick.AddListener(() => { onQuestButtonDown(GameInventory.Instance.GetGlobalSystemActiveQuestString(), QuestTypes.Scout); });  
-
         setNonGlobalQuestButton(_shalwendWargodQuestButton, EnjinTokenKeys.QUEST_WARGOD_SHALWEND, nameof(SerialQuests.ShalwendWargod), QuestTypes.Serial);
         setNonGlobalQuestButton(_shalwendDeadlyKnightQuestButton, EnjinTokenKeys.QUEST_DEADLY_KNIGHT_SHALWEND, nameof(SerialQuests.ShalwendDeadlyKnight), QuestTypes.Serial);
 
@@ -65,12 +63,12 @@ public class QuestSelection : MonoBehaviour
         bool tokenAvailable = GameNetwork.Instance.GetIsTokenAvailable(tokenKey);
         bool questCompleted = GameInventory.Instance.GetQuestCompleted(questString);
 
-        button.GetComponent<Button>().onClick.AddListener(() => { onQuestButtonDown(questString, questType); });
-
-        button.SetActive(allEnjinTokenQuestsEnabled || (tokenAvailable && !questCompleted));
+        button.GetComponent<Button>().onClick.AddListener(() => { onQuestButtonDown(allEnjinTokenQuestsEnabled || tokenAvailable, questString, questType, false, questCompleted); });
+        button.GetComponent<QuestGridItem>().Set(questCompleted);
+        //button.SetActive(allEnjinTokenQuestsEnabled || (tokenAvailable && !questCompleted));
     }
 
-    private void onQuestButtonDown(string questString, QuestTypes questType)
+    private void onQuestButtonDown(bool questAvailable, string questString, QuestTypes questType, bool isGlobalSystem, bool isCompleted)
     {
         GameSounds.Instance.PlayUiAdvanceSound();
 
@@ -81,7 +79,7 @@ public class QuestSelection : MonoBehaviour
             sceneToLoad = Scenes.SCOUT_QUEST;
         }
 
-        _questConfirmPopUp.Open(questString, sceneToLoad, questType);
+        _questConfirmPopUp.Open(questAvailable, questString, sceneToLoad, questType, isGlobalSystem, isCompleted);
     }
 
     public void OnBackButtonDown()
@@ -90,31 +88,29 @@ public class QuestSelection : MonoBehaviour
         SceneManager.LoadScene(EnigmaConstants.Scenes.MAIN);
     }
 
-    private void handleGlobalSystemQuestPanelAndButtonVisibility(int points)
+    private void handleGlobalSystemQuestPanelAndButtonStates(int points)
     {
         GameInventory gameInventory = GameInventory.Instance;
 
-        if (gameInventory.GetAllGlobalSystemQuestLevelsCompleted())
-        {
-            return;
-        }
+        //if (gameInventory.GetAllGlobalSystemQuestLevelsCompleted())
+        //{
+        //    return;
+        //}
 
         ScoutQuests globalSystemActiveQuest = gameInventory.GetGlobalSystemActiveQuest();
-        Sprite rewardSprite = gameInventory.GetQuestRewardSprite(globalSystemActiveQuest.ToString());
+        string questString = globalSystemActiveQuest.ToString();
+        Sprite rewardSprite = gameInventory.GetQuestRewardSprite(questString);
 
         _questProgressText.text = points.ToString() + " / " + _POINTS_FOR_QUEST.ToString();
         _questProgressFill.fillAmount = ((float)points) / _POINTS_FOR_QUEST;
 
+        bool questAvailable = false;
+
         if (points >= _POINTS_FOR_QUEST)
         {
-            _globalSystemQuestButton.transform.Find("QuestName").GetComponent<Text>().text = gameInventory.GetGlobalSystemActiveQuestName();
+            questAvailable = true;
 
-            if (rewardSprite != null)
-            {
-                _globalSystemQuestButton.transform.Find("icon").GetComponent<Image>().sprite = rewardSprite;
-            }
-
-            _globalSystemQuestButton.SetActive(true);
+            //_globalSystemQuestButton.SetActive(true);
             _questProgressPanel.SetActive(false);
         }
         else
@@ -126,34 +122,46 @@ public class QuestSelection : MonoBehaviour
 
             _questProgressPanel.SetActive(true);
         }
-    }
 
-    private void handleSwolesomeButtonVisibility(bool hasCode)
-    {
-        if (!hasCode)
-        {
-            return;
-        }
-
-        GameInventory gameInventory = GameInventory.Instance;
-
-        if (gameInventory.GetAllSwolesomeQuestLevelsCompleted())
-        {
-            return;
-        }
-
-        ScoutQuests swolesomeActiveQuest = gameInventory.GetSwolesomeActiveQuest();
-        Sprite rewardSprite = gameInventory.GetQuestRewardSprite(swolesomeActiveQuest.ToString());
-
-        _narwwhalEmeraldQuestButton.transform.Find("QuestName").GetComponent<Text>().text = gameInventory.GetSwolesomeActiveQuestName();
+        _globalSystemQuestButton.transform.Find("QuestName").GetComponent<Text>().text = gameInventory.GetGlobalSystemActiveQuestName();
 
         if (rewardSprite != null)
         {
-            _narwwhalEmeraldQuestButton.transform.Find("icon").GetComponent<Image>().sprite = rewardSprite;
+            _globalSystemQuestButton.transform.Find("icon").GetComponent<Image>().sprite = rewardSprite;
         }
 
-        _narwwhalEmeraldQuestButton.SetActive(true);
+        bool questCompleted = GameInventory.Instance.GetQuestCompleted(questString);
+        _globalSystemQuestButton.GetComponent<Button>().onClick.AddListener(() => { onQuestButtonDown(questAvailable, GameInventory.Instance.GetGlobalSystemActiveQuestString(), QuestTypes.Scout, true, questCompleted); });
+        _globalSystemQuestButton.GetComponent<QuestGridItem>().Set(questCompleted);
+        _globalSystemQuestButton.SetActive(true);
     }
+
+    //private void handleSwolesomeAvailability(bool hasCode)
+    //{
+    //    if (!hasCode)
+    //    {
+    //        return;
+    //    }
+
+    //    GameInventory gameInventory = GameInventory.Instance;
+
+    //    //if (gameInventory.GetAllSwolesomeQuestLevelsCompleted())
+    //    //{
+    //    //    return;
+    //    //}
+
+    //    ScoutQuests swolesomeActiveQuest = gameInventory.GetSwolesomeActiveQuest();
+    //    Sprite rewardSprite = gameInventory.GetQuestRewardSprite(swolesomeActiveQuest.ToString());
+
+    //    _narwwhalEmeraldQuestButton.transform.Find("QuestName").GetComponent<Text>().text = gameInventory.GetSwolesomeActiveQuestName();
+
+    //    if (rewardSprite != null)
+    //    {
+    //        _narwwhalEmeraldQuestButton.transform.Find("icon").GetComponent<Image>().sprite = rewardSprite;
+    //    }
+
+    //    _narwwhalEmeraldQuestButton.SetActive(true);
+    //}
 
     private void onGetQuestData(JSONNode response)
     {
@@ -229,7 +237,7 @@ public class QuestSelection : MonoBehaviour
                         points = progressNode.AsInt;
                     }
 
-                    handleGlobalSystemQuestPanelAndButtonVisibility(points);
+                    handleGlobalSystemQuestPanelAndButtonStates(points);
                 }
 
                 if (leadersNode != null)
@@ -249,7 +257,7 @@ public class QuestSelection : MonoBehaviour
         if (GameHacks.Instance.QuestsPoints.Enabled)
         {
             int points = GameHacks.Instance.QuestsPoints.ValueAsInt;
-            handleGlobalSystemQuestPanelAndButtonVisibility(points);
+            handleGlobalSystemQuestPanelAndButtonStates(points);
         }
 #endif
     }

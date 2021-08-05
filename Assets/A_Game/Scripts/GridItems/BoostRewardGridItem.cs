@@ -41,6 +41,6 @@ public class BoostRewardGridItem : MonoBehaviour
 
     public void SetTextForQuestReward(string oreTier, string categoryLabel)
     {
-        _categoryText.text = LocalizationManager.GetTermTranslation(oreTier) + " " + LocalizationManager.GetTermTranslation(Terms.ORE) + ": " + LocalizationManager.GetTermTranslation(categoryLabel);
+        _categoryText.text = LocalizationManager.GetTermTranslation(oreTier) + " " + LocalizationManager.GetTermTranslation(LocalizationTerms.ORE) + ": " + LocalizationManager.GetTermTranslation(categoryLabel);
     }
 }

@@ -5,6 +5,7 @@ using GameEnums;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class QuestConfirmPopUp : MonoBehaviour
 {
@@ -13,6 +14,9 @@ public class QuestConfirmPopUp : MonoBehaviour
     [SerializeField] private GameObject _unitRewardTemplate;
     [SerializeField] private GameObject _boostRewardTemplate;
     [SerializeField] private GameObject _boxRewardTemplate;
+
+    [SerializeField] private Text _messageText;
+    [SerializeField] private GameObject _confirmButton;
 
     private string _sceneToLoad = "";
     private string _questStringToConfirm = nameof(ScoutQuests.None);
@@ -31,7 +35,7 @@ public class QuestConfirmPopUp : MonoBehaviour
         gridTemplate.SetActive(false);
     }
 
-    public void Open(string questStringToConfirm, string sceneToLoad, QuestTypes questTypeToConfirm)
+    public void Open(bool questAvailable, string questStringToConfirm, string sceneToLoad, QuestTypes questTypeToConfirm, bool isGlobalSystem, bool questCompleted)
     {
         _questStringToConfirm = questStringToConfirm;
         _sceneToLoad = sceneToLoad;
@@ -58,8 +62,6 @@ public class QuestConfirmPopUp : MonoBehaviour
         float maxOreBonusAtMaxLevel = (float)gameInventory.GetLevelMaxBonus(maxLevel);
         float minOreBonusAtMaxLevel = (float)gameInventory.GetLevelMinBonus(maxLevel);
         
-
-
         float oreProbability = (float)RewardsChances.ORE_ODDS/(float)RewardsChances.GUARANTEED_ODDS;
 
         string[] boostCategories = gameInventory.BoostCategories;
@@ -93,6 +95,24 @@ public class QuestConfirmPopUp : MonoBehaviour
             addBoostReward(boostCategory, OreTiers.RAW, OreBonuses.RAW_ORE_MIN, getOddFromProbability(finalRawOreProbability));
         }
 
+        if (questCompleted)
+        {
+            _messageText.text = LocalizationManager.GetTermTranslation(LocalizationTerms.QUEST_COMPLETED);
+        }
+        else if (!questAvailable)
+        {
+            if (isGlobalSystem)
+            {
+                _messageText.text = LocalizationManager.GetTermTranslation(LocalizationTerms.REQUIRES_ENOUGH_GLOBAL_SYSTEM_QUEST_POINTS);
+            }
+            else
+            {
+                _messageText.text = LocalizationManager.GetTermTranslation(LocalizationTerms.REQUIRES_TOKEN) + gameInventory.GetQuestName(questStringToConfirm);
+            }
+        }
+
+        _messageText.gameObject.SetActive(!questAvailable || questCompleted);
+        _confirmButton.SetActive(questAvailable && !questCompleted);
         gameObject.SetActive(true);
     }
 
