@@ -27,6 +27,7 @@ public class QuestSelection : MonoBehaviour
     [SerializeField] private Text _questLeadersText;
 
     [SerializeField] private QuestConfirmPopUp _questConfirmPopUp;
+    [SerializeField] BasicPopUp _loginForPvpPopUp;
 
     private const int _POINTS_FOR_QUEST = 1000;
 
@@ -47,6 +48,42 @@ public class QuestSelection : MonoBehaviour
         setNonGlobalQuestButton(_narwhalCheeseQuestButton, EnjinTokenKeys.QUEST_CHEESE_NARWHAL, nameof(ScoutQuests.NarwhalCheese), QuestTypes.Scout);
         setNonGlobalQuestButton(_narwwhalEmeraldQuestButton, EnjinTokenKeys.QUEST_EMERALD_NARWHAL, nameof(ScoutQuests.NarwhalEmerald), QuestTypes.Scout);
         setNonGlobalQuestButton(_narwhalCrimsonQuestButton, EnjinTokenKeys.QUEST_CRIMSON_NARWHAL, nameof(ScoutQuests.NarwhalCrimson), QuestTypes.Scout);
+    }
+
+    public void OnSinglePlayerButtonDown()
+    {
+        print("OnSinglePlayerButtonDown");
+        GameSounds.Instance.PlayUiAdvanceSound();
+        GameStats.Instance.Mode = GameModes.SinglePlayer;
+        goToLevels();
+    }
+
+    public void OnPvpButtonDown()
+    {
+        print("OnPvpButtonDown");
+        GameSounds.Instance.PlayUiAdvanceSound();
+
+        if (NetworkManager.LoggedIn)
+        {
+            GameStats.Instance.Mode = GameModes.Pvp;
+            goToLevels();
+        }
+        else
+        {
+            _loginForPvpPopUp.Open();
+        }
+    }
+
+    public void OnStoreButtonDown()
+    {
+        print("OnStoreButtonDown");
+        GameSounds.Instance.PlayUiAdvanceSound();
+        SceneManager.LoadScene(GameConstants.Scenes.STORE);
+    }
+
+    private void goToLevels()
+    {
+        SceneManager.LoadScene(GameConstants.Scenes.LEVELS);
     }
 
     private void setNonGlobalQuestButton(GameObject button, string tokenKey, string questString, QuestTypes questType)
