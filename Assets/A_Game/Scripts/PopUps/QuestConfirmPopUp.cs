@@ -107,7 +107,7 @@ public class QuestConfirmPopUp : MonoBehaviour
             }
             else
             {
-                _messageText.text = LocalizationManager.GetTermTranslation(LocalizationTerms.REQUIRES_TOKEN) + gameInventory.GetQuestName(questStringToConfirm);
+                _messageText.text = LocalizationManager.GetTermTranslation(LocalizationTerms.REQUIRES_TOKEN) + ": " + gameInventory.GetQuestName(questStringToConfirm);
             }
         }
 

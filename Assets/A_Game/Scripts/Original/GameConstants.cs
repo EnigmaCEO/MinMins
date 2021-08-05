@@ -86,9 +86,9 @@ namespace GameConstants
     {
         public const string PING = "Ping:";
         public const string ORE = "Ore";
-        public const string REQUIRES_TOKEN = "Requires Token: ";
+        public const string REQUIRES_TOKEN = "Requires Token";
         public const string REQUIRES_ENOUGH_GLOBAL_SYSTEM_QUEST_POINTS = "Requires enough Global System Quest points.";
-        public const string QUEST_COMPLETED = "Quest Completed.";
+        public const string QUEST_COMPLETED = "Quest is already completed.";
     }
 
     public class SoundNames

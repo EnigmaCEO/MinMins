@@ -2431,6 +2431,50 @@ MonoBehaviour:
       - 
       Flags: 0000000000
       Languages_Touch: []
+    - Term: Requires Token
+      TermType: 0
+      Description: 
+      Languages:
+      - Requires Token
+      - Requieres Ficha
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Requires enough Global System Quest points.
+      TermType: 0
+      Description: 
+      Languages:
+      - Requires enough Global System Quest points.
+      - "Requieres suficientes puntos del Sistema de B\xFAsqueda Global."
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Quest is already completed.
+      TermType: 0
+      Description: 
+      Languages:
+      - Quest is already completed.
+      - "La B\xFAsqueda ya se ha completado."
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Quest Rewards
+      TermType: 0
+      Description: 
+      Languages:
+      - Quest Rewards
+      - "Recompensas de B\xFAsqueda"
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
     - Term: Tap boost to select/deselect.
       TermType: 0
       Description: 
@@ -2466,7 +2510,7 @@ MonoBehaviour:
     Google_WebServiceURL: https://script.google.com/macros/s/AKfycbw05ISkGCPtIS0hMzFD5jshgfH09mIP6BAxRKhWsA/exec
     Google_SpreadsheetKey: 1iIWCtExuyR2XXyYkJv6y83PTVMPC4FxzSITGGroefcg
     Google_SpreadsheetName: I2Loc MinMins Localization
-    Google_LastUpdatedVersion: 1628031725352
+    Google_LastUpdatedVersion: 1628123876803
     Google_Password: shalwend
     GoogleUpdateFrequency: 0
     GoogleInEditorCheckFrequency: 0
