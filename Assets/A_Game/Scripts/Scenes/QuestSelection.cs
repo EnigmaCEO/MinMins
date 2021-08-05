@@ -274,6 +274,13 @@ public class QuestSelection : MonoBehaviour
                         points = progressNode.AsInt;
                     }
 
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+                    if (GameHacks.Instance.QuestsPoints.Enabled)
+                    {
+                        points = GameHacks.Instance.QuestsPoints.ValueAsInt;
+                    }
+#endif
+
                     handleGlobalSystemQuestPanelAndButtonStates(points);
                 }
 
@@ -289,13 +296,5 @@ public class QuestSelection : MonoBehaviour
                 }
             }
         }
-
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
-        if (GameHacks.Instance.QuestsPoints.Enabled)
-        {
-            int points = GameHacks.Instance.QuestsPoints.ValueAsInt;
-            handleGlobalSystemQuestPanelAndButtonStates(points);
-        }
-#endif
     }
 }
