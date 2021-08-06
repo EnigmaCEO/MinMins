@@ -90,14 +90,26 @@ public class QuestSelection : MonoBehaviour
     {
         bool allEnjinQuestCodesAvailable = false;
 
-        unlockEnjinKeys.Add(EnigmaConstants.EnjinTokenKeys.ENIGMA_TOKEN); //Unlocks all non global quests
+        bool allowEnigmaTokenUnlock = true;
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
-        if (GameHacks.Instance.EnableAllEnjinCodeQuests)
+        GameHacks gameHacks = GameHacks.Instance;
+
+        if (gameHacks.EnableAllEnjinCodeQuests)
         {
             allEnjinQuestCodesAvailable = true;
         }
+
+        if (gameHacks.DisableEnigmaTokenQuestUnlocks)
+        {
+            allowEnigmaTokenUnlock = false;
+        }
 #endif
+
+        if (allowEnigmaTokenUnlock)
+        {
+            unlockEnjinKeys.Add(EnigmaConstants.EnjinTokenKeys.ENIGMA_TOKEN); //Unlocks all non global quests
+        }
 
         bool questUnlocked = false;
         foreach (string enjinKey in unlockEnjinKeys)
