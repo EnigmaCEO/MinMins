@@ -2602,7 +2602,7 @@ public class War : NetworkEntity
                     int chance = RewardsChances.ENJIN_REWARDS_ODDS;
                     int enjinWinsRequired = RewardsChances.ENJIN_WINS_FOR_GUARANTEED_ENJIN_REWARD;
 
-                    if (gameNetwork.GetIsTokenAvailable(EnjinTokenKeys.MINMINS_TOKEN))
+                    if (gameNetwork.GetIsEnjinKeyAvailable(GameConstants.EnjinTokenKeys.MINMINS_TOKEN))
                     {
                         chance = RewardsChances.ENJIN_REWARDS_ODDS_WITH_MINMINS_TOKEN;
                         enjinWinsRequired = RewardsChances.ENJIN_WINS_FOR_GUARANTEED_ENJIN_REWARD_WITH_MINMINS_TOKEN;

@@ -2431,12 +2431,12 @@ MonoBehaviour:
       - 
       Flags: 0000000000
       Languages_Touch: []
-    - Term: Requires Token
+    - Term: Requires
       TermType: 0
       Description: 
       Languages:
-      - Requires Token
-      - Requieres Ficha
+      - Requires
+      - Requieres
       - 
       - 
       - 
@@ -2510,7 +2510,7 @@ MonoBehaviour:
     Google_WebServiceURL: https://script.google.com/macros/s/AKfycbw05ISkGCPtIS0hMzFD5jshgfH09mIP6BAxRKhWsA/exec
     Google_SpreadsheetKey: 1iIWCtExuyR2XXyYkJv6y83PTVMPC4FxzSITGGroefcg
     Google_SpreadsheetName: I2Loc MinMins Localization
-    Google_LastUpdatedVersion: 1628123876803
+    Google_LastUpdatedVersion: 1628206838459
     Google_Password: shalwend
     GoogleUpdateFrequency: 0
     GoogleInEditorCheckFrequency: 0

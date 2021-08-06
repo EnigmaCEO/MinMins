@@ -38,7 +38,7 @@ namespace GameConstants
         public const string SIZE = "Size";
     }
 
-    public class TeamBoostEnjinTokens
+    public class BoostEnjinTokenKeys
     {
         public const string SWORD = "Apochrome Sword";
         public const string ARMOR = "Soulshift Armor";
@@ -86,7 +86,8 @@ namespace GameConstants
     {
         public const string PING = "Ping:";
         public const string ORE = "Ore";
-        public const string REQUIRES_TOKEN = "Requires Token";
+        public const string REQUIRES = "Requires";
+        public const string OR = "or";
         public const string REQUIRES_ENOUGH_GLOBAL_SYSTEM_QUEST_POINTS = "Requires enough Global System Quest points.";
         public const string QUEST_COMPLETED = "Quest is already completed.";
     }
@@ -159,11 +160,6 @@ namespace GameConstants
         public const string NARWHAL_CRIMSON = "narwhal_crimson";
         public const string NARWHAL_DIAMOND = "narwhal_diamond";
 
-        public const string QUEST_BLUE_NARWHAL = "quest_bluenarwhal";
-        public const string QUEST_CHEESE_NARWHAL = "quest_cheesenarwhal";
-        public const string QUEST_EMERALD_NARWHAL = "quest_emeraldnarwhal";
-        public const string QUEST_CRIMSON_NARWHAL = "quest_crimsonnarwhal";
-
         public const string QUEST_WARGOD_SHALWEND = "quest_shalwend";
         public const string QUEST_DEADLY_KNIGHT_SHALWEND = "quest_deadlyknight";
 
@@ -223,6 +219,14 @@ namespace GameConstants
         public const string ENJIN_SIZE_ORE_ITEM_9 = "enjin_size_ore_9";
         public const string ENJIN_SIZE_ORE_ITEM_10 = "enjin_size_ore_10";
         */
+    }
+
+    public class EnjinCodeKeys
+    {
+        public const string QUEST_BLUE_NARWHAL = "quest_bluenarwhal";
+        public const string QUEST_CHEESE_NARWHAL = "quest_cheesenarwhal";
+        public const string QUEST_EMERALD_NARWHAL = "quest_emeraldnarwhal";
+        public const string QUEST_CRIMSON_NARWHAL = "quest_crimsonnarwhal";
     }
 
     public class BoxIndexes

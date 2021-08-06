@@ -73,7 +73,7 @@ public class RewardsInventoryPopUp : MonoBehaviour
 
         if (useOnlineWithdrawnItems)
         {
-            List<string> availableTokens = GameNetwork.Instance.GetTokensAvailable();
+            List<string> availableTokens = GameNetwork.Instance.GetEnjinKeysAvailable();
             foreach (string tokenKey in availableTokens)
             {
                 setWithdrawnToken(tokenKey);

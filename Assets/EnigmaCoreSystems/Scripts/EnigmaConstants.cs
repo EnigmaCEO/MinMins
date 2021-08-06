@@ -10,7 +10,7 @@ namespace EnigmaConstants
         public const string NONE = "None";
     }
 
-    public class TokenKeys
+    public class EnjinTokenKeys
     {
         public const string ENJIN_MFT = "enjin_mft";
         public const string ENIGMA_TOKEN = "enigma_token";

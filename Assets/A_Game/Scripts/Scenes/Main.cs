@@ -480,9 +480,9 @@ public class Main : EnigmaScene
         _enjinWindow.gameObject.SetActive(false);
     }
 
-    private void addToEnjinItemDisplay(string tokenName, string label)
+    private void addToEnjinItemDisplay(string enjinKey, string label)
     {
-        if (GameNetwork.Instance.GetIsTokenAvailable(tokenName))
+        if (GameNetwork.Instance.GetIsEnjinKeyAvailable(enjinKey))
         {
             GameObject newEnjinTokenItem = Instantiate<GameObject>(_enjinTokenTemplate, _enjinTokensContent);
             newEnjinTokenItem.name = label;
@@ -534,10 +534,15 @@ public class Main : EnigmaScene
             //Text text = _enjinIcon.GetComponentInChildren<Text>();
             //text.text = ""; 
 
-            addToEnjinItemDisplay(EnigmaConstants.TokenKeys.ENJIN_MFT, "Enjin MFT");
-            addToEnjinItemDisplay(EnigmaConstants.TokenKeys.ENIGMA_TOKEN, "Enigma Token");
+            GameInventory gameInventory = GameInventory.Instance;
+
+            addToEnjinItemDisplay(EnigmaConstants.EnjinTokenKeys.ENJIN_MFT, "Enjin MFT");
+            addToEnjinItemDisplay(EnigmaConstants.EnjinTokenKeys.ENIGMA_TOKEN, "Enigma Token");
 
             addToEnjinItemDisplay(EnjinTokenKeys.MINMINS_TOKEN, "Min-Mins Token");
+
+            addToEnjinItemDisplay(EnjinTokenKeys.QUEST_DEADLY_KNIGHT_SHALWEND, gameInventory.GetEnjinKeyName(EnjinTokenKeys.QUEST_DEADLY_KNIGHT_SHALWEND));
+            addToEnjinItemDisplay(EnjinTokenKeys.QUEST_WARGOD_SHALWEND, gameInventory.GetEnjinKeyName(EnjinTokenKeys.QUEST_WARGOD_SHALWEND));
 
             addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_MAXIM, "Maxim Legend");
             addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_WITEK, "Witek Legend");

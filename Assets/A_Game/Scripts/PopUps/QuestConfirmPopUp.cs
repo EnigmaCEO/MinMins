@@ -35,7 +35,7 @@ public class QuestConfirmPopUp : MonoBehaviour
         gridTemplate.SetActive(false);
     }
 
-    public void Open(bool questAvailable, string questStringToConfirm, string sceneToLoad, QuestTypes questTypeToConfirm, bool isGlobalSystem, bool questCompleted)
+    public void Open(bool questUnlocked, List<string> unlockEnjinKeys, string questStringToConfirm, string sceneToLoad, QuestTypes questTypeToConfirm, bool isGlobalSystem, bool questCompleted)
     {
         _questStringToConfirm = questStringToConfirm;
         _sceneToLoad = sceneToLoad;
@@ -99,7 +99,7 @@ public class QuestConfirmPopUp : MonoBehaviour
         {
             _messageText.text = LocalizationManager.GetTermTranslation(LocalizationTerms.QUEST_COMPLETED);
         }
-        else if (!questAvailable)
+        else if (!questUnlocked)
         {
             if (isGlobalSystem)
             {
@@ -107,12 +107,24 @@ public class QuestConfirmPopUp : MonoBehaviour
             }
             else
             {
-                _messageText.text = LocalizationManager.GetTermTranslation(LocalizationTerms.REQUIRES_TOKEN) + ": " + gameInventory.GetQuestName(questStringToConfirm);
+
+                string enjinKeysMessage = "";
+                foreach (string enjinKey in unlockEnjinKeys)
+                {
+                    if (enjinKeysMessage != "")
+                    {
+                        enjinKeysMessage += " " + LocalizationManager.GetTermTranslation(LocalizationTerms.OR) + " ";                     
+                    }
+
+                    enjinKeysMessage += gameInventory.GetEnjinKeyName(enjinKey);
+                }
+
+                _messageText.text = LocalizationManager.GetTermTranslation(LocalizationTerms.REQUIRES) + ": " + enjinKeysMessage;
             }
         }
 
-        _messageText.gameObject.SetActive(!questAvailable || questCompleted);
-        _confirmButton.SetActive(questAvailable && !questCompleted);
+        _messageText.gameObject.SetActive(!questUnlocked || questCompleted);
+        _confirmButton.SetActive(questUnlocked && !questCompleted);
         gameObject.SetActive(true);
     }
 

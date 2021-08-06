@@ -41,13 +41,13 @@ public class QuestSelection : MonoBehaviour
         _questProgressPanel.SetActive(false);
         _globalSystemQuestButton.SetActive(false);
 
-        setNonGlobalQuestButton(_shalwendWargodQuestButton, EnjinTokenKeys.QUEST_WARGOD_SHALWEND, nameof(SerialQuests.ShalwendWargod), QuestTypes.Serial);
-        setNonGlobalQuestButton(_shalwendDeadlyKnightQuestButton, EnjinTokenKeys.QUEST_DEADLY_KNIGHT_SHALWEND, nameof(SerialQuests.ShalwendDeadlyKnight), QuestTypes.Serial);
+        setNonGlobalQuestButton(_shalwendWargodQuestButton, new List<string> { EnjinTokenKeys.QUEST_WARGOD_SHALWEND }, nameof(SerialQuests.ShalwendWargod), QuestTypes.Serial);
+        setNonGlobalQuestButton(_shalwendDeadlyKnightQuestButton, new List<string> { EnjinTokenKeys.QUEST_DEADLY_KNIGHT_SHALWEND }, nameof(SerialQuests.ShalwendDeadlyKnight), QuestTypes.Serial);
 
-        setNonGlobalQuestButton(_narwhalBlueQuestButton, EnjinTokenKeys.QUEST_BLUE_NARWHAL, nameof(ScoutQuests.NarwhalBlue), QuestTypes.Scout);
-        setNonGlobalQuestButton(_narwhalCheeseQuestButton, EnjinTokenKeys.QUEST_CHEESE_NARWHAL, nameof(ScoutQuests.NarwhalCheese), QuestTypes.Scout);
-        setNonGlobalQuestButton(_narwwhalEmeraldQuestButton, EnjinTokenKeys.QUEST_EMERALD_NARWHAL, nameof(ScoutQuests.NarwhalEmerald), QuestTypes.Scout);
-        setNonGlobalQuestButton(_narwhalCrimsonQuestButton, EnjinTokenKeys.QUEST_CRIMSON_NARWHAL, nameof(ScoutQuests.NarwhalCrimson), QuestTypes.Scout);
+        setNonGlobalQuestButton(_narwhalBlueQuestButton, new List<string> { EnjinCodeKeys.QUEST_BLUE_NARWHAL }, nameof(ScoutQuests.NarwhalBlue), QuestTypes.Scout);
+        setNonGlobalQuestButton(_narwhalCheeseQuestButton, new List<string> { EnjinCodeKeys.QUEST_CHEESE_NARWHAL }, nameof(ScoutQuests.NarwhalCheese), QuestTypes.Scout);
+        setNonGlobalQuestButton(_narwwhalEmeraldQuestButton, new List<string> { EnjinCodeKeys.QUEST_EMERALD_NARWHAL }, nameof(ScoutQuests.NarwhalEmerald), QuestTypes.Scout);
+        setNonGlobalQuestButton(_narwhalCrimsonQuestButton, new List<string> { EnjinCodeKeys.QUEST_CRIMSON_NARWHAL }, nameof(ScoutQuests.NarwhalCrimson), QuestTypes.Scout);
     }
 
     public void OnSinglePlayerButtonDown()
@@ -86,26 +86,36 @@ public class QuestSelection : MonoBehaviour
         SceneManager.LoadScene(GameConstants.Scenes.LEVELS);
     }
 
-    private void setNonGlobalQuestButton(GameObject button, string tokenKey, string questString, QuestTypes questType)
+    private void setNonGlobalQuestButton(GameObject button, List<string> unlockEnjinKeys, string questString, QuestTypes questType)
     {
-        bool allEnjinTokenQuestsEnabled = false;
+        bool allEnjinQuestCodesAvailable = false;
+
+        unlockEnjinKeys.Add(EnigmaConstants.EnjinTokenKeys.ENIGMA_TOKEN); //Unlocks all non global quests
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
-        if (GameHacks.Instance.EnableAllEnjinTokenQuests)
+        if (GameHacks.Instance.EnableAllEnjinCodeQuests)
         {
-            allEnjinTokenQuestsEnabled = true;
+            allEnjinQuestCodesAvailable = true;
         }
 #endif
 
-        bool tokenAvailable = GameNetwork.Instance.GetIsTokenAvailable(tokenKey);
+        bool questUnlocked = false;
+        foreach (string enjinKey in unlockEnjinKeys)
+        {
+            if (GameNetwork.Instance.GetIsEnjinKeyAvailable(enjinKey) == true)
+            {
+                questUnlocked = true;
+                break;
+            }
+        }
+
         bool questCompleted = GameInventory.Instance.GetQuestCompleted(questString);
 
-        button.GetComponent<Button>().onClick.AddListener(() => { onQuestButtonDown(allEnjinTokenQuestsEnabled || tokenAvailable, questString, questType, false, questCompleted); });
+        button.GetComponent<Button>().onClick.AddListener(() => { onQuestButtonDown(allEnjinQuestCodesAvailable || questUnlocked, unlockEnjinKeys, questString, questType, false, questCompleted); });
         button.GetComponent<QuestGridItem>().Set(questCompleted);
-        //button.SetActive(allEnjinTokenQuestsEnabled || (tokenAvailable && !questCompleted));
     }
 
-    private void onQuestButtonDown(bool questAvailable, string questString, QuestTypes questType, bool isGlobalSystem, bool isCompleted)
+    private void onQuestButtonDown(bool questUnlocked, List<string> unlockEnjinKeys, string questString, QuestTypes questType, bool isGlobalSystem, bool isCompleted)
     {
         GameSounds.Instance.PlayUiAdvanceSound();
 
@@ -116,7 +126,7 @@ public class QuestSelection : MonoBehaviour
             sceneToLoad = Scenes.SCOUT_QUEST;
         }
 
-        _questConfirmPopUp.Open(questAvailable, questString, sceneToLoad, questType, isGlobalSystem, isCompleted);
+        _questConfirmPopUp.Open(questUnlocked, unlockEnjinKeys, questString, sceneToLoad, questType, isGlobalSystem, isCompleted);
     }
 
     public void OnBackButtonDown()
@@ -128,11 +138,6 @@ public class QuestSelection : MonoBehaviour
     private void handleGlobalSystemQuestPanelAndButtonStates(int points)
     {
         GameInventory gameInventory = GameInventory.Instance;
-
-        //if (gameInventory.GetAllGlobalSystemQuestLevelsCompleted())
-        //{
-        //    return;
-        //}
 
         ScoutQuests globalSystemActiveQuest = gameInventory.GetGlobalSystemActiveQuest();
         string questString = globalSystemActiveQuest.ToString();
@@ -146,8 +151,6 @@ public class QuestSelection : MonoBehaviour
         if (points >= _POINTS_FOR_QUEST)
         {
             questAvailable = true;
-
-            //_globalSystemQuestButton.SetActive(true);
             _questProgressPanel.SetActive(false);
         }
         else
@@ -168,7 +171,7 @@ public class QuestSelection : MonoBehaviour
         }
 
         bool questCompleted = GameInventory.Instance.GetQuestCompleted(questString);
-        _globalSystemQuestButton.GetComponent<Button>().onClick.AddListener(() => { onQuestButtonDown(questAvailable, GameInventory.Instance.GetGlobalSystemActiveQuestString(), QuestTypes.Scout, true, questCompleted); });
+        _globalSystemQuestButton.GetComponent<Button>().onClick.AddListener(() => { onQuestButtonDown(questAvailable, null, GameInventory.Instance.GetGlobalSystemActiveQuestString(), QuestTypes.Scout, true, questCompleted); });
         _globalSystemQuestButton.GetComponent<QuestGridItem>().Set(questCompleted);
         _globalSystemQuestButton.SetActive(true);
     }

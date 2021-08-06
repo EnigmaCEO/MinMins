@@ -369,6 +369,38 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
         return questName;
     }
 
+    public string GetEnjinKeyName(string enjinKey)
+    {
+        string enjinKeyName = enjinKey;
+
+        switch (enjinKey)
+        {
+            case EnigmaConstants.EnjinTokenKeys.ENIGMA_TOKEN:
+                enjinKeyName = "Enigma Token";
+                break;
+            case GameConstants.EnjinTokenKeys.QUEST_WARGOD_SHALWEND:
+                enjinKeyName = "Rank: Wargod Token";
+                break;
+            case GameConstants.EnjinTokenKeys.QUEST_DEADLY_KNIGHT_SHALWEND:
+                enjinKeyName = "Black Token";
+                break;
+            case EnjinCodeKeys.QUEST_BLUE_NARWHAL:
+                enjinKeyName = "Blue Narwhal Token";
+                break;
+            case EnjinCodeKeys.QUEST_CHEESE_NARWHAL:
+                enjinKeyName = "Cheese Narwhal Token";
+                break;
+            case EnjinCodeKeys.QUEST_EMERALD_NARWHAL:
+                enjinKeyName = "Emerald Narwhal Token";
+                break;
+            case EnjinCodeKeys.QUEST_CRIMSON_NARWHAL:
+                enjinKeyName = "Crimson Narwhal Token";
+                break;
+        }
+
+        return enjinKeyName;
+    }
+
     public Sprite GetQuestRewardSprite(string questString)
     {
         string rewardImagePath = "";
@@ -683,7 +715,7 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
 
     public void AddExpToUnit(string unitName, int expToAdd)
     {
-        if (GameNetwork.Instance.GetIsTokenAvailable(EnjinTokenKeys.MINMINS_TOKEN))
+        if (GameNetwork.Instance.GetIsEnjinKeyAvailable(GameConstants.EnjinTokenKeys.MINMINS_TOKEN))
         {
             expToAdd *= 2; // Min Min Token perk
         }
@@ -979,7 +1011,7 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
         for (int i = _legend_firstUnitNumber; i <= _legend_lastUnitNumer; i++)
         {
             string unitName = i.ToString();
-            if (gameNetwork.GetIsTokenAvailable(gameInventory.GetUnitNameToken(unitName)) && !HasUnit(unitName))
+            if (gameNetwork.GetIsEnjinKeyAvailable(gameInventory.GetUnitNameToken(unitName)) && !HasUnit(unitName))
             {
                 AddUnit(unitName, 0);
             }
@@ -1015,15 +1047,15 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
         {
             canBeWithdrawn = false;
         }
-        else if (unitName == GetTokenUnitName(EnjinTokenKeys.SWISSBORG_CYBORG))
+        else if (unitName == GetTokenUnitName(GameConstants.EnjinTokenKeys.SWISSBORG_CYBORG))
         {
             canBeWithdrawn = false;
         }
-        else if (checkUnitBetweenTokens(unitNumber, EnjinTokenKeys.ENJIN_MAXIM, EnjinTokenKeys.ENJIN_SIMON))
+        else if (checkUnitBetweenTokens(unitNumber, GameConstants.EnjinTokenKeys.ENJIN_MAXIM, GameConstants.EnjinTokenKeys.ENJIN_SIMON))
         {
             canBeWithdrawn = false;
         }
-        else if (checkUnitBetweenTokens(unitNumber, EnjinTokenKeys.ENJIN_ALEX, EnjinTokenKeys.ENJIN_LIZZ))
+        else if (checkUnitBetweenTokens(unitNumber, GameConstants.EnjinTokenKeys.ENJIN_ALEX, GameConstants.EnjinTokenKeys.ENJIN_LIZZ))
         {
             canBeWithdrawn = false;
         }
@@ -1110,47 +1142,47 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
 
     private void initializeUnitNameByToken()
     {
-        linkUnitAndToken("100", EnjinTokenKeys.ENJIN_MAXIM);
-        linkUnitAndToken("101", EnjinTokenKeys.ENJIN_WITEK);
-        linkUnitAndToken("102", EnjinTokenKeys.ENJIN_BRYANA);
-        linkUnitAndToken("103", EnjinTokenKeys.ENJIN_TASSIO);
-        linkUnitAndToken("104", EnjinTokenKeys.ENJIN_SIMON);
+        linkUnitAndToken("100", GameConstants.EnjinTokenKeys.ENJIN_MAXIM);
+        linkUnitAndToken("101", GameConstants.EnjinTokenKeys.ENJIN_WITEK);
+        linkUnitAndToken("102", GameConstants.EnjinTokenKeys.ENJIN_BRYANA);
+        linkUnitAndToken("103", GameConstants.EnjinTokenKeys.ENJIN_TASSIO);
+        linkUnitAndToken("104", GameConstants.EnjinTokenKeys.ENJIN_SIMON);
 
-        linkUnitAndToken("105", EnjinTokenKeys.KNIGHT_TANK);
-        linkUnitAndToken("106", EnjinTokenKeys.KNIGHT_HEALER);
-        linkUnitAndToken("107", EnjinTokenKeys.KNIGHT_SCOUT);
-        linkUnitAndToken("108", EnjinTokenKeys.KNIGHT_DESTROYER);
-        linkUnitAndToken("109", EnjinTokenKeys.KNIGHT_BOMBER);
+        linkUnitAndToken("105", GameConstants.EnjinTokenKeys.KNIGHT_TANK);
+        linkUnitAndToken("106", GameConstants.EnjinTokenKeys.KNIGHT_HEALER);
+        linkUnitAndToken("107", GameConstants.EnjinTokenKeys.KNIGHT_SCOUT);
+        linkUnitAndToken("108", GameConstants.EnjinTokenKeys.KNIGHT_DESTROYER);
+        linkUnitAndToken("109", GameConstants.EnjinTokenKeys.KNIGHT_BOMBER);
 
-        linkUnitAndToken("110", EnjinTokenKeys.DEMON_BOMBER);
-        linkUnitAndToken("111", EnjinTokenKeys.DEMON_SCOUT);
-        linkUnitAndToken("112", EnjinTokenKeys.DEMON_DESTROYER);
-        linkUnitAndToken("113", EnjinTokenKeys.DEMON_TANK);
-        linkUnitAndToken("114", EnjinTokenKeys.DEMON_HEALER);
+        linkUnitAndToken("110", GameConstants.EnjinTokenKeys.DEMON_BOMBER);
+        linkUnitAndToken("111", GameConstants.EnjinTokenKeys.DEMON_SCOUT);
+        linkUnitAndToken("112", GameConstants.EnjinTokenKeys.DEMON_DESTROYER);
+        linkUnitAndToken("113", GameConstants.EnjinTokenKeys.DEMON_TANK);
+        linkUnitAndToken("114", GameConstants.EnjinTokenKeys.DEMON_HEALER);
 
-        linkUnitAndToken("115", EnjinTokenKeys.GOD_TANK_1);
-        linkUnitAndToken("116", EnjinTokenKeys.GOD_TANK_2);
-        linkUnitAndToken("117", EnjinTokenKeys.GOD_DESTROYER_1);
-        linkUnitAndToken("118", EnjinTokenKeys.GOD_BOMBER);
-        linkUnitAndToken("119", EnjinTokenKeys.GOD_HEALER);
-        linkUnitAndToken("120", EnjinTokenKeys.GOD_DESTROYER_2);
-        linkUnitAndToken("121", EnjinTokenKeys.GOD_SCOUT);
+        linkUnitAndToken("115", GameConstants.EnjinTokenKeys.GOD_TANK_1);
+        linkUnitAndToken("116", GameConstants.EnjinTokenKeys.GOD_TANK_2);
+        linkUnitAndToken("117", GameConstants.EnjinTokenKeys.GOD_DESTROYER_1);
+        linkUnitAndToken("118", GameConstants.EnjinTokenKeys.GOD_BOMBER);
+        linkUnitAndToken("119", GameConstants.EnjinTokenKeys.GOD_HEALER);
+        linkUnitAndToken("120", GameConstants.EnjinTokenKeys.GOD_DESTROYER_2);
+        linkUnitAndToken("121", GameConstants.EnjinTokenKeys.GOD_SCOUT);
 
-        linkUnitAndToken("122", EnjinTokenKeys.ENJIN_ALEX);
-        linkUnitAndToken("123", EnjinTokenKeys.ENJIN_EVAN);
-        linkUnitAndToken("124", EnjinTokenKeys.ENJIN_ESTHER);
-        linkUnitAndToken("125", EnjinTokenKeys.ENJIN_BRAD);
-        linkUnitAndToken("126", EnjinTokenKeys.ENJIN_LIZZ);
+        linkUnitAndToken("122", GameConstants.EnjinTokenKeys.ENJIN_ALEX);
+        linkUnitAndToken("123", GameConstants.EnjinTokenKeys.ENJIN_EVAN);
+        linkUnitAndToken("124", GameConstants.EnjinTokenKeys.ENJIN_ESTHER);
+        linkUnitAndToken("125", GameConstants.EnjinTokenKeys.ENJIN_BRAD);
+        linkUnitAndToken("126", GameConstants.EnjinTokenKeys.ENJIN_LIZZ);
 
-        linkUnitAndToken("129", EnjinTokenKeys.NARWHAL_BLUE);
-        linkUnitAndToken("130", EnjinTokenKeys.NARWHAL_CHEESE);
-        linkUnitAndToken("131", EnjinTokenKeys.NARWHAL_EMERALD);
-        linkUnitAndToken("132", EnjinTokenKeys.NARWHAL_CRIMSON);
-        linkUnitAndToken("133", EnjinTokenKeys.NARWHAL_DIAMOND);
+        linkUnitAndToken("129", GameConstants.EnjinTokenKeys.NARWHAL_BLUE);
+        linkUnitAndToken("130", GameConstants.EnjinTokenKeys.NARWHAL_CHEESE);
+        linkUnitAndToken("131", GameConstants.EnjinTokenKeys.NARWHAL_EMERALD);
+        linkUnitAndToken("132", GameConstants.EnjinTokenKeys.NARWHAL_CRIMSON);
+        linkUnitAndToken("133", GameConstants.EnjinTokenKeys.NARWHAL_DIAMOND);
 
-        linkUnitAndToken("127", EnjinTokenKeys.SWISSBORG_CYBORG);
-        linkUnitAndToken("128", EnjinTokenKeys.SHALWEND_WARGOD);
-        linkUnitAndToken("134", EnjinTokenKeys.SHALWEND_DEADLY_KNIGHT);
+        linkUnitAndToken("127", GameConstants.EnjinTokenKeys.SWISSBORG_CYBORG);
+        linkUnitAndToken("128", GameConstants.EnjinTokenKeys.SHALWEND_WARGOD);
+        linkUnitAndToken("134", GameConstants.EnjinTokenKeys.SHALWEND_DEADLY_KNIGHT);
     }
 
     private void linkUnitAndToken(string unitName, string tokenName)

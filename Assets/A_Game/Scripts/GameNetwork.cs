@@ -222,7 +222,7 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
     [Header("=================================")]
 
     private Hashtable _matchResultshashTable = new Hashtable();
-    private Dictionary<string, bool> _availabilityByToken = new Dictionary<string, bool>();
+    private Dictionary<string, bool> _availabilityByEnjinKey = new Dictionary<string, bool>();
 
     public string EthAdress
     {
@@ -252,31 +252,31 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
         }
 #endif
 
-        setTokenAvailabilityFalseByDefault();
+        setKeyAvailabilityFalseByDefault();
     }
 
-    private void setTokenAvailabilityFalseByDefault()
+    private void setKeyAvailabilityFalseByDefault()
     {
-        SetTokenAvailable(EnigmaConstants.TokenKeys.ENJIN_MFT, false);
-        SetTokenAvailable(EnigmaConstants.TokenKeys.ENIGMA_TOKEN, false);
+        SetEnjinKeyAvailable(EnigmaConstants.EnjinTokenKeys.ENJIN_MFT, false);
+        SetEnjinKeyAvailable(EnigmaConstants.EnjinTokenKeys.ENIGMA_TOKEN, false);
 
-        SetTokenAvailable(EnjinTokenKeys.MINMINS_TOKEN, false);
+        SetEnjinKeyAvailable(EnjinTokenKeys.MINMINS_TOKEN, false);
 
         GameInventory gameInventory = GameInventory.Instance;
         List<string> legendUnits = GameInventory.Instance.GetLegendUnitNames();
         foreach (string legendUnit in legendUnits)
         {
             string tokenName = gameInventory.GetUnitNameToken(legendUnit);
-            SetTokenAvailable(tokenName, false);
+            SetEnjinKeyAvailable(tokenName, false);
         }
 
-        SetTokenAvailable(EnjinTokenKeys.QUEST_BLUE_NARWHAL, false);
-        SetTokenAvailable(EnjinTokenKeys.QUEST_CHEESE_NARWHAL, false);
-        SetTokenAvailable(EnjinTokenKeys.QUEST_EMERALD_NARWHAL, false);
-        SetTokenAvailable(EnjinTokenKeys.QUEST_CRIMSON_NARWHAL, false);
+        SetEnjinKeyAvailable(EnjinCodeKeys.QUEST_BLUE_NARWHAL, false);
+        SetEnjinKeyAvailable(EnjinCodeKeys.QUEST_CHEESE_NARWHAL, false);
+        SetEnjinKeyAvailable(EnjinCodeKeys.QUEST_EMERALD_NARWHAL, false);
+        SetEnjinKeyAvailable(EnjinCodeKeys.QUEST_CRIMSON_NARWHAL, false);
 
-        SetTokenAvailable(EnjinTokenKeys.QUEST_WARGOD_SHALWEND, false);
-        SetTokenAvailable(EnjinTokenKeys.QUEST_DEADLY_KNIGHT_SHALWEND, false);
+        SetEnjinKeyAvailable(EnjinTokenKeys.QUEST_WARGOD_SHALWEND, false);
+        SetEnjinKeyAvailable(EnjinTokenKeys.QUEST_DEADLY_KNIGHT_SHALWEND, false);
     }
 
     public void UpdateEnjinGoodies(JSONNode response_hash, bool updateEthAddress)
@@ -300,8 +300,8 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
             updateWalletFromUserDataNode(userDataNode, updateEthAddress);
         }
 
-        determineServerTokenAvailable(userDataNode, EnigmaConstants.TokenKeys.ENJIN_MFT);
-        determineServerTokenAvailable(userDataNode, EnigmaConstants.TokenKeys.ENIGMA_TOKEN);
+        determineServerTokenAvailable(userDataNode, EnigmaConstants.EnjinTokenKeys.ENJIN_MFT);
+        determineServerTokenAvailable(userDataNode, EnigmaConstants.EnjinTokenKeys.ENIGMA_TOKEN);
 
         determineServerTokenAvailable(userDataNode, EnjinTokenKeys.MINMINS_TOKEN);
 
@@ -324,29 +324,29 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
         CheckAllEnjinTeamBoostTokens(response_hash);
     }
 
-    public bool GetIsTokenAvailable(string token)
+    public bool GetIsEnjinKeyAvailable(string enjinKey)
     {
-        return _availabilityByToken[token];
+        return _availabilityByEnjinKey[enjinKey];
     }
 
-    public List<string> GetTokensAvailable()
+    public List<string> GetEnjinKeysAvailable()
     {
-        List<string> tokensAvailable = new List<string>();
+        List<string> keysAvailable = new List<string>();
 
-        foreach (string token in _availabilityByToken.Keys)
+        foreach (string token in _availabilityByEnjinKey.Keys)
         {
-            if (_availabilityByToken[token])
+            if (_availabilityByEnjinKey[token])
             {
-                tokensAvailable.Add(token);
+                keysAvailable.Add(token);
             }
         }
 
-        return tokensAvailable;
+        return keysAvailable;
     }
 
-    public void SetTokenAvailable(string tokenKey, bool available)
+    public void SetEnjinKeyAvailable(string enjinKey, bool available)
     {
-        _availabilityByToken[tokenKey] = available;
+        _availabilityByEnjinKey[enjinKey] = available;
     }
 
     //private void determineTokenAvailable(SimpleJSON.JSONNode response_hash, string tokenKey)
@@ -519,11 +519,11 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
             IsEnjinLinked = true;
         }
 #endif
-        List<string> keys = new List<string>(_availabilityByToken.Keys);
+        List<string> keys = new List<string>(_availabilityByEnjinKey.Keys);
         foreach (string token in keys)
         {
             //Debug.Log("Reset login values -> token: " + token);
-            SetTokenAvailable(token, false);
+            SetEnjinKeyAvailable(token, false);
         }
 
         GameStats.Instance.TeamBoostTokensOwnedByName.Clear();
@@ -999,10 +999,10 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
     {
         GameStats.Instance.TeamBoostTokensOwnedByName.Clear();
 
-        checkSingleEnjinTeamBoostToken(response_hash, EnjinTokenKeys.ENJIN_SWORD, TeamBoostEnjinTokens.SWORD, BoostCategory.DAMAGE);
-        checkSingleEnjinTeamBoostToken(response_hash, EnjinTokenKeys.ENJIN_ARMOR, TeamBoostEnjinTokens.ARMOR, BoostCategory.DEFENSE);
-        checkSingleEnjinTeamBoostToken(response_hash, EnjinTokenKeys.ENJIN_SHADOWSONG, TeamBoostEnjinTokens.SHADOW_SONG, BoostCategory.HEALTH);
-        checkSingleEnjinTeamBoostToken(response_hash, EnjinTokenKeys.ENJIN_BULL, TeamBoostEnjinTokens.BULL, BoostCategory.POWER);
+        checkSingleEnjinTeamBoostToken(response_hash, EnjinTokenKeys.ENJIN_SWORD, BoostEnjinTokenKeys.SWORD, BoostCategory.DAMAGE);
+        checkSingleEnjinTeamBoostToken(response_hash, EnjinTokenKeys.ENJIN_ARMOR, BoostEnjinTokenKeys.ARMOR, BoostCategory.DEFENSE);
+        checkSingleEnjinTeamBoostToken(response_hash, EnjinTokenKeys.ENJIN_SHADOWSONG, BoostEnjinTokenKeys.SHADOW_SONG, BoostCategory.HEALTH);
+        checkSingleEnjinTeamBoostToken(response_hash, EnjinTokenKeys.ENJIN_BULL, BoostEnjinTokenKeys.BULL, BoostCategory.POWER);
     }
 
     private void checkSingleEnjinTeamBoostToken(SimpleJSON.JSONNode response_hash, string transactionKey, string name, string category)
@@ -1094,7 +1094,7 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
 
                     if (code != "")
                     {
-                        SetTokenAvailable(code, true);
+                        SetEnjinKeyAvailable(code, true);
                     }
                 }
                 else
@@ -1122,7 +1122,7 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
         }
 #endif
 
-        SetTokenAvailable(tokenKey, (tokenAvailable == "1"));
+        SetEnjinKeyAvailable(tokenKey, (tokenAvailable == "1"));
     }
 
     static private IEnumerator checkNftEnjinTokenAvailable(Hashtable hashtable, Callback externalCallback, Callback localCallback = null)

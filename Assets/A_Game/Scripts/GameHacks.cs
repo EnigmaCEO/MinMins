@@ -8,7 +8,7 @@ public class GameHacks : SingletonPersistentPrefab<GameHacks>
 {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
     public bool EnableAllEnjinUnitTokens;
-    public bool EnableAllEnjinTokenQuests;
+    public bool EnableAllEnjinCodeQuests;
     public bool ForceEnjinRewardOnChest;
     public bool AllEnjinTeamBoostTokens;
     public bool EnjinLinked;
