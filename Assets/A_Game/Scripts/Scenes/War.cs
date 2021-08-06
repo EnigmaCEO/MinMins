@@ -1602,7 +1602,7 @@ public class War : NetworkEntity
                     unitsString = "23|25|30|42|50"; //scout, healer, destroyer, bomber
                     break;
                 case 4:
-                    unitsString = "72|77|100|68|69"; //tank, bomber, healer, scout, destroyer
+                    unitsString = "128|77|75|68|69"; //tank, bomber, healer, scout, destroyer
                     break;
             }
         }
@@ -1620,7 +1620,7 @@ public class War : NetworkEntity
                     unitsString = "72|75|80|78|77";
                     break;
                 case 4:
-                    unitsString = "125|116|104|109|102";
+                    unitsString = "134|60|63|73|76"; //Destroyer, bomber, scout, healer, tank
                     break;
             }
         }
