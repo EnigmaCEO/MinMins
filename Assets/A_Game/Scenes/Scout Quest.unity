@@ -7904,17 +7904,17 @@ MonoBehaviour:
     m_Font: {fileID: 12800000, guid: 9a4d5b491588d6d4599e39dab3b1d379, type: 3}
     m_FontSize: 30
     m_FontStyle: 0
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 3
     m_MaxSize: 74
     m_Alignment: 0
-    m_AlignByGeometry: 0
+    m_AlignByGeometry: 1
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Click within the zone to find and attack quest bosses. If you miss you
-    will be attacked by random Min-Mins.
+  m_Text: 'Click within the zone to scout inside the clouds or to fight a revealed
+    boss. When you scout you will be attacked by random Min-Mins.
 
 
     Defeat all 5 bosses to complete the quest!'

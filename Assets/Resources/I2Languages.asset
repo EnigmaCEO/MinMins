@@ -2497,6 +2497,33 @@ MonoBehaviour:
       - 
       Flags: 0000000000
       Languages_Touch: []
+    - Term: Click within the zone to scout inside the clouds or to fight a revealed
+        boss. When you scout you will be attacked by random Min-Mins. Defeat all 5
+        bosses to complete the quest!
+      TermType: 0
+      Description: 
+      Languages:
+      - Click within the zone to scout inside the clouds or to fight a revealed boss.
+        When you scout you will be attacked by random Min-Mins.
+      - "Haz click en la zona para explorar dentro de las nubes o para pelear con
+        un jefe revelado. Cuando exploras ser\xE1s atacado por Min-Mins aleatorios.\n\nDerrota
+        a los 5 jefes para completar la b\xFAsqueda!"
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: CONFIRM
+      TermType: 0
+      Description: 
+      Languages:
+      - CONFIRM
+      - CONFIRMAR
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
     - Term: Tap boost to select/deselect.
       TermType: 0
       Description: 
@@ -2532,7 +2559,7 @@ MonoBehaviour:
     Google_WebServiceURL: https://script.google.com/macros/s/AKfycbw05ISkGCPtIS0hMzFD5jshgfH09mIP6BAxRKhWsA/exec
     Google_SpreadsheetKey: 1iIWCtExuyR2XXyYkJv6y83PTVMPC4FxzSITGGroefcg
     Google_SpreadsheetName: I2Loc MinMins Localization
-    Google_LastUpdatedVersion: 1628274530182
+    Google_LastUpdatedVersion: 1628283334807
     Google_Password: shalwend
     GoogleUpdateFrequency: 0
     GoogleInEditorCheckFrequency: 0
