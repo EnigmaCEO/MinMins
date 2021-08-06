@@ -480,13 +480,14 @@ public class Main : EnigmaScene
         _enjinWindow.gameObject.SetActive(false);
     }
 
-    private void addToEnjinItemDisplay(string enjinKey, string label)
+    private void addToEnjinItemDisplay(string enjinKey)
     {
         if (GameNetwork.Instance.GetIsEnjinKeyAvailable(enjinKey))
         {
             GameObject newEnjinTokenItem = Instantiate<GameObject>(_enjinTokenTemplate, _enjinTokensContent);
-            newEnjinTokenItem.name = label;
-            newEnjinTokenItem.GetComponent<Text>().text = label;
+            string displayName = GameInventory.Instance.GetEnjinKeyDisplayName(enjinKey, false);
+            newEnjinTokenItem.name = displayName;
+            newEnjinTokenItem.GetComponent<Text>().text = displayName;
             newEnjinTokenItem.SetActive(true);
         }
     }
@@ -536,47 +537,47 @@ public class Main : EnigmaScene
 
             GameInventory gameInventory = GameInventory.Instance;
 
-            addToEnjinItemDisplay(EnigmaConstants.EnjinTokenKeys.ENJIN_MFT, "Enjin MFT");
-            addToEnjinItemDisplay(EnigmaConstants.EnjinTokenKeys.ENIGMA_TOKEN, "Enigma Token");
+            addToEnjinItemDisplay(EnigmaConstants.EnjinTokenKeys.ENJIN_MFT);
+            addToEnjinItemDisplay(EnigmaConstants.EnjinTokenKeys.ENIGMA_TOKEN);
 
-            addToEnjinItemDisplay(EnjinTokenKeys.MINMINS_TOKEN, "Min-Mins Token");
+            addToEnjinItemDisplay(EnjinTokenKeys.MINMINS_TOKEN);
 
-            addToEnjinItemDisplay(EnjinTokenKeys.QUEST_DEADLY_KNIGHT_SHALWEND, gameInventory.GetEnjinKeyName(EnjinTokenKeys.QUEST_DEADLY_KNIGHT_SHALWEND));
-            addToEnjinItemDisplay(EnjinTokenKeys.QUEST_WARGOD_SHALWEND, gameInventory.GetEnjinKeyName(EnjinTokenKeys.QUEST_WARGOD_SHALWEND));
+            addToEnjinItemDisplay(EnjinTokenKeys.QUEST_DEADLY_KNIGHT_SHALWEND);
+            addToEnjinItemDisplay(EnjinTokenKeys.QUEST_WARGOD_SHALWEND);
 
-            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_MAXIM, "Maxim Legend");
-            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_WITEK, "Witek Legend");
-            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_BRYANA, "Bryana Legend");
-            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_TASSIO, "Tassio Legend");
-            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_SIMON, "Simon Legend");
+            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_MAXIM);
+            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_WITEK);
+            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_BRYANA);
+            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_TASSIO);
+            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_SIMON);
 
-            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_ESTHER, "Esther Legend");
-            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_ALEX, "Alex Legend");
-            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_EVAN, "Evan Legend");
-            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_LIZZ, "Lizz Legend");
-            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_BRAD, "Brad Legend");
+            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_ESTHER);
+            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_ALEX);
+            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_EVAN);
+            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_LIZZ);
+            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_BRAD);
 
-            addToEnjinItemDisplay(EnjinTokenKeys.SHALWEND_DEADLY_KNIGHT, "Deadly Knight: Shalwend");
-            addToEnjinItemDisplay(EnjinTokenKeys.KNIGHT_HEALER, "Deadly Knight: Healer");
-            addToEnjinItemDisplay(EnjinTokenKeys.KNIGHT_BOMBER, "Deadly Knight: Bomber");
-            addToEnjinItemDisplay(EnjinTokenKeys.KNIGHT_DESTROYER, "Deadly Knight: Destroyer");
-            addToEnjinItemDisplay(EnjinTokenKeys.KNIGHT_SCOUT, "Deadly Knight: Scout");
-            addToEnjinItemDisplay(EnjinTokenKeys.KNIGHT_TANK, "Deadly Knight: Tank");
+            addToEnjinItemDisplay(EnjinTokenKeys.SHALWEND_DEADLY_KNIGHT);
+            addToEnjinItemDisplay(EnjinTokenKeys.KNIGHT_HEALER);
+            addToEnjinItemDisplay(EnjinTokenKeys.KNIGHT_BOMBER);
+            addToEnjinItemDisplay(EnjinTokenKeys.KNIGHT_DESTROYER);
+            addToEnjinItemDisplay(EnjinTokenKeys.KNIGHT_SCOUT);
+            addToEnjinItemDisplay(EnjinTokenKeys.KNIGHT_TANK);
 
-            addToEnjinItemDisplay(EnjinTokenKeys.DEMON_HEALER, "Demon King: Healer");
-            addToEnjinItemDisplay(EnjinTokenKeys.DEMON_BOMBER, "Demon King: Bomber");
-            addToEnjinItemDisplay(EnjinTokenKeys.DEMON_DESTROYER, "Demon King: Destroyer");
-            addToEnjinItemDisplay(EnjinTokenKeys.DEMON_SCOUT, "Demon King: Scout");
-            addToEnjinItemDisplay(EnjinTokenKeys.DEMON_TANK, "Demon King: Tank");
+            addToEnjinItemDisplay(EnjinTokenKeys.DEMON_HEALER);
+            addToEnjinItemDisplay(EnjinTokenKeys.DEMON_BOMBER);
+            addToEnjinItemDisplay(EnjinTokenKeys.DEMON_DESTROYER);
+            addToEnjinItemDisplay(EnjinTokenKeys.DEMON_SCOUT);
+            addToEnjinItemDisplay(EnjinTokenKeys.DEMON_TANK);
 
-            addToEnjinItemDisplay(EnjinTokenKeys.NARWHAL_BLUE, "Narhwal Blue");
-            addToEnjinItemDisplay(EnjinTokenKeys.NARWHAL_CHEESE, "Narwhal Cheese");
-            addToEnjinItemDisplay(EnjinTokenKeys.NARWHAL_EMERALD, "Narwhal Emerald");
-            addToEnjinItemDisplay(EnjinTokenKeys.NARWHAL_CRIMSON, "Narwhal Crimson");
-            addToEnjinItemDisplay(EnjinTokenKeys.NARWHAL_DIAMOND, "Narwhal Diamond");
+            addToEnjinItemDisplay(EnjinTokenKeys.NARWHAL_BLUE);
+            addToEnjinItemDisplay(EnjinTokenKeys.NARWHAL_CHEESE);
+            addToEnjinItemDisplay(EnjinTokenKeys.NARWHAL_EMERALD);
+            addToEnjinItemDisplay(EnjinTokenKeys.NARWHAL_CRIMSON);
+            addToEnjinItemDisplay(EnjinTokenKeys.NARWHAL_DIAMOND);
 
-            addToEnjinItemDisplay(EnjinTokenKeys.SWISSBORG_CYBORG, "Swissborg Cyborg");
-            addToEnjinItemDisplay(EnjinTokenKeys.SHALWEND_WARGOD, "Wargod Shalwend");           
+            addToEnjinItemDisplay(EnjinTokenKeys.SWISSBORG_CYBORG);
+            addToEnjinItemDisplay(EnjinTokenKeys.SHALWEND_WARGOD);           
 
             //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_1, "Damage Ore +1");
             //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_2, "Damage Ore +2");

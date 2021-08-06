@@ -31,7 +31,7 @@ public class QuestCompletePopUp : MonoBehaviour
 
         string selectedQuestString = GameStats.Instance.SelectedQuestString;
 
-        _questName.text = GameInventory.Instance.GetQuestName(selectedQuestString);
+        _questName.text = GameInventory.Instance.GetQuestDisplayName(selectedQuestString);
 
         fillQuestRewardMessage(selectedQuestString);
         handleRewardImage(selectedQuestString);

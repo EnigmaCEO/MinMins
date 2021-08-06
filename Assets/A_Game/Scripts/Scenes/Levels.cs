@@ -62,7 +62,7 @@ public class Levels : EnigmaScene
                 levelsLenght = gameInventory.GetHighestQuestLevelCompletedAmount() + 1;
                 int questMaxLevel = gameInventory.GetSerialQuestMaxLevel(gameStats.SelectedSerialQuest);
 
-                _title.text = gameInventory.GetQuestName(gameStats.SelectedQuestString);
+                _title.text = gameInventory.GetQuestDisplayName(gameStats.SelectedQuestString);
 
                 if (levelsLenght > questMaxLevel)
                 {

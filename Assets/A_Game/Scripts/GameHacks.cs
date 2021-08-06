@@ -7,19 +7,22 @@ using UnityEngine;
 public class GameHacks : SingletonPersistentPrefab<GameHacks>
 {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
-    public bool EnableAllEnjinUnitTokens;
-    public bool EnableAllEnjinCodeQuests;
-    public bool ForceEnjinRewardOnChest;
-    public bool AllEnjinTeamBoostTokens;
-    public bool EnjinLinked;
+    public bool EnableAllEnjinUnitTokens = false;
+    public bool EnableAllEnjinCodeQuests = false;
+    public bool LockQuests = false;
+    public bool ForceEnjinRewardOnChest = false;
+    public bool AllEnjinTeamBoostTokens = false;
+    public bool EnjinLinked = false;
 
-    public bool HideClouds;
-    public bool BuyAndroid;
-    public bool DecisionTimeFreeze;
-    public bool WarVictory;
-    public bool ChestHit;
-    public bool ForcePvpAi;
-    public bool TreatBattleResultsAsPrivateMatch;
+    public bool AllowCompletedQuests = false;
+
+    public bool HideClouds = false;
+    public bool BuyAndroid = false;
+    public bool DecisionTimeFreeze = false;
+    public bool WarVictory = false;
+    public bool ChestHit = false;
+    public bool ForcePvpAi = false;
+    public bool TreatBattleResultsAsPrivateMatch = false;
 
     public bool UseOfflineTestWithdrawnItems = false;
     public List<string> OfflineTestWithdrawnTokenKeys = new List<string>();
@@ -55,19 +58,19 @@ public class GameHacks : SingletonPersistentPrefab<GameHacks>
     public ValueHack Crystals = new ValueHack("1000");
 #endif
 
-    public bool RandomizeUnitTypes;
-    public bool AssignDefaultEffectByType;
+    public bool RandomizeUnitTypes = false;
+    public bool AssignDefaultEffectByType = false;
 
-    public bool GuestCameraAsHost;
+    public bool GuestCameraAsHost = false;
 
-    public bool CreateWarPrepLineRendererOnUpdate;
+    public bool CreateWarPrepLineRendererOnUpdate = false;
 
-    public bool EnjinItemCollectedFailure;
-    public bool CompleteLevelQuestFail;
-    public bool CompleteQuestOffline;
+    public bool EnjinItemCollectedFailure = false;
+    public bool CompleteLevelQuestFail = false;
+    public bool CompleteQuestOffline = false;
 
-    public bool ClearSavedTeamDataOnScenesEnter;
-    public bool NegatePrefsBackup;
+    public bool ClearSavedTeamDataOnScenesEnter = false;
+    public bool NegatePrefsBackup = false;
 
     public ValueHack TriggerPlayerDisconnectPopUp = new ValueHack("D");
     public ValueHack TriggerOpponentDisconnectPopUp = new ValueHack("O");

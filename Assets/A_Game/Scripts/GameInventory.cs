@@ -292,7 +292,7 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
 
     public string GetGlobalSystemActiveQuestName()
     {
-        return GetQuestName(GetGlobalSystemActiveQuestString());
+        return GetQuestDisplayName(GetGlobalSystemActiveQuestString());
     }
 
     public void SetSwolesomeActiveQuest(ScoutQuests activeQuest)
@@ -311,17 +311,17 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
         return InventoryManager.Instance.GetItem<string>(GroupNames.STATS, ItemKeys.SWOLESOME_ACTIVE_QUEST);
     }
 
-    public string GetSwolesomeActiveQuestName()
+    public string GetSwolesomeActiveQuestDisplayName()
     {
-        return GetQuestName(GetSwolesomeActiveQuestString());
+        return GetQuestDisplayName(GetSwolesomeActiveQuestString());
     }
 
-    public string GetSelectedQuestName()
+    public string GetSelectedQuestDisplayName()
     {
-        return GetQuestName(GameStats.Instance.SelectedQuestString);
+        return GetQuestDisplayName(GameStats.Instance.SelectedQuestString);
     }
 
-    public string GetQuestName(string questString)
+    public string GetQuestDisplayName(string questString)
     {
         string enjinLegendLocalized = LocalizationManager.GetTermTranslation("Enjin Legend:");
         string questName = enjinLegendLocalized + " ";
@@ -369,7 +369,7 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
         return questName;
     }
 
-    public string GetEnjinKeyName(string enjinKey)
+    public string GetEnjinKeyDisplayName(string enjinKey, bool addTokenSuffixIfNecessary)
     {
         string enjinKeyName = enjinKey;
 
@@ -378,24 +378,145 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
             case EnigmaConstants.EnjinTokenKeys.ENIGMA_TOKEN:
                 enjinKeyName = "Enigma Token";
                 break;
+            case EnigmaConstants.EnjinTokenKeys.ENJIN_MFT:
+                enjinKeyName = "Enjin MFT";
+                break;
+
+            case GameConstants.EnjinTokenKeys.MINMINS_TOKEN:
+                enjinKeyName = "Min Mins Token";
+                break;
+
             case GameConstants.EnjinTokenKeys.QUEST_WARGOD_SHALWEND:
-                enjinKeyName = "Rank: Wargod Token";
+                enjinKeyName = "Rank Wargod";
                 break;
             case GameConstants.EnjinTokenKeys.QUEST_DEADLY_KNIGHT_SHALWEND:
                 enjinKeyName = "Black Token";
                 break;
+
+            case GameConstants.EnjinTokenKeys.SHALWEND_WARGOD:
+                enjinKeyName = "Wargod Shalwend";
+                break;
+            case GameConstants.EnjinTokenKeys.SHALWEND_DEADLY_KNIGHT:
+                enjinKeyName = "Deadly Knight Shalwend";
+                break;
+
+            case GameConstants.EnjinTokenKeys.SWISSBORG_CYBORG:
+                enjinKeyName = "Swissborg Cyborg";
+                break;
+
             case EnjinCodeKeys.QUEST_BLUE_NARWHAL:
-                enjinKeyName = "Blue Narwhal Token";
+            case GameConstants.EnjinTokenKeys.NARWHAL_BLUE:
+                enjinKeyName = "Blue Narwhal";
                 break;
             case EnjinCodeKeys.QUEST_CHEESE_NARWHAL:
-                enjinKeyName = "Cheese Narwhal Token";
+            case GameConstants.EnjinTokenKeys.NARWHAL_CHEESE:
+                enjinKeyName = "Cheese Narwhal";
                 break;
             case EnjinCodeKeys.QUEST_EMERALD_NARWHAL:
-                enjinKeyName = "Emerald Narwhal Token";
+            case GameConstants.EnjinTokenKeys.NARWHAL_EMERALD:
+                enjinKeyName = "Emerald Narwhal";
                 break;
             case EnjinCodeKeys.QUEST_CRIMSON_NARWHAL:
-                enjinKeyName = "Crimson Narwhal Token";
+            case GameConstants.EnjinTokenKeys.NARWHAL_CRIMSON:
+                enjinKeyName = "Crimson Narwhal";
                 break;
+            case GameConstants.EnjinTokenKeys.NARWHAL_DIAMOND:
+                enjinKeyName = "Diamond Narwhal";
+                break;
+
+            case GameConstants.EnjinTokenKeys.ENJIN_MAXIM:
+                enjinKeyName = "Maxim Legend";
+                break;
+            case GameConstants.EnjinTokenKeys.ENJIN_WITEK:
+                enjinKeyName = "Witek Legend";
+                break;
+            case GameConstants.EnjinTokenKeys.ENJIN_BRYANA:
+                enjinKeyName = "Bryana Legend";
+                break;
+            case GameConstants.EnjinTokenKeys.ENJIN_TASSIO:
+                enjinKeyName = "Tassio Legend";
+                break;
+            case GameConstants.EnjinTokenKeys.ENJIN_SIMON:
+                enjinKeyName = "Simon Legend";
+                break;
+
+            case GameConstants.EnjinTokenKeys.ENJIN_ESTHER:
+                enjinKeyName = "Esther Legend";
+                break;
+            case GameConstants.EnjinTokenKeys.ENJIN_ALEX:
+                enjinKeyName = "Alex Legend";
+                break;
+            case GameConstants.EnjinTokenKeys.ENJIN_EVAN:
+                enjinKeyName = "Evan Legend";
+                break;
+            case GameConstants.EnjinTokenKeys.ENJIN_LIZZ:
+                enjinKeyName = "Lizz Legend";
+                break;
+            case GameConstants.EnjinTokenKeys.ENJIN_BRAD:
+                enjinKeyName = "Brad Legend";
+                break;
+
+            case GameConstants.EnjinTokenKeys.KNIGHT_HEALER:
+                enjinKeyName = "Deadly Knight Healer";
+                break;
+            case GameConstants.EnjinTokenKeys.KNIGHT_BOMBER:
+                enjinKeyName = "Deadly Knight Bomber";
+                break;
+            case GameConstants.EnjinTokenKeys.KNIGHT_DESTROYER:
+                enjinKeyName = "Deadly Knight Destroyer";
+                break;
+            case GameConstants.EnjinTokenKeys.KNIGHT_SCOUT:
+                enjinKeyName = "Deadly Knight Scout";
+                break;
+            case GameConstants.EnjinTokenKeys.KNIGHT_TANK:
+                enjinKeyName = "Deadly Knight Tank";
+                break;
+
+            case GameConstants.EnjinTokenKeys.DEMON_HEALER:
+                enjinKeyName = "Demon King Healer";
+                break;
+            case GameConstants.EnjinTokenKeys.DEMON_BOMBER:
+                enjinKeyName = "Demon King Bomber";
+                break;
+            case GameConstants.EnjinTokenKeys.DEMON_DESTROYER:
+                enjinKeyName = "Demon King Destroyer";
+                break;
+            case GameConstants.EnjinTokenKeys.DEMON_SCOUT:
+                enjinKeyName = "Demon King Scout";
+                break;
+            case GameConstants.EnjinTokenKeys.DEMON_TANK:
+                enjinKeyName = "Demon King Tank";
+                break;
+
+            case GameConstants.EnjinTokenKeys.GOD_HEALER:
+                enjinKeyName = "God Healer";
+                break;
+            case GameConstants.EnjinTokenKeys.GOD_BOMBER:
+                enjinKeyName = "God Bomber";
+                break;
+            case GameConstants.EnjinTokenKeys.GOD_DESTROYER_1:
+                enjinKeyName = "God Destroyer 1";
+                break;
+            case GameConstants.EnjinTokenKeys.GOD_DESTROYER_2:
+                enjinKeyName = "God Destroyer 2";
+                break;
+            case GameConstants.EnjinTokenKeys.GOD_SCOUT:
+                enjinKeyName = "God Scout";
+                break;
+            case GameConstants.EnjinTokenKeys.GOD_TANK_1:
+                enjinKeyName = "God Tank 1";
+                break;
+            case GameConstants.EnjinTokenKeys.GOD_TANK_2:
+                enjinKeyName = "God Tank 2";
+                break;
+        }
+
+        if (addTokenSuffixIfNecessary)
+        {
+            if (!enjinKeyName.Contains(LocalizationTerms.TOKEN))
+            {
+                enjinKeyName += " " + LocalizationManager.GetTermTranslation(LocalizationTerms.TOKEN);
+            }
         }
 
         return enjinKeyName;

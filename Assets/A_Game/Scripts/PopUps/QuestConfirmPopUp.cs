@@ -95,6 +95,20 @@ public class QuestConfirmPopUp : MonoBehaviour
             addBoostReward(boostCategory, OreTiers.RAW, OreBonuses.RAW_ORE_MIN, getOddFromProbability(finalRawOreProbability));
         }
 
+        GameHacks gameHacks = GameHacks.Instance;
+
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+        if (gameHacks.AllowCompletedQuests)
+        {
+            questCompleted = false;
+        }
+
+        if (gameHacks.LockQuests)
+        {
+            questUnlocked = false;
+        }
+#endif
+
         if (questCompleted)
         {
             _messageText.text = LocalizationManager.GetTermTranslation(LocalizationTerms.QUEST_COMPLETED);
@@ -116,7 +130,7 @@ public class QuestConfirmPopUp : MonoBehaviour
                         enjinKeysMessage += " " + LocalizationManager.GetTermTranslation(LocalizationTerms.OR) + " ";                     
                     }
 
-                    enjinKeysMessage += gameInventory.GetEnjinKeyName(enjinKey);
+                    enjinKeysMessage += gameInventory.GetEnjinKeyDisplayName(enjinKey, true);
                 }
 
                 _messageText.text = LocalizationManager.GetTermTranslation(LocalizationTerms.REQUIRES) + ": " + enjinKeysMessage;

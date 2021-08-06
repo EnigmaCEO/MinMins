@@ -90,6 +90,7 @@ namespace GameConstants
         public const string OR = "or";
         public const string REQUIRES_ENOUGH_GLOBAL_SYSTEM_QUEST_POINTS = "Requires enough Global System Quest points.";
         public const string QUEST_COMPLETED = "Quest is already completed.";
+        public const string TOKEN = "Token";
     }
 
     public class SoundNames

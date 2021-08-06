@@ -213,7 +213,7 @@ public class War : NetworkEntity
             {
                 if (gameStats.SelectedLevelNumber > 0)
                 {
-                    _teamNameText2.text = GameInventory.Instance.GetSelectedQuestName();
+                    _teamNameText2.text = GameInventory.Instance.GetSelectedQuestDisplayName();
                 }
             }
             else

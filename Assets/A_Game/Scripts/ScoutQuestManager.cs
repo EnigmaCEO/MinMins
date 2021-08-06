@@ -38,7 +38,7 @@ public class ScoutQuestManager : MonoBehaviour
 
         _notEnoughUnitsPopUp.SetActive(false);
 
-        _questNameTitle.text = gameInventory.GetSelectedQuestName(); 
+        _questNameTitle.text = gameInventory.GetSelectedQuestDisplayName(); 
 
         if (gameStats.QuestUnits.Count == 0)
         {
