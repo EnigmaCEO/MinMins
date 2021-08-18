@@ -481,6 +481,7 @@ public class NewLobby : NetworkEntity
 
                 NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.GUEST_NAME, NetworkManager.GetPlayerName());
                 NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.GUEST_RATING, guestRating);
+                NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.GUEST_PING, NetworkManager.GetLocalPlayerPing());
 
                 gameNetwork.GuestPlayerId = NetworkManager.GetLocalPlayerId();
                 gameNetwork.HostPlayerId = NetworkManager.GetRoomCustomPropertyAsInt(GameNetwork.RoomCustomProperties.HOST_ID);

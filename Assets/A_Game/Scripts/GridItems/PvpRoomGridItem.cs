@@ -15,14 +15,11 @@ public class PvpRoomGridItem : MonoBehaviour
     [SerializeField] private Text _guestRatingText;
     [SerializeField] private Text _guestPingText;
 
-    private void Start()
+    public void SetUp(string hostName, int hostRating, int hostPing, string guestName, int guestRating, int guestPing, string roomName)
     {
         _guestPingText.gameObject.SetActive(false);
         _guestRatingText.gameObject.SetActive(false);
-    }
 
-    public void SetUp(string hostName, int hostRating, int hostPing, string guestName, int guestRating, int guestPing, string roomName)
-    {
         this.name = roomName;
 
         _hostNameText.text = hostName;
@@ -56,7 +53,7 @@ public class PvpRoomGridItem : MonoBehaviour
         {
             _guestPingText.text = LocalizationManager.GetTermTranslation("Ping:") + " " + ping.ToString();
 
-            if (!_guestRatingText.gameObject.activeSelf)
+            if (!_guestPingText.gameObject.activeSelf)
             {
                 _guestPingText.gameObject.SetActive(true);
             }

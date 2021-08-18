@@ -188,7 +188,6 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
     static public OnPlayerTeamUnitsSetDelegate OnPlayerTeamUnitsSetCallback;
 
     public delegate void OnPvpAiSetDelegate(bool enabled);
-
     public OnPvpAiSetDelegate OnPvpAiSetCallback;
 
     public delegate void OnSendResultsDelegate(string message, int updatedRating);
