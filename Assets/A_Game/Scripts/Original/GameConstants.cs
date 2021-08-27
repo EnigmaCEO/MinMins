@@ -79,7 +79,7 @@ namespace GameConstants
         public const string GET_ENJIN_WALLET_DESCRIPTION = "Press OK to request an Enjin Wallet so you can withdraw your tokens. Close window to go back.";
         public const string WITHDRAWAL_COMPLETED = "Withdrawal completed!";
         public const string WITHDRAWAL_FAILED = "Withdrawal failed. Please try again.";
-        public const string ENJIN_AUTO_WITHDRAWAL = "* Items are immediately sent to your Enjin wallet after trade approval";
+        public const string ENJIN_AUTO_WITHDRAWAL = "* Units can be tokenized";
     }
 
     public class LocalizationTerms
@@ -156,7 +156,7 @@ namespace GameConstants
         public const string SHALWEND_DEADLY_KNIGHT = "shalwend_deadlyknight";
 
         public const string NARWHAL_BLUE = "narwhal_blue";
-        public const string NARWHAL_CHEESE = "nawhal_cheese";
+        public const string NARWHAL_CHEESE = "narwhal_cheese";
         public const string NARWHAL_EMERALD = "narwhal_emerald";
         public const string NARWHAL_CRIMSON = "narwhal_crimson";
         public const string NARWHAL_DIAMOND = "narwhal_diamond";
