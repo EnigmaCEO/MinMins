@@ -52,7 +52,6 @@ public class QuestConfirmPopUp : MonoBehaviour
             unitReward.SetActive(true);
         }
 
-        addBoxReward(BoxTiers.GOLD, guaranteedOdds);
         addBoxReward(BoxTiers.BRONZE, guaranteedOdds);
 
         GameInventory gameInventory = GameInventory.Instance;
