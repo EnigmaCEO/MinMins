@@ -40,7 +40,7 @@ public class ScoutQuestManager : MonoBehaviour
 
         _questNameTitle.text = gameInventory.GetSelectedQuestDisplayName(); 
 
-        if (gameStats.QuestUnits.Count == 0)
+        //if (gameStats.QuestUnits.Count == 0)
         {
             determineQuestTeam();
         }
