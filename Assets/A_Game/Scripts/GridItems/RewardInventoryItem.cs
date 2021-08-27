@@ -28,7 +28,7 @@ public class RewardInventoryItem : MonoBehaviour
     {
         TokenKey = tokenKey;
 
-        _nameText.text = rewardName;
+        _nameText.text = "#" + rewardName;
 
         CostNumber = float.Parse(rewardCost);
         _costText.text = rewardCost += " " + coinName; ;

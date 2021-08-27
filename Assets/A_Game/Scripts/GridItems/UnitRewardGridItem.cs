@@ -10,7 +10,7 @@ public class UnitRewardGridItem : MonoBehaviour
 
     public void Setup(string unitName)
     {
-        _nameText.text = unitName;
+        _nameText.text = "#" + unitName;
         _icon.sprite = Resources.Load<Sprite>("Images/Units/" + unitName);
     }
 }

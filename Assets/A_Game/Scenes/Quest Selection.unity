@@ -1834,6 +1834,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: LoginForPvpPopUp
       objectReference: {fileID: 0}
+    - target: {fileID: 44867734807727018, guid: 658ca170f47802243b4712293cd54712,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 44867734807727017, guid: 658ca170f47802243b4712293cd54712,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3570,6 +3575,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: QuestInfoPopUp
       objectReference: {fileID: 0}
+    - target: {fileID: 2979166289750225913, guid: 74d7bc385a48b714d88d89f40b1b744e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2979166289750225912, guid: 74d7bc385a48b714d88d89f40b1b744e,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4057,17 +4067,17 @@ PrefabInstance:
     - target: {fileID: 2057997111636849522, guid: 4013b39aaf07d994bbdee578b71fec36,
         type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0
+      value: 0.20332429
       objectReference: {fileID: 0}
     - target: {fileID: 2057997111636849522, guid: 4013b39aaf07d994bbdee578b71fec36,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 0.7966757
       objectReference: {fileID: 0}
     - target: {fileID: 2057997111636849522, guid: 4013b39aaf07d994bbdee578b71fec36,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 194203678167514192, guid: 4013b39aaf07d994bbdee578b71fec36,
         type: 3}
@@ -4167,6 +4177,31 @@ PrefabInstance:
     - target: {fileID: 3929162169532093487, guid: 4013b39aaf07d994bbdee578b71fec36,
         type: 3}
       propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7888704923203819367, guid: 4013b39aaf07d994bbdee578b71fec36,
+        type: 3}
+      propertyPath: m_FontData.m_FontSize
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 7888704923203819367, guid: 4013b39aaf07d994bbdee578b71fec36,
+        type: 3}
+      propertyPath: m_FontData.m_MinSize
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2057981153009390267, guid: 4013b39aaf07d994bbdee578b71fec36,
+        type: 3}
+      propertyPath: m_Text
+      value: REWARDS
+      objectReference: {fileID: 0}
+    - target: {fileID: 4355376430283372988, guid: 4013b39aaf07d994bbdee578b71fec36,
+        type: 3}
+      propertyPath: m_HorizontalScrollbar
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6186873756033070007, guid: 4013b39aaf07d994bbdee578b71fec36,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

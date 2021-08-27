@@ -143,7 +143,7 @@ public class RewardsInventoryPopUp : MonoBehaviour
         GameObject newRewardItem = Instantiate<GameObject>(_rewardItemTemplate, _gridContent);
         string tokenUnitName = GameInventory.Instance.GetTokenUnitName(tokenKey);
         newRewardItem.GetComponent<RewardInventoryItem>().Setup(tokenKey, tokenUnitName, getRewardCost(tokenType), _coinName, getRewardSprite(tokenKey, tokenType), onRewardButtonDown);
-        newRewardItem.name = tokenKey;
+        newRewardItem.name = "#" + tokenKey;
         newRewardItem.SetActive(true);
     }
 

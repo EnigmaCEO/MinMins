@@ -18,11 +18,11 @@ MonoBehaviour:
   HostType: 1
   PreferredRegion: 1
   EnabledRegions: -1
-  Protocol: 1
+  Protocol: 0
   ServerAddress: 
   ServerPort: 5055
   VoiceServerPort: 5055
-  JoinLobby: 0
+  JoinLobby: 1
   EnableLobbyStatistics: 0
   PunLogging: 0
   NetworkLogging: 1

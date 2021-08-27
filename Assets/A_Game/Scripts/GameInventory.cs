@@ -329,20 +329,20 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
         switch(questString)
         {
             case nameof(ScoutQuests.EnjinLegend122):
-                questName += "122";
+                questName += "#122";
                 break;
             case nameof(ScoutQuests.EnjinLegend123):
-                questName += "123";
+                questName += "#123";
                 break;
             case nameof(ScoutQuests.EnjinLegend124):
-                questName += "124";
+                questName += "#124";
                 break;
             case nameof(ScoutQuests.EnjinLegend125):
-                questName += "125";
+                questName += "#125";
                 break;
 
             case nameof(ScoutQuests.EnjinLegend126):
-                questName += "126";
+                questName += "#126";
                 break;
 
             case nameof(ScoutQuests.NarwhalBlue):
