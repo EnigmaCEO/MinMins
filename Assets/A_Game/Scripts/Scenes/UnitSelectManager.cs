@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Enigma.CoreSystems;
 using GameConstants;
 using GameEnums;
+using System.Linq;
 
 public class UnitSelectManager : EnigmaScene
 {
@@ -51,7 +52,8 @@ public class UnitSelectManager : EnigmaScene
    
     void Start()
     {
-        SoundManager.FadeCurrentSong(1f, () => {
+        SoundManager.FadeCurrentSong(1f, () => 
+        {
             int arena = Random.Range(1, 4);
             SoundManager.Stop();
             SoundManager.Play("arena" + arena, SoundManager.AudioTypes.Music, "", true);
@@ -63,13 +65,15 @@ public class UnitSelectManager : EnigmaScene
         GameInventory gameInventory = GameInventory.Instance;
 
         List<string> inventoryUnitNames = gameInventory.GetInventoryUnitNames();  //TODO: Check if this needs to return stats
-        int unitsLength = inventoryUnitNames.Count;
+        List<string> descendingUnitNames = inventoryUnitNames.OrderByDescending(x => int.Parse(x)).ToList();
+
+        int unitsLength = descendingUnitNames.Count;
         GameObject unitGridItemTemplate = _unitsGridContent.GetChild(0).gameObject;
 
         for (int i = 0; i < unitsLength; i++)
         {
             Transform unitTransform = Instantiate<GameObject>(unitGridItemTemplate, _unitsGridContent).transform;
-            string unitName = inventoryUnitNames[i];
+            string unitName = descendingUnitNames[i];
             unitTransform.name = unitName;
             unitTransform.Find("Sprite").GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/Units/" + unitName);
             unitTransform.GetComponent<Button>().onClick.AddListener(() => { onUnitFightButtonDown(unitName); });

@@ -1,5 +1,6 @@
 ﻿using GameConstants;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -102,11 +103,12 @@ public class RewardsInventoryPopUp : MonoBehaviour
         GameInventory gameInventory = GameInventory.Instance;
 
         List<string> ownedUnitNames = gameInventory.GetInventoryUnitNames();
+        List<string> descendingUnitNames = ownedUnitNames.OrderByDescending(x => int.Parse(x)).ToList();
 
         string shalwendDeadlyKnightUnitName = gameInventory.GetTokenUnitName(EnjinTokenKeys.SHALWEND_DEADLY_KNIGHT);
         string shalwendWarGodUnitName = gameInventory.GetTokenUnitName(EnjinTokenKeys.SHALWEND_WARGOD);
 
-        foreach (string unitName in ownedUnitNames)
+        foreach (string unitName in descendingUnitNames)
         {
             if (gameInventory.CheckCanBeWithdrawn(unitName))
             {
