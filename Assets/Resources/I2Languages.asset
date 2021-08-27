@@ -521,8 +521,8 @@ MonoBehaviour:
       Languages:
       - '* 3 items total with purchase
 
-        * 3 random playable demon king token'
-      - "* 3 \xEDtems totales con la compra\n* 3 fichas rey demonio jugable aleatorias"
+        * 3 random playable demon king units'
+      - "* 3 \xEDtems totales con la compra\n* 3 unidades rey demonio jugable aleatorias"
       - 
       - 
       - 
@@ -2559,7 +2559,7 @@ MonoBehaviour:
     Google_WebServiceURL: https://script.google.com/macros/s/AKfycbw05ISkGCPtIS0hMzFD5jshgfH09mIP6BAxRKhWsA/exec
     Google_SpreadsheetKey: 1iIWCtExuyR2XXyYkJv6y83PTVMPC4FxzSITGGroefcg
     Google_SpreadsheetName: I2Loc MinMins Localization
-    Google_LastUpdatedVersion: 1628283334807
+    Google_LastUpdatedVersion: 1630079927039
     Google_Password: shalwend
     GoogleUpdateFrequency: 0
     GoogleInEditorCheckFrequency: 0
