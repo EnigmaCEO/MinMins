@@ -32,12 +32,13 @@ public class QuestUnit : MonoBehaviour
 
     public void OnMouseDown()
     {
+        Debug.Log("QuestUnit::OnMouseDown-> unitName: " + this.name);
         _onClick(name);
     }
 
     protected void OnTriggerEnter2D(Collider2D coll)
     {
-        Debug.Log("QuestUnit::OnTriggerEnter2D: " + coll.name);
+        Debug.Log("QuestUnit::OnTriggerEnter2D-> unitName: " + this.name + " collider game object: " + coll.name);
         _onReveal(name);    
     }
 }

@@ -11,6 +11,9 @@ public class ScoutQuestManager : MonoBehaviour
     public const string QUEST_PLAYER_UNIT_NAME = "quest_player_unit_name";
     public const string QUEST_PLAYER_TEAM_NAME = "quest_player_team_name";
 
+    [SerializeField] private float _loadScoutingDelay = 0.5f;
+    [SerializeField] private float _emptyClickCheckDelay = 0.5f;
+
     [SerializeField] private GameCamera _gameCamera;
     [SerializeField] private float _commonPosZ = -0.1f;
     [SerializeField] private string _scoutAreaPrefabName = "ScoutArea";
@@ -31,6 +34,8 @@ public class ScoutQuestManager : MonoBehaviour
     private LineRenderer _lineRenderer1;
     private LineRenderer _lineRenderer2;
 
+    private bool _playerClicked = false;
+
     private void Start()
     {
         GameInventory gameInventory = GameInventory.Instance;
@@ -48,7 +53,7 @@ public class ScoutQuestManager : MonoBehaviour
         refreshEnemyUnitsGrid();
         createQuestTeam();
 
-        loadScouting();
+        StartCoroutine(loadScouting());
 
         if (gameStats.QuestScoutPending)
         {
@@ -85,7 +90,11 @@ public class ScoutQuestManager : MonoBehaviour
         {
             if (!_tutorialPopUp.GetActive())
             {
-                StartCoroutine(handleMouseClick());
+                if (!_playerClicked)  //To prevent bugs with multiple clicks 
+                {
+                    _playerClicked = true;
+                    StartCoroutine(handleMouseClick());
+                }
             }
         }
     }
@@ -95,8 +104,10 @@ public class ScoutQuestManager : MonoBehaviour
         SceneManager.LoadScene(GameConstants.Scenes.QUEST_SELECTION);
     }
 
-    private void loadScouting()
+    private IEnumerator loadScouting()
     {
+        yield return new WaitForSeconds(_loadScoutingDelay);
+
         List<Vector3> positions = GameInventory.Instance.GetQuestScoutProgress(GameStats.Instance.SelectedScoutQuest);
 
         foreach (Vector3 pos in positions)
@@ -126,7 +137,7 @@ public class ScoutQuestManager : MonoBehaviour
 
     private IEnumerator handleMouseClick()
     {
-        yield return 0;  // wait one frame so MouseDown in units is called if clicked.
+        yield return new WaitForSeconds(_emptyClickCheckDelay);  // wait a time so MouseDown in units is called before if clicked.
 
         bool IsEmptyUnitClick = (_unitClicked == "");
         GameStats gameStats = GameStats.Instance;
