@@ -103,11 +103,21 @@ public class RewardsInventoryPopUp : MonoBehaviour
 
         List<string> ownedUnitNames = gameInventory.GetInventoryUnitNames();
 
+        string shalwendDeadlyKnightUnitName = gameInventory.GetTokenUnitName(EnjinTokenKeys.SHALWEND_DEADLY_KNIGHT);
+        string shalwendWarGodUnitName = gameInventory.GetTokenUnitName(EnjinTokenKeys.SHALWEND_WARGOD);
+
         foreach (string unitName in ownedUnitNames)
         {
             if (gameInventory.CheckCanBeWithdrawn(unitName))
             {
-                addRewardItem(gameInventory.GetUnitNameToken(unitName), EnjinTokenTypes.SPECIAL);
+                string tokenType = EnjinTokenTypes.SPECIAL;
+
+                if ((unitName == shalwendDeadlyKnightUnitName) || (unitName == shalwendWarGodUnitName))
+                {
+                    tokenType = EnjinTokenTypes.ULTIMATE;
+                }
+
+                addRewardItem(gameInventory.GetUnitNameToken(unitName), tokenType);
             }
         }
     }

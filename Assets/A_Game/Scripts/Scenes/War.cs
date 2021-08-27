@@ -470,7 +470,7 @@ public class War : NetworkEntity
         GameStats gameStats = GameStats.Instance;
 
         bool localPlayerIsHost = GetIsHost();
-        bool isTeamSetHost = teamName == GameNetwork.TeamNames.HOST;
+        bool isTeamHost = (teamName == GameNetwork.TeamNames.HOST);
 
         print("War::onPlayerTeamUnitsSet -> localPlayerIsHost: " + localPlayerIsHost);
 
@@ -478,7 +478,7 @@ public class War : NetworkEntity
         {
             instantiateTeam(teamName, teamUnits);
 
-            if (isTeamSetHost)
+            if (isTeamHost)
             {
                 if (gameStats.Mode == GameModes.SinglePlayer)
                 {
@@ -496,14 +496,14 @@ public class War : NetworkEntity
                     }
                 }
             }
-            else // Team set is Host
+            else // Team is Guest
             {
                 instantiateRewardChests(GridNames.TEAM_2);
             }
         }
         else // Local player is Guest
         {
-            if (isTeamSetHost)
+            if (isTeamHost)
             {
                 instantiateRewardChests(GridNames.TEAM_1);
             }
@@ -593,7 +593,7 @@ public class War : NetworkEntity
 
         if (GameStats.Instance.Mode == GameModes.Pvp)
         {
-            if (GetIsHost() || GetIsGuest())
+            //if (GetIsHost() || GetIsGuest())  //Doesn't seem necessary
             {
                 StartCoroutine(handlePingUpdate());
             }
@@ -1269,7 +1269,7 @@ public class War : NetworkEntity
 
     private void setupWar()
     {
-        if ((_localPlayerTeam == GameNetwork.TeamNames.GUEST) || GameHacks.Instance.GuestCameraAsHost)
+        if (GetIsGuest() || GameHacks.Instance.GuestCameraAsHost)
         {
             _gameCamera.SetCameraForGuest();
             moveCloudsToOppositeSide();
