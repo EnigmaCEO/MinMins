@@ -976,7 +976,7 @@ MonoBehaviour:
       - '* 3 items total with purchase
 
         * 3 random playable legend units'
-      - "* 3 \xEDtems totales con la compra\n* 3 unidades leyenda jugables aleatorias\n"
+      - "* 3 \xEDtems totales con la compra\n* 3 unidades leyenda jugables aleatorias"
       - 
       - 
       - 
@@ -2524,6 +2524,133 @@ MonoBehaviour:
       - 
       Flags: 0000000000
       Languages_Touch: []
+    - Term: LEVEL UP
+      TermType: 0
+      Description: 
+      Languages:
+      - LEVEL UP
+      - SUBIR NIVEL
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Finish watching a video ad to gain 20 experience for each Min-Min in your
+        team!
+      TermType: 0
+      Description: 
+      Languages:
+      - Finish watching a video ad to gain 20 experience for each Min-Min in your
+        team!
+      - "\xA1Termina de ver un video para ganar 20 de experiencia por cada Min-Min
+        de tu equipo!"
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: REWARDS
+      TermType: 0
+      Description: 
+      Languages:
+      - REWARDS
+      - RECOMPENSAS
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: or
+      TermType: 0
+      Description: 
+      Languages:
+      - or
+      - o
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Leaders
+      TermType: 0
+      Description: 
+      Languages:
+      - Leaders
+      - "L\xEDderes"
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Units and items can be tokenized into your wallet using Enjin Jumpnet
+      TermType: 0
+      Description: 
+      Languages:
+      - Units and items can be tokenized into your wallet using Enjin Jumpnet
+      - "Unidades e \xEDtems pueden ser tokenizados a tu billetera usando Enjin Jumpnet"
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: TOKENIZE ITEMS
+      TermType: 0
+      Description: 
+      Languages:
+      - TOKENIZE ITEMS
+      - "TOKENIZAR \xCDTEMS"
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: '* Units can be tokenized'
+      TermType: 0
+      Description: 
+      Languages:
+      - '* Units can be tokenized'
+      - '* Las unidades pueden ser tokenizadas'
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Tokens are sent to your wallet in exchange for JENJ. After clicking Start
+        look for the wallet notification to approve the trade.
+      TermType: 0
+      Description: 
+      Languages:
+      - Tokens are sent to your wallet in exchange for JENJ. After clicking Start
+        look for the wallet notification to approve the trade.
+      - "Las fichas son enviadas a tu billetera en intercambio por JENJ.  Despu\xE9s
+        de dar click a Comenzar espera la notificaci\xF3n para aprobar la transacci\xF3n."
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Tokenizing...
+      TermType: 0
+      Description: 
+      Languages:
+      - Tokenizing...
+      - Tokenizando...
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Link Wallet Explanation
+      TermType: 0
+      Description: 
+      Languages:
+      - Scan QR or use the code to link your wallet
+      - "Escanea el QR o usa el c\xF3digo para enlazar tu billetera"
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
     - Term: Tap boost to select/deselect.
       TermType: 0
       Description: 
@@ -2559,7 +2686,7 @@ MonoBehaviour:
     Google_WebServiceURL: https://script.google.com/macros/s/AKfycbw05ISkGCPtIS0hMzFD5jshgfH09mIP6BAxRKhWsA/exec
     Google_SpreadsheetKey: 1iIWCtExuyR2XXyYkJv6y83PTVMPC4FxzSITGGroefcg
     Google_SpreadsheetName: I2Loc MinMins Localization
-    Google_LastUpdatedVersion: 1630079927039
+    Google_LastUpdatedVersion: 1630111846119
     Google_Password: shalwend
     GoogleUpdateFrequency: 0
     GoogleInEditorCheckFrequency: 0
