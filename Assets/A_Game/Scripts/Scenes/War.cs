@@ -470,7 +470,7 @@ public class War : NetworkEntity
         GameStats gameStats = GameStats.Instance;
 
         bool localPlayerIsHost = GetIsHost();
-        bool isTeamHost = (teamName == GameNetwork.TeamNames.HOST);
+        bool isTeamSetHost = teamName == GameNetwork.TeamNames.HOST;
 
         print("War::onPlayerTeamUnitsSet -> localPlayerIsHost: " + localPlayerIsHost);
 
@@ -478,7 +478,7 @@ public class War : NetworkEntity
         {
             instantiateTeam(teamName, teamUnits);
 
-            if (isTeamHost)
+            if (isTeamSetHost)
             {
                 if (gameStats.Mode == GameModes.SinglePlayer)
                 {
@@ -496,14 +496,14 @@ public class War : NetworkEntity
                     }
                 }
             }
-            else // Team is Guest
+            else // Team set is Host
             {
                 instantiateRewardChests(GridNames.TEAM_2);
             }
         }
         else // Local player is Guest
         {
-            if (isTeamHost)
+            if (isTeamSetHost)
             {
                 instantiateRewardChests(GridNames.TEAM_1);
             }
@@ -593,7 +593,7 @@ public class War : NetworkEntity
 
         if (GameStats.Instance.Mode == GameModes.Pvp)
         {
-            //if (GetIsHost() || GetIsGuest())  //Doesn't seem necessary
+            if (GetIsHost() || GetIsGuest())
             {
                 StartCoroutine(handlePingUpdate());
             }
@@ -1269,7 +1269,7 @@ public class War : NetworkEntity
 
     private void setupWar()
     {
-        if (GetIsGuest() || GameHacks.Instance.GuestCameraAsHost)
+        if ((_localPlayerTeam == GameNetwork.TeamNames.GUEST) || GameHacks.Instance.GuestCameraAsHost)
         {
             _gameCamera.SetCameraForGuest();
             moveCloudsToOppositeSide();
@@ -1602,7 +1602,7 @@ public class War : NetworkEntity
                     unitsString = "23|25|30|42|50"; //scout, healer, destroyer, bomber
                     break;
                 case 4:
-                    unitsString = "128|77|75|68|69"; //tank, bomber, healer, scout, destroyer
+                    unitsString = "128|118|125|124|134"; //tank, bomber, healer, scout, destroyer
                     break;
             }
         }
@@ -1620,7 +1620,7 @@ public class War : NetworkEntity
                     unitsString = "72|75|80|78|77";
                     break;
                 case 4:
-                    unitsString = "134|60|63|73|76"; //Destroyer, bomber, scout, healer, tank
+                    unitsString = "134|126|107|106|128"; //Destroyer, bomber, scout, healer, tank
                     break;
             }
         }
@@ -2921,9 +2921,6 @@ public class War : NetworkEntity
 
             case nameof(SerialQuests.ShalwendWargod):
                 gameInventory.HandleAddUnitOrExp("128");
-                break;
-            case nameof(SerialQuests.ShalwendDeadlyKnight):
-                gameInventory.HandleAddUnitOrExp("134");
                 break;
         }
     }

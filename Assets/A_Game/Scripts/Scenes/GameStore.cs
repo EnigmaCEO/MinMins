@@ -361,7 +361,7 @@ public class GameStore : EnigmaScene
         else
 #else
         {
-            IAPManager.BuyConsumable(_selectedPackIndex);
+            IAPManager.BuyConsumable(_selectedBoxIndex);
         }
 #endif
 

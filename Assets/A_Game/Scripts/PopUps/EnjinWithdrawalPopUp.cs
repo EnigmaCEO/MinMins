@@ -10,7 +10,7 @@ using UnityEngine.UI;
 public class EnjinWithdrawalPopUp : MonoBehaviour
 {
     [SerializeField] private string _getEnjinWalletURL = "https://enjin.io/software/wallet";
-    [SerializeField] private float _withdrawalRetryDelay = 3;
+    [SerializeField] private float _withdrawalRetryDelay = 10;
 
     [SerializeField] private Text _statusUiText;
     [SerializeField] private Text _descriptionText;
@@ -60,14 +60,17 @@ public class EnjinWithdrawalPopUp : MonoBehaviour
     {
         if (GameNetwork.Instance.IsEnjinLinked)
         {
-            _okButton.SetActive(false);
+            if (GameStats.Instance.EnjBalance > 0)
+            {
+                _okButton.SetActive(false);
 
-            _descriptionText.gameObject.SetActive(false);
+                _descriptionText.gameObject.SetActive(false);
 
-            _statusUiText.text = LocalizationManager.GetTermTranslation(UiMessages.PERFORMING_WITHDRAWAL);
-            _statusUiText.gameObject.SetActive(true);
+                _statusUiText.text = LocalizationManager.GetTermTranslation(UiMessages.PERFORMING_WITHDRAWAL);
+                _statusUiText.gameObject.SetActive(true);
 
-            StartCoroutine(handleWithdrawalProcess(0));
+                StartCoroutine(handleWithdrawalProcess(0));
+            }
         }
         else
         {
@@ -107,13 +110,14 @@ public class EnjinWithdrawalPopUp : MonoBehaviour
         {
             yield return new WaitForSeconds(delay);
 
-            string tokenKey = _tokenSelected.TokenKey;
+            string tokenKey = _tokenSelected.TokenKey + "vEGI_MINMINSv" + GameStats.Instance.EnjBalance + NetworkManager.GetSessionID();
 
-            string fileSec = FileManager.Instance.GetDataStringSec(tokenKey);
+            string fileSec = NetworkManager.md5(tokenKey);
 
             Hashtable hashTable = new Hashtable();
-            hashTable.Add(GameNetwork.TransactionKeys.TOKEN_KEY, tokenKey);
+            hashTable.Add(GameNetwork.TransactionKeys.TOKEN_KEY, _tokenSelected.TokenKey);
             hashTable.Add(GameNetwork.TransactionKeys.SEC_CODE, fileSec);
+            hashTable.Add(GameNetwork.TransactionKeys.ENJ_BALANCE, GameStats.Instance.EnjBalance);
 
             NetworkManager.Transaction(Transactions.ENJIN_WITHDRAWAL, hashTable, onWithdrawalServerResponse);
         }
