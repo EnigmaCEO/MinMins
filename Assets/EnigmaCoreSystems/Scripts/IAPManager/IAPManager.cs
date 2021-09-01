@@ -452,7 +452,7 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
     {
         bool validPurchase = true; // Presume valid for platforms with no R.V.
 
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
+#if DEVELOPMENT_BUILD
         if (EnigmaHacks.Instance.ByPassIAPReceiptCheck)
         { 
             //bypass
@@ -490,7 +490,7 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
                         // This is Google's Order ID.
                         // Note that it is null when testing in the sandbox
                         // because Google's sandbox does not provide Order IDs.
-                        Debug.Log("Google transaction Id: " + google.transactionID);
+                        Debug.Log("Google transaction Id: " + google.orderID);
                         Debug.Log("Google purchase state: " + google.purchaseState);
                         Debug.Log("Google purchase token: " + google.purchaseToken);
                     }
@@ -533,7 +533,7 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
 
 
             // Unlock the appropriate content here.
-#if (UNITY_ANDROID || UNITY_IOS)
+#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
 
             Hashtable hashtable = new Hashtable();
 
@@ -570,11 +570,12 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
                 hashtable.Add("results", "fail");
                 NetworkManager.Transaction(Transactions.PURCHASE, hashtable, onPurchaseTransaction);
             }
+#endif
         }
 
         IAPResult(args.purchasedProduct.definition.id, validPurchase);
 
-#endif
+
 
         return PurchaseProcessingResult.Complete;
     }

@@ -353,7 +353,7 @@ public class GameStore : EnigmaScene
             gameInventory.ChangeCrystalsAmount(-price);
             _crystalsAmount.text = gameInventory.GetCrystalsAmount().ToString();
         }
-#elif DEVELOPMENT_BUILD || UNITY_EDITOR
+#elif DEVELOPMENT_BUILD
         if (GameHacks.Instance.BuyAndroid)
         {
             handleCurrencyBuyResult(IAPManager.Instance.IAP_IDS[_selectedBoxIndex], true);  // Buy hack to work on android
