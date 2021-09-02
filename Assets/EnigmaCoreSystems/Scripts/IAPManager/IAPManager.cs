@@ -465,75 +465,78 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
             //string productId = "";
 
             // Unity IAP's validation logic is only included on these platforms.
-#if (UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX) && !UNITY_EDITOR
+#if (UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX)
             // Prepare the validator with the secrets we prepared in the Editor
             // obfuscation window.
             CrossPlatformValidator validator = new CrossPlatformValidator(GooglePlayTangle.Data(), AppleTangle.Data(), Application.identifier);
-            
 
-            try
+            if (!args.purchasedProduct.receipt.Contains("fake"))
             {
-                // On Google Play, result has a single product ID.
-                // On Apple stores, receipts contain multiple products.
-                IPurchaseReceipt[] result = validator.Validate(args.purchasedProduct.receipt);
-                // For informational purposes, we list the receipt(s)
-                Debug.Log("Receipt is valid. Contents:");
-                foreach (IPurchaseReceipt productReceipt in result)
+                try
                 {
-                    Debug.Log(productReceipt.productID);
-                    Debug.Log(productReceipt.purchaseDate);
-                    Debug.Log(productReceipt.transactionID);
-
-                    GooglePlayReceipt google = productReceipt as GooglePlayReceipt;
-                    if (null != google)
+                    // On Google Play, result has a single product ID.
+                    // On Apple stores, receipts contain multiple products.
+                    IPurchaseReceipt[] result = validator.Validate(args.purchasedProduct.receipt);
+                    // For informational purposes, we list the receipt(s)
+                    Debug.Log("Receipt is valid. Contents:");
+                    foreach (IPurchaseReceipt productReceipt in result)
                     {
-                        // This is Google's Order ID.
-                        // Note that it is null when testing in the sandbox
-                        // because Google's sandbox does not provide Order IDs.
-                        Debug.Log("Google transaction Id: " + google.orderID);
-                        Debug.Log("Google purchase state: " + google.purchaseState);
-                        Debug.Log("Google purchase token: " + google.purchaseToken);
-                    }
+                        Debug.Log(productReceipt.productID);
+                        Debug.Log(productReceipt.purchaseDate);
+                        Debug.Log(productReceipt.transactionID);
 
-                    AppleInAppPurchaseReceipt apple = productReceipt as AppleInAppPurchaseReceipt;
-                    if (null != apple)
-                    {
-                        Debug.Log("Apple transaction Id: " + apple.originalTransactionIdentifier);
-                        Debug.Log("Apple subscription expiration date: " + apple.subscriptionExpirationDate);
-                        Debug.Log("Apple cancellation date: " + apple.cancellationDate);
-                        Debug.Log("Apple quantity: " + apple.quantity);
-                    }
-
-                    //purchaseToken = google.purchaseToken;
-                    transactionId = productReceipt.transactionID;
-                    //productId = productReceipt.productID;
-
-                    if (!args.purchasedProduct.definition.id.Contains(Application.identifier))
-                    {
-                        Debug.Log("Invalid receipt, incorrect ID");
-                        validPurchase = false;
-                    }
-
-                    if (transactionId.Contains("-"))
-                    {
-                        if (!transactionId.Contains("GPA"))
+                        GooglePlayReceipt google = productReceipt as GooglePlayReceipt;
+                        if (null != google)
                         {
-                            Debug.Log("Invalid receipt, fake ID");
+                            // This is Google's Order ID.
+                            // Note that it is null when testing in the sandbox
+                            // because Google's sandbox does not provide Order IDs.
+                            Debug.Log("Google transaction Id: " + google.orderID);
+                            Debug.Log("Google purchase state: " + google.purchaseState);
+                            Debug.Log("Google purchase token: " + google.purchaseToken);
+                        }
+
+                        AppleInAppPurchaseReceipt apple = productReceipt as AppleInAppPurchaseReceipt;
+                        if (null != apple)
+                        {
+                            Debug.Log("Apple transaction Id: " + apple.originalTransactionIdentifier);
+                            Debug.Log("Apple subscription expiration date: " + apple.subscriptionExpirationDate);
+                            Debug.Log("Apple cancellation date: " + apple.cancellationDate);
+                            Debug.Log("Apple quantity: " + apple.quantity);
+                        }
+
+                        //purchaseToken = google.purchaseToken;
+                        transactionId = productReceipt.transactionID;
+                        //productId = productReceipt.productID;
+
+                        if (!args.purchasedProduct.definition.id.Contains(Application.identifier))
+                        {
+                            Debug.Log("Invalid receipt, incorrect ID");
                             validPurchase = false;
+                        }
+
+                        if (transactionId.Contains("-"))
+                        {
+                            if (!transactionId.Contains("GPA"))
+                            {
+                                Debug.Log("Invalid receipt, fake ID");
+                                validPurchase = false;
+                            }
                         }
                     }
                 }
-            }
-            catch (IAPSecurityException)
-            {
-                Debug.Log("Invalid receipt, not unlocking content");
-                validPurchase = false;
+                catch (IAPSecurityException e)
+                {
+                    Debug.LogError("Invalid receipt, not unlocking content");
+                    Debug.LogError(e.ToString());
+                    validPurchase = false;
+                }
             }
 #endif
 
 
             // Unlock the appropriate content here.
-#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+#if (UNITY_ANDROID || UNITY_IOS)
 
             Hashtable hashtable = new Hashtable();
 
@@ -541,7 +544,7 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
             {
                 Debug.Log("Receipt: " + args.purchasedProduct.receipt);
 
-                hashtable.Add("receipt", args.purchasedProduct.receipt);
+                hashtable.Add("receipt", args.purchasedProduct.receipt.ToString());
                 hashtable.Add("transaction_id", args.purchasedProduct.transactionID);
                 hashtable.Add("product_id", (args.purchasedProduct.definition != null) ? args.purchasedProduct.definition.id : "");
             }

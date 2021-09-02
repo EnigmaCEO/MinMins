@@ -18,7 +18,7 @@ public class Init : EnigmaScene
 
 #if UNITY_ANDROID || UNITY_IOS
         //Screen.SetResolution(1920, 1080, true, 60);
-        Screen.SetResolution(1280, 720, true, 60);
+        //Screen.SetResolution(1280, 720, true, 60);
         //Screen.orientation = ScreenOrientation.Landscape;
 #endif
 
