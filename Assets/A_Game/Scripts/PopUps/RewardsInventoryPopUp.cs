@@ -27,7 +27,7 @@ public class RewardsInventoryPopUp : MonoBehaviour
     [SerializeField] private EnjinWithdrawalPopUp _enjinWithdrawalPopUp;
 
     private GameObject _rewardItemTemplate;
-    private bool _initialized = false;
+    //private bool _initialized = false;
 
     private void Awake()
     {
@@ -40,7 +40,7 @@ public class RewardsInventoryPopUp : MonoBehaviour
 
     public void Open()
     {
-        if (!_initialized)
+        //if (!_initialized)
         {
             initializeInventory();
         }
@@ -81,7 +81,7 @@ public class RewardsInventoryPopUp : MonoBehaviour
             }
         }
 
-        _initialized = true;
+        //_initialized = true;
         _statusUI.gameObject.SetActive(false);
     }
 

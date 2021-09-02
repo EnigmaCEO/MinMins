@@ -146,6 +146,7 @@ public class EnjinWithdrawalPopUp : MonoBehaviour
                 if (handleWithdrawalStatus(status))
                 {
                     GameNetwork.Instance.UpdateEnjinGoodies(response_hash, false);
+                    GameStats.Instance.EnjBalance -= _tokenSelected.CostNumber;  //Because it won't be updated in server response
                     _inventoryChangedCallback();
                 }
             }
