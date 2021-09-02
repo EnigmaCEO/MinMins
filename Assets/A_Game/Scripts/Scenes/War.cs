@@ -2922,6 +2922,9 @@ public class War : NetworkEntity
             case nameof(SerialQuests.ShalwendWargod):
                 gameInventory.HandleAddUnitOrExp("128");
                 break;
+            case nameof(SerialQuests.ShalwendDeadlyKnight):
+                gameInventory.HandleAddUnitOrExp("134");
+                break;
         }
     }
 
