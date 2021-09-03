@@ -196,16 +196,16 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
 
         var builder = ConfigurationBuilder.Instance(module);
         builder.Configure<IMicrosoftConfiguration>().useMockBillingSystem = false;
-        builder.Configure<IGooglePlayConfiguration>().SetPublicKey(IAPManager.Instance.ANDROID_GOOGLE_PLAY_KEY);
+        //builder.Configure<IGooglePlayConfiguration>().SetPublicKey(IAPManager.Instance.ANDROID_GOOGLE_PLAY_KEY);
 
-    #if UNITY_TIZEN
+#if UNITY_TIZEN
         builder.Configure<ITizenStoreConfiguration>().SetGroupId("100000086671");
         IAPManager.Instance.IAP_IDS = new string[] { "000000599631", "000000599632", "000000599633", "000000599634", "000000599635", "000000599636", "000000599637", "000000599638" };
-    #endif
-    #if ANDROID_MOOLAH
+#endif
+#if ANDROID_MOOLAH
 		builder.Configure<IMoolahConfiguration>().appKey = "27";
 		builder.Configure<IMoolahConfiguration>().hashKey = "1525127e80ac408f98e75ad6142e4517";
-    #endif
+#endif
         foreach (string id in IAPManager.Instance.IAP_IDS)
         {
             builder.AddProduct(id, ProductType.Consumable);
@@ -451,6 +451,7 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
     PurchaseProcessingResult IStoreListener.ProcessPurchase(PurchaseEventArgs args)
     {
         bool validPurchase = true; // Presume valid for platforms with no R.V.
+        string errorCatched = "";
 
 #if DEVELOPMENT_BUILD
         if (EnigmaHacks.Instance.ByPassIAPReceiptCheck)
@@ -465,20 +466,25 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
             //string productId = "";
 
             // Unity IAP's validation logic is only included on these platforms.
-#if (UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX)
-            // Prepare the validator with the secrets we prepared in the Editor
-            // obfuscation window.
-            CrossPlatformValidator validator = new CrossPlatformValidator(GooglePlayTangle.Data(), AppleTangle.Data(), Application.identifier);
+#if (!UNITY_EDITOR && (UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX))
 
-            if (!args.purchasedProduct.receipt.Contains("fake"))
+            try
             {
-                try
+                // Prepare the validator with the secrets we prepared in the Editor
+                // obfuscation window.
+                CrossPlatformValidator validator = new CrossPlatformValidator(GooglePlayTangle.Data(), AppleTangle.Data(), Application.identifier);
+
+                if (!args.purchasedProduct.receipt.Contains("fake"))
                 {
-                    // On Google Play, result has a single product ID.
-                    // On Apple stores, receipts contain multiple products.
-                    IPurchaseReceipt[] result = validator.Validate(args.purchasedProduct.receipt);
+                    //try
+                    //{
+
                     // For informational purposes, we list the receipt(s)
                     Debug.Log("Receipt is valid. Contents:");
+                    // On Google Play, result has a single product ID.
+                    // On Apple stores, receipts contain multiple products.
+
+                    IPurchaseReceipt[] result = validator.Validate(args.purchasedProduct.receipt);
                     foreach (IPurchaseReceipt productReceipt in result)
                     {
                         Debug.Log(productReceipt.productID);
@@ -524,13 +530,25 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
                             }
                         }
                     }
+                    //}
+                    //catch (IAPSecurityException e)
+                    //{
+                    //    Debug.LogError("Invalid receipt, not unlocking content");
+                    //    Debug.LogError(e.ToString());
+                    //    validPurchase = false;
+                    //}
                 }
-                catch (IAPSecurityException e)
-                {
-                    Debug.LogError("Invalid receipt, not unlocking content");
-                    Debug.LogError(e.ToString());
-                    validPurchase = false;
-                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("Invalid receipt, not unlocking content");
+
+                string errorString = e.ToString();
+                Debug.LogError(errorString);
+
+                errorCatched = errorString;
+
+                validPurchase = false;
             }
 #endif
 
@@ -553,6 +571,11 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
                 hashtable.Add("receipt", "");
                 hashtable.Add("transaction_id", "");
                 hashtable.Add("product_id", "");
+            }
+
+            if (errorCatched != "")
+            {
+                hashtable["receipt"] = errorCatched;
             }
 
             if (validPurchase)

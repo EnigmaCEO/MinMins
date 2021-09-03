@@ -1172,14 +1172,14 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
         {
             canBeWithdrawn = false;
         }
-        else if (checkUnitBetweenTokens(unitNumber, GameConstants.EnjinTokenKeys.ENJIN_MAXIM, GameConstants.EnjinTokenKeys.ENJIN_SIMON))
-        {
-            canBeWithdrawn = false;
-        }
-        else if (checkUnitBetweenTokens(unitNumber, GameConstants.EnjinTokenKeys.ENJIN_ALEX, GameConstants.EnjinTokenKeys.ENJIN_LIZZ))
-        {
-            canBeWithdrawn = false;
-        }
+        //else if (checkUnitBetweenTokens(unitNumber, GameConstants.EnjinTokenKeys.ENJIN_MAXIM, GameConstants.EnjinTokenKeys.ENJIN_SIMON))
+        //{
+        //    canBeWithdrawn = false;
+        //}
+        //else if (checkUnitBetweenTokens(unitNumber, GameConstants.EnjinTokenKeys.ENJIN_ALEX, GameConstants.EnjinTokenKeys.ENJIN_LIZZ))
+        //{
+        //    canBeWithdrawn = false;
+        //}
 
         return canBeWithdrawn;
     }

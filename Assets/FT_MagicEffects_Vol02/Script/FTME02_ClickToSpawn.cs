@@ -4,7 +4,8 @@ using ParticlePlayground;
 
 public class FTME02_ClickToSpawn : MonoBehaviour {
 
-	public GUIText prefabName;
+	//public GUIText prefabName;
+	public UnityEngine.UI.Text prefabName;
 	public GameObject[] particlePrefab;
 	public int particleNum = 0;
 

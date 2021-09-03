@@ -6,13 +6,17 @@ namespace I2.Loc
     #if UNITY_EDITOR
     [UnityEditor.InitializeOnLoad] 
     #endif
-    public class LocalizeTarget_UnityStandard_GUIText : LocalizeTarget<GUIText>
+    public class LocalizeTarget_UnityStandard_GUIText : LocalizeTarget<UnityEngine.UI.Text>//LocalizeTarget<GUIText>
     {
         static LocalizeTarget_UnityStandard_GUIText() { AutoRegister(); }
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)] static void AutoRegister() { LocalizationManager.RegisterTarget(new LocalizeTargetDesc_Type<GUIText, LocalizeTarget_UnityStandard_GUIText>() { Name = "GUIText", Priority = 100 }); }
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)] static void AutoRegister() { LocalizationManager.RegisterTarget(new LocalizeTargetDesc_Type<UnityEngine.UI.Text/*GUIText*/, LocalizeTarget_UnityStandard_GUIText>() { Name = "GUIText", Priority = 100 }); }
 
-        TextAlignment mAlignment_RTL = TextAlignment.Right;
-        TextAlignment mAlignment_LTR = TextAlignment.Left;
+        //TextAlignment mAlignment_RTL = TextAlignment.Right;
+        //TextAlignment mAlignment_LTR = TextAlignment.Left;
+
+        TextAnchor mAlignment_RTL = TextAnchor.MiddleRight;
+        TextAnchor mAlignment_LTR = TextAnchor.MiddleLeft;
+
         bool mAlignmentWasRTL;
         bool mInitializeAlignment = true;
         
@@ -40,18 +44,32 @@ namespace I2.Loc
             {
                 mInitializeAlignment = false;
 
-                mAlignment_LTR = mAlignment_RTL = mTarget.alignment;
+                mAlignment_LTR = mAlignment_RTL = mTarget.alignment; // mTarget.alignment;
 
-                if (LocalizationManager.IsRight2Left && mAlignment_RTL == TextAlignment.Right)
-                    mAlignment_LTR = TextAlignment.Left;
-                if (!LocalizationManager.IsRight2Left && mAlignment_LTR == TextAlignment.Left)
-                    mAlignment_RTL = TextAlignment.Right;
+                //if (LocalizationManager.IsRight2Left && mAlignment_RTL == TextAlignment.Right)
+                //    mAlignment_LTR = TextAlignment.Left;
+                //if (!LocalizationManager.IsRight2Left && mAlignment_LTR == TextAlignment.Left)
+                //    mAlignment_RTL = TextAlignment.Right;
+
+                if (LocalizationManager.IsRight2Left && (mAlignment_RTL == TextAnchor.MiddleRight))
+                {
+                    mAlignment_LTR = TextAnchor.MiddleLeft;
+                }
+                if (!LocalizationManager.IsRight2Left && (mAlignment_LTR == TextAnchor.MiddleLeft))
+                {
+                    mAlignment_RTL = TextAnchor.MiddleRight;
+                }
 
             }
             if (mainTranslation != null && mTarget.text != mainTranslation)
             {
-                if (cmp.CorrectAlignmentForRTL && mTarget.alignment != TextAlignment.Center)
+                //if (cmp.CorrectAlignmentForRTL && mTarget.alignment != TextAlignment.Center)
+                //    mTarget.alignment = (LocalizationManager.IsRight2Left ? mAlignment_RTL : mAlignment_LTR);
+
+                if (cmp.CorrectAlignmentForRTL && mTarget.alignment != TextAnchor.MiddleCenter)
+                {
                     mTarget.alignment = (LocalizationManager.IsRight2Left ? mAlignment_RTL : mAlignment_LTR);
+                }
 
                 mTarget.text = mainTranslation;
             }

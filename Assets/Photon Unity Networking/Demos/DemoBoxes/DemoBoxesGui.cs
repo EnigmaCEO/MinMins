@@ -8,7 +8,8 @@ public class DemoBoxesGui : MonoBehaviour
     public bool HideUI = false;
 
     /// <summary>A GUI element to show tips in.</summary>
-    public GUIText GuiTextForTips;
+    //public GUIText GuiTextForTips;
+    public UnityEngine.UI.Text GuiTextForTips;
 
     private int tipsIndex;
 
