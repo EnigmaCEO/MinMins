@@ -441,19 +441,19 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
                 break;
 
             case GameConstants.EnjinTokenKeys.ENJIN_ESTHER:
-                enjinKeyName = "Esther Legend";
+                enjinKeyName = "Esther Legend II";
                 break;
             case GameConstants.EnjinTokenKeys.ENJIN_ALEX:
-                enjinKeyName = "Alex Legend";
+                enjinKeyName = "Rene Legend II";
                 break;
             case GameConstants.EnjinTokenKeys.ENJIN_EVAN:
-                enjinKeyName = "Evan Legend";
+                enjinKeyName = "Evan Legend II";
                 break;
             case GameConstants.EnjinTokenKeys.ENJIN_LIZZ:
-                enjinKeyName = "Lizz Legend";
+                enjinKeyName = "Lizz Legend II";
                 break;
             case GameConstants.EnjinTokenKeys.ENJIN_BRAD:
-                enjinKeyName = "Brad Legend";
+                enjinKeyName = "Brad Legend II";
                 break;
 
             case GameConstants.EnjinTokenKeys.KNIGHT_HEALER:
@@ -489,25 +489,28 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
                 break;
 
             case GameConstants.EnjinTokenKeys.GOD_HEALER:
-                enjinKeyName = "God Healer";
+                enjinKeyName = "God Burtonscustom";
                 break;
             case GameConstants.EnjinTokenKeys.GOD_BOMBER:
-                enjinKeyName = "God Bomber";
+                enjinKeyName = "God Nhinestreams";
                 break;
             case GameConstants.EnjinTokenKeys.GOD_DESTROYER_1:
-                enjinKeyName = "God Destroyer 1";
+                enjinKeyName = "God Eindbaas";
                 break;
             case GameConstants.EnjinTokenKeys.GOD_DESTROYER_2:
-                enjinKeyName = "God Destroyer 2";
+                enjinKeyName = "God Billysaurus";
                 break;
             case GameConstants.EnjinTokenKeys.GOD_SCOUT:
-                enjinKeyName = "God Scout";
+                enjinKeyName = "God Mapl3sn0w";
                 break;
             case GameConstants.EnjinTokenKeys.GOD_TANK_1:
-                enjinKeyName = "God Tank 1";
+                enjinKeyName = "God Jtobcat";
                 break;
             case GameConstants.EnjinTokenKeys.GOD_TANK_2:
-                enjinKeyName = "God Tank 2";
+                enjinKeyName = "God Capcapcin";
+                break;
+            case GameConstants.EnjinTokenKeys.GOD_ENIGMA:
+                enjinKeyName = "Gods of Enigma";
                 break;
         }
 

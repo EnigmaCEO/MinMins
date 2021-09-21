@@ -577,7 +577,15 @@ public class Main : EnigmaScene
             addToEnjinItemDisplay(EnjinTokenKeys.NARWHAL_DIAMOND);
 
             addToEnjinItemDisplay(EnjinTokenKeys.SWISSBORG_CYBORG);
-            addToEnjinItemDisplay(EnjinTokenKeys.SHALWEND_WARGOD);           
+            addToEnjinItemDisplay(EnjinTokenKeys.SHALWEND_WARGOD);
+            addToEnjinItemDisplay(EnjinTokenKeys.GOD_ENIGMA);
+            addToEnjinItemDisplay(EnjinTokenKeys.GOD_BOMBER);
+            addToEnjinItemDisplay(EnjinTokenKeys.GOD_DESTROYER_1);
+            addToEnjinItemDisplay(EnjinTokenKeys.GOD_DESTROYER_2);
+            addToEnjinItemDisplay(EnjinTokenKeys.GOD_HEALER);
+            addToEnjinItemDisplay(EnjinTokenKeys.GOD_SCOUT);
+            addToEnjinItemDisplay(EnjinTokenKeys.GOD_TANK_1);
+            addToEnjinItemDisplay(EnjinTokenKeys.GOD_TANK_2);
 
             //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_1, "Damage Ore +1");
             //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_2, "Damage Ore +2");

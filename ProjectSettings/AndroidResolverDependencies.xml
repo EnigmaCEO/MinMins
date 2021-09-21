@@ -3,7 +3,7 @@
     <package>com.google.android.gms:play-services-gcm:11.0.1</package>
     <package>com.google.android.gms:play-services-identity:11.0.1</package>
     <package>com.google.android.gms:play-services-iid:11.0.1</package>
-    <package>com.google.games:gpgs-plugin-support:0.10.05</package>
+    <package>com.google.games:gpgs-plugin-support:0.10.12</package>
   </packages>
   <files />
 </dependencies>

@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f0b0c553be8edd4682e9180fdd13e37, type: 3}
+  m_Script: {fileID: 11500000, guid: 33f10ac602cff614a87951dbd0be36ca, type: 3}
   m_Name: I2Languages
   m_EditorClassIdentifier: 
   mSource:
@@ -157,7 +157,8 @@ MonoBehaviour:
       - 'Are you ready for Quest Levels?
 
 
-        Log in with your Enigma Games account to access them.'
+        Log in with your Enigma Games
+        account to access them.'
       - "\xBFEst\xE1s listo para Niveles de B\xFAsqueda?\n\nAccede a tu cuenta de
         Juegos Enigma para accesarlos."
       - "\u4F60\u6E96\u5099\u597D\u8FCE\u63A5\u4EFB\u52D9\u7B49\u7D1A\u55CE\uFF1F\n\n\u4F7F\u7528
@@ -176,15 +177,16 @@ MonoBehaviour:
         \uACC4\uC815\uC5D0 \uB85C\uADF8\uC778\uD558\uC5EC \uC561\uC138\uC2A4\uD558\uC138\uC694."
       Flags: 0000000000
       Languages_Touch: []
-    - Term: Are you ready to battle other players? Log in with your Enigma Games account
-        to access the PvP arenas.
+    - Term: Are you ready to battle other players? Log in with your Enigma Games
+        account to access the PvP arenas.
       TermType: 0
       Description: 
       Languages:
       - 'Are you ready to battle other players?
 
 
-        Log in with your Enigma Games account to access the PvP arenas.'
+        Log in with your Enigma
+        Games account to access the PvP arenas.'
       - "\xBFEst\xE1s listo para batallar otros jugadores?\n\nIngresa con tu cuenta
         de Enigma Games para accesar las arenas JcJ."
       - "\u4F60\u6E96\u5099\u597D\u548C\u5176\u4ED6\u73A9\u5BB6\u6230\u9B25\u4E86\u55CE?
@@ -523,9 +525,14 @@ MonoBehaviour:
 
         * 3 random playable demon king units'
       - "* 3 \xEDtems totales con la compra\n* 3 unidades rey demonio jugable aleatorias"
-      - 
-      - 
-      - 
+      - "* \u8CFC\u8CB7\u5F8C\u53EF\u7372\u5F97 3 \u9805\u7269\u54C1\r\n* \u96A8\u6A5F\u7372\u5F97
+        3 \u500B\u60E1\u738B\u6230\u968A\u6210\u54E1\uFF0C\u53EF\u5728\u904A\u6232\u4E2D\u4F7F\u7528*
+        \u8CFC\u8CB7\u5F8C\u53EF\u7372\u5F97 3 \u9805\u7269\u54C1"
+      - "* \u8D2D\u4E70\u603B\u5171\u5305\u542B3\u4E2A\u7269\u54C1\n* 3\u4E2A\u968F\u673A\u53EF\u73A9\u7684\u9B54\u738B\u5355\u4F4D*
+        \u8D2D\u4E70\u603B\u5171\u5305\u542B3\u4E2A\u7269\u54C1"
+      - "* \uAD6C\uB9E4 \uC2DC \uC544\uC774\uD15C \uCD1D 2\uAC1C\r\n* 1\uAC1C\uC758
+        \uBCF4\uC7A5\uB41C \uD76C\uADC0 \uC544\uC774\uD15C\r\n* 1\uAC1C\uC758 \uBB34\uC791\uC704
+        \uD50C\uB808\uC774 \uAC00\uB2A5 \uC545\uB9C8\uC758 \uC655 \uD1A0\uD070"
       Flags: 0000000000
       Languages_Touch: []
     - Term: Destroyer
@@ -679,8 +686,8 @@ MonoBehaviour:
       - Error conectando al servidor. Recomience el app y reintente.
       - "\u7121\u6CD5\u9023\u63A5\u81F3\u4F3A\u670D\u5668\uFF0C\u8ACB\u91CD\u958B\u61C9\u7528\u7A0B\u5F0F\u4E26\u91CD\u8A66"
       - "\u65E0\u6CD5\u8FDE\u63A5\u81F3\u4F3A\u670D\u5668\uFF0C\u8BF7\u91CD\u5F00\u5E94\u7528\u7A0B\u5F0F\u5E76\u91CD\u8BD5"
-      - "\uC11C\uBC84 \uC5F0\uACB0\uC911 \uC5D0\uB7EC \uBC1C\uC0DD. \uC571\uC744 \uB2E4\uC2DC
-        \uC2E4\uD589\uD558\uC138\uC694"
+      - "\uC11C\uBC84 \uC5F0\uACB0\uC911 \uC5D0\uB7EC \uBC1C\uC0DD. \uC571\uC744
+        \uB2E4\uC2DC \uC2E4\uD589\uD558\uC138\uC694"
       Flags: 0000000000
       Languages_Touch: []
     - Term: FILE WARNING!
@@ -883,8 +890,9 @@ MonoBehaviour:
       - "\uD0A8(KIN) \uD654\uD3D0"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: 'Kin is used in Min-Mins to: * Allow players to show appreciation to others
-        after battles * Resurrect units that die in battle * Global Gift Box rewards'
+    - Term: 'Kin is used in Min-Mins to: * Allow players to show appreciation to
+        others after battles * Resurrect units that die in battle * Global Gift Box
+        rewards'
       TermType: 0
       Description: 
       Languages:
@@ -977,9 +985,13 @@ MonoBehaviour:
 
         * 3 random playable legend units'
       - "* 3 \xEDtems totales con la compra\n* 3 unidades leyenda jugables aleatorias"
-      - 
-      - 
-      - 
+      - "* \u8CFC\u8CB7\u5F8C\u53EF\u7372\u5F97 3 \u9805\u7269\u54C1\r\n* \u96A8\u6A5F\u7372\u5F97
+        3 \u500B\u82F1\u96C4\u6230\u968A\u6210\u54E1\uFF0C\u53EF\u5728\u904A\u6232\u4E2D\u4F7F\u7528*
+        \u8CFC\u8CB7\u5F8C\u53EF\u7372\u5F97 3 \u9805\u7269\u54C1"
+      - "* \u8D2D\u4E70\u603B\u5171\u5305\u542B3\u4E2A\u7269\u54C1\r\n* 3\u4E2A\u968F\u673A\u53EF\u73A9\u7684\u4F20\u5947\u5355\u4F4D*
+        \u8D2D\u4E70\u603B\u5171\u5305\u542B3\u4E2A\u7269\u54C1"
+      - "* \uAD6C\uB9E4 \uC2DC \uCD1D \uC544\uC774\uD15C 3\uAC1C\r\n* \uBB34\uC791\uC704
+        \uD50C\uB808\uC774 \uAC00\uB2A5 \uC804\uC124 \uC720\uB2DB 3\uAC1C"
       Flags: 0000000000
       Languages_Touch: []
     - Term: '* Items are immediately sent to your Enjin wallet after trade approval'
@@ -989,9 +1001,12 @@ MonoBehaviour:
       - '* Items are immediately sent to your Enjin wallet after trade approval'
       - "* Los \xEDtems son inmediatamente enviados a tu Billetera Enjin luego de
         aprobarse el canje"
-      - 
-      - 
-      - 
+      - "* \u4EA4\u6613\u4E00\u7D93\u5BE9\u6279\uFF0C\u6240\u5F97\u7269\u54C1\u6703\u7ACB\u5373\u65B0\u589E\u5230\u4F60\u7684
+        Enjin \u9322\u5305\r"
+      - "* \u4EA4\u6613\u6210\u529F\u540E\u7269\u54C1\u4F1A\u7ACB\u5373\u53D1\u653E\u5230\u60A8\u7684Enjin
+        Wallet\u4E2D\r"
+      - "* \uC544\uC774\uD15C\uC740 \uAC70\uB798 \uC2B9\uC778 \uD6C4 \uC5D4\uC9C4
+        \uC9C0\uAC11\uC73C\uB85C \uC989\uC2DC \uC804\uC1A1\uB429\uB2C8\uB2E4"
       Flags: 0000000000
       Languages_Touch: []
     - Term: Legend Unit tokens required
@@ -1197,11 +1212,16 @@ MonoBehaviour:
       TermType: 0
       Description: 
       Languages:
-      - "* 3 random units.\r\n* Stronger units have higher rarity."
+      - '* 3 random units.
+
+        * Stronger units have higher rarity.'
       - "* 3 unidades aleatorias.\r\n* Unidades fuertes tienen m\xE1s alta rareza."
-      - 
-      - 
-      - 
+      - "* \u96A8\u6A5F\u7372\u5F97 3 \u500B\u6230\u968A\u6210\u54E1\n* \u6230\u968A\u6210\u54E1\u7684\u80FD\u529B\u8D8A\u5F37\uFF0C\u7A00\u6709\u5EA6\u8D8A\u9AD8\u3002*
+        \u96A8\u6A5F\u7372\u5F97 3 \u500B\u6230\u968A\u6210\u54E1"
+      - "* 3\u4E2A\u968F\u673A\u5355\u4F4D\u3002\n* \u66F4\u5F3A\u58EE\u7684\u5355\u4F4D\u62E5\u6709\u66F4\u9AD8\u7684\u7A00\u6709\u5EA6\u3002*
+        3\u4E2A\u968F\u673A\u5355\u4F4D\u3002"
+      - "* \uBB34\uC791\uC704 \uC720\uB2DB 3\uAC1C.\r\n* \uB354 \uB192\uC740 \uD76C\uADC0\uB3C4\uB97C
+        \uAC00\uC9C4 \uB354 \uAC15\uB825\uD55C \uC720\uB2DB."
       Flags: 0000000000
       Languages_Touch: []
     - Term: NotEnoughCurrency
@@ -1459,11 +1479,11 @@ MonoBehaviour:
       - "\uD018\uC2A4\uD2B8"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: 'Quest Team #'
+    - Term: Quest Team #
       TermType: 0
       Description: 
       Languages:
-      - 'Quest Team #'
+      - Quest Team #
       - "Equipo de B\xFAsqueda #"
       - "\u4EFB\u52D9\u6230\u968A #"
       - "\u4EFB\u52A1\u961F\u4F0D #"
@@ -1815,16 +1835,17 @@ MonoBehaviour:
       TermType: 0
       Description: 
       Languages:
-      - 'Congratulations. You have been rewarded with the Cyborg Torso. The item will
-        be sent to your Enjin Wallet soon.
+      - 'Congratulations. You have been rewarded with the Cyborg Torso. The item
+        will be sent to your Enjin Wallet soon.
 
 
-        Good luck finding the other pieces and completing the Cyborg''s Quest!
+        Good luck finding the other
+        pieces and completing the Cyborg''s Quest!
 
 '
       - "Felicidades. Has sido recompensado con el Torso Cyborg. El \xEDtem te ser\xE1
-        enviado a tu Billetera Enjin pronto.\n\n\xA1Buena suerte encontrando las otras
-        piezas y completando la B\xFAsqueda del Cyborg!"
+        enviado a tu Billetera Enjin pronto.\n\n\xA1Buena suerte encontrando las
+        otras piezas y completando la B\xFAsqueda del Cyborg!"
       - "\u7372\u5F97\u6539\u9020\u4EBA\u8EC0\u5E79\uFF01\u7269\u54C1\u7A0D\u5F8C\u6703\u65B0\u589E\u5230\u4F60\u7684
         Enjin \u9322\u5305\u3002\n\n\u7E7C\u7E8C\u8490\u96C6\u5176\u4ED6\u7269\u54C1\uFF0C\u4E26\u5B8C\u6210\u6539\u9020\u4EBA\u4EFB\u52D9\uFF01\n\u7372\u5F97\u6539\u9020\u4EBA\u8EC0\u5E79\uFF01\u7269\u54C1\u7A0D\u5F8C\u6703\u65B0\u589E\u5230\u4F60\u7684
         Enjin \u9322\u5305\u3002\n\n\u7E7C\u7E8C\u8490\u96C6\u5176\u4ED6\u7269\u54C1\uFF0C\u4E26\u5B8C\u6210\u6539\u9020\u4EBA\u4EFB\u52D9\uFF01"
@@ -1929,7 +1950,7 @@ MonoBehaviour:
       - Reloj
       - "\u8A08\u6642\u5668"
       - "\u8BA1\u65F6\u5668"
-      - 
+      - "\uD0C0\uC774\uBA38"
       Flags: 0000000000
       Languages_Touch: []
     - Term: Title
@@ -2179,8 +2200,8 @@ MonoBehaviour:
       TermType: 0
       Description: 
       Languages:
-      - "You need at least 5 units for battle. \n\nWe offer 2 free Starter Boxes or
-        40% off the Master Box!"
+      - "You need at least 5 units for battle. \n\nWe offer 2 free Starter Boxes
+        or 40% off the Master Box!"
       - "Necesitas al menos 5 unidades para el combate. \n\nOfrecemos estas 2 Cajas
         de Inicio o 40% de la Caja Maestra!"
       - "\u4F60\u9700\u8981\u81F3\u5C115\u55AE\u4F4D\u624D\u80FD\u958B\u59CB\u6230\u9B25.
@@ -2202,12 +2223,12 @@ MonoBehaviour:
       TermType: 0
       Description: 
       Languages:
-      - "You need at least 5 units to start a battle.\n \nReturn to the Shop for assistance
-        in rebuilding your Min Min army."
+      - "You need at least 5 units to start a battle.\n \nReturn to the Shop for
+        assistance in rebuilding your Min Min army."
       - "Necesitas al menos 5 unidades para comenzar un combate.\n \nRegresa a la
         tienda por ayuda en reconstruir tu ej\xE9rcito Min Min."
-      - "\u4F60\u9700\u8981\u81F3\u5C115\u55AE\u4F4D\u624D\u80FD\u958B\u59CB\u6230\u9B25.
-        \ \u8FD4\u56DE\u5546\u5E97\u4EE5\u5EFA\u9020\u4F60\u7684Min Min\u8ECD\u968A"
+      - "\u4F60\u9700\u8981\u81F3\u5C115\u55AE\u4F4D\u624D\u80FD\u958B\u59CB\u6230\u9B25. 
+        \u8FD4\u56DE\u5546\u5E97\u4EE5\u5EFA\u9020\u4F60\u7684Min Min\u8ECD\u968A"
       - "\u4F60\u9700\u8981\u81F3\u5C115\u5355\u4F4D\u624D\u80FD\u5F00\u59CB\u6218\u6597.
         \u8FD4\u56DE\u5546\u5E97\u4EE5\u5EFA\u9020\u4F60\u7684Min Min\u519B\u961F"
       - "\uBC30\uD2C0\uC744 \uC2DC\uC791\uD558\uB824\uBA74 \uCD5C\uC18C 5 \uAC1C\uC758
@@ -2257,9 +2278,9 @@ MonoBehaviour:
       Languages:
       - QUEST SELECTION
       - "SELECCI\xD3N DE B\xDASQUEDA"
-      - 
-      - 
-      - 
+      - "\u4EFB\u52D9\u9078\u64C7"
+      - "\u4EFB\u52A1\u9009\u62E9"
+      - "\uD018\uC2A4\uD2B8 \uC120\uD0DD"
       Flags: 0000000000
       Languages_Touch: []
     - Term: Global System
@@ -2268,9 +2289,9 @@ MonoBehaviour:
       Languages:
       - Global System
       - Sistema Global
-      - 
-      - 
-      - 
+      - "\u5168\u5C40\u7CFB\u7D71"
+      - "\u5168\u7403\u7CFB\u7EDF"
+      - "\uAE00\uB85C\uBC8C \uC2DC\uC2A4\uD15C"
       Flags: 0000000000
       Languages_Touch: []
     - Term: REWARDS INVENTORY
@@ -2279,9 +2300,9 @@ MonoBehaviour:
       Languages:
       - REWARDS INVENTORY
       - INVENTARIO DE RECOMPENSAS
-      - 
-      - 
-      - 
+      - "\u734E\u52F5\u6E05\u55AE"
+      - "\u5956\u52B1\u5E93\u5B58"
+      - "\uBCF4\uC0C1 \uC778\uBCA4\uD1A0\uB9AC"
       Flags: 0000000000
       Languages_Touch: []
     - Term: Use buttons to withdrawn Enjin Tokens.
@@ -2290,9 +2311,10 @@ MonoBehaviour:
       Languages:
       - Use buttons to withdrawn Enjin Tokens.
       - Usa los botones para retirar los Token Enjin.
-      - 
-      - 
-      - 
+      - "\u4F7F\u7528\u6309\u9215\u4F86\u9818\u53D6 Enjin \u4EE3\u5E63\u3002"
+      - "\u4F7F\u7528\u6309\u94AE\u53EF\u4EE5\u63D0\u73B0Enjin\u4EE3\u5E01\u3002"
+      - "\uBC84\uD2BC\uC744 \uC0AC\uC6A9\uD558\uC5EC \uC5D4\uC9C4 \uD1A0\uD070\uC744
+        \uCD9C\uAE08\uD558\uC138\uC694."
       Flags: 0000000000
       Languages_Touch: []
     - Term: Performing withdrawal...
@@ -2301,9 +2323,9 @@ MonoBehaviour:
       Languages:
       - Performing withdrawal...
       - Realizando retiro...
-      - 
-      - 
-      - 
+      - "\u6B63\u5728\u9818\u5E63..."
+      - "\u6B63\u5728\u5904\u7406\u63D0\u73B0..."
+      - "\uCD9C\uAE08 \uC218\uD589 \uC911..."
       Flags: 0000000000
       Languages_Touch: []
     - Term: Press OK to start withdrawal process. Close window to go back.
@@ -2313,13 +2335,14 @@ MonoBehaviour:
       - Press OK to start withdrawal process. Close window to go back.
       - "Presiona OK para comenzar el proceso de retiro. Cierra la ventana para volver
         atr\xE1s."
-      - 
-      - 
-      - 
+      - "\u6309\u300C\u53EF\u4EE5\u300D\u958B\u59CB\u9818\u53D6\u4EE3\u5E63\u3002\u5982\u8981\u8FD4\u56DE\uFF0C\u8ACB\u95DC\u9589\u8996\u7A97\u3002"
+      - "\u6309\u4E0B\u201COK\u201D\u53EF\u4EE5\u5F00\u59CB\u63D0\u73B0\u8FC7\u7A0B\u3002\u5173\u95ED\u7A97\u53E3\u53EF\u4EE5\u8FD4\u56DE\u3002"
+      - "\uD655\uC778\uC744 \uB20C\uB7EC\uC11C \uCD9C\uAE08 \uACFC\uC815\uC744 \uC2DC\uC791\uD558\uC138\uC694.
+        \uCC3D\uC744 \uB2EB\uC544\uC11C \uB4A4\uB85C \uB3CC\uC544\uAC00\uC138\uC694."
       Flags: 0000000000
       Languages_Touch: []
-    - Term: Press OK to request an Enjin Wallet so you can withdraw your tokens. Close
-        window to go back.
+    - Term: Press OK to request an Enjin Wallet so you can withdraw your tokens.
+        Close window to go back.
       TermType: 0
       Description: 
       Languages:
@@ -2327,9 +2350,11 @@ MonoBehaviour:
         window to go back.
       - "Presiona OK para solicitar una Cartera Enjin para que puedas retirar tus
         tokens. Cierra la ventana para volver atr\xE1s."
-      - 
-      - 
-      - 
+      - "\u6309\u300C\u53EF\u4EE5\u300D\u5373\u53EF\u7533\u8ACB Enjin \u9322\u5305\uFF0C\u4EE5\u958B\u59CB\u9818\u53D6\u4EE3\u5E63\u3002\u5982\u8981\u8FD4\u56DE\uFF0C\u8ACB\u95DC\u9589\u8996\u7A97\u3002"
+      - "\u70B9\u51FB\u201COK\u201D\u53EF\u4EE5\u7533\u8BF7\u4E00\u4E2AEnjin Wallet\uFF0C\u60A8\u5C31\u53EF\u4EE5\u63D0\u73B0\u4EE3\u5E01\u4E86\u3002\u5173\u95ED\u7A97\u53E3\u53EF\u4EE5\u8FD4\u56DE\u3002"
+      - "\uD655\uC778\uC744 \uB20C\uB7EC\uC11C \uC5D4\uC9C4 \uC9C0\uAC11\uC744 \uC694\uCCAD\uD558\uBA74
+        \uD1A0\uD070\uC744 \uCD9C\uAE08\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4. \uCC3D\uC744
+        \uB2EB\uC544\uC11C \uB4A4\uB85C \uB3CC\uC544\uAC00\uC138\uC694."
       Flags: 0000000000
       Languages_Touch: []
     - Term: ENJIN WITHDRAWAL
@@ -2338,9 +2363,9 @@ MonoBehaviour:
       Languages:
       - ENJIN WITHDRAWAL
       - RETIRO ENJIN
-      - 
-      - 
-      - 
+      - "Enjin \u9818\u53D6\u624B\u7E8C"
+      - "Enjin\u63D0\u73B0"
+      - "\uC5D4\uC9C4 \uCD9C\uAE08"
       Flags: 0000000000
       Languages_Touch: []
     - Term: Withdrawal completed!
@@ -2349,9 +2374,9 @@ MonoBehaviour:
       Languages:
       - Withdrawal completed!
       - "\xA1Retiro completado!"
-      - 
-      - 
-      - 
+      - "\u9818\u5E63\u624B\u7E8C\u5DF2\u5B8C\u6210\uFF01"
+      - "\u63D0\u73B0\u5DF2\u5B8C\u6210\uFF01"
+      - "\uCD9C\uAE08 \uC644\uB8CC!"
       Flags: 0000000000
       Languages_Touch: []
     - Term: Withdrawal failed. Please try again.
@@ -2360,9 +2385,9 @@ MonoBehaviour:
       Languages:
       - Withdrawal failed. Please try again.
       - "Retiro fall\xF3. Por favor intente otra vez."
-      - 
-      - 
-      - 
+      - "\u9818\u5E63\u5931\u6557\uFF0C\u8ACB\u518D\u8A66\u4E00\u6B21\u3002"
+      - "\u63D0\u73B0\u5931\u8D25\u3002\u8BF7\u91CD\u8BD5\u3002"
+      - "\uCD9C\uAE08 \uC2E4\uD328. \uB2E4\uC2DC \uC2DC\uB3C4\uD558\uC138\uC694."
       Flags: 0000000000
       Languages_Touch: []
     - Term: 'You have completed the Quest:'
@@ -2371,9 +2396,9 @@ MonoBehaviour:
       Languages:
       - 'You have completed the Quest:'
       - "Has completado la B\xFAsqueda:"
-      - 
-      - 
-      - 
+      - "\u4F60\u5DF2\u5B8C\u6210\u4EFB\u52D9\uFF1A"
+      - "\u60A8\u5DF2\u7ECF\u5B8C\u6210\u4E86\u4EFB\u52A1\uFF1A"
+      - "\uD018\uC2A4\uD2B8\uB97C \uC644\uB8CC\uD588\uC2B5\uB2C8\uB2E4."
       Flags: 0000000000
       Languages_Touch: []
     - Term: Perfect
@@ -2382,9 +2407,9 @@ MonoBehaviour:
       Languages:
       - Perfect
       - Perfecto
-      - 
-      - 
-      - 
+      - "\u5B8C\u7F8E\u7121\u7455"
+      - "\u5B8C\u7F8E"
+      - "\uC644\uBCBD\uD55C"
       Flags: 0000000000
       Languages_Touch: []
     - Term: Polished
@@ -2393,9 +2418,9 @@ MonoBehaviour:
       Languages:
       - Polished
       - Pulido
-      - 
-      - 
-      - 
+      - "\u7CBE\u5DE5\u6253\u78E8"
+      - "\u6253\u78E8"
+      - "\uC6B0\uC544\uD55C"
       Flags: 0000000000
       Languages_Touch: []
     - Term: Raw
@@ -2404,9 +2429,9 @@ MonoBehaviour:
       Languages:
       - Raw
       - Crudo
-      - 
-      - 
-      - 
+      - "\u539F\u77F3"
+      - "\u539F\u59CB"
+      - "\uCC9C\uC5F0"
       Flags: 0000000000
       Languages_Touch: []
     - Term: Ore
@@ -2415,9 +2440,9 @@ MonoBehaviour:
       Languages:
       - Ore
       - Mineral
-      - 
-      - 
-      - 
+      - "\u7926\u77F3"
+      - "\u77FF\u77F3"
+      - "\uAD11\uC11D"
       Flags: 0000000000
       Languages_Touch: []
     - Term: Quests
@@ -2426,9 +2451,9 @@ MonoBehaviour:
       Languages:
       - Quests
       - "B\xFAsquedas"
-      - 
-      - 
-      - 
+      - "\u4EFB\u52D9"
+      - "\u4EFB\u52A1"
+      - "\uD018\uC2A4\uD2B8"
       Flags: 0000000000
       Languages_Touch: []
     - Term: Requires
@@ -2437,9 +2462,9 @@ MonoBehaviour:
       Languages:
       - Requires
       - Requieres
-      - 
-      - 
-      - 
+      - "\u5FC5\u9808\u689D\u4EF6"
+      - "\u9700\u8981"
+      - "\uD544\uC694"
       Flags: 0000000000
       Languages_Touch: []
     - Term: Requires enough Global System Quest points.
@@ -2448,9 +2473,10 @@ MonoBehaviour:
       Languages:
       - Requires enough Global System Quest points.
       - "Requieres suficientes puntos del Sistema de B\xFAsqueda Global."
-      - 
-      - 
-      - 
+      - "\u9700\u8981\u6709\u8DB3\u5920\u7684\u300C\u5168\u5C40\u7CFB\u7D71\u4EFB\u52D9\u300D\u9EDE\u6578"
+      - "\u9700\u8981\u8DB3\u591F\u7684\u5168\u7403\u7CFB\u7EDF\u4EFB\u52A1\u5206\u6570\u3002"
+      - "\uCDA9\uBD84\uD55C \uAE00\uB85C\uBC8C \uC2DC\uC2A4\uD15C \uD018\uC2A4\uD2B8
+        \uD3EC\uC778\uD2B8\uAC00 \uD544\uC694\uD569\uB2C8\uB2E4."
       Flags: 0000000000
       Languages_Touch: []
     - Term: Quest is already completed.
@@ -2459,9 +2485,9 @@ MonoBehaviour:
       Languages:
       - Quest is already completed.
       - "La B\xFAsqueda ya se ha completado."
-      - 
-      - 
-      - 
+      - "\u4EFB\u52D9\u5DF2\u5B8C\u6210\u3002"
+      - "\u4EFB\u52A1\u5DF2\u7ECF\u5B8C\u6210\u3002"
+      - "\uD018\uC2A4\uD2B8\uAC00 \uC774\uBBF8 \uC644\uB8CC\uB418\uC5C8\uC2B5\uB2C8\uB2E4."
       Flags: 0000000000
       Languages_Touch: []
     - Term: Quest Rewards
@@ -2470,9 +2496,9 @@ MonoBehaviour:
       Languages:
       - Quest Rewards
       - "Recompensas de B\xFAsqueda"
-      - 
-      - 
-      - 
+      - "\u4EFB\u52D9\u734E\u52F5"
+      - "\u4EFB\u52A1\u5956\u52B1"
+      - "\uD018\uC2A4\uD2B8 \uBCF4\uC0C1"
       Flags: 0000000000
       Languages_Touch: []
     - Term: Token
@@ -2481,9 +2507,9 @@ MonoBehaviour:
       Languages:
       - Token
       - Ficha
-      - 
-      - 
-      - 
+      - "\u4EE3\u5E63"
+      - "\u4EE3\u5E01"
+      - "\uD1A0\uD070"
       Flags: 0000000000
       Languages_Touch: []
     - Term: FINDING BOSSES
@@ -2492,14 +2518,14 @@ MonoBehaviour:
       Languages:
       - FINDING BOSSES
       - ENCONTRANDO JEFES
-      - 
-      - 
-      - 
+      - "\u5C0B\u627E\u7D42\u6975\u6575\u4EBA"
+      - "\u6B63\u5728\u5BFB\u627E\u9996\u9886"
+      - "\uBCF4\uC2A4 \uCC3E\uAE30"
       Flags: 0000000000
       Languages_Touch: []
     - Term: Click within the zone to scout inside the clouds or to fight a revealed
-        boss. When you scout you will be attacked by random Min-Mins. Defeat all 5
-        bosses to complete the quest!
+        boss. When you scout you will be attacked by random Min-Mins. Defeat all
+        5 bosses to complete the quest!
       TermType: 0
       Description: 
       Languages:
@@ -2508,9 +2534,14 @@ MonoBehaviour:
       - "Haz click en la zona para explorar dentro de las nubes o para pelear con
         un jefe revelado. Cuando exploras ser\xE1s atacado por Min-Mins aleatorios.\n\nDerrota
         a los 5 jefes para completar la b\xFAsqueda!"
-      - 
-      - 
-      - 
+      - "\u5728\u7BC4\u570D\u5167\u8F15\u89F8\u4E00\u4E0B\uFF0C\u5373\u53EF\u5075\u5BDF\u96F2\u9727
+        / \u5C0D\u4ED8\u5DF2\u73FE\u8EAB\u7684\u7D42\u6975\u6575\u4EBA\u3002\u9032\u884C\u5075\u5BDF\u6642\uFF0CMin-Min
+        \u6703\u96A8\u6A5F\u5411\u4F60\u767C\u52D5\u653B\u64CA\u3002"
+      - "\u5728\u533A\u57DF\u5185\u70B9\u51FB\u53EF\u4EE5\u5728\u4E91\u4E2D\u5DE1\u903B\uFF0C\u6216\u8005\u4E0E\u51FA\u73B0\u7684\u9996\u9886\u6218\u6597\u3002\u5F53\u60A8\u5728\u5DE1\u903B\u65F6\uFF0C\u5C06\u906D\u9047\u968F\u673A\u7684Min-Min\u4EEC\u653B\u51FB\u3002"
+      - "\uAD6C\uC5ED \uB0B4\uC5D0\uC11C \uD074\uB9AD\uD558\uC5EC \uAD6C\uB984 \uC548\uC744
+        \uC815\uCC30\uD558\uAC70\uB098 \uB4F1\uC7A5\uD55C \uBCF4\uC2A4\uC640 \uC2F8\uC6B0\uC138\uC694.
+        \uC815\uCC30\uD560 \uB54C \uBB34\uC791\uC704 \uBBFC\uBBFC\uC758 \uACF5\uACA9\uC744
+        \uBC1B\uAC8C \uB429\uB2C8\uB2E4."
       Flags: 0000000000
       Languages_Touch: []
     - Term: CONFIRM
@@ -2519,9 +2550,9 @@ MonoBehaviour:
       Languages:
       - CONFIRM
       - CONFIRMAR
-      - 
-      - 
-      - 
+      - "\u78BA\u5B9A"
+      - "\u786E\u5B9A"
+      - "\uD655\uC778"
       Flags: 0000000000
       Languages_Touch: []
     - Term: LEVEL UP
@@ -2530,13 +2561,13 @@ MonoBehaviour:
       Languages:
       - LEVEL UP
       - SUBIR NIVEL
-      - 
-      - 
-      - 
+      - "\u5347\u7D1A"
+      - "\u5347\u7EA7"
+      - "\uB808\uBCA8 \uC5C5"
       Flags: 0000000000
       Languages_Touch: []
-    - Term: Finish watching a video ad to gain 20 experience for each Min-Min in your
-        team!
+    - Term: Finish watching a video ad to gain 20 experience for each Min-Min in
+        your team!
       TermType: 0
       Description: 
       Languages:
@@ -2544,9 +2575,11 @@ MonoBehaviour:
         team!
       - "\xA1Termina de ver un video para ganar 20 de experiencia por cada Min-Min
         de tu equipo!"
-      - 
-      - 
-      - 
+      - "\u89C0\u770B\u5F71\u7247\u5EE3\u544A\u5F8C\uFF0C\u968A\u4F0D\u4E2D\u6240\u6709
+        Min-Min \u5747\u53EF\u7372\u5F97 20 \u7D93\u9A57\u503C\uFF01"
+      - "\u5B8C\u6210\u89C2\u770B\u4E00\u4E2A\u89C6\u9891\u5E7F\u544A\u53EF\u4EE5\u4F7F\u60A8\u7684\u961F\u4F0D\u4E2D\u7684\u6BCF\u4E2AMin-Min\u83B7\u5F9720\u7ECF\u9A8C\uFF01"
+      - "\uB3D9\uC601\uC0C1 \uC2DC\uCCAD\uC744 \uC644\uB8CC\uD558\uC5EC \uD300\uC758
+        \uAC01 \uBBFC\uBBFC\uC5D0 20 \uACBD\uD5D8\uCE58\uB97C \uC5BB\uC73C\uC138\uC694!"
       Flags: 0000000000
       Languages_Touch: []
     - Term: REWARDS
@@ -2555,9 +2588,9 @@ MonoBehaviour:
       Languages:
       - REWARDS
       - RECOMPENSAS
-      - 
-      - 
-      - 
+      - "\u734E\u52F5"
+      - "\u5956\u52B1"
+      - "\uBCF4\uC0C1 \uC778\uBCA4\uD1A0\uB9AC"
       Flags: 0000000000
       Languages_Touch: []
     - Term: or
@@ -2566,9 +2599,9 @@ MonoBehaviour:
       Languages:
       - or
       - o
-      - 
-      - 
-      - 
+      - "\u6216"
+      - "\u6216"
+      - "\uB610\uB294"
       Flags: 0000000000
       Languages_Touch: []
     - Term: Leaders
@@ -2577,9 +2610,9 @@ MonoBehaviour:
       Languages:
       - Leaders
       - "L\xEDderes"
-      - 
-      - 
-      - 
+      - "\u5148\u92D2"
+      - "\u9886\u8896"
+      - "\uB9AC\uB354"
       Flags: 0000000000
       Languages_Touch: []
     - Term: Units and items can be tokenized into your wallet using Enjin Jumpnet
@@ -2588,9 +2621,10 @@ MonoBehaviour:
       Languages:
       - Units and items can be tokenized into your wallet using Enjin Jumpnet
       - "Unidades e \xEDtems pueden ser tokenizados a tu billetera usando Enjin Jumpnet"
-      - 
-      - 
-      - 
+      - "\u5C07\u7269\u54C1\u514C\u63DB\u6210\u4EE3\u5E63"
+      - "\u4EE3\u5E01\u5316\u7269\u54C1"
+      - "\uC720\uB2DB \uBC0F \uC544\uC774\uD15C\uC774 \uC5D4\uC9C4 \uC810\uD504\uB137\uC744
+        \uC0AC\uC6A9\uD558\uC5EC \uC9C0\uAC11\uC5D0\uC11C \uD1A0\uD070\uC774 \uB429\uB2C8\uB2E4."
       Flags: 0000000000
       Languages_Touch: []
     - Term: TOKENIZE ITEMS
@@ -2599,9 +2633,9 @@ MonoBehaviour:
       Languages:
       - TOKENIZE ITEMS
       - "TOKENIZAR \xCDTEMS"
-      - 
-      - 
-      - 
+      - "\u4F7F\u7528 Enjin Jumpnet \u5F8C\uFF0C\u53EF\u5C07\u6230\u968A\u6210\u54E1\u53CA\u7269\u54C1\u514C\u63DB\u6210\u9322\u5305\u4EE3\u5E63"
+      - "\u4F7F\u7528Enjin Jumpnet\u53EF\u4EE5\u628A\u5355\u4F4D\u548C\u7269\u54C1\u4EE3\u5E01\u5316\u540E\u8FDB\u5165\u60A8\u7684\u94B1\u5305"
+      - "\uD1A0\uD070 \uC544\uC774\uD15C"
       Flags: 0000000000
       Languages_Touch: []
     - Term: '* Units can be tokenized'
@@ -2610,9 +2644,9 @@ MonoBehaviour:
       Languages:
       - '* Units can be tokenized'
       - '* Las unidades pueden ser tokenizadas'
-      - 
-      - 
-      - 
+      - "* \u6230\u968A\u6210\u54E1\u53EF\u514C\u63DB\u6210\u4EE3\u5E63"
+      - "* \u5355\u4F4D\u53EF\u4EE5\u88AB\u4EE3\u5E01\u5316"
+      - "* \uC720\uB2DB\uC774 \uD1A0\uD070\uC774 \uB420 \uC218 \uC788\uC74C"
       Flags: 0000000000
       Languages_Touch: []
     - Term: Tokens are sent to your wallet in exchange for JENJ. After clicking Start
@@ -2624,9 +2658,12 @@ MonoBehaviour:
         look for the wallet notification to approve the trade.
       - "Las fichas son enviadas a tu billetera en intercambio por JENJ.  Despu\xE9s
         de dar click a Comenzar espera la notificaci\xF3n para aprobar la transacci\xF3n."
-      - 
-      - 
-      - 
+      - "\u4EE3\u5E63\u5DF2\u65B0\u589E\u5230\u4F60\u7684\u9322\u5305\uFF0C\u7528\u4F86\u514C\u63DB\u6210
+        JENJ\u3002\u6309\u300C\u958B\u59CB\u300D\u5F8C\uFF0C\u8ACB\u641C\u5C0B\u9322\u5305\u901A\u77E5\uFF0C\u4E26\u5BE9\u6279\u4EA4\u6613\u3002"
+      - "\u5728\u4EA4\u6362JENJ\u65F6\uFF0C\u4EE3\u5E01\u4F1A\u53D1\u9001\u5230\u60A8\u7684\u94B1\u5305\u3002\u70B9\u51FB\u201C\u5F00\u59CB\u201D\u540E\u5BFB\u627E\u94B1\u5305\u901A\u77E5\u53EF\u4EE5\u540C\u610F\u4EA4\u6613\u3002"
+      - "\uD1A0\uD070\uC740 \uC9C0\uAC11\uC73C\uB85C \uC804\uC1A1\uB418\uC5B4 \uC820\uC988\uB85C
+        \uAD50\uD658\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4. \uC2DC\uC791\uC744 \uD074\uB9AD\uD55C
+        \uD6C4\uC5D0 \uC9C0\uAC11 \uC54C\uB9BC\uC5D0\uC11C \uAC70\uB798\uB97C \uC2B9\uC778\uD558\uC138\uC694."
       Flags: 0000000000
       Languages_Touch: []
     - Term: Tokenizing...
@@ -2635,9 +2672,9 @@ MonoBehaviour:
       Languages:
       - Tokenizing...
       - Tokenizando...
-      - 
-      - 
-      - 
+      - "\u6B63\u5728\u514C\u63DB\u4EE3\u5E63..."
+      - "\u6B63\u5728\u4EE3\u5E01\u5316..."
+      - "\uD1A0\uD070\uD654 \uC911..."
       Flags: 0000000000
       Languages_Touch: []
     - Term: Link Wallet Explanation
@@ -2646,20 +2683,10 @@ MonoBehaviour:
       Languages:
       - Scan QR or use the code to link your wallet
       - "Escanea el QR o usa el c\xF3digo para enlazar tu billetera"
-      - 
-      - 
-      - 
-      Flags: 0000000000
-      Languages_Touch: []
-    - Term: Tap boost to select/deselect.
-      TermType: 0
-      Description: 
-      Languages:
-      - Tap boost to select/deselect.
-      - Presiona aumento para seleccionar/deseleccionar.
-      - "\u6309\u300C\u589E\u5F37\u300D\u5373\u53EF\u9078\u53D6 / \u53D6\u6D88\u9078\u9805\u3002"
-      - "\u70B9\u51FB\u9053\u5177\u53EF\u4EE5\u9009\u62E9/\u4E0D\u9009\u62E9\u3002"
-      - "\uBD80\uC2A4\uD2B8\uB97C \uD0ED\uD558\uC5EC \uC120\uD0DD/\uC120\uD0DD \uCDE8\uC18C\uD558\uC138\uC694."
+      - "\u6383\u63CF QR \u689D\u78BC\u6216\u4F7F\u7528\u4EE3\u78BC\uFF0C\u5373\u53EF\u9023\u7D50\u9322\u5305"
+      - "\u626B\u63CF\u4E8C\u7EF4\u7801\u6216\u4F7F\u7528\u4EE3\u7801\u8FDE\u63A5\u60A8\u7684\u94B1\u5305"
+      - "QR\uC744 \uC2A4\uCE94\uD558\uAC70\uB098 \uCF54\uB4DC\uB97C \uC0AC\uC6A9\uD558\uC5EC
+        \uC9C0\uAC11\uC744 \uC5F0\uACB0\uD558\uC138\uC694"
       Flags: 0000000000
       Languages_Touch: []
     CaseInsensitiveTerms: 0
@@ -2681,13 +2708,13 @@ MonoBehaviour:
     - Name: Korean
       Code: ko
       Flags: 0
-    IgnoreDeviceLanguage: 1
+    IgnoreDeviceLanguage: 0
     _AllowUnloadingLanguages: 0
-    Google_WebServiceURL: https://script.google.com/macros/s/AKfycbw05ISkGCPtIS0hMzFD5jshgfH09mIP6BAxRKhWsA/exec
-    Google_SpreadsheetKey: 1iIWCtExuyR2XXyYkJv6y83PTVMPC4FxzSITGGroefcg
-    Google_SpreadsheetName: I2Loc MinMins Localization
-    Google_LastUpdatedVersion: 1630111846119
-    Google_Password: shalwend
+    Google_WebServiceURL: https://script.google.com/macros/s/AKfycbw32utr3kCJns7NCLeWgxEKcn3KFlDSmgdTHiLvcxYYDnNFr8GGxIKFi4aMYaVFd2Y/exec
+    Google_SpreadsheetKey: 1Mrp9xxAsvTcT2syMv3hS3qILmncXoJnIA5mgZOmBoMY
+    Google_SpreadsheetName: I2Loc Min-Mins Localization
+    Google_LastUpdatedVersion: 1631172567682
+    Google_Password: change_this
     GoogleUpdateFrequency: 0
     GoogleInEditorCheckFrequency: 0
     GoogleUpdateSynchronization: 1

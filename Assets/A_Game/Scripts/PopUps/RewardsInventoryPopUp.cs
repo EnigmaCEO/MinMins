@@ -157,25 +157,30 @@ public class RewardsInventoryPopUp : MonoBehaviour
 
     private string getRewardCost(string rewardType)
     {
-        string rewardCost = "";
+        float rewardCost = 0.0f;
 
         switch (rewardType)
         {
             default:
-                rewardCost = _commonCost.ToString();
+                rewardCost = _commonCost;
                 break;
             case EnjinTokenTypes.PREMIUM:
-                rewardCost = _premiumCost.ToString();
+                rewardCost = _premiumCost;
                 break;
             case EnjinTokenTypes.SPECIAL:
-                rewardCost = _specialCost.ToString();
+                rewardCost = _specialCost;
                 break;
             case EnjinTokenTypes.ULTIMATE:
-                rewardCost = _ultimateCost.ToString();
+                rewardCost = _ultimateCost;
                 break;
         }
 
-        return rewardCost;
+        if (GameNetwork.Instance.GetIsEnjinKeyAvailable(EnjinTokenKeys.GOD_ENIGMA))
+        {
+            rewardCost *= 0.5f;
+        }
+
+        return rewardCost.ToString();
     }
 
     private Sprite getRewardSprite(string enjinToken, string rewardType)

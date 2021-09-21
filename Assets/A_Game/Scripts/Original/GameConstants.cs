@@ -150,6 +150,7 @@ namespace GameConstants
         public const string GOD_DESTROYER_2 = "god_destroyer_2";
         public const string GOD_TANK_1 = "god_tank_1";
         public const string GOD_TANK_2 = "god_tank_2";
+        public const string GOD_ENIGMA = "god_enigma";
 
         public const string SWISSBORG_CYBORG = "swissborg_cyborg";
         public const string SHALWEND_WARGOD = "shalwend_wargod";

@@ -474,8 +474,7 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
                 // obfuscation window.
                 CrossPlatformValidator validator = new CrossPlatformValidator(GooglePlayTangle.Data(), AppleTangle.Data(), Application.identifier);
 
-                if (!args.purchasedProduct.receipt.Contains("fake"))
-                {
+                
                     //try
                     //{
 
@@ -537,7 +536,7 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
                     //    Debug.LogError(e.ToString());
                     //    validPurchase = false;
                     //}
-                }
+                
             }
             catch (Exception e)
             {
@@ -562,7 +561,7 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
             {
                 Debug.Log("Receipt: " + args.purchasedProduct.receipt);
 
-                hashtable.Add("receipt", args.purchasedProduct.receipt.ToString());
+                //hashtable.Add("receipt", args.purchasedProduct.receipt.ToString());
                 hashtable.Add("transaction_id", args.purchasedProduct.transactionID);
                 hashtable.Add("product_id", (args.purchasedProduct.definition != null) ? args.purchasedProduct.definition.id : "");
             }
@@ -575,7 +574,7 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
 
             if (errorCatched != "")
             {
-                hashtable["receipt"] = errorCatched;
+                hashtable.Add("receipt", errorCatched);
             }
 
             if (validPurchase)

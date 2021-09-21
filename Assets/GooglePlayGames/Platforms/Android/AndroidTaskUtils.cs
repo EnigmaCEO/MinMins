@@ -1,4 +1,5 @@
 #if UNITY_ANDROID
+#pragma warning disable 0642 // Possible mistaken empty statement
 
 namespace GooglePlayGames.Android
 {
@@ -62,7 +63,6 @@ namespace GooglePlayGames.Android
         private class TaskOnSuccessProxy<T> : AndroidJavaProxy
         {
             private Action<T> mCallback;
-            private Action<AndroidJavaObject> mCallback2;
             private bool mDisposeResult;
 
             public TaskOnSuccessProxy(Action<T> callback, bool disposeResult)

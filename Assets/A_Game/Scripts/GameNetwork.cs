@@ -276,6 +276,8 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
 
         SetEnjinKeyAvailable(EnjinTokenKeys.QUEST_WARGOD_SHALWEND, false);
         SetEnjinKeyAvailable(EnjinTokenKeys.QUEST_DEADLY_KNIGHT_SHALWEND, false);
+
+        SetEnjinKeyAvailable(EnjinTokenKeys.GOD_ENIGMA, false);
     }
 
     public void UpdateEnjinGoodies(JSONNode response_hash, bool updateEthAddress)
@@ -303,6 +305,7 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
         determineServerTokenAvailable(userDataNode, EnigmaConstants.EnjinTokenKeys.ENIGMA_TOKEN);
 
         determineServerTokenAvailable(userDataNode, EnjinTokenKeys.MINMINS_TOKEN);
+        determineServerTokenAvailable(userDataNode, EnjinTokenKeys.GOD_ENIGMA);
 
         GameInventory gameInventory = GameInventory.Instance;
 
