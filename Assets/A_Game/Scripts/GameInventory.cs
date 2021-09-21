@@ -59,7 +59,7 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
     [SerializeField] private int _tierGold_unitsAmount = 10;
 
     [SerializeField] private int _legend_firstUnitNumber = 100;
-    [SerializeField] private int _legend_lastUnitNumer = 134;
+    [SerializeField] private int _legend_lastUnitNumer = 137;
 
     [SerializeField] private int _demonFirstUnitNumber = 110;
     [SerializeField] private int _demonLastUnitNumber = 114;
@@ -512,6 +512,15 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
             case GameConstants.EnjinTokenKeys.GOD_ENIGMA:
                 enjinKeyName = "Gods of Enigma";
                 break;
+            case GameConstants.EnjinTokenKeys.COZY_BLOBBY:
+                enjinKeyName = "Cozy Blobby";
+                break;
+            case GameConstants.EnjinTokenKeys.ENJINEER_BLOBBY:
+                enjinKeyName = "Enjineer Blobby";
+                break;
+            case GameConstants.EnjinTokenKeys.VR_BLOBBY:
+                enjinKeyName = "VR Blobby";
+                break;
         }
 
         if (addTokenSuffixIfNecessary)
@@ -527,42 +536,42 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
 
     public Sprite GetQuestRewardSprite(string questString)
     {
-        string rewardImagePath = "";
+        string rewardImagePath = ResourcePaths.UNIT_IMAGES;
 
         switch (questString)
         {
             case nameof(ScoutQuests.EnjinLegend122):
-                rewardImagePath = ResourcePaths.UNIT_IMAGES + "122";
+                rewardImagePath += "122";
                 break;
             case nameof(ScoutQuests.EnjinLegend123):
-                rewardImagePath = ResourcePaths.UNIT_IMAGES + "123";
+                rewardImagePath += "123";
                 break;
             case nameof(ScoutQuests.EnjinLegend124):
-                rewardImagePath = ResourcePaths.UNIT_IMAGES + "124";
+                rewardImagePath += "124";
                 break;
             case nameof(ScoutQuests.EnjinLegend125):
-                rewardImagePath = ResourcePaths.UNIT_IMAGES + "125";
+                rewardImagePath += "125";
                 break;
             case nameof(ScoutQuests.EnjinLegend126):
-                rewardImagePath = ResourcePaths.UNIT_IMAGES + "126";
+                rewardImagePath += "126";
                 break;
             case nameof(SerialQuests.ShalwendWargod):
-                rewardImagePath = ResourcePaths.UNIT_IMAGES + "128";
+                rewardImagePath += "128";
                 break;
             case nameof(SerialQuests.ShalwendDeadlyKnight):
-                rewardImagePath = ResourcePaths.UNIT_IMAGES + "134";
+                rewardImagePath += "134";
                 break;
             case nameof(ScoutQuests.NarwhalBlue):
-                rewardImagePath = ResourcePaths.UNIT_IMAGES + "130";
+                rewardImagePath += "130";
                 break;
             case nameof(ScoutQuests.NarwhalCheese):
-                rewardImagePath = ResourcePaths.UNIT_IMAGES + "131";
+                rewardImagePath += "131";
                 break;
             case nameof(ScoutQuests.NarwhalEmerald):
-                rewardImagePath = ResourcePaths.UNIT_IMAGES + "132";
+                rewardImagePath += "132";
                 break;
             case nameof(ScoutQuests.NarwhalCrimson):
-                rewardImagePath = ResourcePaths.UNIT_IMAGES + "133";
+                rewardImagePath += "133";
                 break;
             default:
                 Debug.LogError("There is not image path for quest: " + questString);
@@ -1175,6 +1184,10 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
         {
             canBeWithdrawn = false;
         }
+        else if (checkUnitBetweenTokens(unitNumber, GameConstants.EnjinTokenKeys.COZY_BLOBBY, GameConstants.EnjinTokenKeys.VR_BLOBBY))
+        {
+            canBeWithdrawn = false;
+        }
         //else if (checkUnitBetweenTokens(unitNumber, GameConstants.EnjinTokenKeys.ENJIN_MAXIM, GameConstants.EnjinTokenKeys.ENJIN_SIMON))
         //{
         //    canBeWithdrawn = false;
@@ -1307,6 +1320,10 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
         linkUnitAndToken("127", GameConstants.EnjinTokenKeys.SWISSBORG_CYBORG);
         linkUnitAndToken("128", GameConstants.EnjinTokenKeys.SHALWEND_WARGOD);
         linkUnitAndToken("134", GameConstants.EnjinTokenKeys.SHALWEND_DEADLY_KNIGHT);
+
+        linkUnitAndToken("135", GameConstants.EnjinTokenKeys.COZY_BLOBBY);
+        linkUnitAndToken("136", GameConstants.EnjinTokenKeys.ENJINEER_BLOBBY);
+        linkUnitAndToken("137", GameConstants.EnjinTokenKeys.VR_BLOBBY);
     }
 
     private void linkUnitAndToken(string unitName, string tokenName)

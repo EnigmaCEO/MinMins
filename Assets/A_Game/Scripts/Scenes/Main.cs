@@ -587,6 +587,10 @@ public class Main : EnigmaScene
             addToEnjinItemDisplay(EnjinTokenKeys.GOD_TANK_1);
             addToEnjinItemDisplay(EnjinTokenKeys.GOD_TANK_2);
 
+            addToEnjinItemDisplay(EnjinTokenKeys.COZY_BLOBBY);
+            addToEnjinItemDisplay(EnjinTokenKeys.ENJINEER_BLOBBY);
+            addToEnjinItemDisplay(EnjinTokenKeys.VR_BLOBBY);
+
             //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_1, "Damage Ore +1");
             //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_2, "Damage Ore +2");
             //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_3, "Damage Ore +3");

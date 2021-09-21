@@ -165,6 +165,10 @@ namespace GameConstants
         public const string QUEST_WARGOD_SHALWEND = "quest_shalwend";
         public const string QUEST_DEADLY_KNIGHT_SHALWEND = "quest_deadlyknight";
 
+        public const string COZY_BLOBBY = "cozy_blobby";
+        public const string ENJINEER_BLOBBY = "enjineer_blobby";
+        public const string VR_BLOBBY = "vr_blobby";
+
         /*
         public const string ENJIN_DEFENSE_ORE_ITEM_1 = "enjin_defense_ore_1";
         public const string ENJIN_DEFENSE_ORE_ITEM_2 = "enjin_defense_ore_2";

@@ -82,7 +82,7 @@ public class Levels : EnigmaScene
 
         string selectedQuestString = gameStats.SelectedQuestString;
 
-int selectedQuestLastLevel = 0;
+        int selectedQuestLastLevel = 0;
 
         if (mode == GameModes.Quest)
         {
