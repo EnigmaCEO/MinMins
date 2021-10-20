@@ -71,7 +71,7 @@ public class RewardTransactionPopUp : MonoBehaviour
         gameObject.SetActive(true);
 
         string titleTerm = TOKENIZE_TITLE_TERM;
-        if (_option == RewardsInventoryOptions.Purchase)
+        if (_option == RewardsInventoryOptions.Buy)
         {
             titleTerm = PURCHASE_TITLE_TERM;
             startTransaction();

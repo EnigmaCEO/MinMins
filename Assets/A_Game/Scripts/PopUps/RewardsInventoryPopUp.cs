@@ -172,7 +172,7 @@ public class RewardsInventoryPopUp : MonoBehaviour
                             }
                             else
                             {
-                                option = RewardsInventoryOptions.Purchase;
+                                option = RewardsInventoryOptions.Buy;
                             }
 
                             string tokenType = EnjinTokenTypes.SPECIAL;
@@ -331,6 +331,6 @@ public enum RewardsInventoryOptions
 {
     None,
     Tokenize,
-    Purchase,
+    Buy,
     Sell
 }

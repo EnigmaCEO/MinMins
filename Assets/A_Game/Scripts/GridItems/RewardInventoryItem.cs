@@ -10,9 +10,7 @@ public class RewardInventoryItem : MonoBehaviour
     [SerializeField] private Text _costText;
     [SerializeField] private Image _icon;
 
-    [SerializeField] private GameObject TokenizeButton;
-    [SerializeField] private GameObject BuyButton;
-    [SerializeField] private GameObject SellButton;
+    [SerializeField] private Text OptionButtonText;
 
     private Action<RewardInventoryItem> _callback;
 
@@ -55,17 +53,21 @@ public class RewardInventoryItem : MonoBehaviour
        
         _nameText.text = "#" + unitName;
 
-        Cost = float.Parse(optionCostString);
-
-        _costText.text = optionCostString += " " + coinName;
+        if (option == RewardsInventoryOptions.Sell)
+        {
+            _costText.gameObject.SetActive(false);
+        }
+        else
+        { 
+            Cost = float.Parse(optionCostString);
+            _costText.text = optionCostString += " " + coinName;
+        }
 
         _icon.sprite = sprite;
 
         _callback = buttonDownCallback;
 
-        TokenizeButton.SetActive(option == RewardsInventoryOptions.Tokenize);
-        BuyButton.SetActive(option == RewardsInventoryOptions.Purchase);
-        SellButton.SetActive(option == RewardsInventoryOptions.Sell);
+        OptionButtonText.text = LocalizationManager.GetTermTranslation(option.ToString());
     }
 
     public void ButtonDown()
