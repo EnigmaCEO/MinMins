@@ -210,7 +210,7 @@ public class GameStore : EnigmaScene
             }
         }
 
-        if (count == 0 || !GameNetwork.Instance.GetIsEnjinKeyAvailable(EnigmaConstants.EnjinTokenKeys.ENJIN_MFT))
+        if (count == 0 || !GameNetwork.Instance.GetIsEnjinKeyAvailable(EnigmaTokenKeys.ENJIN_MFT))
         {
             _enjinmftPopUp.transform.Find("SummonButton").gameObject.SetActive(false);
         }
@@ -219,7 +219,7 @@ public class GameStore : EnigmaScene
 
         _enjinmftPopUp.SetActive(true);
 
-        if (GameNetwork.Instance.GetIsEnjinKeyAvailable(EnigmaConstants.EnjinTokenKeys.ENJIN_MFT))
+        if (GameNetwork.Instance.GetIsEnjinKeyAvailable(EnigmaTokenKeys.ENJIN_MFT))
         {
             _enjinmftPopUp.transform.Find("WindowMessage").GetComponent<Text>().text = attempts + " " + LocalizationManager.GetTermTranslation("Summons remaining");
         }

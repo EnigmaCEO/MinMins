@@ -27,8 +27,9 @@ public class GameHacks : SingletonPersistentPrefab<GameHacks>
 
     public bool UseOfflineTestWithdrawnItems = false;
     public List<string> OfflineTestWithdrawnTokenKeys = new List<string>();
-    public ValueHack WithdrawalResponse = new ValueHack("Success");  //Success, Pending or Error
-    public float OfflineWithdrawalDelay = 2;
+
+    public ValueHack EnjinTransactionResponse = new ValueHack("Success");  //Success, Pending or Error
+    public float OfflineEnjinTransactionDelay = 2;
     public ValueHack StartingEnjBalance = new ValueHack("100");
 
     public ValueHack SinglePlayerLevel = new ValueHack("50");

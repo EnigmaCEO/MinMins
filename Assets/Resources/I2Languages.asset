@@ -2341,20 +2341,18 @@ MonoBehaviour:
         \uCC3D\uC744 \uB2EB\uC544\uC11C \uB4A4\uB85C \uB3CC\uC544\uAC00\uC138\uC694."
       Flags: 0000000000
       Languages_Touch: []
-    - Term: Press OK to request an Enjin Wallet so you can withdraw your tokens.
+    - Term: Press OK to request an Enjin Wallet so you can withdraw or buy tokens.
         Close window to go back.
       TermType: 0
       Description: 
       Languages:
-      - Press OK to request an Enjin Wallet so you can withdraw your tokens. Close
+      - Press OK to request an Enjin Wallet so you can withdraw or buy tokens. Close
         window to go back.
-      - "Presiona OK para solicitar una Cartera Enjin para que puedas retirar tus
+      - "Presiona OK para solicitar una Cartera Enjin para que puedas retirar o comprar
         tokens. Cierra la ventana para volver atr\xE1s."
-      - "\u6309\u300C\u53EF\u4EE5\u300D\u5373\u53EF\u7533\u8ACB Enjin \u9322\u5305\uFF0C\u4EE5\u958B\u59CB\u9818\u53D6\u4EE3\u5E63\u3002\u5982\u8981\u8FD4\u56DE\uFF0C\u8ACB\u95DC\u9589\u8996\u7A97\u3002"
-      - "\u70B9\u51FB\u201COK\u201D\u53EF\u4EE5\u7533\u8BF7\u4E00\u4E2AEnjin Wallet\uFF0C\u60A8\u5C31\u53EF\u4EE5\u63D0\u73B0\u4EE3\u5E01\u4E86\u3002\u5173\u95ED\u7A97\u53E3\u53EF\u4EE5\u8FD4\u56DE\u3002"
-      - "\uD655\uC778\uC744 \uB20C\uB7EC\uC11C \uC5D4\uC9C4 \uC9C0\uAC11\uC744 \uC694\uCCAD\uD558\uBA74
-        \uD1A0\uD070\uC744 \uCD9C\uAE08\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4. \uCC3D\uC744
-        \uB2EB\uC544\uC11C \uB4A4\uB85C \uB3CC\uC544\uAC00\uC138\uC694."
+      - 
+      - 
+      - 
       Flags: 0000000000
       Languages_Touch: []
     - Term: ENJIN WITHDRAWAL
@@ -2638,6 +2636,17 @@ MonoBehaviour:
       - "\uD1A0\uD070 \uC544\uC774\uD15C"
       Flags: 0000000000
       Languages_Touch: []
+    - Term: PURCHASE ITEMS
+      TermType: 0
+      Description: 
+      Languages:
+      - PURCHASE ITEMS
+      - "COMPRAR \xCDTEMS"
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
     - Term: '* Units can be tokenized'
       TermType: 0
       Description: 
@@ -2689,6 +2698,39 @@ MonoBehaviour:
         \uC9C0\uAC11\uC744 \uC5F0\uACB0\uD558\uC138\uC694"
       Flags: 0000000000
       Languages_Touch: []
+    - Term: Purchase failed. Please try again.
+      TermType: 0
+      Description: 
+      Languages:
+      - Purchase failed. Please try again.
+      - "La compra fall\xF3. Por favor intente otra vez."
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: There is a Server Error. Please try again later.
+      TermType: 0
+      Description: 
+      Languages:
+      - There is a Server Error. Please try again later.
+      - Hay un Error de Servidor. Por favor intente otra vez.
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Requesting purchase link...
+      TermType: 0
+      Description: 
+      Languages:
+      - Requesting purchase link...
+      - Solicitando enlace de compra...
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
     CaseInsensitiveTerms: 0
     OnMissingTranslation: 1
     mTerm_AppName: 
@@ -2713,7 +2755,7 @@ MonoBehaviour:
     Google_WebServiceURL: https://script.google.com/macros/s/AKfycbw32utr3kCJns7NCLeWgxEKcn3KFlDSmgdTHiLvcxYYDnNFr8GGxIKFi4aMYaVFd2Y/exec
     Google_SpreadsheetKey: 1Mrp9xxAsvTcT2syMv3hS3qILmncXoJnIA5mgZOmBoMY
     Google_SpreadsheetName: I2Loc Min-Mins Localization
-    Google_LastUpdatedVersion: 1631172567682
+    Google_LastUpdatedVersion: 1634746227278
     Google_Password: change_this
     GoogleUpdateFrequency: 0
     GoogleInEditorCheckFrequency: 0

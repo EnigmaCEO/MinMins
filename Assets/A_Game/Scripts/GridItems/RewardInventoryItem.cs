@@ -10,7 +10,17 @@ public class RewardInventoryItem : MonoBehaviour
     [SerializeField] private Text _costText;
     [SerializeField] private Image _icon;
 
+    [SerializeField] private GameObject TokenizeButton;
+    [SerializeField] private GameObject BuyButton;
+    [SerializeField] private GameObject SellButton;
+
     private Action<RewardInventoryItem> _callback;
+
+    public string EthereumId
+    {
+        get;
+        private set;
+    }
 
     public string TokenKey
     {
@@ -18,29 +28,44 @@ public class RewardInventoryItem : MonoBehaviour
         private set;
     }
 
-    public float CostNumber
+    public string Uuid
     {
         get;
         private set;
     }
 
-    public void Setup(string tokenKey, string rewardName, string rewardCost, string coinName, Sprite sprite, Action<RewardInventoryItem> buttonDownCallback)
+    public float Cost
+    {
+        get;
+        private set;
+    }
+
+    public RewardsInventoryOptions Option
+    {
+        get;
+        private set;
+    }
+
+    public void Setup(string tokenKey, string unitName, string ethereumId, string uuid, string optionCostString, string coinName, Sprite sprite, Action<RewardInventoryItem> buttonDownCallback, RewardsInventoryOptions option)
     {
         TokenKey = tokenKey;
+        EthereumId = ethereumId;
+        Uuid = uuid;
+        Option = option;
+       
+        _nameText.text = "#" + unitName;
 
-        _nameText.text = "#" + rewardName;
+        Cost = float.Parse(optionCostString);
 
-        CostNumber = float.Parse(rewardCost);
-        _costText.text = rewardCost += " " + coinName; ;
+        _costText.text = optionCostString += " " + coinName;
 
         _icon.sprite = sprite;
 
         _callback = buttonDownCallback;
-    }
 
-    public void SetAsWithdrawn()
-    {
-        Destroy(gameObject);
+        TokenizeButton.SetActive(option == RewardsInventoryOptions.Tokenize);
+        BuyButton.SetActive(option == RewardsInventoryOptions.Purchase);
+        SellButton.SetActive(option == RewardsInventoryOptions.Sell);
     }
 
     public void ButtonDown()

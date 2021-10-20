@@ -33,7 +33,7 @@ public class QuestSelection : MonoBehaviour
 
     private void Start()
     {
-        NetworkManager.Transaction(Transactions.GET_QUEST_DATA, onGetQuestData);
+        NetworkManager.Transaction(GameTransactions.GET_QUEST_DATA, onGetQuestData);
         //GameNetwork.CheckEnjinTokenAvailable()
 
         _questConfirmPopUp.Close(false);
@@ -41,13 +41,13 @@ public class QuestSelection : MonoBehaviour
         _questProgressPanel.SetActive(false);
         _globalSystemQuestButton.SetActive(false);
 
-        setNonGlobalQuestButton(_shalwendWargodQuestButton, new List<string> { EnjinTokenKeys.QUEST_WARGOD_SHALWEND }, nameof(SerialQuests.ShalwendWargod), QuestTypes.Serial);
-        setNonGlobalQuestButton(_shalwendDeadlyKnightQuestButton, new List<string> { EnjinTokenKeys.QUEST_DEADLY_KNIGHT_SHALWEND }, nameof(SerialQuests.ShalwendDeadlyKnight), QuestTypes.Serial);
+        setNonGlobalQuestButton(_shalwendWargodQuestButton, new List<string> { GameEnjinTokenKeys.QUEST_WARGOD_SHALWEND }, nameof(SerialQuests.ShalwendWargod), QuestTypes.Serial);
+        setNonGlobalQuestButton(_shalwendDeadlyKnightQuestButton, new List<string> { GameEnjinTokenKeys.QUEST_DEADLY_KNIGHT_SHALWEND }, nameof(SerialQuests.ShalwendDeadlyKnight), QuestTypes.Serial);
 
-        setNonGlobalQuestButton(_narwhalBlueQuestButton, new List<string> { EnjinCodeKeys.QUEST_BLUE_NARWHAL }, nameof(ScoutQuests.NarwhalBlue), QuestTypes.Scout);
-        setNonGlobalQuestButton(_narwhalCheeseQuestButton, new List<string> { EnjinCodeKeys.QUEST_CHEESE_NARWHAL }, nameof(ScoutQuests.NarwhalCheese), QuestTypes.Scout);
-        setNonGlobalQuestButton(_narwwhalEmeraldQuestButton, new List<string> { EnjinCodeKeys.QUEST_EMERALD_NARWHAL }, nameof(ScoutQuests.NarwhalEmerald), QuestTypes.Scout);
-        setNonGlobalQuestButton(_narwhalCrimsonQuestButton, new List<string> { EnjinCodeKeys.QUEST_CRIMSON_NARWHAL }, nameof(ScoutQuests.NarwhalCrimson), QuestTypes.Scout);
+        setNonGlobalQuestButton(_narwhalBlueQuestButton, new List<string> { GameEnjinCodeKeys.QUEST_BLUE_NARWHAL }, nameof(ScoutQuests.NarwhalBlue), QuestTypes.Scout);
+        setNonGlobalQuestButton(_narwhalCheeseQuestButton, new List<string> { GameEnjinCodeKeys.QUEST_CHEESE_NARWHAL }, nameof(ScoutQuests.NarwhalCheese), QuestTypes.Scout);
+        setNonGlobalQuestButton(_narwwhalEmeraldQuestButton, new List<string> { GameEnjinCodeKeys.QUEST_EMERALD_NARWHAL }, nameof(ScoutQuests.NarwhalEmerald), QuestTypes.Scout);
+        setNonGlobalQuestButton(_narwhalCrimsonQuestButton, new List<string> { GameEnjinCodeKeys.QUEST_CRIMSON_NARWHAL }, nameof(ScoutQuests.NarwhalCrimson), QuestTypes.Scout);
     }
 
     public void OnSinglePlayerButtonDown()
@@ -108,7 +108,7 @@ public class QuestSelection : MonoBehaviour
 
         if (allowEnigmaTokenUnlock)
         {
-            unlockEnjinKeys.Add(EnigmaConstants.EnjinTokenKeys.ENIGMA_TOKEN); //Unlocks all non global quests
+            unlockEnjinKeys.Add(EnigmaTokenKeys.ENIGMA_TOKEN); //Unlocks all non global quests
         }
 
         bool questUnlocked = false;
@@ -239,7 +239,7 @@ public class QuestSelection : MonoBehaviour
 
             if (!questIsHacked)
             {
-                questNode = NetworkManager.CheckValidNode(response[0], GameNetwork.TransactionKeys.QUEST);
+                questNode = NetworkManager.CheckValidNode(response[0], GameTransactionKeys.QUEST);
             }
 
             if (questIsHacked || (questNode != null))
@@ -276,8 +276,8 @@ public class QuestSelection : MonoBehaviour
 
                 if (!questIsHacked)
                 {
-                    progressNode = NetworkManager.CheckValidNode(response[0], GameNetwork.TransactionKeys.PROGRESS);
-                    leadersNode = NetworkManager.CheckValidNode(response[0], GameNetwork.TransactionKeys.LEADERS);
+                    progressNode = NetworkManager.CheckValidNode(response[0], GameTransactionKeys.PROGRESS);
+                    leadersNode = NetworkManager.CheckValidNode(response[0], GameTransactionKeys.LEADERS);
                 }
 
                 if (questIsHacked || (progressNode != null))

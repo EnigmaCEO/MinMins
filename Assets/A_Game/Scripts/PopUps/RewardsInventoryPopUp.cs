@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using Enigma.CoreSystems;
+using SimpleJSON;
+using System;
+
 
 public class RewardsInventoryPopUp : MonoBehaviour
 {
@@ -24,10 +28,11 @@ public class RewardsInventoryPopUp : MonoBehaviour
     [SerializeField] private Text _statusUI;
     [SerializeField] private Text _currencyText;
 
-    [SerializeField] private EnjinWithdrawalPopUp _enjinWithdrawalPopUp;
+    [SerializeField] private RewardTransactionPopUp _enjinTransactionPopUp;
 
+    private const string SERVER_ERROR_TERM = "There is a Server Error. Please try again later.";
+    private const string TOKEN_WEBSITE_PREFIX = "https://jumpnet.enjinx.io/eth/asset/";
     private GameObject _rewardItemTemplate;
-    //private bool _initialized = false;
 
     private void Awake()
     {
@@ -35,16 +40,12 @@ public class RewardsInventoryPopUp : MonoBehaviour
         _rewardItemTemplate.transform.SetParent(_gridContent.parent);
         _rewardItemTemplate.SetActive(false);
 
-        _enjinWithdrawalPopUp.SetInventoryChangedCallback(onInventoryChanged);
+        _enjinTransactionPopUp.SetInventoryChangedCallback(onInventoryChanged);
     }
 
     public void Open()
     {
-        //if (!_initialized)
-        {
-            initializeInventory();
-        }
-
+        initializeInventory();
         gameObject.SetActive(true);
     }
 
@@ -55,73 +56,140 @@ public class RewardsInventoryPopUp : MonoBehaviour
         _statusUI.text = LocalizationManager.GetTermTranslation(UiMessages.LOADING);
         _gridContent.DestroyChildren();
 
-        bool useOnlineWithdrawnItems = true;
+        NetworkManager.Transaction(EnigmaTransactions.GET_ENJIN_MARKETPLACE, onGetEnjinMarketPlace);
+    }
 
-        addOwnedItems();
+    private float getPriceFromListing(JSONNode listing)
+    {
+        float purchaseCost = -1;
+
+        JSONNode purchaseCostNode = NetworkManager.CheckValidNode(listing, EnigmaNodeKeys.PRICE);
+        if (purchaseCostNode != null)
+        {
+            string purchaseCostString = purchaseCostNode.ToString().Trim('"');
+            purchaseCost = float.Parse(purchaseCostString);
+        }
+
+        return purchaseCost;
+    }
+
+    private void onGetEnjinMarketPlace(JSONNode response)
+    {
+        if (NetworkManager.CheckInvalidServerResponse(response, nameof(onGetEnjinMarketPlace)))
+        {
+            _statusUI.text = LocalizationManager.GetTermTranslation(SERVER_ERROR_TERM);
+            return;
+        }
+
+        GameInventory gameInventory = GameInventory.Instance;
+
+        List<string> ownedUnitNames = gameInventory.GetInventoryUnitNames();
+        string shalwendDeadlyKnightUnitName = gameInventory.GetTokenUnitName(GameEnjinTokenKeys.SHALWEND_DEADLY_KNIGHT);
+        string shalwendWarGodUnitName = gameInventory.GetTokenUnitName(GameEnjinTokenKeys.SHALWEND_WARGOD);
+
+        bool useOnlineWithdrawnItems = true; 
+        List<string> availableTokenKeys = null;
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
         if (GameHacks.Instance.UseOfflineTestWithdrawnItems)
         {
             useOnlineWithdrawnItems = false;
-            List<string> testWithdrawnTokenKeys = GameHacks.Instance.OfflineTestWithdrawnTokenKeys;
-
-            foreach (string testWithdrawnTokenKey in testWithdrawnTokenKeys)
-            {
-                setWithdrawnToken(testWithdrawnTokenKey);
-            }
+            availableTokenKeys = GameHacks.Instance.OfflineTestWithdrawnTokenKeys;
         }
 #endif
 
         if (useOnlineWithdrawnItems)
         {
-            List<string> availableTokens = GameNetwork.Instance.GetEnjinKeysAvailable();
-            foreach (string tokenKey in availableTokens)
-            {
-                setWithdrawnToken(tokenKey);
-            }
+            availableTokenKeys = GameNetwork.Instance.GetEnjinKeysAvailable();
         }
 
-        //_initialized = true;
-        _statusUI.gameObject.SetActive(false);
-    }
+        JSONNode response_hash = response[0];
+        JSONNode listings = NetworkManager.CheckValidNode(response_hash, EnigmaNodeKeys.LISTINGS);
+        Dictionary<string, JSONNode> listingByUnitName = new Dictionary<string, JSONNode>();
+        List<string> listingsUnitNames = new List<string>();
 
-    private void setWithdrawnToken(string tokenKey)
-    {
-        foreach (Transform tokenTransform in _gridContent)
+        if (listings != null)
         {
-            RewardInventoryItem rewardItem = tokenTransform.GetComponent<RewardInventoryItem>();
-            if (rewardItem.TokenKey == tokenKey)
+            foreach (JSONNode listing in listings.AsArray)
             {
-                rewardItem.SetAsWithdrawn();
-                break;
-            }
-        }
-    }
-
-    private void addOwnedItems()
-    {
-        GameInventory gameInventory = GameInventory.Instance;
-
-        List<string> ownedUnitNames = gameInventory.GetInventoryUnitNames();
-        List<string> descendingUnitNames = ownedUnitNames.OrderByDescending(x => int.Parse(x)).ToList();
-
-        string shalwendDeadlyKnightUnitName = gameInventory.GetTokenUnitName(EnjinTokenKeys.SHALWEND_DEADLY_KNIGHT);
-        string shalwendWarGodUnitName = gameInventory.GetTokenUnitName(EnjinTokenKeys.SHALWEND_WARGOD);
-
-        foreach (string unitName in descendingUnitNames)
-        {
-            if (gameInventory.CheckCanBeWithdrawn(unitName))
-            {
-                string tokenType = EnjinTokenTypes.SPECIAL;
-
-                if ((unitName == shalwendDeadlyKnightUnitName) || (unitName == shalwendWarGodUnitName))
+                JSONNode tokenCodeNode = NetworkManager.CheckValidNode(listing, EnigmaNodeKeys.ENJIN_CODE);
+                if (tokenCodeNode != null)
                 {
-                    tokenType = EnjinTokenTypes.ULTIMATE;
-                }
+                    string tokenCode = tokenCodeNode.ToString().Trim('"');
+                    string unitName = gameInventory.GetTokenUnitName(tokenCode);
 
-                addRewardItem(gameInventory.GetUnitNameToken(unitName), tokenType);
+                    if (listingByUnitName.ContainsKey(unitName))
+                    {
+                        float newPrice = getPriceFromListing(listingByUnitName[unitName]);
+                        float currentPrice = getPriceFromListing(listing);
+
+                        if (newPrice < currentPrice)
+                        {
+                            listingByUnitName[unitName] = listing;
+                        }
+                    }
+                    else
+                    {
+                        listingByUnitName.Add(unitName, listing);
+                        listingsUnitNames.Add(unitName);
+                    }
+                }
             }
         }
+
+        List<string> descendingListingNames = listingsUnitNames.OrderByDescending(x => int.Parse(x)).ToList();
+
+        foreach (string unitName in descendingListingNames)
+        {         
+            JSONNode listingNode = listingByUnitName[unitName];
+
+            JSONNode tokenCodeNode = NetworkManager.CheckValidNode(listingNode, EnigmaNodeKeys.ENJIN_CODE);
+            if (tokenCodeNode != null)
+            {
+                string tokenCode = tokenCodeNode.ToString().Trim('"');
+
+                JSONNode etherumIdNode = NetworkManager.CheckValidNode(listingNode, EnigmaNodeKeys.ETHEREUM_ID);
+                if (etherumIdNode != null)
+                {
+                    string ethereumId = etherumIdNode.ToString().Trim('"');
+
+                    JSONNode uuidNode = NetworkManager.CheckValidNode(listingNode, EnigmaNodeKeys.UUID);
+                    if (uuidNode != null)
+                    {
+                        string uuid = uuidNode.ToString().Trim('"');
+
+                        string purchaseCostString = getPriceFromListing(listingNode).ToString();
+                        if(purchaseCostString != "-1")
+                        { 
+                            RewardsInventoryOptions option = RewardsInventoryOptions.None;
+                            if (availableTokenKeys.Contains(tokenCode))
+                            {
+                                option = RewardsInventoryOptions.Sell;
+                            }
+                            else if (ownedUnitNames.Contains(unitName))
+                            {
+                                option = RewardsInventoryOptions.Tokenize;
+                            }
+                            else
+                            {
+                                option = RewardsInventoryOptions.Purchase;
+                            }
+
+                            string tokenType = EnjinTokenTypes.SPECIAL;
+
+                            if ((unitName == shalwendDeadlyKnightUnitName) || (unitName == shalwendWarGodUnitName))
+                            {
+                                tokenType = EnjinTokenTypes.ULTIMATE;
+                            }
+
+                            addRewardItem(tokenCode, tokenType, ethereumId, uuid, purchaseCostString, option);
+                        }
+                    }
+                }
+            }
+        }
+
+        _statusUI.gameObject.SetActive(false);
     }
 
     public void Close()
@@ -140,11 +208,18 @@ public class RewardsInventoryPopUp : MonoBehaviour
         initializeInventory();
     }
 
-    private void addRewardItem(string tokenKey, string tokenType)
+    private void addRewardItem(string tokenKey, string tokenType, string ethereumId, string uuid, string purchaseCost, RewardsInventoryOptions option)
     {
+        string costString = purchaseCost;
+
+        if (option == RewardsInventoryOptions.Tokenize)
+        {
+            costString = getTokenizeCost(tokenType);
+        }
+
         GameObject newRewardItem = Instantiate<GameObject>(_rewardItemTemplate, _gridContent);
         string tokenUnitName = GameInventory.Instance.GetTokenUnitName(tokenKey);
-        newRewardItem.GetComponent<RewardInventoryItem>().Setup(tokenKey, tokenUnitName, getRewardCost(tokenType), _coinName, getRewardSprite(tokenKey, tokenType), onRewardButtonDown);
+        newRewardItem.GetComponent<RewardInventoryItem>().Setup(tokenKey, tokenUnitName, ethereumId, uuid, costString, _coinName, getRewardSprite(tokenKey, tokenType), onRewardButtonDown, option);
         newRewardItem.name = "#" + tokenKey;
         newRewardItem.SetActive(true);
     }
@@ -152,10 +227,44 @@ public class RewardsInventoryPopUp : MonoBehaviour
     private void onRewardButtonDown(RewardInventoryItem rewardItemSelected)
     {
         Debug.Log("onRewardButtonDown -> code: " + rewardItemSelected.TokenKey);
-        _enjinWithdrawalPopUp.Open(rewardItemSelected);
+
+        RewardsInventoryOptions option = rewardItemSelected.Option;
+
+        if (option == RewardsInventoryOptions.Sell)
+        {
+            string ethereumIdWebSuffix = getEthereumIdWebSuffix(rewardItemSelected.EthereumId);
+            string fullRewardWebUrl = TOKEN_WEBSITE_PREFIX + ethereumIdWebSuffix;
+            Application.OpenURL(fullRewardWebUrl);
+        }
+        else //Tokenize or Buy
+        {
+            _enjinTransactionPopUp.Open(rewardItemSelected, option);
+        }
     }
 
-    private string getRewardCost(string rewardType)
+    private string getEthereumIdWebSuffix(string ethereumId)
+    {
+        string ethereumIdeWebSuffix = ethereumId;
+        int stringLength = ethereumId.Length;
+        int lastReleventCharIndex = 0;
+
+        for (int i = 0; i < stringLength; i++)
+        {
+            if (ethereumId[i] != '0')
+            {
+                lastReleventCharIndex = i;
+            }
+        }
+
+        if (lastReleventCharIndex != (stringLength - 1))
+        {
+            ethereumIdeWebSuffix.Remove(lastReleventCharIndex + 1);
+        }
+
+        return ethereumIdeWebSuffix;
+    }
+
+    private string getTokenizeCost(string rewardType)
     {
         float rewardCost = 0.0f;
 
@@ -175,7 +284,7 @@ public class RewardsInventoryPopUp : MonoBehaviour
                 break;
         }
 
-        if (GameNetwork.Instance.GetIsEnjinKeyAvailable(EnjinTokenKeys.GOD_ENIGMA))
+        if (GameNetwork.Instance.GetIsEnjinKeyAvailable(GameEnjinTokenKeys.GOD_ENIGMA))
         {
             rewardCost *= 0.5f;
         }
@@ -216,4 +325,12 @@ public class RewardsInventoryPopUp : MonoBehaviour
 
         return sprite;
     }
+}
+
+public enum RewardsInventoryOptions
+{
+    None,
+    Tokenize,
+    Purchase,
+    Sell
 }

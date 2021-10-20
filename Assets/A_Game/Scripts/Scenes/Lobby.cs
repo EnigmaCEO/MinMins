@@ -116,8 +116,8 @@ public class Lobby : NetworkEntity
             Room room = NetworkManager.GetRoom();
             print("Lobby::OnJoinedRoom ->  Joined first as master client in room.Name: " + room.Name + " and room.CustomProperties: " + room.CustomProperties.ToStringFull());
             gameNetwork.HostPlayerId = NetworkManager.GetLocalPlayerId();
-            NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.HOST_ID, GameNetwork.Instance.HostPlayerId);
-            NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.TIME_ROOM_STARTED, NetworkManager.GetNetworkTime());
+            NetworkManager.SetRoomCustomProperty(GameRoomProperties.HOST_ID, GameNetwork.Instance.HostPlayerId);
+            NetworkManager.SetRoomCustomProperty(GameRoomProperties.TIME_ROOM_STARTED, NetworkManager.GetNetworkTime());
 
             _waitingPopUp.SetActive(true);
 
@@ -134,7 +134,7 @@ public class Lobby : NetworkEntity
         }
         else
         {
-            double timeRoomStarted = double.Parse(NetworkManager.GetRoomCustomProperty(GameNetwork.RoomCustomProperties.TIME_ROOM_STARTED));
+            double timeRoomStarted = double.Parse(NetworkManager.GetRoomCustomProperty(GameRoomProperties.TIME_ROOM_STARTED));
             double currentTime = NetworkManager.GetNetworkTime();
 
             double timeToWaitAi = double.Parse(_roomSetWithPvpDelay.ToString());
@@ -160,11 +160,11 @@ public class Lobby : NetworkEntity
             else
             {
                 gameNetwork.GuestPlayerId = NetworkManager.GetLocalPlayerId();
-                gameNetwork.HostPlayerId = NetworkManager.GetRoomCustomPropertyAsInt(GameNetwork.RoomCustomProperties.HOST_ID);
+                gameNetwork.HostPlayerId = NetworkManager.GetRoomCustomPropertyAsInt(GameRoomProperties.HOST_ID);
 
                 Debug.LogWarning("Lobby::onJoinedRoom -> joined room as guest id: " + gameNetwork.GuestPlayerId);
 
-                GameNetwork.SetLocalPlayerRating(GameStats.Instance.Rating, GameNetwork.TeamNames.GUEST);
+                GameNetwork.SetLocalPlayerRating(GameStats.Instance.Rating, TeamNames.GUEST);
                 NetworkManager.GetRoom().IsOpen = false;
             }
         }
@@ -237,21 +237,21 @@ public class Lobby : NetworkEntity
                 {
                     Debug.LogWarning("Lobby::handleRoomCreationAndJoin -> room.CustomProperties: " + room.CustomProperties.ToStringFull());             
           
-                    int playerInRoomRating = (int)room.CustomProperties[GameNetwork.RoomCustomProperties.HOST_RATING];
+                    int playerInRoomRating = (int)room.CustomProperties[GameRoomProperties.HOST_RATING];
                     int ratingDifference = Mathf.Abs(playerInRoomRating - thisPlayerRating);
 
                     Debug.LogWarning("Lobby::handleRoomCreationAndJoin-> playerInRoomRating: " + playerInRoomRating + " ratingDifference: " + ratingDifference + " _maxRatingDifferenceToFight: " + _maxRatingDifferenceToFight);
 
                     if (ratingDifference <= _maxRatingDifferenceToFight)
                     {
-                        bool hasPvpAi = bool.Parse(room.CustomProperties[GameNetwork.RoomCustomProperties.HAS_PVP_AI].ToString());
+                        bool hasPvpAi = bool.Parse(room.CustomProperties[GameRoomProperties.HAS_PVP_AI].ToString());
                         Debug.LogWarning("Lobby::handleRoomCreationAndJoin -> room: " + room.Name + " hasPvpAi: " + hasPvpAi);
 
                         if (!hasPvpAi)
                         {
                             Debug.LogWarning("Lobby::handleRoomCreationAndJoin -> joined room: " + room.Name);
 
-                            GameNetwork.SetLocalPlayerRating(GameStats.Instance.Rating, GameNetwork.TeamNames.GUEST);
+                            GameNetwork.SetLocalPlayerRating(GameStats.Instance.Rating, TeamNames.GUEST);
                             NetworkManager.JoinRoom(room.Name);
                             foundRoom = true;
                             break;
@@ -288,7 +288,7 @@ public class Lobby : NetworkEntity
 
     private void joinOrCreateRoom()
     {
-        GameNetwork.SetLocalPlayerRating(GameStats.Instance.Rating, GameNetwork.TeamNames.HOST);
+        GameNetwork.SetLocalPlayerRating(GameStats.Instance.Rating, TeamNames.HOST);
         GameNetwork.Instance.CreatePublicRoom();
         _isJoiningRoom = true;
     }
@@ -315,6 +315,6 @@ public class Lobby : NetworkEntity
         Debug.LogWarning("setRoomWithPvpAi");
         GameStats.Instance.UsesAiForPvp = true;
         GameNetwork.Instance.GuestPlayerId = NetworkManager.GetLocalPlayerId();
-        NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.HAS_PVP_AI, "True");
+        NetworkManager.SetRoomCustomProperty(GameRoomProperties.HAS_PVP_AI, "True");
     }
 }

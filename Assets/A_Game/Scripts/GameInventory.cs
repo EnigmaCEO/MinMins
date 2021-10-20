@@ -99,13 +99,13 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
     private const char POSITIONS_SEPARATOR = ';';
     private const char COORDS_SEPARATOR = ',';
 
-    private string[] _boostCategories = { GameConstants.BoostCategory.DAMAGE, GameConstants.BoostCategory.DEFENSE,
-                                    GameConstants.BoostCategory.HEALTH, GameConstants.BoostCategory.POWER,
-                                    GameConstants.BoostCategory.SIZE };
+    private string[] _boostCategories = { BoostCategory.DAMAGE, BoostCategory.DEFENSE,
+                                    BoostCategory.HEALTH, BoostCategory.POWER,
+                                    BoostCategory.SIZE };
 
-    private string[] _boostBaseNames = { GameConstants.BoostEnjinOreItems.DAMAGE, GameConstants.BoostEnjinOreItems.DEFENSE,
-                                   GameConstants.BoostEnjinOreItems.HEALTH, GameConstants.BoostEnjinOreItems.POWER,
-                                   GameConstants.BoostEnjinOreItems.SIZE };
+    private string[] _boostBaseNames = { BoostEnjinOreItems.DAMAGE, BoostEnjinOreItems.DEFENSE,
+                                   BoostEnjinOreItems.HEALTH, BoostEnjinOreItems.POWER,
+                                   BoostEnjinOreItems.SIZE };
 
     public string[] BoostCategories
     {
@@ -149,11 +149,21 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
 
     public string GetTokenUnitName(string tokenName)
     {
+        if (!_unitNameByToken.ContainsKey(tokenName))
+        {
+            Debug.LogError("There is no unitName for token: " + tokenName);
+        }
+
         return _unitNameByToken[tokenName];
     }
 
     public string GetUnitNameToken(string unitName)
     {
+        if (!_tokenByUnitName.ContainsKey(unitName))
+        {
+            Debug.LogError("There is no token for unitName: " + unitName);
+        }
+
         return _tokenByUnitName[unitName];
     }
 
@@ -375,150 +385,150 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
 
         switch (enjinKey)
         {
-            case EnigmaConstants.EnjinTokenKeys.ENIGMA_TOKEN:
+            case EnigmaTokenKeys.ENIGMA_TOKEN:
                 enjinKeyName = "Enigma Token";
                 break;
-            case EnigmaConstants.EnjinTokenKeys.ENJIN_MFT:
+            case EnigmaTokenKeys.ENJIN_MFT:
                 enjinKeyName = "Enjin MFT";
                 break;
 
-            case GameConstants.EnjinTokenKeys.MINMINS_TOKEN:
+            case GameEnjinTokenKeys.MINMINS_TOKEN:
                 enjinKeyName = "Min Mins Token";
                 break;
 
-            case GameConstants.EnjinTokenKeys.QUEST_WARGOD_SHALWEND:
+            case GameEnjinTokenKeys.QUEST_WARGOD_SHALWEND:
                 enjinKeyName = "Rank Wargod";
                 break;
-            case GameConstants.EnjinTokenKeys.QUEST_DEADLY_KNIGHT_SHALWEND:
+            case GameEnjinTokenKeys.QUEST_DEADLY_KNIGHT_SHALWEND:
                 enjinKeyName = "Black Token";
                 break;
 
-            case GameConstants.EnjinTokenKeys.SHALWEND_WARGOD:
+            case GameEnjinTokenKeys.SHALWEND_WARGOD:
                 enjinKeyName = "Wargod Shalwend";
                 break;
-            case GameConstants.EnjinTokenKeys.SHALWEND_DEADLY_KNIGHT:
+            case GameEnjinTokenKeys.SHALWEND_DEADLY_KNIGHT:
                 enjinKeyName = "Deadly Knight Shalwend";
                 break;
 
-            case GameConstants.EnjinTokenKeys.SWISSBORG_CYBORG:
+            case GameEnjinTokenKeys.SWISSBORG_CYBORG:
                 enjinKeyName = "Swissborg Cyborg";
                 break;
 
-            case EnjinCodeKeys.QUEST_BLUE_NARWHAL:
-            case GameConstants.EnjinTokenKeys.NARWHAL_BLUE:
+            case GameEnjinCodeKeys.QUEST_BLUE_NARWHAL:
+            case GameEnjinTokenKeys.NARWHAL_BLUE:
                 enjinKeyName = "Blue Narwhal";
                 break;
-            case EnjinCodeKeys.QUEST_CHEESE_NARWHAL:
-            case GameConstants.EnjinTokenKeys.NARWHAL_CHEESE:
+            case GameEnjinCodeKeys.QUEST_CHEESE_NARWHAL:
+            case GameEnjinTokenKeys.NARWHAL_CHEESE:
                 enjinKeyName = "Cheese Narwhal";
                 break;
-            case EnjinCodeKeys.QUEST_EMERALD_NARWHAL:
-            case GameConstants.EnjinTokenKeys.NARWHAL_EMERALD:
+            case GameEnjinCodeKeys.QUEST_EMERALD_NARWHAL:
+            case GameEnjinTokenKeys.NARWHAL_EMERALD:
                 enjinKeyName = "Emerald Narwhal";
                 break;
-            case EnjinCodeKeys.QUEST_CRIMSON_NARWHAL:
-            case GameConstants.EnjinTokenKeys.NARWHAL_CRIMSON:
+            case GameEnjinCodeKeys.QUEST_CRIMSON_NARWHAL:
+            case GameEnjinTokenKeys.NARWHAL_CRIMSON:
                 enjinKeyName = "Crimson Narwhal";
                 break;
-            case GameConstants.EnjinTokenKeys.NARWHAL_DIAMOND:
+            case GameEnjinTokenKeys.NARWHAL_DIAMOND:
                 enjinKeyName = "Diamond Narwhal";
                 break;
 
-            case GameConstants.EnjinTokenKeys.ENJIN_MAXIM:
+            case GameEnjinTokenKeys.ENJIN_MAXIM:
                 enjinKeyName = "Maxim Legend";
                 break;
-            case GameConstants.EnjinTokenKeys.ENJIN_WITEK:
+            case GameEnjinTokenKeys.ENJIN_WITEK:
                 enjinKeyName = "Witek Legend";
                 break;
-            case GameConstants.EnjinTokenKeys.ENJIN_BRYANA:
+            case GameEnjinTokenKeys.ENJIN_BRYANA:
                 enjinKeyName = "Bryana Legend";
                 break;
-            case GameConstants.EnjinTokenKeys.ENJIN_TASSIO:
+            case GameEnjinTokenKeys.ENJIN_TASSIO:
                 enjinKeyName = "Tassio Legend";
                 break;
-            case GameConstants.EnjinTokenKeys.ENJIN_SIMON:
+            case GameEnjinTokenKeys.ENJIN_SIMON:
                 enjinKeyName = "Simon Legend";
                 break;
 
-            case GameConstants.EnjinTokenKeys.ENJIN_ESTHER:
+            case GameEnjinTokenKeys.ENJIN_ESTHER:
                 enjinKeyName = "Esther Legend II";
                 break;
-            case GameConstants.EnjinTokenKeys.ENJIN_ALEX:
+            case GameEnjinTokenKeys.ENJIN_ALEX:
                 enjinKeyName = "Rene Legend II";
                 break;
-            case GameConstants.EnjinTokenKeys.ENJIN_EVAN:
+            case GameEnjinTokenKeys.ENJIN_EVAN:
                 enjinKeyName = "Evan Legend II";
                 break;
-            case GameConstants.EnjinTokenKeys.ENJIN_LIZZ:
+            case GameEnjinTokenKeys.ENJIN_LIZZ:
                 enjinKeyName = "Lizz Legend II";
                 break;
-            case GameConstants.EnjinTokenKeys.ENJIN_BRAD:
+            case GameEnjinTokenKeys.ENJIN_BRAD:
                 enjinKeyName = "Brad Legend II";
                 break;
 
-            case GameConstants.EnjinTokenKeys.KNIGHT_HEALER:
+            case GameEnjinTokenKeys.KNIGHT_HEALER:
                 enjinKeyName = "Deadly Knight Healer";
                 break;
-            case GameConstants.EnjinTokenKeys.KNIGHT_BOMBER:
+            case GameEnjinTokenKeys.KNIGHT_BOMBER:
                 enjinKeyName = "Deadly Knight Bomber";
                 break;
-            case GameConstants.EnjinTokenKeys.KNIGHT_DESTROYER:
+            case GameEnjinTokenKeys.KNIGHT_DESTROYER:
                 enjinKeyName = "Deadly Knight Destroyer";
                 break;
-            case GameConstants.EnjinTokenKeys.KNIGHT_SCOUT:
+            case GameEnjinTokenKeys.KNIGHT_SCOUT:
                 enjinKeyName = "Deadly Knight Scout";
                 break;
-            case GameConstants.EnjinTokenKeys.KNIGHT_TANK:
+            case GameEnjinTokenKeys.KNIGHT_TANK:
                 enjinKeyName = "Deadly Knight Tank";
                 break;
 
-            case GameConstants.EnjinTokenKeys.DEMON_HEALER:
+            case GameEnjinTokenKeys.DEMON_HEALER:
                 enjinKeyName = "Demon King Healer";
                 break;
-            case GameConstants.EnjinTokenKeys.DEMON_BOMBER:
+            case GameEnjinTokenKeys.DEMON_BOMBER:
                 enjinKeyName = "Demon King Bomber";
                 break;
-            case GameConstants.EnjinTokenKeys.DEMON_DESTROYER:
+            case GameEnjinTokenKeys.DEMON_DESTROYER:
                 enjinKeyName = "Demon King Destroyer";
                 break;
-            case GameConstants.EnjinTokenKeys.DEMON_SCOUT:
+            case GameEnjinTokenKeys.DEMON_SCOUT:
                 enjinKeyName = "Demon King Scout";
                 break;
-            case GameConstants.EnjinTokenKeys.DEMON_TANK:
+            case GameEnjinTokenKeys.DEMON_TANK:
                 enjinKeyName = "Demon King Tank";
                 break;
 
-            case GameConstants.EnjinTokenKeys.GOD_HEALER:
+            case GameEnjinTokenKeys.GOD_HEALER:
                 enjinKeyName = "God Burtonscustom";
                 break;
-            case GameConstants.EnjinTokenKeys.GOD_BOMBER:
+            case GameEnjinTokenKeys.GOD_BOMBER:
                 enjinKeyName = "God Nhinestreams";
                 break;
-            case GameConstants.EnjinTokenKeys.GOD_DESTROYER_1:
+            case GameEnjinTokenKeys.GOD_DESTROYER_1:
                 enjinKeyName = "God Eindbaas";
                 break;
-            case GameConstants.EnjinTokenKeys.GOD_DESTROYER_2:
+            case GameEnjinTokenKeys.GOD_DESTROYER_2:
                 enjinKeyName = "God Billysaurus";
                 break;
-            case GameConstants.EnjinTokenKeys.GOD_SCOUT:
+            case GameEnjinTokenKeys.GOD_SCOUT:
                 enjinKeyName = "God Mapl3sn0w";
                 break;
-            case GameConstants.EnjinTokenKeys.GOD_TANK_1:
+            case GameEnjinTokenKeys.GOD_TANK_1:
                 enjinKeyName = "God Jtobcat";
                 break;
-            case GameConstants.EnjinTokenKeys.GOD_TANK_2:
+            case GameEnjinTokenKeys.GOD_TANK_2:
                 enjinKeyName = "God Capcapcin";
                 break;
-            case GameConstants.EnjinTokenKeys.GOD_ENIGMA:
+            case GameEnjinTokenKeys.GOD_ENIGMA:
                 enjinKeyName = "Gods of Enigma";
                 break;
-            case GameConstants.EnjinTokenKeys.COZY_BLOBBY:
+            case GameEnjinTokenKeys.COZY_BLOBBY:
                 enjinKeyName = "Cozy Blobby";
                 break;
-            case GameConstants.EnjinTokenKeys.ENJINEER_BLOBBY:
+            case GameEnjinTokenKeys.ENJINEER_BLOBBY:
                 enjinKeyName = "Enjineer Blobby";
                 break;
-            case GameConstants.EnjinTokenKeys.VR_BLOBBY:
+            case GameEnjinTokenKeys.VR_BLOBBY:
                 enjinKeyName = "VR Blobby";
                 break;
         }
@@ -848,7 +858,7 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
 
     public void AddExpToUnit(string unitName, int expToAdd)
     {
-        if (GameNetwork.Instance.GetIsEnjinKeyAvailable(GameConstants.EnjinTokenKeys.MINMINS_TOKEN))
+        if (GameNetwork.Instance.GetIsEnjinKeyAvailable(GameEnjinTokenKeys.MINMINS_TOKEN))
         {
             expToAdd *= 2; // Min Min Token perk
         }
@@ -1180,19 +1190,19 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
         {
             canBeWithdrawn = false;
         }
-        else if (unitName == GetTokenUnitName(GameConstants.EnjinTokenKeys.SWISSBORG_CYBORG))
+        else if (unitName == GetTokenUnitName(GameEnjinTokenKeys.SWISSBORG_CYBORG))
         {
             canBeWithdrawn = false;
         }
-        else if (checkUnitBetweenTokens(unitNumber, GameConstants.EnjinTokenKeys.COZY_BLOBBY, GameConstants.EnjinTokenKeys.VR_BLOBBY))
+        else if (checkUnitBetweenTokens(unitNumber, GameEnjinTokenKeys.COZY_BLOBBY, GameEnjinTokenKeys.VR_BLOBBY))
         {
             canBeWithdrawn = false;
         }
-        //else if (checkUnitBetweenTokens(unitNumber, GameConstants.EnjinTokenKeys.ENJIN_MAXIM, GameConstants.EnjinTokenKeys.ENJIN_SIMON))
+        //else if (checkUnitBetweenTokens(unitNumber, EnjinTokenKeys.ENJIN_MAXIM, EnjinTokenKeys.ENJIN_SIMON))
         //{
         //    canBeWithdrawn = false;
         //}
-        //else if (checkUnitBetweenTokens(unitNumber, GameConstants.EnjinTokenKeys.ENJIN_ALEX, GameConstants.EnjinTokenKeys.ENJIN_LIZZ))
+        //else if (checkUnitBetweenTokens(unitNumber, EnjinTokenKeys.ENJIN_ALEX, EnjinTokenKeys.ENJIN_LIZZ))
         //{
         //    canBeWithdrawn = false;
         //}
@@ -1279,51 +1289,51 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
 
     private void initializeUnitNameByToken()
     {
-        linkUnitAndToken("100", GameConstants.EnjinTokenKeys.ENJIN_MAXIM);
-        linkUnitAndToken("101", GameConstants.EnjinTokenKeys.ENJIN_WITEK);
-        linkUnitAndToken("102", GameConstants.EnjinTokenKeys.ENJIN_BRYANA);
-        linkUnitAndToken("103", GameConstants.EnjinTokenKeys.ENJIN_TASSIO);
-        linkUnitAndToken("104", GameConstants.EnjinTokenKeys.ENJIN_SIMON);
+        linkUnitAndToken("100", GameEnjinTokenKeys.ENJIN_MAXIM);
+        linkUnitAndToken("101", GameEnjinTokenKeys.ENJIN_WITEK);
+        linkUnitAndToken("102", GameEnjinTokenKeys.ENJIN_BRYANA);
+        linkUnitAndToken("103", GameEnjinTokenKeys.ENJIN_TASSIO);
+        linkUnitAndToken("104", GameEnjinTokenKeys.ENJIN_SIMON);
 
-        linkUnitAndToken("105", GameConstants.EnjinTokenKeys.KNIGHT_TANK);
-        linkUnitAndToken("106", GameConstants.EnjinTokenKeys.KNIGHT_HEALER);
-        linkUnitAndToken("107", GameConstants.EnjinTokenKeys.KNIGHT_SCOUT);
-        linkUnitAndToken("108", GameConstants.EnjinTokenKeys.KNIGHT_DESTROYER);
-        linkUnitAndToken("109", GameConstants.EnjinTokenKeys.KNIGHT_BOMBER);
+        linkUnitAndToken("105", GameEnjinTokenKeys.KNIGHT_TANK);
+        linkUnitAndToken("106", GameEnjinTokenKeys.KNIGHT_HEALER);
+        linkUnitAndToken("107", GameEnjinTokenKeys.KNIGHT_SCOUT);
+        linkUnitAndToken("108", GameEnjinTokenKeys.KNIGHT_DESTROYER);
+        linkUnitAndToken("109", GameEnjinTokenKeys.KNIGHT_BOMBER);
 
-        linkUnitAndToken("110", GameConstants.EnjinTokenKeys.DEMON_BOMBER);
-        linkUnitAndToken("111", GameConstants.EnjinTokenKeys.DEMON_SCOUT);
-        linkUnitAndToken("112", GameConstants.EnjinTokenKeys.DEMON_DESTROYER);
-        linkUnitAndToken("113", GameConstants.EnjinTokenKeys.DEMON_TANK);
-        linkUnitAndToken("114", GameConstants.EnjinTokenKeys.DEMON_HEALER);
+        linkUnitAndToken("110", GameEnjinTokenKeys.DEMON_BOMBER);
+        linkUnitAndToken("111", GameEnjinTokenKeys.DEMON_SCOUT);
+        linkUnitAndToken("112", GameEnjinTokenKeys.DEMON_DESTROYER);
+        linkUnitAndToken("113", GameEnjinTokenKeys.DEMON_TANK);
+        linkUnitAndToken("114", GameEnjinTokenKeys.DEMON_HEALER);
 
-        linkUnitAndToken("115", GameConstants.EnjinTokenKeys.GOD_TANK_1);
-        linkUnitAndToken("116", GameConstants.EnjinTokenKeys.GOD_TANK_2);
-        linkUnitAndToken("117", GameConstants.EnjinTokenKeys.GOD_DESTROYER_1);
-        linkUnitAndToken("118", GameConstants.EnjinTokenKeys.GOD_BOMBER);
-        linkUnitAndToken("119", GameConstants.EnjinTokenKeys.GOD_HEALER);
-        linkUnitAndToken("120", GameConstants.EnjinTokenKeys.GOD_DESTROYER_2);
-        linkUnitAndToken("121", GameConstants.EnjinTokenKeys.GOD_SCOUT);
+        linkUnitAndToken("115", GameEnjinTokenKeys.GOD_TANK_1);
+        linkUnitAndToken("116", GameEnjinTokenKeys.GOD_TANK_2);
+        linkUnitAndToken("117", GameEnjinTokenKeys.GOD_DESTROYER_1);
+        linkUnitAndToken("118", GameEnjinTokenKeys.GOD_BOMBER);
+        linkUnitAndToken("119", GameEnjinTokenKeys.GOD_HEALER);
+        linkUnitAndToken("120", GameEnjinTokenKeys.GOD_DESTROYER_2);
+        linkUnitAndToken("121", GameEnjinTokenKeys.GOD_SCOUT);
 
-        linkUnitAndToken("122", GameConstants.EnjinTokenKeys.ENJIN_ALEX);
-        linkUnitAndToken("123", GameConstants.EnjinTokenKeys.ENJIN_EVAN);
-        linkUnitAndToken("124", GameConstants.EnjinTokenKeys.ENJIN_ESTHER);
-        linkUnitAndToken("125", GameConstants.EnjinTokenKeys.ENJIN_BRAD);
-        linkUnitAndToken("126", GameConstants.EnjinTokenKeys.ENJIN_LIZZ);
+        linkUnitAndToken("122", GameEnjinTokenKeys.ENJIN_ALEX);
+        linkUnitAndToken("123", GameEnjinTokenKeys.ENJIN_EVAN);
+        linkUnitAndToken("124", GameEnjinTokenKeys.ENJIN_ESTHER);
+        linkUnitAndToken("125", GameEnjinTokenKeys.ENJIN_BRAD);
+        linkUnitAndToken("126", GameEnjinTokenKeys.ENJIN_LIZZ);
 
-        linkUnitAndToken("129", GameConstants.EnjinTokenKeys.NARWHAL_BLUE);
-        linkUnitAndToken("130", GameConstants.EnjinTokenKeys.NARWHAL_CHEESE);
-        linkUnitAndToken("131", GameConstants.EnjinTokenKeys.NARWHAL_EMERALD);
-        linkUnitAndToken("132", GameConstants.EnjinTokenKeys.NARWHAL_CRIMSON);
-        linkUnitAndToken("133", GameConstants.EnjinTokenKeys.NARWHAL_DIAMOND);
+        linkUnitAndToken("129", GameEnjinTokenKeys.NARWHAL_BLUE);
+        linkUnitAndToken("130", GameEnjinTokenKeys.NARWHAL_CHEESE);
+        linkUnitAndToken("131", GameEnjinTokenKeys.NARWHAL_EMERALD);
+        linkUnitAndToken("132", GameEnjinTokenKeys.NARWHAL_CRIMSON);
+        linkUnitAndToken("133", GameEnjinTokenKeys.NARWHAL_DIAMOND);
 
-        linkUnitAndToken("127", GameConstants.EnjinTokenKeys.SWISSBORG_CYBORG);
-        linkUnitAndToken("128", GameConstants.EnjinTokenKeys.SHALWEND_WARGOD);
-        linkUnitAndToken("134", GameConstants.EnjinTokenKeys.SHALWEND_DEADLY_KNIGHT);
+        linkUnitAndToken("127", GameEnjinTokenKeys.SWISSBORG_CYBORG);
+        linkUnitAndToken("128", GameEnjinTokenKeys.SHALWEND_WARGOD);
+        linkUnitAndToken("134", GameEnjinTokenKeys.SHALWEND_DEADLY_KNIGHT);
 
-        linkUnitAndToken("135", GameConstants.EnjinTokenKeys.COZY_BLOBBY);
-        linkUnitAndToken("136", GameConstants.EnjinTokenKeys.ENJINEER_BLOBBY);
-        linkUnitAndToken("137", GameConstants.EnjinTokenKeys.VR_BLOBBY);
+        linkUnitAndToken("135", GameEnjinTokenKeys.COZY_BLOBBY);
+        linkUnitAndToken("136", GameEnjinTokenKeys.ENJINEER_BLOBBY);
+        linkUnitAndToken("137", GameEnjinTokenKeys.VR_BLOBBY);
     }
 
     private void linkUnitAndToken(string unitName, string tokenName)
@@ -1518,11 +1528,11 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
             inventoryManager.AddItem(GroupNames.LOOT_BOXES, boxIndex.ToString(), 0);
         }
 
-        addDefaultOreItemGroups(GameConstants.BoostEnjinOreItems.DAMAGE, GameConstants.BoostCategory.DAMAGE);
-        addDefaultOreItemGroups(GameConstants.BoostEnjinOreItems.DEFENSE, GameConstants.BoostCategory.DEFENSE);
-        addDefaultOreItemGroups(GameConstants.BoostEnjinOreItems.HEALTH, GameConstants.BoostCategory.HEALTH);
-        addDefaultOreItemGroups(GameConstants.BoostEnjinOreItems.POWER, GameConstants.BoostCategory.POWER);
-        addDefaultOreItemGroups(GameConstants.BoostEnjinOreItems.SIZE, GameConstants.BoostCategory.SIZE);
+        addDefaultOreItemGroups(BoostEnjinOreItems.DAMAGE, BoostCategory.DAMAGE);
+        addDefaultOreItemGroups(BoostEnjinOreItems.DEFENSE, BoostCategory.DEFENSE);
+        addDefaultOreItemGroups(BoostEnjinOreItems.HEALTH, BoostCategory.HEALTH);
+        addDefaultOreItemGroups(BoostEnjinOreItems.POWER, BoostCategory.POWER);
+        addDefaultOreItemGroups(BoostEnjinOreItems.SIZE, BoostCategory.SIZE);
 
         //addTokenWithdrawalDefaultValues();
 
@@ -1768,13 +1778,13 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
             string fileSec = fileManager.GetDataStringSec(dataString);
 
             Hashtable hashTable = new Hashtable();
-            hashTable.Add(GameNetwork.TransactionKeys.DATA, dataString);
-            hashTable.Add(GameNetwork.TransactionKeys.SEC_CODE, fileSec);
+            hashTable.Add(GameTransactionKeys.DATA, dataString);
+            hashTable.Add(GameTransactionKeys.SEC_CODE, fileSec);
 
-            NetworkManager.Transaction(GameConstants.Transactions.SAVE_FILE_TO_SERVER, hashTable, onSaveFileToServer);
+            NetworkManager.Transaction(GameTransactions.SAVE_FILE_TO_SERVER, hashTable, onSaveFileToServer);
         }
 
-        ObscuredPrefs.SetString(GameNetwork.TransactionKeys.DATA, dataString);
+        ObscuredPrefs.SetString(GameTransactionKeys.DATA, dataString);
         //======================================================================
 
         FileManager.Instance.SaveDataRaw(dataString);
@@ -1789,13 +1799,13 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
     {
         if (NetworkManager.LoggedIn && GameConfig.Instance.EnableServerBackup && GameStats.Instance.IsThereServerBackup)
         {
-            NetworkManager.Transaction(GameConstants.Transactions.LOAD_FILE_FROM_SERVER, onLoadFileFromServer);
+            NetworkManager.Transaction(GameTransactions.LOAD_FILE_FROM_SERVER, onLoadFileFromServer);
         }
         else
         {
             FileManager fileManager = FileManager.Instance;
 
-            string dataString = ObscuredPrefs.GetString(GameNetwork.TransactionKeys.DATA, "");
+            string dataString = ObscuredPrefs.GetString(GameTransactionKeys.DATA, "");
 
             if (dataString != "")
             {
@@ -1803,7 +1813,7 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
                 {
                     Debug.LogWarning("LoadBackupSave::Security Breach.");
                     dataString = "";
-                    ObscuredPrefs.SetString(GameNetwork.TransactionKeys.DATA, dataString);
+                    ObscuredPrefs.SetString(GameTransactionKeys.DATA, dataString);
                 }
 
                 fileManager.SaveDataRaw(dataString);
@@ -1821,8 +1831,8 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
 
         SimpleJSON.JSONNode response_hash = response[0];
 
-        string dataString = response_hash[GameNetwork.TransactionKeys.DATA];
-        string sec = response_hash[GameNetwork.TransactionKeys.SEC_CODE];
+        string dataString = response_hash[GameTransactionKeys.DATA];
+        string sec = response_hash[GameTransactionKeys.SEC_CODE];
 
         if (!string.IsNullOrEmpty(dataString))
         {
@@ -1841,7 +1851,7 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
 
     public bool IsTherePrefsBackupSave()
     {
-        string key = GameNetwork.TransactionKeys.DATA;
+        string key = GameTransactionKeys.DATA;
         bool isThereBackupSave = (ObscuredPrefs.HasKey(key) && (ObscuredPrefs.GetString(key, "") != ""));
 
         if (GameHacks.Instance.NegatePrefsBackup)

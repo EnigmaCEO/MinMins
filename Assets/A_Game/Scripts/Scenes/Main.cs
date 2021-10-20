@@ -296,8 +296,8 @@ public class Main : EnigmaScene
         yield return new WaitForSeconds(delay);
         Debug.Log("Checking server for Link3");
         Hashtable val = new Hashtable();
-        val.Add(NetworkManager.TransactionKeys.GAME, GameNetwork.TRANSACTION_GAME_NAME);
-        NetworkManager.Transaction(EnigmaConstants.Transactions.ENJIN_LINKED, val, onLinkedTransaction);
+        val.Add(EnigmaNodeKeys.GAME, GameNetwork.TRANSACTION_GAME_NAME);
+        NetworkManager.Transaction(EnigmaTransactions.ENJIN_LINKED, val, onLinkedTransaction);
 
         yield break;
     }
@@ -537,114 +537,114 @@ public class Main : EnigmaScene
 
             GameInventory gameInventory = GameInventory.Instance;
 
-            addToEnjinItemDisplay(EnigmaConstants.EnjinTokenKeys.ENJIN_MFT);
-            addToEnjinItemDisplay(EnigmaConstants.EnjinTokenKeys.ENIGMA_TOKEN);
+            addToEnjinItemDisplay(EnigmaTokenKeys.ENJIN_MFT);
+            addToEnjinItemDisplay(EnigmaTokenKeys.ENIGMA_TOKEN);
 
-            addToEnjinItemDisplay(EnjinTokenKeys.MINMINS_TOKEN);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.MINMINS_TOKEN);
 
-            addToEnjinItemDisplay(EnjinTokenKeys.QUEST_DEADLY_KNIGHT_SHALWEND);
-            addToEnjinItemDisplay(EnjinTokenKeys.QUEST_WARGOD_SHALWEND);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.QUEST_DEADLY_KNIGHT_SHALWEND);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.QUEST_WARGOD_SHALWEND);
 
-            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_MAXIM);
-            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_WITEK);
-            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_BRYANA);
-            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_TASSIO);
-            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_SIMON);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_MAXIM);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_WITEK);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_BRYANA);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_TASSIO);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_SIMON);
 
-            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_ESTHER);
-            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_ALEX);
-            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_EVAN);
-            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_LIZZ);
-            addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_BRAD);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_ESTHER);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_ALEX);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_EVAN);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_LIZZ);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_BRAD);
 
-            addToEnjinItemDisplay(EnjinTokenKeys.SHALWEND_DEADLY_KNIGHT);
-            addToEnjinItemDisplay(EnjinTokenKeys.KNIGHT_HEALER);
-            addToEnjinItemDisplay(EnjinTokenKeys.KNIGHT_BOMBER);
-            addToEnjinItemDisplay(EnjinTokenKeys.KNIGHT_DESTROYER);
-            addToEnjinItemDisplay(EnjinTokenKeys.KNIGHT_SCOUT);
-            addToEnjinItemDisplay(EnjinTokenKeys.KNIGHT_TANK);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.SHALWEND_DEADLY_KNIGHT);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.KNIGHT_HEALER);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.KNIGHT_BOMBER);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.KNIGHT_DESTROYER);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.KNIGHT_SCOUT);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.KNIGHT_TANK);
 
-            addToEnjinItemDisplay(EnjinTokenKeys.DEMON_HEALER);
-            addToEnjinItemDisplay(EnjinTokenKeys.DEMON_BOMBER);
-            addToEnjinItemDisplay(EnjinTokenKeys.DEMON_DESTROYER);
-            addToEnjinItemDisplay(EnjinTokenKeys.DEMON_SCOUT);
-            addToEnjinItemDisplay(EnjinTokenKeys.DEMON_TANK);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.DEMON_HEALER);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.DEMON_BOMBER);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.DEMON_DESTROYER);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.DEMON_SCOUT);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.DEMON_TANK);
 
-            addToEnjinItemDisplay(EnjinTokenKeys.NARWHAL_BLUE);
-            addToEnjinItemDisplay(EnjinTokenKeys.NARWHAL_CHEESE);
-            addToEnjinItemDisplay(EnjinTokenKeys.NARWHAL_EMERALD);
-            addToEnjinItemDisplay(EnjinTokenKeys.NARWHAL_CRIMSON);
-            addToEnjinItemDisplay(EnjinTokenKeys.NARWHAL_DIAMOND);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.NARWHAL_BLUE);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.NARWHAL_CHEESE);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.NARWHAL_EMERALD);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.NARWHAL_CRIMSON);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.NARWHAL_DIAMOND);
 
-            addToEnjinItemDisplay(EnjinTokenKeys.SWISSBORG_CYBORG);
-            addToEnjinItemDisplay(EnjinTokenKeys.SHALWEND_WARGOD);
-            addToEnjinItemDisplay(EnjinTokenKeys.GOD_ENIGMA);
-            addToEnjinItemDisplay(EnjinTokenKeys.GOD_BOMBER);
-            addToEnjinItemDisplay(EnjinTokenKeys.GOD_DESTROYER_1);
-            addToEnjinItemDisplay(EnjinTokenKeys.GOD_DESTROYER_2);
-            addToEnjinItemDisplay(EnjinTokenKeys.GOD_HEALER);
-            addToEnjinItemDisplay(EnjinTokenKeys.GOD_SCOUT);
-            addToEnjinItemDisplay(EnjinTokenKeys.GOD_TANK_1);
-            addToEnjinItemDisplay(EnjinTokenKeys.GOD_TANK_2);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.SWISSBORG_CYBORG);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.SHALWEND_WARGOD);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.GOD_ENIGMA);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.GOD_BOMBER);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.GOD_DESTROYER_1);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.GOD_DESTROYER_2);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.GOD_HEALER);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.GOD_SCOUT);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.GOD_TANK_1);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.GOD_TANK_2);
 
-            addToEnjinItemDisplay(EnjinTokenKeys.COZY_BLOBBY);
-            addToEnjinItemDisplay(EnjinTokenKeys.ENJINEER_BLOBBY);
-            addToEnjinItemDisplay(EnjinTokenKeys.VR_BLOBBY);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.COZY_BLOBBY);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.ENJINEER_BLOBBY);
+            addToEnjinItemDisplay(GameEnjinTokenKeys.VR_BLOBBY);
 
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_1, "Damage Ore +1");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_2, "Damage Ore +2");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_3, "Damage Ore +3");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_4, "Damage Ore +4");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_5, "Damage Ore +5");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_6, "Damage Ore +6");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_7, "Damage Ore +7");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_8, "Damage Ore +8");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_9, "Damage Ore +9");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_10, "Damage Ore +10");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_1, "Damage Ore +1");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_2, "Damage Ore +2");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_3, "Damage Ore +3");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_4, "Damage Ore +4");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_5, "Damage Ore +5");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_6, "Damage Ore +6");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_7, "Damage Ore +7");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_8, "Damage Ore +8");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_9, "Damage Ore +9");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_DAMAGE_ORE_ITEM_10, "Damage Ore +10");
 
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_1, "Defense Ore +1");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_2, "Defense Ore +2");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_3, "Defense Ore +3");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_4, "Defense Ore +4");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_5, "Defense Ore +5");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_6, "Defense Ore +6");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_7, "Defense Ore +7");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_8, "Defense Ore +8");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_9, "Defense Ore +9");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_10, "Defense Ore +10");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_1, "Defense Ore +1");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_2, "Defense Ore +2");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_3, "Defense Ore +3");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_4, "Defense Ore +4");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_5, "Defense Ore +5");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_6, "Defense Ore +6");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_7, "Defense Ore +7");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_8, "Defense Ore +8");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_9, "Defense Ore +9");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_DEFENSE_ORE_ITEM_10, "Defense Ore +10");
 
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_1, "Health Ore +1");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_2, "Health Ore +2");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_3, "Health Ore +3");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_4, "Health Ore +4");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_5, "Health Ore +5");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_6, "Health Ore +6");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_7, "Health Ore +7");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_8, "Health Ore +8");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_9, "Health Ore +9");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_10, "Health Ore +10");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_1, "Health Ore +1");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_2, "Health Ore +2");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_3, "Health Ore +3");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_4, "Health Ore +4");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_5, "Health Ore +5");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_6, "Health Ore +6");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_7, "Health Ore +7");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_8, "Health Ore +8");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_9, "Health Ore +9");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_HEALTH_ORE_ITEM_10, "Health Ore +10");
 
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_POWER_ORE_ITEM_1, "Power Ore +1");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_POWER_ORE_ITEM_2, "Power Ore +2");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_POWER_ORE_ITEM_3, "Power Ore +3");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_POWER_ORE_ITEM_4, "Power Ore +4");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_POWER_ORE_ITEM_5, "Power Ore +5");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_POWER_ORE_ITEM_6, "Power Ore +6");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_POWER_ORE_ITEM_7, "Power Ore +7");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_POWER_ORE_ITEM_8, "Power Ore +8");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_POWER_ORE_ITEM_9, "Power Ore +9");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_POWER_ORE_ITEM_10, "Power Ore +10");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_POWER_ORE_ITEM_1, "Power Ore +1");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_POWER_ORE_ITEM_2, "Power Ore +2");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_POWER_ORE_ITEM_3, "Power Ore +3");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_POWER_ORE_ITEM_4, "Power Ore +4");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_POWER_ORE_ITEM_5, "Power Ore +5");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_POWER_ORE_ITEM_6, "Power Ore +6");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_POWER_ORE_ITEM_7, "Power Ore +7");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_POWER_ORE_ITEM_8, "Power Ore +8");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_POWER_ORE_ITEM_9, "Power Ore +9");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_POWER_ORE_ITEM_10, "Power Ore +10");
 
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_1, "Size Ore +1");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_2, "Size Ore +2");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_3, "Size Ore +3");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_4, "Size Ore +4");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_5, "Size Ore +5");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_6, "Size Ore +6");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_7, "Size Ore +7");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_8, "Size Ore +8");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_9, "Size Ore +9");
-            //addToEnjinItemDisplay(EnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_10, "Size Ore +10");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_1, "Size Ore +1");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_2, "Size Ore +2");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_3, "Size Ore +3");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_4, "Size Ore +4");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_5, "Size Ore +5");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_6, "Size Ore +6");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_7, "Size Ore +7");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_8, "Size Ore +8");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_9, "Size Ore +9");
+            //addToEnjinItemDisplay(GameEnjinTokenKeys.ENJIN_SIZE_ORE_ITEM_10, "Size Ore +10");
         }
     }
 }

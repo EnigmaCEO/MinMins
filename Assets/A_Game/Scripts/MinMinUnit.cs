@@ -6,32 +6,6 @@ using UnityEngine;
 
 public class MinMinUnit : NetworkEntity
 {
-    //public enum Types
-    //{
-    //    None,
-    //    Healer,
-    //    Bomber,
-    //    Tank,
-    //    Destroyer,
-    //    Scout
-    //}
-
-    //public enum EffectNames
-    //{
-    //    None,
-    //    FireExplosion = 1,
-    //    LifeArea,
-    //    LightningProjectile,
-    //    ScoutLight,
-    //    ShieldEffect,
-    //    //Six
-    //    FireExplosionDemon,
-    //    LifeAreaDemon,
-    //    LightningProjectileDemon,
-    //    ScoutLightDemon,
-    //    ShieldEffectDemon,
-    //}
-
     public float Strength = 1;
     public float Defense = 1;
 
@@ -122,7 +96,7 @@ public class MinMinUnit : NetworkEntity
         _teamName = teamName;
         _teamIndex = teamIndex;
 
-        bool isHost = (teamName == GameNetwork.TeamNames.HOST);
+        bool isHost = (teamName == TeamNames.HOST);
 
         Vector3 localScale;
 

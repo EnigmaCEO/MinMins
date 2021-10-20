@@ -236,9 +236,9 @@ public class EnjinLogin : MonoBehaviour
         //     print("onRegistration: " + response.ToString());
 
             SimpleJSON.JSONNode response_hash = response[0];
-            string status = response_hash[NetworkManager.TransactionKeys.STATUS].ToString().Trim('"');
+            string status = response_hash[EnigmaNodeKeys.STATUS].ToString().Trim('"');
 
-            if (status == NetworkManager.StatusOptions.SUCCESS)
+            if (status == EnigmaServerStatuses.SUCCESS)
             {
                 // print("onRegistration SUCCESS");
                 completeLogin(response_hash);
@@ -249,15 +249,15 @@ public class EnjinLogin : MonoBehaviour
                 EnableLoginWindow();
                 string term = "";
 
-                if (status == NetworkManager.StatusOptions.ERR_REGISTER)
+                if (status == EnigmaServerStatuses.ERR_REGISTER)
                 {
                     term = "Register Error";
                 }
-                else if (status == NetworkManager.StatusOptions.ERR_INVALID_PASSWORD)
+                else if (status == EnigmaServerStatuses.ERR_INVALID_PASSWORD)
                 {
                     term = "Invalid Password";
                 }
-                else if (status == NetworkManager.StatusOptions.ERR_INVALID_USERNAME)
+                else if (status == EnigmaServerStatuses.ERR_INVALID_USERNAME)
                 {
                     term = "Invalid Username";
                 }
@@ -295,22 +295,22 @@ public class EnjinLogin : MonoBehaviour
         GameHacks gameHacks = GameHacks.Instance;
         GameInventory gameInventory = GameInventory.Instance;
 
-        JSONNode userDataNode = response_hash[NetworkManager.TransactionKeys.USER_DATA];
+        JSONNode userDataNode = response_hash[EnigmaNodeKeys.USER_DATA];
         if (userDataNode != null)
         {
-            JSONNode hasPurchasedNode = userDataNode[NetworkManager.TransactionKeys.PURCHASED];
+            JSONNode hasPurchasedNode = userDataNode[EnigmaNodeKeys.PURCHASED];
             gameStats.HasPurchased = ((hasPurchasedNode != null) && (hasPurchasedNode.AsInt == 1));
 
-            JSONNode isThereServerBackupNode = userDataNode[GameNetwork.TransactionKeys.BACKUP];
+            JSONNode isThereServerBackupNode = userDataNode[GameTransactionKeys.BACKUP];
             gameStats.IsThereServerBackup = ((isThereServerBackupNode != null) && (isThereServerBackupNode.AsInt == 1));
 
-            JSONNode ratingNode = userDataNode[GameNetwork.TransactionKeys.RATING];
+            JSONNode ratingNode = userDataNode[GameTransactionKeys.RATING];
             if (ratingNode != null)
             {
                 gameStats.Rating = ratingNode.AsInt;
             }
 
-            JSONNode userNameNode = userDataNode[GameNetwork.TransactionKeys.USERNAME];
+            JSONNode userNameNode = userDataNode[GameTransactionKeys.USERNAME];
             if (userNameNode != null)
             {
                 NetworkManager.SetLocalPlayerNickName(userNameNode.ToString().Trim('"'));
@@ -320,7 +320,7 @@ public class EnjinLogin : MonoBehaviour
         string enjinId = "null";
         if (userDataNode != null)
         {
-            JSONNode enjinIdNode = userDataNode[NetworkManager.TransactionKeys.ENJIN_ID];
+            JSONNode enjinIdNode = userDataNode[EnigmaNodeKeys.ENJIN_ID];
             if (enjinIdNode != null)
             {
                 enjinId = enjinIdNode.ToString().Trim('"');
@@ -343,7 +343,7 @@ public class EnjinLogin : MonoBehaviour
             string enjinCode = "null";
             if (userDataNode != null)
             {
-                JSONNode enjinCodeNode = userDataNode[NetworkManager.TransactionKeys.ENJIN_CODE];
+                JSONNode enjinCodeNode = userDataNode[EnigmaNodeKeys.ENJIN_CODE];
                 if (enjinCodeNode != null)
                 {
                     enjinCode = enjinCodeNode.ToString().Trim('"');
@@ -372,7 +372,7 @@ public class EnjinLogin : MonoBehaviour
 
             gameNetwork.UpdateEnjinGoodies(response_hash, true);
 
-            JSONNode trainingRewardsNode = response_hash[NetworkManager.TransactionKeys.REWARDS];
+            JSONNode trainingRewardsNode = response_hash[EnigmaNodeKeys.REWARDS];
             if (trainingRewardsNode != null)
             {
                 JSONArray trainingRewards = trainingRewardsNode as JSONArray;
@@ -414,9 +414,9 @@ public class EnjinLogin : MonoBehaviour
             Debug.Log("onLogin: " + response.ToString());
 
             SimpleJSON.JSONNode response_hash = response[0];
-            string status = response_hash[NetworkManager.TransactionKeys.STATUS].ToString().Trim('"');
+            string status = response_hash[EnigmaNodeKeys.STATUS].ToString().Trim('"');
 
-            if (status == NetworkManager.StatusOptions.SUCCESS)
+            if (status == EnigmaServerStatuses.SUCCESS)
             {
                 // print("onRegistration SUCCESS");
 
@@ -445,11 +445,11 @@ public class EnjinLogin : MonoBehaviour
                 EnableLoginWindow();
                 string term = "";
 
-                if (status == NetworkManager.StatusOptions.ERR_REGISTER)
+                if (status == EnigmaServerStatuses.ERR_REGISTER)
                     term = "Register Error";
-                else if (status == NetworkManager.StatusOptions.ERR_INVALID_PASSWORD)
+                else if (status == EnigmaServerStatuses.ERR_INVALID_PASSWORD)
                     term = "Invalid Password";
-                else if (status == NetworkManager.StatusOptions.ERR_INVALID_USERNAME)
+                else if (status == EnigmaServerStatuses.ERR_INVALID_USERNAME)
                     term = "Invalid Username";
                 else
                     term = "Server Error";

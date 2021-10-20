@@ -74,11 +74,6 @@ namespace GameConstants
     {
         public const string PRIVATE_ROOM_ALREADY_USED = "Name is already used. Please provide another.";
         public const string LOADING = "Loading...";
-        public const string PERFORMING_WITHDRAWAL = "Tokenizing...";
-        public const string WITHDRAWAL_DESCRIPTION = "Tokens are sent to your wallet in exchange for JENJ. After clicking Start look for the wallet notification to approve the trade.";
-        public const string GET_ENJIN_WALLET_DESCRIPTION = "Press OK to request an Enjin Wallet so you can withdraw your tokens. Close window to go back.";
-        public const string WITHDRAWAL_COMPLETED = "Withdrawal completed!";
-        public const string WITHDRAWAL_FAILED = "Withdrawal failed. Please try again.";
         public const string ENJIN_AUTO_WITHDRAWAL = "* Units can be tokenized";
     }
 
@@ -110,131 +105,6 @@ namespace GameConstants
         public const string UI_BACK = "ui2";
     }
 
-    public class EnjinTokenKeys
-    {
-        public const string MINMINS_TOKEN = "minmins_token";
-
-        public const string ENJIN_MAXIM = "enjin_maxim";
-        public const string ENJIN_WITEK = "enjin_witek";
-        public const string ENJIN_BRYANA = "enjin_bryana";
-        public const string ENJIN_TASSIO = "enjin_tassio";
-        public const string ENJIN_SIMON = "enjin_simon";
-
-        public const string ENJIN_ESTHER = "enjin_esther"; //fairy 124
-        public const string ENJIN_ALEX = "enjin_alex";  //black 122
-        public const string ENJIN_LIZZ = "enjin_lizz";  //fire 126
-        public const string ENJIN_EVAN = "enjin_evan";  //wizard 123
-        public const string ENJIN_BRAD = "enjin_brad";  //book 125
-
-        public const string ENJIN_SWORD = "enjin_sword";
-        public const string ENJIN_ARMOR = "enjin_armor";
-        public const string ENJIN_SHADOWSONG = "enjin_shadowsong";
-        public const string ENJIN_BULL = "enjin_bull";
-
-        public const string KNIGHT_HEALER = "knight_healer";
-        public const string KNIGHT_BOMBER = "knight_bomber";
-        public const string KNIGHT_SCOUT = "knight_scout";
-        public const string KNIGHT_DESTROYER = "knight_destroyer";
-        public const string KNIGHT_TANK = "knight_tank";
-
-        public const string DEMON_HEALER = "demon_healer";
-        public const string DEMON_BOMBER = "demon_bomber";
-        public const string DEMON_SCOUT = "demon_scout";
-        public const string DEMON_DESTROYER = "demon_destroyer";
-        public const string DEMON_TANK = "demon_tank";
-
-        public const string GOD_HEALER = "god_healer";
-        public const string GOD_BOMBER = "god_bomber";
-        public const string GOD_SCOUT = "god_scout";
-        public const string GOD_DESTROYER_1 = "god_destroyer_1";
-        public const string GOD_DESTROYER_2 = "god_destroyer_2";
-        public const string GOD_TANK_1 = "god_tank_1";
-        public const string GOD_TANK_2 = "god_tank_2";
-        public const string GOD_ENIGMA = "god_enigma";
-
-        public const string SWISSBORG_CYBORG = "swissborg_cyborg";
-        public const string SHALWEND_WARGOD = "shalwend_wargod";
-        public const string SHALWEND_DEADLY_KNIGHT = "shalwend_deadlyknight";
-
-        public const string NARWHAL_BLUE = "narwhal_blue";
-        public const string NARWHAL_CHEESE = "narwhal_cheese";
-        public const string NARWHAL_EMERALD = "narwhal_emerald";
-        public const string NARWHAL_CRIMSON = "narwhal_crimson";
-        public const string NARWHAL_DIAMOND = "narwhal_diamond";
-
-        public const string QUEST_WARGOD_SHALWEND = "quest_shalwend";
-        public const string QUEST_DEADLY_KNIGHT_SHALWEND = "quest_deadlyknight";
-
-        public const string COZY_BLOBBY = "cozy_blobby";
-        public const string ENJINEER_BLOBBY = "enjineer_blobby";
-        public const string VR_BLOBBY = "vr_blobby";
-
-        /*
-        public const string ENJIN_DEFENSE_ORE_ITEM_1 = "enjin_defense_ore_1";
-        public const string ENJIN_DEFENSE_ORE_ITEM_2 = "enjin_defense_ore_2";
-        public const string ENJIN_DEFENSE_ORE_ITEM_3 = "enjin_defense_ore_3";
-        public const string ENJIN_DEFENSE_ORE_ITEM_4 = "enjin_defense_ore_4";
-        public const string ENJIN_DEFENSE_ORE_ITEM_5 = "enjin_defense_ore_5";
-        public const string ENJIN_DEFENSE_ORE_ITEM_6 = "enjin_defense_ore_6";
-        public const string ENJIN_DEFENSE_ORE_ITEM_7 = "enjin_defense_ore_7";
-        public const string ENJIN_DEFENSE_ORE_ITEM_8 = "enjin_defense_ore_8";
-        public const string ENJIN_DEFENSE_ORE_ITEM_9 = "enjin_defense_ore_9";
-        public const string ENJIN_DEFENSE_ORE_ITEM_10 = "enjin_defense_ore_10";
-
-        public const string ENJIN_HEALTH_ORE_ITEM_1 = "enjin_health_ore_1";
-        public const string ENJIN_HEALTH_ORE_ITEM_2 = "enjin_health_ore_2";
-        public const string ENJIN_HEALTH_ORE_ITEM_3 = "enjin_health_ore_3";
-        public const string ENJIN_HEALTH_ORE_ITEM_4 = "enjin_health_ore_4";
-        public const string ENJIN_HEALTH_ORE_ITEM_5 = "enjin_health_ore_5";
-        public const string ENJIN_HEALTH_ORE_ITEM_6 = "enjin_health_ore_6";
-        public const string ENJIN_HEALTH_ORE_ITEM_7 = "enjin_health_ore_7";
-        public const string ENJIN_HEALTH_ORE_ITEM_8 = "enjin_health_ore_8";
-        public const string ENJIN_HEALTH_ORE_ITEM_9 = "enjin_health_ore_9";
-        public const string ENJIN_HEALTH_ORE_ITEM_10 = "enjin_health_ore_10";
-
-        public const string ENJIN_POWER_ORE_ITEM_1 = "enjin_power_ore_1";
-        public const string ENJIN_POWER_ORE_ITEM_2 = "enjin_power_ore_2";
-        public const string ENJIN_POWER_ORE_ITEM_3 = "enjin_power_ore_3";
-        public const string ENJIN_POWER_ORE_ITEM_4 = "enjin_power_ore_4";
-        public const string ENJIN_POWER_ORE_ITEM_5 = "enjin_power_ore_5";
-        public const string ENJIN_POWER_ORE_ITEM_6 = "enjin_power_ore_6";
-        public const string ENJIN_POWER_ORE_ITEM_7 = "enjin_power_ore_7";
-        public const string ENJIN_POWER_ORE_ITEM_8 = "enjin_power_ore_8";
-        public const string ENJIN_POWER_ORE_ITEM_9 = "enjin_power_ore_9";
-        public const string ENJIN_POWER_ORE_ITEM_10 = "enjin_power_ore_10";
-
-        public const string ENJIN_DAMAGE_ORE_ITEM_1 = "enjin_damage_ore_1";
-        public const string ENJIN_DAMAGE_ORE_ITEM_2 = "enjin_damage_ore_2";
-        public const string ENJIN_DAMAGE_ORE_ITEM_3 = "enjin_damage_ore_3";
-        public const string ENJIN_DAMAGE_ORE_ITEM_4 = "enjin_damage_ore_4";
-        public const string ENJIN_DAMAGE_ORE_ITEM_5 = "enjin_damage_ore_5";
-        public const string ENJIN_DAMAGE_ORE_ITEM_6 = "enjin_damage_ore_6";
-        public const string ENJIN_DAMAGE_ORE_ITEM_7 = "enjin_damage_ore_7";
-        public const string ENJIN_DAMAGE_ORE_ITEM_8 = "enjin_damage_ore_8";
-        public const string ENJIN_DAMAGE_ORE_ITEM_9 = "enjin_damage_ore_9";
-        public const string ENJIN_DAMAGE_ORE_ITEM_10 = "enjin_damage_ore_10";
-
-        public const string ENJIN_SIZE_ORE_ITEM_1 = "enjin_size_ore_1";
-        public const string ENJIN_SIZE_ORE_ITEM_2 = "enjin_size_ore_2";
-        public const string ENJIN_SIZE_ORE_ITEM_3 = "enjin_size_ore_3";
-        public const string ENJIN_SIZE_ORE_ITEM_4 = "enjin_size_ore_4";
-        public const string ENJIN_SIZE_ORE_ITEM_5 = "enjin_size_ore_5";
-        public const string ENJIN_SIZE_ORE_ITEM_6 = "enjin_size_ore_6";
-        public const string ENJIN_SIZE_ORE_ITEM_7 = "enjin_size_ore_7";
-        public const string ENJIN_SIZE_ORE_ITEM_8 = "enjin_size_ore_8";
-        public const string ENJIN_SIZE_ORE_ITEM_9 = "enjin_size_ore_9";
-        public const string ENJIN_SIZE_ORE_ITEM_10 = "enjin_size_ore_10";
-        */
-    }
-
-    public class EnjinCodeKeys
-    {
-        public const string QUEST_BLUE_NARWHAL = "quest_bluenarwhal";
-        public const string QUEST_CHEESE_NARWHAL = "quest_cheesenarwhal";
-        public const string QUEST_EMERALD_NARWHAL = "quest_emeraldnarwhal";
-        public const string QUEST_CRIMSON_NARWHAL = "quest_crimsonnarwhal";
-    }
-
     public class BoxIndexes
     {
         public const int STARTER = 0;
@@ -243,21 +113,6 @@ namespace GameConstants
         public const int SPECIAL = 3;
         public const int DEMON = 4;
         public const int LEGEND = 5;
-    }
-
-    public class Transactions
-    {
-        public const int CHANGE_RATING = 18;
-        public const int RANK_CHANGED_TRANSACTION_ID = 19;
-        public const int COMPLETED_QUEST_ID = 20;
-
-        public const int SAVE_FILE_TO_SERVER = 25;
-        public const int LOAD_FILE_FROM_SERVER = 26;
-
-        public const int GET_QUEST_DATA = 27;
-        public const int NEW_TRAINING_LEVEL = 28;
-
-        public const int ENJIN_WITHDRAWAL = 29;
     }
 
     public class ResourcePaths

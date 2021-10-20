@@ -588,12 +588,12 @@ public class IAPManager : Manageable<IAPManager>, IStoreListener
                                                     );
 */
 
-                NetworkManager.Transaction(Transactions.PURCHASE, hashtable, onPurchaseTransaction);
+                NetworkManager.Transaction(EnigmaTransactions.PURCHASE, hashtable, onPurchaseTransaction);
             } 
             else
             {
                 hashtable.Add("results", "fail");
-                NetworkManager.Transaction(Transactions.PURCHASE, hashtable, onPurchaseTransaction);
+                NetworkManager.Transaction(EnigmaTransactions.PURCHASE, hashtable, onPurchaseTransaction);
             }
 #endif
         }

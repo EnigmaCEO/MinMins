@@ -13,7 +13,7 @@ public class GameCamera : MonoBehaviour
     [SerializeField] private float _movementDelay = 0.1f;
     [SerializeField] private float _movementTime = 1;
 
-    private string _positionSideTeam = GameNetwork.TeamNames.HOST;
+    private string _positionSideTeam = TeamNames.HOST;
 
     public delegate void OnMovementCompletedDelegate(string teamName);
     static public OnMovementCompletedDelegate OnMovementCompletedCallback;
@@ -22,7 +22,7 @@ public class GameCamera : MonoBehaviour
 
     public void SetCameraForGuest()
     {
-        _positionSideTeam = GameNetwork.TeamNames.GUEST;
+        _positionSideTeam = TeamNames.GUEST;
 
         MyCamera.projectionMatrix = MyCamera .projectionMatrix * Matrix4x4.Scale(new Vector3(-1, 1, 1));
         Vector3 team2_pos = _team2_transform.position;
@@ -60,11 +60,11 @@ public class GameCamera : MonoBehaviour
         {
             Transform sideTransform = null;
 
-            if (sideToMoveTeam == GameNetwork.TeamNames.HOST)
+            if (sideToMoveTeam == TeamNames.HOST)
             {
                 sideTransform = _team1_transform;
             }
-            else if (sideToMoveTeam == GameNetwork.TeamNames.GUEST)
+            else if (sideToMoveTeam == TeamNames.GUEST)
             {
                 sideTransform = _team2_transform;
             }

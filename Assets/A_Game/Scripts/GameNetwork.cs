@@ -9,140 +9,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using static Enigma.CoreSystems.NetworkManager;
 
+
 public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
 {
     public const string TRANSACTION_GAME_NAME = "MinMins";
-
-    public class TransactionKeys
-    {
-        public const string SEC_CODE = "code";
-        public const string DATA = "data";
-        public const string BACKUP = "backup";
-
-        public const string RATING = "rating";
-        public const string USERNAME = "username";
-
-        public const string QUEST = "quest";
-        public const string PROGRESS = "progress";
-        public const string LEADERS = "leaders";
-        public const string LEVEL = "level";
-
-        public const string REWARDS = "rewards";
-        public const string TOKEN_TYPE = "token_type";
-        public const string TOKEN_KEY = "token_code";
-        //public const string TOKEN_WITHDRAWN = "token_withdrawn";
-
-        public const string WINNER_NICKNAME = "winner_nickname";
-        public const string LOSER_NICKNAME = "loser_nickname";
-
-        public const string WINNER_DAMAGE_DEALT = "winner_damage_dealt";
-        public const string LOSER_DAMAGE_DEALT = "loser_damage_dealt";
-
-        public const string WINNER_UNITS_KILLED = "winner_units_killed";
-        public const string LOSER_UNITS_KILLED = "loser_units_killed";
-
-        public const string MATCH_DURATION = "match_duration";
-
-        public const string BALANCES = "balances";
-        public const string ENJ_BALANCE = "enjBalance";
-        public const string ETH_ADDRESS = "ethAddress";
-        public const string WALLET = "wallet";
-        public const string GAME_ID = "gameId";
-        public const string CODE = "code";
-    }
-
-    public class ServerResponseMessages
-    {
-        public const string SUCCESS = "SUCCESS";
-        public const string SERVER_ERROR = "Server Error";
-        public const string CONNECTION_ERROR = "Connection Error";
-        public const string PENDING = "PENDING";
-        public const string ERROR = "Error";
-    }
-
-    public class PlayerCustomProperties
-    {
-        public const string RATING = "Rating";
-        public const string SPECTATING = "Spectating";
-        public const string TEAM_UNITS = "Unit_Names";
-        public const string READY_TO_FIGHT = "Ready_To_Fight";
-
-        public const string POWER_BONUS = "Effect_Bonus";
-        public const string DAMAGE_BONUS = "Damage_Bonus";
-        public const string DEFENSE_BONUS = "Defense_Bonus";
-        public const string HEALTH_BONUS = "Health_Bonus";
-        public const string SIZE_BONUS = "Size_Bonus";
-    }
-
-    public class RoomCustomProperties
-    {
-        public const string ROUND_COUNT = "Round_Count";
-        public const string TEAM_IN_TURN = "Team_In_Turn";
-        public const string HOST_UNIT_INDEX = "Host_Unit_Index";
-        public const string GUEST_UNIT_INDEX = "Guest_Unit_Index";
-        public const string ACTIONS_LEFT = "Actions_Left";
-
-        public const string START_COUNT_DOWN_TIMER = "st";
-
-        public const string MATCH_START_TIME = "Match_Start_Time";
-        public const string MATCH_END_TIME = "Match_End_Time";
-        public const string MATCH_DURATION = "Match_Duration";
-        public const string WINNER_NICKNAME = "Winner_Nickname";
-        public const string LOSER_NICKNAME = "Loser_Nickname";
-
-        //public const string GAME_STATE = "gState";
-        //public const string PLAYER_LIST = "playerList";
-        //public const string HOST = "host";
-        public const string HOST_RATING = "Host_Rating";
-        public const string HOST_ID = "Host_Id";
-        public const string HOST_NAME = "Host_name";
-        public const string HOST_PING = "HostPing";
-        public const string GUEST_NAME = "Guest_Name";
-        public const string GUEST_RATING = "Guest_Rating";
-        public const string GUEST_PING = "Guest_Ping";
-        public const string TIME_ROOM_STARTED = "Time_Room_Started";
-        public const string IS_PRIVATE = "Is_Private";
-   
-        //public const string MAX_PLAYERS = "mp";
-
-        public const string HAS_PVP_AI = "Has_Pvp_Ai";
-    }
-
-    public class UnitRoomProperties
-    {
-        public const string HEALTH = "Unit_Health";
-        public const string MAX_HEALTH = "Unit_Max_Health";
-    }
-
-    public class TeamRoomProperties
-    {
-        public const string HEALTH = "Team_Health";
-        public const string MAX_HEALTH = "Team_Max_Health";
-
-        public const string PLAYER_NICKNAME = "Player_Nickname";
-        public const string DAMAGE_DEALT = "Damage_Dealt";
-        public const string DAMAGE_RECEIVED = "Damage_Received";
-        public const string UNITS_KILLED = "Units_Killed";
-    }
-
-    public class UnitPlayerProperties
-    {
-        public const string POSITION = "Position";
-        public const string EXPERIENCE = "Experience";
-
-        public const string LEVEL = "Level";
-        public const string STRENGHT = "Strenght";
-        public const string DEFENSE = "Defense";
-
-        public const string EFFECT_SCALE = "EffectScale";
-    }
-
-    public class TeamNames
-    {
-        public const string HOST = "Host";
-        public const string GUEST = "Guest";
-        public const string SPECTATOR = "Spectator";
-    }
 
     public class PopUpMessages
     {
@@ -256,10 +126,10 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
 
     private void setKeyAvailabilityFalseByDefault()
     {
-        SetEnjinKeyAvailable(EnigmaConstants.EnjinTokenKeys.ENJIN_MFT, false);
-        SetEnjinKeyAvailable(EnigmaConstants.EnjinTokenKeys.ENIGMA_TOKEN, false);
+        SetEnjinKeyAvailable(EnigmaTokenKeys.ENJIN_MFT, false);
+        SetEnjinKeyAvailable(EnigmaTokenKeys.ENIGMA_TOKEN, false);
 
-        SetEnjinKeyAvailable(EnjinTokenKeys.MINMINS_TOKEN, false);
+        SetEnjinKeyAvailable(GameEnjinTokenKeys.MINMINS_TOKEN, false);
 
         GameInventory gameInventory = GameInventory.Instance;
         List<string> legendUnits = GameInventory.Instance.GetLegendUnitNames();
@@ -269,15 +139,15 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
             SetEnjinKeyAvailable(tokenName, false);
         }
 
-        SetEnjinKeyAvailable(EnjinCodeKeys.QUEST_BLUE_NARWHAL, false);
-        SetEnjinKeyAvailable(EnjinCodeKeys.QUEST_CHEESE_NARWHAL, false);
-        SetEnjinKeyAvailable(EnjinCodeKeys.QUEST_EMERALD_NARWHAL, false);
-        SetEnjinKeyAvailable(EnjinCodeKeys.QUEST_CRIMSON_NARWHAL, false);
+        SetEnjinKeyAvailable(GameEnjinCodeKeys.QUEST_BLUE_NARWHAL, false);
+        SetEnjinKeyAvailable(GameEnjinCodeKeys.QUEST_CHEESE_NARWHAL, false);
+        SetEnjinKeyAvailable(GameEnjinCodeKeys.QUEST_EMERALD_NARWHAL, false);
+        SetEnjinKeyAvailable(GameEnjinCodeKeys.QUEST_CRIMSON_NARWHAL, false);
 
-        SetEnjinKeyAvailable(EnjinTokenKeys.QUEST_WARGOD_SHALWEND, false);
-        SetEnjinKeyAvailable(EnjinTokenKeys.QUEST_DEADLY_KNIGHT_SHALWEND, false);
+        SetEnjinKeyAvailable(GameEnjinTokenKeys.QUEST_WARGOD_SHALWEND, false);
+        SetEnjinKeyAvailable(GameEnjinTokenKeys.QUEST_DEADLY_KNIGHT_SHALWEND, false);
 
-        SetEnjinKeyAvailable(EnjinTokenKeys.GOD_ENIGMA, false);
+        SetEnjinKeyAvailable(GameEnjinTokenKeys.GOD_ENIGMA, false);
     }
 
     public void UpdateEnjinGoodies(JSONNode response_hash, bool updateEthAddress)
@@ -295,17 +165,17 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
         //        }
         //#endif
 
-        JSONNode userDataNode = response_hash[Enigma.CoreSystems.NetworkManager.TransactionKeys.USER_DATA];
+        JSONNode userDataNode = response_hash[EnigmaNodeKeys.USER_DATA];
         if (userDataNode != null)
         {
             updateWalletFromUserDataNode(userDataNode, updateEthAddress);
         }
 
-        determineServerTokenAvailable(userDataNode, EnigmaConstants.EnjinTokenKeys.ENJIN_MFT);
-        determineServerTokenAvailable(userDataNode, EnigmaConstants.EnjinTokenKeys.ENIGMA_TOKEN);
+        determineServerTokenAvailable(userDataNode, EnigmaTokenKeys.ENJIN_MFT);
+        determineServerTokenAvailable(userDataNode, EnigmaTokenKeys.ENIGMA_TOKEN);
 
-        determineServerTokenAvailable(userDataNode, EnjinTokenKeys.MINMINS_TOKEN);
-        determineServerTokenAvailable(userDataNode, EnjinTokenKeys.GOD_ENIGMA);
+        determineServerTokenAvailable(userDataNode, GameEnjinTokenKeys.MINMINS_TOKEN);
+        determineServerTokenAvailable(userDataNode, GameEnjinTokenKeys.GOD_ENIGMA);
 
         GameInventory gameInventory = GameInventory.Instance;
 
@@ -461,13 +331,13 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
     {
         string oppositeTeam = "";
 
-        if (teamName == GameNetwork.TeamNames.HOST)
+        if (teamName == TeamNames.HOST)
         {
-            oppositeTeam = GameNetwork.TeamNames.GUEST;
+            oppositeTeam = TeamNames.GUEST;
         }
-        else if (teamName == GameNetwork.TeamNames.GUEST)
+        else if (teamName == TeamNames.GUEST)
         {
-            oppositeTeam = GameNetwork.TeamNames.HOST;
+            oppositeTeam = TeamNames.HOST;
         }
 
         return oppositeTeam;
@@ -500,7 +370,7 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
     {
         int networkPlayerId = GetTeamNetworkPlayerId(teamName);
 
-        string unitsString = NetworkManager.GetAnyPlayerCustomProperty(GameNetwork.PlayerCustomProperties.TEAM_UNITS, teamName, networkPlayerId);
+        string unitsString = NetworkManager.GetAnyPlayerCustomProperty(GamePlayerProperties.TEAM_UNITS, teamName, networkPlayerId);
 
         if (unitsString == "")
         {
@@ -544,35 +414,35 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
 
             string value = updatedProperties[keyObject].ToString();
 
-            if (idPart == RoomCustomProperties.ROUND_COUNT)
+            if (idPart == GameRoomProperties.ROUND_COUNT)
             {
                 if (OnRoundStartedCallback != null)
                 {
                     OnRoundStartedCallback(int.Parse(value));
                 }
             }
-            else if (idPart == RoomCustomProperties.TEAM_IN_TURN)
+            else if (idPart == GameRoomProperties.TEAM_IN_TURN)
             {
                 if (OnTeamTurnChangedCallback != null)
                 {
                     OnTeamTurnChangedCallback(value);
                 }
             }
-            else if (idPart == RoomCustomProperties.HOST_UNIT_INDEX)
+            else if (idPart == GameRoomProperties.HOST_UNIT_INDEX)
             {
                 if (OnHostUnitIndexChangedCallback != null)
                 {
                     OnHostUnitIndexChangedCallback(int.Parse(value));
                 }
             }
-            else if (idPart == RoomCustomProperties.GUEST_UNIT_INDEX)
+            else if (idPart == GameRoomProperties.GUEST_UNIT_INDEX)
             {
                 if (OnGuestUnitIndexChangedCallback != null)
                 {
                     OnGuestUnitIndexChangedCallback(int.Parse(value));
                 }
             }
-            else if (idPart == RoomCustomProperties.ACTIONS_LEFT)
+            else if (idPart == GameRoomProperties.ACTIONS_LEFT)
             {
                 if (OnActionStartedCallback != null)
                 {
@@ -589,7 +459,7 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
                     OnUnitHealthSetCallback(team, unitName, int.Parse(value));
                 }
             }
-            else if (idPart == TeamRoomProperties.HEALTH)
+            else if (idPart == GameTeamRoomProperties.HEALTH)
             {
                 string team = keyParts[1];
 
@@ -598,21 +468,21 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
                     OnTeamHealthSetCallback(team, int.Parse(value));
                 }
             }
-            else if (idPart == RoomCustomProperties.HAS_PVP_AI)
+            else if (idPart == GameRoomProperties.HAS_PVP_AI)
             {
                 if (OnPvpAiSetCallback != null)
                 {
                     OnPvpAiSetCallback(bool.Parse(value));
                 }
             }
-            else if (idPart == RoomCustomProperties.HOST_PING)
+            else if (idPart == GameRoomProperties.HOST_PING)
             {
                 if (OnHostPingSetCallback != null)
                 {
                     OnHostPingSetCallback(int.Parse(value));
                 }
             }
-            else if (idPart == RoomCustomProperties.GUEST_PING)
+            else if (idPart == GameRoomProperties.GUEST_PING)
             {
                 if (OnGuestPingSetCallback != null)
                 {
@@ -643,21 +513,21 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
             string[] keyParts = key.Split(NetworkManager.Separators.KEYS);
             string idPart = keyParts[0];
 
-            if (idPart == PlayerCustomProperties.RATING)
+            if (idPart == GamePlayerProperties.RATING)
             {
                 if (OnPlayerRatingSetCallback != null)
                 {
                     OnPlayerRatingSetCallback(int.Parse(value));
                 }
             }
-            else if (idPart == PlayerCustomProperties.TEAM_UNITS)
+            else if (idPart == GamePlayerProperties.TEAM_UNITS)
             {
                 if (OnPlayerTeamUnitsSetCallback != null)
                 {
                     OnPlayerTeamUnitsSetCallback(teamName, value);
                 }
             }
-            else if (idPart == PlayerCustomProperties.READY_TO_FIGHT)
+            else if (idPart == GamePlayerProperties.READY_TO_FIGHT)
             {
                 if (OnReadyToFightCallback != null)
                 {
@@ -682,14 +552,14 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
 
         _matchResultshashTable.Clear();
 
-        _matchResultshashTable.Add(TransactionKeys.WINNER_NICKNAME, NetworkManager.GetRoomCustomProperty(GameNetwork.RoomCustomProperties.WINNER_NICKNAME));
-        _matchResultshashTable.Add(TransactionKeys.LOSER_NICKNAME, NetworkManager.GetRoomCustomProperty(GameNetwork.RoomCustomProperties.LOSER_NICKNAME));
+        _matchResultshashTable.Add(GameTransactionKeys.WINNER_NICKNAME, NetworkManager.GetRoomCustomProperty(GameRoomProperties.WINNER_NICKNAME));
+        _matchResultshashTable.Add(GameTransactionKeys.LOSER_NICKNAME, NetworkManager.GetRoomCustomProperty(GameRoomProperties.LOSER_NICKNAME));
 
-        _matchResultshashTable.Add(TransactionKeys.WINNER_DAMAGE_DEALT, GameNetwork.GetTeamRoomProperty(GameNetwork.TeamRoomProperties.DAMAGE_DEALT, winner));
-        _matchResultshashTable.Add(TransactionKeys.LOSER_DAMAGE_DEALT, GameNetwork.GetTeamRoomProperty(GameNetwork.TeamRoomProperties.DAMAGE_DEALT, loser));
+        _matchResultshashTable.Add(GameTransactionKeys.WINNER_DAMAGE_DEALT, GameNetwork.GetTeamRoomProperty(GameTeamRoomProperties.DAMAGE_DEALT, winner));
+        _matchResultshashTable.Add(GameTransactionKeys.LOSER_DAMAGE_DEALT, GameNetwork.GetTeamRoomProperty(GameTeamRoomProperties.DAMAGE_DEALT, loser));
 
-        _matchResultshashTable.Add(TransactionKeys.WINNER_UNITS_KILLED, GameNetwork.GetTeamRoomProperty(GameNetwork.TeamRoomProperties.UNITS_KILLED, winner));
-        _matchResultshashTable.Add(TransactionKeys.LOSER_UNITS_KILLED, GameNetwork.GetTeamRoomProperty(GameNetwork.TeamRoomProperties.UNITS_KILLED, loser));
+        _matchResultshashTable.Add(GameTransactionKeys.WINNER_UNITS_KILLED, GameNetwork.GetTeamRoomProperty(GameTeamRoomProperties.UNITS_KILLED, winner));
+        _matchResultshashTable.Add(GameTransactionKeys.LOSER_UNITS_KILLED, GameNetwork.GetTeamRoomProperty(GameTeamRoomProperties.UNITS_KILLED, loser));
 
         performResultsSendingTransaction();
     }
@@ -715,10 +585,10 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
         int unitTier = GameInventory.Instance.GetUnitTier(unitName);
         int baseMaxHealth = unitTier * _unitHealthByTier;
 
-        int healthBonus = NetworkManager.GetAnyPlayerCustomPropertyAsInt(GameNetwork.PlayerCustomProperties.HEALTH_BONUS, teamName, networkPlayerId);
-        int damageBonus = NetworkManager.GetAnyPlayerCustomPropertyAsInt(GameNetwork.PlayerCustomProperties.DAMAGE_BONUS, teamName, networkPlayerId);
-        int defenseBonus = NetworkManager.GetAnyPlayerCustomPropertyAsInt(GameNetwork.PlayerCustomProperties.DEFENSE_BONUS, teamName, networkPlayerId);
-        int powerBonus = NetworkManager.GetAnyPlayerCustomPropertyAsInt(GameNetwork.PlayerCustomProperties.POWER_BONUS, teamName, networkPlayerId);
+        int healthBonus = NetworkManager.GetAnyPlayerCustomPropertyAsInt(GamePlayerProperties.HEALTH_BONUS, teamName, networkPlayerId);
+        int damageBonus = NetworkManager.GetAnyPlayerCustomPropertyAsInt(GamePlayerProperties.DAMAGE_BONUS, teamName, networkPlayerId);
+        int defenseBonus = NetworkManager.GetAnyPlayerCustomPropertyAsInt(GamePlayerProperties.DEFENSE_BONUS, teamName, networkPlayerId);
+        int powerBonus = NetworkManager.GetAnyPlayerCustomPropertyAsInt(GamePlayerProperties.POWER_BONUS, teamName, networkPlayerId);
 
         string maxHealth = getIntStatByLevelAsString(baseMaxHealth, unitLevel, healthBonus);
 
@@ -786,7 +656,7 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
 
     private void performResultsSendingTransaction()
     {
-        NetworkManager.Transaction(GameConstants.Transactions.CHANGE_RATING, _matchResultshashTable, onSendMatchResults);
+        NetworkManager.Transaction(GameTransactions.CHANGE_RATING, _matchResultshashTable, onSendMatchResults);
     }
 
     private void onSendMatchResults(JSONNode response)
@@ -796,25 +666,25 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
             Debug.Log("onSendMatchResults -> response: " + response.ToString());
 
             JSONNode response_hash = response[0];
-            string status = response_hash[NetworkManager.TransactionKeys.STATUS].ToString().Trim('"');
+            string status = response_hash[EnigmaNodeKeys.STATUS].ToString().Trim('"');
 
-            if (status == NetworkManager.StatusOptions.SUCCESS)
+            if (status == EnigmaServerStatuses.SUCCESS)
             {
-                int updatedRating = response_hash[TransactionKeys.RATING].AsInt;
+                int updatedRating = response_hash[GameTransactionKeys.RATING].AsInt;
                 GameStats.Instance.Rating = updatedRating;
                 SetLocalPlayerRating(updatedRating, TeamNames.HOST);
-                _onSendResultsCallback(ServerResponseMessages.SUCCESS, updatedRating);
+                _onSendResultsCallback(EnigmaServerStatuses.SUCCESS, updatedRating);
             }
             else
             {
                 //StartCoroutine(retryResultsSending());
-                _onSendResultsCallback(ServerResponseMessages.SERVER_ERROR, -1);
+                _onSendResultsCallback(EnigmaServerStatuses.SERVER_ERROR, -1);
             }
         }
         else
         {
             //StartCoroutine(retryResultsSending());
-            _onSendResultsCallback(ServerResponseMessages.CONNECTION_ERROR, -1);
+            _onSendResultsCallback(EnigmaServerStatuses.CONNECTION_ERROR, -1);
         }
     }
 
@@ -836,12 +706,12 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
 
     static public string GetTeamInTurn()
     {
-        return NetworkManager.GetRoomCustomProperty(GameNetwork.RoomCustomProperties.TEAM_IN_TURN);
+        return NetworkManager.GetRoomCustomProperty(GameRoomProperties.TEAM_IN_TURN);
     }
 
     static public void SetTeamInTurn(string teamInTurn)
     {
-        NetworkManager.SetRoomCustomProperty(GameNetwork.RoomCustomProperties.TEAM_IN_TURN, teamInTurn);
+        NetworkManager.SetRoomCustomProperty(GameRoomProperties.TEAM_IN_TURN, teamInTurn);
     }
 
     static public void SetUnitRoomProperty(string property, string team, string unitName, string value)
@@ -889,7 +759,7 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
                 SetLocalPlayerUnitProperty(UnitPlayerProperties.POSITION, unitName, null, teamName);
             }
 
-            NetworkManager.SetLocalPlayerCustomProperty(PlayerCustomProperties.TEAM_UNITS, null, teamName);
+            NetworkManager.SetLocalPlayerCustomProperty(GamePlayerProperties.TEAM_UNITS, null, teamName);
         }
     }
 
@@ -925,17 +795,17 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
 
     static public int GetLocalPlayerRating(string teamName)
     {
-        return NetworkManager.GetLocalPlayerCustomPropertyAsInt(PlayerCustomProperties.RATING, teamName);
+        return NetworkManager.GetLocalPlayerCustomPropertyAsInt(GamePlayerProperties.RATING, teamName);
     }
 
     static public void SetLocalPlayerRating(int newRating, string teamName)
     {
-        NetworkManager.SetLocalPlayerCustomProperty(PlayerCustomProperties.RATING, newRating.ToString(), teamName);
+        NetworkManager.SetLocalPlayerCustomProperty(GamePlayerProperties.RATING, newRating.ToString(), teamName);
     }
 
     static public int GetAnyPlayerRating(int networkPlayerId, string teamName)
     {
-        return NetworkManager.GetAnyPlayerCustomPropertyAsInt(PlayerCustomProperties.RATING, teamName, networkPlayerId);
+        return NetworkManager.GetAnyPlayerCustomPropertyAsInt(GamePlayerProperties.RATING, teamName, networkPlayerId);
     }
 
     public void CreatePublicRoom()
@@ -967,9 +837,9 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
     {
         return new string[] 
         {
-            RoomCustomProperties.HOST_NAME, RoomCustomProperties.HOST_RATING, RoomCustomProperties.HOST_PING,
-            RoomCustomProperties.GUEST_NAME, RoomCustomProperties.GUEST_RATING, RoomCustomProperties.GUEST_PING,
-            RoomCustomProperties.IS_PRIVATE, RoomCustomProperties.HAS_PVP_AI
+            GameRoomProperties.HOST_NAME, GameRoomProperties.HOST_RATING, GameRoomProperties.HOST_PING,
+            GameRoomProperties.GUEST_NAME, GameRoomProperties.GUEST_RATING, GameRoomProperties.GUEST_PING,
+            GameRoomProperties.IS_PRIVATE, GameRoomProperties.HAS_PVP_AI
         };
     }
 
@@ -980,14 +850,14 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
         playerList.Add(NetworkManager.GetPlayerName());
 
         Hashtable customProps = new Hashtable();
-        customProps.Add(RoomCustomProperties.HOST_NAME, NetworkManager.GetPlayerName());
-        customProps.Add(RoomCustomProperties.HOST_RATING, GameStats.Instance.Rating);
-        customProps.Add(RoomCustomProperties.HOST_PING, NetworkManager.GetLocalPlayerPing());
-        customProps.Add(RoomCustomProperties.HAS_PVP_AI, "False");
-        customProps.Add(RoomCustomProperties.GUEST_NAME, "");
-        customProps.Add(RoomCustomProperties.GUEST_RATING, -1);
-        customProps.Add(RoomCustomProperties.GUEST_PING, -1);
-        customProps.Add(RoomCustomProperties.IS_PRIVATE, isPrivate.ToString());
+        customProps.Add(GameRoomProperties.HOST_NAME, NetworkManager.GetPlayerName());
+        customProps.Add(GameRoomProperties.HOST_RATING, GameStats.Instance.Rating);
+        customProps.Add(GameRoomProperties.HOST_PING, NetworkManager.GetLocalPlayerPing());
+        customProps.Add(GameRoomProperties.HAS_PVP_AI, "False");
+        customProps.Add(GameRoomProperties.GUEST_NAME, "");
+        customProps.Add(GameRoomProperties.GUEST_RATING, -1);
+        customProps.Add(GameRoomProperties.GUEST_PING, -1);
+        customProps.Add(GameRoomProperties.IS_PRIVATE, isPrivate.ToString());
 
         //customProps.Add(RoomCustomProperties.PLAYER_LIST, playerList.ToArray());
         //customProps.Add(RoomCustomProperties.HOST, NetworkManager.GetPlayerName());
@@ -1001,15 +871,15 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
     {
         GameStats.Instance.TeamBoostTokensOwnedByName.Clear();
 
-        checkSingleEnjinTeamBoostToken(response_hash, EnjinTokenKeys.ENJIN_SWORD, BoostEnjinTokenKeys.SWORD, BoostCategory.DAMAGE);
-        checkSingleEnjinTeamBoostToken(response_hash, EnjinTokenKeys.ENJIN_ARMOR, BoostEnjinTokenKeys.ARMOR, BoostCategory.DEFENSE);
-        checkSingleEnjinTeamBoostToken(response_hash, EnjinTokenKeys.ENJIN_SHADOWSONG, BoostEnjinTokenKeys.SHADOW_SONG, BoostCategory.HEALTH);
-        checkSingleEnjinTeamBoostToken(response_hash, EnjinTokenKeys.ENJIN_BULL, BoostEnjinTokenKeys.BULL, BoostCategory.POWER);
+        checkSingleEnjinTeamBoostToken(response_hash, GameEnjinTokenKeys.ENJIN_SWORD, BoostEnjinTokenKeys.SWORD, BoostCategory.DAMAGE);
+        checkSingleEnjinTeamBoostToken(response_hash, GameEnjinTokenKeys.ENJIN_ARMOR, BoostEnjinTokenKeys.ARMOR, BoostCategory.DEFENSE);
+        checkSingleEnjinTeamBoostToken(response_hash, GameEnjinTokenKeys.ENJIN_SHADOWSONG, BoostEnjinTokenKeys.SHADOW_SONG, BoostCategory.HEALTH);
+        checkSingleEnjinTeamBoostToken(response_hash, GameEnjinTokenKeys.ENJIN_BULL, BoostEnjinTokenKeys.BULL, BoostCategory.POWER);
     }
 
     private void checkSingleEnjinTeamBoostToken(SimpleJSON.JSONNode response_hash, string transactionKey, string name, string category)
     {
-        SimpleJSON.JSONNode boostNode = response_hash[NetworkManager.TransactionKeys.USER_DATA][transactionKey];
+        SimpleJSON.JSONNode boostNode = response_hash[EnigmaNodeKeys.USER_DATA][transactionKey];
         bool isAvailable = false;
 
         if (boostNode != null)
@@ -1035,16 +905,16 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
 
     private void updateWalletFromUserDataNode(JSONNode userDataNode, bool updateAddress)
     {
-        JSONNode balancesNode = userDataNode[TransactionKeys.BALANCES];
+        JSONNode balancesNode = userDataNode[GameTransactionKeys.BALANCES];
         if (balancesNode != null)
         {
-            JSONNode balancesData = balancesNode[TransactionKeys.DATA];
+            JSONNode balancesData = balancesNode[GameTransactionKeys.DATA];
             if (balancesData != null)
             {
-                JSONNode walletNode = balancesData[TransactionKeys.WALLET];
+                JSONNode walletNode = balancesData[GameTransactionKeys.WALLET];
                 if (walletNode != null)
                 {
-                    JSONNode enjBalanceNode = walletNode[TransactionKeys.ENJ_BALANCE];
+                    JSONNode enjBalanceNode = walletNode[GameTransactionKeys.ENJ_BALANCE];
                     if (enjBalanceNode != null)
                     {
                         string balanceString = enjBalanceNode.ToString();
@@ -1054,11 +924,11 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
 
                     if (updateAddress)
                     {
-                        JSONNode ethAddressNode = walletNode[TransactionKeys.ETH_ADDRESS];
+                        JSONNode ethAddressNode = walletNode[GameTransactionKeys.ETH_ADDRESS];
                         string ethString = ethAddressNode.ToString();
                         EthAdress = ethString.Trim('"');
 
-                        Hashtable hashtable = new Hashtable() { { TransactionKeys.GAME_ID, "1" }, { TransactionKeys.WALLET, EthAdress } };
+                        Hashtable hashtable = new Hashtable() { { GameTransactionKeys.GAME_ID, "1" }, { GameTransactionKeys.WALLET, EthAdress } };
                         StartCoroutine(checkNftEnjinTokenAvailable(hashtable, onCheckNftEnjinTokenAvailableResponse));
                     }
                 }
@@ -1086,7 +956,7 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
             int count = response.Count;
             for (int i = 0; i < count; i++)
             {
-                JSONNode codeNode = response[i][TransactionKeys.CODE];
+                JSONNode codeNode = response[i][GameTransactionKeys.CODE];
                 if (codeNode != null)
                 {
                     string code = codeNode.ToString();
@@ -1177,4 +1047,265 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
             }
         }
     }
+}
+
+public class GameEnjinCodeKeys
+{
+    public const string QUEST_BLUE_NARWHAL = "quest_bluenarwhal";
+    public const string QUEST_CHEESE_NARWHAL = "quest_cheesenarwhal";
+    public const string QUEST_EMERALD_NARWHAL = "quest_emeraldnarwhal";
+    public const string QUEST_CRIMSON_NARWHAL = "quest_crimsonnarwhal";
+}
+
+public class GameEnjinTokenKeys
+{
+    public const string MINMINS_TOKEN = "minmins_token";
+
+    public const string ENJIN_MAXIM = "enjin_maxim";
+    public const string ENJIN_WITEK = "enjin_witek";
+    public const string ENJIN_BRYANA = "enjin_bryana";
+    public const string ENJIN_TASSIO = "enjin_tassio";
+    public const string ENJIN_SIMON = "enjin_simon";
+
+    public const string ENJIN_ESTHER = "enjin_esther"; //fairy 124
+    public const string ENJIN_ALEX = "enjin_alex";  //black 122
+    public const string ENJIN_LIZZ = "enjin_lizz";  //fire 126
+    public const string ENJIN_EVAN = "enjin_evan";  //wizard 123
+    public const string ENJIN_BRAD = "enjin_brad";  //book 125
+
+    public const string ENJIN_SWORD = "enjin_sword";
+    public const string ENJIN_ARMOR = "enjin_armor";
+    public const string ENJIN_SHADOWSONG = "enjin_shadowsong";
+    public const string ENJIN_BULL = "enjin_bull";
+
+    public const string KNIGHT_HEALER = "knight_healer";
+    public const string KNIGHT_BOMBER = "knight_bomber";
+    public const string KNIGHT_SCOUT = "knight_scout";
+    public const string KNIGHT_DESTROYER = "knight_destroyer";
+    public const string KNIGHT_TANK = "knight_tank";
+
+    public const string DEMON_HEALER = "demon_healer";
+    public const string DEMON_BOMBER = "demon_bomber";
+    public const string DEMON_SCOUT = "demon_scout";
+    public const string DEMON_DESTROYER = "demon_destroyer";
+    public const string DEMON_TANK = "demon_tank";
+
+    public const string GOD_HEALER = "god_healer";
+    public const string GOD_BOMBER = "god_bomber";
+    public const string GOD_SCOUT = "god_scout";
+    public const string GOD_DESTROYER_1 = "god_destroyer_1";
+    public const string GOD_DESTROYER_2 = "god_destroyer_2";
+    public const string GOD_TANK_1 = "god_tank_1";
+    public const string GOD_TANK_2 = "god_tank_2";
+    public const string GOD_ENIGMA = "god_enigma";
+
+    public const string SWISSBORG_CYBORG = "swissborg_cyborg";
+    public const string SHALWEND_WARGOD = "shalwend_wargod";
+    public const string SHALWEND_DEADLY_KNIGHT = "shalwend_deadlyknight";
+
+    public const string NARWHAL_BLUE = "narwhal_blue";
+    public const string NARWHAL_CHEESE = "narwhal_cheese";
+    public const string NARWHAL_EMERALD = "narwhal_emerald";
+    public const string NARWHAL_CRIMSON = "narwhal_crimson";
+    public const string NARWHAL_DIAMOND = "narwhal_diamond";
+
+    public const string QUEST_WARGOD_SHALWEND = "quest_shalwend";
+    public const string QUEST_DEADLY_KNIGHT_SHALWEND = "quest_deadlyknight";
+
+    public const string COZY_BLOBBY = "cozy_blobby";
+    public const string ENJINEER_BLOBBY = "enjineer_blobby";
+    public const string VR_BLOBBY = "vr_blobby";
+
+    /*
+    public const string ENJIN_DEFENSE_ORE_ITEM_1 = "enjin_defense_ore_1";
+    public const string ENJIN_DEFENSE_ORE_ITEM_2 = "enjin_defense_ore_2";
+    public const string ENJIN_DEFENSE_ORE_ITEM_3 = "enjin_defense_ore_3";
+    public const string ENJIN_DEFENSE_ORE_ITEM_4 = "enjin_defense_ore_4";
+    public const string ENJIN_DEFENSE_ORE_ITEM_5 = "enjin_defense_ore_5";
+    public const string ENJIN_DEFENSE_ORE_ITEM_6 = "enjin_defense_ore_6";
+    public const string ENJIN_DEFENSE_ORE_ITEM_7 = "enjin_defense_ore_7";
+    public const string ENJIN_DEFENSE_ORE_ITEM_8 = "enjin_defense_ore_8";
+    public const string ENJIN_DEFENSE_ORE_ITEM_9 = "enjin_defense_ore_9";
+    public const string ENJIN_DEFENSE_ORE_ITEM_10 = "enjin_defense_ore_10";
+
+    public const string ENJIN_HEALTH_ORE_ITEM_1 = "enjin_health_ore_1";
+    public const string ENJIN_HEALTH_ORE_ITEM_2 = "enjin_health_ore_2";
+    public const string ENJIN_HEALTH_ORE_ITEM_3 = "enjin_health_ore_3";
+    public const string ENJIN_HEALTH_ORE_ITEM_4 = "enjin_health_ore_4";
+    public const string ENJIN_HEALTH_ORE_ITEM_5 = "enjin_health_ore_5";
+    public const string ENJIN_HEALTH_ORE_ITEM_6 = "enjin_health_ore_6";
+    public const string ENJIN_HEALTH_ORE_ITEM_7 = "enjin_health_ore_7";
+    public const string ENJIN_HEALTH_ORE_ITEM_8 = "enjin_health_ore_8";
+    public const string ENJIN_HEALTH_ORE_ITEM_9 = "enjin_health_ore_9";
+    public const string ENJIN_HEALTH_ORE_ITEM_10 = "enjin_health_ore_10";
+
+    public const string ENJIN_POWER_ORE_ITEM_1 = "enjin_power_ore_1";
+    public const string ENJIN_POWER_ORE_ITEM_2 = "enjin_power_ore_2";
+    public const string ENJIN_POWER_ORE_ITEM_3 = "enjin_power_ore_3";
+    public const string ENJIN_POWER_ORE_ITEM_4 = "enjin_power_ore_4";
+    public const string ENJIN_POWER_ORE_ITEM_5 = "enjin_power_ore_5";
+    public const string ENJIN_POWER_ORE_ITEM_6 = "enjin_power_ore_6";
+    public const string ENJIN_POWER_ORE_ITEM_7 = "enjin_power_ore_7";
+    public const string ENJIN_POWER_ORE_ITEM_8 = "enjin_power_ore_8";
+    public const string ENJIN_POWER_ORE_ITEM_9 = "enjin_power_ore_9";
+    public const string ENJIN_POWER_ORE_ITEM_10 = "enjin_power_ore_10";
+
+    public const string ENJIN_DAMAGE_ORE_ITEM_1 = "enjin_damage_ore_1";
+    public const string ENJIN_DAMAGE_ORE_ITEM_2 = "enjin_damage_ore_2";
+    public const string ENJIN_DAMAGE_ORE_ITEM_3 = "enjin_damage_ore_3";
+    public const string ENJIN_DAMAGE_ORE_ITEM_4 = "enjin_damage_ore_4";
+    public const string ENJIN_DAMAGE_ORE_ITEM_5 = "enjin_damage_ore_5";
+    public const string ENJIN_DAMAGE_ORE_ITEM_6 = "enjin_damage_ore_6";
+    public const string ENJIN_DAMAGE_ORE_ITEM_7 = "enjin_damage_ore_7";
+    public const string ENJIN_DAMAGE_ORE_ITEM_8 = "enjin_damage_ore_8";
+    public const string ENJIN_DAMAGE_ORE_ITEM_9 = "enjin_damage_ore_9";
+    public const string ENJIN_DAMAGE_ORE_ITEM_10 = "enjin_damage_ore_10";
+
+    public const string ENJIN_SIZE_ORE_ITEM_1 = "enjin_size_ore_1";
+    public const string ENJIN_SIZE_ORE_ITEM_2 = "enjin_size_ore_2";
+    public const string ENJIN_SIZE_ORE_ITEM_3 = "enjin_size_ore_3";
+    public const string ENJIN_SIZE_ORE_ITEM_4 = "enjin_size_ore_4";
+    public const string ENJIN_SIZE_ORE_ITEM_5 = "enjin_size_ore_5";
+    public const string ENJIN_SIZE_ORE_ITEM_6 = "enjin_size_ore_6";
+    public const string ENJIN_SIZE_ORE_ITEM_7 = "enjin_size_ore_7";
+    public const string ENJIN_SIZE_ORE_ITEM_8 = "enjin_size_ore_8";
+    public const string ENJIN_SIZE_ORE_ITEM_9 = "enjin_size_ore_9";
+    public const string ENJIN_SIZE_ORE_ITEM_10 = "enjin_size_ore_10";
+    */
+}
+
+public class GameTransactions
+{
+    public const int CHANGE_RATING = 18;
+    public const int RANK_CHANGED_TRANSACTION_ID = 19;
+    public const int COMPLETED_QUEST_ID = 20;
+
+    public const int SAVE_FILE_TO_SERVER = 25;
+    public const int LOAD_FILE_FROM_SERVER = 26;
+
+    public const int GET_QUEST_DATA = 27;
+    public const int NEW_TRAINING_LEVEL = 28;
+}
+
+public class GameTransactionKeys
+{
+    public const string SEC_CODE = "code";
+    public const string DATA = "data";
+    public const string BACKUP = "backup";
+
+    public const string RATING = "rating";
+    public const string USERNAME = "username";
+
+    public const string QUEST = "quest";
+    public const string PROGRESS = "progress";
+    public const string LEADERS = "leaders";
+    public const string LEVEL = "level";
+
+    public const string REWARDS = "rewards";
+    public const string TOKEN_TYPE = "token_type";
+    public const string TOKEN_KEY = "token_code";
+    //public const string TOKEN_WITHDRAWN = "token_withdrawn";
+
+    public const string WINNER_NICKNAME = "winner_nickname";
+    public const string LOSER_NICKNAME = "loser_nickname";
+
+    public const string WINNER_DAMAGE_DEALT = "winner_damage_dealt";
+    public const string LOSER_DAMAGE_DEALT = "loser_damage_dealt";
+
+    public const string WINNER_UNITS_KILLED = "winner_units_killed";
+    public const string LOSER_UNITS_KILLED = "loser_units_killed";
+
+    public const string MATCH_DURATION = "match_duration";
+
+    public const string BALANCES = "balances";
+    public const string ENJ_BALANCE = "enjBalance";
+    public const string ETH_ADDRESS = "ethAddress";
+    public const string WALLET = "wallet";
+    public const string GAME_ID = "gameId";
+    public const string CODE = "code";
+    public const string UUID = "uuid";
+}
+
+public class GamePlayerProperties
+{
+    public const string RATING = "Rating";
+    public const string SPECTATING = "Spectating";
+    public const string TEAM_UNITS = "Unit_Names";
+    public const string READY_TO_FIGHT = "Ready_To_Fight";
+
+    public const string POWER_BONUS = "Effect_Bonus";
+    public const string DAMAGE_BONUS = "Damage_Bonus";
+    public const string DEFENSE_BONUS = "Defense_Bonus";
+    public const string HEALTH_BONUS = "Health_Bonus";
+    public const string SIZE_BONUS = "Size_Bonus";
+}
+
+public class GameRoomProperties
+{
+    public const string ROUND_COUNT = "Round_Count";
+    public const string TEAM_IN_TURN = "Team_In_Turn";
+    public const string HOST_UNIT_INDEX = "Host_Unit_Index";
+    public const string GUEST_UNIT_INDEX = "Guest_Unit_Index";
+    public const string ACTIONS_LEFT = "Actions_Left";
+
+    public const string START_COUNT_DOWN_TIMER = "st";
+
+    public const string MATCH_START_TIME = "Match_Start_Time";
+    public const string MATCH_END_TIME = "Match_End_Time";
+    public const string MATCH_DURATION = "Match_Duration";
+    public const string WINNER_NICKNAME = "Winner_Nickname";
+    public const string LOSER_NICKNAME = "Loser_Nickname";
+
+    //public const string GAME_STATE = "gState";
+    //public const string PLAYER_LIST = "playerList";
+    //public const string HOST = "host";
+    public const string HOST_RATING = "Host_Rating";
+    public const string HOST_ID = "Host_Id";
+    public const string HOST_NAME = "Host_name";
+    public const string HOST_PING = "HostPing";
+    public const string GUEST_NAME = "Guest_Name";
+    public const string GUEST_RATING = "Guest_Rating";
+    public const string GUEST_PING = "Guest_Ping";
+    public const string TIME_ROOM_STARTED = "Time_Room_Started";
+    public const string IS_PRIVATE = "Is_Private";
+
+    //public const string MAX_PLAYERS = "mp";
+
+    public const string HAS_PVP_AI = "Has_Pvp_Ai";
+}
+
+public class GameTeamRoomProperties
+{
+    public const string HEALTH = "Team_Health";
+    public const string MAX_HEALTH = "Team_Max_Health";
+
+    public const string PLAYER_NICKNAME = "Player_Nickname";
+    public const string DAMAGE_DEALT = "Damage_Dealt";
+    public const string DAMAGE_RECEIVED = "Damage_Received";
+    public const string UNITS_KILLED = "Units_Killed";
+}
+
+public class UnitRoomProperties
+{
+    public const string HEALTH = "Unit_Health";
+    public const string MAX_HEALTH = "Unit_Max_Health";
+}
+
+public class UnitPlayerProperties
+{
+    public const string POSITION = "Position";
+    public const string EXPERIENCE = "Experience";
+
+    public const string LEVEL = "Level";
+    public const string STRENGHT = "Strenght";
+    public const string DEFENSE = "Defense";
+
+    public const string EFFECT_SCALE = "EffectScale";
+}
+
+public class TeamNames
+{
+    public const string HOST = "Host";
+    public const string GUEST = "Guest";
+    public const string SPECTATOR = "Spectator";
 }

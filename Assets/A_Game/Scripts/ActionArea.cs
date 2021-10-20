@@ -49,7 +49,7 @@ public class ActionArea : NetworkEntity
 
         if (OwnerUnitName != "")
         {
-            Strenght = float.Parse(getOwnerUnitProperty(GameNetwork.UnitPlayerProperties.STRENGHT));
+            Strenght = float.Parse(getOwnerUnitProperty(UnitPlayerProperties.STRENGHT));
         }
     }
 
@@ -145,7 +145,7 @@ public class ActionArea : NetworkEntity
 
         if (OwnerUnitName != ScoutQuestManager.QUEST_PLAYER_UNIT_NAME)
         {
-            scaleFactor = float.Parse(getOwnerUnitProperty(GameNetwork.UnitPlayerProperties.EFFECT_SCALE));
+            scaleFactor = float.Parse(getOwnerUnitProperty(UnitPlayerProperties.EFFECT_SCALE));
         }
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
@@ -233,9 +233,9 @@ public class ActionArea : NetworkEntity
 
         int targetUnitPlayerId = GameNetwork.GetTeamNetworkPlayerId(targetUnitTeam); 
 
-        int targetUnitHealth = GameNetwork.GetUnitRoomPropertyAsInt(GameNetwork.UnitRoomProperties.HEALTH, targetUnitTeam, targetUnitName);
+        int targetUnitHealth = GameNetwork.GetUnitRoomPropertyAsInt(UnitRoomProperties.HEALTH, targetUnitTeam, targetUnitName);
 
-        float targetUnitDefense = float.Parse(GameNetwork.GetAnyPlayerUnitProperty(GameNetwork.UnitPlayerProperties.DEFENSE, targetUnitName, targetUnitTeam, targetUnitPlayerId));
+        float targetUnitDefense = float.Parse(GameNetwork.GetAnyPlayerUnitProperty(UnitPlayerProperties.DEFENSE, targetUnitName, targetUnitTeam, targetUnitPlayerId));
         float targetUnitTankDefense = _warRef.GetUnitTankDefense(targetUnitTeam, targetUnitName);
         //int finalDefense = targetUnitDefense + targetUnitTankDefense;
         //int maxDefense = GameConfig.Instance.MaxUnitDefense;
@@ -264,11 +264,11 @@ public class ActionArea : NetworkEntity
         //    damage = 1;
         ScoreFlash.Instance.PushWorld(gameObject.transform.localPosition, gameObject.transform.position, damage, Color.red);
 
-        int damageDealt = GameNetwork.GetTeamRoomPropertyAsInt(GameNetwork.TeamRoomProperties.DAMAGE_DEALT, OwnerTeamName);
-        GameNetwork.SetTeamRoomProperty(GameNetwork.TeamRoomProperties.DAMAGE_DEALT, OwnerTeamName, (damageDealt + damage).ToString());
+        int damageDealt = GameNetwork.GetTeamRoomPropertyAsInt(GameTeamRoomProperties.DAMAGE_DEALT, OwnerTeamName);
+        GameNetwork.SetTeamRoomProperty(GameTeamRoomProperties.DAMAGE_DEALT, OwnerTeamName, (damageDealt + damage).ToString());
 
-        int damageReceived = GameNetwork.GetTeamRoomPropertyAsInt(GameNetwork.TeamRoomProperties.DAMAGE_RECEIVED, targetUnitTeam);
-        GameNetwork.SetTeamRoomProperty(GameNetwork.TeamRoomProperties.DAMAGE_RECEIVED, targetUnitTeam, (damageReceived + damage).ToString());
+        int damageReceived = GameNetwork.GetTeamRoomPropertyAsInt(GameTeamRoomProperties.DAMAGE_RECEIVED, targetUnitTeam);
+        GameNetwork.SetTeamRoomProperty(GameTeamRoomProperties.DAMAGE_RECEIVED, targetUnitTeam, (damageReceived + damage).ToString());
         
         Debug.LogWarning("ActionArea::dealDamage -> damage: " + damage.ToString());
 

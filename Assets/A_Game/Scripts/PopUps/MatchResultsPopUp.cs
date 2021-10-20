@@ -51,7 +51,7 @@ public class MatchResultsPopUp : MonoBehaviour
 
     public void SetValues(War.MatchLocalData matchLocalData, TeamBoostItemGroup boostItemGroup)
     {
-        string winnerNickname = NetworkManager.GetRoomCustomProperty(GameNetwork.RoomCustomProperties.WINNER_NICKNAME);
+        string winnerNickname = NetworkManager.GetRoomCustomProperty(GameRoomProperties.WINNER_NICKNAME);
         string localPlayerNickname = NetworkManager.GetLocalPlayerNickname();
 
         if (localPlayerNickname == winnerNickname)
@@ -69,11 +69,11 @@ public class MatchResultsPopUp : MonoBehaviour
 
         string localTeamName = _warRef.LocalPlayerTeam;
 
-        _damageDealtValue.text = GameNetwork.GetTeamRoomProperty(GameNetwork.TeamRoomProperties.DAMAGE_DEALT, localTeamName);
-        _damageReceivedValue.text = GameNetwork.GetTeamRoomProperty(GameNetwork.TeamRoomProperties.DAMAGE_RECEIVED, localTeamName);
-        _unitsKilledValue.text = GameNetwork.GetTeamRoomProperty(GameNetwork.TeamRoomProperties.UNITS_KILLED, localTeamName);
+        _damageDealtValue.text = GameNetwork.GetTeamRoomProperty(GameTeamRoomProperties.DAMAGE_DEALT, localTeamName);
+        _damageReceivedValue.text = GameNetwork.GetTeamRoomProperty(GameTeamRoomProperties.DAMAGE_RECEIVED, localTeamName);
+        _unitsKilledValue.text = GameNetwork.GetTeamRoomProperty(GameTeamRoomProperties.UNITS_KILLED, localTeamName);
 
-        double matchDuration = double.Parse(NetworkManager.GetRoomCustomProperty(GameNetwork.RoomCustomProperties.MATCH_DURATION));
+        double matchDuration = double.Parse(NetworkManager.GetRoomCustomProperty(GameRoomProperties.MATCH_DURATION));
         System.TimeSpan timeSpan = System.TimeSpan.FromSeconds(matchDuration);
         string matchDurationString = string.Format("{0:D2}:{1:D2}:{2:D2}", timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds);
         _matchDurationValue.text = matchDurationString;
@@ -85,7 +85,7 @@ public class MatchResultsPopUp : MonoBehaviour
 
         foreach(string unitName in localTeamUnitNames)
         {
-            int unitHealth = GameNetwork.GetUnitRoomPropertyAsInt(GameNetwork.UnitRoomProperties.HEALTH, localTeam, unitName);
+            int unitHealth = GameNetwork.GetUnitRoomPropertyAsInt(UnitRoomProperties.HEALTH, localTeam, unitName);
             bool unitIsAlive = (unitHealth > 0);
 
             if (!unitIsAlive)

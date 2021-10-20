@@ -221,7 +221,7 @@ public class AiPlayer
                 int injury = GetUnitInjury(unit.name);
                 if (injury > 0)
                 {
-                    if (!healerAreasByTargetByTeam[GameNetwork.TeamNames.GUEST].ContainsKey(unit.name))
+                    if (!healerAreasByTargetByTeam[TeamNames.GUEST].ContainsKey(unit.name))
                     {
                         //Debug.LogWarning("AiPlayer::getHealerTargetPosition -> injured unit with no healing: " + unit.name + " unit.Type: " + unit.Type + " injury: " + injury);
 
@@ -249,7 +249,7 @@ public class AiPlayer
         }
         else
         {
-            List<MinMinUnit> exposedUnits = exposedUnitsByTeam[GameNetwork.TeamNames.GUEST];
+            List<MinMinUnit> exposedUnits = exposedUnitsByTeam[TeamNames.GUEST];
 
             if (exposedUnits.Count > 0)
             {
@@ -276,8 +276,8 @@ public class AiPlayer
 
     private int GetUnitInjury(string unitName)
     {
-        int unitHealth = GameNetwork.GetUnitRoomPropertyAsInt(GameNetwork.UnitRoomProperties.HEALTH, GameNetwork.TeamNames.GUEST, unitName);
-        int unitMaxHealth = GameNetwork.GetUnitRoomPropertyAsInt(GameNetwork.UnitRoomProperties.MAX_HEALTH, GameNetwork.TeamNames.GUEST, unitName);
+        int unitHealth = GameNetwork.GetUnitRoomPropertyAsInt(UnitRoomProperties.HEALTH, TeamNames.GUEST, unitName);
+        int unitMaxHealth = GameNetwork.GetUnitRoomPropertyAsInt(UnitRoomProperties.MAX_HEALTH, TeamNames.GUEST, unitName);
 
         int injury = unitMaxHealth - unitHealth;
 

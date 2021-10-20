@@ -18,49 +18,9 @@ namespace Enigma.CoreSystems
             public const char VIRTUAL_PLAYER_KEY = ':';
         }
 
-        public class TransactionKeys
-        {
-            public const string TID = "tid";
-            public const string SSID = "ssid";
-            public const string IMAGE = "image";
-            public const string IMAGE_UPLOAD = "imageUpload";
-            public const string BUNDLE_ID = "bundle_id";
-            public const string GAME = "game";
-            public const string USERNAME = "username";
-            public const string PASSWORD = "password";
-            public const string EMAIL = "email";
-            public const string USER = "user";
-            public const string PW_HASH = "pwhash";
-            public const string STATUS = "status";
-            public const string STORE = "store";
-            public const string ROOM = "room";
-            public const string LIST = "list";
-            public const string CHAT = "chat";
-            public const string USER_LIST = "userList";
-            public const string SEC = "sec";
-            public const string USER_LOGIN = "user_login";
-            public const string USER_DATA = "user_data";
-            public const string COINS = "coins";
-            public const string ENJIN = "enjin";
-            public const string PURCHASED = "purchased";
-            public const string REWARDS = "rewards";
-            public const string QUEST_REWARDS = "quest_rewards";
-
-            public const string ENJIN_ID = "enjin_id";
-            public const string ENJIN_CODE = "enjin_code";
-        }
-
         public class PlayerPropertyOptions
         {
             public const string PLAYER_STATE = "plState";
-        }
-
-        public class StatusOptions
-        {
-            public const string SUCCESS = "SUCCESS";
-            public const string ERR_REGISTER = "ERR_REGISTER";
-            public const string ERR_INVALID_PASSWORD = "ERR_WRONG_PASSWORD";
-            public const string ERR_INVALID_USERNAME = "ERR_WRONG_USERNAME";
         }
 
         public class DataGroups
@@ -294,7 +254,7 @@ namespace Enigma.CoreSystems
             base.Start();
             Data = new Dictionary<string, Hashtable>();
 
-            NetworkManager.Transaction(Transactions.IP_AND_COUNTRY, new Hashtable(), GetIpAndCountry);
+            NetworkManager.Transaction(EnigmaTransactions.IP_AND_COUNTRY, new Hashtable(), GetIpAndCountry);
 
             //Test hack
             // EtceteraAndroid.showAlert(LocalizationManager.GetTermTranslation("Network Error"), LocalizationManager.GetTermTranslation("Error connecting to the server. Restart the app and retry."), LocalizationManager.GetTermTranslation("OK"));
@@ -388,12 +348,12 @@ namespace Enigma.CoreSystems
                 Debug.Log("Transaction response " + transactionName + " was: " + response.ToString());
 
                 JSONNode response_hash = response[0];
-                if (response_hash[TransactionKeys.STATUS] == null)
+                if (response_hash[EnigmaNodeKeys.STATUS] == null)
                 {
                     Debug.LogError("Transaction response " + transactionName + " didn't get status.");
                     isInvalid = true;
                 }
-                else if (response_hash[TransactionKeys.STATUS].ToString().Trim('"') != "SUCCESS")
+                else if (response_hash[EnigmaNodeKeys.STATUS].ToString().Trim('"') != "SUCCESS")
                 {
                     Debug.LogError("Transaction response " + transactionName + " was NOT successful.");
                     isInvalid = true;
@@ -429,10 +389,10 @@ namespace Enigma.CoreSystems
             string sec = "";
 
             WWWForm formData = new WWWForm();
-            formData.AddField(TransactionKeys.TID, id);
+            formData.AddField(EnigmaNodeKeys.TID, id);
             if (_sessionID != null)
             {
-                formData.AddField(TransactionKeys.SSID, _sessionID);
+                formData.AddField(EnigmaNodeKeys.SSID, _sessionID);
             }
 
             foreach (DictionaryEntry pair in hashtable)
@@ -443,9 +403,9 @@ namespace Enigma.CoreSystems
                 }
 
                 Debug.Log(pair.Key + " " + pair.Value);
-                if (pair.Key.ToString() == TransactionKeys.IMAGE)
+                if (pair.Key.ToString() == EnigmaNodeKeys.IMAGE)
                 {
-                    formData.AddBinaryData(TransactionKeys.IMAGE_UPLOAD, pair.Value as byte[], "image.png", "image/png");
+                    formData.AddBinaryData(EnigmaNodeKeys.IMAGE_UPLOAD, pair.Value as byte[], "image.png", "image/png");
                 }
                 else
                 {
@@ -455,13 +415,13 @@ namespace Enigma.CoreSystems
                 }
             }
 
-            formData.AddField(TransactionKeys.BUNDLE_ID, Application.identifier);
-            formData.AddField(TransactionKeys.GAME, _game);
+            formData.AddField(EnigmaNodeKeys.BUNDLE_ID, Application.identifier);
+            formData.AddField(EnigmaNodeKeys.GAME, _game);
 
             sec += Application.identifier + _game;
             sec = md5(sec);
 
-            formData.AddField(TransactionKeys.SEC, sec);
+            formData.AddField(EnigmaNodeKeys.SEC, sec);
 
             Debug.Log("url: " + url);
             var www = UnityWebRequest.Post(url, formData);
@@ -550,7 +510,7 @@ namespace Enigma.CoreSystems
                 JSONNode response_hash = response[0];
                 string status = response_hash["status"].ToString().Trim('"');
 
-                if (status != StatusOptions.SUCCESS)
+                if (status != EnigmaServerStatuses.SUCCESS)
                 {
 
                 }
@@ -561,30 +521,30 @@ namespace Enigma.CoreSystems
         {
             Hashtable hashtable = new Hashtable();
 
-            hashtable.Add(TransactionKeys.USERNAME, userName);
-            hashtable.Add(TransactionKeys.PASSWORD, password);
-            hashtable.Add(TransactionKeys.EMAIL, email);
-            hashtable.Add(TransactionKeys.GAME, game);
-            hashtable.Add(TransactionKeys.BUNDLE_ID, bundleId);
-            hashtable.Add(TransactionKeys.ENJIN, ethAddress);
+            hashtable.Add(EnigmaNodeKeys.USERNAME, userName);
+            hashtable.Add(EnigmaNodeKeys.PASSWORD, password);
+            hashtable.Add(EnigmaNodeKeys.EMAIL, email);
+            hashtable.Add(EnigmaNodeKeys.GAME, game);
+            hashtable.Add(EnigmaNodeKeys.BUNDLE_ID, bundleId);
+            hashtable.Add(EnigmaNodeKeys.ENJIN, ethAddress);
 
             if (extras != null)
             {
                 hashtable.Merge(extras);
             }
 
-            Transaction(Transactions.REGISTRATION, hashtable, callback, RegistrationResult);
+            Transaction(EnigmaTransactions.REGISTRATION, hashtable, callback, RegistrationResult);
         }
 
         static private void RegistrationResult(JSONNode response)
         {
             JSONNode response_hash = response[0];
-            string status = response_hash[TransactionKeys.STATUS].ToString().Trim('"');
-            string ssid = response_hash[TransactionKeys.SSID].ToString().Trim('"');
+            string status = response_hash[EnigmaNodeKeys.STATUS].ToString().Trim('"');
+            string ssid = response_hash[EnigmaNodeKeys.SSID].ToString().Trim('"');
 
             Debug.Log("RegistrationResult: " + response_hash.ToString());
 
-            if (status == StatusOptions.SUCCESS)
+            if (status == EnigmaServerStatuses.SUCCESS)
             {
                 SetSessionID(ssid);
                 LoggedIn = true;
@@ -595,15 +555,15 @@ namespace Enigma.CoreSystems
         static public void Login(string user, string pw, Callback callback = null, Hashtable extras = null)
         {
             Hashtable hashtable = new Hashtable();
-            hashtable.Add(TransactionKeys.USER, user);
-            hashtable.Add(TransactionKeys.PW_HASH, pw);
+            hashtable.Add(EnigmaNodeKeys.USER, user);
+            hashtable.Add(EnigmaNodeKeys.PW_HASH, pw);
 
             if (extras != null)
             {
                 hashtable.Merge(extras);
             }
 
-            Transaction(Transactions.LOGIN, hashtable, callback, LoginResult);
+            Transaction(EnigmaTransactions.LOGIN, hashtable, callback, LoginResult);
         }
 
         static public void Logout()
@@ -620,12 +580,12 @@ namespace Enigma.CoreSystems
             }
 
             JSONNode response_hash = response[0];
-            string status = response_hash[TransactionKeys.STATUS].ToString().Trim('"');
-            string ssid = response_hash[TransactionKeys.SSID].ToString().Trim('"');
+            string status = response_hash[EnigmaNodeKeys.STATUS].ToString().Trim('"');
+            string ssid = response_hash[EnigmaNodeKeys.SSID].ToString().Trim('"');
 
             Debug.Log("LoginResult: " + response_hash.ToString());
 
-            if (status == StatusOptions.SUCCESS)
+            if (status == EnigmaServerStatuses.SUCCESS)
             {
                 SetSessionID(ssid);
                 LoggedIn = true;
@@ -646,10 +606,10 @@ namespace Enigma.CoreSystems
         static public void GetIAP(JSONNode response)
         {
             JSONNode response_hash = response[0];
-            string status = response_hash[TransactionKeys.STATUS].ToString().Trim('"');
-            JSONNode data = response_hash[TransactionKeys.STORE];
+            string status = response_hash[EnigmaNodeKeys.STATUS].ToString().Trim('"');
+            JSONNode data = response_hash[EnigmaNodeKeys.STORE];
 
-            if (status == StatusOptions.SUCCESS)
+            if (status == EnigmaServerStatuses.SUCCESS)
             {
 #if !UNITY_STANDALONE
                 //IAPManager.LoadData(data);
@@ -689,7 +649,7 @@ namespace Enigma.CoreSystems
                 }
                 else
                 {
-                    Transaction(Transactions.HEART_BEAT, onHeartBeat);
+                    Transaction(EnigmaTransactions.HEART_BEAT, onHeartBeat);
 
                     float heartBeatDelay = _HEARTBEAT_DELAY;
 
@@ -717,7 +677,7 @@ namespace Enigma.CoreSystems
                     JSONNode response_hash = response[0];
                     JSONNode statusRaw = null;
 
-                    statusRaw = response_hash[TransactionKeys.STATUS];
+                    statusRaw = response_hash[EnigmaNodeKeys.STATUS];
 
                     if (statusRaw != null)
                     {
@@ -734,7 +694,7 @@ namespace Enigma.CoreSystems
                 }
             }
 
-            if (status != StatusOptions.SUCCESS)
+            if (status != EnigmaServerStatuses.SUCCESS)
             {
                 StopHeartBeat();
                 Logout();
@@ -1405,7 +1365,7 @@ namespace Enigma.CoreSystems
             var val = new System.Collections.Hashtable();
             val.Add("game", gameName);
             val.Add("level", level);
-            NetworkManager.Transaction(Transactions.ENJIN_ITEM_COLLECTED_TRANSACTION, val, onEnjinItemCollectedTransactionExternal,  onEnjinItemCollectedTransactionLocal);
+            NetworkManager.Transaction(EnigmaTransactions.ENJIN_ITEM_COLLECTED_TRANSACTION, val, onEnjinItemCollectedTransactionExternal,  onEnjinItemCollectedTransactionLocal);
         }
 
         private void onEnjinItemCollectedTransactionLocal(JSONNode response)
@@ -1621,7 +1581,7 @@ namespace Enigma.CoreSystems
             Hashtable val = new Hashtable();
             //val.Add("room", "1");
             //FOR TESTing
-            val.Add(TransactionKeys.ROOM, "2");
+            val.Add(EnigmaNodeKeys.ROOM, "2");
             //Transaction(WGO2Configs.EnterLobbyTransaction, val, EnterLobby);
         }
 
@@ -1630,10 +1590,10 @@ namespace Enigma.CoreSystems
         static public void EnterLobby(JSONNode response)
         {
             JSONNode response_hash = response[0];
-            string status = response_hash[TransactionKeys.STATUS].ToString().Trim('"');
+            string status = response_hash[EnigmaNodeKeys.STATUS].ToString().Trim('"');
             Debug.Log(response_hash);
 
-            if (status == StatusOptions.SUCCESS)
+            if (status == EnigmaServerStatuses.SUCCESS)
             {
                 Instance.StartCoroutine(GetRoomDataCoroutine());
 
@@ -1650,10 +1610,10 @@ namespace Enigma.CoreSystems
         static public void LeaveChatLobby(JSONNode response)
         {
             JSONNode response_hash = response[0];
-            string status = response_hash[TransactionKeys.STATUS].ToString().Trim('"');
+            string status = response_hash[EnigmaNodeKeys.STATUS].ToString().Trim('"');
             Debug.Log(response_hash);
 
-            if (status == StatusOptions.SUCCESS)
+            if (status == EnigmaServerStatuses.SUCCESS)
             {
                 Instance.StopAllCoroutines();
                 LobbyUserList.Clear();
@@ -1684,13 +1644,13 @@ namespace Enigma.CoreSystems
         static public void GetRoomData(JSONNode response)
         {
             JSONNode response_hash = response[0];
-            string status = response_hash[TransactionKeys.STATUS].ToString().Trim('"');
+            string status = response_hash[EnigmaNodeKeys.STATUS].ToString().Trim('"');
             Debug.Log(response_hash);
 
-            if (status == StatusOptions.SUCCESS)
+            if (status == EnigmaServerStatuses.SUCCESS)
             {
-                JSONNode response_userlist = response_hash[TransactionKeys.LIST];
-                JSONNode response_chat = response_hash[TransactionKeys.CHAT];
+                JSONNode response_userlist = response_hash[EnigmaNodeKeys.LIST];
+                JSONNode response_chat = response_hash[EnigmaNodeKeys.CHAT];
 
                 //List of people in the lobby
                 _updatedLobbyUserList.Clear();
@@ -1698,7 +1658,7 @@ namespace Enigma.CoreSystems
 
                 for (int i = 0; i < response_userlist.Count; i++)
                 {
-                    _updatedLobbyUserList.Add(response_userlist[i][TransactionKeys.USER_LOGIN].ToString().Trim('"'));
+                    _updatedLobbyUserList.Add(response_userlist[i][EnigmaNodeKeys.USER_LOGIN].ToString().Trim('"'));
                     //UPDATED_ROOM_LEVELLIST.Add(response_userlist[i]["level"].ToString().Trim('"'));
                 }
 
@@ -1777,4 +1737,81 @@ namespace Enigma.CoreSystems
             return hashTable;
         }
     }
+}
+
+public class EnigmaTransactions
+{
+    public const int IP_AND_COUNTRY = 0;
+    public const int LOGIN = 3;
+    public const int REGISTRATION = 5;
+    public const int COINS_EARNED = 6;
+    public const int HEART_BEAT = 14;
+    public const int ENJIN_LINKED = 15;
+    public const int ENJIN_ITEM_COLLECTED_TRANSACTION = 17;
+    public const int GIFT_PROGRESS = 21;
+    public const int PURCHASE = 22;
+
+    public const int ENJIN_WITHDRAWAL = 29;
+    public const int GET_ENJIN_MARKETPLACE = 30;
+    public const int ENJIN_PURCHASE = 31;
+}
+
+public class EnigmaNodeKeys
+{
+    public const string TID = "tid";
+    public const string SSID = "ssid";
+    public const string IMAGE = "image";
+    public const string IMAGE_UPLOAD = "imageUpload";
+    public const string BUNDLE_ID = "bundle_id";
+    public const string GAME = "game";
+    public const string USERNAME = "username";
+    public const string PASSWORD = "password";
+    public const string EMAIL = "email";
+    public const string USER = "user";
+    public const string PW_HASH = "pwhash";
+    public const string STATUS = "status";
+    public const string STORE = "store";
+    public const string ROOM = "room";
+    public const string LIST = "list";
+    public const string CHAT = "chat";
+    public const string USER_LIST = "userList";
+    public const string SEC = "sec";
+    public const string USER_LOGIN = "user_login";
+    public const string USER_DATA = "user_data";
+    public const string COINS = "coins";
+    public const string ENJIN = "enjin";
+    public const string PURCHASED = "purchased";
+    public const string REWARDS = "rewards";
+    public const string QUEST_REWARDS = "quest_rewards";
+
+    public const string ENJIN_ID = "enjin_id";
+    public const string ENJIN_CODE = "enjin_code";
+
+    //public const string LISTINGS = "listings";
+    public const string LISTINGS = "listings";
+    //public const string NAME = "name";
+    public const string PRICE = "price";
+    public const string TOKEN_CODE = "token_code";
+    public const string ETHEREUM_ID = "ethereum_id";
+    public const string UUID = "uuid";
+    public const string URL = "url";
+}
+
+public class EnigmaTokenKeys
+{
+    public const string ENJIN_MFT = "enjin_mft";
+    public const string ENIGMA_TOKEN = "enigma_token";
+}
+
+public class EnigmaServerStatuses
+{
+    public const string SUCCESS = "SUCCESS";
+    public const string ERR_REGISTER = "ERR_REGISTER";
+    public const string ERR_INVALID_PASSWORD = "ERR_WRONG_PASSWORD";
+    public const string ERR_INVALID_USERNAME = "ERR_WRONG_USERNAME";
+
+    public const string SERVER_ERROR = "Server Error";
+    public const string CONNECTION_ERROR = "Connection Error";
+    public const string PENDING = "PENDING";
+    public const string ERROR = "Error";
 }
