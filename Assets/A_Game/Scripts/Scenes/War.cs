@@ -117,12 +117,15 @@ public class War : NetworkEntity
     private LineRenderer _lineRenderer2;
 
     private bool _isVictory = false;
+    private ReplayManager _replayManager;
 
     public string LocalPlayerTeam { get { return _localPlayerTeam; } }
 
     override protected void Awake()
     {
         base.Awake();
+
+        _replayManager = FindObjectOfType<ReplayManager>();
 
         NetworkManager.OnJoinedRoomCallback += onJoinedRoom;
         NetworkManager.OnPlayerDisconnectedCallback += onPlayerDisconnected;
@@ -151,6 +154,18 @@ public class War : NetworkEntity
     private void Start()
     {
         GameStats gameStats = GameStats.Instance;
+
+        if (gameStats.Mode == GameModes.Pvp)
+        {
+            if (_replayManager.IsAvailable())
+            {
+                _replayManager.StartRecording(false);
+            }
+            else
+            {
+                Debug.LogError("Replay recording isn't available.");
+            }
+        }
 
         SoundManager.FadeCurrentSong(1f, () => {
                                                     SoundManager.Stop();
@@ -183,7 +198,7 @@ public class War : NetworkEntity
 
         //_matchResultsPopUp.DismissButton.onClick.AddListener(() => OnMatchResultsDismissButtonDown());
         _matchResultsPopUp.DismissButtonDown += onDismissButtonDown;
-        _matchResultsPopUp.gameObject.SetActive(false);
+        _matchResultsPopUp.Close();
 
         UnitTurnHighlightTransform.gameObject.SetActive(false);
 
@@ -2455,6 +2470,11 @@ public class War : NetworkEntity
 
     private void handleMatchEnd(string winnerTeam)
     {
+        if (GameStats.Instance.Mode == GameModes.Pvp)
+        {
+            _replayManager.StopRecording();
+        }
+
         _lineRenderer1.gameObject.SetActive(false);
         _lineRenderer2.gameObject.SetActive(false);
 

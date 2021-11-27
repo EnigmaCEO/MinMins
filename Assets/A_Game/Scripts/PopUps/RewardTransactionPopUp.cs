@@ -160,15 +160,15 @@ public class RewardTransactionPopUp : MonoBehaviour
 
             if (_option == RewardsInventoryOptions.Tokenize)
             {
-                hashTable.Add(GameTransactionKeys.TOKEN_KEY, _tokenSelected.TokenKey);
-                hashTable.Add(GameTransactionKeys.SEC_CODE, fileSec);
-                hashTable.Add(GameTransactionKeys.ENJ_BALANCE, GameStats.Instance.EnjBalance);
+                hashTable.Add(GameNodeKeys.TOKEN_KEY, _tokenSelected.TokenKey);
+                hashTable.Add(GameNodeKeys.SEC_CODE, fileSec);
+                hashTable.Add(GameNodeKeys.ENJ_BALANCE, GameStats.Instance.EnjBalance);
 
                 transactionId = EnigmaTransactions.ENJIN_WITHDRAWAL;
             }
             else // Buy
             {
-                hashTable.Add(GameTransactionKeys.UUID, _tokenSelected.Uuid);
+                hashTable.Add(GameNodeKeys.UUID, _tokenSelected.Uuid);
                 transactionId = EnigmaTransactions.ENJIN_PURCHASE;
             }
 

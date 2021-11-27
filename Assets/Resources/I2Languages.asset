@@ -2764,6 +2764,61 @@ MonoBehaviour:
       - 
       Flags: 0000000000
       Languages_Touch: []
+    - Term: Uploading...
+      TermType: 0
+      Description: 
+      Languages:
+      - Uploading...
+      - Subiendo...
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Retry replay upload
+      TermType: 0
+      Description: 
+      Languages:
+      - Retry replay upload
+      - Reintentar subir repeticion
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Upload replay
+      TermType: 0
+      Description: 
+      Languages:
+      - Upload replay
+      - "Sube repetici\xF3n"
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Replay failed
+      TermType: 0
+      Description: 
+      Languages:
+      - Replay failed
+      - "Repetici\xF3n fall\xF3"
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
+    - Term: Preparing replay...
+      TermType: 0
+      Description: 
+      Languages:
+      - Preparing Replay...
+      - "Preparando repetici\xF3n..."
+      - 
+      - 
+      - 
+      Flags: 0000000000
+      Languages_Touch: []
     CaseInsensitiveTerms: 0
     OnMissingTranslation: 1
     mTerm_AppName: 
@@ -2788,7 +2843,7 @@ MonoBehaviour:
     Google_WebServiceURL: https://script.google.com/macros/s/AKfycbw32utr3kCJns7NCLeWgxEKcn3KFlDSmgdTHiLvcxYYDnNFr8GGxIKFi4aMYaVFd2Y/exec
     Google_SpreadsheetKey: 1Mrp9xxAsvTcT2syMv3hS3qILmncXoJnIA5mgZOmBoMY
     Google_SpreadsheetName: I2Loc Min-Mins Localization
-    Google_LastUpdatedVersion: 1634752054725
+    Google_LastUpdatedVersion: 1637854802039
     Google_Password: change_this
     GoogleUpdateFrequency: 0
     GoogleInEditorCheckFrequency: 0

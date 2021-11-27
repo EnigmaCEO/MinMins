@@ -239,7 +239,7 @@ public class QuestSelection : MonoBehaviour
 
             if (!questIsHacked)
             {
-                questNode = NetworkManager.CheckValidNode(response[0], GameTransactionKeys.QUEST);
+                questNode = NetworkManager.CheckValidNode(response[0], GameNodeKeys.QUEST);
             }
 
             if (questIsHacked || (questNode != null))
@@ -276,8 +276,8 @@ public class QuestSelection : MonoBehaviour
 
                 if (!questIsHacked)
                 {
-                    progressNode = NetworkManager.CheckValidNode(response[0], GameTransactionKeys.PROGRESS);
-                    leadersNode = NetworkManager.CheckValidNode(response[0], GameTransactionKeys.LEADERS);
+                    progressNode = NetworkManager.CheckValidNode(response[0], GameNodeKeys.PROGRESS);
+                    leadersNode = NetworkManager.CheckValidNode(response[0], GameNodeKeys.LEADERS);
                 }
 
                 if (questIsHacked || (progressNode != null))

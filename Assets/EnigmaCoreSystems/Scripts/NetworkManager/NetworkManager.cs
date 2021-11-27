@@ -6,6 +6,7 @@ using UnityEngine.Networking;
 using SimpleJSON;
 using Tiny;
 using EnigmaConstants;
+using System.IO;
 
 namespace Enigma.CoreSystems
 {
@@ -305,22 +306,22 @@ namespace Enigma.CoreSystems
             return _game;
         }
 
-        static public void Transaction(int id, Callback externalCallback = null, Callback localCallback = null, TextureCallback texture = null)
+        static public void Transaction(int id, Callback externalCallback = null, Callback localCallback = null, TextureCallback textureCallback = null)
         {
-            Instance.StartCoroutine(httpRequest(id, new Hashtable(), externalCallback, localCallback, texture));
+            Instance.StartCoroutine(httpRequest(id, new Hashtable(), externalCallback, localCallback, textureCallback));
         }
 
-        static public void Transaction(int id, string transactionKey, object transactionValue, Callback externalCallback = null, Callback localCallback = null, TextureCallback texture = null)
+        static public void Transaction(int id, string transactionKey, object transactionValue, Callback externalCallback = null, Callback localCallback = null, TextureCallback textureCallback = null)
         {
             Hashtable hashtable = new Hashtable();
             hashtable.Add(transactionKey, transactionValue);
-            Instance.StartCoroutine(httpRequest(id, hashtable, externalCallback, localCallback, texture));
+            Instance.StartCoroutine(httpRequest(id, hashtable, externalCallback, localCallback, textureCallback));
         }
 
-        static public void Transaction(int id, Hashtable hashtable, Callback externalCallback = null, Callback localCallback = null, TextureCallback texture = null)
+        static public void Transaction(int id, Hashtable hashtable, Callback externalCallback = null, Callback localCallback = null, TextureCallback textureCallback = null)
         {
             Debug.Log(Instance);
-            Instance.StartCoroutine(httpRequest(id, hashtable, externalCallback, localCallback, texture));
+            Instance.StartCoroutine(httpRequest(id, hashtable, externalCallback, localCallback, textureCallback));
         }
 
         static public JSONNode CheckValidNode(JSONNode parentNode, string key)
@@ -383,12 +384,13 @@ namespace Enigma.CoreSystems
             return PhotonNetwork.LoadLevelAsync(sceneName);
         }
 
-        static private IEnumerator httpRequest(int id, Hashtable hashtable, Callback externalCallback, Callback localCallback, TextureCallback texture)
+        static private IEnumerator httpRequest(int id, Hashtable hashtable, Callback externalCallback, Callback localCallback, TextureCallback textureCallback)
         {
             string url = _serverUrl + "/trans/" + id + ".php";
             string sec = "";
 
             WWWForm formData = new WWWForm();
+
             formData.AddField(EnigmaNodeKeys.TID, id);
             if (_sessionID != null)
             {
@@ -406,6 +408,21 @@ namespace Enigma.CoreSystems
                 if (pair.Key.ToString() == EnigmaNodeKeys.IMAGE)
                 {
                     formData.AddBinaryData(EnigmaNodeKeys.IMAGE_UPLOAD, pair.Value as byte[], "image.png", "image/png");
+                }
+                else if (pair.Key.ToString() == EnigmaNodeKeys.VIDEO_PATH)
+                {
+                    string fullVideoPath = pair.Value.ToString();
+                    Debug.Log("NetworkManager::httpRequest -> videoPath: " + fullVideoPath);
+
+                    if (File.Exists(fullVideoPath))
+                    {
+                        byte[] videoBytes = System.IO.File.ReadAllBytes(fullVideoPath);
+                        formData.AddBinaryData(EnigmaNodeKeys.VIDEO_UPLOAD, videoBytes, "video.mp4", "video/mp4");
+                    }
+                    else
+                    {
+                        Debug.Log("Video was not found at path: " + fullVideoPath);
+                    }
                 }
                 else
                 {
@@ -425,6 +442,11 @@ namespace Enigma.CoreSystems
 
             Debug.Log("url: " + url);
             var www = UnityWebRequest.Post(url, formData);
+
+            #if DEVELOPMENT_BUILD
+            www.certificateHandler = new BypassCertificate();
+            #endif
+
             yield return www.SendWebRequest();
 
             if (www.isNetworkError || www.isHttpError)
@@ -453,6 +475,7 @@ namespace Enigma.CoreSystems
             {
                 if (externalCallback != null)
                 {
+                    Debug.Log("www.downloadHandler.text: " + www.downloadHandler.text);
                     JSONNode response = JSON.Parse(www.downloadHandler.text);
 
                     if (localCallback != null)
@@ -462,9 +485,10 @@ namespace Enigma.CoreSystems
 
                     externalCallback(response);
                 }
-                if (texture != null)
+
+                if (textureCallback != null)
                 {
-                    texture(((DownloadHandlerTexture)www.downloadHandler).texture);
+                    textureCallback(((DownloadHandlerTexture)www.downloadHandler).texture);
                 }
             }
         }
@@ -1739,6 +1763,17 @@ namespace Enigma.CoreSystems
     }
 }
 
+#if DEVELOPMENT_BUILD
+public class BypassCertificate : CertificateHandler
+{
+    protected override bool ValidateCertificate(byte[] certificateData)
+    {
+        //Simply return true no matter what
+        return true;
+    }
+}
+#endif
+
 public class EnigmaTransactions
 {
     public const int IP_AND_COUNTRY = 0;
@@ -1761,7 +1796,9 @@ public class EnigmaNodeKeys
     public const string TID = "tid";
     public const string SSID = "ssid";
     public const string IMAGE = "image";
+    public const string VIDEO_PATH = "video_path";
     public const string IMAGE_UPLOAD = "imageUpload";
+    public const string VIDEO_UPLOAD = "videoUpload";
     public const string BUNDLE_ID = "bundle_id";
     public const string GAME = "game";
     public const string USERNAME = "username";

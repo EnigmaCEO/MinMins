@@ -1778,13 +1778,13 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
             string fileSec = fileManager.GetDataStringSec(dataString);
 
             Hashtable hashTable = new Hashtable();
-            hashTable.Add(GameTransactionKeys.DATA, dataString);
-            hashTable.Add(GameTransactionKeys.SEC_CODE, fileSec);
+            hashTable.Add(GameNodeKeys.DATA, dataString);
+            hashTable.Add(GameNodeKeys.SEC_CODE, fileSec);
 
             NetworkManager.Transaction(GameTransactions.SAVE_FILE_TO_SERVER, hashTable, onSaveFileToServer);
         }
 
-        ObscuredPrefs.SetString(GameTransactionKeys.DATA, dataString);
+        ObscuredPrefs.SetString(GameNodeKeys.DATA, dataString);
         //======================================================================
 
         FileManager.Instance.SaveDataRaw(dataString);
@@ -1805,7 +1805,7 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
         {
             FileManager fileManager = FileManager.Instance;
 
-            string dataString = ObscuredPrefs.GetString(GameTransactionKeys.DATA, "");
+            string dataString = ObscuredPrefs.GetString(GameNodeKeys.DATA, "");
 
             if (dataString != "")
             {
@@ -1813,7 +1813,7 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
                 {
                     Debug.LogWarning("LoadBackupSave::Security Breach.");
                     dataString = "";
-                    ObscuredPrefs.SetString(GameTransactionKeys.DATA, dataString);
+                    ObscuredPrefs.SetString(GameNodeKeys.DATA, dataString);
                 }
 
                 fileManager.SaveDataRaw(dataString);
@@ -1831,8 +1831,8 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
 
         SimpleJSON.JSONNode response_hash = response[0];
 
-        string dataString = response_hash[GameTransactionKeys.DATA];
-        string sec = response_hash[GameTransactionKeys.SEC_CODE];
+        string dataString = response_hash[GameNodeKeys.DATA];
+        string sec = response_hash[GameNodeKeys.SEC_CODE];
 
         if (!string.IsNullOrEmpty(dataString))
         {
@@ -1851,7 +1851,7 @@ public class GameInventory : SingletonPersistentPrefab<GameInventory>
 
     public bool IsTherePrefsBackupSave()
     {
-        string key = GameTransactionKeys.DATA;
+        string key = GameNodeKeys.DATA;
         bool isThereBackupSave = (ObscuredPrefs.HasKey(key) && (ObscuredPrefs.GetString(key, "") != ""));
 
         if (GameHacks.Instance.NegatePrefsBackup)

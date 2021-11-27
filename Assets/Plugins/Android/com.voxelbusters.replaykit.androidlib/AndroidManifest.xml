@@ -9,8 +9,6 @@
     <service android:name="com.voxelbusters.replaykit.internal.ScreenRecordingService" android:enabled="true" android:foregroundServiceType="mediaProjection" />
   </application>
   <!--Permissions-->
-  <!--Required for recording audio-->
-  <uses-permission android:name="android.permission.RECORD_AUDIO" />
   <!--For reading files from external storage-->
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" tools:remove="android:maxSdkVersion" />
   <!--For storing files in external storage-->

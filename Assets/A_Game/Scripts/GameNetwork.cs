@@ -552,14 +552,14 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
 
         _matchResultshashTable.Clear();
 
-        _matchResultshashTable.Add(GameTransactionKeys.WINNER_NICKNAME, NetworkManager.GetRoomCustomProperty(GameRoomProperties.WINNER_NICKNAME));
-        _matchResultshashTable.Add(GameTransactionKeys.LOSER_NICKNAME, NetworkManager.GetRoomCustomProperty(GameRoomProperties.LOSER_NICKNAME));
+        _matchResultshashTable.Add(GameNodeKeys.WINNER_NICKNAME, NetworkManager.GetRoomCustomProperty(GameRoomProperties.WINNER_NICKNAME));
+        _matchResultshashTable.Add(GameNodeKeys.LOSER_NICKNAME, NetworkManager.GetRoomCustomProperty(GameRoomProperties.LOSER_NICKNAME));
 
-        _matchResultshashTable.Add(GameTransactionKeys.WINNER_DAMAGE_DEALT, GameNetwork.GetTeamRoomProperty(GameTeamRoomProperties.DAMAGE_DEALT, winner));
-        _matchResultshashTable.Add(GameTransactionKeys.LOSER_DAMAGE_DEALT, GameNetwork.GetTeamRoomProperty(GameTeamRoomProperties.DAMAGE_DEALT, loser));
+        _matchResultshashTable.Add(GameNodeKeys.WINNER_DAMAGE_DEALT, GameNetwork.GetTeamRoomProperty(GameTeamRoomProperties.DAMAGE_DEALT, winner));
+        _matchResultshashTable.Add(GameNodeKeys.LOSER_DAMAGE_DEALT, GameNetwork.GetTeamRoomProperty(GameTeamRoomProperties.DAMAGE_DEALT, loser));
 
-        _matchResultshashTable.Add(GameTransactionKeys.WINNER_UNITS_KILLED, GameNetwork.GetTeamRoomProperty(GameTeamRoomProperties.UNITS_KILLED, winner));
-        _matchResultshashTable.Add(GameTransactionKeys.LOSER_UNITS_KILLED, GameNetwork.GetTeamRoomProperty(GameTeamRoomProperties.UNITS_KILLED, loser));
+        _matchResultshashTable.Add(GameNodeKeys.WINNER_UNITS_KILLED, GameNetwork.GetTeamRoomProperty(GameTeamRoomProperties.UNITS_KILLED, winner));
+        _matchResultshashTable.Add(GameNodeKeys.LOSER_UNITS_KILLED, GameNetwork.GetTeamRoomProperty(GameTeamRoomProperties.UNITS_KILLED, loser));
 
         performResultsSendingTransaction();
     }
@@ -670,7 +670,7 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
 
             if (status == EnigmaServerStatuses.SUCCESS)
             {
-                int updatedRating = response_hash[GameTransactionKeys.RATING].AsInt;
+                int updatedRating = response_hash[GameNodeKeys.RATING].AsInt;
                 GameStats.Instance.Rating = updatedRating;
                 SetLocalPlayerRating(updatedRating, TeamNames.HOST);
                 _onSendResultsCallback(EnigmaServerStatuses.SUCCESS, updatedRating);
@@ -905,16 +905,16 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
 
     private void updateWalletFromUserDataNode(JSONNode userDataNode, bool updateAddress)
     {
-        JSONNode balancesNode = userDataNode[GameTransactionKeys.BALANCES];
+        JSONNode balancesNode = userDataNode[GameNodeKeys.BALANCES];
         if (balancesNode != null)
         {
-            JSONNode balancesData = balancesNode[GameTransactionKeys.DATA];
+            JSONNode balancesData = balancesNode[GameNodeKeys.DATA];
             if (balancesData != null)
             {
-                JSONNode walletNode = balancesData[GameTransactionKeys.WALLET];
+                JSONNode walletNode = balancesData[GameNodeKeys.WALLET];
                 if (walletNode != null)
                 {
-                    JSONNode enjBalanceNode = walletNode[GameTransactionKeys.ENJ_BALANCE];
+                    JSONNode enjBalanceNode = walletNode[GameNodeKeys.ENJ_BALANCE];
                     if (enjBalanceNode != null)
                     {
                         string balanceString = enjBalanceNode.ToString();
@@ -924,11 +924,11 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
 
                     if (updateAddress)
                     {
-                        JSONNode ethAddressNode = walletNode[GameTransactionKeys.ETH_ADDRESS];
+                        JSONNode ethAddressNode = walletNode[GameNodeKeys.ETH_ADDRESS];
                         string ethString = ethAddressNode.ToString();
                         EthAdress = ethString.Trim('"');
 
-                        Hashtable hashtable = new Hashtable() { { GameTransactionKeys.GAME_ID, "1" }, { GameTransactionKeys.WALLET, EthAdress } };
+                        Hashtable hashtable = new Hashtable() { { GameNodeKeys.GAME_ID, "1" }, { GameNodeKeys.WALLET, EthAdress } };
                         StartCoroutine(checkNftEnjinTokenAvailable(hashtable, onCheckNftEnjinTokenAvailableResponse));
                     }
                 }
@@ -956,7 +956,7 @@ public class GameNetwork : SingletonPersistentPrefab<GameNetwork>
             int count = response.Count;
             for (int i = 0; i < count; i++)
             {
-                JSONNode codeNode = response[i][GameTransactionKeys.CODE];
+                JSONNode codeNode = response[i][GameNodeKeys.CODE];
                 if (codeNode != null)
                 {
                     string code = codeNode.ToString();
@@ -1185,9 +1185,11 @@ public class GameTransactions
 
     public const int GET_QUEST_DATA = 27;
     public const int NEW_TRAINING_LEVEL = 28;
+
+    public const int UPLOAD_REPLAY = 32;
 }
 
-public class GameTransactionKeys
+public class GameNodeKeys
 {
     public const string SEC_CODE = "code";
     public const string DATA = "data";
@@ -1224,6 +1226,8 @@ public class GameTransactionKeys
     public const string GAME_ID = "gameId";
     public const string CODE = "code";
     public const string UUID = "uuid";
+
+    public const string REWARD = "reward";
 }
 
 public class GamePlayerProperties

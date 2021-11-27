@@ -301,16 +301,16 @@ public class EnjinLogin : MonoBehaviour
             JSONNode hasPurchasedNode = userDataNode[EnigmaNodeKeys.PURCHASED];
             gameStats.HasPurchased = ((hasPurchasedNode != null) && (hasPurchasedNode.AsInt == 1));
 
-            JSONNode isThereServerBackupNode = userDataNode[GameTransactionKeys.BACKUP];
+            JSONNode isThereServerBackupNode = userDataNode[GameNodeKeys.BACKUP];
             gameStats.IsThereServerBackup = ((isThereServerBackupNode != null) && (isThereServerBackupNode.AsInt == 1));
 
-            JSONNode ratingNode = userDataNode[GameTransactionKeys.RATING];
+            JSONNode ratingNode = userDataNode[GameNodeKeys.RATING];
             if (ratingNode != null)
             {
                 gameStats.Rating = ratingNode.AsInt;
             }
 
-            JSONNode userNameNode = userDataNode[GameTransactionKeys.USERNAME];
+            JSONNode userNameNode = userDataNode[GameNodeKeys.USERNAME];
             if (userNameNode != null)
             {
                 NetworkManager.SetLocalPlayerNickName(userNameNode.ToString().Trim('"'));

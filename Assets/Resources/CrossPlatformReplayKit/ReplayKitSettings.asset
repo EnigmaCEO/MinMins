@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: ReplayKitSettings
   m_EditorClassIdentifier: 
   m_android:
-    m_videoQuality: 1
+    m_videoQuality: 0
     m_customVideoBitrate:
       m_allowCustomBitrates: 0
       m_bitrateFactor: 0.5
     m_usesSavePreview: 1
     m_allowControllingAudio: 1
     m_prioritiseAppAudioWhenUsingMicrophone: 0
-  m_usesMicrophone: 1
+  m_usesMicrophone: 0
