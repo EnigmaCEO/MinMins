@@ -27,6 +27,7 @@ public class ReplayManager : MonoBehaviour
     {
         ReplayKitManager.DidInitialise -= onInitialize;
         ReplayKitManager.DidRecordingStateChange -= onRecordStateChange;
+        DiscardPreview();
     }
 
     private void onInitialize(ReplayKitInitialisationState state, string message)
